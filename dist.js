@@ -4,22 +4,23 @@ var lowerCase = window.navigator.userAgent.toLowerCase();
 var isTouchScreen = (((((((lowerCase.indexOf("isTouchScreen") !== -1) || (lowerCase.indexOf("android") !== -1)) || (lowerCase.indexOf("ipad") !== -1)) || (lowerCase.indexOf("iphone") !== -1)) || (lowerCase.indexOf("ipod") !== -1)) || (lowerCase.indexOf("kindle") !== -1)) || (lowerCase.indexOf("silk/") !== -1)) ? 1 : 0;
 if (isTouchScreen === 1) {
     var meta = window.document.createElement("meta");
-    meta.name = "viewport";
-    meta.content = "initial-scale=1.0 maximum-scale=1.0";
+    meta.name       = "viewport";
+    meta.content    = "initial-scale=1.0 maximum-scale=1.0";
     window.document.getElementsByTagName("head")[0].appendChild(meta);
 }
-localStorage = null;
+
+localStorage2 = null;
 try {
-    localStorage = window.localStorage;
-    localStorage.setItem("LapaMauve", "1");
-    localStorage.getItem("LapaMauve");
+    localStorage2 = window.localStorage;
+    localStorage2.setItem("LapaMauve", "1");
+    localStorage2.getItem("LapaMauve");
 } catch (error) {
-    storage = {};
-    localStorage = {};
-    localStorage.setItem = function(storageCell, cellValue) {
+    storage         = {};
+    localStorage2   = {};
+    localStorage2.setItem = function(storageCell, cellValue) {
         storage[storageCell] = cellValue;
     };
-    localStorage.getItem = function(storageCell) {
+    localStorage2.getItem = function(storageCell) {
         return (storage[storageCell] === window.undefined) ? null : storage[storageCell];
     };
 }
@@ -28,15 +29,17 @@ var sety;
 var rowx;
 var rowy;
 var canvas;
-var screenWidth, screenHeight, screencenterX, screencenterY, mWmwm, nVnwN, wvwNM, wwWnm, canw2ns, canh2ns, VNwMw, nwVmW;
+var canw, canh, canw2, canh2, canw4, canh4, canwns, canhns, canw2ns, canh2ns, canw4ns, canh4ns;
 var ctx;
-var delta = 0;
-var previousTimestamp = 0;
-var scaleby = 1;
-var mNVwV = 100;
-var WMWmn = 1;
+var delta               = 0;
+var previousTimestamp   = 0;
+var scaleby             = 1;
+var fpsAvg              = 100;
+var canvasQuality       = 1;
+
 var __RESIZE_METHOD_SCALE__ = 1;
-var nWWnW = 0;
+var __RESIZE_METHOD_CSS__   = 0;
+
 var CanvasUtils = (function() {
     var wmWnm = 5;
     var nnW = 0;
@@ -44,32 +47,33 @@ var CanvasUtils = (function() {
     var WVNmV = 0;
     var wMmNw = 0;
     var VVWwv = new window.Array(wmWnm);
+
     var options = {
-        vMMnv: __RESIZE_METHOD_SCALE__,
-        size: window.innerWidth,
-        wmNnN: true,
-        MNWmW: window.devicePixelRatio || 1,
-        NmwvV: window.devicePixelRatio || 1,
-        nmWmN: 1,
-        wWMMM: 0,
-        ratio: 0,
-        ratioX: 1,
-        ratioY: 1,
-        can: "can",
-        bod: "bod"
+        resizeMethod:       __RESIZE_METHOD_SCALE__,
+        size:               window.innerWidth,
+        aliasing:           true,
+        deviceRatio:        window.devicePixelRatio || 1,
+        scheduledRatio:     window.devicePixelRatio || 1,
+        backingStoreRatio:  1,
+        forceResolution:    0,
+        ratio:              0,
+        ratioX:             1,
+        ratioY:             1,
+        can:                "can",
+        bod:                "bod"
     };
 
-    function initAnimatedCanvas(wMN, vMMnv, can, bod, wMv, mnV, wmNnN) {
+    function initAnimatedCanvas(wMN, resizeMethod, can, bod, wMv, mnV, aliasing) {
         setRenderer(wMN);
-        if (vMMnv !== window.undefined) options.vMMnv = vMMnv;
+        if (resizeMethod !== window.undefined) options.resizeMethod = resizeMethod;
         if (can !== window.undefined) options.can = can;
         if (bod !== window.undefined) options.bod = bod;
         if (wMv !== window.undefined) options.size = wMv;
         if (mnV !== window.undefined) options.ratio = mnV;
-        if (wmNnN !== window.undefined) options.wmNnN = wmNnN;
+        if (aliasing !== window.undefined) options.aliasing = aliasing;
         canvas = window.document.getElementById(options.can);
         ctx = canvas.getContext('2d');
-        options.nmWmN = ((((ctx.VVnwv || ctx.VVMNN) || ctx.MNVww) || ctx.MmNMW) || ctx.NwmMW) || 1;
+        options.backingStoreRatio = ((((ctx.webkitBackingStorePixelRatio || ctx.mozBackingStorePixelRatio) || ctx.msBackingStorePixelRatio) || ctx.oBackingStorePixelRatio) || ctx.backingStorePixelRatio) || 1;
         nWVwM();
         canvas.oncontextmenu = function() {
             return false;
@@ -88,7 +92,7 @@ var CanvasUtils = (function() {
 
     function bodOnResize() {
         var mnV, SY, SX;
-        if (options.vMMnv === nWWnW) {
+        if (options.resizeMethod === __RESIZE_METHOD_CSS__) {
             if (window.innerWidth > window.innerHeight) {
                 mnV = window.innerHeight / window.innerWidth;
                 SY = options.size;
@@ -102,31 +106,31 @@ var CanvasUtils = (function() {
             SY = window.innerWidth;
             SX = window.innerHeight;
         }
-        screenWidth = SY;
-        screenHeight = SX;
-        screencenterX = window.Math.floor(screenWidth / 2);
-        screencenterY = window.Math.floor(screenHeight / 2);
-        mWmwm = window.Math.floor(screenWidth / 4);
-        nVnwN = window.Math.floor(screenHeight / 4);
-        options.ratioX = screenWidth / window.innerWidth;
-        options.ratioY = screenHeight / window.innerHeight;
-        mnV = options.NmwvV / options.nmWmN;
+        canw = SY;
+        canh = SX;
+        canw2 = window.Math.floor(canw / 2);
+        canh2 = window.Math.floor(canh / 2);
+        canw4 = window.Math.floor(canw / 4);
+        canh4 = window.Math.floor(canh / 4);
+        options.ratioX = canw / window.innerWidth;
+        options.ratioY = canh / window.innerHeight;
+        mnV = options.scheduledRatio / options.backingStoreRatio;
         if (options.ratio !== 0) mnV *= options.ratio;
-        canvas.width = screenWidth * mnV;
-        canvas.height = screenHeight * mnV;
-        if (options.vMMnv === __RESIZE_METHOD_SCALE__) {
+        canvas.width = canw * mnV;
+        canvas.height = canh * mnV;
+        if (options.resizeMethod === __RESIZE_METHOD_SCALE__) {
             scaleby = window.Math.max(SX / ((options.size * 11) / 16), SY / options.size);
             canvas.style.width = SY + "px";
             canvas.style.height = SX + "px";
         }
-        wvwNM = screenWidth / scaleby;
-        wwWnm = screenHeight / scaleby;
-        canw2ns = screencenterX / scaleby;
-        canh2ns = screencenterY / scaleby;
-        VNwMw = mWmwm / scaleby;
-        nwVmW = nVnwN / scaleby;
+        canwns = canw / scaleby;
+        canhns = canh / scaleby;
+        canw2ns = canw2 / scaleby;
+        canh2ns = canh2 / scaleby;
+        canw4ns = canw4 / scaleby;
+        canh4ns = canh4 / scaleby;
         ctx.scale(mnV, mnV);
-        setAntialiasing(ctx, options.wmNnN);
+        setAntialiasing(ctx, options.aliasing);
         nWMmW.update();
     };
 
@@ -154,12 +158,12 @@ var CanvasUtils = (function() {
 
     function setResolution(mvWMM) {
         if (((mvWMM === 1) || (mvWMM === 2)) || (mvWMM === 3)) {
-            if (mvWMM === options.wWMMM) {
+            if (mvWMM === options.forceResolution) {
                 mvWMM = 0;
-                options.NmwvV = options.MNWmW / WMWmn;
+                options.scheduledRatio = options.deviceRatio / canvasQuality;
             } else
-                options.NmwvV = options.MNWmW / mvWMM;
-            options.wWMMM = mvWMM;
+                options.scheduledRatio = options.deviceRatio / mvWMM;
+            options.forceResolution = mvWMM;
             bodOnResize();
         }
     };
@@ -176,31 +180,31 @@ var CanvasUtils = (function() {
                 for (var i = 0; i < wmWnm; i++)
                     mmmWv += VVWwv[i];
                 mmmWv = mmmWv / wmWnm;
-                var mnV = options.MNWmW / options.nmWmN;
-                if (((options.wWMMM === 0) && (mnV === 2)) && (window.Math.abs(mNVwV - mmmWv) < 5)) {
-                    if ((mmmWv < 22) && (mNVwV < 22)) {
-                        if (WMWmn === 1) {
-                            WMWmn = 2;
-                            options.NmwvV = options.MNWmW / 2;
+                var mnV = options.deviceRatio / options.backingStoreRatio;
+                if (((options.forceResolution === 0) && (mnV === 2)) && (window.Math.abs(fpsAvg - mmmWv) < 5)) {
+                    if ((mmmWv < 22) && (fpsAvg < 22)) {
+                        if (canvasQuality === 1) {
+                            canvasQuality = 2;
+                            options.scheduledRatio = options.deviceRatio / 2;
                             bodOnResize();
-                        } else if (WMWmn === 2) {
-                            WMWmn = 3;
-                            options.NmwvV = options.MNWmW / 3;
+                        } else if (canvasQuality === 2) {
+                            canvasQuality = 3;
+                            options.scheduledRatio = options.deviceRatio / 3;
                             bodOnResize();
                         }
-                    } else if ((options.MNWmW > options.NmwvV) && ((mmmWv + mNVwV) > 119)) {
-                        if (WMWmn === 2) {
-                            WMWmn = 1;
-                            options.NmwvV = options.MNWmW;
+                    } else if ((options.deviceRatio > options.scheduledRatio) && ((mmmWv + fpsAvg) > 119)) {
+                        if (canvasQuality === 2) {
+                            canvasQuality = 1;
+                            options.scheduledRatio = options.deviceRatio;
                             bodOnResize();
-                        } else if (WMWmn === 3) {
-                            WMWmn = 2;
-                            options.NmwvV = options.MNWmW / 2;
+                        } else if (canvasQuality === 3) {
+                            canvasQuality = 2;
+                            options.scheduledRatio = options.deviceRatio / 2;
                             bodOnResize();
                         }
                     }
                 }
-                mNVwV = mmmWv;
+                fpsAvg = mmmWv;
                 wMmNw = 0;
             }
             nnW = 0;
@@ -331,7 +335,7 @@ var CanvasUtils = (function() {
     };
 
     function lerp(WMwvw, WnnmM, VwW) {
-        var WNn = window.Math.max(1, window.Math.floor(60 / mNVwV));
+        var WNn = window.Math.max(1, window.Math.floor(60 / fpsAvg));
         for (var i = 0; i < WNn; i++)
             WMwvw = MathUtils.lerp(WMwvw, WnnmM, VwW);
         return WMwvw;
@@ -384,7 +388,7 @@ var CanvasUtils = (function() {
         var h = W.h2 * imgMovement;
         var nnvvn = (-VwW / 2) + (wWNWN * imgMovement);
         var nNmWM = (-h / 2) + (wnwnM * imgMovement);
-        if ((((((WX + nnvvn) + VwW) < 0) || (((WY + nNmWM) + h) < 0)) || (((WX - VwW) - screenWidth) > 0)) || (((WY - h) - screenHeight) > 0))
+        if ((((((WX + nnvvn) + VwW) < 0) || (((WY + nNmWM) + h) < 0)) || (((WX - VwW) - canw) > 0)) || (((WY - h) - canh) > 0))
             return;
         ctx.save();
         ctx.translate(WX, WY);
@@ -424,7 +428,7 @@ var CanvasUtils = (function() {
         var h = (wVnWn / 2) * imgMovement;
         var nnvvn = -VwW / 2;
         var nNmWM = -h / 2;
-        if ((((((WX + nnvvn) + VwW) < 0) || (((WY + nNmWM) + h) < 0)) || (((WX - VwW) - screenWidth) > 0)) || (((WY - h) - screenHeight) > 0))
+        if ((((((WX + nnvvn) + VwW) < 0) || (((WY + nNmWM) + h) < 0)) || (((WX - VwW) - canw) > 0)) || (((WY - h) - canh) > 0))
             return;
         ctx.save();
         ctx.translate(WX, WY);
@@ -1104,8 +1108,8 @@ function onHandshake(buf, unit8) {
     }
 
     World.PLAYER.ghoul = World.players[World.PLAYER.id].ghoul;
-    localStorage.setItem("tokenId", World.players[World.PLAYER.id].tokenId);
-    localStorage.setItem("userId", World.PLAYER.id);
+    localStorage2.setItem("tokenId", World.players[World.PLAYER.id].tokenId);
+    localStorage2.setItem("userId", World.PLAYER.id);
     World.sortLeaderboard();
     World.initGauges();
 
@@ -1480,31 +1484,42 @@ function onWrongTool(wmN) {
 
 function onModdedGaugesValues(buf) {
     var unit16 = new window.Uint16Array(buf);
-    World.gauges.life._max = unit16[1];
-    World.gauges.life.speedInc = unit16[2] / 10000;
-    World.gauges.life.speedDec = unit16[3] / 10000;
-    World.gauges.food._max = unit16[4];
-    World.gauges.food.speedInc = unit16[5] / 10000;
-    World.gauges.food.speedDec = unit16[6] / 10000;
-    World.gauges.cold._max = unit16[7];
-    World.gauges.cold.speedInc = unit16[8] / 10000;
-    World.gauges.cold.speedDec = unit16[9] / 10000;
-    World.gauges.stamina._max = unit16[10];
-    World.gauges.stamina.speedInc = unit16[11] / 10000;
-    World.gauges.stamina.speedDec = unit16[12] / 10000;
-    World.gauges.rad._max = unit16[13];
-    World.gauges.rad.speedInc = unit16[14] / 10000;
-    World.gauges.rad.speedDec = unit16[15] / 10000;
-    World.gauges.life.nnw = window.Math.min(World.gauges.life._max, World.gauges.life.nnw);
-    World.gauges.life.value = window.Math.min(World.gauges.life._max, World.gauges.life.value);
-    World.gauges.food.nnw = window.Math.min(World.gauges.food._max, World.gauges.food.nnw);
-    World.gauges.food.value = window.Math.min(World.gauges.food._max, World.gauges.food.value);
-    World.gauges.cold.nnw = window.Math.min(World.gauges.cold._max, World.gauges.cold.nnw);
-    World.gauges.cold.value = window.Math.min(World.gauges.cold._max, World.gauges.cold.value);
-    World.gauges.stamina.nnw = window.Math.min(World.gauges.stamina._max, World.gauges.stamina.nnw);
-    World.gauges.stamina.value = window.Math.min(World.gauges.stamina._max, World.gauges.stamina.value);
-    World.gauges.rad.nnw = window.Math.min(World.gauges.rad._max, World.gauges.rad.nnw);
-    World.gauges.rad.value = window.Math.min(World.gauges.rad._max, World.gauges.rad.value);
+
+    World.gauges.life._max          = unit16[1];
+    World.gauges.life.speedInc      = unit16[2] / 10000;
+    World.gauges.life.speedDec      = unit16[3] / 10000;
+
+    World.gauges.food._max          = unit16[4];
+    World.gauges.food.speedInc      = unit16[5] / 10000;
+    World.gauges.food.speedDec      = unit16[6] / 10000;
+
+    World.gauges.cold._max          = unit16[7];
+    World.gauges.cold.speedInc      = unit16[8] / 10000;
+    World.gauges.cold.speedDec      = unit16[9] / 10000;
+
+    World.gauges.stamina._max       = unit16[10];
+    World.gauges.stamina.speedInc   = unit16[11] / 10000;
+    World.gauges.stamina.speedDec   = unit16[12] / 10000;
+
+    World.gauges.rad._max           = unit16[13];
+    World.gauges.rad.speedInc       = unit16[14] / 10000;
+    World.gauges.rad.speedDec       = unit16[15] / 10000;
+
+    World.gauges.life.current       = window.Math.min(World.gauges.life._max, World.gauges.life.current);
+    World.gauges.life.value         = window.Math.min(World.gauges.life._max, World.gauges.life.value);
+
+    World.gauges.food.current       = window.Math.min(World.gauges.food._max, World.gauges.food.current);
+    World.gauges.food.value         = window.Math.min(World.gauges.food._max, World.gauges.food.value);
+
+    World.gauges.cold.current       = window.Math.min(World.gauges.cold._max, World.gauges.cold.current);
+    World.gauges.cold.value         = window.Math.min(World.gauges.cold._max, World.gauges.cold.value);
+
+    World.gauges.stamina.current    = window.Math.min(World.gauges.stamina._max, World.gauges.stamina.current);
+    World.gauges.stamina.value      = window.Math.min(World.gauges.stamina._max, World.gauges.stamina.value);
+
+    World.gauges.rad.current        = window.Math.min(World.gauges.rad._max, World.gauges.rad.current);
+    World.gauges.rad.value          = window.Math.min(World.gauges.rad._max, World.gauges.rad.value);
+
 };
 
 function onShakeExplosionState(shake) {
@@ -1805,7 +1820,7 @@ function onNewPlayer(buf) {
 function onNicknamesToken(buf) {
     var len = buf.length - 1;
     World.playerNumber = len;
-    localStorage.setItem("token", buf[len]);
+    localStorage2.setItem("token", buf[len]);
     buf[0] = "";
     World.allocatePlayers(buf);
 };
@@ -1844,22 +1859,22 @@ function onMessageJSON(buf) {
 };
 
 function onFirstMessage(dat) {
-    var token = localStorage.getItem("token");
-    var tokenId = localStorage.getItem("tokenId");
+    var token = localStorage2.getItem("token");
+    var tokenId = localStorage2.getItem("tokenId");
     var userid = -1;
     try {
-        userid = window.Number(localStorage.getItem("userId"));
+        userid = window.Number(localStorage2.getItem("userId"));
         if (userid === window.NaN)
             userid = -1;
     } catch (error) {};
-    var nickname = localStorage.getItem("nickname");
+    var nickname = localStorage2.getItem("nickname");
     var mNVNV = ((Client.state & Client.State.__CONNECTION_LOST__) > 0) ? 1 : 0;
-    var skin = window.Number(localStorage.getItem("skin"));
+    var skin = window.Number(localStorage2.getItem("skin"));
     var password = 0;
     if (window.document.getElementById("passwordInput") !== null) {
         password = window.document.getElementById("passwordInput").value;
         if (password.length > 0)
-            localStorage.setItem("password", password);
+            localStorage2.setItem("password", password);
         if (Loader.getURLData("admin") !== null) {
             Home.adblocker = 0;
             Home.ads = -1;
@@ -1930,10 +1945,10 @@ var Client = (function() {
         nnwwV = (WvnMM !== window.undefined) ? WvnMM : (function() {});
         timeoutnb = (vVVWm !== window.undefined) ? vVVWm : 2000;
         nmVmM = previousTimestamp;
-        var serverversion = localStorage.getItem("serverVersion");
-        if ((localStorage.getItem("token") === null) || (serverversion !== ("" + dat)))
-            localStorage.setItem("token", chngtoken());
-        localStorage.setItem("serverVersion", dat);
+        var serverversion = localStorage2.getItem("serverVersion");
+        if ((localStorage2.getItem("token") === null) || (serverversion !== ("" + dat)))
+            localStorage2.setItem("token", chngtoken());
+        localStorage2.setItem("serverVersion", dat);
     };
 
     function WmMnn() {
@@ -1965,8 +1980,8 @@ var Client = (function() {
 
     function startConnection(nickname, skin, shit) {
         if (((Client.state & State.__PENDING__) === 0) && ((Client.state & State.__CONNECTED__) === 0)) {
-            localStorage.setItem("nickname", nickname);
-            localStorage.setItem("skin", skin);
+            localStorage2.setItem("nickname", nickname);
+            localStorage2.setItem("skin", skin);
             vVnMm(shit);
         }
     };
@@ -2063,8 +2078,8 @@ var Client = (function() {
     };
 
     function newstorage(shit) {
-        localStorage.setItem("tokenId", 0);
-        localStorage.setItem("userId", 1);
+        localStorage2.setItem("tokenId", 0);
+        localStorage2.setItem("userId", 1);
         connectsrv(shit);
     };
 
@@ -2598,7 +2613,7 @@ var World = (function() {
     };
 
     function VmmnM() {
-        this.nnw = 0;
+        this.current = 0;
         this.value = 0;
         this._max = 0;
         this.speed = 0;
@@ -2608,7 +2623,7 @@ var World = (function() {
     };
 
     function nVnwv(Vnv, vW, speedInc, speedDec, vww) {
-        Vnv.nnw = vW;
+        Vnv.current = vW;
         Vnv.value = vW;
         Vnv._max = vW;
         Vnv.speedInc = speedInc;
@@ -2633,7 +2648,7 @@ var World = (function() {
         }
         nVnwv(gauges.xp, 255, 0, 0, 0);
         gauges.xp.value = 0;
-        gauges.xp.nnw = 0;
+        gauges.xp.current = 0;
         PLAYER.nextLevel = NwwNn;
         if (day === NwVWM)
             gauges.cold.vww = 1;
@@ -2644,7 +2659,7 @@ var World = (function() {
             Vnv.value = window.Math.min(Vnv._max, window.Math.max(Vnv.value - (delta * (Vnv.speedDec - Vnv.mNNmw)), 0));
         else if (Vnv.vww === -1)
             Vnv.value = window.Math.min(Vnv.value + (delta * (Vnv.speedInc + Vnv.mNNmw)), Vnv._max);
-        Vnv.nnw = MathUtils.lerp(Vnv.nnw, Vnv.value, 0.1);
+        Vnv.current = MathUtils.lerp(Vnv.current, Vnv.value, 0.1);
     };
 
     function updateGauges() {
@@ -2655,10 +2670,10 @@ var World = (function() {
         nMmNW(gauges.stamina);
         nMmNW(gauges.xp);
         World.PLAYER.VWMmM += delta;
-        if (gauges.rad.nnw > 254)
+        if (gauges.rad.current > 254)
             AudioManager.vwMNW = 0;
         else
-            AudioManager.vwMNW = window.Math.min(1, window.Math.max(0, 1 - (gauges.rad.nnw / 255)));
+            AudioManager.vwMNW = window.Math.min(1, window.Math.max(0, 1 - (gauges.rad.current / 255)));
         vNvmW();
     };
     var gauges = {
@@ -2879,9 +2894,9 @@ var World = (function() {
     };
 
     function vNvmW() {
-        if ((PLAYER.xp > 0) && (window.Math.abs(gauges.xp.nnw - gauges.xp.value) < 0.6)) {
+        if ((PLAYER.xp > 0) && (window.Math.abs(gauges.xp.current - gauges.xp.value) < 0.6)) {
             if (gauges.xp.value === 255) {
-                gauges.xp.nnw = 0;
+                gauges.xp.current = 0;
                 gauges.xp.value = 0;
                 PLAYER.level++;
                 PLAYER.skillPoint++;
@@ -7064,7 +7079,7 @@ var TextManager = (function() {
         lang = wnWwm;
         TextManager.lang = lang;
         VNWww = lang[0];
-        localStorage.setItem("lang", window.JSON.stringify(lang));
+        localStorage2.setItem("lang", window.JSON.stringify(lang));
     };
 
     function get(Wn) {
@@ -7118,7 +7133,7 @@ var TextManager = (function() {
             NvMWn(vNvWn);
             VNWww = mWN;
         }
-        var WVNNM = localStorage.getItem("lang");
+        var WVNNM = localStorage2.getItem("lang");
         if (WVNNM === null) {
             var vnmnw = window.navigator.language || window.navigator.userLanguage;
             switch (vnmnw) {
@@ -7198,7 +7213,7 @@ var Keyboard = (function() {
         key_d = 68;
         key_w = 90;
         key_s = 83;
-        localStorage.setItem("keyboardMap", WWWNw);
+        localStorage2.setItem("keyboardMap", WWWNw);
         MVvNV = WWWNw;
     };
 
@@ -7207,7 +7222,7 @@ var Keyboard = (function() {
         key_d = 68;
         key_w = 87;
         key_s = 83;
-        localStorage.setItem("keyboardMap", VVvvM);
+        localStorage2.setItem("keyboardMap", VVvvM);
         MVvNV = VVvvM;
     };
 
@@ -7292,7 +7307,7 @@ var Keyboard = (function() {
         this.ctrlKey = false;
         this.preventDefault = function() {};
     };
-    MVvNV = localStorage.getItem("keyboardMap");
+    MVvNV = localStorage2.getItem("keyboardMap");
     if (MVvNV === null) {
         var nVmWN = window.navigator.language || window.navigator.userLanguage;
         if ((nVmWN === "fr") || (nVmWN === "fr-FR"))
@@ -7367,12 +7382,12 @@ var AudioUtils = (function() {
         nNmMV: 1
     };
     try {
-        var vW = localStorage.getItem("isFx");
+        var vW = localStorage2.getItem("isFx");
         if (vW !== null)
             options.VWVWW = window.Number(vW);
         else if (isTouchScreen === 1)
             options.VWVWW = 0;
-        vW = localStorage.getItem("isAudio");
+        vW = localStorage2.getItem("isAudio");
         if (vW !== null)
             options.nNmMV = window.Number(vW);
         else if (isTouchScreen === 1)
@@ -7392,7 +7407,7 @@ var AudioUtils = (function() {
             }
         }
         options.nNmMV = vW;
-        localStorage.setItem("isAudio", "" + vW);
+        localStorage2.setItem("isAudio", "" + vW);
     };
 
     function setFx(vW) {
@@ -7403,7 +7418,7 @@ var AudioUtils = (function() {
             }
         }
         options.VWVWW = vW;
-        localStorage.setItem("isFx", "" + vW);
+        localStorage2.setItem("isFx", "" + vW);
     };
 
     function playFx(_fx, VwV, dist, NwnmN) {
@@ -7599,7 +7614,7 @@ var Loader = (function() {
         var vMm = 0;
         var wwv = 0;
         if (MNw > 0) {
-            wwv = screenHeight;
+            wwv = canh;
             var transition = mwn(1 - (MNw / WwM));
             if (transition === 1)
                 MNw = 0;
@@ -7610,14 +7625,14 @@ var Loader = (function() {
             vMm *= transition;
             wwv *= transition;
         }
-        mwnMm.pos.x = (screencenterX - window.Math.floor(211 * scaleby)) + vMm;
-        mwnMm.pos.y = window.Math.max(0, screencenterY - window.Math.floor(138 * scaleby)) + wwv;
+        mwnMm.pos.x = (canw2 - window.Math.floor(211 * scaleby)) + vMm;
+        mwnMm.pos.y = window.Math.max(0, canh2 - window.Math.floor(138 * scaleby)) + wwv;
     };
 
     function draw() {
         if (MMVwV() === 0)
             return;
-        ctx.clearRect(0, 0, screenWidth, screenHeight);
+        ctx.clearRect(0, 0, canw, canh);
         mwnMm.draw();
     };
 
@@ -7741,7 +7756,7 @@ var Loader = (function() {
                             window.document.getElementById("chatInput").maxLength = 1000000;
                         }
                         window.document.getElementById("nickname").innerHTML += '<input id="passwordInput" type="password" placeholder="Password" maxLength="16">';
-                        var password = localStorage.getItem("password");
+                        var password = localStorage2.getItem("password");
                         if (password !== null) window.document.getElementById("passwordInput").value = password;
                     }
 
@@ -7991,7 +8006,7 @@ var Home = (function() {
         Home.publicMode = 1;
         Home.alertId = 0;
         Home.alertDelay = 0;
-        window.document.getElementById("nicknameInput").value = localStorage.getItem("nickname", nickname);
+        window.document.getElementById("nicknameInput").value = localStorage2.getItem("nickname", nickname);
         AudioUtils.fadeSound(AudioUtils.audio.title, 1000, AudioManager.mvVWW);
         Entitie.removeAll();
         Render.reset(1);
@@ -8199,40 +8214,40 @@ var Home = (function() {
         var vMm = 0;
         var wwv = 0;
         if (MNw > 0) {
-            wwv = screenHeight;
+            wwv = canh;
             var transition = mwn(1 - (MNw / WwM));
             if (transition === 1) MNw = 0;
             if (mwm === 1) transition = 1 - window.Math.abs(transition);
             vMm *= transition;
             wwv *= transition;
         }
-        VmV.pos.x = ((screencenterX - window.Math.floor(325 * scaleby)) + window.Math.floor(((isTouchScreen === 0) ? -30 : -70) * scaleby)) - vMm;
-        VmV.pos.y = window.Math.max(0, (screencenterY - window.Math.floor(156 * scaleby)) + window.Math.floor(((isTouchScreen === 0) ? -150 : -150) * scaleby)) - wwv;
+        VmV.pos.x = ((canw2 - window.Math.floor(325 * scaleby)) + window.Math.floor(((isTouchScreen === 0) ? -30 : -70) * scaleby)) - vMm;
+        VmV.pos.y = window.Math.max(0, (canh2 - window.Math.floor(156 * scaleby)) + window.Math.floor(((isTouchScreen === 0) ? -150 : -150) * scaleby)) - wwv;
         mVwVw.pos.x = window.Math.floor(5 * scaleby) + vMm;
-        mVwVw.pos.y = ((screenHeight - window.Math.floor(40 * scaleby)) + window.Math.floor(-5 * scaleby)) + wwv;
-        VWvmM.x = ((screencenterX - window.Math.floor(91 * scaleby)) + window.Math.floor(((isTouchScreen === 0) ? -6.8 : -47.5) * scaleby)) - vMm;
+        mVwVw.pos.y = ((canh - window.Math.floor(40 * scaleby)) + window.Math.floor(-5 * scaleby)) + wwv;
+        VWvmM.x = ((canw2 - window.Math.floor(91 * scaleby)) + window.Math.floor(((isTouchScreen === 0) ? -6.8 : -47.5) * scaleby)) - vMm;
         vWmNN.left = VWvmM.x + "px";
         VWvmM.y = VmV.pos.y + window.Math.floor(143 * scaleby);
         vWmNN.top = VWvmM.y + "px";
         playbutt.pos.x = VmV.pos.x + window.Math.floor(290 * scaleby);
         playbutt.pos.y = VmV.pos.y + window.Math.floor(235 * scaleby);
-        VMmWW.x = (screenWidth - 85) + vMm;
+        VMmWW.x = (canw - 85) + vMm;
         Wvwwv.left = VMmWW.x + "px";
-        VMmWW.y = ((screenHeight - 17) + window.Math.floor(-10 * scaleby)) + wwv;
+        VMmWW.y = ((canh - 17) + window.Math.floor(-10 * scaleby)) + wwv;
         Wvwwv.top = VMmWW.y + "px";
-        wwMMw.x = ((screencenterX - window.Math.floor(100 * scaleby)) + window.Math.floor(((isTouchScreen === 0) ? 12.8 : -26.5) * scaleby)) - vMm;
+        wwMMw.x = ((canw2 - window.Math.floor(100 * scaleby)) + window.Math.floor(((isTouchScreen === 0) ? 12.8 : -26.5) * scaleby)) - vMm;
         vnmmN.left = wwMMw.x + "px";
         wwMMw.y = VWvmM.y + window.Math.floor(45 * scaleby);
         vnmmN.top = wwMMw.y + "px";
-        mwvwV.pos.x = ((screenWidth - window.Math.floor(230 * scaleby)) + window.Math.floor(7 * scaleby)) - vMm;
+        mwvwV.pos.x = ((canw - window.Math.floor(230 * scaleby)) + window.Math.floor(7 * scaleby)) - vMm;
         mwvwV.pos.y = -wwv;
-        nmnWW.x = ((screenWidth - 200) + window.Math.floor(-10 * scaleby)) - vMm;
+        nmnWW.x = ((canw - 200) + window.Math.floor(-10 * scaleby)) - vMm;
         VNVnM.left = nmnWW.x + "px";
         nmnWW.y = window.Math.floor(20 * scaleby) - wwv;
         VNVnM.top = nmnWW.y + "px";
         mmvWv.pos.x = mwvwV.pos.x;
         mmvWv.pos.y = mwvwV.pos.y + window.Math.floor(230 * scaleby);
-        MMNMM.x = ((screenWidth - 200) + window.Math.floor(-10 * scaleby)) - vMm;
+        MMNMM.x = ((canw - 200) + window.Math.floor(-10 * scaleby)) - vMm;
         wnwvW.left = MMNMM.x + "px";
         MMNMM.y = nmnWW.y + window.Math.floor(215 * scaleby);
         wnwvW.top = MMNMM.y + "px";
@@ -8276,13 +8291,13 @@ var Home = (function() {
         privateServer.pos.y = VMm.pos.y + window.Math.floor(41 * scaleby);
         vvmMm.pos.x = privateServer.pos.x + window.Math.floor(-8.5 * scaleby);
         vvmMm.pos.y = privateServer.pos.y + window.Math.floor(-53 * scaleby);
-        vWNNw.x = screencenterX - window.Math.floor(150 * scaleby);
+        vWNNw.x = canw2 - window.Math.floor(150 * scaleby);
         trevdaStyle.left = vWNNw.x + "px";
         vWNNw.y = VWvmM.y + window.Math.floor(130 * scaleby);
         trevdaStyle.top = vWNNw.y + "px";
         var mVvwv = window.Math.min(scaleby, 1);
         var pos = (VWvmM.y + wwv) + (170 * scaleby);
-        window.document.getElementById("trevda").style.left = window.Math.floor(screencenterX - (325 * mVvwv)) + "px";
+        window.document.getElementById("trevda").style.left = window.Math.floor(canw2 - (325 * mVvwv)) + "px";
         window.document.getElementById("trevda").style.top = window.Math.floor(pos + (((mVvwv * 250) - 250) / 2)) + "px";
         window.document.getElementById("trevda").style.transform = ("scale(" + mVvwv) + ")";
         var mwNww = window.document.getElementById("nicknameInput").style;
@@ -8309,7 +8324,7 @@ var Home = (function() {
             var VNNvn = window.document.getElementById("passwordInput").style;
             var SY = window.Math.floor(220 * scaleby);
             var SX = window.Math.floor(35 * scaleby);
-            var MMM = window.Math.floor(screencenterX - (SY / 2)) + "px";
+            var MMM = window.Math.floor(canw2 - (SY / 2)) + "px";
             SX = SX + "px";
             SY = SY + "px";
             VNNvn.width = SY;
@@ -8336,10 +8351,10 @@ var Home = (function() {
         nVvNv.fontSize = window.Math.floor(13 * scaleby) + "px";
         SY = window.Math.floor(185 * scaleby);
         SX = window.Math.floor(17 * scaleby);
-        MMM = window.Math.floor(screenWidth - SY) + "px";
+        MMM = window.Math.floor(canw - SY) + "px";
         SX = SX + "px";
         SY = SY + "px";
-        _top = (window.Math.floor(screenHeight - (18 * scaleby)) + wwv) + "px";
+        _top = (window.Math.floor(canh - (18 * scaleby)) + wwv) + "px";
         Wvwwv.width = SY;
         Wvwwv.height = SX;
         Wvwwv.left = MMM;
@@ -8347,7 +8362,7 @@ var Home = (function() {
         Wvwwv.fontSize = window.Math.floor(11 * scaleby) + "px";
         SY = window.Math.floor(197 * scaleby);
         SX = window.Math.floor(250 * scaleby);
-        MMM = window.Math.floor(screenWidth - (205 * scaleby)) + "px";
+        MMM = window.Math.floor(canw - (205 * scaleby)) + "px";
         SX = SX + "px";
         SY = SY + "px";
         VNVnM.width = SY;
@@ -8379,8 +8394,8 @@ var Home = (function() {
         nMWvW["paddingTop"] = window.Math.floor(5 * scaleby) + "px";
         SY = window.Math.floor(197 * scaleby);
         SX = window.Math.floor(347 * scaleby);
-        MMM = window.Math.floor(screenWidth - (205 * scaleby)) + "px";
-        MVvmn = window.Math.floor(screenHeight - (105 * scaleby)) + "px";
+        MMM = window.Math.floor(canw - (205 * scaleby)) + "px";
+        MVvmn = window.Math.floor(canh - (105 * scaleby)) + "px";
         SX = SX + "px";
         SY = SY + "px";
         wnwvW.width = SY;
@@ -8434,7 +8449,7 @@ var Home = (function() {
 
     function draw() {
         if (MMVwV() === 0) return;
-        ctx.clearRect(0, 0, screenWidth, screenHeight);
+        ctx.clearRect(0, 0, canw, canh);
         Render.world();
         if (MNw > 0) {
             NNN = mwn(1 - (MNw / WwM));
@@ -8443,7 +8458,7 @@ var Home = (function() {
         }
         ctx.globalAlpha = 0.3 * NNN;
         ctx.fillStyle = "#000000";
-        ctx.fillRect(0, 0, screenWidth, screenHeight);
+        ctx.fillRect(0, 0, canw, canh);
         ctx.globalAlpha = 1;
         if (Home.gameMode === World.__SURVIVAL__) NvW.setState(GUI.__BUTTON_CLICK__);
         else if (Home.gameMode === World.__BR__) VmwMm.setState(GUI.__BUTTON_CLICK__);
@@ -9166,7 +9181,7 @@ var Game = (function() {
     function run() {
         Client.onError = onError;
         Client.onOpen = onOpen;
-        if (localStorage.getItem("showLeaderboard") === "0") {
+        if (localStorage2.getItem("showLeaderboard") === "0") {
             leaderboardbutt.hide();
             leaderboardbutt2.show();
         } else {
@@ -9214,7 +9229,7 @@ var Game = (function() {
         var vMm = 0;
         var wwv = 0;
         if (MNw > 0) {
-            wwv = screenHeight;
+            wwv = canh;
             var transition = mwn(1 - (MNw / WwM));
             if (transition === 1) MNw = 0;
             if (mwm === 1) transition = 1 - window.Math.abs(transition);
@@ -9222,23 +9237,23 @@ var Game = (function() {
             wwv *= transition;
         }
         gauges.pos.x = window.Math.floor(5 * scaleby) + vMm;
-        gauges.pos.y = ((screenHeight - window.Math.floor(174 * scaleby)) + window.Math.floor(-7 * scaleby)) + wwv;
-        settingbox.pos.x = (screencenterX - window.Math.floor(134 * scaleby)) + vMm;
-        settingbox.pos.y = window.Math.max(0, screencenterY - window.Math.floor(133 * scaleby)) + wwv;
-        chestbox.pos.x = (screencenterX - window.Math.floor(81 * scaleby)) + vMm;
-        chestbox.pos.y = window.Math.max(0, screencenterY - window.Math.floor(82 * scaleby)) + wwv;
-        craftbox.pos.x = (screencenterX - window.Math.floor(297 * scaleby)) + vMm;
-        craftbox.pos.y = window.Math.max(0, screencenterY - window.Math.floor(202 * scaleby)) + wwv;
-        bordermap.pos.x = (screencenterX - window.Math.floor(206 * scaleby)) + vMm;
-        bordermap.pos.y = window.Math.max(0, screencenterY - window.Math.floor(206 * scaleby)) + wwv;
+        gauges.pos.y = ((canh - window.Math.floor(174 * scaleby)) + window.Math.floor(-7 * scaleby)) + wwv;
+        settingbox.pos.x = (canw2 - window.Math.floor(134 * scaleby)) + vMm;
+        settingbox.pos.y = window.Math.max(0, canh2 - window.Math.floor(133 * scaleby)) + wwv;
+        chestbox.pos.x = (canw2 - window.Math.floor(81 * scaleby)) + vMm;
+        chestbox.pos.y = window.Math.max(0, canh2 - window.Math.floor(82 * scaleby)) + wwv;
+        craftbox.pos.x = (canw2 - window.Math.floor(297 * scaleby)) + vMm;
+        craftbox.pos.y = window.Math.max(0, canh2 - window.Math.floor(202 * scaleby)) + wwv;
+        bordermap.pos.x = (canw2 - window.Math.floor(206 * scaleby)) + vMm;
+        bordermap.pos.y = window.Math.max(0, canh2 - window.Math.floor(206 * scaleby)) + wwv;
         minimap.pos.x = window.Math.floor(5 * scaleby) - vMm;
         minimap.pos.y = window.Math.floor(5 * scaleby) - wwv;
-        leaderboard.pos.x = ((screenWidth - window.Math.floor(233 * scaleby)) + window.Math.floor(-6 * scaleby)) - vMm;
+        leaderboard.pos.x = ((canw - window.Math.floor(233 * scaleby)) + window.Math.floor(-6 * scaleby)) - vMm;
         leaderboard.pos.y = window.Math.floor(5 * scaleby) - wwv;
-        teambox.pos.x = (screencenterX - window.Math.floor(258 * scaleby)) - vMm;
-        teambox.pos.y = window.Math.max(0, screencenterY - window.Math.floor(137 * scaleby)) - wwv;
-        teammemberbox.pos.x = (screencenterX - window.Math.floor(256 * scaleby)) - vMm;
-        teammemberbox.pos.y = window.Math.max(0, screencenterY - window.Math.floor(75 * scaleby)) - wwv;
+        teambox.pos.x = (canw2 - window.Math.floor(258 * scaleby)) - vMm;
+        teambox.pos.y = window.Math.max(0, canh2 - window.Math.floor(137 * scaleby)) - wwv;
+        teammemberbox.pos.x = (canw2 - window.Math.floor(256 * scaleby)) - vMm;
+        teammemberbox.pos.y = window.Math.max(0, canh2 - window.Math.floor(75 * scaleby)) - wwv;
         fullscreenimg.pos.x = minimap.pos.x + window.Math.floor(126 * scaleby);
         fullscreenimg.pos.y = minimap.pos.y;
         craftbutton.pos.x = fullscreenimg.pos.x + window.Math.floor(50 * scaleby);
@@ -9249,19 +9264,19 @@ var Game = (function() {
         minimapbutt.pos.y = settingsimg.pos.y + window.Math.floor(44.5 * scaleby);
         teambutt.pos.x = minimap.pos.x;
         teambutt.pos.y = minimap.pos.y + window.Math.floor(127 * scaleby);
-        leaderboardbutt.pos.x = ((screenWidth - window.Math.floor(34 * scaleby)) + window.Math.floor(-7 * scaleby)) - vMm;
+        leaderboardbutt.pos.x = ((canw - window.Math.floor(34 * scaleby)) + window.Math.floor(-7 * scaleby)) - vMm;
         leaderboardbutt.pos.y = window.Math.floor(5 * scaleby) - wwv;
         leaderboardbutt2.pos.x = leaderboardbutt.pos.x;
         leaderboardbutt2.pos.y = leaderboardbutt.pos.y;
-        NWmmW.x = (screencenterX - window.Math.floor(150 * scaleby)) + vMm;
+        NWmmW.x = (canw2 - window.Math.floor(150 * scaleby)) + vMm;
         mnnNv.left = NWmmW.x + "px";
-        NWmmW.y = (window.Math.max(0, screencenterY - 12) + window.Math.floor(150 * scaleby)) + wwv;
+        NWmmW.y = (window.Math.max(0, canh2 - 12) + window.Math.floor(150 * scaleby)) + wwv;
         mnnNv.top = NWmmW.y + "px";
         var wvnVv = window.document.getElementById("chatInput").style;
         var SY = window.Math.floor(250 * scaleby);
         var SX = window.Math.floor(20 * scaleby);
-        var MMM = window.Math.floor(screencenterX - (SY / 2)) + "px";
-        var _top = window.Math.floor(((screencenterY - (SX / 2)) + (scaleby * 85)) + wwv) + "px";
+        var MMM = window.Math.floor(canw2 - (SY / 2)) + "px";
+        var _top = window.Math.floor(((canh2 - (SX / 2)) + (scaleby * 85)) + wwv) + "px";
         SX = SX + "px";
         SY = SY + "px";
         mnnNv.width = SY;
@@ -9276,7 +9291,7 @@ var Game = (function() {
     function draw() {
         if (MMVwV() === 0) return;
         vWMVN();
-        ctx.clearRect(0, 0, screenWidth, screenHeight);
+        ctx.clearRect(0, 0, canw, canh);
         World.updatePosition();
         World.updateGauges();
         Render.world();
@@ -9309,8 +9324,8 @@ var Game = (function() {
         } else if (isTouchScreen === 1) {
             if ((((Keyboard.isLeft() + Keyboard.isRight()) + Keyboard.isTop()) + Keyboard.isBottom()) >= 1) {
                 ctx.globalAlpha = 0.3;
-                var WX = canw2ns - (VNwMw * 1.5);
-                var WY = canh2ns + (VNwMw / 4);
+                var WX = canw2ns - (canw4ns * 1.5);
+                var WY = canh2ns + (canw4ns / 4);
                 CanvasUtils.circle(ctx, WX, WY, 60);
                 CanvasUtils.drawPath(ctx, "#000000");
                 CanvasUtils.circle(ctx, WX + ((window.Math.cos(MWVNw) * NVNwm) * scaleby), WY + ((window.Math.sin(MWVNw) * NVNwm) * scaleby), 30);
@@ -9319,8 +9334,8 @@ var Game = (function() {
             }
             if (vmWNW === 1) {
                 ctx.globalAlpha = 0.3;
-                var WX = canw2ns + (VNwMw * 1.5);
-                var WY = canh2ns + (VNwMw / 4);
+                var WX = canw2ns + (canw4ns * 1.5);
+                var WY = canh2ns + (canw4ns / 4);
                 CanvasUtils.circle(ctx, WX, WY, 60);
                 CanvasUtils.drawPath(ctx, "#000000");
                 CanvasUtils.circle(ctx, WX + ((window.Math.cos(Mouse.angle) * 25) * scaleby), WY + ((window.Math.sin(Mouse.angle) * 25) * scaleby), 30);
@@ -9565,7 +9580,7 @@ var Game = (function() {
             vnm = 1;
             leaderboardbutt.hide();
             leaderboardbutt2.show();
-            localStorage.setItem("showLeaderboard", "0");
+            localStorage2.setItem("showLeaderboard", "0");
             AudioUtils.playFx(AudioUtils._fx.button, 1, 0);
             return;
         }
@@ -9573,7 +9588,7 @@ var Game = (function() {
             vnm = 1;
             leaderboardbutt2.hide();
             leaderboardbutt.show();
-            localStorage.setItem("showLeaderboard", "1");
+            localStorage2.setItem("showLeaderboard", "1");
             AudioUtils.playFx(AudioUtils._fx.button, 1, 0);
             return;
         }
@@ -10231,36 +10246,36 @@ var Game = (function() {
                             }
                             break;
                 }
-                if (sy < (screenHeight - (70 * scaleby))) {
-                    var WMm = mWmwm * 1.5;
-                    var nmV = mWmwm / 4;
-                    if (sx < screencenterX) {
+                if (sy < (canh - (70 * scaleby))) {
+                    var WMm = canw4 * 1.5;
+                    var nmV = canw4 / 4;
+                    if (sx < canw2) {
                         var MVM = 30 * scaleby;
-                        MWVNw = Math2d.angle(screencenterX - WMm, screencenterY + nmV, sx, sy);
-                        NVNwm = window.Math.min(Math2d.dist(sx, sy, screencenterX - WMm, screencenterY + nmV), 25);
-                        if (sx < ((screencenterX - WMm) - MVM)) {
+                        MWVNw = Math2d.angle(canw2 - WMm, canh2 + nmV, sx, sy);
+                        NVNwm = window.Math.min(Math2d.dist(sx, sy, canw2 - WMm, canh2 + nmV), 25);
+                        if (sx < ((canw2 - WMm) - MVM)) {
                             mWM |= 1;
                             nNw.charCode = 37;
                             nNw.keyCode = 37;
                             vnW(nNw);
-                        } else if (sx > ((screencenterX - WMm) + MVM)) {
+                        } else if (sx > ((canw2 - WMm) + MVM)) {
                             mWM |= 2;
                             nNw.charCode = 39;
                             nNw.keyCode = 39;
                             vnW(nNw);
                         }
-                        if (sy < ((screencenterY + nmV) - MVM)) {
+                        if (sy < ((canh2 + nmV) - MVM)) {
                             mWM |= 4;
                             nNw.charCode = 38;
                             nNw.keyCode = 38;
                             vnW(nNw);
-                        } else if (sy > ((screencenterY + nmV) + MVM)) {
+                        } else if (sy > ((canh2 + nmV) + MVM)) {
                             mWM |= 8;
                             nNw.charCode = 40;
                             nNw.keyCode = 40;
                             vnW(nNw);
                         }
-                    } else if ((sx < (screenWidth - (40 * scaleby))) || (sy > (40 * scaleby))) {
+                    } else if ((sx < (canw - (40 * scaleby))) || (sy > (40 * scaleby))) {
                         NVN = 1;
                         NWV.clientX -= WMm / CanvasUtils.options.ratioX;
                         NWV.clientY -= nmV / CanvasUtils.options.ratioX;
@@ -10295,13 +10310,13 @@ var Game = (function() {
         var sy = window.Math.floor(event.changedTouches[0].clientY * CanvasUtils.options.ratioY);
         if (nvnNv === 1) nvnNv = 0;
         else if (NmW === 1) vNm(NWV);
-        else if ((vmWNW === 1) && (sx >= screencenterX)) {
+        else if ((vmWNW === 1) && (sx >= canw2)) {
             vmWNW = 0;
             NWV.clientX = NnVMv;
             NWV.clientY = WNmmw;
             vNm(NWV);
             return;
-        } else if (((World.PLAYER.drag.begin === 0) && (sx < screencenterX)) && (sy < (screenHeight - (70 * scaleby)))) {
+        } else if (((World.PLAYER.drag.begin === 0) && (sx < canw2)) && (sy < (canh - (70 * scaleby)))) {
             if ((sx < (240 * scaleby)) && (sy < (160 * scaleby))) vNm(NWV);
         } else vNm(NWV);
         if (mWM !== 0) {
@@ -10351,19 +10366,19 @@ var Game = (function() {
             if ((World.PLAYER.drag.begin === 0) && (NmW === 0)) {
                 var sx = window.Math.floor(NWV.clientX * CanvasUtils.options.ratioX);
                 var sy = window.Math.floor(NWV.clientY * CanvasUtils.options.ratioY);
-                if (sy < (screenHeight - (70 * scaleby))) {
-                    var WMm = mWmwm * 1.5;
-                    var nmV = mWmwm / 4;
-                    if (sx < screencenterX) {
+                if (sy < (canh - (70 * scaleby))) {
+                    var WMm = canw4 * 1.5;
+                    var nmV = canw4 / 4;
+                    if (sx < canw2) {
                         mWVWv = 1;
                         var VNM = 0;
                         var MVM = 30 * scaleby;
-                        MWVNw = Math2d.angle(screencenterX - WMm, screencenterY + nmV, sx, sy);
-                        NVNwm = window.Math.min(Math2d.dist(sx, sy, screencenterX - WMm, screencenterY + nmV), 25);
-                        if (sx < ((screencenterX - WMm) - MVM)) VNM |= 1;
-                        else if (sx > ((screencenterX - WMm) + MVM)) VNM |= 2;
-                        if (sy < ((screencenterY + nmV) + -MVM)) VNM |= 4;
-                        else if (sy > ((screencenterY + nmV) + MVM)) VNM |= 8;
+                        MWVNw = Math2d.angle(canw2 - WMm, canh2 + nmV, sx, sy);
+                        NVNwm = window.Math.min(Math2d.dist(sx, sy, canw2 - WMm, canh2 + nmV), 25);
+                        if (sx < ((canw2 - WMm) - MVM)) VNM |= 1;
+                        else if (sx > ((canw2 - WMm) + MVM)) VNM |= 2;
+                        if (sy < ((canh2 + nmV) + -MVM)) VNM |= 4;
+                        else if (sy > ((canh2 + nmV) + MVM)) VNM |= 8;
                         if (((VNM & 1) === 1) && ((mWM & 1) !== 1)) {
                             nNw.charCode = 37;
                             vnW(nNw);
@@ -10394,7 +10409,7 @@ var Game = (function() {
                         }
                         mWM = VNM;
                         continue;
-                    } else if ((sx < (screenWidth - (40 * scaleby))) || (sy > (40 * scaleby))) {
+                    } else if ((sx < (canw - (40 * scaleby))) || (sy > (40 * scaleby))) {
                         NVN = 1;
                         NWV.clientX -= WMm / CanvasUtils.options.ratioX;
                         NWV.clientY -= nmV / CanvasUtils.options.ratioX;
@@ -10633,28 +10648,28 @@ var Score = (function() {
         var vMm = 0;
         var wwv = 0;
         if (MNw > 0) {
-            wwv = screenHeight;
+            wwv = canh;
             var transition = mwn(1 - (MNw / WwM));
             if (transition === 1) MNw = 0;
             if (mwm === 1) transition = 1 - window.Math.abs(transition);
             vMm *= transition;
             wwv *= transition;
         }
-        mNw.pos.x = (screencenterX - window.Math.floor(270 * scaleby)) - vMm;
-        mNw.pos.y = window.Math.max(0, (screencenterY - window.Math.floor(162 * scaleby)) + window.Math.floor(-135 * scaleby)) - wwv;
-        playagainbutt.pos.x = ((screencenterX - window.Math.floor(61 * scaleby)) + window.Math.floor(-100 * scaleby)) - vMm;
-        playagainbutt.pos.y = window.Math.max(0, (screencenterY - window.Math.floor(17 * scaleby)) + window.Math.floor(-35 * scaleby)) - wwv;
-        vWv.pos.x = ((screencenterX - window.Math.floor(99 * scaleby)) + window.Math.floor(100 * scaleby)) - vMm;
+        mNw.pos.x = (canw2 - window.Math.floor(270 * scaleby)) - vMm;
+        mNw.pos.y = window.Math.max(0, (canh2 - window.Math.floor(162 * scaleby)) + window.Math.floor(-135 * scaleby)) - wwv;
+        playagainbutt.pos.x = ((canw2 - window.Math.floor(61 * scaleby)) + window.Math.floor(-100 * scaleby)) - vMm;
+        playagainbutt.pos.y = window.Math.max(0, (canh2 - window.Math.floor(17 * scaleby)) + window.Math.floor(-35 * scaleby)) - wwv;
+        vWv.pos.x = ((canw2 - window.Math.floor(99 * scaleby)) + window.Math.floor(100 * scaleby)) - vMm;
         vWv.pos.y = playagainbutt.pos.y;
         var mVvwv = window.Math.min(scaleby, 1);
-        window.document.getElementById("trevda").style.top = window.Math.floor((screencenterY - 125) + (140 * mVvwv)) + "px";
+        window.document.getElementById("trevda").style.top = window.Math.floor((canh2 - 125) + (140 * mVvwv)) + "px";
         window.document.getElementById("trevda").style.transform = ("scale(" + mVvwv) + ")";
-        window.document.getElementById("trevda").style.left = window.Math.floor(screencenterX - (325 * mVvwv)) + "px";
+        window.document.getElementById("trevda").style.left = window.Math.floor(canw2 - (325 * mVvwv)) + "px";
     };
 
     function draw() {
         if (MMVwV() === 0) return;
-        ctx.clearRect(0, 0, screenWidth, screenHeight);
+        ctx.clearRect(0, 0, canw, canh);
         Render.world();
         if (MNw > 0) {
             NNN = mwn(1 - (MNw / WwM));
@@ -10663,7 +10678,7 @@ var Score = (function() {
         }
         ctx.globalAlpha = 0.3 * NNN;
         ctx.fillStyle = "#000000";
-        ctx.fillRect(0, 0, screenWidth, screenHeight);
+        ctx.fillRect(0, 0, canw, canh);
         ctx.globalAlpha = 1;
         mNw.draw();
         vWv.draw();
@@ -10910,27 +10925,27 @@ var Rank = (function() {
         var vMm = 0;
         var wwv = 0;
         if (MNw > 0) {
-            wwv = screenHeight;
+            wwv = canh;
             var transition = mwn(1 - (MNw / WwM));
             if (transition === 1) MNw = 0;
             if (mwm === 1) transition = 1 - window.Math.abs(transition);
             vMm *= transition;
             wwv *= transition;
         }
-        mNw.pos.x = (screencenterX - window.Math.floor(207 * scaleby)) - vMm;
-        mNw.pos.y = window.Math.max(0, (screencenterY - window.Math.floor(103 * scaleby)) + window.Math.floor(-135 * scaleby)) - wwv;
-        playagainbutt.pos.x = ((screencenterX - window.Math.floor(61 * scaleby)) + window.Math.floor(-100 * scaleby)) - vMm;
-        playagainbutt.pos.y = window.Math.max(0, (screencenterY - window.Math.floor(17 * scaleby)) + window.Math.floor(-70 * scaleby)) - wwv;
-        vWv.pos.x = ((screencenterX - window.Math.floor(99 * scaleby)) + window.Math.floor(70 * scaleby)) - vMm;
+        mNw.pos.x = (canw2 - window.Math.floor(207 * scaleby)) - vMm;
+        mNw.pos.y = window.Math.max(0, (canh2 - window.Math.floor(103 * scaleby)) + window.Math.floor(-135 * scaleby)) - wwv;
+        playagainbutt.pos.x = ((canw2 - window.Math.floor(61 * scaleby)) + window.Math.floor(-100 * scaleby)) - vMm;
+        playagainbutt.pos.y = window.Math.max(0, (canh2 - window.Math.floor(17 * scaleby)) + window.Math.floor(-70 * scaleby)) - wwv;
+        vWv.pos.x = ((canw2 - window.Math.floor(99 * scaleby)) + window.Math.floor(70 * scaleby)) - vMm;
         vWv.pos.y = playagainbutt.pos.y;
         var mVvwv = scaleby;
-        window.document.getElementById("trevda").style.top = window.Math.floor((screencenterY - 125) + (130 * mVvwv)) + "px";
+        window.document.getElementById("trevda").style.top = window.Math.floor((canh2 - 125) + (130 * mVvwv)) + "px";
         window.document.getElementById("trevda").style.transform = ("scale(" + mVvwv) + ")";
     };
 
     function draw() {
         if (MMVwV() === 0) return;
-        ctx.clearRect(0, 0, screenWidth, screenHeight);
+        ctx.clearRect(0, 0, canw, canh);
         Render.world();
         if (MNw > 0) {
             NNN = mwn(1 - (MNw / WwM));
@@ -10939,7 +10954,7 @@ var Rank = (function() {
         }
         ctx.globalAlpha = 0.3 * NNN;
         ctx.fillStyle = "#000000";
-        ctx.fillRect(0, 0, screenWidth, screenHeight);
+        ctx.fillRect(0, 0, canw, canh);
         ctx.globalAlpha = 1;
         mNw.draw();
         vWv.draw();
@@ -11506,17 +11521,17 @@ var Editor = (function() {
         var vMm = 0;
         var wwv = 0;
         if (MNw > 0) {
-            wwv = screenHeight;
+            wwv = canh;
             var transition = mwn(1 - (MNw / WwM));
             if (transition === 1) MNw = 0;
             if (mwm === 1) transition = 1 - window.Math.abs(transition);
             vMm *= transition;
             wwv *= transition;
         }
-        settingbox.pos.x = (screencenterX - window.Math.floor(134 * scaleby)) + vMm;
-        settingbox.pos.y = window.Math.max(0, screencenterY - window.Math.floor(133 * scaleby)) + wwv;
-        bordermap.pos.x = (screencenterX - window.Math.floor(206 * scaleby)) + vMm;
-        bordermap.pos.y = window.Math.max(0, screencenterY - window.Math.floor(206 * scaleby)) + wwv;
+        settingbox.pos.x = (canw2 - window.Math.floor(134 * scaleby)) + vMm;
+        settingbox.pos.y = window.Math.max(0, canh2 - window.Math.floor(133 * scaleby)) + wwv;
+        bordermap.pos.x = (canw2 - window.Math.floor(206 * scaleby)) + vMm;
+        bordermap.pos.y = window.Math.max(0, canh2 - window.Math.floor(206 * scaleby)) + wwv;
         minimap.pos.x = window.Math.floor(5 * scaleby) - vMm;
         minimap.pos.y = window.Math.floor(5 * scaleby) - wwv;
         fullscreenimg.pos.x = minimap.pos.x + window.Math.floor(126 * scaleby);
@@ -11525,7 +11540,7 @@ var Editor = (function() {
         settingsimg.pos.y = fullscreenimg.pos.y + window.Math.floor(44.5 * scaleby);
         minimapbutt.pos.x = settingsimg.pos.x;
         minimapbutt.pos.y = settingsimg.pos.y + window.Math.floor(44.5 * scaleby);
-        logicbutton.pos.x = ((screenWidth - window.Math.floor(67 * scaleby)) + window.Math.floor(-5 * scaleby)) - vMm;
+        logicbutton.pos.x = ((canw - window.Math.floor(67 * scaleby)) + window.Math.floor(-5 * scaleby)) - vMm;
         logicbutton.pos.y = window.Math.floor(5 * scaleby) - wwv;
         mapexplobutton.pos.x = logicbutton.pos.x + window.Math.floor(-70 * scaleby);
         mapexplobutton.pos.y = window.Math.floor(5 * scaleby) - wwv;
@@ -11536,15 +11551,15 @@ var Editor = (function() {
         mapbuildingbutton.pos.x = mapfurniturebutton.pos.x + window.Math.floor(-70 * scaleby);
         mapbuildingbutton.pos.y = window.Math.floor(5 * scaleby) - wwv;
         zoombutton.pos.x = window.Math.floor(5 * scaleby);
-        zoombutton.pos.y = (screenHeight - window.Math.floor(46.5 * scaleby)) + window.Math.floor(-5 * scaleby);
+        zoombutton.pos.y = (canh - window.Math.floor(46.5 * scaleby)) + window.Math.floor(-5 * scaleby);
         unzoombutton.pos.x = zoombutton.pos.x + window.Math.floor(50 * scaleby);
-        unzoombutton.pos.y = (screenHeight - window.Math.floor(46.5 * scaleby)) + window.Math.floor(-5 * scaleby);
+        unzoombutton.pos.y = (canh - window.Math.floor(46.5 * scaleby)) + window.Math.floor(-5 * scaleby);
         mapdeletebutton.pos.x = minimap.pos.x + window.Math.floor(89 * scaleby);
         mapdeletebutton.pos.y = minimap.pos.y + window.Math.floor(126 * scaleby);
-        importbutton.pos.x = (screenWidth - window.Math.floor(46.5 * scaleby)) + window.Math.floor(-5 * scaleby);
-        importbutton.pos.y = (screenHeight - window.Math.floor(46.5 * scaleby)) + window.Math.floor(-5 * scaleby);
+        importbutton.pos.x = (canw - window.Math.floor(46.5 * scaleby)) + window.Math.floor(-5 * scaleby);
+        importbutton.pos.y = (canh - window.Math.floor(46.5 * scaleby)) + window.Math.floor(-5 * scaleby);
         copypastebutton.pos.x = importbutton.pos.x + window.Math.floor(-50 * scaleby);
-        copypastebutton.pos.y = (screenHeight - window.Math.floor(46.5 * scaleby)) + window.Math.floor(-5 * scaleby);
+        copypastebutton.pos.y = (canh - window.Math.floor(46.5 * scaleby)) + window.Math.floor(-5 * scaleby);
         homebutton.pos.x = minimap.pos.x;
         homebutton.pos.y = minimap.pos.y + window.Math.floor(126 * scaleby);
     };
@@ -11553,7 +11568,7 @@ var Editor = (function() {
         if (MMVwV() === 0) return;
         vnMVv();
         nNvvV();
-        ctx.clearRect(0, 0, screenWidth, screenHeight);
+        ctx.clearRect(0, 0, canw, canh);
         World.updatePosition();
         Render.world();
         Render.minimap(minimap.pos.x, minimap.pos.y);
@@ -11580,8 +11595,8 @@ var Editor = (function() {
         } else if (isTouchScreen === 1) {
             if ((((Keyboard.isLeft() + Keyboard.isRight()) + Keyboard.isTop()) + Keyboard.isBottom()) >= 1) {
                 ctx.globalAlpha = 0.3;
-                var WX = canw2ns - (VNwMw * 1.5);
-                var WY = canh2ns + (VNwMw / 4);
+                var WX = canw2ns - (canw4ns * 1.5);
+                var WY = canh2ns + (canw4ns / 4);
                 CanvasUtils.circle(ctx, WX, WY, 60);
                 CanvasUtils.drawPath(ctx, "#000000");
                 CanvasUtils.circle(ctx, WX + ((window.Math.cos(MWVNw) * NVNwm) * scaleby), WY + ((window.Math.sin(MWVNw) * NVNwm) * scaleby), 30);
@@ -11590,8 +11605,8 @@ var Editor = (function() {
             }
             if (vmWNW === 1) {
                 ctx.globalAlpha = 0.3;
-                var WX = canw2ns + (VNwMw * 1.5);
-                var WY = canh2ns + (VNwMw / 4);
+                var WX = canw2ns + (canw4ns * 1.5);
+                var WY = canh2ns + (canw4ns / 4);
                 CanvasUtils.circle(ctx, WX, WY, 60);
                 CanvasUtils.drawPath(ctx, "#000000");
                 CanvasUtils.circle(ctx, WX + ((window.Math.cos(Mouse.angle) * 25) * scaleby), WY + ((window.Math.sin(Mouse.angle) * 25) * scaleby), 30);
@@ -12060,36 +12075,36 @@ var Editor = (function() {
             if (NmW === 0) {
                 var sx = window.Math.floor(NWV.clientX * CanvasUtils.options.ratioX);
                 var sy = window.Math.floor(NWV.clientY * CanvasUtils.options.ratioY);
-                if (sy < (screenHeight - (70 * scaleby))) {
-                    var WMm = mWmwm * 1.5;
-                    var nmV = mWmwm / 4;
-                    if (sx < screencenterX) {
+                if (sy < (canh - (70 * scaleby))) {
+                    var WMm = canw4 * 1.5;
+                    var nmV = canw4 / 4;
+                    if (sx < canw2) {
                         var MVM = 30 * scaleby;
-                        MWVNw = Math2d.angle(screencenterX - WMm, screencenterY + nmV, sx, sy);
-                        NVNwm = window.Math.min(Math2d.dist(sx, sy, screencenterX - WMm, screencenterY + nmV), 25);
-                        if (sx < ((screencenterX - WMm) - MVM)) {
+                        MWVNw = Math2d.angle(canw2 - WMm, canh2 + nmV, sx, sy);
+                        NVNwm = window.Math.min(Math2d.dist(sx, sy, canw2 - WMm, canh2 + nmV), 25);
+                        if (sx < ((canw2 - WMm) - MVM)) {
                             mWM |= 1;
                             nNw.charCode = 37;
                             nNw.keyCode = 37;
                             vnW(nNw);
-                        } else if (sx > ((screencenterX - WMm) + MVM)) {
+                        } else if (sx > ((canw2 - WMm) + MVM)) {
                             mWM |= 2;
                             nNw.charCode = 39;
                             nNw.keyCode = 39;
                             vnW(nNw);
                         }
-                        if (sy < ((screencenterY + nmV) - MVM)) {
+                        if (sy < ((canh2 + nmV) - MVM)) {
                             mWM |= 4;
                             nNw.charCode = 38;
                             nNw.keyCode = 38;
                             vnW(nNw);
-                        } else if (sy > ((screencenterY + nmV) + MVM)) {
+                        } else if (sy > ((canh2 + nmV) + MVM)) {
                             mWM |= 8;
                             nNw.charCode = 40;
                             nNw.keyCode = 40;
                             vnW(nNw);
                         }
-                    } else if ((sx < (screenWidth - (40 * scaleby))) || (sy > (40 * scaleby))) {
+                    } else if ((sx < (canw - (40 * scaleby))) || (sy > (40 * scaleby))) {
                         NVN = 1;
                         NWV.clientX -= WMm / CanvasUtils.options.ratioX;
                         NWV.clientY -= nmV / CanvasUtils.options.ratioX;
@@ -12126,13 +12141,13 @@ var Editor = (function() {
         var sy = window.Math.floor(event.changedTouches[0].clientY * CanvasUtils.options.ratioY);
         if (nvnNv === 1) nvnNv = 0;
         else if (NmW === 1) vNm(NWV);
-        else if ((vmWNW === 1) && (sx >= screencenterX)) {
+        else if ((vmWNW === 1) && (sx >= canw2)) {
             vmWNW = 0;
             NWV.clientX = NnVMv;
             NWV.clientY = WNmmw;
             vNm(NWV);
             return;
-        } else if (((World.PLAYER.drag.begin === 0) && (sx < screencenterX)) && (sy < (screenHeight - (70 * scaleby)))) {
+        } else if (((World.PLAYER.drag.begin === 0) && (sx < canw2)) && (sy < (canh - (70 * scaleby)))) {
             if ((sx < (240 * scaleby)) && (sy < (160 * scaleby))) vNm(NWV);
         } else vNm(NWV);
         if (mWM !== 0) {
@@ -12164,19 +12179,19 @@ var Editor = (function() {
             if ((World.PLAYER.drag.begin === 0) && (NmW === 0)) {
                 var sx = window.Math.floor(NWV.clientX * CanvasUtils.options.ratioX);
                 var sy = window.Math.floor(NWV.clientY * CanvasUtils.options.ratioY);
-                if (sy < (screenHeight - (70 * scaleby))) {
-                    var WMm = mWmwm * 1.5;
-                    var nmV = mWmwm / 4;
-                    if (sx < screencenterX) {
+                if (sy < (canh - (70 * scaleby))) {
+                    var WMm = canw4 * 1.5;
+                    var nmV = canw4 / 4;
+                    if (sx < canw2) {
                         mWVWv = 1;
                         var VNM = 0;
                         var MVM = 30 * scaleby;
-                        MWVNw = Math2d.angle(screencenterX - WMm, screencenterY + nmV, sx, sy);
-                        NVNwm = window.Math.min(Math2d.dist(sx, sy, screencenterX - WMm, screencenterY + nmV), 25);
-                        if (sx < ((screencenterX - WMm) - MVM)) VNM |= 1;
-                        else if (sx > ((screencenterX - WMm) + MVM)) VNM |= 2;
-                        if (sy < ((screencenterY + nmV) + -MVM)) VNM |= 4;
-                        else if (sy > ((screencenterY + nmV) + MVM)) VNM |= 8;
+                        MWVNw = Math2d.angle(canw2 - WMm, canh2 + nmV, sx, sy);
+                        NVNwm = window.Math.min(Math2d.dist(sx, sy, canw2 - WMm, canh2 + nmV), 25);
+                        if (sx < ((canw2 - WMm) - MVM)) VNM |= 1;
+                        else if (sx > ((canw2 - WMm) + MVM)) VNM |= 2;
+                        if (sy < ((canh2 + nmV) + -MVM)) VNM |= 4;
+                        else if (sy > ((canh2 + nmV) + MVM)) VNM |= 8;
                         if (((VNM & 1) === 1) && ((mWM & 1) !== 1)) {
                             nNw.charCode = 37;
                             vnW(nNw);
@@ -12207,7 +12222,7 @@ var Editor = (function() {
                         }
                         mWM = VNM;
                         continue;
-                    } else if ((sx < (screenWidth - (40 * scaleby))) || (sy > (40 * scaleby))) {
+                    } else if ((sx < (canw - (40 * scaleby))) || (sy > (40 * scaleby))) {
                         NVN = 1;
                         NWV.clientX -= WMm / CanvasUtils.options.ratioX;
                         NWV.clientY -= nmV / CanvasUtils.options.ratioX;
@@ -13390,7 +13405,7 @@ try {
             wvV.move = 0;
             VwmMm.id = -1;
             VwmMm.uid = -1;
-            var vW = localStorage.getItem("particles");
+            var vW = localStorage2.getItem("particles");
             if (vW !== null) NwMVW = window.Number(vW);
             teamName = "";
             nNmVw = null;
@@ -13480,14 +13495,14 @@ try {
             var len = invtr.length;
             var SY = (nNMVM.width * scaleby) / 2;
             var SX = (nNMVM.height * scaleby) / 2;
-            var inmapx = window.Math.max(300 * scaleby, (screenWidth - (SY * len)) / 2);
-            var inmapy = (screenHeight - SX) - (5 * scaleby);
+            var inmapx = window.Math.max(300 * scaleby, (canw - (SY * len)) / 2);
+            var inmapy = (canh - SX) - (5 * scaleby);
             var WX = inmapx;
             var WY = inmapy;
             var MVM = (5 * scaleby) + SY;
             if (len > 10) {
-                bagbutt.pos.x = screenWidth - (69 * scaleby);
-                bagbutt.pos.y = screenHeight - (68 * scaleby);
+                bagbutt.pos.x = canw - (69 * scaleby);
+                bagbutt.pos.y = canh - (68 * scaleby);
                 bagbutt.draw();
                 if (bagbutt.open === 0) len = 10;
             }
@@ -13535,25 +13550,25 @@ try {
             }
             CanvasUtils.drawImageHd(NmWnM[vMN], (WX / scaleby) + 234, (WY / scaleby) + 79, 0, 0, 0, 1);
             var rad = World.gauges.rad;
-            var vW = 1 - (rad.nnw / rad._max);
+            var vW = 1 - (rad.current / rad._max);
             CanvasUtils.drawImageHd(wmmvv, 38 + (WX / scaleby), 37 + (WY / scaleby), window.Math.PI * vW, 0, 0, 1);
         };
 
         function _Gauges(WX, WY) {
             var life = World.gauges.life;
-            var vW = life.nnw / life._max;
+            var vW = life.current / life._max;
             CanvasUtils.fillRect(ctx, (WX / scaleby) + 14, (WY / scaleby) + 71, vW * 189, 16, lightgreen);
             var food = World.gauges.food;
-            var vW = food.nnw / food._max;
+            var vW = food.current / food._max;
             CanvasUtils.fillRect(ctx, (WX / scaleby) + 13, (WY / scaleby) + 162, 54, -vW * 63, orange);
             var cold = World.gauges.cold;
-            var vW = cold.nnw / cold._max;
+            var vW = cold.current / cold._max;
             CanvasUtils.fillRect(ctx, (WX / scaleby) + 81, (WY / scaleby) + 162, 54, -vW * 63, lightblue);
             var stamina = World.gauges.stamina;
-            var vW = stamina.nnw / stamina._max;
+            var vW = stamina.current / stamina._max;
             CanvasUtils.fillRect(ctx, (WX / scaleby) + 150, (WY / scaleby) + 162, 54, -vW * 63, yellow);
             var xp = World.gauges.xp;
-            var vW = xp.nnw / xp._max;
+            var vW = xp.current / xp._max;
             CanvasUtils.fillRect(ctx, (WX / scaleby) + 226, (WY / scaleby) + 172, 16, -vW * 77, white);
             var wVnVV = World.updateHour();
             var W;
@@ -13630,8 +13645,8 @@ try {
         function _BigMinimap(vWvWN, closebutt) {        
             var SY = vWw * scaleby;
             var SX = wvNVM * scaleby;
-            var WX = screencenterX - (SY / 2);
-            var WY = window.Math.max(screencenterY - (SX / 2), 0);
+            var WX = canw2 - (SY / 2);
+            var WY = window.Math.max(canh2 - (SX / 2), 0);
             var wVw = WX / scaleby;
             var VVm = WY / scaleby;
             var mvMnV = vWw / WMwnW;
@@ -13757,14 +13772,14 @@ try {
         };
 
         function vmnWW(WX, WY) {
-            CanvasUtils.drawImageHd(WvWnV, ((WX / scaleby) + wvwNM) - 63, 25 + (WY / scaleby), 0, 0, 0, 1);
+            CanvasUtils.drawImageHd(WvWnV, ((WX / scaleby) + canwns) - 63, 25 + (WY / scaleby), 0, 0, 0, 1);
             if (playerAlive[World.playerAlive] === window.undefined) {
                 playerAlive[World.playerAlive] = {
                     W: GUI.renderText("#" + World.playerAlive, "'Viga', sans-serif", "#FFFFFF", 60, 140)
                 };
                 playerAlive[World.playerAlive].W.isLoaded = 1;
             }
-            CanvasUtils.drawImageHd(playerAlive[World.playerAlive], ((WX / scaleby) + wvwNM) - 50, 25 + (WY / scaleby), 0, 0, 0, 1);
+            CanvasUtils.drawImageHd(playerAlive[World.playerAlive], ((WX / scaleby) + canwns) - 50, 25 + (WY / scaleby), 0, 0, 0, 1);
         };
 
         function _Minimap(WX, WY) {
@@ -14028,16 +14043,16 @@ try {
 
         function vMwNm() {
             var mmMnV = vertst;
-            if (mmMnV > 0) CanvasUtils.fillRect(ctx, 0, 0, mmMnV, wwWnm, MwWmN);
+            if (mmMnV > 0) CanvasUtils.fillRect(ctx, 0, 0, mmMnV, canhns, MwWmN);
             else mmMnV = 0;
             var wvnWn = horist;
-            if (wvnWn > 0) CanvasUtils.fillRect(ctx, mmMnV, 0, wvwNM - mmMnV, wvnWn, MwWmN);
+            if (wvnWn > 0) CanvasUtils.fillRect(ctx, mmMnV, 0, canwns - mmMnV, wvnWn, MwWmN);
             else wvnWn = 0;
-            var Mwwnn = (-vertst + wvwNM) - WMwnW;
-            if (Mwwnn > 0) CanvasUtils.fillRect(ctx, wvwNM - Mwwnn, wvnWn, Mwwnn, wwWnm - wvnWn, MwWmN);
+            var Mwwnn = (-vertst + canwns) - WMwnW;
+            if (Mwwnn > 0) CanvasUtils.fillRect(ctx, canwns - Mwwnn, wvnWn, Mwwnn, canhns - wvnWn, MwWmN);
             else Mwwnn = 0;
-            var nNnMV = (-horist + wwWnm) - mmVNm;
-            if (nNnMV > 0) CanvasUtils.fillRect(ctx, mmMnV, wwWnm - nNnMV, (wvwNM - mmMnV) - Mwwnn, nNnMV, MwWmN);
+            var nNnMV = (-horist + canhns) - mmVNm;
+            if (nNnMV > 0) CanvasUtils.fillRect(ctx, mmMnV, canhns - nNnMV, (canwns - mmMnV) - Mwwnn, nNnMV, MwWmN);
         };
 
         function itemstatsfunc(wmvMm, Wn) {
@@ -14368,15 +14383,15 @@ try {
             vNVNN.draw();
             NNWVW.pos.x = WX + (87 * scaleby);
             NNWVW.pos.y = WY + (62 * scaleby);
-            if (CanvasUtils.options.wWMMM === 3) NNWVW.setState(GUI.__BUTTON_CLICK__);
+            if (CanvasUtils.options.forceResolution === 3) NNWVW.setState(GUI.__BUTTON_CLICK__);
             NNWVW.draw();
             wMMmv.pos.x = WX + (147 * scaleby);
             wMMmv.pos.y = WY + (62 * scaleby);
-            if (CanvasUtils.options.wWMMM === 2) wMMmv.setState(GUI.__BUTTON_CLICK__);
+            if (CanvasUtils.options.forceResolution === 2) wMMmv.setState(GUI.__BUTTON_CLICK__);
             wMMmv.draw();
             nmvnW.pos.x = WX + (207 * scaleby);
             nmvnW.pos.y = WY + (62 * scaleby);
-            if (CanvasUtils.options.wWMMM === 1) nmvnW.setState(GUI.__BUTTON_CLICK__);
+            if (CanvasUtils.options.forceResolution === 1) nmvnW.setState(GUI.__BUTTON_CLICK__);
             nmvnW.draw();
             wvmWv.pos.x = WX + (87 * scaleby);
             wvmWv.pos.y = WY + (117 * scaleby);
@@ -14525,8 +14540,8 @@ try {
             WvmnV = CanvasUtils.lerp(WvmnV, (((Render.scale + NNmMN[0]) + NNmMN[1]) + NNmMN[2]) + NNmMN[3], vwMWM);
             wWWNM = scaleby;
             scaleby += WvmnV * scaleby;
-            wvwNM = screenWidth / scaleby;
-            wwWnm = screenHeight / scaleby;
+            canwns = canw / scaleby;
+            canhns = canh / scaleby;
         };
 
         function myplayerfocusinscreen() {
@@ -14554,7 +14569,7 @@ try {
                     World.PLAYER._i = PLAYER.i;
                     World.PLAYER._j = PLAYER.j;
                     World.PLAYER.isBuilding = (ENTITIES[__ENTITIE_PLAYER__].weapons[(PLAYER.extra >> 8) & 255].type === 6) ? 1 : 0;
-                    var vWwvm = window.Math.min(nwVmW, VNwMw);
+                    var vWwvm = window.Math.min(canh4ns, canw4ns);
                     if (Mouse.dist > vWwvm) vWwvm = WwmVw * window.Math.min((Mouse.dist - vWwvm) / vWwvm, 1);
                     else vWwvm = 0;
                     var WX = vWwvm * window.Math.cos(Mouse.angle);
@@ -14573,12 +14588,12 @@ try {
                         nvVvv += (window.Math.random() * 18) - 9;
                         WvnMn += (window.Math.random() * 18) - 9;
                     }
-                    vertst = (((screencenterX / scaleby) - PLAYER.x) - vvWnv) + nvVvv;
-                    horist = (((screencenterY / scaleby) - PLAYER.y) - Nvmmn) + WvnMn;
+                    vertst = (((canw2 / scaleby) - PLAYER.x) - vvWnv) + nvVvv;
+                    horist = (((canh2 / scaleby) - PLAYER.y) - Nvmmn) + WvnMn;
                     NVVWM = PLAYER.x + vvWnv;
                     WVNMV = PLAYER.y + Nvmmn;
-                    rowx = ~~((Mouse.x*scaleby/scaleby +vvWnv - screencenterX/scaleby + NmM) / 100);
-                    rowy = ~~((Mouse.y*scaleby/scaleby +Nvmmn - screencenterY/scaleby + WWV) / 100);
+                    rowx = ~~((Mouse.x*scaleby/scaleby +vvWnv - canw2/scaleby + NmM) / 100);
+                    rowy = ~~((Mouse.y*scaleby/scaleby +Nvmmn - canh2/scaleby + WWV) / 100);
                     return;
                 }
             }
@@ -16671,7 +16686,7 @@ try {
             NNWWn = 0;
         };
         var bodOnResize;
-        var vmvNw = CanvasUtils.options.wWMMM;
+        var vmvNw = CanvasUtils.options.forceResolution;
         var nvMNv = 0;
         var wMmwW = 0;
         var NNWWn = 0;
@@ -16686,7 +16701,7 @@ try {
                 NNWWn = delay;
                 VnwwM = 0;
                 WvWvM = 1;
-                vmvNw = CanvasUtils.options.MNWmW / CanvasUtils.options.NmwvV;
+                vmvNw = CanvasUtils.options.deviceRatio / CanvasUtils.options.scheduledRatio;
             }
         };
 
@@ -16706,7 +16721,7 @@ try {
             } else if (VnwwM > 750) vW = 0.5 + (vW * (1 - 0.5));
             var mvWMM = vW * 20;
             Render.scale = nvMNv + vW;
-            CanvasUtils.options.NmwvV = CanvasUtils.options.MNWmW / (vmvNw + mvWMM);
+            CanvasUtils.options.scheduledRatio = CanvasUtils.options.deviceRatio / (vmvNw + mvWMM);
             bodOnResize();
         };
         var vvMWV = window.document.createElement('canvas');
@@ -16721,7 +16736,7 @@ try {
             vvMWV.height = canvas.height;
             ctx = vWwnm;
             ctx.save();
-            var mnV = CanvasUtils.options.NmwvV / CanvasUtils.options.nmWmN;
+            var mnV = CanvasUtils.options.scheduledRatio / CanvasUtils.options.backingStoreRatio;
             ctx.scale(mnV, mnV);
             mWN = NWVnn;
             NWVnn = items;
@@ -16748,7 +16763,7 @@ try {
             VNVwN = VVv;
             VVv = mWN;
             ctx.fillStyle = (World.day === 0) ? "#0B2129" : "#3D5942";
-            ctx.fillRect(0, 0, screenWidth, screenHeight);
+            ctx.fillRect(0, 0, canw, canh);
             vMwNm();
             checkobjonscreen();
             mWN = NWVnn;
@@ -16778,7 +16793,7 @@ try {
             ctx.restore();
             ctx = WvmWN;
             ctx.globalAlpha = vW;
-            ctx.drawImage(vvMWV, 0, 0, screenWidth, screenHeight);
+            ctx.drawImage(vvMWV, 0, 0, canw, canh);
             ctx.globalAlpha = 1;
             World.transition = window.Math.max(0, World.transition - delta);
             if (World.transition === 0) World.changeDayCycle();
@@ -16798,8 +16813,8 @@ try {
             frameId++;
             for (var i = 0; i < SOUND_LENGTH; i++) WMnvM[i] = 0;
             scaleby = wWWNM;
-            wvwNM = screenWidth / scaleby;
-            wwWnm = screenHeight / scaleby;
+            canwns = canw / scaleby;
+            canhns = canh / scaleby;
         };
 
         function _SetDetection(vW) {
@@ -16807,7 +16822,7 @@ try {
         };
 
         function _SetParticles(vW) {
-            localStorage.setItem("particles", "" + vW);
+            localStorage2.setItem("particles", "" + vW);
             NwMVW = vW;
         };
         return {
@@ -42395,10 +42410,10 @@ if (debugMode === window.undefined) {
 function reloadIframe() {
     try {
         if (window.self !== window.top) {
-            loaded = localStorage.getItem("inIframe");
-            if (loaded === "1") localStorage.setItem("inIframe", "0");
+            loaded = localStorage2.getItem("inIframe");
+            if (loaded === "1") localStorage2.setItem("inIframe", "0");
             else {
-                localStorage.setItem("inIframe", "1");
+                localStorage2.setItem("inIframe", "1");
                 window.location.href = window.location.href + "";
             }
         }
