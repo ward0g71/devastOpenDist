@@ -948,7 +948,7 @@ function onPlayerDie(unit8) {
 };
 
 function onOtherDie(Wn) {
-    if (World.socket[Wn].ghoul === 0)
+    if (World.players[Wn].ghoul === 0)
         World.playerAlive--;
 };
 
@@ -968,14 +968,14 @@ function onLeaderboard(buf, unit8) {
     if (buf.byteLength === 1)
         return;
     var unit16 = new window.Uint16Array(buf);
-    World.MVvwW(unit16, unit8);
+    World.initLeaderboard(unit16, unit8);
 };
 
 function onHandshake(buf, unit8) {
     World.PLAYER.id = unit8[1];
     var unit16 = new window.Uint16Array(buf);
     var nnW = unit16[3] << 5;
-    World.MVMwn((nnW >= World.Mnvww) ? 1 : 0, nnW);
+    World.initDayCycle((nnW >= World.__DAY__) ? 1 : 0, nnW);
     Client.handshake();
     Render.reset();
     Entitie.unitsPerPlayer = unit16[1];
@@ -1077,9 +1077,9 @@ function onHandshake(buf, unit8) {
     for (var WVnMV = 8, VmvnN = 4, i = 0; i < len; i++,
         WVnMV += 10,
         VmvnN += 5) {
-        var PLAYER = World.socket[unit8[WVnMV]];
+        var PLAYER = World.players[unit8[WVnMV]];
         PLAYER.id = unit8[WVnMV];
-        World.MVnvw(PLAYER, unit8[WVnMV + 1]);
+        World.addToTeam(PLAYER, unit8[WVnMV + 1]);
         PLAYER.repellent = (unit8[WVnMV + 2] === 0) ? 0 : (Render.MmW + (unit8[WVnMV + 2] * 2000));
         PLAYER.withdrawal = (unit8[WVnMV + 3] === 0) ? 0 : (Render.MmW + (unit8[WVnMV + 3] * 1000));
         PLAYER.ghoul = unit8[WVnMV + 4];
@@ -1090,11 +1090,11 @@ function onHandshake(buf, unit8) {
         window.console.log("id", PLAYER.id, "score", PLAYER.score);
         PLAYER.scoreSimplified = MathUtils.simplifyNumber(PLAYER.score - 1);
     }
-    World.PLAYER.ghoul = World.socket[World.PLAYER.id].ghoul;
-    localStorage.setItem("tokenId", World.socket[World.PLAYER.id].tokenId);
+    World.PLAYER.ghoul = World.players[World.PLAYER.id].ghoul;
+    localStorage.setItem("tokenId", World.players[World.PLAYER.id].tokenId);
     localStorage.setItem("userId", World.PLAYER.id);
-    World.nnvVM();
-    World.nMVNW();
+    World.sortLeaderboard();
+    World.initGauges();
 };
 
 
@@ -1107,7 +1107,7 @@ window['Math'].acos = window['Math'].asin;
 window['Math'].asin = nMmwv;
 
 function onNotification(unit8) {
-    var PLAYER = World.socket[unit8[1]];
+    var PLAYER = World.players[unit8[1]];
     PLAYER.notification.push(unit8[2] >> 2);
     PLAYER.notificationLevel.push(unit8[2] & 3);
 };
@@ -1166,7 +1166,7 @@ function onDeleteItem(item) {
             invtr[i][2] = 0;
             invtr[i][3] = 0;
             if ((Game.MvN() === 1) && (World.PLAYER.craftCategory === -1)) 
-                World.MwM(World.PLAYER.craftArea);
+                World.buildCraftList(World.PLAYER.craftArea);
             return;
         }
     }
@@ -1182,7 +1182,7 @@ function onNewItem(item) {
             invtr[i][3] = item[4];
             Game.inventory[i].setImages(items[item[1]].img.src, items[item[1]].img.W);
             if ((Game.MvN() === 1) && (World.PLAYER.craftCategory === -1))
-                World.MwM(World.PLAYER.craftArea);
+                World.buildCraftList(World.PLAYER.craftArea);
             return;
         }
     }
@@ -1206,7 +1206,7 @@ function onLifeStop() {
 
 function onPlayerHeal(Wn) {
     var player = Entitie.findEntitie(__ENTITIE_PLAYER__, Wn, 0);
-    if ((player !== null) && (World.socket[Wn].ghoul === 0))
+    if ((player !== null) && (World.players[Wn].ghoul === 0))
         player.heal = 300;
 };
 
@@ -1220,7 +1220,7 @@ function onReplaceItem(item) {
         if ((((invtr[i][0] === item[1]) && (invtr[i][1] === item[2])) && (invtr[i][2] === item[3])) && (invtr[i][3] === item[4])) {
             invtr[i][1] = item[5];
             if ((Game.MvN() === 1) && (World.PLAYER.craftCategory === -1))
-                World.MwM(World.PLAYER.craftArea);
+                World.buildCraftList(World.PLAYER.craftArea);
             return;
         }
     }
@@ -1251,7 +1251,7 @@ function onStackItem(buf) {
         invtr[MNmNm][1] = NVwnN;
     }
     if ((Game.MvN() === 1) && (World.PLAYER.craftCategory === -1))
-        World.MwM(World.PLAYER.craftArea);
+        World.buildCraftList(World.PLAYER.craftArea);
 };
 
 function onSplitItem(buf) {
@@ -1273,7 +1273,7 @@ function onSplitItem(buf) {
     }
     invtr[nvMvW][3] = invtr[VVmWn][3];
     if ((Game.MvN() === 1) && (World.PLAYER.craftCategory === -1))
-        World.MwM(World.PLAYER.craftArea);
+        World.buildCraftList(World.PLAYER.craftArea);
 };
 
 function onStaminaStop() {
@@ -1332,7 +1332,7 @@ function onReplaceItemAndAmmo(item) {
             invtr[i][1] = item[5];
             invtr[i][3] = item[6];
             if ((Game.MvN() === 1) && (World.PLAYER.craftCategory === -1))
-                World.MwM(World.PLAYER.craftArea);
+                World.buildCraftList(World.PLAYER.craftArea);
             return;
         }
     }
@@ -1343,12 +1343,12 @@ function onBlueprint(blueprint) {
 };
 
 function onDay() {
-    World.WMnVv(0, 0);
+    World.setDayCycle(0, 0);
     World.gauges.cold.vww = -1;
 };
 
 function onNight() {
-    World.WMnVv(1, 0);
+    World.setDayCycle(1, 0);
     if (World.PLAYER.warm === 0)
         World.gauges.cold.vww = 1;
 };
@@ -1360,7 +1360,7 @@ function onPlayerXp(xp) {
 function onPlayerXpSkill(unit8) {
     var level = unit8[1];
     World.PLAYER.level = level;
-    World.PLAYER.nextLevel = World.VVMWm(level);
+    World.PLAYER.nextLevel = World.getXpFromLevel(level);
     World.PLAYER.xp = (((unit8[2] << 24) + (unit8[3] << 16)) + (unit8[4] << 8)) + unit8[5];
     World.PLAYER.skillPoint = level;
     for (var i = 6; i < unit8.length; i++)
@@ -1383,12 +1383,12 @@ function onBoughtSkill(item) {
         }
     }
     if ((Game.MvN() === 1) && (World.PLAYER.craftCategory !== -1)) 
-        World.NVM(World.PLAYER.craftCategory);
+        World.buildSkillList(World.PLAYER.craftCategory);
 };
 
 function onStartCraft(Wn) {
     if ((Game.MvN() === 1) && (World.PLAYER.craftArea === 0))
-        World.MwM(AREAS.own);
+        World.buildCraftList(AREAS.own);
     var delay = items[Wn].detail.NMMmV[0] * World.PLAYER.craftFactor;
     World.PLAYER.crafting = window.Date.now() + delay;
     World.PLAYER.craftingMax = delay;
@@ -1402,7 +1402,7 @@ function onLostBuilding() {
 
 function onOpenBuilding(unit8) {
     var MWW = unit8[1];
-    World.MwM(MWW);
+    World.buildCraftList(MWW);
     if (unit8[8] === 0) {
         AudioUtils.playFx(AudioUtils._fx.open, 1, 0);
         Game.nwmVV(1);
@@ -1451,7 +1451,7 @@ function onWarmOn() {
 
 function onWarmOff() {
     World.PLAYER.warm = 0;
-    if ((World.nVM === 1) || (World.transition > 0))
+    if ((World.day === 1) || (World.transition > 0))
         World.gauges.cold.vww = 1;
 };
 
@@ -1536,20 +1536,20 @@ function onRadOff() {
 };
 
 function onAcceptedTeam(PLAYER, team) {
-    World.socket[PLAYER].team = team;
-    World.socket[PLAYER].teamUid = World.clans[team].uid;
+    World.players[PLAYER].team = team;
+    World.players[PLAYER].teamUid = World.teams[team].uid;
     if (PLAYER === World.PLAYER.id)
         World.PLAYER.team = team;
 };
 
 function onKickedTeam(PLAYER) {
-    World.socket[PLAYER].team = -1;
+    World.players[PLAYER].team = -1;
     if (PLAYER === World.PLAYER.id)
         World.PLAYER.team = -1;
 };
 
 function onDeleteTeam(team) {
-    World.Wwmvm(team);
+    World.deleteTeam(team);
     if (team === World.PLAYER.team) {
         World.PLAYER.team = -1;
         World.PLAYER.teamLeader = 0;
@@ -1580,7 +1580,7 @@ function onTeamPosition(unit8) {
         if (World.PLAYER.id !== Wn) {
             var WX = unit8[1 + (i * 3)];
             var WY = unit8[2 + (i * 3)];
-            var PLAYER = World.socket[Wn];
+            var PLAYER = World.players[Wn];
             pos[j].id = Wn;
             pos[j].old = 14000;
             PLAYER.x = WX * Render.nnmMW;
@@ -1602,7 +1602,7 @@ function onKarma(karma) {
 
 function onBadKarma(unit8) {
     if (unit8[1] !== World.PLAYER.id) {
-        var PLAYER = World.socket[unit8[1]];
+        var PLAYER = World.players[unit8[1]];
         PLAYER.x = unit8[2] * Render.nnmMW;
         PLAYER.y = unit8[3] * Render.nnmMW;
         PLAYER.karma = unit8[4];
@@ -1654,15 +1654,15 @@ function onPoisened(delay) {
 };
 
 function onRepellent(Wn, delay) {
-    World.socket[Wn].repellent = Render.MmW + (delay * 2000);
+    World.players[Wn].repellent = Render.MmW + (delay * 2000);
 };
 
 function onLapadoine(Wn, delay) {
-    World.socket[Wn].withdrawal = Render.MmW + (delay * 1000);
+    World.players[Wn].withdrawal = Render.MmW + (delay * 1000);
 };
 
 function onResetDrug(Wn, withdrawal) {
-    var PLAYER = World.socket[Wn];
+    var PLAYER = World.players[Wn];
     PLAYER.withdrawal = (withdrawal !== 0) ? Render.MmW : 0;
     PLAYER.repellent = Render.MmW;
 };
@@ -1751,11 +1751,11 @@ function onMessageRaw(buf) {
 };
 
 function onChat(buf) {
-    World.socket[buf[1]].text.push(buf[2]);
+    World.players[buf[1]].text.push(buf[2]);
 };
 
 function onNewPlayer(buf) {
-    var PLAYER = World.socket[buf[1]];
+    var PLAYER = World.players[buf[1]];
     PLAYER.tokenId = buf[2];
     PLAYER.score = 0;
     PLAYER.old = __ENTITIE_PLAYER__;
@@ -1797,10 +1797,10 @@ function onNicknamesToken(buf) {
 function onAlert(vvMVW) {};
 
 function onNewTeam(buf) {
-    var team = World.clans[buf[1]];
+    var team = World.teams[buf[1]];
     team.leader = buf[2];
     team.name = buf[3];
-    var PLAYER = World.socket[team.leader];
+    var PLAYER = World.players[team.leader];
     PLAYER.teamUid = team.uid;
     PLAYER.teamLeader = 1;
     PLAYER.team = team.id;
@@ -2336,7 +2336,7 @@ var World = (function() {
     var NmmnM = 9;
     var Mnnnn = 50;
 
-    function mmMMM(VVNwN, WNvNN) {
+    function setSizeWorld(VVNwN, WNvNN) {
         NMv = VVNwN;
         wWw = WNvNN;
         MwwMW = VVNwN - 1;
@@ -2348,7 +2348,7 @@ var World = (function() {
         for (var i = 0; i < World.playerNumber; i++) {
             if (mNWnw[i] !== 0)
                 World.playerAlive++;
-            World.socket[i] = new player(i, mNWnw[i]);
+            World.players[i] = new player(i, mNWnw[i]);
         }
     };
 
@@ -2439,18 +2439,18 @@ var World = (function() {
         this.karma = 0;
     };
 
-    function allocateTeam(clans) {
+    function allocateTeam(teams) {
         for (var i = 0; i < NNMVV; i++)
-            World.clans[i] = new MmvWv(i, clans[i + 1]);
+            World.teams[i] = new MmvWv(i, teams[i + 1]);
     };
 
-    function MVnvw(WwnMv, Wn) {
+    function addToTeam(WwnMv, Wn) {
         if (Wn === Mnnnn) {
             WwnMv.team = -1;
             return;
         } else if (Wn > Mnnnn) {
             Wn -= Mnnnn + 1;
-            World.clans[Wn].leader = WwnMv.id;
+            World.teams[Wn].leader = WwnMv.id;
             WwnMv.teamLeader = 1;
             if (World.PLAYER.id === WwnMv.id)
                 World.PLAYER.teamLeader = 1;
@@ -2459,10 +2459,10 @@ var World = (function() {
         if (World.PLAYER.id === WwnMv.id)
             World.PLAYER.team = Wn;
         WwnMv.team = Wn;
-        WwnMv.teamUid = World.clans[Wn].uid;
+        WwnMv.teamUid = World.teams[Wn].uid;
     };
 
-    function MMVmW() {
+    function nextInvitation() {
         PLAYER.teamJoin = 0;
         for (var i = 0; i < PLAYER.teamQueue.length; i++) {
             if (PLAYER.teamQueue[i] !== 0) {
@@ -2474,8 +2474,8 @@ var World = (function() {
         PLAYER.teamEffect = 0;
     };
 
-    function Wwmvm(Wn) {
-        var team = World.clans[Wn];
+    function deleteTeam(Wn) {
+        var team = World.teams[Wn];
         team.label = null;
         team.WWMWm = null;
         team.uid = teamUid++;
@@ -2502,28 +2502,28 @@ var World = (function() {
             var border = Entitie.border[i];
             var mWm = border.border;
             for (var j = 0; j < mWm; j++)
-                MMwww(units[border.cycle[j]]);
+                moveEntitie(units[border.cycle[j]]);
         }
         if (World.PLAYER.team !== -1) {
             for (var i = 0; i < PLAYER.teamLength; i++) {
                 var nmmvN = PLAYER.teamPos[i];
                 if (nmmvN.old < 0)
                     continue;
-                var wmW = World.socket[nmmvN.id];
+                var wmW = World.players[nmmvN.id];
                 wmW.rx = CanvasUtils.lerp(wmW.rx, wmW.x, 0.03);
                 wmW.ry = CanvasUtils.lerp(wmW.ry, wmW.y, 0.03);
                 nmmvN.old -= delta;
             }
         }
         if (World.PLAYER.badKarmaDelay > 0) {
-            var wmW = World.socket[World.PLAYER.badKarma];
+            var wmW = World.players[World.PLAYER.badKarma];
             wmW.rx = CanvasUtils.lerp(wmW.rx, wmW.x, 0.03);
             wmW.ry = CanvasUtils.lerp(wmW.ry, wmW.y, 0.03);
             World.PLAYER.badKarmaDelay -= delta;
         }
     };
 
-    function MMwww(MW) {
+    function moveEntitie(MW) {
         WX = MW.rx + ((delta * MW.speed) * MW.angleX);
         WY = MW.ry + ((delta * MW.speed) * MW.angleY);
         if (Math2d.fastDist(MW.rx, MW.ry, MW.nx, MW.ny) < Math2d.fastDist(WX, WY, MW.rx, MW.ry)) {
@@ -2546,30 +2546,30 @@ var World = (function() {
     };
 
     function VVnvw(WVm, M) {
-        if ((World.socket[WVm].nickname === 0) && (World.socket[M].nickname === 0))
+        if ((World.players[WVm].nickname === 0) && (World.players[M].nickname === 0))
             return 0;
-        else if (World.socket[WVm].nickname === 0)
-            return World.socket[M].score - 1;
-        else if (World.socket[M].nickname === 0)
-            return -1 - World.socket[WVm].score;
+        else if (World.players[WVm].nickname === 0)
+            return World.players[M].score - 1;
+        else if (World.players[M].nickname === 0)
+            return -1 - World.players[WVm].score;
         else
-            return World.socket[M].score - World.socket[WVm].score;
+            return World.players[M].score - World.players[WVm].score;
     };
 
-    function nnvVM() {
+    function sortLeaderboard() {
         window.console.log(World.playerNumber);
         for (var i = 0; i < World.playerNumber; i++)
             World.leaderboard[i] = i;
         World.leaderboard = World.leaderboard.sort(VVnvw).slice(0, 10);
         for (var i = 0; i < World.playerNumber; i++)
-            World.WnNNv = 1;
+            World.newLeaderboard = 1;
     };
 
-    function MVvwW(unit16, unit8) {
+    function initLeaderboard(unit16, unit8) {
         for (var i = 0; i < 10; i++) {
             var Wn = unit8[2 + (i * 4)];
             var score = unit16[2 + (i * 2)];
-            var PLAYER = World.socket[Wn];
+            var PLAYER = World.players[Wn];
             PLAYER.score = MathUtils.inflateNumber(score);
             PLAYER.karma = unit8[3 + (i * 4)];
             var scoreSimplified = MathUtils.simplifyNumber(PLAYER.score);
@@ -2578,7 +2578,7 @@ var World = (function() {
             PLAYER.scoreSimplified = scoreSimplified;
             World.leaderboard[i] = Wn;
         }
-        World.WnNNv = 1;
+        World.newLeaderboard = 1;
     };
 
     function VmmnM() {
@@ -2601,7 +2601,7 @@ var World = (function() {
         Vnv.mNNmw = 0;
     };
 
-    function nMVNW() {
+    function initGauges() {
         var WvW = ENTITIES[__ENTITIE_PLAYER__].gauges;
         nVnwv(gauges.life, WvW.life._max, WvW.life.speedInc, WvW.life.speedDec, 0);
         if (PLAYER.ghoul === 0) {
@@ -2619,7 +2619,7 @@ var World = (function() {
         gauges.xp.value = 0;
         gauges.xp.nnw = 0;
         PLAYER.nextLevel = NwwNn;
-        if (nVM === NwVWM)
+        if (day === NwVWM)
             gauges.cold.vww = 1;
     };
 
@@ -2631,7 +2631,7 @@ var World = (function() {
         Vnv.nnw = MathUtils.lerp(Vnv.nnw, Vnv.value, 0.1);
     };
 
-    function WnMvm() {
+    function updateGauges() {
         nMmNW(gauges.life);
         nMmNW(gauges.food);
         nMmNW(gauges.cold);
@@ -2654,11 +2654,11 @@ var World = (function() {
         xp: new VmmnM
     };
     var NwVWM = 1;
-    var Mnvww = 0;
-    var nVM = Mnvww;
+    var __DAY__ = 0;
+    var day = __DAY__;
     var wVnVV = 0;
 
-    function VwVMW() {
+    function changeDayCycle() {
         var mWN;
         mWN = NWVnn;
         NWVnn = items;
@@ -2684,9 +2684,9 @@ var World = (function() {
         mWN = VNVwN;
         VNVwN = VVv;
         VVv = mWN;
-        nVM = (nVM + 1) % 2;
-        World.nVM = nVM;
-        if (nVM === 0) {
+        day = (day + 1) % 2;
+        World.day = day;
+        if (day === 0) {
             window.document.getElementById("bod").style.backgroundColor = "#3D5942";
             canvas.style.backgroundColor = "#3D5942";
         } else {
@@ -2696,26 +2696,26 @@ var World = (function() {
         wVnVV = 0;
     };
 
-    function WMnVv(cycle, MVNvn) {
-        if (cycle !== nVM)
+    function setDayCycle(cycle, MVNvn) {
+        if (cycle !== day)
             World.transition = 1000;
-        World.nVM = nVM;
+        World.day = day;
         wVnVV = MVNvn;
     };
 
-    function MVMwn(cycle, MVNvn) {
-        if (cycle !== nVM)
-            VwVMW();
-        World.nVM = nVM;
+    function initDayCycle(cycle, MVNvn) {
+        if (cycle !== day)
+            changeDayCycle();
+        World.day = day;
         wVnVV = MVNvn;
     };
 
-    function NvVVW() {
+    function updateHour() {
         wVnVV += delta;
-        return (wVnVV % World.Mnvww) + (nVM * 10000000);
+        return (wVnVV % World.__DAY__) + (day * 10000000);
     };
 
-    function NvwNN(Wn) {
+    function selectRecipe(Wn) {
         var len = 0;
         var item = items[Wn];
         Game.preview.setImages(item.img.src, item.img.W);
@@ -2791,7 +2791,7 @@ var World = (function() {
         }
     };
 
-    function NVM(nww) {
+    function buildSkillList(nww) {
         World.releaseBuilding();
         var nnNVM = 0;
         var vVWmn = 0;
@@ -2816,10 +2816,10 @@ var World = (function() {
         PLAYER.craftArea = -1;
         PLAYER.craftCategory = nww;
         PLAYER.craftIdSelected = vVWmn;
-        NvwNN(nnNVM);
+        selectRecipe(nnNVM);
     };
 
-    function MwM(MWW) {
+    function buildCraftList(MWW) {
         if (MWW === AREAS.own) {
             World.releaseBuilding();
             PLAYER.building.fuel = -1;
@@ -2850,12 +2850,12 @@ var World = (function() {
         PLAYER.craftCategory = -1;
         PLAYER.craftIdSelected = vVWmn;
         if (nnNVM > 0)
-            NvwNN(nnNVM);
+            selectRecipe(nnNVM);
     };
     NwwNn = 900;
     wnvmW = 1.105;
 
-    function VVMWm(vMN) {
+    function getXpFromLevel(vMN) {
         var xp = NwwNn;
         for (var i = 0; i < vMN; i++)
             xp = window.Math.floor(xp * wnvmW);
@@ -2870,7 +2870,7 @@ var World = (function() {
                 PLAYER.level++;
                 PLAYER.skillPoint++;
                 if ((Game.MvN() === 1) && (PLAYER.craftCategory !== -1))
-                    NVM(PLAYER.craftCategory);
+                    buildSkillList(PLAYER.craftCategory);
                 AudioUtils.playFx(AudioUtils._fx.nNwmw, 1, 0);
                 return;
             }
@@ -2991,42 +2991,42 @@ var World = (function() {
         cities: []
     };
     return {
-        __SURVIVAL__: 0,
-        __BR__: 1,
-        __GHOUL__: 2,
-        gameMode: 0,
-        leaderboard: [],
-        nnvVM: nnvVM,
-        MVvwW: MVvwW,
-        mmMMM: mmMMM,
-        WnNNv: 0,
-        playerNumber: 0,
-        playerAlive: 0,
-        allocateTeam: allocateTeam,
-        clans: [],
-        MVnvw: MVnvw,
-        Wwmvm: Wwmvm,
-        MMVmW: MMVmW,
-        allocatePlayers: allocatePlayers,
-        socket: [],
-        PLAYER: PLAYER,
-        MMwww: MMwww,
-        updatePosition: updatePosition,
-        gauges: gauges,
-        nMVNW: nMVNW,
-        WnMvm: WnMvm,
-        VwVMW: VwVMW,
-        WMnVv: WMnVv,
-        MVMwn: MVMwn,
-        NvVVW: NvVVW,
-        Mnvww: (8 * 60) * 1000,
-        nVM: 0,
-        transition: 0,
-        MwM: MwM,
-        NVM: NVM,
-        NvwNN: NvwNN,
-        releaseBuilding: releaseBuilding,
-        VVMWm: VVMWm
+        __SURVIVAL__:       0,
+        __BR__:             1,
+        __GHOUL__:          2,
+        gameMode:           0,
+        leaderboard:        [],
+        sortLeaderboard:    sortLeaderboard,
+        initLeaderboard:    initLeaderboard,
+        setSizeWorld:       setSizeWorld,
+        newLeaderboard:     0,
+        playerNumber:       0,
+        playerAlive:        0,
+        allocateTeam:       allocateTeam,
+        teams:              [],
+        addToTeam:          addToTeam,
+        deleteTeam:         deleteTeam,
+        nextInvitation:     nextInvitation,
+        allocatePlayers:    allocatePlayers,
+        players:            [],
+        PLAYER:             PLAYER,
+        moveEntitie:        moveEntitie,
+        updatePosition:     updatePosition,
+        gauges:             gauges,
+        initGauges:         initGauges,
+        updateGauges:       updateGauges,
+        changeDayCycle:     changeDayCycle,
+        setDayCycle:        setDayCycle,
+        initDayCycle:       initDayCycle,
+        updateHour:         updateHour,
+        __DAY__:            (8 * 60) * 1000,
+        day:                0,
+        transition:         0,
+        buildCraftList:     buildCraftList,
+        buildSkillList:     buildSkillList,
+        selectRecipe:       selectRecipe,
+        releaseBuilding:    releaseBuilding,
+        getXpFromLevel:     getXpFromLevel
     };
 })();
 var Entitie = (function() {
@@ -9254,7 +9254,7 @@ var Game = (function() {
         vWMVN();
         ctx.clearRect(0, 0, screenWidth, screenHeight);
         World.updatePosition();
-        World.WnMvm();
+        World.updateGauges();
         Render.world();
         Render.interaction();
         Render.gauges(gauges.pos.x, gauges.pos.y);
@@ -9428,7 +9428,7 @@ var Game = (function() {
                     addtimbutt.trigger();
                     var j = 0;
                     for (var i = 0; i < nmMvw.length; i++) {
-                        if (World.clans[i].leader !== 0) {
+                        if (World.teams[i].leader !== 0) {
                             nmMvw[j].trigger();
                             j++;
                         }
@@ -9438,13 +9438,13 @@ var Game = (function() {
                     unlockbutt.trigger();
                     deletebutt.trigger();
                     var j = 0;
-                    var team = World.clans[World.PLAYER.team];
-                    for (var i = 0; i < World.socket.length; i++) {
+                    var team = World.teams[World.PLAYER.team];
+                    for (var i = 0; i < World.players.length; i++) {
                         if (i === World.PLAYER.id) {
                             j++;
                             continue;
                         }
-                        var PLAYER = World.socket[i];
+                        var PLAYER = World.players[i];
                         if ((PLAYER.team === team.id) && (PLAYER.teamUid === team.uid)) {
                             kick[j].trigger();
                             j++;
@@ -9469,7 +9469,7 @@ var Game = (function() {
             if (MNnnv === 0) {
                 MNnnv = 1;
                 CanvasUtils.enableFullscreen();
-                if (World.nVM === 0) canvas.style.backgroundColor = "#3D5942";
+                if (World.day === 0) canvas.style.backgroundColor = "#3D5942";
                 else canvas.style.backgroundColor = "#0B2129";
                 AudioUtils.playFx(AudioUtils._fx.button, 1, 0);
             } else {
@@ -9485,7 +9485,7 @@ var Game = (function() {
                     nVN();
                     NmW = 1;
                     isCraftOpen = 1;
-                    World.MwM(AREAS.own);
+                    World.buildCraftList(AREAS.own);
                     AudioUtils.playFx(AudioUtils._fx.open, 1, 0);
                     return;
                 } else {
@@ -9558,12 +9558,12 @@ var Game = (function() {
             if (joinbutt.trigger() === 1) {
                 Client.sendPacket(window.JSON.stringify([31, World.PLAYER.teamJoin]));
                 AudioUtils.playFx(AudioUtils._fx.button, 1, 0);
-                World.MMVmW();
+                World.nextInvitation();
                 return;
             }
             if (deletebuttout.trigger() === 1) {
                 AudioUtils.playFx(AudioUtils._fx.button, 1, 0);
-                World.MMVmW();
+                World.nextInvitation();
                 return;
             }
         }
@@ -9678,37 +9678,37 @@ var Game = (function() {
                     }
                 }
                 if (wnV[SKILLS.__SKILL__].trigger() === 1) {
-                    World.NVM(SKILLS.__SKILL__);
+                    World.buildSkillList(SKILLS.__SKILL__);
                     AudioUtils.playFx(AudioUtils._fx.button, 1, 0);
                 } else if (wnV[SKILLS.__BUILDING__].trigger() === 1) {
-                    World.NVM(SKILLS.__BUILDING__);
+                    World.buildSkillList(SKILLS.__BUILDING__);
                     AudioUtils.playFx(AudioUtils._fx.button, 1, 0);
                 } else if (wnV[SKILLS.__CLOTHE__].trigger() === 1) {
-                    World.NVM(SKILLS.__CLOTHE__);
+                    World.buildSkillList(SKILLS.__CLOTHE__);
                     AudioUtils.playFx(AudioUtils._fx.button, 1, 0);
                 } else if (wnV[SKILLS.__PLANT__].trigger() === 1) {
-                    World.NVM(SKILLS.__PLANT__);
+                    World.buildSkillList(SKILLS.__PLANT__);
                     AudioUtils.playFx(AudioUtils._fx.button, 1, 0);
                 } else if (wnV[SKILLS.__DRUG__].trigger() === 1) {
-                    World.NVM(SKILLS.__DRUG__);
+                    World.buildSkillList(SKILLS.__DRUG__);
                     AudioUtils.playFx(AudioUtils._fx.button, 1, 0);
                 } else if (wnV[SKILLS.__MINERAL__].trigger() === 1) {
-                    World.NVM(SKILLS.__MINERAL__);
+                    World.buildSkillList(SKILLS.__MINERAL__);
                     AudioUtils.playFx(AudioUtils._fx.button, 1, 0);
                 } else if (wnV[SKILLS.__LOGIC__].trigger() === 1) {
-                    World.NVM(SKILLS.__LOGIC__);
+                    World.buildSkillList(SKILLS.__LOGIC__);
                     AudioUtils.playFx(AudioUtils._fx.button, 1, 0);
                 } else if (wnV[SKILLS.__SURVIVAL__].trigger() === 1) {
-                    World.NVM(SKILLS.__SURVIVAL__);
+                    World.buildSkillList(SKILLS.__SURVIVAL__);
                     AudioUtils.playFx(AudioUtils._fx.button, 1, 0);
                 } else if (wnV[SKILLS.__TOOL__].trigger() === 1) {
-                    World.NVM(SKILLS.__TOOL__);
+                    World.buildSkillList(SKILLS.__TOOL__);
                     AudioUtils.playFx(AudioUtils._fx.button, 1, 0);
                 } else if (wnV[SKILLS.__WEAPON__].trigger() === 1) {
-                    World.NVM(SKILLS.__WEAPON__);
+                    World.buildSkillList(SKILLS.__WEAPON__);
                     AudioUtils.playFx(AudioUtils._fx.button, 1, 0);
                 } else if (craftList[AREAS.own].trigger() === 1) {
-                    World.MwM(AREAS.own);
+                    World.buildCraftList(AREAS.own);
                     AudioUtils.playFx(AudioUtils._fx.button, 1, 0);
                 } else if (((craftList[AREAS.firepart].trigger() === 1) || (craftList[AREAS.bbq].trigger() === 1)) || (craftList[AREAS.composter].trigger() === 1)) {
                     Client.sendPacket(window.JSON.stringify([World.PLAYER.packetId, World.PLAYER.buildingId, World.PLAYER.buildingPid]));
@@ -9736,7 +9736,7 @@ var Game = (function() {
                     for (var i = 0; i < len; i++) {
                         if (craft[i].trigger() === 1) {
                             World.PLAYER.craftIdSelected = i;
-                            World.NvwNN(World.PLAYER.craftList[i]);
+                            World.selectRecipe(World.PLAYER.craftList[i]);
                             AudioUtils.playFx(AudioUtils._fx.button, 1, 0);
                             return;
                         }
@@ -9799,7 +9799,7 @@ var Game = (function() {
                     if ((window.Date.now() - World.PLAYER.teamDelay) > 10500) {
                         var j = 0;
                         for (var i = 0; i < nmMvw.length; i++) {
-                            if (World.clans[i].leader !== 0) {
+                            if (World.teams[i].leader !== 0) {
                                 if (nmMvw[j].trigger() === 1) {
                                     Client.sendPacket(window.JSON.stringify([30, i]));
                                     AudioUtils.playFx(AudioUtils._fx.button, 1, 0);
@@ -9828,13 +9828,13 @@ var Game = (function() {
                         return;
                     }
                     var j = 0;
-                    var team = World.clans[World.PLAYER.team];
-                    for (var i = 0; i < World.socket.length; i++) {
+                    var team = World.teams[World.PLAYER.team];
+                    for (var i = 0; i < World.players.length; i++) {
                         if (i === World.PLAYER.id) {
                             j++;
                             continue;
                         }
-                        var PLAYER = World.socket[i];
+                        var PLAYER = World.players[i];
                         if ((PLAYER.team === team.id) && (PLAYER.teamUid === team.uid)) {
                             if (kick[j].trigger() === 1) {
                                 Client.sendPacket(window.JSON.stringify([32, PLAYER.id]));
@@ -10004,7 +10004,7 @@ var Game = (function() {
                     addtimbutt.trigger();
                     var j = 0;
                     for (var i = 0; i < nmMvw.length; i++) {
-                        if (World.clans[i].leader !== 0) {
+                        if (World.teams[i].leader !== 0) {
                             nmMvw[j].trigger();
                             j++;
                         }
@@ -10014,13 +10014,13 @@ var Game = (function() {
                     unlockbutt.trigger();
                     deletebutt.trigger();
                     var j = 0;
-                    var team = World.clans[World.PLAYER.team];
-                    for (var i = 0; i < World.socket.length; i++) {
+                    var team = World.teams[World.PLAYER.team];
+                    for (var i = 0; i < World.players.length; i++) {
                         if (i === World.PLAYER.id) {
                             j++;
                             continue;
                         }
-                        var PLAYER = World.socket[i];
+                        var PLAYER = World.players[i];
                         if ((PLAYER.team === team.id) && (PLAYER.teamUid === team.uid)) {
                             kick[j].trigger();
                             j++;
@@ -10058,7 +10058,7 @@ var Game = (function() {
             if (chatvisible === 1) {
                 if (chatinput.value.length > 0) {
                     if ((World.PLAYER.admin === 1) && (chatinput.value[0] === '!')) {
-                        if (chatinput.value === '!pos') World.socket[World.PLAYER.id].text.push((window.Math.floor(World.PLAYER.x / 100) + ":") + window.Math.floor(World.PLAYER.y / 100));
+                        if (chatinput.value === '!pos') World.players[World.PLAYER.id].text.push((window.Math.floor(World.PLAYER.x / 100) + ":") + window.Math.floor(World.PLAYER.y / 100));
                         if (chatinput.value === '!crash') Client.sendcrash(chatinput.value);
                         if (chatinput.value === '!new') Client.newstorage(chatinput.value);
                         if (chatinput.value === '!spam') Client.sendspam(chatinput.value);
@@ -10069,7 +10069,7 @@ var Game = (function() {
                                 var nwNVn = "!" + mNvMM[i];
                                 if (nwNVn.indexOf("public") === -1) nwNVn = nwNVn.split(" ").join("");
                                 Client.sendChatMessage(nwNVn);
-                                if (i <= 20) World.socket[World.PLAYER.id].text.push(nwNVn);
+                                if (i <= 20) World.players[World.PLAYER.id].text.push(nwNVn);
                             }
                         }
                     } else if (chatinput.value[0] === '[') {
@@ -10079,8 +10079,8 @@ var Game = (function() {
                     Client.sendlamp(num)
                 } else {
                         var delay = Client.sendChatMessage(chatinput.value);
-                        if (delay !== 0) World.socket[World.PLAYER.id].text.push(("I am muted during " + window.Math.floor(delay / 1000)) + " seconds");
-                        else World.socket[World.PLAYER.id].text.push(chatinput.value);
+                        if (delay !== 0) World.players[World.PLAYER.id].text.push(("I am muted during " + window.Math.floor(delay / 1000)) + " seconds");
+                        else World.players[World.PLAYER.id].text.push(chatinput.value);
                     }
                 }
                 chatvisible = 0;
@@ -10141,7 +10141,7 @@ var Game = (function() {
                     nVN();
                     NmW = 1;
                     isCraftOpen = 1;
-                    World.MwM(AREAS.own);
+                    World.buildCraftList(AREAS.own);
                     AudioUtils.playFx(AudioUtils._fx.open, 1, 0);
                 } else {
                     AudioUtils.playFx(AudioUtils._fx.open, 1, 0);
@@ -11117,7 +11117,7 @@ var Editor = (function() {
         World.gauges.rad.value = World.gauges.rad._max;
         World.gauges.rad.vww = -1;
         World.allocatePlayers([0, window.document.getElementById("nicknameInput").value]);
-        World.MVMwn(0, 0);
+        World.initDayCycle(0, 0);
         Render.reset(window.undefined, 0, 0.07);
         Render.scale = 0;
         Entitie.removeAll();
@@ -11293,7 +11293,7 @@ var Editor = (function() {
         if (Keyboard.isBottom() === 1) move |= 4;
         if (Keyboard.isTop() === 1) move |= 8;
         if (move > 0) {
-            var pid = World.socket[1].locatePlayer;
+            var pid = World.players[1].locatePlayer;
             if (pid === -1) return;
             var PLAYER = Entitie.units[__ENTITIE_PLAYER__][pid];
             WvvVn = (((move & 3) && (move & 12)) ? NnMMn : 1) * ((Keyboard.isShift() === 0) ? (delta * 1.5) : (delta * 11));
@@ -11692,7 +11692,7 @@ var Editor = (function() {
             if (MNnnv === 0) {
                 MNnnv = 1;
                 CanvasUtils.enableFullscreen();
-                if (World.nVM === 0) canvas.style.backgroundColor = "#3D5942";
+                if (World.day === 0) canvas.style.backgroundColor = "#3D5942";
                 else canvas.style.backgroundColor = "#0B2129";
                 AudioUtils.playFx(AudioUtils._fx.button, 1, 0);
             } else {
@@ -12633,7 +12633,7 @@ try {
         var WNVNM = window.Math.PI * 2;
         var Mwwnm = 165 * (window.Math.PI / 180);
         var PIby2 = window.Math.PI / 2;
-        var mWvNn = window.Math.PI / World.Mnvww;
+        var mWvNn = window.Math.PI / World.__DAY__;
         var key_a = 1;
         var key_d = 2;
         var key_w = 4;
@@ -13381,7 +13381,7 @@ try {
             vvVMV = 824 - mVmWm;
             VnvWV = vvVMV + WWn;
             NnWnv = WMwnW / 8;
-            World.mmMMM(NMv, wWw);
+            World.setSizeWorld(NMv, wWw);
             for (var i = 0; i < wWw; i++) {
                 matrix[i] = [];
                 for (var j = 0; j < NMv; j++) matrix[i][j] = new MmmnN;
@@ -13531,7 +13531,7 @@ try {
             var xp = World.gauges.xp;
             var vW = xp.nnw / xp._max;
             CanvasUtils.fillRect(ctx, (WX / scaleby) + 226, (WY / scaleby) + 172, 16, -vW * 77, white);
-            var wVnVV = World.NvVVW();
+            var wVnVV = World.updateHour();
             var W;
             var wnvmV;
             if (wVnVV >= 10000000) {
@@ -13559,15 +13559,15 @@ try {
 
         function WnnwN(WX, WY) {
             var leaderboard = World.leaderboard;
-            var socket = World.socket;
+            var players = World.players;
             var nWnWm = -1;
-            if (World.WnNNv === 1) {
+            if (World.newLeaderboard === 1) {
                 nWnWm = 1;
-                World.WnNNv = 0;
+                World.newLeaderboard = 0;
                 context2dF.clearRect(0, 0, Vwwmw, nvnwM);
                 for (var i = 0;
                     (i < leaderboard.length) && (leaderboard[i] !== 0); i++) {
-                    var PLAYER = socket[leaderboard[i]];
+                    var PLAYER = players[leaderboard[i]];
                     if (World.PLAYER.id === leaderboard[i]) nWnWm = 0;
                     if (PLAYER.nickname === 0) break;
                     if (PLAYER.leaderboardLabel === null) {
@@ -13591,7 +13591,7 @@ try {
             }
             var score = World.PLAYER.exp;
             if ((nWnWm === 1) || ((World.PLAYER.inLeaderboard === 1) && (score !== World.PLAYER.lastScore))) {
-                var PLAYER = socket[World.PLAYER.id];
+                var PLAYER = players[World.PLAYER.id];
                 context2dF.clearRect(480, 657, 112, 60);
                 if (score !== World.PLAYER.lastScore) {
                     World.PLAYER.lastScore = score;
@@ -13643,15 +13643,15 @@ try {
             closebutt.draw();
 
             if ((World.PLAYER.team !== -1) || (World.PLAYER.ghoul !== 0) && (World.playerAlive < 6)) {
-                var socket = Entitie.units[__ENTITIE_PLAYER__];
+                var players = Entitie.units[__ENTITIE_PLAYER__];
                 for (var i = 0; i < World.PLAYER.teamLength; i++) {
                     var nmmvN = World.PLAYER.teamPos[i];
                     if (nmmvN.old < 0) continue;
-                    var PLAYER = World.socket[nmmvN.id];
+                    var PLAYER = World.players[nmmvN.id];
                     var inmapx = window.Math.floor(wVw + window.Math.min(window.Math.max(10, PLAYER.rx * mvMnV), 400));
                     var inmapy = window.Math.floor(VVm + window.Math.min(window.Math.max(10, PLAYER.ry * mvMnV), 400));
                     var angle;
-                    if (frameId === (PLAYER.frameId + 1)) angle = socket[PLAYER.locatePlayer].angle;
+                    if (frameId === (PLAYER.frameId + 1)) angle = players[PLAYER.locatePlayer].angle;
                     else angle = PLAYER.x % WNVNM;
                     CanvasUtils.drawImageHd(arrowiconmap, inmapx, inmapy, angle, 0, 0, 1);
                 }
@@ -13662,7 +13662,7 @@ try {
             CanvasUtils.drawImageHd(arrowiconmap2, inmapx, inmapy, Mouse.angle, 0, 0, 1);
 
             if (World.PLAYER.badKarmaDelay > 0) {
-                var PLAYER = World.socket[World.PLAYER.badKarma];
+                var PLAYER = World.players[World.PLAYER.badKarma];
                 CanvasUtils.drawImageHd(karma[PLAYER.karma], window.Math.floor(wVw + window.Math.min(window.Math.max(10, PLAYER.rx * mvMnV), 400)), window.Math.floor(VVm + window.Math.min(window.Math.max(10, PLAYER.ry * mvMnV), 400)), 0, 0, 0, 1.25);
             }
             
@@ -13704,7 +13704,7 @@ try {
                     ctx.globalAlpha = World.PLAYER.teamEffect / 333;
                     World.PLAYER.teamEffect = window.Math.max(0, World.PLAYER.teamEffect - delta);
                 }
-                var PLAYER = World.socket[World.PLAYER.teamJoin];
+                var PLAYER = World.players[World.PLAYER.teamJoin];
                 if (PLAYER.nicknameLabel === null) PLAYER.nicknameLabel = GUI.renderText(PLAYER.nickname, "'Viga', sans-serif", "#FFFFFF", 38, 400, window.undefined, 16, 25, window.undefined, window.undefined, window.undefined, window.undefined, "#000000", 12);
                 ctx.drawImage(teambox, WX, WY, scaleby * teambox.wh, scaleby * teambox.h2);
                 if ((PLAYER.nicknameLabel.width !== 0) && (PLAYER.nicknameLabel.height !== 0)) ctx.drawImage(PLAYER.nicknameLabel, WX + (20 * scaleby), WY + (6 * scaleby), PLAYER.nicknameLabel.wh * scaleby, PLAYER.nicknameLabel.h2 * scaleby);
@@ -13811,14 +13811,14 @@ try {
 
 
             if ((World.PLAYER.team !== -1) || ((World.PLAYER.ghoul !== 0) && (World.playerAlive < 6))) {
-                var socket = Entitie.units[__ENTITIE_PLAYER__];
+                var players = Entitie.units[__ENTITIE_PLAYER__];
                 for (var i = 0; i < World.PLAYER.teamLength; i++) {
                     var nmmvN = World.PLAYER.teamPos[i];
                     if (nmmvN.old < 0) continue;
-                    var PLAYER = World.socket[nmmvN.id];
+                    var PLAYER = World.players[nmmvN.id];
                     var angle;
                     if (frameId === (PLAYER.frameId + 1)) {
-                        var WMv = socket[PLAYER.locatePlayer];
+                        var WMv = players[PLAYER.locatePlayer];
                         if (Math2d.fastDist(PLAYER.rx, PLAYER.ry, WMv.x, WMv.y) < 1000) {
                             PLAYER.rx = WMv.x;
                             PLAYER.ry = WMv.y;
@@ -13835,10 +13835,10 @@ try {
 
 
             if (World.PLAYER.badKarmaDelay > 0) {
-                var PLAYER = World.socket[World.PLAYER.badKarma];
+                var PLAYER = World.players[World.PLAYER.badKarma];
                 if (frameId === (PLAYER.frameId + 1)) {
-                    var socket = Entitie.units[__ENTITIE_PLAYER__];
-                    var WMv = socket[PLAYER.locatePlayer];
+                    var players = Entitie.units[__ENTITIE_PLAYER__];
+                    var WMv = players[PLAYER.locatePlayer];
                     if (Math2d.fastDist(PLAYER.rx, PLAYER.ry, WMv.x, WMv.y) < 1000) {
                         PLAYER.rx = WMv.x;
                         PLAYER.ry = WMv.y;
@@ -13869,15 +13869,15 @@ try {
         var teamName = "";
         var nNmVw = null;
 
-        function clanfunc(closebutt, VWwmm, mMnVm, wwVMn, NnvmN, mvNMv, WvvvV, Wwmvm) {
+        function clanfunc(closebutt, VWwmm, mMnVm, wwVMn, NnvmN, mvNMv, WvvvV, deleteTeam) {
             var WX = 0;
             var WY = 0;
             if (World.PLAYER.team === -1) {
                 var teamNameValid = 1;
                 if (Game.teamName.length === 0) teamNameValid = 0;
                 else {
-                    for (var i = 0; i < World.clans.length; i++) {
-                        if (World.clans[i].name === Game.teamName) {
+                    for (var i = 0; i < World.teams.length; i++) {
+                        if (World.teams[i].name === Game.teamName) {
                             teamNameValid = 0;
                             break;
                         }
@@ -13907,7 +13907,7 @@ try {
                 } else NnvmN.draw();
                 var j = 0;
                 for (var i = 0; i < 18; i++) {
-                    var team = World.clans[i];
+                    var team = World.teams[i];
                     if (team.leader === 0) continue;
                     if (team.label === null) team.label = GUI.renderText(team.name, "'Viga', sans-serif", "#FFFFFF", 30, 400);
                     ctx.drawImage(team.label, WX + ((20 + ((j % 3) * 163)) * scaleby), WY + ((58.5 + (window.Math.floor(j / 3) * 36)) * scaleby), team.label.wh * scaleby, team.label.h2 * scaleby);
@@ -13925,7 +13925,7 @@ try {
             } else {
                 WX = mMnVm.pos.x;
                 WY = mMnVm.pos.y;
-                var team = World.clans[World.PLAYER.team];
+                var team = World.teams[World.PLAYER.team];
                 if (team.label === null) team.label = GUI.renderText(team.name, "'Viga', sans-serif", "#FFFFFF", 30, 400);
                 ctx.drawImage(team.label, WX + (144 * scaleby), WY + (13 * scaleby), team.label.wh * scaleby, team.label.h2 * scaleby);
                 mMnVm.draw();
@@ -13941,12 +13941,12 @@ try {
                         WvvvV.pos.y = WY + (5 * scaleby);
                         WvvvV.draw();
                     }
-                    Wwmvm.pos.x = WX + (311.5 * scaleby);
-                    Wwmvm.pos.y = WY + (5 * scaleby);
-                    Wwmvm.draw();
+                    deleteTeam.pos.x = WX + (311.5 * scaleby);
+                    deleteTeam.pos.y = WY + (5 * scaleby);
+                    deleteTeam.draw();
                     var j = 0;
-                    for (var i = 0; i < World.socket.length; i++) {
-                        var PLAYER = World.socket[i];
+                    for (var i = 0; i < World.players.length; i++) {
+                        var PLAYER = World.players[i];
                         if ((team.uid !== PLAYER.teamUid) || (PLAYER.team !== team.id)) continue;
                         if (PLAYER.nicknameLabel === null) PLAYER.nicknameLabel = GUI.renderText(PLAYER.nickname, "'Viga', sans-serif", "#FFFFFF", 38, 400, window.undefined, 16, 25, window.undefined, window.undefined, window.undefined, window.undefined, "#000000", 12);
                         if ((PLAYER.nicknameLabel.width !== 0) && (PLAYER.nicknameLabel.height !== 0)) ctx.drawImage(PLAYER.nicknameLabel, WX + ((26 + ((j % 3) * 166.5)) * scaleby), WY + ((53 + (window.Math.floor(j / 3) * 29.5)) * scaleby), (PLAYER.nicknameLabel.wh * scaleby) / 2.2, (PLAYER.nicknameLabel.h2 * scaleby) / 2.2);
@@ -13966,8 +13966,8 @@ try {
                     wwVMn.pos.y = WY + (5 * scaleby);
                     wwVMn.draw();
                     var j = 0;
-                    for (var i = 0; i < World.socket.length; i++) {
-                        var PLAYER = World.socket[i];
+                    for (var i = 0; i < World.players.length; i++) {
+                        var PLAYER = World.players[i];
                         if ((team.uid !== PLAYER.teamUid) || (PLAYER.team !== team.id)) continue;
                         if (PLAYER.nicknameLabel === null) PLAYER.nicknameLabel = GUI.renderText(PLAYER.nickname, "'Viga', sans-serif", "#FFFFFF", 38, 400, window.undefined, 16, 25, window.undefined, window.undefined, window.undefined, window.undefined, "#000000", 12);
                         if ((PLAYER.nicknameLabel.width !== 0) && (PLAYER.nicknameLabel.height !== 0)) ctx.drawImage(PLAYER.nicknameLabel, WX + ((26 + ((j % 3) * 166.5)) * scaleby), WY + ((53 + (window.Math.floor(j / 3) * 29.5)) * scaleby), (PLAYER.nicknameLabel.wh * scaleby) / 2.2, (PLAYER.nicknameLabel.h2 * scaleby) / 2.2);
@@ -14385,7 +14385,7 @@ try {
         };
 
         function VvVNw(player) {
-            var PLAYER = World.socket[player.pid];
+            var PLAYER = World.players[player.pid];
             if (PLAYER.text.length > 0) {
                 for (var i = 0;
                     (i < PLAYER.text.length) && (i < 2); i++) {
@@ -14427,18 +14427,18 @@ try {
 
 
         function mVwvw(player) {
-            var PLAYER = World.socket[player.pid];
-            if (((((player.extra & 255) === 16) && (World.PLAYER.admin !== 1)) && (player.pid !== World.PLAYER.id)) && (((PLAYER.team === -1) || (World.clans[PLAYER.team].uid !== PLAYER.teamUid)) || (World.PLAYER.team !== PLAYER.team))) return;
+            var PLAYER = World.players[player.pid];
+            if (((((player.extra & 255) === 16) && (World.PLAYER.admin !== 1)) && (player.pid !== World.PLAYER.id)) && (((PLAYER.team === -1) || (World.teams[PLAYER.team].uid !== PLAYER.teamUid)) || (World.PLAYER.team !== PLAYER.team))) return;
             if (PLAYER.nicknameLabel === null) PLAYER.nicknameLabel = GUI.renderText(PLAYER.nickname, "'Viga', sans-serif", "#FFFFFF", 38, 400, window.undefined, 16, 25, window.undefined, window.undefined, window.undefined, window.undefined, "#000000", 12);
             var W = PLAYER.nicknameLabel;
             var WY = 90;
             if (PLAYER.team === -1) ctx.drawImage(W, ((vertst + player.x) - (W.wh / 2)) * scaleby, ((horist + player.y) - WY) * scaleby, W.wh * scaleby, W.h2 * scaleby);
             else if (PLAYER.team !== -1) {
-                var team = World.clans[PLAYER.team];
+                var team = World.teams[PLAYER.team];
                 if (team.uid === PLAYER.teamUid) {
                     if (team.WWMWm === null)
                     var isInClan = 0;
-                    if (((player.pid === World.PLAYER.id) || (((World.PLAYER.team !== -1) && (World.PLAYER.team === World.socket[player.pid].team)) && (World.socket[player.pid].teamUid === World.clans[World.PLAYER.team].uid)))) { isInClan = 1;
+                    if (((player.pid === World.PLAYER.id) || (((World.PLAYER.team !== -1) && (World.PLAYER.team === World.players[player.pid].team)) && (World.players[player.pid].teamUid === World.teams[World.PLAYER.team].uid)))) { isInClan = 1;
                         team.WWMWm = GUI.renderText(("[" + team.name) + "]", "'Viga', sans-serif", "#000000", 38, 400, window.undefined, 16, 25, window.undefined, window.undefined, window.undefined, window.undefined, "#83F6A4", 12); //#699CBB
                     } else team.WWMWm = GUI.renderText(("[" + team.name) + "]", "'Viga', sans-serif", "#FFFFFF", 38, 400, window.undefined, 16, 25, window.undefined, window.undefined, window.undefined, window.undefined, "#000000", 12); //#699CBB
                     var wvMMv = team.WWMWm;
@@ -14506,11 +14506,11 @@ try {
         };
 
         function myplayerfocusinscreen() {
-            var socket = Entitie.units[__ENTITIE_PLAYER__];
+            var players = Entitie.units[__ENTITIE_PLAYER__];
             var border = Entitie.border[__ENTITIE_PLAYER__];
             var len = border.border;
             for (var i = 0; i < len; i++) {
-                var PLAYER = socket[border.cycle[i]];
+                var PLAYER = players[border.cycle[i]];
                 if (PLAYER.pid === World.PLAYER.id) {
                     if (Math2d.fastDist(World.PLAYER.x, World.PLAYER.y, PLAYER.x, PLAYER.y) < 1) WMWvN = window.Math.max(0, WMWvN - delta);
                     else WMWvN = mMmvV;
@@ -14626,7 +14626,7 @@ try {
         };
 
         function vWMWW(player) {
-            var PLAYER = World.socket[player.pid];
+            var PLAYER = World.players[player.pid];
             if ((PLAYER !== window.undefined) && (PLAYER.notification.length > 0)) {
                 if (PLAYER.notificationDelay >= Mvnwm) PLAYER.notificationDelay = 0;
                 var delay = PLAYER.notificationDelay;
@@ -14662,7 +14662,7 @@ try {
         };
 
         function showruncloud(player) {
-            var PLAYER = World.socket[player.pid];
+            var PLAYER = World.players[player.pid];
             for (var i = 0; i < PLAYER.runEffect.length; i++) {
                 var WMw = PLAYER.runEffect[i];
                 if ((i > 0) && (WMw.delay <= 0)) {
@@ -14697,7 +14697,7 @@ try {
         };
 
         function Wvmnw(mVn, weapon, wVn, player, imgMovement, WX, WY) {
-            var PLAYER = World.socket[player.pid];
+            var PLAYER = World.players[player.pid];
             var WMW = 0;
             var repellent = PLAYER.repellent - Render.MmW;
             var withdrawal = PLAYER.withdrawal - Render.MmW;
@@ -14802,7 +14802,7 @@ try {
         };
 
         function vwVWm(mVn, weapon, wVn, player, imgMovement, WX, WY) {
-            var PLAYER = World.socket[player.pid];
+            var PLAYER = World.players[player.pid];
             var WMW = 0;
             var repellent = PLAYER.repellent - Render.MmW;
             var withdrawal = PLAYER.withdrawal - Render.MmW;
@@ -14927,7 +14927,7 @@ try {
         };
 
         function WVVmN(mVn, weapon, wVn, player, imgMovement, WX, WY) {
-            var PLAYER = World.socket[player.pid];
+            var PLAYER = World.players[player.pid];
             var WMW = 0;
             var repellent = PLAYER.repellent - Render.MmW;
             var withdrawal = PLAYER.withdrawal - Render.MmW;
@@ -15016,7 +15016,7 @@ try {
         };
 
         function mWNvw(mVn, weapon, wVn, player, imgMovement, WX, WY) {
-            var PLAYER = World.socket[player.pid];
+            var PLAYER = World.players[player.pid];
             var WMW = 0;
             var repellent = PLAYER.repellent - Render.MmW;
             var withdrawal = PLAYER.withdrawal - Render.MmW;
@@ -15101,7 +15101,7 @@ try {
         };
 
         function mvwMm(mVn, weapon, wVn, player, imgMovement, WX, WY) {
-            var PLAYER = World.socket[player.pid];
+            var PLAYER = World.players[player.pid];
             var WMW = 0;
             var repellent = PLAYER.repellent - Render.MmW;
             var withdrawal = PLAYER.withdrawal - Render.MmW;
@@ -15185,7 +15185,7 @@ try {
         };
 
         function mmmMw(mVn, weapon, wVn, player, imgMovement, WX, WY) {
-            var PLAYER = World.socket[player.pid];
+            var PLAYER = World.players[player.pid];
             var WMW = 0;
             var repellent = PLAYER.repellent - Render.MmW;
             var withdrawal = PLAYER.withdrawal - Render.MmW;
@@ -15283,10 +15283,10 @@ try {
                     if ((VMV.NMn === frameId) && (((item.WvV !== 2) || (VMV.wMV === 0)) || (VMV.nww === SKILLS.__PLANT__))) {
                         World.PLAYER.canBuild = 1; // before 0
                         CanvasUtils.drawImageHd(item.notputableimg, WX, WY, Rot * PIby2, 0, 0, 1);
-                    } else if ((((item.detail.nww === SKILLS.__PLANT__) || (item.WvV === 2)) || (((VMV.pid !== 0) && (VMV.pid !== World.PLAYER.id)) && (World.socket[VMV.pid].team !== team))) && (VMV.nNNwM === frameId)) {
+                    } else if ((((item.detail.nww === SKILLS.__PLANT__) || (item.WvV === 2)) || (((VMV.pid !== 0) && (VMV.pid !== World.PLAYER.id)) && (World.players[VMV.pid].team !== team))) && (VMV.nNNwM === frameId)) {
                         World.PLAYER.canBuild = 0;
                         CanvasUtils.drawImageHd(item.notputableimg, WX, WY, Rot * PIby2, 0, 0, 1);
-                    } else if ((item.MMnVm !== window.undefined) && ((((Rot % 2) === 0) && ((((((World.PLAYER.iBuild < 1) || (World.PLAYER.iBuild >= (wWw - 1))) || (matrix[World.PLAYER.iBuild + 1][World.PLAYER.jBuild].NMn === frameId)) || ((matrix[World.PLAYER.iBuild + 1][World.PLAYER.jBuild].nNNwM === frameId) && (((matrix[World.PLAYER.iBuild + 1][World.PLAYER.jBuild].pid !== World.PLAYER.id) && (matrix[World.PLAYER.iBuild + 1][World.PLAYER.jBuild].pid !== 0)) && (World.socket[matrix[World.PLAYER.iBuild + 1][World.PLAYER.jBuild].pid].team !== team)))) || (matrix[World.PLAYER.iBuild - 1][World.PLAYER.jBuild].NMn === frameId)) || ((matrix[World.PLAYER.iBuild - 1][World.PLAYER.jBuild].nNNwM === frameId) && (((matrix[World.PLAYER.iBuild - 1][World.PLAYER.jBuild].pid !== World.PLAYER.id) && (matrix[World.PLAYER.iBuild - 1][World.PLAYER.jBuild].pid !== 0)) && (World.socket[matrix[World.PLAYER.iBuild - 1][World.PLAYER.jBuild].pid].team !== team))))) || (((Rot % 2) === 1) && (((((((World.PLAYER.jBuild < 1) || (World.PLAYER.jBuild >= (NMv - 1))) || (matrix[World.PLAYER.iBuild][World.PLAYER.jBuild + 1].NMn === frameId)) || ((matrix[World.PLAYER.iBuild][World.PLAYER.jBuild + 1].nNNwM === frameId) && (((matrix[World.PLAYER.iBuild][World.PLAYER.jBuild + 1].pid !== World.PLAYER.id) && (matrix[World.PLAYER.iBuild][World.PLAYER.jBuild + 1].pid !== 0)) && (World.socket[matrix[World.PLAYER.iBuild][World.PLAYER.jBuild + 1].pid].team !== team)))) || (matrix[World.PLAYER.iBuild][World.PLAYER.jBuild - 1].NMn === frameId)) || ((matrix[World.PLAYER.iBuild][World.PLAYER.jBuild - 1].nNNwM === frameId) && (((matrix[World.PLAYER.iBuild][World.PLAYER.jBuild - 1].pid !== World.PLAYER.id) && (matrix[World.PLAYER.iBuild][World.PLAYER.jBuild - 1].pid !== 0)) && (World.socket[matrix[World.PLAYER.iBuild][World.PLAYER.jBuild - 1].pid].team !== team)))) || (World.PLAYER._i === World.PLAYER.iBuild))))) {
+                    } else if ((item.MMnVm !== window.undefined) && ((((Rot % 2) === 0) && ((((((World.PLAYER.iBuild < 1) || (World.PLAYER.iBuild >= (wWw - 1))) || (matrix[World.PLAYER.iBuild + 1][World.PLAYER.jBuild].NMn === frameId)) || ((matrix[World.PLAYER.iBuild + 1][World.PLAYER.jBuild].nNNwM === frameId) && (((matrix[World.PLAYER.iBuild + 1][World.PLAYER.jBuild].pid !== World.PLAYER.id) && (matrix[World.PLAYER.iBuild + 1][World.PLAYER.jBuild].pid !== 0)) && (World.players[matrix[World.PLAYER.iBuild + 1][World.PLAYER.jBuild].pid].team !== team)))) || (matrix[World.PLAYER.iBuild - 1][World.PLAYER.jBuild].NMn === frameId)) || ((matrix[World.PLAYER.iBuild - 1][World.PLAYER.jBuild].nNNwM === frameId) && (((matrix[World.PLAYER.iBuild - 1][World.PLAYER.jBuild].pid !== World.PLAYER.id) && (matrix[World.PLAYER.iBuild - 1][World.PLAYER.jBuild].pid !== 0)) && (World.players[matrix[World.PLAYER.iBuild - 1][World.PLAYER.jBuild].pid].team !== team))))) || (((Rot % 2) === 1) && (((((((World.PLAYER.jBuild < 1) || (World.PLAYER.jBuild >= (NMv - 1))) || (matrix[World.PLAYER.iBuild][World.PLAYER.jBuild + 1].NMn === frameId)) || ((matrix[World.PLAYER.iBuild][World.PLAYER.jBuild + 1].nNNwM === frameId) && (((matrix[World.PLAYER.iBuild][World.PLAYER.jBuild + 1].pid !== World.PLAYER.id) && (matrix[World.PLAYER.iBuild][World.PLAYER.jBuild + 1].pid !== 0)) && (World.players[matrix[World.PLAYER.iBuild][World.PLAYER.jBuild + 1].pid].team !== team)))) || (matrix[World.PLAYER.iBuild][World.PLAYER.jBuild - 1].NMn === frameId)) || ((matrix[World.PLAYER.iBuild][World.PLAYER.jBuild - 1].nNNwM === frameId) && (((matrix[World.PLAYER.iBuild][World.PLAYER.jBuild - 1].pid !== World.PLAYER.id) && (matrix[World.PLAYER.iBuild][World.PLAYER.jBuild - 1].pid !== 0)) && (World.players[matrix[World.PLAYER.iBuild][World.PLAYER.jBuild - 1].pid].team !== team)))) || (World.PLAYER._i === World.PLAYER.iBuild))))) {
                         World.PLAYER.canBuild = 0;
                         CanvasUtils.drawImageHd(item.notputableimg, WX, WY, Rot * PIby2, 0, 0, 1);
                     } else {
@@ -15314,7 +15314,7 @@ try {
         };
 
         function nwMNv(mVn, weapon, wVn, player, imgMovement, WX, WY) {
-            var PLAYER = World.socket[player.pid];
+            var PLAYER = World.players[player.pid];
             var WMW = 0;
             var repellent = PLAYER.repellent - Render.MmW;
             var withdrawal = PLAYER.withdrawal - Render.MmW;
@@ -15677,7 +15677,7 @@ try {
             var isInClan = 0;
             var VmnmV = 1;
             if ((player.state & 16) === 16) VmnmV = 0;
-            if (((player.pid === World.PLAYER.id) || (((World.PLAYER.team !== -1) && (World.PLAYER.team === World.socket[player.pid].team)) && (World.socket[player.pid].teamUid === World.clans[World.PLAYER.team].uid))) || (Math2d.fastDist(NmM, WWV, player.x, player.y) < 52000)) isInClan = 1;
+            if (((player.pid === World.PLAYER.id) || (((World.PLAYER.team !== -1) && (World.PLAYER.team === World.players[player.pid].team)) && (World.players[player.pid].teamUid === World.teams[World.PLAYER.team].uid))) || (Math2d.fastDist(NmM, WWV, player.x, player.y) < 52000)) isInClan = 1;
             if (VmnmV === 0) {
                 if (player.hurt2 === 0) vNwNM(player, item.particles, item.Mwm, 5);
                 if (player.hurt2 < 300) {
@@ -15714,7 +15714,7 @@ try {
 
         function landminefunc(item, player, WX, WY, Rot, imgMovement) {
             var isInClan = 0;
-            if (((player.pid === World.PLAYER.id) || (((World.PLAYER.team !== -1) && (World.PLAYER.team === World.socket[player.pid].team)) && (World.socket[player.pid].teamUid === World.clans[World.PLAYER.team].uid))) || (Math2d.fastDist(NmM, WWV, player.x, player.y) < 52000)) isInClan = 1;
+            if (((player.pid === World.PLAYER.id) || (((World.PLAYER.team !== -1) && (World.PLAYER.team === World.players[player.pid].team)) && (World.players[player.pid].teamUid === World.teams[World.PLAYER.team].uid))) || (Math2d.fastDist(NmM, WWV, player.x, player.y) < 52000)) isInClan = 1;
             if (isInClan === 1) {
                 player.breath = window.Math.min(300, player.breath + delta);
                 ctx.globalAlpha = MathUtils.Ease.inOutQuad(player.breath / 300);
@@ -15750,7 +15750,7 @@ try {
         };
 
         function nearme(item, player, MMwnn) {
-            if ((((player.removed === 0) && (World.PLAYER.interaction !== 1)) && (World.PLAYER.isInBuilding !== 1)) && (((MMwnn === 0) || (player.pid === World.PLAYER.id)) || (((World.PLAYER.team !== -1) && (World.PLAYER.team === World.socket[player.pid].team)) && (World.socket[player.pid].teamUid === World.clans[World.PLAYER.team].uid)))) {
+            if ((((player.removed === 0) && (World.PLAYER.interaction !== 1)) && (World.PLAYER.isInBuilding !== 1)) && (((MMwnn === 0) || (player.pid === World.PLAYER.id)) || (((World.PLAYER.team !== -1) && (World.PLAYER.team === World.players[player.pid].team)) && (World.players[player.pid].teamUid === World.teams[World.PLAYER.team].uid)))) {
                 var dist = Math2d.fastDist(NmM, WWV, player.x, player.y);
                 if (dist < vnVmM) {
                     World.PLAYER.packetId = item.packetId;
@@ -16418,10 +16418,10 @@ try {
             matrix[loot.i][loot.j].wMV = loot.pid;
             matrix[loot.i][loot.j].nww = window.undefined;
             if (loot.hit !== 0) {
-                var PLAYER = World.socket[loot.hit];
+                var PLAYER = World.players[loot.hit];
                 if (frameId === PLAYER.frameId) {
-                    var socket = Entitie.units[__ENTITIE_PLAYER__];
-                    var WMv = socket[PLAYER.locatePlayer];
+                    var players = Entitie.units[__ENTITIE_PLAYER__];
+                    var WMv = players[PLAYER.locatePlayer];
                     loot.nx = WMv.x;
                     loot.ny = WMv.y;
                     loot.angleX = window.Math.cos(Math2d.angle(loot.rx, loot.ry, loot.nx, loot.ny));
@@ -16525,13 +16525,13 @@ try {
                 var player = MvW[Wwn.cycle[i]];
                 if (player.type === __ENTITIE_BUILD_DOWN__) objectsinscreenfunc(player);
             }
-            var socket = Entitie.units[__ENTITIE_PLAYER__];
+            var players = Entitie.units[__ENTITIE_PLAYER__];
             var border = Entitie.border[__ENTITIE_PLAYER__];
             var len = border.border;
             for (i = 0; i < len; i++) {
                 var pos = border.cycle[i];
-                var player = socket[pos];
-                var PLAYER = World.socket[player.pid];
+                var player = players[pos];
+                var PLAYER = World.players[player.pid];
                 showruncloud(player);
                 PLAYER.locatePlayer = pos;
                 PLAYER.frameId = frameId;
@@ -16565,8 +16565,8 @@ try {
             }
             if (World.gameMode === World.__GHOUL__) {
                 for (i = 0; i < len; i++) {
-                    var player = socket[border.cycle[i]];
-                    var ghoul = World.socket[player.pid].ghoul;
+                    var player = players[border.cycle[i]];
+                    var ghoul = World.players[player.pid].ghoul;
                     if (ghoul === 0) playerinscreenfunc(player);
                     else {
                         player.extra = ghoul - 1;
@@ -16577,7 +16577,7 @@ try {
                     var player = MvW[Wwn.cycle[i]];
                     if (player.type === __ENTITIE_PLAYER__) {
                         showruncloud(player);
-                        var ghoul = World.socket[player.pid].ghoul;
+                        var ghoul = World.players[player.pid].ghoul;
                         if (ghoul === 0) playerinscreenfunc(player);
                         else {
                             player.extra = ghoul - 1;
@@ -16586,7 +16586,7 @@ try {
                     }
                 }
             } else {
-                for (i = 0; i < len; i++) playerinscreenfunc(socket[border.cycle[i]]);
+                for (i = 0; i < len; i++) playerinscreenfunc(players[border.cycle[i]]);
                 for (i = 0; i < WWM; i++) {
                     var player = MvW[Wwn.cycle[i]];
                     if (player.type === __ENTITIE_PLAYER__) {
@@ -16636,10 +16636,10 @@ try {
             VMnwn = Entitie.border[__ENTITIE_EXPLOSION__];
             WNnmw = VMnwn.border;
             for (i = 0; i < WNnmw; i++) nVmNm(explosions[VMnwn.cycle[i]]);
-            for (i = 0; i < len; i++) vWMWW(socket[border.cycle[i]]);
+            for (i = 0; i < len; i++) vWMWW(players[border.cycle[i]]);
             if (World.gameMode !== World.__BR__) {
-                for (i = 0; i < len; i++) mVwvw(socket[border.cycle[i]]);
-                for (i = 0; i < len; i++) VvVNw(socket[border.cycle[i]]);
+                for (i = 0; i < len; i++) mVwvw(players[border.cycle[i]]);
+                for (i = 0; i < len; i++) VvVNw(players[border.cycle[i]]);
             }
         };
 
@@ -16723,7 +16723,7 @@ try {
             mWN = VNVwN;
             VNVwN = VVv;
             VVv = mWN;
-            ctx.fillStyle = (World.nVM === 0) ? "#0B2129" : "#3D5942";
+            ctx.fillStyle = (World.day === 0) ? "#0B2129" : "#3D5942";
             ctx.fillRect(0, 0, screenWidth, screenHeight);
             vMwNm();
             checkobjonscreen();
@@ -16757,7 +16757,7 @@ try {
             ctx.drawImage(vvMWV, 0, 0, screenWidth, screenHeight);
             ctx.globalAlpha = 1;
             World.transition = window.Math.max(0, World.transition - delta);
-            if (World.transition === 0) World.VwVMW();
+            if (World.transition === 0) World.changeDayCycle();
         };
 
         function wVVvW() {
@@ -16934,7 +16934,7 @@ ENTITIES[__ENTITIE_PLAYER__].update = function updateEntitiePlayer(MW, WX, WY) {
     MW.speed = (MW.state >> 8) / 100;
 };
 ENTITIES[__ENTITIE_PLAYER__].init = function initEntitiePlayer(MW) {
-    var PLAYER = World.socket[MW.pid];
+    var PLAYER = World.players[MW.pid];
     for (var i = 0; i < PLAYER.runEffect.length; i++) PLAYER.runEffect[i].delay = 0;
     for (var i = 0; i < PLAYER.cartridges.length; i++) PLAYER.cartridges[i].delay = 0;
     MW.angle = MW.nangle;
