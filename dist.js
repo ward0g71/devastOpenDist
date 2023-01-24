@@ -993,7 +993,7 @@ function onHandshake(buf, unit8) {
     World.PLAYER.putableimg = 0;
     World.PLAYER.buildRotate = 0;
     World.PLAYER.NvwMN = 0;
-    World.PLAYER.Mww = 0;
+    World.PLAYER.grid = 0;
     for (var i = 0; i < World.PLAYER.Wvv.length; i++)
         World.PLAYER.Wvv[i] = 0;
     for (var i = 0; i < 8; i++)
@@ -1143,24 +1143,24 @@ function onFullInventory(MWwnV) {
     }
     var j = 0;
     for (var i = 1; i < MWwnV.length; i += 4) {
-        var idd = MWwnV[i];
-        if (idd !== 0)
-            Game.inventory[j].setImages(items[idd].img.src, items[idd].img.W);
+        var item = MWwnV[i];
+        if (item !== 0)
+            Game.inventory[j].setImages(items[item].img.src, items[item].img.W);
         else
             continue;
         var invtr = World.PLAYER.inventory[j];
         invtr[1] = MWwnV[i + 1];
         invtr[2] = MWwnV[i + 2];
         invtr[3] = MWwnV[i + 3];
-        invtr[0] = idd;
+        invtr[0] = item;
         j++;
     }
 };
 
-function onDeleteItem(idd) {
+function onDeleteItem(item) {
     var invtr = World.PLAYER.inventory;
     for (var i = 0; i < invtr.length; i++) {
-        if ((((invtr[i][0] === idd[1]) && (invtr[i][1] === idd[2])) && (invtr[i][2] === idd[3])) && (invtr[i][3] === idd[4])) {
+        if ((((invtr[i][0] === item[1]) && (invtr[i][1] === item[2])) && (invtr[i][2] === item[3])) && (invtr[i][3] === item[4])) {
             invtr[i][0] = 0;
             invtr[i][1] = 0;
             invtr[i][2] = 0;
@@ -1172,15 +1172,15 @@ function onDeleteItem(idd) {
     }
 };
 
-function onNewItem(idd) {
+function onNewItem(item) {
     var invtr = World.PLAYER.inventory;
     for (var i = 0; i < invtr.length; i++) {
         if (invtr[i][0] === 0) {
-            invtr[i][0] = idd[1];
-            invtr[i][1] = idd[2];
-            invtr[i][2] = idd[3];
-            invtr[i][3] = idd[4];
-            Game.inventory[i].setImages(items[idd[1]].img.src, items[idd[1]].img.W);
+            invtr[i][0] = item[1];
+            invtr[i][1] = item[2];
+            invtr[i][2] = item[3];
+            invtr[i][3] = item[4];
+            Game.inventory[i].setImages(items[item[1]].img.src, items[item[1]].img.W);
             if ((Game.MvN() === 1) && (World.PLAYER.nVV === -1))
                 World.MwM(World.PLAYER.Vvw);
             return;
@@ -1214,11 +1214,11 @@ function onStaminaIncrease() {
     World.gauges.stamina.vww = -1;
 };
 
-function onReplaceItem(idd) {
+function onReplaceItem(item) {
     var invtr = World.PLAYER.inventory;
     for (var i = 0; i < invtr.length; i++) {
-        if ((((invtr[i][0] === idd[1]) && (invtr[i][1] === idd[2])) && (invtr[i][2] === idd[3])) && (invtr[i][3] === idd[4])) {
-            invtr[i][1] = idd[5];
+        if ((((invtr[i][0] === item[1]) && (invtr[i][1] === item[2])) && (invtr[i][2] === item[3])) && (invtr[i][3] === item[4])) {
+            invtr[i][1] = item[5];
             if ((Game.MvN() === 1) && (World.PLAYER.nVV === -1))
                 World.MwM(World.PLAYER.Vvw);
             return;
@@ -1236,12 +1236,12 @@ function onStackItem(buf) {
         else if (((invtr[i][0] === buf[1]) && (invtr[i][1] === buf[4])) && (invtr[i][2] === buf[5]))
             MNmNm = i;
     }
-    var idd = items[buf[1]];
+    var item = items[buf[1]];
     var NVwnN = buf[2] + buf[4];
-    if (idd.stack < NVwnN) {
-        invtr[MNmNm][3] = window.Math.min(255, window.Math.max(0, window.Math.floor(((invtr[wWnWW][3] * invtr[wWnWW][1]) + (invtr[MNmNm][3] * (idd.stack - invtr[wWnWW][1]))) / idd.stack)));
-        invtr[wWnWW][1] = NVwnN - idd.stack;
-        invtr[MNmNm][1] = idd.stack;
+    if (item.stack < NVwnN) {
+        invtr[MNmNm][3] = window.Math.min(255, window.Math.max(0, window.Math.floor(((invtr[wWnWW][3] * invtr[wWnWW][1]) + (invtr[MNmNm][3] * (item.stack - invtr[wWnWW][1]))) / item.stack)));
+        invtr[wWnWW][1] = NVwnN - item.stack;
+        invtr[MNmNm][1] = item.stack;
     } else {
         invtr[MNmNm][3] = window.Math.min(255, window.Math.max(0, window.Math.floor(((invtr[wWnWW][3] * invtr[wWnWW][1]) + (invtr[MNmNm][3] * invtr[MNmNm][1])) / NVwnN)));
         invtr[wWnWW][0] = 0;
@@ -1304,11 +1304,11 @@ function onLifeIncrease() {
     World.gauges.life.vww = -1;
 };
 
-function onReplaceAmmo(idd) {
+function onReplaceAmmo(item) {
     var invtr = World.PLAYER.inventory;
     for (var i = 0; i < invtr.length; i++) {
-        if ((((invtr[i][0] === idd[1]) && (invtr[i][1] === idd[2])) && (invtr[i][2] === idd[3])) && (invtr[i][3] === idd[4])) {
-            invtr[i][3] = idd[5];
+        if ((((invtr[i][0] === item[1]) && (invtr[i][1] === item[2])) && (invtr[i][2] === item[3])) && (invtr[i][3] === item[4])) {
+            invtr[i][3] = item[5];
             return;
         }
     }
@@ -1325,12 +1325,12 @@ function onInterruptInteraction() {
     World.PLAYER.wVnVm = 0;
 };
 
-function onReplaceItemAndAmmo(idd) {
+function onReplaceItemAndAmmo(item) {
     var invtr = World.PLAYER.inventory;
     for (var i = 0; i < invtr.length; i++) {
-        if ((((invtr[i][0] === idd[1]) && (invtr[i][1] === idd[2])) && (invtr[i][2] === idd[3])) && (invtr[i][3] === idd[4])) {
-            invtr[i][1] = idd[5];
-            invtr[i][3] = idd[6];
+        if ((((invtr[i][0] === item[1]) && (invtr[i][1] === item[2])) && (invtr[i][2] === item[3])) && (invtr[i][3] === item[4])) {
+            invtr[i][1] = item[5];
+            invtr[i][3] = item[6];
             if ((Game.MvN() === 1) && (World.PLAYER.nVV === -1))
                 World.MwM(World.PLAYER.Vvw);
             return;
@@ -1412,10 +1412,10 @@ function onOpenBuilding(unit8) {
     var queue = craft.queue;
     World.PLAYER.Nn.len = 4;
     for (var i = 0; i < 4; i++) {
-        var idd = unit8[i + 4];
-        queue[i] = idd;
-        if (idd !== 0)
-            Game.queue[i].setImages(items[idd].img.src, items[idd].img.W);
+        var item = unit8[i + 4];
+        queue[i] = item;
+        if (item !== 0)
+            Game.queue[i].setImages(items[item].img.src, items[item].img.W);
         else {
             World.PLAYER.Nn.len = i;
             break;
@@ -1427,11 +1427,11 @@ function onOpenBuilding(unit8) {
     else
         craft.MNM = -1;
     if (((queue[0] !== 0) && (craft.pos !== 4)) && (queue[craft.pos] !== 0)) {
-        var idd = items[queue[craft.pos]];
-        var canvasZ = idd.detail.MWW;
+        var item = items[queue[craft.pos]];
+        var canvasZ = item.detail.MWW;
         for (i = 0; i < canvasZ.length; i++) {
             if (canvasZ[i] === MWW) {
-                craft.WWNVM = idd.detail.NMMmV[i] * World.PLAYER.VVvMn;
+                craft.WWNVM = item.detail.NMMmV[i] * World.PLAYER.VVvMn;
                 break;
             }
         }
@@ -1640,7 +1640,7 @@ function onWrongPassword() {
 function onPlayerEat(Wn) {
     var player = Entitie.findEntitie(__ENTITIE_PLAYER__, Wn, 0);
     if (player !== null)
-        player.nMW = 300;
+        player.hurt2 = 300;
 };
 
 function onCitiesLocation(wmWvV) {
@@ -2616,8 +2616,8 @@ var World = (function() {
         }
         MW.x = MathUtils.lerp(MW.x, MW.rx, MW.lerp);
         MW.y = MathUtils.lerp(MW.y, MW.ry, MW.lerp);
-        MW.i = window.Math.max(0, window.Math.min(nVnMn, window.Math.floor(MW.y / Render.wmn)));
-        MW.j = window.Math.max(0, window.Math.min(MwwMW, window.Math.floor(MW.x / Render.wmn)));
+        MW.i = window.Math.max(0, window.Math.min(nVnMn, window.Math.floor(MW.y / Render.__TILE_SIZE__)));
+        MW.j = window.Math.max(0, window.Math.min(MwwMW, window.Math.floor(MW.x / Render.__TILE_SIZE__)));
         if ((World.PLAYER.id === MW.pid) && (MW.id === 0))
             MW.angle = Mouse.angle;
         else if (MW.pid === 0)
@@ -2798,10 +2798,10 @@ var World = (function() {
 
     function NvwNN(Wn) {
         var len = 0;
-        var idd = items[Wn];
-        Game.preview.setImages(idd.img.src, idd.img.W);
-        var MWVwN = idd.detail.recipe;
-        var canvasZ = idd.detail.MWW;
+        var item = items[Wn];
+        Game.preview.setImages(item.img.src, item.img.W);
+        var MWVwN = item.detail.recipe;
+        var canvasZ = item.detail.MWW;
         var recipe = Game.recipe;
         var tools = Game.tools;
         var nNNWn = PLAYER.nNNWn;
@@ -2810,8 +2810,8 @@ var World = (function() {
             for (var i = 0; i < canvasZ.length; i++) {
                 var wmN = VmwwM[canvasZ[i]];
                 if (wmN !== window.undefined) {
-                    idd = items[wmN];
-                    tools[len].setImages(idd.img.src, idd.img.W);
+                    item = items[wmN];
+                    tools[len].setImages(item.img.src, item.img.W);
                     len++;
                 }
             }
@@ -2820,9 +2820,9 @@ var World = (function() {
         len = 0;
         if (MWVwN !== window.undefined) {
             for (i = 0; i < MWVwN.length; i++) {
-                idd = items[MWVwN[i][0]];
-                recipe[len].setImages(idd.img.src, idd.img.W);
-                nNNWn[len] = idd.id;
+                item = items[MWVwN[i][0]];
+                recipe[len].setImages(item.img.src, item.img.W);
+                nNNWn[len] = item.id;
                 len++;
             }
         }
@@ -2847,9 +2847,9 @@ var World = (function() {
         for (var i = 0; i < recipe.length; i++) {
             var VWVMW = recipe[i];
             for (var j = 0; j < invtr.length; j++) {
-                var idd = invtr[j];
-                if (idd[0] === VWVMW[0]) {
-                    if (idd[1] >= VWVMW[1]) {
+                var item = invtr[j];
+                if (item[0] === VWVMW[0]) {
+                    if (item[1] >= VWVMW[1]) {
                         MvmWv[i] = VWVMW[1];
                         break;
                     } else
@@ -2881,15 +2881,15 @@ var World = (function() {
         var craftList = Game.craft;
         var vVN = PLAYER.vVN;
         for (var i = 1; i < items.length; i++) {
-            var idd = items[i];
-            if (idd.detail.nww === nww) {
+            var item = items[i];
+            if (item.detail.nww === nww) {
                 if (nnNVM === 0) {
                     nnNVM = i;
                     vVWmn = len;
                 }
-                craftList[len].setImages(idd.img.src, idd.img.W);
+                craftList[len].setImages(item.img.src, item.img.W);
                 craft[len] = i;
-                vVN[len] = NMvWv(i, idd.detail);
+                vVN[len] = NMvWv(i, item.detail);
                 len++;
             }
         }
@@ -2913,14 +2913,14 @@ var World = (function() {
         var vVN = PLAYER.vVN;
         var craftList = Game.craft;
         for (var i = 1; i < items.length; i++) {
-            var idd = items[i];
-            var NW = idd.detail;
-            if (((NW.MWW !== window.undefined) && (NW.MWW.indexOf(MWW) !== -1)) && ((NW.level === -1) || (PLAYER.WvMVw[idd.id] === 1))) {
+            var item = items[i];
+            var NW = item.detail;
+            if (((NW.MWW !== window.undefined) && (NW.MWW.indexOf(MWW) !== -1)) && ((NW.level === -1) || (PLAYER.WvMVw[item.id] === 1))) {
                 if ((nnNVM === 0) || (WnNmW === i)) {
                     nnNVM = i;
                     vVWmn = len;
                 }
-                craftList[len].setImages(idd.img.src, idd.img.W);
+                craftList[len].setImages(item.img.src, item.img.W);
                 craft[len] = i;
                 vVN[len] = MMMWN(NW.recipe);
                 len++;
@@ -3033,7 +3033,7 @@ var World = (function() {
         mWmnv: 0,
         buildRotate: 0,
         NvwMN: 0,
-        Mww: 0,
+        grid: 0,
         Wvv: [0, 0, 0],
         VWVWw: 0,
         vNwMm: 0,
@@ -6898,12 +6898,12 @@ function setEntitie(MW, pid, uid, Wn, vV, WX, WY, nx, ny, extra, angle, Mnn) {
         MW.lerp = WvW.lerp;
         MW.rx = WX;
         MW.ry = WY;
-        MW.i = window.Math.floor(WY / Render.wmn);
-        MW.j = window.Math.floor(WX / Render.wmn);
+        MW.i = window.Math.floor(WY / Render.__TILE_SIZE__);
+        MW.j = window.Math.floor(WX / Render.__TILE_SIZE__);
         MW.hit = 0;
         MW.hitMax = 0;
         MW.hurt = 0;
-        MW.nMW = 0;
+        MW.hurt2 = 0;
         MW.hurtAngle = 0;
         MW.heal = 0;
         MW.death = 0;
@@ -8039,41 +8039,41 @@ var Home = (function() {
         Render.reset(1);
         vmV = 0;
 
-        nnn(mWmnn, 200, 0, 127, object.stone, 3);
-        nnn(MmvmN, 400, 100, 127, object.orangebush, 2);
-        nnn(MVm, 100, 100, 127, object.tree, 0);
-        Vnvmv(MNvmw, 900, 500, 0, 33, item.smelter);
-        Vnvmv(wNnwm, 800, 400, 1, 1, item.workbench);
-        nnn(MVm, 1100, 300, 10, object.tree, 1);
-        nnn(MVm, 800, 200, 127, object.tree, 2);
-        nnn(MVm, 700, 100, 127, object.tree, 3);
-        nnn(MVm, 1200, 0, 127, object.tree, 0);
-        nnn(MVm, 1300, 100, 127, object.tree, 4);
-        nnn(MVm, 1300, 300, 127, object.tree, 2);
-        nnn(MVm, 800, 500, 127, object.tree, 4);
-        nnn(MmvmN, 1000, 200, 127, object.orangebush, 0);
-        nnn(MVm, 700, 600, 127, object.tree, 0);
-        nnn(MVm, 500, 400, 127, object.tree, 2);
-        nnn(mWmnn, 500, 700, 127, object.stone, 3);
-        nnn(mWmnn, 1000, 300, 127, object.stone, 4);
-        nnn(MVm, 1300, 500, 100, object.tree, 2);
-        nnn(MVm, 1200, 700, 127, object.tree, 4);
-        nnn(MVm, 1300, 700, 127, object.tree, 0);
-        nnn(mWmnn, 800, 600, 127, object.stone, 5);
-        nnn(MVm, 500, 600, 127, object.tree, 4);
-        nnn(mWmnn, 200, 400, 127, object.uranium, 0);
-        nnn(mWmnn, 400, 500, 50, object.branchtree, 3);
-        nnn(MVm, 100, 400, 190, object.tree, 2);
-        nnn(MVm, 100, 500, 190, object.tree, 3);
-        nnn(MVm, 100, 600, 127, object.tree, 4);
-        nnn(MVm, 0, 500, 127, object.tree, 1);
-        nnn(MVm, 200, 300, 50, object.tree, 4);
-        nnn(MVm, 400, 200, 10, object.tree, 2);
-        nnn(MVm, 500, 200, 10, object.tree, 1);
-        nnn(MVm, 100, 800, 10, object.tree, 0);
-        nnn(MVm, 400, 800, 10, object.tree, 1);
-        nnn(MVm, 700, 800, 10, object.tree, 2);
-        nnn(mWmnn, 900, 700, 50, object.branchtree, 4);
+        nnn(__ENTITIE_RESOURCES_DOWN__, 200, 0, 127, object.stone, 3);
+        nnn(__ENTITIE_RESOURCES_TOP__, 400, 100, 127, object.orangebush, 2);
+        nnn(__ENTITIE_RESOURCES_STOP__, 100, 100, 127, object.tree, 0);
+        Vnvmv(__ENTITIE_BUILD_GROUND__, 900, 500, 0, 33, item.smelter);
+        Vnvmv(__ENTITIE_BUILD_DOWN__, 800, 400, 1, 1, item.workbench);
+        nnn(__ENTITIE_RESOURCES_STOP__, 1100, 300, 10, object.tree, 1);
+        nnn(__ENTITIE_RESOURCES_STOP__, 800, 200, 127, object.tree, 2);
+        nnn(__ENTITIE_RESOURCES_STOP__, 700, 100, 127, object.tree, 3);
+        nnn(__ENTITIE_RESOURCES_STOP__, 1200, 0, 127, object.tree, 0);
+        nnn(__ENTITIE_RESOURCES_STOP__, 1300, 100, 127, object.tree, 4);
+        nnn(__ENTITIE_RESOURCES_STOP__, 1300, 300, 127, object.tree, 2);
+        nnn(__ENTITIE_RESOURCES_STOP__, 800, 500, 127, object.tree, 4);
+        nnn(__ENTITIE_RESOURCES_TOP__, 1000, 200, 127, object.orangebush, 0);
+        nnn(__ENTITIE_RESOURCES_STOP__, 700, 600, 127, object.tree, 0);
+        nnn(__ENTITIE_RESOURCES_STOP__, 500, 400, 127, object.tree, 2);
+        nnn(__ENTITIE_RESOURCES_DOWN__, 500, 700, 127, object.stone, 3);
+        nnn(__ENTITIE_RESOURCES_DOWN__, 1000, 300, 127, object.stone, 4);
+        nnn(__ENTITIE_RESOURCES_STOP__, 1300, 500, 100, object.tree, 2);
+        nnn(__ENTITIE_RESOURCES_STOP__, 1200, 700, 127, object.tree, 4);
+        nnn(__ENTITIE_RESOURCES_STOP__, 1300, 700, 127, object.tree, 0);
+        nnn(__ENTITIE_RESOURCES_DOWN__, 800, 600, 127, object.stone, 5);
+        nnn(__ENTITIE_RESOURCES_STOP__, 500, 600, 127, object.tree, 4);
+        nnn(__ENTITIE_RESOURCES_DOWN__, 200, 400, 127, object.uranium, 0);
+        nnn(__ENTITIE_RESOURCES_DOWN__, 400, 500, 50, object.branchtree, 3);
+        nnn(__ENTITIE_RESOURCES_STOP__, 100, 400, 190, object.tree, 2);
+        nnn(__ENTITIE_RESOURCES_STOP__, 100, 500, 190, object.tree, 3);
+        nnn(__ENTITIE_RESOURCES_STOP__, 100, 600, 127, object.tree, 4);
+        nnn(__ENTITIE_RESOURCES_STOP__, 0, 500, 127, object.tree, 1);
+        nnn(__ENTITIE_RESOURCES_STOP__, 200, 300, 50, object.tree, 4);
+        nnn(__ENTITIE_RESOURCES_STOP__, 400, 200, 10, object.tree, 2);
+        nnn(__ENTITIE_RESOURCES_STOP__, 500, 200, 10, object.tree, 1);
+        nnn(__ENTITIE_RESOURCES_STOP__, 100, 800, 10, object.tree, 0);
+        nnn(__ENTITIE_RESOURCES_STOP__, 400, 800, 10, object.tree, 1);
+        nnn(__ENTITIE_RESOURCES_STOP__, 700, 800, 10, object.tree, 2);
+        nnn(__ENTITIE_RESOURCES_DOWN__, 900, 700, 50, object.branchtree, 4);
 
 
         if (isTouchScreen === 1) VmV = GUI.createBackground(650, 312, "img/logo-homepage-mobile2.png");
@@ -9931,11 +9931,11 @@ var Game = (function() {
             if ((i > 9) && (bagbutt.open === 0)) break;
             if (inventory[i].trigger() === 1) {
                 mnWNv = 1;
-                var idd = invtr[i][0];
+                var item = invtr[i][0];
                 var nM = invtr[i][1];
                 var vmM = invtr[i][2];
                 var wvmvw = invtr[i][3];
-                var vV = items[idd];
+                var vV = items[item];
                 if (holditem.inclick === 1) {
                     if (holditem.id !== i) {
                         if (invtr[i][0] === invtr[holditem.id][0]) {
@@ -9950,11 +9950,11 @@ var Game = (function() {
                         invtr[i][1] = invtr[holditem.id][1];
                         invtr[i][2] = invtr[holditem.id][2];
                         invtr[i][3] = invtr[holditem.id][3];
-                        invtr[holditem.id][0] = idd;
+                        invtr[holditem.id][0] = item;
                         invtr[holditem.id][1] = nM;
                         invtr[holditem.id][2] = vmM;
                         invtr[holditem.id][3] = wvmvw;
-                        if (idd !== 0) Game.inventory[holditem.id].setImages(items[idd].img.src, items[idd].img.W);
+                        if (item !== 0) Game.inventory[holditem.id].setImages(items[item].img.src, items[item].img.W);
                         Game.inventory[i].setImages(items[invtr[i][0]].img.src, items[invtr[i][0]].img.W);
                         World.PLAYER.holditem.inclick = 0;
                         AudioUtils.playFx(AudioUtils._fx.holditem, 1, 0);
@@ -9962,18 +9962,18 @@ var Game = (function() {
                     }
                     World.PLAYER.holditem.inclick = 0;
                 }
-                if (idd !== 0) {
+                if (item !== 0) {
                     if ((isChestOpen === 1) && (event.which !== 3)) {
-                        Client.sendPacket(window.JSON.stringify([26, idd, nM, vmM, wvmvw]));
+                        Client.sendPacket(window.JSON.stringify([26, item, nM, vmM, wvmvw]));
                         AudioUtils.playFx(AudioUtils._fx.holditem, 1, 0);
                     } else if (event.which === 3) {
-                        Client.sendPacket(window.JSON.stringify([9, idd, nM, vmM, wvmvw]));
+                        Client.sendPacket(window.JSON.stringify([9, item, nM, vmM, wvmvw]));
                         AudioUtils.playFx(AudioUtils._fx.wWwnM, 1, 0);
                     } else {
                         if (event.ctrlKey) {
                             AudioUtils.playFx(AudioUtils._fx.holditem, 0.6, 0);
-                            Client.sendPacket(window.JSON.stringify([11, idd, nM, vmM]));
-                        } else Client.sendPacket(window.JSON.stringify([8, idd, nM, vmM, wvmvw]));
+                            Client.sendPacket(window.JSON.stringify([11, item, nM, vmM]));
+                        } else Client.sendPacket(window.JSON.stringify([8, item, nM, vmM, wvmvw]));
                     }
                 }
             }
@@ -10187,18 +10187,18 @@ var Game = (function() {
                     var i = event.keyCode - 49;
                     var invtr = World.PLAYER.inventory;
                     if (i < invtr.length) {
-                        var idd = invtr[i][0];
+                        var item = invtr[i][0];
                         var nM = invtr[i][1];
                         var vmM = invtr[i][2];
                         var wvmvw = invtr[i][3];
                         if (event.altKey) {
-                            Client.sendPacket(window.JSON.stringify([9, idd, nM, vmM, wvmvw]));
+                            Client.sendPacket(window.JSON.stringify([9, item, nM, vmM, wvmvw]));
                             AudioUtils.playFx(AudioUtils._fx.wWwnM, 1, 0);
                         } else {
                             if (event.ctrlKey) {
                                 AudioUtils.playFx(AudioUtils._fx.holditem, 0.6, 0);
-                                Client.sendPacket(window.JSON.stringify([11, idd, nM, vmM]));
-                            } else Client.sendPacket(window.JSON.stringify([8, idd, nM, vmM, wvmvw]));
+                                Client.sendPacket(window.JSON.stringify([11, item, nM, vmM]));
+                            } else Client.sendPacket(window.JSON.stringify([8, item, nM, vmM, wvmvw]));
                         }
                     }
                 }
@@ -10641,13 +10641,13 @@ var Score = (function() {
         }
         var MWMwV = mvv[window.Math.min(mvv.length - 1, World.PLAYER.level)];
         for (var i = 0; i < MWMwV.length; i++) {
-            var idd = MWMwV[i];
-            if (idd.id !== 0) Game.inventory[i].setImages(items[idd.id].img.src, items[idd.id].img.W);
+            var item = MWMwV[i];
+            if (item.id !== 0) Game.inventory[i].setImages(items[item.id].img.src, items[item.id].img.W);
             var invtr = World.PLAYER.inventory[i];
-            invtr[1] = idd.nM;
+            invtr[1] = item.nM;
             invtr[2] = 0;
-            invtr[3] = idd.life;
-            invtr[0] = idd.id;
+            invtr[3] = item.life;
+            invtr[0] = item.id;
         }
         waitAds = 5000;
         if (Loader.getURLData("admin") === null) {
@@ -11119,10 +11119,10 @@ function exportmapfunc() {
     else if (Nnw <= 500) Nnw = 3000 - Nnw;
     else if (Nnw <= 2500) Nnw = 2500;
     var NvV = "";
-    NvV += wMNww(wNnwm);
-    NvV += wMNww(nnvNN);
-    NvV += wMNww(NWWvM);
-    NvV += wMNww(MNvmw);
+    NvV += wMNww(__ENTITIE_BUILD_DOWN__);
+    NvV += wMNww(__ENTITIE_BUILD_TOP__);
+    NvV += wMNww(__ENTITIE_BUILD_GROUND2__);
+    NvV += wMNww(__ENTITIE_BUILD_GROUND__);
     var vMV = window.document.createElement('textarea');
     vMV["value"] = NvV;
     window.document["body"]["appendChild"](vMV);
@@ -11140,9 +11140,9 @@ function wMNww(vV) {
     var wVN = wWv.border;
     for (i = 0; i < wVN; i++) {
         var player = Nvw[wWv.cycle[i]];
-        var idd = items[player.extra >> 7];
-        NvV += ("!b=" + idd.id) + ":";
-        if (idd.subtype !== 0) NvV += player.subtype + ":";
+        var item = items[player.extra >> 7];
+        NvV += ("!b=" + item.id) + ":";
+        if (item.subtype !== 0) NvV += player.subtype + ":";
         NvV += (((player.j + ":") + player.i) + ":") + ((player.extra >> 5) & 3);
     }
     return NvV;
@@ -11267,25 +11267,25 @@ var Editor = (function() {
         i = window.Number(i) >>> 0;
         j = window.Number(j) >>> 0;
         Rot = window.Number(Rot) >>> 0;
-        if (((Rot > 3) || (i >= nmn.height)) || (j >= nmn.height)) return;
+        if (((Rot > 3) || (i >= MapManager.height)) || (j >= MapManager.height)) return;
         var Nn = items[NNWVv];
         if (((Nn === window.undefined) || (Nn.subtype === window.undefined)) || ((Nn.subtype > 0) && (Nn.Nn.length <= subtype))) return;
         var Rot = (Nn.Mvw === 1) ? 0 : Rot;
-        var WX = (Nn.Wwv[Rot] + 50) + (100 * j);
-        var WY = (Nn.nWn[Rot] + 50) + (100 * i);
+        var WX = (Nn.xCenter[Rot] + 50) + (100 * j);
+        var WY = (Nn.yCenter[Rot] + 50) + (100 * i);
         var vV = 0;
         switch ((Nn.subtype === 0) ? Nn.WvV : Nn.subtype[subtype].WvV) {
             case 0:
-                vV = wNnwm;
+                vV = __ENTITIE_BUILD_DOWN__;
                 break;
             case 1:
-                vV = nnvNN;
+                vV = __ENTITIE_BUILD_TOP__;
                 break;
             case 2:
-                vV = NWWvM;
+                vV = __ENTITIE_BUILD_GROUND2__;
                 break;
             default:
-                vV = MNvmw;
+                vV = __ENTITIE_BUILD_GROUND__;
                 break;
         }
         nWMWn(1, vV, WX, WY, Rot, 1 + ((Nn.subtype === 0) ? 0 : (subtype << 5)), Nn.id);
@@ -11306,9 +11306,9 @@ var Editor = (function() {
         var wVN = wWv.border;
         for (i = 0; i < wVN; i++) {
             var player = Nvw[wWv.cycle[i]];
-            var idd = items[player.extra >> 7];
-            NvV += ("!b=" + idd.id) + ":";
-            if (idd.subtype !== 0) NvV += player.subtype + ":";
+            var item = items[player.extra >> 7];
+            NvV += ("!b=" + item.id) + ":";
+            if (item.subtype !== 0) NvV += player.subtype + ":";
             NvV += (((player.j + ":") + player.i) + ":") + ((player.extra >> 5) & 3);
         }
         return NvV;
@@ -11333,14 +11333,14 @@ var Editor = (function() {
             if (World.PLAYER.isBuilding === 1) {
                 World.PLAYER.click = -1;
                 if (World.PLAYER.canBuild === 1) {
-                    if ((((World.PLAYER.jBuild !== -1) && (World.PLAYER.iBuild !== -1)) && (World.PLAYER.jBuild !== nmn.width)) && (World.PLAYER.iBuild !== nmn.height)) Vnvmv(World.PLAYER.putableimg, World.PLAYER.mWmnv, World.PLAYER.iBuild, World.PLAYER.jBuild, World.PLAYER.buildRotate);
+                    if ((((World.PLAYER.jBuild !== -1) && (World.PLAYER.iBuild !== -1)) && (World.PLAYER.jBuild !== MapManager.width)) && (World.PLAYER.iBuild !== MapManager.height)) Vnvmv(World.PLAYER.putableimg, World.PLAYER.mWmnv, World.PLAYER.iBuild, World.PLAYER.jBuild, World.PLAYER.buildRotate);
                 } else {
                     var WX = 100 * World.PLAYER.jBuild;
                     var WY = 100 * World.PLAYER.iBuild;
-                    nwmMw(wNnwm, WX, WY);
-                    nwmMw(nnvNN, WX, WY);
-                    nwmMw(NWWvM, WX, WY);
-                    nwmMw(MNvmw, WX, WY);
+                    nwmMw(__ENTITIE_BUILD_DOWN__, WX, WY);
+                    nwmMw(__ENTITIE_BUILD_TOP__, WX, WY);
+                    nwmMw(__ENTITIE_BUILD_GROUND2__, WX, WY);
+                    nwmMw(__ENTITIE_BUILD_GROUND__, WX, WY);
                 }
             }
         } else if (Mouse.state === Mouse.__MOUSE_UP__) {
@@ -11367,8 +11367,8 @@ var Editor = (function() {
             else if (move & 2) PLAYER.rx = PLAYER.x + WvvVn;
             if (move & 8) PLAYER.ry = PLAYER.y - WvvVn;
             else if (move & 4) PLAYER.ry = PLAYER.y + WvvVn;
-            PLAYER.rx = window.Math.max(0, window.Math.min(PLAYER.rx, nmn.width * 100));
-            PLAYER.ry = window.Math.max(0, window.Math.min(PLAYER.ry, nmn.height * 100));
+            PLAYER.rx = window.Math.max(0, window.Math.min(PLAYER.rx, MapManager.width * 100));
+            PLAYER.ry = window.Math.max(0, window.Math.min(PLAYER.ry, MapManager.height * 100));
             PLAYER.nx = PLAYER.rx;
             PLAYER.ny = PLAYER.ry;
         }
@@ -11391,10 +11391,10 @@ var Editor = (function() {
         else if (Nnw <= 500) Nnw = 3000 - Nnw;
         else if (Nnw <= 2500) Nnw = 2500;
         var NvV = "";
-        NvV += wMNww(wNnwm);
-        NvV += wMNww(nnvNN);
-        NvV += wMNww(NWWvM);
-        NvV += wMNww(MNvmw);
+        NvV += wMNww(__ENTITIE_BUILD_DOWN__);
+        NvV += wMNww(__ENTITIE_BUILD_TOP__);
+        NvV += wMNww(__ENTITIE_BUILD_GROUND2__);
+        NvV += wMNww(__ENTITIE_BUILD_GROUND__);
         var vMV = window.document.createElement('textarea');
         vMV["value"] = NvV;
         window.document["body"]["appendChild"](vMV);
@@ -11497,9 +11497,9 @@ var Editor = (function() {
             vVnNn = 1;
             var vnvwV = items[item.NvMvM].subtype;
             for (var i = 0; i < vnvwV.length; i++) {
-                var idd = vnvwV[i];
-                idd.img = {
-                    src: [idd.Nn.src, "img/useless.png", "img/useless.png"],
+                var item = vnvwV[i];
+                item.img = {
+                    src: [item.Nn.src, "img/useless.png", "img/useless.png"],
                     W: [{
                         isLoaded: 0
                     }, {
@@ -11511,9 +11511,9 @@ var Editor = (function() {
             }
             var vnvwV = items[item.MMnVW].subtype;
             for (var i = 0; i < vnvwV.length; i++) {
-                var idd = vnvwV[i];
-                idd.img = {
-                    src: [idd.Nn.src, "img/useless.png", "img/useless.png"],
+                var item = vnvwV[i];
+                item.img = {
+                    src: [item.Nn.src, "img/useless.png", "img/useless.png"],
                     W: [{
                         isLoaded: 0
                     }, {
@@ -11799,10 +11799,10 @@ var Editor = (function() {
             vnm = 1;
             NWw = 0;
             for (var i = 1; i < items.length; i++) {
-                var idd = items[i];
-                if (idd.behavior === BEHAVIOR.__LOGIC__) {
-                    Wnw[NWw].setImages(idd.img.src, idd.img.W);
-                    Wnw[NWw].vmM = idd.id;
+                var item = items[i];
+                if (item.behavior === BEHAVIOR.__LOGIC__) {
+                    Wnw[NWw].setImages(item.img.src, item.img.W);
+                    Wnw[NWw].vmM = item.id;
                     NWw++;
                 }
             }
@@ -11812,10 +11812,10 @@ var Editor = (function() {
             vnm = 1;
             NWw = 0;
             for (var i = 1; i < items.length; i++) {
-                var idd = items[i];
-                if ((((idd.id === item.landmine) || (idd.id === item.c4bomb)) || (idd.id === item.woodespike)) || (idd.id === item.dynamite)) {
-                    Wnw[NWw].setImages(idd.img.src, idd.img.W);
-                    Wnw[NWw].vmM = idd.id;
+                var item = items[i];
+                if ((((item.id === item.landmine) || (item.id === item.c4bomb)) || (item.id === item.woodespike)) || (item.id === item.dynamite)) {
+                    Wnw[NWw].setImages(item.img.src, item.img.W);
+                    Wnw[NWw].vmM = item.id;
                     NWw++;
                 }
             }
@@ -11826,8 +11826,8 @@ var Editor = (function() {
             NWw = 0;
             var vnvwV = items[item.NvMvM].subtype;
             for (var i = 0; i < vnvwV.length; i++) {
-                var idd = vnvwV[i];
-                Wnw[NWw].setImages(idd.img.src, idd.img.W);
+                var item = vnvwV[i];
+                Wnw[NWw].setImages(item.img.src, item.img.W);
                 Wnw[NWw].vmM = item.NvMvM;
                 Wnw[NWw].nVWnM = i;
                 NWw++;
@@ -11839,8 +11839,8 @@ var Editor = (function() {
             NWw = 0;
             var vnvwV = items[item.MMnVW].subtype;
             for (var i = 0; i < vnvwV.length; i++) {
-                var idd = vnvwV[i];
-                Wnw[NWw].setImages(idd.img.src, idd.img.W);
+                var item = vnvwV[i];
+                Wnw[NWw].setImages(item.img.src, item.img.W);
                 Wnw[NWw].vmM = item.MMnVW;
                 Wnw[NWw].nVWnM = i;
                 NWw++;
@@ -11851,10 +11851,10 @@ var Editor = (function() {
             vnm = 1;
             NWw = 0;
             for (var i = 1; i < items.length; i++) {
-                var idd = items[i];
-                if (((((idd.Mvw === 1) || (idd.VWN === 1)) || (idd.WNv === 1)) || (idd.chest === 1)) || (idd.VVmmM === 1)) {
-                    Wnw[NWw].setImages(idd.img.src, idd.img.W);
-                    Wnw[NWw].vmM = idd.id;
+                var item = items[i];
+                if (((((item.Mvw === 1) || (item.VWN === 1)) || (item.WNv === 1)) || (item.chest === 1)) || (item.VVmmM === 1)) {
+                    Wnw[NWw].setImages(item.img.src, item.img.W);
+                    Wnw[NWw].vmM = item.id;
                     NWw++;
                 }
             }
@@ -12347,7 +12347,7 @@ var NVwvn = [{}, {
         h: 28,
         w: 28
     },
-    Mww: [
+    grid: [
         [0, 0, 0, 0],
         [0, 0, 0, 0],
         [0, 0, 0, 0],
@@ -12366,7 +12366,7 @@ var NVwvn = [{}, {
         h: 28,
         w: 28
     },
-    Mww: [
+    grid: [
         [0, 0, 0, 0],
         [0, 0, 0, 0],
         [0, 0, 0, 0],
@@ -12385,7 +12385,7 @@ var NVwvn = [{}, {
         h: 28,
         w: 28
     },
-    Mww: [
+    grid: [
         [0, 0, 0, 0],
         [0, 0, 0, 0],
         [0, 0, 0, 0],
@@ -12404,7 +12404,7 @@ var NVwvn = [{}, {
         h: 28,
         w: 28
     },
-    Mww: [
+    grid: [
         [0, 0, 0, 0],
         [0, 0, 0, 0],
         [0, 0, 0, 0],
@@ -12423,7 +12423,7 @@ var NVwvn = [{}, {
         h: 28,
         w: 28
     },
-    Mww: [
+    grid: [
         [0, 0, 0, 0],
         [0, 0, 0, 0],
         [0, 0, 0, 0],
@@ -12441,7 +12441,7 @@ var NVwvn = [{}, {
         h: 28,
         w: 28
     },
-    Mww: [
+    grid: [
         [0, 0, 0, 0],
         [0, 0, 0, 0],
         [0, 0, 0, 0],
@@ -12459,7 +12459,7 @@ var NVwvn = [{}, {
         h: 28,
         w: 28
     },
-    Mww: [
+    grid: [
         [0, 0, 0, 0],
         [0, 0, 0, 0],
         [0, 0, 0, 0],
@@ -12477,7 +12477,7 @@ var NVwvn = [{}, {
         h: 28,
         w: 28
     },
-    Mww: [
+    grid: [
         [0, 0, 0, 0],
         [0, 0, 0, 0],
         [0, 0, 0, 0],
@@ -12495,7 +12495,7 @@ var NVwvn = [{}, {
         h: 28,
         w: 28
     },
-    Mww: [
+    grid: [
         [0, 0, 0, 0],
         [0, 0, 0, 0],
         [0, 0, 0, 0],
@@ -12513,7 +12513,7 @@ var NVwvn = [{}, {
         h: 28,
         w: 28
     },
-    Mww: [
+    grid: [
         [0, 0, 0, 0],
         [0, 0, 0, 0],
         [0, 0, 0, 0],
@@ -12531,7 +12531,7 @@ var NVwvn = [{}, {
         h: 28,
         w: 28
     },
-    Mww: [
+    grid: [
         [0, 0, 0, 0],
         [0, 0, 0, 0],
         [0, 0, 0, 0],
@@ -12549,7 +12549,7 @@ var NVwvn = [{}, {
         h: 28,
         w: 28
     },
-    Mww: [
+    grid: [
         [0, 0, 0, 0],
         [0, 0, 0, 0],
         [0, 0, 0, 0],
@@ -12567,7 +12567,7 @@ var NVwvn = [{}, {
         h: 28,
         w: 28
     },
-    Mww: [
+    grid: [
         [0, 0, 0, 0],
         [0, 0, 0, 0],
         [0, 0, 0, 0],
@@ -12585,7 +12585,7 @@ var NVwvn = [{}, {
         h: 28,
         w: 28
     },
-    Mww: [
+    grid: [
         [0, 0, 0, 0],
         [0, 0, 0, 0],
         [0, 0, 0, 0],
@@ -12603,7 +12603,7 @@ var NVwvn = [{}, {
         h: 28,
         w: 28
     },
-    Mww: [
+    grid: [
         [0, 0, 0, 0],
         [0, 0, 0, 0],
         [0, 0, 0, 0],
@@ -12619,8 +12619,8 @@ try {
 } catch (error) {}
 
     var Render = (function() {
-        var wmn = 100;      
-        var nwn = wmn / 2; 
+        var __TILE_SIZE__ = 100;      
+        var __TILE_SIZE2__ = __TILE_SIZE__ / 2; 
         var VNvvM = 1;
         var NVmMW = 13;
         var WnWvv = 9;
@@ -12844,8 +12844,8 @@ try {
         var matrix = [];
         var wWmnn = NVmMW;
         var VmvVW = WnWvv;
-        var NwVwM = NVmMW * wmn;
-        var wNwMv = WnWvv * wmn;
+        var NwVwM = NVmMW * __TILE_SIZE__;
+        var wNwMv = WnWvv * __TILE_SIZE__;
         var NmWnM = [];
         var nNMVM = {
             isLoaded: 0
@@ -13436,13 +13436,13 @@ try {
             if (vW !== null) NwMVW = window.Number(vW);
             teamName = "";
             nNmVw = null;
-            nmn.width = 150;
-            nmn.height = 150;
-            Render.nnmMW = (nmn.width * 100) / 255;
-            NMv = nmn.width;
-            wWw = nmn.height;
-            WMwnW = wmn * NMv;
-            mmVNm = wmn * wWw;
+            MapManager.width = 150;
+            MapManager.height = 150;
+            Render.nnmMW = (MapManager.width * 100) / 255;
+            NMv = MapManager.width;
+            wWw = MapManager.height;
+            WMwnW = __TILE_SIZE__ * NMv;
+            mmVNm = __TILE_SIZE__ * wWw;
             nwMnv = 824 / WMwnW;
             vvVMV = 824 - mVmWm;
             VnvWV = vvVMV + WWn;
@@ -13461,7 +13461,7 @@ try {
             wm.pos.x = WX;
             wm.pos.y = WY;
             wm.draw();
-            var idd = items[invtr[0]];
+            var item = items[invtr[0]];
             var nM = invtr[1];
             if (nM > 1) {
                 if (inventoryItemNumber[nM] === window.undefined) {
@@ -13472,7 +13472,7 @@ try {
                 }
                 CanvasUtils.drawImageHd(inventoryItemNumber[nM], (WX / scaleby) + 53, (WY / scaleby) + 55, -0.5, 0, 0, 1);
             }
-            if ((idd.vMv !== window.undefined) && (idd.mMVwm === window.undefined)) {
+            if ((item.vMv !== window.undefined) && (item.mMVwm === window.undefined)) {
                 var nM = invtr[3];
                 if (inventoryAmmoNumber[nM] === window.undefined) {
                     inventoryAmmoNumber[nM] = {
@@ -13482,7 +13482,7 @@ try {
                 }
                 CanvasUtils.drawImageHd(inventoryAmmoNumber[nM], (WX / scaleby) + 53, (WY / scaleby) + 55, -0.5, 0, 0, 1);
             }
-            if (idd.vWVMV !== window.undefined) {
+            if (item.vWVMV !== window.undefined) {
                 var VWNwv = window.Math.floor(invtr[3] / 12.8);
                 var W = wwvmV[VWNwv];
                 if (W.isLoaded !== 1) {
@@ -13551,10 +13551,10 @@ try {
             }
             var holditem = World.PLAYER.holditem;
             if (((holditem.inclick === 1) && (Mouse.state === Mouse.__MOUSE_DOWN__)) && (Math2d.dist(holditem.x, holditem.y, Mouse.x, Mouse.y) > (4 * scaleby))) {
-                var idd = invtr[holditem.id][0];
-                if (idd > 0) {
-                    var W = items[idd].img.W[0];
-                    if (W.isLoaded === 0) W = NWVnn[idd].img.W[0];
+                var item = invtr[holditem.id][0];
+                if (item > 0) {
+                    var W = items[item].img.W[0];
+                    if (W.isLoaded === 0) W = NWVnn[item].img.W[0];
                     ctx.globalAlpha = 0.7;
                     var SY = 68 * scaleby;
                     ctx.drawImage(W, (Mouse.x * scaleby) - (SY / 2), (Mouse.y * scaleby) - (SY / 2), SY, SY);
@@ -14525,18 +14525,18 @@ try {
             }
             var nVNNn = NVWwM - NMn.i;
             var VwMWn = MWMvm - NMn.j;
-            var nNmvn = (i + Nn.Mww.length) - nVNNn;
-            var VWMmV = (j + Nn.Mww[0].length) - VwMWn;
+            var nNmvn = (i + Nn.grid.length) - nVNNn;
+            var VWMmV = (j + Nn.grid[0].length) - VwMWn;
             var nMNww = 0;
             var WvMwV = 0;
             for (var _i = i, mmWMW = 0; _i < nNmvn; _i++, mmWMW++) {
                 if (_i >= VmvVW) {
-                    nMNww = Nn.Mww.length - mmWMW;
+                    nMNww = Nn.grid.length - mmWMW;
                     break;
                 }
                 for (var _j = j, mVvwm = 0; _j < VWMmV; _j++, mVvwm++) {
                     if (_j >= wWmnn) {
-                        WvMwV = Nn.Mww[0].length - mVvwm;
+                        WvMwV = Nn.grid[0].length - mVvwm;
                         break;
                     } else vMnnw[_i][_j] = frameId;
                 }
@@ -14546,15 +14546,15 @@ try {
             var SX = 0;
             var SY = 0;
             if ((nMNww !== 0) || (WvMwV !== 0)) {
-                WX = (((NMn.j + VwMWn) * wmn) + vertst) * scaleby;
-                WY = (((NMn.i + nVNNn) * wmn) + horist) * scaleby;
+                WX = (((NMn.j + VwMWn) * __TILE_SIZE__) + vertst) * scaleby;
+                WY = (((NMn.i + nVNNn) * __TILE_SIZE__) + horist) * scaleby;
                 nVNNn *= 32;
                 VwMWn *= 32;
                 SX = (W.height - (nMNww * 32)) + nVNNn;
                 SY = (W.width - (WvMwV * 32)) + VwMWn;
             } else {
-                WX = (((NMn.j + VwMWn) * wmn) + vertst) * scaleby;
-                WY = (((NMn.i + nVNNn) * wmn) + horist) * scaleby;
+                WX = (((NMn.j + VwMWn) * __TILE_SIZE__) + vertst) * scaleby;
+                WY = (((NMn.i + nVNNn) * __TILE_SIZE__) + horist) * scaleby;
                 nVNNn *= 32;
                 VwMWn *= 32;
                 SX = W.height - nVNNn;
@@ -14635,33 +14635,33 @@ try {
 
         function wmVNW() {
             if (World.PLAYER.isBuilding === 1) {
-                if ((World.PLAYER.Mww > 0) && ((World.PLAYER.VWVWw !== World.PLAYER._i) || (World.PLAYER.vNwMm !== World.PLAYER._j))) {
+                if ((World.PLAYER.grid > 0) && ((World.PLAYER.VWVWw !== World.PLAYER._i) || (World.PLAYER.vNwMm !== World.PLAYER._j))) {
                     for (var i = 0; i < World.PLAYER.Wvv.length; i++) {
                         if (World.PLAYER.Wvv[i] === 0) {
-                            World.PLAYER.Wvv[i] = World.PLAYER.Mww;
+                            World.PLAYER.Wvv[i] = World.PLAYER.grid;
                             World.PLAYER.NVNMw[i] = World.PLAYER.VWVWw;
                             World.PLAYER.NmVnm[i] = World.PLAYER.vNwMm;
                             break;
                         }
                     }
-                    World.PLAYER.Mww = 0;
+                    World.PLAYER.grid = 0;
                     World.PLAYER.VWVWw = World.PLAYER._i;
                     World.PLAYER.vNwMm = World.PLAYER._j;
                 }
-                World.PLAYER.Mww = window.Math.min(Mvvwv, World.PLAYER.Mww + delta);
+                World.PLAYER.grid = window.Math.min(Mvvwv, World.PLAYER.grid + delta);
                 for (var i = 0; i < World.PLAYER.Wvv.length; i++) World.PLAYER.Wvv[i] = window.Math.max(0, World.PLAYER.Wvv[i] - delta);
-            } else if ((World.PLAYER.Mww === 0) && (mNWNw() === 1)) return;
+            } else if ((World.PLAYER.grid === 0) && (mNWNw() === 1)) return;
             else {
-                World.PLAYER.Mww = window.Math.max(0, World.PLAYER.Mww - delta);
+                World.PLAYER.grid = window.Math.max(0, World.PLAYER.grid - delta);
                 for (var i = 0; i < World.PLAYER.Wvv.length; i++) World.PLAYER.Wvv[i] = window.Math.max(0, World.PLAYER.Wvv[i] - delta);
             }
             if (wWNmv.isLoaded !== 1) {
                 wWNmv = CanvasUtils.loadImage(craftgrid, wWNmv);
                 return;
             }
-            ctx.globalAlpha = World.PLAYER.Mww / Mvvwv;
-            var WY = scaleby * (((World.PLAYER.VWVWw * wmn) + horist) + nwn);
-            var WX = scaleby * (((World.PLAYER.vNwMm * wmn) + vertst) + nwn);
+            ctx.globalAlpha = World.PLAYER.grid / Mvvwv;
+            var WY = scaleby * (((World.PLAYER.VWVWw * __TILE_SIZE__) + horist) + __TILE_SIZE2__);
+            var WX = scaleby * (((World.PLAYER.vNwMm * __TILE_SIZE__) + vertst) + __TILE_SIZE2__);
             var SY = (scaleby * wWNmv.width) / 2;
             var SX = (scaleby * wWNmv.height) / 2;
             ctx.drawImage(wWNmv, WX - (SY / 2), WY - (SX / 2), SY, SX);
@@ -14669,8 +14669,8 @@ try {
             for (var i = 0; i < World.PLAYER.Wvv.length; i++) {
                 if (World.PLAYER.Wvv[i] > 0) {
                     ctx.globalAlpha = World.PLAYER.Wvv[i] / Mvvwv;
-                    var WY = scaleby * (((World.PLAYER.NVNMw[i] * wmn) + horist) + nwn);
-                    var WX = scaleby * (((World.PLAYER.NmVnm[i] * wmn) + vertst) + nwn);
+                    var WY = scaleby * (((World.PLAYER.NVNMw[i] * __TILE_SIZE__) + horist) + __TILE_SIZE2__);
+                    var WX = scaleby * (((World.PLAYER.NmVnm[i] * __TILE_SIZE__) + vertst) + __TILE_SIZE2__);
                     var SY = (scaleby * wWNmv.width) / 2;
                     var SX = (scaleby * wWNmv.height) / 2;
                     ctx.drawImage(wWNmv, WX - (SY / 2), WY - (SX / 2), SY, SX);
@@ -14680,13 +14680,13 @@ try {
         };
 
         function wmMwV() {
-            var wVNVN = window.Math.min(nmn.height - VmvVW, window.Math.max(0, (((WnWvv - VmvVW) / 2) + window.Math.floor((WVNMV / wmn) - (VmvVW / 2))) + 1));
-            var vWMwn = window.Math.min(nmn.width - wWmnn, window.Math.max(0, (((NVmMW - wWmnn) / 2) + window.Math.floor((NVVWM / wmn) - (wWmnn / 2))) + 1));
+            var wVNVN = window.Math.min(MapManager.height - VmvVW, window.Math.max(0, (((WnWvv - VmvVW) / 2) + window.Math.floor((WVNMV / __TILE_SIZE__) - (VmvVW / 2))) + 1));
+            var vWMwn = window.Math.min(MapManager.width - wWmnn, window.Math.max(0, (((NVmMW - wWmnn) / 2) + window.Math.floor((NVVWM / __TILE_SIZE__) - (wWmnn / 2))) + 1));
             var SX = wVNVN + VmvVW;
             var SY = vWMwn + wWmnn;
             for (var i = wVNVN; i < SX; i++) {
                 for (var j = vWMwn; j < SY; j++) {
-                    var player = nmn.nWmMn[i][j];
+                    var player = MapManager.nWmMn[i][j];
                 }
             }
         };
@@ -14821,15 +14821,15 @@ try {
             CanvasUtils.drawImageHd(MVn, WX, WY, Nmm.angle + player.angle, ((Nmm.x + (move * PLAYER.orientation)) + recoil) + breath, Nmm.y, imgMovement);
             MVn = (wVn.leftArm === window.undefined) ? skin.leftArm : wVn.leftArm;
             CanvasUtils.drawImageHd(MVn, WX, WY, -VnN.angle + player.angle, ((VnN.x + (move * PLAYER.orientation)) + recoil) + breath, VnN.y, imgMovement);
-            var idd = weapon.weapon;
-            CanvasUtils.drawImageHd(idd, WX, WY, player.angle, ((idd.x + (move * PLAYER.orientation)) + breath) + recoil, idd.y, imgMovement);
-            if (player.nMW > 0) {
+            var item = weapon.weapon;
+            CanvasUtils.drawImageHd(item, WX, WY, player.angle, ((item.x + (move * PLAYER.orientation)) + breath) + recoil, item.y, imgMovement);
+            if (player.hurt2 > 0) {
                 var mnM = 1;
-                player.nMW -= delta;
+                player.hurt2 -= delta;
                 var vW = 0;
-                if (player.nMW > 150) vW = MathUtils.Ease.inQuad((300 - player.nMW) / 300);
+                if (player.hurt2 > 150) vW = MathUtils.Ease.inQuad((300 - player.hurt2) / 300);
                 else {
-                    vW = MathUtils.Ease.outQuad(player.nMW / 150);
+                    vW = MathUtils.Ease.outQuad(player.hurt2 / 150);
                     mnM += (1 - vW) * 0.2;
                 }
                 ctx.globalAlpha = window.Math.min(1, window.Math.max(0, vW));
@@ -14942,12 +14942,12 @@ try {
             CanvasUtils.drawImageHd(MVn, WX, WY, Nmm.angle + player.angle, ((Nmm.x + (move * PLAYER.orientation)) + recoil) + breath, Nmm.y, imgMovement);
             MVn = (wVn.leftArm === window.undefined) ? skin.leftArm : wVn.leftArm;
             CanvasUtils.drawImageHd(MVn, WX, WY, -VnN.angle + player.angle, ((VnN.x + (move * PLAYER.orientation)) + recoil) + breath, VnN.y, imgMovement);
-            var idd = weapon.weapon;
+            var item = weapon.weapon;
             if ((WMw >= 0) && (weapon.noEffect === 0)) {
                 var gunEffect = mVn.gunEffect[weapon.gunEffect][WMw];
-                CanvasUtils.drawImageHd(gunEffect, WX, WY, player.angle, (((idd.x + (move * PLAYER.orientation)) + breath) + recoilGun) + weapon.distance, idd.y, imgMovement);
+                CanvasUtils.drawImageHd(gunEffect, WX, WY, player.angle, (((item.x + (move * PLAYER.orientation)) + breath) + recoilGun) + weapon.distance, item.y, imgMovement);
             }
-            CanvasUtils.drawImageHd(idd, WX, WY, player.angle, ((idd.x + (move * PLAYER.orientation)) + breath) + recoilGun, idd.y, imgMovement);
+            CanvasUtils.drawImageHd(item, WX, WY, player.angle, ((item.x + (move * PLAYER.orientation)) + breath) + recoilGun, item.y, imgMovement);
             for (var i = 0; i < cartridges.length; i++) {
                 var cartridge = cartridges[i];
                 if (cartridge.delay > 0) {
@@ -15045,8 +15045,8 @@ try {
                 var WnVmv = weapon.WnVmv;
                 CanvasUtils.drawImageHd(WnVmv, WX, WY, player.angle, ((WnVmv.x - (move * PLAYER.orientation)) + breathWeapon) + NWW, WnVmv.y, imgMovement);
             }
-            var idd = weapon.weapon;
-            CanvasUtils.drawImageHd(idd, WX, WY, idd.angle + player.angle, ((idd.x + (move * PLAYER.orientation)) + breath) + NNM, idd.y, imgMovement);
+            var item = weapon.weapon;
+            CanvasUtils.drawImageHd(item, WX, WY, item.angle + player.angle, ((item.x + (move * PLAYER.orientation)) + breath) + NNM, item.y, imgMovement);
             NwM = weapon.leftArm;
             MVn = (wVn.leftArm === window.undefined) ? skin.leftArm : wVn.leftArm;
             CanvasUtils.drawImageHd(MVn, WX, WY, -NwM.angle + player.angle, ((NwM.x + (move * PLAYER.orientation)) + NNM) + breath, NwM.y, imgMovement);
@@ -15162,8 +15162,8 @@ try {
             NwM = weapon.rightArm;
             MVn = (wVn.rightArm === window.undefined) ? skin.rightArm : wVn.rightArm;
             CanvasUtils.drawImageHd(MVn, WX, WY, NwM.angle + player.angle, ((NwM.x + (move * PLAYER.orientation)) + NWW) + breathWeapon, NwM.y, imgMovement);
-            var idd = weapon.weapon;
-            CanvasUtils.drawImageHd(idd, WX, WY, idd.angle + player.angle, ((idd.x + (move * PLAYER.orientation)) + breathWeapon) + NWW, idd.y, imgMovement);
+            var item = weapon.weapon;
+            CanvasUtils.drawImageHd(item, WX, WY, item.angle + player.angle, ((item.x + (move * PLAYER.orientation)) + breathWeapon) + NWW, item.y, imgMovement);
         };
 
         function mvwMm(mVn, weapon, wVn, player, imgMovement, WX, WY) {
@@ -15213,8 +15213,8 @@ try {
             }
             var breath = weapon.breath * ((PLAYER.breath < 750) ? (PLAYER.breath / 750) : (1 - ((PLAYER.breath - 750) / 750)));
             var move = weapon.move * ((PLAYER.move < 400) ? (PLAYER.move / 400) : (1 - ((PLAYER.move - 400) / 400)));
-            var idd = weapon.weapon;
-            CanvasUtils.drawImageHd2(idd, WX, WY, (idd.angle + player.angle) + breath, idd.x + (move * PLAYER.orientation), idd.y, imgMovement, nmm * idd.rotation, idd.x2, idd.y2);
+            var item = weapon.weapon;
+            CanvasUtils.drawImageHd2(item, WX, WY, (item.angle + player.angle) + breath, item.x + (move * PLAYER.orientation), item.y, imgMovement, nmm * item.rotation, item.x2, item.y2);
             var MVn = (wVn.rightArm === window.undefined) ? skin.rightArm : wVn.rightArm;
             CanvasUtils.drawImageHd(MVn, WX, WY, ((Nmm.angle + player.angle) + breath) + (nmm * Nmm.rotation), (Nmm.x + (move * PLAYER.orientation)) + NWW, Nmm.y, imgMovement);
             MVn = (wVn.leftArm === window.undefined) ? skin.leftArm : wVn.leftArm;
@@ -15329,42 +15329,42 @@ try {
         function placingobj() {
             var nwmVM = 0;
             if ((World.PLAYER.isBuilding === 1) && (World.PLAYER.putableimg !== 0)) {
-                var idd = items[World.PLAYER.putableimg];
-                if (idd.subtype !== 0) {
-                    idd = idd.subtype[World.PLAYER.mWmnv];
-                    idd.notputableimg = idd.Nn;
-                    idd.putableimg = idd.Nn;
-                    idd.Wwv = nVWnV;
-                    idd.nWn = nVWnV;
+                var item = items[World.PLAYER.putableimg];
+                if (item.subtype !== 0) {
+                    item = item.subtype[World.PLAYER.mWmnv];
+                    item.notputableimg = item.Nn;
+                    item.putableimg = item.Nn;
+                    item.xCenter = nVWnV;
+                    item.yCenter = nVWnV;
                 }
                 var angle = Mouse.angle;
-                var Rot = (idd.Mvw === 1) ? 0 : World.PLAYER.buildRotate;
-                World.PLAYER.jBuild = World.PLAYER._j + window.Math.floor((nwn + (window.Math.cos(angle) * wmn)) / wmn);
-                World.PLAYER.iBuild = World.PLAYER._i + window.Math.floor((nwn + (window.Math.sin(angle) * wmn)) / wmn);
-                var WX = ((idd.Wwv[Rot] + vertst) + nwn) + (wmn * World.PLAYER.jBuild);
-                var WY = ((idd.nWn[Rot] + horist) + nwn) + (wmn * World.PLAYER.iBuild);
+                var Rot = (item.Mvw === 1) ? 0 : World.PLAYER.buildRotate;
+                World.PLAYER.jBuild = World.PLAYER._j + window.Math.floor((__TILE_SIZE2__ + (window.Math.cos(angle) * __TILE_SIZE__)) / __TILE_SIZE__);
+                World.PLAYER.iBuild = World.PLAYER._i + window.Math.floor((__TILE_SIZE2__ + (window.Math.sin(angle) * __TILE_SIZE__)) / __TILE_SIZE__);
+                var WX = ((item.xCenter[Rot] + vertst) + __TILE_SIZE2__) + (__TILE_SIZE__ * World.PLAYER.jBuild);
+                var WY = ((item.yCenter[Rot] + horist) + __TILE_SIZE2__) + (__TILE_SIZE__ * World.PLAYER.iBuild);
                 if ((((World.PLAYER.jBuild >= 0) && (World.PLAYER.iBuild >= 0)) && (World.PLAYER.jBuild < NMv)) && (World.PLAYER.iBuild < wWw)) {
                     var VMV = matrix[World.PLAYER.iBuild][World.PLAYER.jBuild];
                     var team = (World.PLAYER.team === -1) ? -2 : World.PLAYER.team;
-                    if ((VMV.NMn === frameId) && (((idd.WvV !== 2) || (VMV.wMV === 0)) || (VMV.nww === SKILLS.__PLANT__))) {
+                    if ((VMV.NMn === frameId) && (((item.WvV !== 2) || (VMV.wMV === 0)) || (VMV.nww === SKILLS.__PLANT__))) {
                         World.PLAYER.canBuild = 1; // before 0
-                        CanvasUtils.drawImageHd(idd.notputableimg, WX, WY, Rot * PIby2, 0, 0, 1);
-                    } else if ((((idd.detail.nww === SKILLS.__PLANT__) || (idd.WvV === 2)) || (((VMV.pid !== 0) && (VMV.pid !== World.PLAYER.id)) && (World.socket[VMV.pid].team !== team))) && (VMV.nNNwM === frameId)) {
+                        CanvasUtils.drawImageHd(item.notputableimg, WX, WY, Rot * PIby2, 0, 0, 1);
+                    } else if ((((item.detail.nww === SKILLS.__PLANT__) || (item.WvV === 2)) || (((VMV.pid !== 0) && (VMV.pid !== World.PLAYER.id)) && (World.socket[VMV.pid].team !== team))) && (VMV.nNNwM === frameId)) {
                         World.PLAYER.canBuild = 0;
-                        CanvasUtils.drawImageHd(idd.notputableimg, WX, WY, Rot * PIby2, 0, 0, 1);
-                    } else if ((idd.MMnVm !== window.undefined) && ((((Rot % 2) === 0) && ((((((World.PLAYER.iBuild < 1) || (World.PLAYER.iBuild >= (wWw - 1))) || (matrix[World.PLAYER.iBuild + 1][World.PLAYER.jBuild].NMn === frameId)) || ((matrix[World.PLAYER.iBuild + 1][World.PLAYER.jBuild].nNNwM === frameId) && (((matrix[World.PLAYER.iBuild + 1][World.PLAYER.jBuild].pid !== World.PLAYER.id) && (matrix[World.PLAYER.iBuild + 1][World.PLAYER.jBuild].pid !== 0)) && (World.socket[matrix[World.PLAYER.iBuild + 1][World.PLAYER.jBuild].pid].team !== team)))) || (matrix[World.PLAYER.iBuild - 1][World.PLAYER.jBuild].NMn === frameId)) || ((matrix[World.PLAYER.iBuild - 1][World.PLAYER.jBuild].nNNwM === frameId) && (((matrix[World.PLAYER.iBuild - 1][World.PLAYER.jBuild].pid !== World.PLAYER.id) && (matrix[World.PLAYER.iBuild - 1][World.PLAYER.jBuild].pid !== 0)) && (World.socket[matrix[World.PLAYER.iBuild - 1][World.PLAYER.jBuild].pid].team !== team))))) || (((Rot % 2) === 1) && (((((((World.PLAYER.jBuild < 1) || (World.PLAYER.jBuild >= (NMv - 1))) || (matrix[World.PLAYER.iBuild][World.PLAYER.jBuild + 1].NMn === frameId)) || ((matrix[World.PLAYER.iBuild][World.PLAYER.jBuild + 1].nNNwM === frameId) && (((matrix[World.PLAYER.iBuild][World.PLAYER.jBuild + 1].pid !== World.PLAYER.id) && (matrix[World.PLAYER.iBuild][World.PLAYER.jBuild + 1].pid !== 0)) && (World.socket[matrix[World.PLAYER.iBuild][World.PLAYER.jBuild + 1].pid].team !== team)))) || (matrix[World.PLAYER.iBuild][World.PLAYER.jBuild - 1].NMn === frameId)) || ((matrix[World.PLAYER.iBuild][World.PLAYER.jBuild - 1].nNNwM === frameId) && (((matrix[World.PLAYER.iBuild][World.PLAYER.jBuild - 1].pid !== World.PLAYER.id) && (matrix[World.PLAYER.iBuild][World.PLAYER.jBuild - 1].pid !== 0)) && (World.socket[matrix[World.PLAYER.iBuild][World.PLAYER.jBuild - 1].pid].team !== team)))) || (World.PLAYER._i === World.PLAYER.iBuild))))) {
+                        CanvasUtils.drawImageHd(item.notputableimg, WX, WY, Rot * PIby2, 0, 0, 1);
+                    } else if ((item.MMnVm !== window.undefined) && ((((Rot % 2) === 0) && ((((((World.PLAYER.iBuild < 1) || (World.PLAYER.iBuild >= (wWw - 1))) || (matrix[World.PLAYER.iBuild + 1][World.PLAYER.jBuild].NMn === frameId)) || ((matrix[World.PLAYER.iBuild + 1][World.PLAYER.jBuild].nNNwM === frameId) && (((matrix[World.PLAYER.iBuild + 1][World.PLAYER.jBuild].pid !== World.PLAYER.id) && (matrix[World.PLAYER.iBuild + 1][World.PLAYER.jBuild].pid !== 0)) && (World.socket[matrix[World.PLAYER.iBuild + 1][World.PLAYER.jBuild].pid].team !== team)))) || (matrix[World.PLAYER.iBuild - 1][World.PLAYER.jBuild].NMn === frameId)) || ((matrix[World.PLAYER.iBuild - 1][World.PLAYER.jBuild].nNNwM === frameId) && (((matrix[World.PLAYER.iBuild - 1][World.PLAYER.jBuild].pid !== World.PLAYER.id) && (matrix[World.PLAYER.iBuild - 1][World.PLAYER.jBuild].pid !== 0)) && (World.socket[matrix[World.PLAYER.iBuild - 1][World.PLAYER.jBuild].pid].team !== team))))) || (((Rot % 2) === 1) && (((((((World.PLAYER.jBuild < 1) || (World.PLAYER.jBuild >= (NMv - 1))) || (matrix[World.PLAYER.iBuild][World.PLAYER.jBuild + 1].NMn === frameId)) || ((matrix[World.PLAYER.iBuild][World.PLAYER.jBuild + 1].nNNwM === frameId) && (((matrix[World.PLAYER.iBuild][World.PLAYER.jBuild + 1].pid !== World.PLAYER.id) && (matrix[World.PLAYER.iBuild][World.PLAYER.jBuild + 1].pid !== 0)) && (World.socket[matrix[World.PLAYER.iBuild][World.PLAYER.jBuild + 1].pid].team !== team)))) || (matrix[World.PLAYER.iBuild][World.PLAYER.jBuild - 1].NMn === frameId)) || ((matrix[World.PLAYER.iBuild][World.PLAYER.jBuild - 1].nNNwM === frameId) && (((matrix[World.PLAYER.iBuild][World.PLAYER.jBuild - 1].pid !== World.PLAYER.id) && (matrix[World.PLAYER.iBuild][World.PLAYER.jBuild - 1].pid !== 0)) && (World.socket[matrix[World.PLAYER.iBuild][World.PLAYER.jBuild - 1].pid].team !== team)))) || (World.PLAYER._i === World.PLAYER.iBuild))))) {
                         World.PLAYER.canBuild = 0;
-                        CanvasUtils.drawImageHd(idd.notputableimg, WX, WY, Rot * PIby2, 0, 0, 1);
+                        CanvasUtils.drawImageHd(item.notputableimg, WX, WY, Rot * PIby2, 0, 0, 1);
                     } else {
                         World.PLAYER.canBuild = 1;
-                        CanvasUtils.drawImageHd(idd.putableimg, WX, WY, Rot * PIby2, 0, 0, 1);
+                        CanvasUtils.drawImageHd(item.putableimg, WX, WY, Rot * PIby2, 0, 0, 1);
                     }
                 }
                 if (NvwMN.isLoaded !== 1) {
                     NvwMN = CanvasUtils.loadImage(hintrotate, NvwMN);
                     return;
                 }
-                if ((idd.Mvw === 1) || (World.PLAYER.interaction >= 0)) nwmVM = window.Math.max(0, World.PLAYER.NvwMN - delta);
+                if ((item.Mvw === 1) || (World.PLAYER.interaction >= 0)) nwmVM = window.Math.max(0, World.PLAYER.NvwMN - delta);
                 else nwmVM = window.Math.min(900, World.PLAYER.NvwMN + delta);
             } else nwmVM = window.Math.max(0, World.PLAYER.NvwMN - delta);
             if (nwmVM > 0) {
@@ -15432,13 +15432,13 @@ try {
             NwM = weapon.leftArm;
             MVn = (wVn.leftArm === window.undefined) ? skin.leftArm : wVn.leftArm;
             CanvasUtils.drawImageHd(MVn, WX, WY, ((-NwM.angle + player.angle) - breath) + nmm, (NwM.x - (move * PLAYER.orientation)) + NNM, NwM.y, imgMovement);
-            if (player.nMW > 0) {
+            if (player.hurt2 > 0) {
                 var mnM = 1;
-                player.nMW -= delta;
+                player.hurt2 -= delta;
                 var vW = 0;
-                if (player.nMW > 150) vW = MathUtils.Ease.inQuad((300 - player.nMW) / 300);
+                if (player.hurt2 > 150) vW = MathUtils.Ease.inQuad((300 - player.hurt2) / 300);
                 else {
-                    vW = MathUtils.Ease.outQuad(player.nMW / 150);
+                    vW = MathUtils.Ease.outQuad(player.hurt2 / 150);
                     mnM += (1 - vW) * 0.2;
                 }
                 ctx.globalAlpha = window.Math.min(1, window.Math.max(0, vW));
@@ -15698,7 +15698,7 @@ try {
         function vNwNM(player, Wn, dist, nM) {
             if ((NwMVW === vMNWw) || (Wn === particulesitems.woodtree)) return;
             else if (NwMVW === nWNMn) nM *= 3;
-            if ((Entitie.border[vvwvw].border + nM) >= wnNWM) return;
+            if ((Entitie.border[__ENTITIE_PARTICLES__].border + nM) >= wnNWM) return;
             for (var i = 0; i < nM; i++) {
                 var N = window.Math.random();
                 var angle = ((N * 10) % 1) * WNVNM;
@@ -15707,8 +15707,8 @@ try {
                 WvWmM = (WvWmM + 1) % wnNWM;
                 var wmWnw = WvWmM + Entitie.maxUnitsMaster;
                 nMVNv += 1;
-                var NVm = Entitie.get(0, wmWnw, nMVNv, vvwvw);
-                setEntitie(NVm, 0, nMVNv, wmWnw, vvwvw, player.px, player.py, player.px + (window.Math.cos(angle) * MMwmm), player.py + (window.Math.sin(angle) * MMwmm), window.Math.floor(N * VNw[Wn].length), ((N * 100) % 1) * 255, Wn);
+                var NVm = Entitie.get(0, wmWnw, nMVNv, __ENTITIE_PARTICLES__);
+                setEntitie(NVm, 0, nMVNv, wmWnw, __ENTITIE_PARTICLES__, player.px, player.py, player.px + (window.Math.cos(angle) * MMwmm), player.py + (window.Math.sin(angle) * MMwmm), window.Math.floor(N * VNw[Wn].length), ((N * 100) % 1) * 255, Wn);
             }
         };
 
@@ -15728,63 +15728,63 @@ try {
             CanvasUtils.drawImageHd(W, vertst + player.x, horist + player.y, player.angle, 0, 0, 1);
         };
 
-        function dynac4func(idd, player, WX, WY, Rot, imgMovement) {
+        function dynac4func(item, player, WX, WY, Rot, imgMovement) {
             player.breath = (player.breath + delta) % 500;
             var vW = player.breath / 500;
             var mnM = 0.95 + (0.3 * MathUtils.Ease.inOutQuad(vW));
             ctx.globalAlpha = 1 - vW;
-            CanvasUtils.drawImageHd(idd.Nn[1], (vertst + player.x) + WX, (horist + player.y) + WY, Rot * PIby2, 0, 0, mnM);
+            CanvasUtils.drawImageHd(item.Nn[1], (vertst + player.x) + WX, (horist + player.y) + WY, Rot * PIby2, 0, 0, mnM);
             ctx.globalAlpha = 1;
-            CanvasUtils.drawImageHd(idd.Nn[0], (vertst + player.x) + WX, (horist + player.y) + WY, Rot * PIby2, 0, 0, imgMovement);
+            CanvasUtils.drawImageHd(item.Nn[0], (vertst + player.x) + WX, (horist + player.y) + WY, Rot * PIby2, 0, 0, imgMovement);
         };
 
 
-        function spikefunc(idd, player, WX, WY, Rot, imgMovement) {
+        function spikefunc(item, player, WX, WY, Rot, imgMovement) {
             var isInClan = 0;
             var VmnmV = 1;
             if ((player.state & 16) === 16) VmnmV = 0;
             if (((player.pid === World.PLAYER.id) || (((World.PLAYER.team !== -1) && (World.PLAYER.team === World.socket[player.pid].team)) && (World.socket[player.pid].wwV === World.clans[World.PLAYER.team].uid))) || (Math2d.fastDist(NmM, WWV, player.x, player.y) < 52000)) isInClan = 1;
             if (VmnmV === 0) {
-                if (player.nMW === 0) vNwNM(player, idd.particles, idd.Mwm, 5);
-                if (player.nMW < 300) {
+                if (player.hurt2 === 0) vNwNM(player, item.particles, item.Mwm, 5);
+                if (player.hurt2 < 300) {
                     WX += (window.Math.random() * 6) - 4;
                     WY += (window.Math.random() * 6) - 4;
-                    player.nMW += delta;
+                    player.hurt2 += delta;
                 }
                 if (player.breath > 0) {
                     player.breath = window.Math.max(0, player.breath - (delta / 5));
                     ctx.globalAlpha = MathUtils.Ease.inOutQuad(player.breath / 300);
-                    CanvasUtils.drawImageHd(idd.hidden[player.id % 3], (vertst + player.x) + WX, (horist + player.y) + WY, Rot * PIby2, 0, 0, imgMovement);
+                    CanvasUtils.drawImageHd(item.hidden[player.id % 3], (vertst + player.x) + WX, (horist + player.y) + WY, Rot * PIby2, 0, 0, imgMovement);
                     ctx.globalAlpha = 1;
                 }
-                CanvasUtils.drawImageHd(idd.vWwvw[player.id % 3], (vertst + player.x) + WX, (horist + player.y) + WY, Rot * PIby2, 0, 0, imgMovement);
+                CanvasUtils.drawImageHd(item.vWwvw[player.id % 3], (vertst + player.x) + WX, (horist + player.y) + WY, Rot * PIby2, 0, 0, imgMovement);
             } else if (isInClan === 1) {
-                if (player.breath === 300) CanvasUtils.drawImageHd(idd.hidden[player.id % 3], (vertst + player.x) + WX, (horist + player.y) + WY, Rot * PIby2, 0, 0, imgMovement);
+                if (player.breath === 300) CanvasUtils.drawImageHd(item.hidden[player.id % 3], (vertst + player.x) + WX, (horist + player.y) + WY, Rot * PIby2, 0, 0, imgMovement);
                 else {
                     player.breath = window.Math.min(300, player.breath + delta);
                     ctx.globalAlpha = MathUtils.Ease.inOutQuad(player.breath / 300);
-                    CanvasUtils.drawImageHd(idd.hidden[player.id % 3], (vertst + player.x) + WX, (horist + player.y) + WY, Rot * PIby2, 0, 0, imgMovement);
+                    CanvasUtils.drawImageHd(item.hidden[player.id % 3], (vertst + player.x) + WX, (horist + player.y) + WY, Rot * PIby2, 0, 0, imgMovement);
                     ctx.globalAlpha = 1;
                 }
             } else if ((isInClan === 0) && (player.breath > 0)) {
                 player.breath = window.Math.max(0, player.breath - (delta / 5));
                 ctx.globalAlpha = MathUtils.Ease.inOutQuad(player.breath / 300);
-                CanvasUtils.drawImageHd(idd.hidden[player.id % 3], (vertst + player.x) + WX, (horist + player.y) + WY, Rot * PIby2, 0, 0, imgMovement);
+                CanvasUtils.drawImageHd(item.hidden[player.id % 3], (vertst + player.x) + WX, (horist + player.y) + WY, Rot * PIby2, 0, 0, imgMovement);
                 ctx.globalAlpha = 1;
             }
         };
         
-        function wiresfunc(idd, player, WX, WY, Rot, imgMovement) {
-            CanvasUtils.drawImageHd(idd.Nn, (vertst + player.x) + WX, (horist + player.y) + WY, Rot * PIby2, 0, 0, imgMovement);
+        function wiresfunc(item, player, WX, WY, Rot, imgMovement) {
+            CanvasUtils.drawImageHd(item.Nn, (vertst + player.x) + WX, (horist + player.y) + WY, Rot * PIby2, 0, 0, imgMovement);
         };
 
-        function landminefunc(idd, player, WX, WY, Rot, imgMovement) {
+        function landminefunc(item, player, WX, WY, Rot, imgMovement) {
             var isInClan = 0;
             if (((player.pid === World.PLAYER.id) || (((World.PLAYER.team !== -1) && (World.PLAYER.team === World.socket[player.pid].team)) && (World.socket[player.pid].wwV === World.clans[World.PLAYER.team].uid))) || (Math2d.fastDist(NmM, WWV, player.x, player.y) < 52000)) isInClan = 1;
             if (isInClan === 1) {
                 player.breath = window.Math.min(300, player.breath + delta);
                 ctx.globalAlpha = MathUtils.Ease.inOutQuad(player.breath / 300);
-                CanvasUtils.drawImageHd(idd.Nn[player.id % 3], (vertst + player.x) + WX, (horist + player.y) + WY, Rot * PIby2, 0, 0, imgMovement);
+                CanvasUtils.drawImageHd(item.Nn[player.id % 3], (vertst + player.x) + WX, (horist + player.y) + WY, Rot * PIby2, 0, 0, imgMovement);
                 ctx.globalAlpha = 0.2;
                 CanvasUtils.drawImageHd(NWWWW[5], (vertst + player.x) + WX, (horist + player.y) + WY, 0, 0, 0, 0.6);
                 ctx.globalAlpha = 1;
@@ -15793,7 +15793,7 @@ try {
             else if (isInClan === 0) {
                 player.breath = window.Math.min(300, player.breath + delta);
                 ctx.globalAlpha = MathUtils.Ease.inOutQuad(player.breath / 300);
-                CanvasUtils.drawImageHd(idd.Nn[player.id % 3], (vertst + player.x) + WX, (horist + player.y) + WY, Rot * PIby2, 0, 0, imgMovement);
+                CanvasUtils.drawImageHd(item.Nn[player.id % 3], (vertst + player.x) + WX, (horist + player.y) + WY, Rot * PIby2, 0, 0, imgMovement);
 
                 ctx.globalAlpha = 0.2;
                 CanvasUtils.drawImageHd(NWWWW[4], (vertst + player.x) + WX, (horist + player.y) + WY, 0, 0, 0, 0.6);
@@ -15802,39 +15802,39 @@ try {
             }    
         };
 
-        function MWMmm(idd, player, WX, WY, Rot, imgMovement) {
-            CanvasUtils.drawImageHd(idd.Nn, (vertst + player.x) + WX, (horist + player.y) + WY, Rot * PIby2, 0, 0, imgMovement);
+        function MWMmm(item, player, WX, WY, Rot, imgMovement) {
+            CanvasUtils.drawImageHd(item.Nn, (vertst + player.x) + WX, (horist + player.y) + WY, Rot * PIby2, 0, 0, imgMovement);
         };
 
-        function NnNvw(idd, player, WX, WY, Rot, imgMovement) {
-            CanvasUtils.drawImageHd(idd.Nn[player.broke], (vertst + player.x) + WX, (horist + player.y) + WY, Rot * PIby2, 0, 0, imgMovement);
+        function NnNvw(item, player, WX, WY, Rot, imgMovement) {
+            CanvasUtils.drawImageHd(item.Nn[player.broke], (vertst + player.x) + WX, (horist + player.y) + WY, Rot * PIby2, 0, 0, imgMovement);
         };
 
-        function mmwVM(idd, player, WX, WY, Rot, imgMovement) {
-            if (player.broke > 0) CanvasUtils.drawImageHd(idd.WVW[player.broke - 1], (vertst + player.x) + WX, (horist + player.y) + WY, 0, 0, 0, imgMovement);
-            else CanvasUtils.drawImageHd(idd.Nn[WwmwN(player)], (vertst + player.x) + WX, (horist + player.y) + WY, 0, 0, 0, imgMovement);
+        function mmwVM(item, player, WX, WY, Rot, imgMovement) {
+            if (player.broke > 0) CanvasUtils.drawImageHd(item.WVW[player.broke - 1], (vertst + player.x) + WX, (horist + player.y) + WY, 0, 0, 0, imgMovement);
+            else CanvasUtils.drawImageHd(item.Nn[WwmwN(player)], (vertst + player.x) + WX, (horist + player.y) + WY, 0, 0, 0, imgMovement);
         };
 
-        function nearme(idd, player, MMwnn) {
+        function nearme(item, player, MMwnn) {
             if ((((player.removed === 0) && (World.PLAYER.interaction !== 1)) && (World.PLAYER.VVn !== 1)) && (((MMwnn === 0) || (player.pid === World.PLAYER.id)) || (((World.PLAYER.team !== -1) && (World.PLAYER.team === World.socket[player.pid].team)) && (World.socket[player.pid].wwV === World.clans[World.PLAYER.team].uid)))) {
                 var dist = Math2d.fastDist(NmM, WWV, player.x, player.y);
                 if (dist < vnVmM) {
-                    World.PLAYER.NnN = idd.NnN;
+                    World.PLAYER.NnN = item.NnN;
                     World.PLAYER.MnMwn = player.id;
                     World.PLAYER.MNMvN = player.pid;
-                    World.PLAYER.vWMmW = idd.MWW;
+                    World.PLAYER.vWMmW = item.MWW;
                     vnVmM = dist;
                     if (World.PLAYER.interaction === 0) World.PLAYER.mwMmN = 1;
                     World.PLAYER.interaction = 2;
-                    World.PLAYER.MWVMV = idd.wwN;
+                    World.PLAYER.MWVMV = item.wwN;
                     return 1;
                 }
             }
             return 0;
         };
 
-        function nVwvm(idd, player, WX, WY, Rot, imgMovement) {
-            CanvasUtils.drawImageHd(idd.WnVMV, (vertst + player.x) + WX, (horist + player.y) + WY, Rot * PIby2, 0, 0, 1);
+        function nVwvm(item, player, WX, WY, Rot, imgMovement) {
+            CanvasUtils.drawImageHd(item.WnVMV, (vertst + player.x) + WX, (horist + player.y) + WY, Rot * PIby2, 0, 0, 1);
             var vMN = (player.state >> 4) & 15;
             if (player.breath2 !== vMN) {
                 player.breath2 = vMN;
@@ -15844,35 +15844,35 @@ try {
             player.heal = (player.heal + delta) % 1000;
             var imgMovement = 1 + (0.03 * ((player.heal < 500) ? (player.heal / 500) : (1 - ((player.heal - 500) / 500))));
             if (vMN === 0) {
-                ctx.globalAlpha = MathUtils.Ease.inOutQuad(player.breath / idd.vMvvV);
-                CanvasUtils.drawImageHd(idd.Nn[0], (vertst + player.x) + WX, (horist + player.y) + WY, Rot * PIby2, 0, 0, imgMovement);
+                ctx.globalAlpha = MathUtils.Ease.inOutQuad(player.breath / item.vMvvV);
+                CanvasUtils.drawImageHd(item.Nn[0], (vertst + player.x) + WX, (horist + player.y) + WY, Rot * PIby2, 0, 0, imgMovement);
                 ctx.globalAlpha = 1;
-            } else if (player.breath < idd.vMvvV) {
-                var MwMvw = MathUtils.Ease.inOutQuad(player.breath / idd.vMvvV);
+            } else if (player.breath < item.vMvvV) {
+                var MwMvw = MathUtils.Ease.inOutQuad(player.breath / item.vMvvV);
                 ctx.globalAlpha = 1 - MwMvw;
-                CanvasUtils.drawImageHd(idd.Nn[vMN - 1], (vertst + player.x) + WX, (horist + player.y) + WY, Rot * PIby2, 0, 0, imgMovement);
+                CanvasUtils.drawImageHd(item.Nn[vMN - 1], (vertst + player.x) + WX, (horist + player.y) + WY, Rot * PIby2, 0, 0, imgMovement);
                 ctx.globalAlpha = MwMvw;
-                CanvasUtils.drawImageHd(idd.Nn[vMN], (vertst + player.x) + WX, (horist + player.y) + WY, Rot * PIby2, 0, 0, imgMovement);
+                CanvasUtils.drawImageHd(item.Nn[vMN], (vertst + player.x) + WX, (horist + player.y) + WY, Rot * PIby2, 0, 0, imgMovement);
                 ctx.globalAlpha = 1;
-            } else CanvasUtils.drawImageHd(idd.Nn[vMN], (vertst + player.x) + WX, (horist + player.y) + WY, Rot * PIby2, 0, 0, imgMovement);
+            } else CanvasUtils.drawImageHd(item.Nn[vMN], (vertst + player.x) + WX, (horist + player.y) + WY, Rot * PIby2, 0, 0, imgMovement);
         };
 
-        function NWnmw(idd, player, WX, WY, Rot, imgMovement) {
+        function NWnmw(item, player, WX, WY, Rot, imgMovement) {
             var vMN = (player.state >> 4) & 15;
             player.breath = (player.breath + delta) % 1000;
             var imgMovement = 1 + (0.01 * ((player.breath < 500) ? (player.breath / 500) : (1 - ((player.breath - 500) / 500))));
-            CanvasUtils.drawImageHd(idd.Nn[vMN], (vertst + player.x) + WX, (horist + player.y) + WY, Rot * PIby2, 0, 0, imgMovement);
+            CanvasUtils.drawImageHd(item.Nn[vMN], (vertst + player.x) + WX, (horist + player.y) + WY, Rot * PIby2, 0, 0, imgMovement);
         };
 
-        function VMWWV(idd, player, WX, WY, Rot, imgMovement) {
+        function VMWWV(item, player, WX, WY, Rot, imgMovement) {
             var vMN = (player.state >> 4) & 15;
             player.breath = (player.breath + delta) % 1000;
             var imgMovement = 1 + (0.03 * ((player.breath < 500) ? (player.breath / 500) : (1 - ((player.breath - 500) / 500))));
-            CanvasUtils.drawImageHd(idd.Nn[vMN], (vertst + player.x) + WX, (horist + player.y) + WY, Rot * PIby2, 0, 0, imgMovement);
+            CanvasUtils.drawImageHd(item.Nn[vMN], (vertst + player.x) + WX, (horist + player.y) + WY, Rot * PIby2, 0, 0, imgMovement);
         };
 
-        function nNMVN(idd, player, WX, WY, Rot, imgMovement) {
-            var WVV = (player.broke > 0) ? idd.WVW[player.broke - 1] : idd.Nn[wmNMv(player, Rot)];
+        function nNMVN(item, player, WX, WY, Rot, imgMovement) {
+            var WVV = (player.broke > 0) ? item.WVW[player.broke - 1] : item.Nn[wmNMv(player, Rot)];
             var W = WVV.W;
             if (W.isLoaded !== 1) {
                 WVV.W = CanvasUtils.loadImage(WVV.src, WVV.W);
@@ -15883,28 +15883,28 @@ try {
             ctx.save();
             ctx.translate(scaleby * ((vertst + player.x) + WX), scaleby * ((horist + player.y) + WY));
             ctx.rotate(Rot * PIby2);
-            ctx.translate((idd.VvMvv * scaleby) - (VwW / 2), (idd.MmVVV * scaleby) - (h / 2));
-            ctx.drawImage(W, -idd.VvMvv * scaleby, -idd.MmVVV * scaleby, VwW, h);
+            ctx.translate((item.VvMvv * scaleby) - (VwW / 2), (item.MmVVV * scaleby) - (h / 2));
+            ctx.drawImage(W, -item.VvMvv * scaleby, -item.MmVVV * scaleby, VwW, h);
             ctx.restore();
         };
 
-        function nvVNm(idd, player, WX, WY, Rot, imgMovement) {
+        function nvVNm(item, player, WX, WY, Rot, imgMovement) {
             ctx.globalAlpha = 1;
             var MvVvv = (player.state >> 7) & 1;
             if (MvVvv === 1) player.hitMax = window.Math.min(500, player.hitMax + delta);
             else if (player.hitMax > 0) player.hitMax = window.Math.max(0, player.hitMax - delta);
             if ((player.hitMax > 0) && (player.hitMax !== 500)) {
                 ctx.globalAlpha = MathUtils.Ease.outQuad(player.hitMax / 500);
-                CanvasUtils.drawImageHd(idd.Nn[1][player.broke], (vertst + player.x) + WX, (horist + player.y) + WY, Rot * PIby2, 0, 0, imgMovement);
+                CanvasUtils.drawImageHd(item.Nn[1][player.broke], (vertst + player.x) + WX, (horist + player.y) + WY, Rot * PIby2, 0, 0, imgMovement);
                 ctx.globalAlpha = MathUtils.Ease.outQuad(1 - (player.hitMax / 500));
-                CanvasUtils.drawImageHd(idd.Nn[0][player.broke], (vertst + player.x) + WX, (horist + player.y) + WY, Rot * PIby2, 0, 0, imgMovement);
+                CanvasUtils.drawImageHd(item.Nn[0][player.broke], (vertst + player.x) + WX, (horist + player.y) + WY, Rot * PIby2, 0, 0, imgMovement);
                 ctx.globalAlpha = 1;
-            } else CanvasUtils.drawImageHd(idd.Nn[MvVvv][player.broke], (vertst + player.x) + WX, (horist + player.y) + WY, Rot * PIby2, 0, 0, imgMovement);
+            } else CanvasUtils.drawImageHd(item.Nn[MvVvv][player.broke], (vertst + player.x) + WX, (horist + player.y) + WY, Rot * PIby2, 0, 0, imgMovement);
         };
 
-    function switchonofffunc(idd, player, WX, WY, Rot, imgMovement) {
-        nearme(idd, player, 0);
-        CanvasUtils.drawImageHd(idd.Nn[(player.state >> 4) & 1], (vertst + player.x) + WX, (horist + player.y) + WY, Rot * PIby2, 0, 0, imgMovement);
+    function switchonofffunc(item, player, WX, WY, Rot, imgMovement) {
+        nearme(item, player, 0);
+        CanvasUtils.drawImageHd(item.Nn[(player.state >> 4) & 1], (vertst + player.x) + WX, (horist + player.y) + WY, Rot * PIby2, 0, 0, imgMovement);
             var WY = scaleby * (((player.i * 100) + horist) + 50);
             var WX = scaleby * (((player.j * 100) + vertst) + 50);
             var SY = (imgMovement * arv.width) / 3;
@@ -15914,46 +15914,46 @@ try {
             ctx.drawImage(butlabel, WX - (SY / 2), WY - (SX / 2), SY, SX);
     };
 
-        function gatetimerfunc(idd, player, WX, WY, Rot, imgMovement) {
-            nearme(idd, player, 0);
-            CanvasUtils.drawImageHd(idd.Nn[(player.state >> 4) & 3], (vertst + player.x) + WX, (horist + player.y) + WY, Rot * PIby2, 0, 0, imgMovement);
+        function gatetimerfunc(item, player, WX, WY, Rot, imgMovement) {
+            nearme(item, player, 0);
+            CanvasUtils.drawImageHd(item.Nn[(player.state >> 4) & 3], (vertst + player.x) + WX, (horist + player.y) + WY, Rot * PIby2, 0, 0, imgMovement);
         };
 
-        function mWmNV(idd, player, WX, WY, Rot, imgMovement) {
-            nearme(idd, player, 0);
+        function mWmNV(item, player, WX, WY, Rot, imgMovement) {
+            nearme(item, player, 0);
             var mMW = (player.state >> 7) & 1;
             if (mMW === 1) player.hitMax = window.Math.min(500, player.hitMax + delta);
             else if (player.hitMax > 0) player.hitMax = window.Math.max(0, player.hitMax - delta);
             if (player.hitMax > 0) {
                 WvnvV[pplonscr++] = player;
-                CanvasUtils.drawImageHd(idd.wVnWm[(player.state >> 4) & 7], (vertst + player.x) + WX, (horist + player.y) + WY, Rot * PIby2, 0, 0, imgMovement);
-            } else CanvasUtils.drawImageHd(idd.Nn, (vertst + player.x) + WX, (horist + player.y) + WY, Rot * PIby2, 0, 0, imgMovement);
+                CanvasUtils.drawImageHd(item.wVnWm[(player.state >> 4) & 7], (vertst + player.x) + WX, (horist + player.y) + WY, Rot * PIby2, 0, 0, imgMovement);
+            } else CanvasUtils.drawImageHd(item.Nn, (vertst + player.x) + WX, (horist + player.y) + WY, Rot * PIby2, 0, 0, imgMovement);
         };
 
         function Wnmmm(player) {
-            var idd = items[player.extra >> 7];
+            var item = items[player.extra >> 7];
             ctx.globalAlpha = MathUtils.Ease.outQuad(player.hitMax / 500);
             player.breath2 = (player.breath2 + delta) % 5000;
             var breath = player.breath2;
             var imgMovement = 1 + (0.09 * ((breath < 2500) ? (breath / 2500) : (1 - ((breath - 2500) / 2500))));
-            CanvasUtils.drawImageHd(idd.MwmWn[(player.state >> 4) & 7], vertst + player.x, horist + player.y, 0, 0, 0, imgMovement);
+            CanvasUtils.drawImageHd(item.MwmWn[(player.state >> 4) & 7], vertst + player.x, horist + player.y, 0, 0, 0, imgMovement);
             ctx.globalAlpha = 1;
         };
         
 
-        function doorfunc(idd, player, WX, WY, Rot, imgMovement) {
+        function doorfunc(item, player, WX, WY, Rot, imgMovement) {
             var NVNvv = (player.state >> 4) & 1;
             var MWwVn = (player.pid === 0) ? 0 : 1;
-            if ((nearme(idd, player, MWwVn) === 1) && (NVNvv === 1)) World.PLAYER.MWVMV = idd.mMnmM;
+            if ((nearme(item, player, MWwVn) === 1) && (NVNvv === 1)) World.PLAYER.MWVMV = item.mMnmM;
             if (player.hit !== NVNvv) {
                 player.hitMax = 500;
                 player.hit = NVNvv;
             }
             if (player.hitMax > 0) player.hitMax = window.Math.max(0, player.hitMax - delta);
-            var angle = idd.angle;
+            var angle = item.angle;
             if (NVNvv === 0) angle *= MathUtils.Ease.inOutQuad(player.hitMax / 500);
             else angle *= MathUtils.Ease.inOutQuad(1 - (player.hitMax / 500));
-            var WVV = (player.broke > 0) ? idd.WVW[player.broke - 1] : idd.Nn;
+            var WVV = (player.broke > 0) ? item.WVW[player.broke - 1] : item.Nn;
             var W = WVV.W;
             if (W.isLoaded !== 1) {
                 WVV.W = CanvasUtils.loadImage(WVV.src, WVV.W);
@@ -15964,9 +15964,9 @@ try {
             ctx.save();
             ctx.translate(scaleby * ((vertst + player.x) + WX), scaleby * ((horist + player.y) + WY));
             ctx.rotate(Rot * PIby2);
-            ctx.translate((idd.VvMvv * scaleby) - (VwW / 2), (idd.MmVVV * scaleby) - (h / 2));
+            ctx.translate((item.VvMvv * scaleby) - (VwW / 2), (item.MmVVV * scaleby) - (h / 2));
             ctx.rotate(angle);
-            ctx.drawImage(W, -idd.VvMvv * scaleby, -idd.MmVVV * scaleby, VwW, h);
+            ctx.drawImage(W, -item.VvMvv * scaleby, -item.MmVVV * scaleby, VwW, h);
             ctx.restore();
             if ((player.state & 32) === 32) {
                 player.state -= 32;
@@ -15979,8 +15979,8 @@ try {
                 }
                 if (player.breath > 400) ctx.globalAlpha = MathUtils.Ease.outQuad(1 - ((player.breath - 400) / 200));
                 else if (player.breath < 200) ctx.globalAlpha = MathUtils.Ease.outQuad(player.breath / 200);
-                var WY = scaleby * (((player.i * wmn) + horist) + nwn);
-                var WX = scaleby * (((player.j * wmn) + vertst) + nwn);
+                var WY = scaleby * (((player.i * __TILE_SIZE__) + horist) + __TILE_SIZE2__);
+                var WX = scaleby * (((player.j * __TILE_SIZE__) + vertst) + __TILE_SIZE2__);
                 var SY = (scaleby * arv.width) / 2;
                 var SX = (scaleby * arv.height) / 2;
                 ctx.drawImage(arv, WX - (SY / 2), WY - (SX / 2), SY, SX);
@@ -15989,21 +15989,21 @@ try {
             }
         };
 
-        function NMwnn(idd, player, WX, WY, Rot, imgMovement) {
+        function NMwnn(item, player, WX, WY, Rot, imgMovement) {
             var mmWVw = matrix[player.i][player.j];
             mmWVw.NMn = 0;
             mmWVw.nNNwM = frameId;
             mmWVw.pid = player.pid;
             if ((mmWVw.mVN !== frameId) || (mmWVw.MmvNw === 1)) {
-                if (player.broke > 0) CanvasUtils.drawImageHd(idd.WVW[player.broke - 1], (vertst + player.x) + WX, (horist + player.y) + WY, 0, 0, 0, imgMovement);
-                else CanvasUtils.drawImageHd(idd.Nn[Wwmwm(player)], vertst + player.x, horist + player.y, 0, 0, 0, imgMovement);
+                if (player.broke > 0) CanvasUtils.drawImageHd(item.WVW[player.broke - 1], (vertst + player.x) + WX, (horist + player.y) + WY, 0, 0, 0, imgMovement);
+                else CanvasUtils.drawImageHd(item.Nn[Wwmwm(player)], vertst + player.x, horist + player.y, 0, 0, 0, imgMovement);
             }
         };
 
 
-        function containericonopen(idd, player, WX, WY, Rot, imgMovement) {
+        function containericonopen(item, player, WX, WY, Rot, imgMovement) {
             var inuse = (player.state >> 4) & 1;
-            var objects = items[idd.id].subtype[player.subtype];
+            var objects = items[item.id].subtype[player.subtype];
             if (inuse === 1) player.hit = window.Math.min(500, player.hit + delta);
             else if (player.hit > 0) player.hit = window.Math.max(0, player.hit - delta);
             if (((inuse === 0) && (objects.WvwVM === 1)) && (nearme(objects, player, 0) === 1)) World.PLAYER.MWVMV = econtainericon;
@@ -16011,8 +16011,8 @@ try {
             if (player.hit > 0) containeropenic(player, WX, WY);
         };
 
-        function VWwMV(idd, player, WX, WY, Rot, imgMovement) {
-            var objects = items[idd.id].subtype[player.subtype];
+        function VWwMV(item, player, WX, WY, Rot, imgMovement) {
+            var objects = items[item.id].subtype[player.subtype];
             CanvasUtils.drawImageHd(objects.Nn, vertst + player.x, horist + player.y, 0, 0, 0, imgMovement);
         };
 
@@ -16035,11 +16035,11 @@ try {
                 player.hit = window.Math.max(0, player.hit - delta);
                 player.hit = window.Math.min(player.hit, mnn.vmWVv);
                 vW = (player.hit > mnn.WVVvW) ? (1 - ((player.hit - mnn.WVVvW) / (mnn.vmWVv - mnn.WVVvW))) : (player.hit / mnn.WVVvW);
-                nmm = (player.nMW * MathUtils.Ease.inOutQuad(vW)) * 0.55;
+                nmm = (player.hurt2 * MathUtils.Ease.inOutQuad(vW)) * 0.55;
                 wnN = vW * 6;
-                if (player.nMW === 1) NNM = vW * 25;
+                if (player.hurt2 === 1) NNM = vW * 25;
                 else NWW = vW * 25;
-                if (player.hit === 0) player.nMW *= -1;
+                if (player.hit === 0) player.hurt2 *= -1;
             } else if (Math2d.fastDist(player.x, player.y, player.nx, player.ny) < 1) {
                 player.breath = (player.breath + delta) % 1500;
                 if (player.breath2 !== 0) {
@@ -16082,16 +16082,16 @@ try {
         };
 
 
-        function FCWcontainer(idd, player, WX, WY, Rot, imgMovement) {
+        function FCWcontainer(item, player, WX, WY, Rot, imgMovement) {
             var inuse = (player.state >> 4) & 1;
             if (inuse === 1) player.hit = window.Math.min(500, player.hit + delta);
             else if (player.hit > 0) player.hit = window.Math.max(0, player.hit - delta);
-            if (inuse === 0) nearme(idd, player, 0);
-            CanvasUtils.drawImageHd(idd.Nn, (vertst + player.x) + WX, (horist + player.y) + WY, Rot * PIby2, 0, 0, imgMovement);
+            if (inuse === 0) nearme(item, player, 0);
+            CanvasUtils.drawImageHd(item.Nn, (vertst + player.x) + WX, (horist + player.y) + WY, Rot * PIby2, 0, 0, imgMovement);
             if (player.hit > 0) containeropenic(player, WX, WY);
         };
 
-        function wVMmw(idd, player, WX, WY, Rot, imgMovement) {
+        function wVMmw(item, player, WX, WY, Rot, imgMovement) {
             var i = (Rot + 1) % 2;
             var j = Rot % 2;
             matrix[player.i + i][player.j + j].NMn = frameId;
@@ -16100,15 +16100,15 @@ try {
             matrix[player.i - i][player.j - j].wMV = player.pid;
             matrix[player.i + i][player.j + j].nww = window.undefined;
             matrix[player.i - i][player.j - j].nww = window.undefined;
-            nearme(idd, player, 0);
-            CanvasUtils.drawImageHd(idd.Nn, (vertst + player.x) + WX, (horist + player.y) + WY, Rot * PIby2, 0, 0, imgMovement);
+            nearme(item, player, 0);
+            CanvasUtils.drawImageHd(item.Nn, (vertst + player.x) + WX, (horist + player.y) + WY, Rot * PIby2, 0, 0, imgMovement);
         };
 
-        function VmMwM(idd, player, WX, WY, Rot, imgMovement) {
+        function VmMwM(item, player, WX, WY, Rot, imgMovement) {
             var MWm = (player.state >> 4) & 1;
             if (MWm === 1) player.hit = window.Math.min(500, player.hit + delta);
             else if (player.hit > 0) player.hit = window.Math.max(0, player.hit - delta);
-            if (MWm === 0) nearme(idd, player, 0);
+            if (MWm === 0) nearme(item, player, 0);
             var mMW = (player.state >> 5) & 1;
             if (mMW === 1) player.hitMax = window.Math.min(10000, player.hitMax + delta);
             else if (player.hitMax > 0) player.hitMax = window.Math.max(0, player.hitMax - delta);
@@ -16116,18 +16116,18 @@ try {
             if (player.hitMax > 0) {
                 vW = MathUtils.Ease.outQuad(player.hitMax / 10000);
                 player.heal += (vW * delta) / 300;
-                CanvasUtils.drawImageHd(idd.Nn[1], (vertst + player.x) + WX, (horist + player.y) + WY, Rot * PIby2, 0, 0, imgMovement);
-                CanvasUtils.drawImageHd(idd.Nn[2], ((vertst + player.x) + WX) + idd.NmVwM[Rot][0], ((horist + player.y) + WY) + idd.NmVwM[Rot][1], (Rot * PIby2) + player.heal, 0, 0, imgMovement);
-                CanvasUtils.drawImageHd(idd.Nn[3], (vertst + player.x) + WX, (horist + player.y) + WY, Rot * PIby2, 0, 0, imgMovement);
-            } else CanvasUtils.drawImageHd(idd.Nn[0], (vertst + player.x) + WX, (horist + player.y) + WY, Rot * PIby2, 0, 0, imgMovement);
+                CanvasUtils.drawImageHd(item.Nn[1], (vertst + player.x) + WX, (horist + player.y) + WY, Rot * PIby2, 0, 0, imgMovement);
+                CanvasUtils.drawImageHd(item.Nn[2], ((vertst + player.x) + WX) + item.NmVwM[Rot][0], ((horist + player.y) + WY) + item.NmVwM[Rot][1], (Rot * PIby2) + player.heal, 0, 0, imgMovement);
+                CanvasUtils.drawImageHd(item.Nn[3], (vertst + player.x) + WX, (horist + player.y) + WY, Rot * PIby2, 0, 0, imgMovement);
+            } else CanvasUtils.drawImageHd(item.Nn[0], (vertst + player.x) + WX, (horist + player.y) + WY, Rot * PIby2, 0, 0, imgMovement);
             if (player.hit > 0) containeropenic(player, WX, WY);
         };
 
-        function wnvmM(idd, player, WX, WY, Rot, imgMovement) {
+        function wnvmM(item, player, WX, WY, Rot, imgMovement) {
             var MWm = (player.state >> 4) & 1;
             if (MWm === 1) player.hit = window.Math.min(500, player.hit + delta);
             else if (player.hit > 0) player.hit = window.Math.max(0, player.hit - delta);
-            if (MWm === 0) nearme(idd, player, 0);
+            if (MWm === 0) nearme(item, player, 0);
             var mMW = (player.state >> 5) & 1;
             if (mMW === 1) player.hitMax = window.Math.min(10000, player.hitMax + delta);
             else if (player.hitMax > 0) player.hitMax = window.Math.max(0, player.hitMax - delta);
@@ -16137,9 +16137,9 @@ try {
                 WX += ((window.Math.random() * 2) - 1) * vW;
                 WY += ((window.Math.random() * 2) - 1) * vW;
                 player.heal += (vW * delta) / 300;
-                CanvasUtils.drawImageHd(idd.Nn[1], ((vertst + player.x) + WX) + idd.NmVwM[Rot][0], ((horist + player.y) + WY) + idd.NmVwM[Rot][1], (Rot * PIby2) + player.heal, 0, 0, imgMovement);
-                CanvasUtils.drawImageHd(idd.Nn[0], (vertst + player.x) + WX, (horist + player.y) + WY, Rot * PIby2, 0, 0, imgMovement);
-            } else CanvasUtils.drawImageHd(idd.Nn[2], (vertst + player.x) + WX, (horist + player.y) + WY, Rot * PIby2, 0, 0, imgMovement);
+                CanvasUtils.drawImageHd(item.Nn[1], ((vertst + player.x) + WX) + item.NmVwM[Rot][0], ((horist + player.y) + WY) + item.NmVwM[Rot][1], (Rot * PIby2) + player.heal, 0, 0, imgMovement);
+                CanvasUtils.drawImageHd(item.Nn[0], (vertst + player.x) + WX, (horist + player.y) + WY, Rot * PIby2, 0, 0, imgMovement);
+            } else CanvasUtils.drawImageHd(item.Nn[2], (vertst + player.x) + WX, (horist + player.y) + WY, Rot * PIby2, 0, 0, imgMovement);
             if (player.hit > 0) containeropenic(player, WX, WY);
         };
 
@@ -16152,19 +16152,19 @@ try {
                 return;
             }
             ctx.globalAlpha = MathUtils.Ease.outQuad(player.hit / 500);
-            var WY = scaleby * (((player.i * wmn) + horist) + nwn);
-            var WX = scaleby * (((player.j * wmn) + vertst) + nwn);
+            var WY = scaleby * (((player.i * __TILE_SIZE__) + horist) + __TILE_SIZE2__);
+            var WX = scaleby * (((player.j * __TILE_SIZE__) + vertst) + __TILE_SIZE2__);
             var SY = (imgMovement * arv.width) / 2;
             var SX = (imgMovement * arv.height) / 2;
             ctx.drawImage(arv, WX - (SY / 2), WY - (SX / 2), SY, SX);
             ctx.globalAlpha = 1;
         };
 
-        function nVVVm(idd, player, WX, WY, Rot, imgMovement) {
+        function nVVVm(item, player, WX, WY, Rot, imgMovement) {
             var MWm = (player.state >> 4) & 1;
             if (MWm === 1) player.hit = window.Math.min(500, player.hit + delta);
             else if (player.hit > 0) player.hit = window.Math.max(0, player.hit - delta);
-            if (MWm === 0) nearme(idd, player, 0);
+            if (MWm === 0) nearme(item, player, 0);
             var mMW = (player.state >> 5) & 1;
             if (mMW === 1) player.hitMax = window.Math.min(10000, player.hitMax + delta);
             else if (player.hitMax > 0) {
@@ -16175,12 +16175,12 @@ try {
                 vW = MathUtils.Ease.outQuad(player.hitMax / 10000);
                 WX += ((window.Math.random() * 2) - 1) * vW;
                 WY += ((window.Math.random() * 2) - 1) * vW;
-                CanvasUtils.drawImageHd(idd.Nn[0], (vertst + player.x) + WX, (horist + player.y) + WY, Rot * PIby2, 0, 0, imgMovement);
-            } else CanvasUtils.drawImageHd(idd.Nn[1], (vertst + player.x) + WX, (horist + player.y) + WY, Rot * PIby2, 0, 0, imgMovement);
+                CanvasUtils.drawImageHd(item.Nn[0], (vertst + player.x) + WX, (horist + player.y) + WY, Rot * PIby2, 0, 0, imgMovement);
+            } else CanvasUtils.drawImageHd(item.Nn[1], (vertst + player.x) + WX, (horist + player.y) + WY, Rot * PIby2, 0, 0, imgMovement);
             if (player.hit > 0) containeropenic(player, WX, WY);
         };
 
-        function WNvww(idd, player, WX, WY, Rot, imgMovement) {
+        function WNvww(item, player, WX, WY, Rot, imgMovement) {
             var i = (Rot + 1) % 2;
             var j = Rot % 2;
             matrix[player.i + i][player.j + j].NMn = frameId;
@@ -16192,7 +16192,7 @@ try {
             var MWm = (player.state >> 4) & 1;
             if (MWm === 1) player.hit = window.Math.min(500, player.hit + delta);
             else if (player.hit > 0) player.hit = window.Math.max(0, player.hit - delta);
-            if (MWm === 0) nearme(idd, player, 0);
+            if (MWm === 0) nearme(item, player, 0);
             var mMW = (player.state >> 5) & 1;
             if (mMW === 1) player.hitMax = window.Math.min(10000, player.hitMax + delta);
             else if (player.hitMax > 0) {
@@ -16203,12 +16203,12 @@ try {
                 vW = MathUtils.Ease.outQuad(player.hitMax / 10000);
                 WX += ((window.Math.random() * 2) - 1) * vW;
                 WY += ((window.Math.random() * 2) - 1) * vW;
-                CanvasUtils.drawImageHd(idd.Nn[1], (vertst + player.x) + WX, (horist + player.y) + WY, Rot * PIby2, 0, 0, imgMovement);
-            } else CanvasUtils.drawImageHd(idd.Nn[0], (vertst + player.x) + WX, (horist + player.y) + WY, Rot * PIby2, 0, 0, imgMovement);
+                CanvasUtils.drawImageHd(item.Nn[1], (vertst + player.x) + WX, (horist + player.y) + WY, Rot * PIby2, 0, 0, imgMovement);
+            } else CanvasUtils.drawImageHd(item.Nn[0], (vertst + player.x) + WX, (horist + player.y) + WY, Rot * PIby2, 0, 0, imgMovement);
             if (player.hit > 0) containeropenic(player, WX, WY);
         };
 
-        function NNnwW(idd, player, WX, WY, Rot, imgMovement) {
+        function NNnwW(item, player, WX, WY, Rot, imgMovement) {
             var i = (Rot + 1) % 2;
             var j = Rot % 2;
             matrix[player.i + i][player.j + j].NMn = frameId;
@@ -16220,16 +16220,16 @@ try {
             var MWm = (player.state >> 4) & 1;
             if (MWm === 1) player.hit = window.Math.min(500, player.hit + delta);
             else if (player.hit > 0) player.hit = window.Math.max(0, player.hit - delta);
-            if (MWm === 0) nearme(idd, player, 0);
+            if (MWm === 0) nearme(item, player, 0);
             var mMW = (player.state >> 5) & 1;
             if (mMW === 1) player.hitMax = 1 + (player.hitMax + (delta % 300000));
             else player.hitMax = 0;
             var vW = 0;
             if (player.hitMax > 0) {
-                CanvasUtils.drawImageHd(idd.Nn[1 + (window.Math.floor(player.hitMax / 500) % 3)], (vertst + player.x) + WX, (horist + player.y) + WY, Rot * PIby2, 0, 0, imgMovement);
-                var mMW = idd.mMW[window.Math.floor(player.hitMax / 50) % idd.mMW.length];
+                CanvasUtils.drawImageHd(item.Nn[1 + (window.Math.floor(player.hitMax / 500) % 3)], (vertst + player.x) + WX, (horist + player.y) + WY, Rot * PIby2, 0, 0, imgMovement);
+                var mMW = item.mMW[window.Math.floor(player.hitMax / 50) % item.mMW.length];
                 if (mMW !== 0) CanvasUtils.drawImageHd(mMW, (vertst + player.x) + WX, (horist + player.y) + WY, Rot * PIby2, 0, 0, imgMovement);
-            } else CanvasUtils.drawImageHd(idd.Nn[0], (vertst + player.x) + WX, (horist + player.y) + WY, Rot * PIby2, 0, 0, imgMovement);
+            } else CanvasUtils.drawImageHd(item.Nn[0], (vertst + player.x) + WX, (horist + player.y) + WY, Rot * PIby2, 0, 0, imgMovement);
             if (player.hit > 0) containeropenic(player, WX, WY);
         };
 
@@ -16248,13 +16248,13 @@ try {
             ctx.globalAlpha = 1;
         };
 
-        function fireContainer(idd, player, WX, WY, Rot, imgMovement) {
+        function fireContainer(item, player, WX, WY, Rot, imgMovement) {
             
             var MWm = (player.state >> 4) & 1;
             if (MWm === 1) player.hit = window.Math.min(500, player.hit + delta);
             else if (player.hit > 0) player.hit = window.Math.max(0, player.hit - delta);
-            if (MWm === 0) nearme(idd, player, 0);
-            CanvasUtils.drawImageHd(idd.Nn, (vertst + player.x) + WX, (horist + player.y) + WY, Rot * PIby2, 0, 0, imgMovement);
+            if (MWm === 0) nearme(item, player, 0);
+            CanvasUtils.drawImageHd(item.Nn, (vertst + player.x) + WX, (horist + player.y) + WY, Rot * PIby2, 0, 0, imgMovement);
 
             var mMW = (player.state >> 5) & 1;
             if (mMW === 1) player.hitMax = window.Math.min(500, player.hitMax + delta);
@@ -16313,7 +16313,7 @@ try {
                     WMnvM[WwMWW.impact] = 1;
                 }
                 player.hurt = 250;
-                if (player.nMW <= 0) player.nMW = 300;
+                if (player.hurt2 <= 0) player.hurt2 = 300;
                 player.hurtAngle = (WNVNM * (player.extra & 31)) / 31;
                 player.state &= ~2;
                 vNwNM(player, WwMWW.particles, vV.Mwm, 1);
@@ -16341,11 +16341,11 @@ try {
             if (vV.Vmw !== window.undefined) {
                 WX = 0;
                 WY = 0;
-                if (player.nMW > 0) {
-                    var hurt = (player.nMW > 250) ? (10 * MathUtils.Ease.inQuad((300 - player.nMW) / 250)) : (10 * MathUtils.Ease.outQuad(player.nMW / 250));
+                if (player.hurt2 > 0) {
+                    var hurt = (player.hurt2 > 250) ? (10 * MathUtils.Ease.inQuad((300 - player.hurt2) / 250)) : (10 * MathUtils.Ease.outQuad(player.hurt2 / 250));
                     WX = window.Math.cos(player.hurtAngle) * hurt;
                     WY = window.Math.sin(player.hurtAngle) * hurt;
-                    player.nMW -= delta;
+                    player.hurt2 -= delta;
                 }
                 if (WMWvN === 0) {
                     if (player.heal > 0) player.heal = window.Math.max(0, player.heal - delta);
@@ -16380,12 +16380,12 @@ try {
             matrix[player.i][player.j].wMV = player.pid;
             matrix[player.i][player.j].nww = window.undefined;
             var Rot = (player.extra >> 5) & 3;
-            var idd = items[player.extra >> 7];
+            var item = items[player.extra >> 7];
             var imgMovement = 1;
-            matrix[player.i][player.j].nww = idd.detail.nww;
+            matrix[player.i][player.j].nww = item.detail.nww;
             if (player.removed !== 0) {
                 if (player.death === 0) {
-                    var wwM = (idd.particles === -1) ? items[idd.id].subtype[player.subtype] : idd;
+                    var wwM = (item.particles === -1) ? items[item.id].subtype[player.subtype] : item;
                     vNwNM(player, wwM.particles, wwM.Mwm, 5);
                     if ((wwM.destroyaudio !== 0) && (WMnvM[wwM.destroyaudio] === 0)) {
                         AudioUtils.playFx(AudioUtils._fx.damage[wwM.destroyaudio], 1, Math2d.dist(World.PLAYER.x, World.PLAYER.y, player.x, player.y) / 2.5);
@@ -16401,7 +16401,7 @@ try {
                 player.hurt = 250;
                 player.hurtAngle = (WNVNM * (player.extra & 31)) / 31;
                 player.state &= ~2;
-                var wwM = (idd.particles === -1) ? items[idd.id].subtype[player.subtype] : idd;
+                var wwM = (item.particles === -1) ? items[item.id].subtype[player.subtype] : item;
                 vNwNM(player, wwM.particles, wwM.Mwm, 1);
                 if ((wwM.impact !== 0) && (WMnvM[wwM.impact] === 0)) {
                     AudioUtils.playFx(AudioUtils._fx.damage[wwM.impact], 1, Math2d.dist(World.PLAYER.x, World.PLAYER.y, player.x, player.y) / 2.8);
@@ -16423,7 +16423,7 @@ try {
                     player.hurt -= delta;
                 }
             }
-            idd.draw(idd, player, WX, WY, Rot, imgMovement);
+            item.draw(item, player, WX, WY, Rot, imgMovement);
             if (player.removed !== 0) {
                 if (player.death > 300) player.removed = 2;
                 ctx.globalAlpha = 1;
@@ -16543,53 +16543,53 @@ try {
             var MvW = Entitie.units[ENTITIES.length];
             var Wwn = Entitie.border[ENTITIES.length];
             var WWM = Wwn.border;
-            var Nvw = Entitie.units[nnvNN];
-            var wWv = Entitie.border[nnvNN];
+            var Nvw = Entitie.units[__ENTITIE_BUILD_TOP__];
+            var wWv = Entitie.border[__ENTITIE_BUILD_TOP__];
             var wVN = wWv.border;
             for (i = 0; i < wVN; i++) bigwallsfusion(Nvw[wWv.cycle[i]]);
-            Nvw = Entitie.units[NWWvM];
-            wWv = Entitie.border[NWWvM];
+            Nvw = Entitie.units[__ENTITIE_BUILD_GROUND2__];
+            wWv = Entitie.border[__ENTITIE_BUILD_GROUND2__];
             wVN = wWv.border;
             for (i = 0; i < wVN; i++) floorsfusion(Nvw[wWv.cycle[i]]);
             for (i = 0; i < wVN; i++) objectsinscreenfunc(Nvw[wWv.cycle[i]]);
             for (i = 0; i < WWM; i++) {
                 var player = MvW[Wwn.cycle[i]];
-                if (player.type === NWWvM) objectsinscreenfunc(player);
+                if (player.type === __ENTITIE_BUILD_GROUND2__) objectsinscreenfunc(player);
             }
             if (NwMVW !== vMNWw) {
-                var particles = Entitie.units[vvwvw];
-                var wWv = Entitie.border[vvwvw];
+                var particles = Entitie.units[__ENTITIE_PARTICLES__];
+                var wWv = Entitie.border[__ENTITIE_PARTICLES__];
                 var wVN = wWv.border;
                 for (i = 0; i < wVN; i++) mWNvV(particles[wWv.cycle[i]]);
                 if (VwmMm.id !== -1) {
-                    Entitie.remove(0, VwmMm.id, VwmMm.uid, vvwvw);
+                    Entitie.remove(0, VwmMm.id, VwmMm.uid, __ENTITIE_PARTICLES__);
                     VwmMm.id = -1;
                 }
             }
-            var Nvw = Entitie.units[MNvmw];
-            var wWv = Entitie.border[MNvmw];
+            var Nvw = Entitie.units[__ENTITIE_BUILD_GROUND__];
+            var wWv = Entitie.border[__ENTITIE_BUILD_GROUND__];
             var wVN = wWv.border;
             for (i = 0; i < wVN; i++) objectsinscreenfunc(Nvw[wWv.cycle[i]]);
             for (i = 0; i < WWM; i++) {
                 var player = MvW[Wwn.cycle[i]];
-                if (player.type === MNvmw) objectsinscreenfunc(player);
+                if (player.type === __ENTITIE_BUILD_GROUND__) objectsinscreenfunc(player);
             }
-            WMmMN = Entitie.units[mWmnn];
-            VmwNm = Entitie.border[mWmnn];
+            WMmMN = Entitie.units[__ENTITIE_RESOURCES_DOWN__];
+            VmwNm = Entitie.border[__ENTITIE_RESOURCES_DOWN__];
             vMwWm = VmwNm.border;
             for (i = 0; i < vMwWm; i++) natureinscreenfunc(WMmMN[VmwNm.cycle[i]]);
             for (i = 0; i < WWM; i++) {
                 var player = MvW[Wwn.cycle[i]];
-                if (player.type === mWmnn) natureinscreenfunc(player);
+                if (player.type === __ENTITIE_RESOURCES_DOWN__) natureinscreenfunc(player);
             }
-            var Nvw = Entitie.units[wNnwm];
-            var wWv = Entitie.border[wNnwm];
+            var Nvw = Entitie.units[__ENTITIE_BUILD_DOWN__];
+            var wWv = Entitie.border[__ENTITIE_BUILD_DOWN__];
             var wVN = wWv.border;
             for (i = 0; i < wVN; i++) smallwallsfusion(Nvw[wWv.cycle[i]]);
             for (i = 0; i < wVN; i++) objectsinscreenfunc(Nvw[wWv.cycle[i]]);
             for (i = 0; i < WWM; i++) {
                 var player = MvW[Wwn.cycle[i]];
-                if (player.type === wNnwm) objectsinscreenfunc(player);
+                if (player.type === __ENTITIE_BUILD_DOWN__) objectsinscreenfunc(player);
             }
             var socket = Entitie.units[__ENTITIE_PLAYER__];
             var border = Entitie.border[__ENTITIE_PLAYER__];
@@ -16605,29 +16605,29 @@ try {
             }
             World.PLAYER.loot = -1;
             World.PLAYER.lootsrvID = -1;
-            var MMwVW = Entitie.units[WmVMw];
-            var vmwvW = Entitie.border[WmVMw];
+            var MMwVW = Entitie.units[__ENTITIE_LOOT__];
+            var vmwvW = Entitie.border[__ENTITIE_LOOT__];
             var MVMVw = vmwvW.border;
             for (i = 0; i < MVMVw; i++) lootinscreenfunc(MMwVW[vmwvW.cycle[i]]);
             for (i = 0; i < WWM; i++) {
                 var player = MvW[Wwn.cycle[i]];
-                if (player.type === WmVMw) lootinscreenfunc(player);
+                if (player.type === __ENTITIE_LOOT__) lootinscreenfunc(player);
             }
-            var bullets = Entitie.units[VmnMw];
-            var Mmwnm = Entitie.border[VmnMw];
+            var bullets = Entitie.units[__ENTITIE_BULLET__];
+            var Mmwnm = Entitie.border[__ENTITIE_BULLET__];
             var MNmmw = Mmwnm.border;
             for (i = 0; i < MNmmw; i++) projectilefunc(bullets[Mmwnm.cycle[i]]);
             for (i = 0; i < WWM; i++) {
                 var player = MvW[Wwn.cycle[i]];
-                if (player.type === VmnMw) projectilefunc(player);
+                if (player.type === __ENTITIE_BULLET__) projectilefunc(player);
             }
-            WMmMN = Entitie.units[NWvMw];
-            VmwNm = Entitie.border[NWvMw];
+            WMmMN = Entitie.units[__ENTITIE_RESOURCES_MID__];
+            VmwNm = Entitie.border[__ENTITIE_RESOURCES_MID__];
             vMwWm = VmwNm.border;
             for (i = 0; i < vMwWm; i++) natureinscreenfunc(WMmMN[VmwNm.cycle[i]]);
             for (i = 0; i < WWM; i++) {
                 var player = MvW[Wwn.cycle[i]];
-                if (player.type === NWvMw) natureinscreenfunc(player);
+                if (player.type === __ENTITIE_RESOURCES_MID__) natureinscreenfunc(player);
             }
             if (World.gameMode === World.__GHOUL__) {
                 for (i = 0; i < len; i++) {
@@ -16661,42 +16661,42 @@ try {
                     }
                 }
             }
-            var mnn = Entitie.units[MNWNM];
-            var WwVvW = Entitie.border[MNWNM];
+            var mnn = Entitie.units[__ENTITIE_AI__];
+            var WwVvW = Entitie.border[__ENTITIE_AI__];
             var nWwNn = WwVvW.border;
             for (i = 0; i < nWwNn; i++) creaturesinscreenfunc(mnn[WwVvW.cycle[i]]);
             for (i = 0; i < WWM; i++) {
                 var player = MvW[Wwn.cycle[i]];
-                if (player.type === MNWNM) creaturesinscreenfunc(player);
+                if (player.type === __ENTITIE_AI__) creaturesinscreenfunc(player);
             }
-            Nvw = Entitie.units[nnvNN];
-            wWv = Entitie.border[nnvNN];
+            Nvw = Entitie.units[__ENTITIE_BUILD_TOP__];
+            wWv = Entitie.border[__ENTITIE_BUILD_TOP__];
             wVN = wWv.border;
             for (i = 0; i < wVN; i++) objectsinscreenfunc(Nvw[wWv.cycle[i]]);
             for (i = 0; i < WWM; i++) {
                 var player = MvW[Wwn.cycle[i]];
-                if (player.type === nnvNN) objectsinscreenfunc(player);
+                if (player.type === __ENTITIE_BUILD_TOP__) objectsinscreenfunc(player);
             }
             for (i = 0; i < pplonscr; i++) {
-                var idd = items[WvnvV[i].extra >> 7];
-                idd.VvmvM(WvnvV[i]);
+                var item = items[WvnvV[i].extra >> 7];
+                item.VvmvM(WvnvV[i]);
                 WvnvV[i] = null;
             }
-            WMmMN = Entitie.units[MmvmN];
-            VmwNm = Entitie.border[MmvmN];
+            WMmMN = Entitie.units[__ENTITIE_RESOURCES_TOP__];
+            VmwNm = Entitie.border[__ENTITIE_RESOURCES_TOP__];
             vMwWm = VmwNm.border;
             for (i = 0; i < vMwWm; i++) natureinscreenfunc(WMmMN[VmwNm.cycle[i]]);
             for (i = 0; i < WWM; i++) {
                 var player = MvW[Wwn.cycle[i]];
-                if (player.type === MmvmN) natureinscreenfunc(player);
+                if (player.type === __ENTITIE_RESOURCES_TOP__) natureinscreenfunc(player);
             }
-            WMmMN = Entitie.units[MVm];
-            VmwNm = Entitie.border[MVm];
+            WMmMN = Entitie.units[__ENTITIE_RESOURCES_STOP__];
+            VmwNm = Entitie.border[__ENTITIE_RESOURCES_STOP__];
             vMwWm = VmwNm.border;
             for (i = 0; i < vMwWm; i++) natureinscreenfunc(WMmMN[VmwNm.cycle[i]]);
             for (i = 0; i < WWM; i++) {
                 var player = MvW[Wwn.cycle[i]];
-                if (player.type === MVm) natureinscreenfunc(player);
+                if (player.type === __ENTITIE_RESOURCES_STOP__) natureinscreenfunc(player);
             }
             explosions = Entitie.units[__ENTITIE_EXPLOSION__];
             VMnwn = Entitie.border[__ENTITIE_EXPLOSION__];
@@ -16877,8 +16877,8 @@ try {
             VvWmm: VvWmm,
             stopPoisonEffect: stopPoisonEffect,
             VNvvM: VNvvM,
-            wmn: wmn,
-            nwn: nwn,
+            __TILE_SIZE__: __TILE_SIZE__,
+            __TILE_SIZE2__: __TILE_SIZE2__,
             nnmMW: 0,
             Mvw: mmwVM,
             VWN: nNMVN,
@@ -16913,7 +16913,7 @@ try {
             mMWMV: mwNmN
         };
     })();
-var nmn = (function() {
+var MapManager = (function() {
     var key_w = 0;
     var key_s = 1;
     var key_a = 2;
@@ -16924,9 +16924,9 @@ var nmn = (function() {
     var wWn = null;
     var vWwNw = -1;
     var VNnvM = 0;
-    var Mww = [];
+    var grid = [];
     var NvMvV = [];
-    var MMNNn = [];
+    var roads = [];
     var NWVNw = {
         i: 0,
         j: 0
@@ -16934,8 +16934,8 @@ var nmn = (function() {
 
     function VVvvN() {
         for (var i = 0; i < wMVvN; i++) {
-            Mww[i] = [];
-            for (var j = 0; j < vMWMW; j++) Mww[i][j] = 0;
+            grid[i] = [];
+            for (var j = 0; j < vMWMW; j++) grid[i][j] = 0;
         }
     };
 
@@ -16943,13 +16943,13 @@ var nmn = (function() {
         wWn = new RNG.Random(WVWWv);
         vMWMW = SY;
         wMVvN = SX;
-        nmn.width = SY;
-        nmn.height = SX;
-        Mww = [];
-        nmn.Mww = Mww;
+        MapManager.width = SY;
+        MapManager.height = SX;
+        grid = [];
+        MapManager.grid = grid;
         NvMvV = [];
-        MMNNn = [];
-        nmn.MMNNn = MMNNn;
+        roads = [];
+        MapManager.roads = roads;
         vWwNw = -1;
         NWVNw.i = 0;
         NWVNw.j = 0;
@@ -16966,28 +16966,30 @@ var nmn = (function() {
     return {
         seed: 0,
         init: init,
-        Mww: Mww,
-        MMNNn: null,
+        grid: grid,
+        roads: null,
         width: 0,
         height: 0
     };
 })();
-nVn = 0;
-__ENTITIE_PLAYER__ = nVn++;
-WmVMw = nVn++;
-VmnMw = nVn++;
-nnvNN = nVn++;
-wNnwm = nVn++;
-MNvmw = nVn++;
-NWWvM = nVn++;
-vvwvw = nVn++;
-MmvmN = nVn++;
-mWmnn = nVn++;
-NWvMw = nVn++;
-MVm = nVn++;
-__ENTITIE_EXPLOSION__ = nVn++;
-MNWNM = nVn++;
-ENTITIES[__ENTITIE_PLAYER__].update = function MwMNm(MW, WX, WY) {
+
+COUNTER_ENTITIE = 0;
+__ENTITIE_PLAYER__          = COUNTER_ENTITIE++;
+__ENTITIE_LOOT__            = COUNTER_ENTITIE++;
+__ENTITIE_BULLET__          = COUNTER_ENTITIE++;
+__ENTITIE_BUILD_TOP__       = COUNTER_ENTITIE++;
+__ENTITIE_BUILD_DOWN__      = COUNTER_ENTITIE++;
+__ENTITIE_BUILD_GROUND__    = COUNTER_ENTITIE++;
+__ENTITIE_BUILD_GROUND2__   = COUNTER_ENTITIE++;
+__ENTITIE_PARTICLES__       = COUNTER_ENTITIE++;
+__ENTITIE_RESOURCES_TOP__   = COUNTER_ENTITIE++;
+__ENTITIE_RESOURCES_DOWN__  = COUNTER_ENTITIE++;
+__ENTITIE_RESOURCES_MID__   = COUNTER_ENTITIE++;
+__ENTITIE_RESOURCES_STOP__  = COUNTER_ENTITIE++;
+__ENTITIE_EXPLOSION__       = COUNTER_ENTITIE++;
+__ENTITIE_AI__              = COUNTER_ENTITIE++;
+
+ENTITIES[__ENTITIE_PLAYER__].update = function updateEntitiePlayer(MW, WX, WY) {
     if (Math2d.dist(MW.x, MW.y, WX, WY) > 66) {
         MW.rx = WX;
         MW.ry = WY;
@@ -16997,24 +16999,24 @@ ENTITIES[__ENTITIE_PLAYER__].update = function MwMNm(MW, WX, WY) {
     }
     MW.speed = (MW.state >> 8) / 100;
 };
-ENTITIES[__ENTITIE_PLAYER__].init = function wvwmW(MW) {
+ENTITIES[__ENTITIE_PLAYER__].init = function initEntitiePlayer(MW) {
     var PLAYER = World.socket[MW.pid];
     for (var i = 0; i < PLAYER.runEffect.length; i++) PLAYER.runEffect[i].delay = 0;
     for (var i = 0; i < PLAYER.cartridges.length; i++) PLAYER.cartridges[i].delay = 0;
     MW.angle = MW.nangle;
     if (PLAYER.ghoul > 0) {
         MW.heal = 1;
-        MW.nMW = 1;
+        MW.hurt2 = 1;
     }
 };
-ENTITIES[MNWNM].update = ENTITIES[__ENTITIE_PLAYER__].update;
-ENTITIES[MNWNM].init = function mwmNm(MW) {
+ENTITIES[__ENTITIE_AI__].update = ENTITIES[__ENTITIE_PLAYER__].update;
+ENTITIES[__ENTITIE_AI__].init = function initEntitieAI(MW) {
     MW.heal = 1;
-    MW.nMW = 1;
+    MW.hurt2 = 1;
     MW.angle = MW.nangle;
     MW.speed = (MW.state >> 8) / 100;
 };
-ENTITIES[WmVMw].init = function MVvWW(MW) {
+ENTITIES[__ENTITIE_LOOT__].init = function initEntitieLoot(MW) {
     if ((MW.x !== MW.rx) || (MW.y !== MW.ry)) {
         MW.angle = Math2d.angle(MW.x, MW.y, MW.rx, MW.ry);
         MW.nangle = MW.angle;
@@ -17023,10 +17025,10 @@ ENTITIES[WmVMw].init = function MVvWW(MW) {
         MW.nangle = MW.angle;
     }
 };
-ENTITIES[WmVMw].update = function VmMmm(MW, WX, WY) {
+ENTITIES[__ENTITIE_LOOT__].update = function updateEntitieLoot(MW, WX, WY) {
     MW.hit = MW.state >> 8;
 };
-ENTITIES[VmnMw].init = function wwwnnnm(MW) {
+ENTITIES[__ENTITIE_BULLET__].init = function initEntitieBullet(MW) {
     MW.hurtAngle = Math2d.angle(MW.rx, MW.ry, MW.nx, MW.ny);
     var Wn = MW.extra;
     MW.speed = (MW.state >> 8) / 100;
@@ -17045,7 +17047,7 @@ ENTITIES[VmnMw].init = function wwwnnnm(MW) {
             break;
     }
 };
-ENTITIES[VmnMw].update = function MVNWvvM(MW, WX, WY) {
+ENTITIES[__ENTITIE_BULLET__].update = function updateEntitieBullet(MW, WX, WY) {
     var angle = Math2d.angle(MW.x, MW.y, MW.nx, MW.ny);
     var nvwVm = window.Math.PI * 2;
     var vWWMM = (((angle + nvwVm) % nvwVm) - ((MW.hurtAngle + nvwVm) % nvwVm)) % nvwVm;
@@ -17056,33 +17058,33 @@ ENTITIES[VmnMw].update = function MVNWvvM(MW, WX, WY) {
         MW.ny = MW.y;
     }
 };
-ENTITIES[MmvmN].update = function VvWVm() {
+ENTITIES[__ENTITIE_RESOURCES_TOP__].update = function updateEntitieBuilding() {
 };
-ENTITIES[mWmnn].update = ENTITIES[MmvmN].update;
-ENTITIES[NWvMw].update = ENTITIES[MmvmN].update;
-ENTITIES[MVm].update = ENTITIES[MmvmN].update;
-ENTITIES[nnvNN].update = function VvWVm(MW, WX, WY) {
+ENTITIES[__ENTITIE_RESOURCES_DOWN__].update = ENTITIES[__ENTITIE_RESOURCES_TOP__].update;
+ENTITIES[__ENTITIE_RESOURCES_MID__].update = ENTITIES[__ENTITIE_RESOURCES_TOP__].update;
+ENTITIES[__ENTITIE_RESOURCES_STOP__].update = ENTITIES[__ENTITIE_RESOURCES_TOP__].update;
+ENTITIES[__ENTITIE_BUILD_TOP__].update = function updateEntitieBuilding(MW, WX, WY) {
     var Rot = (MW.extra >> 5) & 3;
     MW.subtype = (MW.state >> 5) & 63;
     MW.broke = MW.state >> 14;
     MW.state = MW.state & 16383;
-    var idd = items[MW.extra >> 7];
-    MW.x = ((window.Math.floor(WX / Render.wmn) * Render.wmn) + Render.nwn) + idd.Wwv[Rot];
-    MW.y = ((window.Math.floor(WY / Render.wmn) * Render.wmn) + Render.nwn) + idd.nWn[Rot];
+    var item = items[MW.extra >> 7];
+    MW.x = ((window.Math.floor(WX / Render.__TILE_SIZE__) * Render.__TILE_SIZE__) + Render.__TILE_SIZE2__) + item.xCenter[Rot];
+    MW.y = ((window.Math.floor(WY / Render.__TILE_SIZE__) * Render.__TILE_SIZE__) + Render.__TILE_SIZE2__) + item.yCenter[Rot];
     MW.rx = MW.x;
     MW.ry = MW.y;
     MW.nx = MW.x;
     MW.ny = MW.y;
     MW.px = MW.x;
     MW.py = MW.y;
-    if ((idd.WNv === 1) && ((MW.state & 16) === 16)) {
-        MW.px = ((window.Math.floor(MW.j + idd.wmvvV[Rot]) * Render.wmn) + Render.nwn) + idd.Wwv[(Rot + 1) % 4];
-        MW.py = ((window.Math.floor(MW.i + idd.NVvMw[Rot]) * Render.wmn) + Render.nwn) + idd.nWn[(Rot + 1) % 4];
+    if ((item.WNv === 1) && ((MW.state & 16) === 16)) {
+        MW.px = ((window.Math.floor(MW.j + item.jMove[Rot]) * Render.__TILE_SIZE__) + Render.__TILE_SIZE2__) + item.xCenter[(Rot + 1) % 4];
+        MW.py = ((window.Math.floor(MW.i + item.iMove[Rot]) * Render.__TILE_SIZE__) + Render.__TILE_SIZE2__) + item.yCenter[(Rot + 1) % 4];
     }
 };
-ENTITIES[wNnwm].update = ENTITIES[nnvNN].update;
-ENTITIES[MNvmw].update = ENTITIES[nnvNN].update;
-ENTITIES[NWWvM].update = ENTITIES[nnvNN].update;
+ENTITIES[__ENTITIE_BUILD_DOWN__].update = ENTITIES[__ENTITIE_BUILD_TOP__].update;
+ENTITIES[__ENTITIE_BUILD_GROUND__].update = ENTITIES[__ENTITIE_BUILD_TOP__].update;
+ENTITIES[__ENTITIE_BUILD_GROUND2__].update = ENTITIES[__ENTITIE_BUILD_TOP__].update;
 try {
     Render.shake;
 } catch (error) {
@@ -18805,8 +18807,8 @@ var items = [{
     delay: 1000,
     width: [30, 30, 30, 30],
     height: [30, 30, 30, 30],
-    Wwv: [0, 0, 0, 0],
-    nWn: [0, 0, 0, 0],
+    xCenter: [0, 0, 0, 0],
+    yCenter: [0, 0, 0, 0],
     inmapx: [35, 35, 35, 35],
     inmapy: [35, 35, 35, 35],
     putableimg: {
@@ -18981,8 +18983,8 @@ var items = [{
     delay: 1000,
     width: [100, 100, 100, 100],
     height: [100, 100, 100, 100],
-    Wwv: [0, 0, 0, 0],
-    nWn: [0, 0, 0, 0],
+    xCenter: [0, 0, 0, 0],
+    yCenter: [0, 0, 0, 0],
     inmapx: [0, 0, 0, 0],
     inmapy: [0, 0, 0, 0],
     putableimg: {
@@ -19217,8 +19219,8 @@ var items = [{
     delay: 1000,
     width: [100, 100, 100, 100],
     height: [100, 100, 100, 100],
-    Wwv: [0, 0, 0, 0],
-    nWn: [0, 0, 0, 0],
+    xCenter: [0, 0, 0, 0],
+    yCenter: [0, 0, 0, 0],
     inmapx: [0, 0, 0, 0],
     inmapy: [0, 0, 0, 0],
     putableimg: {
@@ -19532,8 +19534,8 @@ var items = [{
     delay: 1000,
     width: [100, 100, 100, 100],
     height: [100, 100, 100, 100],
-    Wwv: [0, 0, 0, 0],
-    nWn: [0, 0, 0, 0],
+    xCenter: [0, 0, 0, 0],
+    yCenter: [0, 0, 0, 0],
     inmapx: [0, 0, 0, 0],
     inmapy: [0, 0, 0, 0],
     putableimg: {
@@ -19847,8 +19849,8 @@ var items = [{
     delay: 1000,
     width: [100, 100, 100, 100],
     height: [100, 100, 100, 100],
-    Wwv: [0, 0, 0, 0],
-    nWn: [0, 0, 0, 0],
+    xCenter: [0, 0, 0, 0],
+    yCenter: [0, 0, 0, 0],
     inmapx: [0, 0, 0, 0],
     inmapy: [0, 0, 0, 0],
     putableimg: {
@@ -20162,8 +20164,8 @@ var items = [{
     delay: 600,
     width: [100, 35, 100, 35],
     height: [35, 100, 35, 100],
-    Wwv: [0, -30, 0, 30],
-    nWn: [30, 0, -30, 0],
+    xCenter: [0, -30, 0, 30],
+    yCenter: [30, 0, -30, 0],
     inmapx: [0, 0, 0, 65],
     inmapy: [65, 0, 0, 0],
     putableimg: {
@@ -20188,8 +20190,8 @@ var items = [{
     subtype: 0,
     MMN: 1,
     angle: window.Math.PI / 2,
-    NVvMw: [1, 0, -1, 0],
-    wmvvV: [0, -1, 0, 1],
+    iMove: [1, 0, -1, 0],
+    jMove: [0, -1, 0, 1],
     vVNvM: [0, 0, 65, 0],
     NnmvM: [0, 0, 0, 65],
     wnwMW: [35, 100, 35, 100],
@@ -20266,8 +20268,8 @@ var items = [{
     delay: 600,
     width: [100, 35, 100, 35],
     height: [35, 100, 35, 100],
-    Wwv: [0, -30, 0, 30],
-    nWn: [30, 0, -30, 0],
+    xCenter: [0, -30, 0, 30],
+    yCenter: [30, 0, -30, 0],
     inmapx: [0, 0, 0, 65],
     inmapy: [65, 0, 0, 0],
     putableimg: {
@@ -20292,8 +20294,8 @@ var items = [{
     subtype: 0,
     MMN: 1,
     angle: window.Math.PI / 2,
-    NVvMw: [1, 0, -1, 0],
-    wmvvV: [0, -1, 0, 1],
+    iMove: [1, 0, -1, 0],
+    jMove: [0, -1, 0, 1],
     vVNvM: [0, 0, 65, 0],
     NnmvM: [0, 0, 0, 65],
     wnwMW: [35, 100, 35, 100],
@@ -20370,8 +20372,8 @@ var items = [{
     delay: 600,
     width: [100, 35, 100, 35],
     height: [35, 100, 35, 100],
-    Wwv: [0, -30, 0, 30],
-    nWn: [30, 0, -30, 0],
+    xCenter: [0, -30, 0, 30],
+    yCenter: [30, 0, -30, 0],
     inmapx: [0, 0, 0, 65],
     inmapy: [65, 0, 0, 0],
     putableimg: {
@@ -20396,8 +20398,8 @@ var items = [{
     subtype: 0,
     MMN: 1,
     angle: window.Math.PI / 2,
-    NVvMw: [1, 0, -1, 0],
-    wmvvV: [0, -1, 0, 1],
+    iMove: [1, 0, -1, 0],
+    jMove: [0, -1, 0, 1],
     vVNvM: [0, 0, 65, 0],
     NnmvM: [0, 0, 0, 65],
     wnwMW: [35, 100, 35, 100],
@@ -20477,8 +20479,8 @@ var items = [{
     delay: 1000,
     width: [100, 100, 100, 100],
     height: [100, 100, 100, 100],
-    Wwv: [0, 0, 0, 0],
-    nWn: [0, 0, 0, 0],
+    xCenter: [0, 0, 0, 0],
+    yCenter: [0, 0, 0, 0],
     inmapx: [0, 0, 0, 0],
     inmapy: [0, 0, 0, 0],
     putableimg: {
@@ -20916,8 +20918,8 @@ var items = [{
     delay: 1000,
     width: [100, 100, 100, 100],
     height: [100, 100, 100, 100],
-    Wwv: [0, 0, 0, 0],
-    nWn: [0, 0, 0, 0],
+    xCenter: [0, 0, 0, 0],
+    yCenter: [0, 0, 0, 0],
     inmapx: [0, 0, 0, 0],
     inmapy: [0, 0, 0, 0],
     putableimg: {
@@ -20993,8 +20995,8 @@ var items = [{
     delay: 1000,
     width: [100, 260, 100, 260],
     height: [260, 100, 260, 100],
-    Wwv: [0, 0, 0, 0],
-    nWn: [0, 0, 0, 0],
+    xCenter: [0, 0, 0, 0],
+    yCenter: [0, 0, 0, 0],
     inmapx: [0, -80, 0, -80],
     inmapy: [-80, 0, -80, 0],
     MMnVm: [-1, 0, -1, 0],
@@ -21086,8 +21088,8 @@ var items = [{
     delay: 600,
     width: [100, 100, 100, 100],
     height: [100, 100, 100, 100],
-    Wwv: [0, 0, 0, 0],
-    nWn: [0, 0, 0, 0],
+    xCenter: [0, 0, 0, 0],
+    yCenter: [0, 0, 0, 0],
     inmapx: [0, 0, 0, 0],
     inmapy: [0, 0, 0, 0],
     putableimg: {
@@ -21112,8 +21114,8 @@ var items = [{
     subtype: 0,
     MMN: 1,
     angle: window.Math.PI,
-    NVvMw: [1, -1, -1, 1],
-    wmvvV: [-1, -1, 1, 1],
+    iMove: [1, -1, -1, 1],
+    jMove: [-1, -1, 1, 1],
     vVNvM: [0, 0, 0, 0],
     NnmvM: [0, 0, 0, 0],
     wnwMW: [100, 100, 100, 100],
@@ -21190,8 +21192,8 @@ var items = [{
     delay: 600,
     width: [100, 100, 100, 100],
     height: [100, 100, 100, 100],
-    Wwv: [0, 0, 0, 0],
-    nWn: [0, 0, 0, 0],
+    xCenter: [0, 0, 0, 0],
+    yCenter: [0, 0, 0, 0],
     inmapx: [0, 0, 0, 0],
     inmapy: [0, 0, 0, 0],
     putableimg: {
@@ -21216,8 +21218,8 @@ var items = [{
     subtype: 0,
     MMN: 1,
     angle: window.Math.PI,
-    NVvMw: [1, -1, -1, 1],
-    wmvvV: [-1, -1, 1, 1],
+    iMove: [1, -1, -1, 1],
+    jMove: [-1, -1, 1, 1],
     vVNvM: [0, 0, 0, 0],
     NnmvM: [0, 0, 0, 0],
     wnwMW: [100, 100, 100, 100],
@@ -21294,8 +21296,8 @@ var items = [{
     delay: 600,
     width: [100, 100, 100, 100],
     height: [100, 100, 100, 100],
-    Wwv: [0, 0, 0, 0],
-    nWn: [0, 0, 0, 0],
+    xCenter: [0, 0, 0, 0],
+    yCenter: [0, 0, 0, 0],
     inmapx: [0, 0, 0, 0],
     inmapy: [0, 0, 0, 0],
     putableimg: {
@@ -21320,8 +21322,8 @@ var items = [{
     subtype: 0,
     MMN: 1,
     angle: window.Math.PI,
-    NVvMw: [1, -1, -1, 1],
-    wmvvV: [-1, -1, 1, 1],
+    iMove: [1, -1, -1, 1],
+    jMove: [-1, -1, 1, 1],
     vVNvM: [0, 0, 0, 0],
     NnmvM: [0, 0, 0, 0],
     wnwMW: [100, 100, 100, 100],
@@ -21440,8 +21442,8 @@ var items = [{
     delay: 1000,
     width: [100, 290, 100, 280],
     height: [280, 100, 280, 100],
-    Wwv: [0, 0, 0, 0],
-    nWn: [0, 0, 0, 0],
+    xCenter: [0, 0, 0, 0],
+    yCenter: [0, 0, 0, 0],
     inmapx: [0, -90, 0, -90],
     inmapy: [-90, 0, -90, 0],
     MMnVm: [-1, 0, -1, 0],
@@ -21539,8 +21541,8 @@ var items = [{
     delay: 1000,
     width: [100, 100, 100, 100],
     height: [100, 100, 100, 100],
-    Wwv: [0, 0, 0, 0],
-    nWn: [0, 0, 0, 0],
+    xCenter: [0, 0, 0, 0],
+    yCenter: [0, 0, 0, 0],
     inmapx: [0, 0, 0, 0],
     inmapy: [0, 0, 0, 0],
     putableimg: {
@@ -21658,8 +21660,8 @@ var items = [{
     delay: 600,
     width: [100, 100, 100, 100],
     height: [100, 100, 100, 100],
-    Wwv: [0, 0, 0, 0],
-    nWn: [0, 0, 0, 0],
+    xCenter: [0, 0, 0, 0],
+    yCenter: [0, 0, 0, 0],
     inmapx: [0, 0, 0, 0],
     inmapy: [0, 0, 0, 0],
     putableimg: {
@@ -21735,8 +21737,8 @@ var items = [{
     delay: 600,
     width: [50, 100, 50, 100],
     height: [100, 50, 100, 50],
-    Wwv: [0, 0, 0, 0],
-    nWn: [0, 0, 0, 0],
+    xCenter: [0, 0, 0, 0],
+    yCenter: [0, 0, 0, 0],
     inmapx: [0, 0, 50, 0],
     inmapy: [0, 0, 0, 50],
     putableimg: {
@@ -21809,8 +21811,8 @@ var items = [{
     delay: 1000,
     width: [100, 100, 100, 100],
     height: [100, 100, 100, 100],
-    Wwv: [0, 0, 0, 0],
-    nWn: [0, 0, 0, 0],
+    xCenter: [0, 0, 0, 0],
+    yCenter: [0, 0, 0, 0],
     inmapx: [0, 0, 0, 0],
     inmapy: [0, 0, 0, 0],
     putableimg: {
@@ -22147,8 +22149,8 @@ var items = [{
     delay: 1000,
     width: [100, 100, 100, 100],
     height: [100, 100, 100, 100],
-    Wwv: [0, 0, 0, 0],
-    nWn: [0, 0, 0, 0],
+    xCenter: [0, 0, 0, 0],
+    yCenter: [0, 0, 0, 0],
     inmapx: [0, 0, 0, 0],
     inmapy: [0, 0, 0, 0],
     putableimg: {
@@ -22252,8 +22254,8 @@ var items = [{
     delay: 1000,
     width: [100, 100, 100, 100],
     height: [100, 100, 100, 100],
-    Wwv: [0, 0, 0, 0],
-    nWn: [0, 0, 0, 0],
+    xCenter: [0, 0, 0, 0],
+    yCenter: [0, 0, 0, 0],
     inmapx: [0, 0, 0, 0],
     inmapy: [0, 0, 0, 0],
     putableimg: {
@@ -22566,8 +22568,8 @@ var items = [{
     delay: 1000,
     width: [100, 35, 100, 35],
     height: [35, 100, 35, 100],
-    Wwv: [0, -30, 0, 30],
-    nWn: [30, 0, -30, 0],
+    xCenter: [0, -30, 0, 30],
+    yCenter: [30, 0, -30, 0],
     inmapx: [0, 0, 0, 65],
     inmapy: [65, 0, 0, 0],
     putableimg: {
@@ -22592,8 +22594,8 @@ var items = [{
     subtype: 0,
     MMN: 1,
     angle: window.Math.PI / 2,
-    NVvMw: [1, 0, -1, 0],
-    wmvvV: [0, -1, 0, 1],
+    iMove: [1, 0, -1, 0],
+    jMove: [0, -1, 0, 1],
     vVNvM: [0, 0, 65, 0],
     NnmvM: [0, 0, 0, 65],
     wnwMW: [35, 100, 35, 100],
@@ -22853,8 +22855,8 @@ var items = [{
     delay: 1000,
     width: [100, 35, 100, 35],
     height: [35, 100, 35, 100],
-    Wwv: [0, -30, 0, 30],
-    nWn: [30, 0, -30, 0],
+    xCenter: [0, -30, 0, 30],
+    yCenter: [30, 0, -30, 0],
     inmapx: [0, 0, 0, 65],
     inmapy: [65, 0, 0, 0],
     putableimg: {
@@ -22879,8 +22881,8 @@ var items = [{
     subtype: 0,
     MMN: 1,
     angle: window.Math.PI / 2,
-    NVvMw: [1, 0, -1, 0],
-    wmvvV: [0, -1, 0, 1],
+    iMove: [1, 0, -1, 0],
+    jMove: [0, -1, 0, 1],
     vVNvM: [0, 0, 65, 0],
     NnmvM: [0, 0, 0, 65],
     wnwMW: [35, 100, 35, 100],
@@ -23140,8 +23142,8 @@ var items = [{
     delay: 1000,
     width: [100, 35, 100, 35],
     height: [35, 100, 35, 100],
-    Wwv: [0, -30, 0, 30],
-    nWn: [30, 0, -30, 0],
+    xCenter: [0, -30, 0, 30],
+    yCenter: [30, 0, -30, 0],
     inmapx: [0, 0, 0, 65],
     inmapy: [65, 0, 0, 0],
     putableimg: {
@@ -23166,8 +23168,8 @@ var items = [{
     subtype: 0,
     MMN: 1,
     angle: window.Math.PI / 2,
-    NVvMw: [1, 0, -1, 0],
-    wmvvV: [0, -1, 0, 1],
+    iMove: [1, 0, -1, 0],
+    jMove: [0, -1, 0, 1],
     vVNvM: [0, 0, 65, 0],
     NnmvM: [0, 0, 0, 65],
     wnwMW: [35, 100, 35, 100],
@@ -23403,8 +23405,8 @@ var items = [{
 }, {
     id: item.MMnVW,
     WvV: 0,
-    Wwv: [0, 0, 0, 0],
-    nWn: [0, 0, 0, 0],
+    xCenter: [0, 0, 0, 0],
+    yCenter: [0, 0, 0, 0],
     Mvw: 0,
     VWN: 0,
     WNv: 0,
@@ -23531,8 +23533,8 @@ var items = [{
     delay: 1000,
     width: [30, 30, 30, 30],
     height: [30, 30, 30, 30],
-    Wwv: [0, 0, 0, 0],
-    nWn: [0, 0, 0, 0],
+    xCenter: [0, 0, 0, 0],
+    yCenter: [0, 0, 0, 0],
     inmapx: [35, 35, 35, 35],
     inmapy: [35, 35, 35, 35],
     putableimg: {
@@ -23766,8 +23768,8 @@ var items = [{
     delay: 1000,
     width: [100, 100, 100, 100],
     height: [100, 100, 100, 100],
-    Wwv: [0, 0, 0, 0],
-    nWn: [0, 0, 0, 0],
+    xCenter: [0, 0, 0, 0],
+    yCenter: [0, 0, 0, 0],
     inmapx: [0, 0, 0, 0],
     inmapy: [0, 0, 0, 0],
     putableimg: {
@@ -24080,8 +24082,8 @@ var items = [{
     delay: 1000,
     width: [100, 100, 100, 100],
     height: [100, 100, 100, 100],
-    Wwv: [0, 0, 0, 0],
-    nWn: [0, 0, 0, 0],
+    xCenter: [0, 0, 0, 0],
+    yCenter: [0, 0, 0, 0],
     inmapx: [0, 0, 0, 0],
     inmapy: [0, 0, 0, 0],
     putableimg: {
@@ -24370,8 +24372,8 @@ var items = [{
 }, {
     id: item.NvMvM,
     WvV: 0,
-    Wwv: [0, 0, 0, 0],
-    nWn: [0, 0, 0, 0],
+    xCenter: [0, 0, 0, 0],
+    yCenter: [0, 0, 0, 0],
     Mvw: 0,
     VWN: 0,
     WNv: 0,
@@ -24549,8 +24551,8 @@ var items = [{
     delay: 1000,
     width: [100, 260, 100, 260],
     height: [260, 100, 260, 100],
-    Wwv: [0, 0, 0, 0],
-    nWn: [0, 0, 0, 0],
+    xCenter: [0, 0, 0, 0],
+    yCenter: [0, 0, 0, 0],
     inmapx: [0, -80, 0, -80],
     inmapy: [-80, 0, -80, 0],
     MMnVm: [-1, 0, -1, 0],
@@ -24723,8 +24725,8 @@ var items = [{
     height: [50, 50, 50, 50],
     inmapx: [25, 25, 25, 25],
     inmapy: [25, 25, 25, 25],
-    Wwv: [0, 0, 0, 0],
-    nWn: [0, 0, 0, 0],
+    xCenter: [0, 0, 0, 0],
+    yCenter: [0, 0, 0, 0],
     putableimg: {
         src: "img/clear-blue-landmine.png", //image when you try to put in ground
         W: {
@@ -24800,8 +24802,8 @@ var items = [{
     delay: 1000,
     width: [100, 100, 100, 100],
     height: [100, 100, 100, 100],
-    Wwv: [0, 0, 0, 0],
-    nWn: [0, 0, 0, 0],
+    xCenter: [0, 0, 0, 0],
+    yCenter: [0, 0, 0, 0],
     inmapx: [0, 0, 0, 0],
     inmapy: [0, 0, 0, 0],
     putableimg: {
@@ -24874,8 +24876,8 @@ var items = [{
     delay: 1000,
     width: [100, 100, 100, 100],
     height: [100, 100, 100, 100],
-    Wwv: [0, 0, 0, 0],
-    nWn: [0, 0, 0, 0],
+    xCenter: [0, 0, 0, 0],
+    yCenter: [0, 0, 0, 0],
     inmapx: [0, 0, 0, 0],
     inmapy: [0, 0, 0, 0],
     putableimg: {
@@ -24972,8 +24974,8 @@ var items = [{
     delay: 1000,
     width: [100, 100, 100, 100],
     height: [100, 100, 100, 100],
-    Wwv: [0, 0, 0, 0],
-    nWn: [0, 0, 0, 0],
+    xCenter: [0, 0, 0, 0],
+    yCenter: [0, 0, 0, 0],
     inmapx: [0, 0, 0, 0],
     inmapy: [0, 0, 0, 0],
     putableimg: {
@@ -25336,8 +25338,8 @@ var items = [{
     height: [50, 50, 50, 50],
     inmapx: [25, 25, 25, 25],
     inmapy: [25, 25, 25, 25],
-    Wwv: [0, 0, 0, 0],
-    nWn: [0, 0, 0, 0],
+    xCenter: [0, 0, 0, 0],
+    yCenter: [0, 0, 0, 0],
     putableimg: {
         src: "img/clear-blue-wood-spike.png",
         W: {
@@ -25543,8 +25545,8 @@ var items = [{
     delay: 1000,
     width: [100, 100, 100, 100],
     height: [100, 100, 100, 100],
-    Wwv: [0, 0, 0, 0],
-    nWn: [0, 0, 0, 0],
+    xCenter: [0, 0, 0, 0],
+    yCenter: [0, 0, 0, 0],
     inmapx: [0, 0, 0, 0],
     inmapy: [0, 0, 0, 0],
     putableimg: {
@@ -25805,8 +25807,8 @@ var items = [{
     delay: 1000,
     width: [30, 30, 30, 30],
     height: [30, 30, 30, 30],
-    Wwv: [0, 0, 0, 0],
-    nWn: [0, 0, 0, 0],
+    xCenter: [0, 0, 0, 0],
+    yCenter: [0, 0, 0, 0],
     inmapx: [35, 35, 35, 35],
     inmapy: [35, 35, 35, 35],
     putableimg: {
@@ -25957,8 +25959,8 @@ var items = [{
     delay: 1000,
     width: [30, 30, 30, 30],
     height: [30, 30, 30, 30],
-    Wwv: [0, 0, 0, 0],
-    nWn: [0, 0, 0, 0],
+    xCenter: [0, 0, 0, 0],
+    yCenter: [0, 0, 0, 0],
     inmapx: [35, 35, 35, 35],
     inmapy: [35, 35, 35, 35],
     putableimg: {
@@ -26051,8 +26053,8 @@ var items = [{
     delay: 1000,
     width: [100, 100, 100, 100],
     height: [100, 100, 100, 100],
-    Wwv: [0, 0, 0, 0],
-    nWn: [0, 0, 0, 0],
+    xCenter: [0, 0, 0, 0],
+    yCenter: [0, 0, 0, 0],
     inmapx: [0, 0, 0, 0],
     inmapy: [0, 0, 0, 0],
     putableimg: {
@@ -26183,8 +26185,8 @@ var items = [{
     delay: 1000,
     width: [30, 30, 30, 30],
     height: [30, 30, 30, 30],
-    Wwv: [0, 0, 0, 0],
-    nWn: [0, 0, 0, 0],
+    xCenter: [0, 0, 0, 0],
+    yCenter: [0, 0, 0, 0],
     inmapx: [35, 35, 35, 35],
     inmapy: [35, 35, 35, 35],
     putableimg: {
@@ -26335,8 +26337,8 @@ var items = [{
     delay: 1000,
     width: [30, 30, 30, 30],
     height: [30, 30, 30, 30],
-    Wwv: [0, 0, 0, 0],
-    nWn: [0, 0, 0, 0],
+    xCenter: [0, 0, 0, 0],
+    yCenter: [0, 0, 0, 0],
     inmapx: [35, 35, 35, 35],
     inmapy: [35, 35, 35, 35],
     putableimg: {
@@ -26435,8 +26437,8 @@ var items = [{
     delay: 1000,
     width: [30, 30, 30, 30],
     height: [30, 30, 30, 30],
-    Wwv: [0, 0, 0, 0],
-    nWn: [0, 0, 0, 0],
+    xCenter: [0, 0, 0, 0],
+    yCenter: [0, 0, 0, 0],
     inmapx: [35, 35, 35, 35],
     inmapy: [35, 35, 35, 35],
     putableimg: {
@@ -26530,8 +26532,8 @@ var items = [{
     delay: 1000,
     width: [100, 100, 100, 100],
     height: [100, 100, 100, 100],
-    Wwv: [0, 0, 0, 0],
-    nWn: [0, 0, 0, 0],
+    xCenter: [0, 0, 0, 0],
+    yCenter: [0, 0, 0, 0],
     inmapx: [0, 0, 0, 0],
     inmapy: [0, 0, 0, 0],
     putableimg: {
@@ -26603,8 +26605,8 @@ var items = [{
     delay: 1000,
     width: [100, 100, 100, 100],
     height: [100, 100, 100, 100],
-    Wwv: [0, 0, 0, 0],
-    nWn: [0, 0, 0, 0],
+    xCenter: [0, 0, 0, 0],
+    yCenter: [0, 0, 0, 0],
     inmapx: [0, 0, 0, 0],
     inmapy: [0, 0, 0, 0],
     putableimg: {
@@ -26676,8 +26678,8 @@ var items = [{
     delay: 1000,
     width: [100, 100, 100, 100],
     height: [100, 100, 100, 100],
-    Wwv: [0, 0, 0, 0],
-    nWn: [0, 0, 0, 0],
+    xCenter: [0, 0, 0, 0],
+    yCenter: [0, 0, 0, 0],
     inmapx: [0, 0, 0, 0],
     inmapy: [0, 0, 0, 0],
     putableimg: {
@@ -26749,8 +26751,8 @@ var items = [{
     delay: 1000,
     width: [100, 100, 100, 100],
     height: [100, 100, 100, 100],
-    Wwv: [0, 0, 0, 0],
-    nWn: [0, 0, 0, 0],
+    xCenter: [0, 0, 0, 0],
+    yCenter: [0, 0, 0, 0],
     inmapx: [0, 0, 0, 0],
     inmapy: [0, 0, 0, 0],
     putableimg: {
@@ -26823,8 +26825,8 @@ var items = [{
     delay: 1000,
     width: [100, 100, 100, 100],
     height: [100, 100, 100, 100],
-    Wwv: [0, 0, 0, 0],
-    nWn: [0, 0, 0, 0],
+    xCenter: [0, 0, 0, 0],
+    yCenter: [0, 0, 0, 0],
     inmapx: [0, 0, 0, 0],
     inmapy: [0, 0, 0, 0],
     putableimg: {
@@ -26909,8 +26911,8 @@ var items = [{
     delay: 1000,
     width: [100, 100, 100, 100],
     height: [100, 100, 100, 100],
-    Wwv: [0, 0, 0, 0],
-    nWn: [0, 0, 0, 0],
+    xCenter: [0, 0, 0, 0],
+    yCenter: [0, 0, 0, 0],
     inmapx: [0, 0, 0, 0],
     inmapy: [0, 0, 0, 0],
     putableimg: {
@@ -26983,8 +26985,8 @@ var items = [{
     delay: 1000,
     width: [100, 100, 100, 100],
     height: [100, 100, 100, 100],
-    Wwv: [0, 0, 0, 0],
-    nWn: [0, 0, 0, 0],
+    xCenter: [0, 0, 0, 0],
+    yCenter: [0, 0, 0, 0],
     inmapx: [0, 0, 0, 0],
     inmapy: [0, 0, 0, 0],
     putableimg: {
@@ -27057,8 +27059,8 @@ var items = [{
     delay: 1000,
     width: [100, 100, 100, 100],
     height: [100, 100, 100, 100],
-    Wwv: [0, 0, 0, 0],
-    nWn: [0, 0, 0, 0],
+    xCenter: [0, 0, 0, 0],
+    yCenter: [0, 0, 0, 0],
     inmapx: [0, 0, 0, 0],
     inmapy: [0, 0, 0, 0],
     putableimg: {
@@ -27131,8 +27133,8 @@ var items = [{
     delay: 1000,
     width: [100, 100, 100, 100],
     height: [100, 100, 100, 100],
-    Wwv: [0, 0, 0, 0],
-    nWn: [0, 0, 0, 0],
+    xCenter: [0, 0, 0, 0],
+    yCenter: [0, 0, 0, 0],
     inmapx: [0, 0, 0, 0],
     inmapy: [0, 0, 0, 0],
     putableimg: {
@@ -27286,8 +27288,8 @@ var items = [{
     delay: 1000,
     width: [100, 100, 100, 100],
     height: [100, 100, 100, 100],
-    Wwv: [0, 0, 0, 0],
-    nWn: [0, 0, 0, 0],
+    xCenter: [0, 0, 0, 0],
+    yCenter: [0, 0, 0, 0],
     inmapx: [0, 0, 0, 0],
     inmapy: [0, 0, 0, 0],
     putableimg: {
@@ -27376,8 +27378,8 @@ var items = [{
     delay: 1000,
     width: [100, 100, 100, 100],
     height: [100, 100, 100, 100],
-    Wwv: [0, 0, 0, 0],
-    nWn: [0, 0, 0, 0],
+    xCenter: [0, 0, 0, 0],
+    yCenter: [0, 0, 0, 0],
     inmapx: [0, 0, 0, 0],
     inmapy: [0, 0, 0, 0],
     putableimg: {
@@ -27488,8 +27490,8 @@ var items = [{
     delay: 1000,
     width: [100, 100, 100, 100],
     height: [100, 100, 100, 100],
-    Wwv: [0, 0, 0, 0],
-    nWn: [0, 0, 0, 0],
+    xCenter: [0, 0, 0, 0],
+    yCenter: [0, 0, 0, 0],
     inmapx: [0, 0, 0, 0],
     inmapy: [0, 0, 0, 0],
     putableimg: {
@@ -27561,8 +27563,8 @@ var items = [{
     delay: 1000,
     width: [100, 100, 100, 100],
     height: [100, 100, 100, 100],
-    Wwv: [0, 0, 0, 0],
-    nWn: [0, 0, 0, 0],
+    xCenter: [0, 0, 0, 0],
+    yCenter: [0, 0, 0, 0],
     inmapx: [0, 0, 0, 0],
     inmapy: [0, 0, 0, 0],
     putableimg: {
@@ -27877,8 +27879,8 @@ var items = [{
     delay: 1000,
     width: [100, 100, 100, 100],
     height: [100, 100, 100, 100],
-    Wwv: [0, 0, 0, 0],
-    nWn: [0, 0, 0, 0],
+    xCenter: [0, 0, 0, 0],
+    yCenter: [0, 0, 0, 0],
     inmapx: [0, 0, 0, 0],
     inmapy: [0, 0, 0, 0],
     putableimg: {
@@ -28192,8 +28194,8 @@ var items = [{
     delay: 1000,
     width: [100, 100, 100, 100],
     height: [100, 100, 100, 100],
-    Wwv: [0, 0, 0, 0],
-    nWn: [0, 0, 0, 0],
+    xCenter: [0, 0, 0, 0],
+    yCenter: [0, 0, 0, 0],
     inmapx: [0, 0, 0, 0],
     inmapy: [0, 0, 0, 0],
     putableimg: {
@@ -28506,8 +28508,8 @@ var items = [{
     delay: 1000,
     width: [100, 100, 100, 100],
     height: [100, 100, 100, 100],
-    Wwv: [0, 0, 0, 0],
-    nWn: [0, 0, 0, 0],
+    xCenter: [0, 0, 0, 0],
+    yCenter: [0, 0, 0, 0],
     inmapx: [0, 0, 0, 0],
     inmapy: [0, 0, 0, 0],
     putableimg: {
@@ -28823,8 +28825,8 @@ var items = [{
     delay: 1000,
     width: [100, 100, 100, 100],
     height: [100, 100, 100, 100],
-    Wwv: [0, 0, 0, 0],
-    nWn: [0, 0, 0, 0],
+    xCenter: [0, 0, 0, 0],
+    yCenter: [0, 0, 0, 0],
     inmapx: [0, 0, 0, 0],
     inmapy: [0, 0, 0, 0],
     putableimg: {
@@ -28897,8 +28899,8 @@ var items = [{
     delay: 1000,
     width: [100, 100, 100, 100],
     height: [100, 100, 100, 100],
-    Wwv: [0, 0, 0, 0],
-    nWn: [0, 0, 0, 0],
+    xCenter: [0, 0, 0, 0],
+    yCenter: [0, 0, 0, 0],
     inmapx: [0, 0, 0, 0],
     inmapy: [0, 0, 0, 0],
     putableimg: {
@@ -28971,8 +28973,8 @@ var items = [{
     delay: 1000,
     width: [100, 100, 100, 100],
     height: [100, 100, 100, 100],
-    Wwv: [0, 0, 0, 0],
-    nWn: [0, 0, 0, 0],
+    xCenter: [0, 0, 0, 0],
+    yCenter: [0, 0, 0, 0],
     inmapx: [0, 0, 0, 0],
     inmapy: [0, 0, 0, 0],
     putableimg: {
@@ -29067,8 +29069,8 @@ var items = [{
     delay: 1000,
     width: [100, 100, 100, 100],
     height: [100, 100, 100, 100],
-    Wwv: [0, 0, 0, 0],
-    nWn: [0, 0, 0, 0],
+    xCenter: [0, 0, 0, 0],
+    yCenter: [0, 0, 0, 0],
     inmapx: [0, 0, 0, 0],
     inmapy: [0, 0, 0, 0],
     putableimg: {
@@ -42184,29 +42186,29 @@ try {
         VwM.BEHAVIOR = BEHAVIOR;
         for (var nMm = 0; nMm < 3; nMm++) {
             for (var i = 1; i < items.length; i++) {
-                var idd = items[i];
-                var recipe = idd.detail.recipe;
+                var item = items[i];
+                var recipe = item.detail.recipe;
                 if (recipe === window.undefined) continue;
                 for (var j = 0; j < recipe.length; j++) {
                     var wwM = items[recipe[j][0]];
-                    if (j === 0) idd.score = 0;
-                    idd.score += wwM.score * recipe[j][1];
+                    if (j === 0) item.score = 0;
+                    item.score += wwM.score * recipe[j][1];
                     recipe[j][2] = wwM.loot;
                 }
-                idd.score = window.Math.floor(idd.score / 4);
+                item.score = window.Math.floor(item.score / 4);
             }
         }
         for (var i = 0; i < VV.length; i++) {
-            var idd = VV[i];
-            var recipe = idd.detail.recipe;
+            var item = VV[i];
+            var recipe = item.detail.recipe;
             if (recipe === window.undefined) continue;
             for (var j = 0; j < recipe.length; j++) {
                 var wwM = items[recipe[j][0]];
-                if (j === 0) idd.score = 0;
-                idd.score += wwM.score * recipe[j][1];
+                if (j === 0) item.score = 0;
+                item.score += wwM.score * recipe[j][1];
                 recipe[j][2] = wwM.loot;
             }
-            idd.score = window.Math.floor(idd.score / 4);
+            item.score = window.Math.floor(item.score / 4);
         }
     }
 } catch (error) {
