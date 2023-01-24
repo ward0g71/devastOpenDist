@@ -2228,55 +2228,17 @@ var Client = (function() {
         onOtherDie();
     };
 
-    function NvvVN() {
-        WVMnV = [];
-        wwWNw = Client.serverList[Client.selectedServer][Wmvmm];
-        for (var i = 0; i < Client.serverList.length; i++) {
-            if (wwWNw === Client.serverList[i][Wmvmm])
-                WVMnV.push(i);
-        }
-        Client.selectedServer = WVMnV[window.Math.floor(window.Math.random() * WVMnV.length)];
-    };
-
-    function Vvnww(wVvWw) {
-        MVmWW();
-        window.setTimeout(function() {
-            NvvVN();
-            wVvWw();
-        }, WmNnm);
-    };
-
-    function mmMwv() {
-        Wwvmw = window.JSON.stringify(localStorage.getItem("lastServer"));
-        for (var i = 0; i < Client.serverList.length; i++) {
-            var Nnwmn = Client.serverList[i];
-            if ((Nnwmn[0] === Wwvmw[0]) && (Nnwmn[1] === Wwvmw[1])) {
-                Client.selectedServer = i;
-                return;
-            }
-        }
-        throw "Server not found"
-    };
-
-    function VNWMn(wVvWw) {
-        var VwmvV = 0;
-        try {
-            mmMwv();
-            VwmvV = 1;
-        } catch (error) {
-            Vvnww(wVvWw);
-        }
-        if (VwmvV === 1)
-            wVvWw();
+    var _0x33c8b5 = {
+        'survival': 'Survival',
+        'br': 'Battle Royale',
+        'ghoul': 'Ghoul'
     };
 
     function getServerList(_srv) {
 
         var lobbyList = 'https://matchmaker.api.rivet.gg/v1/lobbies/list';
 
-        let _accept = {
-            'Accept': 'application/json'
-        };
+        let _accept = {'Accept': 'application/json'};
 
         window['RIVET_TOKEN'] && (_accept['Authorization'] = 'Bearer' + window['RIVET_TOKEN']),
 
@@ -2290,7 +2252,7 @@ var Client = (function() {
         }
 
         )['then'](_0xd4093f=>{
-            Client['serverList'] = _0xd4093f['lobbies']['map'](_0x3dd0bf=>{
+            Client.serverList = _0xd4093f['lobbies']['map'](_0x3dd0bf=>{
                 let _0x2b6601 = _0xd4093f['regions']['find'](_0x10ffcf=>_0x10ffcf['region_id'] == _0x3dd0bf['region_id'])
                   , _0x13a27b = _0x2b6601 ? _0x2b6601['region_display_name'] : '?';
                 return [_0x3dd0bf['lobby_id'], '', '', 0x1, _0x13a27b, _0x3dd0bf['total_player_count'], _0x3dd0bf['game_mode_id']];
@@ -2300,49 +2262,6 @@ var Client = (function() {
         }
         );
     }
-
-    function MVmWW() {
-        var MNv = [];
-        var mvNWm = Client.serverList;
-        NvVVv = VMvvn;
-        for (var i = 0; i < mvNWm.length; i++) {
-            var Nnwmn = mvNWm[i];
-            var WmVwN = Nnwmn[Wmvmm];
-            var VNMmn = 0;
-            for (var nMm = 0; nMm < Client.types.length; nMm++) {
-                if (WmVwN.indexOf(Client.types[nMm]) !== -1) {
-                    window.console.log("EXCLUSION OF " + WmVwN);
-                    VNMmn = 1;
-                    break;
-                }
-            }
-            if (VNMmn === 1)
-                continue;
-            if (MNv[WmVwN] === window.undefined) {
-                MNv[WmVwN] = 1;
-                NMmVw(i);
-            }
-        }
-    };
-
-    function NMmVw(Wn) {
-        var Nnwmn = Client.serverList[Wn];
-        var VNVmm = window.Date.now();
-        var xObj = new window.XMLHttpRequest;
-        xObj.open("GET", (((("http" + ((Nnwmn[vNNmW] === 1) ? "s" : "")) + "://") + Nnwmn[VMVmm]) + ":") + Nnwmn[port], true);
-        xObj.onreadystatechange = function() {
-            if (xObj.readyState === 4) {
-                var delay = window.Date.now() - VNVmm;
-                if (delay < NvVVv) {
-                    NvVVv = delay;
-                    Client.selectedServer = Wn;
-                }
-            }
-        };
-        try {
-            xObj.send(null);
-        } catch (error) {}
-    };
 
     function chngtoken() {
         var token = "";
@@ -7780,7 +7699,7 @@ var Loader = (function() {
                     }
                     Home.htmlGhoulServer = '<select id="servers"><option value="auto">Auto Select Server</option>';
                     for (var i in Home.ghoulServer) {
-                        Home.htmlGhoulServer += '<option value="' + serverListserverList[Home.ghoulServer[i]][0] + '">' + serverList[Home.ghoulServer[i]][4].replace("GHOUL", "") + "  - " + serverList[Home.ghoulServer[i]][5] + "  players</option>";
+                        Home.htmlGhoulServer += ('<option value="' + serverListserverList[Home.ghoulServer[i]][0] + '">' + serverList[Home.ghoulServer[i]][4].replace("GHOUL", "") + "  - " + serverList[Home.ghoulServer[i]][5]) + "  players</option>";
                     }
                     NvNnM += ("<option disabled>All servers  - " + NnMvV) + "  players</option></select>";
                     Home.htmlBattleRoyale += ("<option disabled>All servers  - " + NnMvV) + "  players</option></select>";
