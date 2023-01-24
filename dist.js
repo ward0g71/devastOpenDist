@@ -311,8 +311,8 @@ var CanvasUtils = (function() {
 
     function onloadimg() {
         this.isLoaded = 1;
-        this.Wvw = this.width / 2;
-        this.mNm = this.height / 2;
+        this.wh = this.width / 2;
+        this.h2 = this.height / 2;
     };
 
     function onloadimgerror() {
@@ -380,8 +380,8 @@ var CanvasUtils = (function() {
         imgMovement *= scaleby;
         WX *= scaleby;
         WY *= scaleby;
-        var VwW = W.Wvw * imgMovement;
-        var h = W.mNm * imgMovement;
+        var VwW = W.wh * imgMovement;
+        var h = W.h2 * imgMovement;
         var nnvvn = (-VwW / 2) + (wWNWN * imgMovement);
         var nNmWM = (-h / 2) + (wnwnM * imgMovement);
         if ((((((WX + nnvvn) + VwW) < 0) || (((WY + nNmWM) + h) < 0)) || (((WX - VwW) - screenWidth) > 0)) || (((WY - h) - screenHeight) > 0))
@@ -400,8 +400,8 @@ var CanvasUtils = (function() {
             return;
         }
         imgMovement *= scaleby;
-        var VwW = W.Wvw * imgMovement;
-        var h = W.mNm * imgMovement;
+        var VwW = W.wh * imgMovement;
+        var h = W.h2 * imgMovement;
         ctx.save();
         ctx.translate(WX * scaleby, WY * scaleby);
         ctx.rotate(angle);
@@ -873,8 +873,8 @@ var GUI = (function() {
         }
         ctx.fillStyle = color;
         ctx.fillText(Nvm, window.Math.floor(VMnVM / 2), window.Math.floor(vwnNV / 2) + window.Math.floor(SX / 2), SY);
-        canvas.Wvw = canvas.width / 2;
-        canvas.mNm = canvas.height / 2;
+        canvas.wh = canvas.width / 2;
+        canvas.h2 = canvas.height / 2;
         return canvas;
     };
 
@@ -7701,14 +7701,18 @@ var Loader = (function() {
                 };
 
                 function vvWNV() {
+
                     var serverList = Client.serverList;
+
                     Home.regions = [];
                     Home.privateServer = [];
                     Home.ghoulServer = [];
+
                     var regions = [];
                     var MNmMv = [];
                     var NnMvV = 0;
                     var NvNnM = '<select id="servers"><option value="auto">Auto Select Server</option>';
+
                     for (var i = 0; i < serverList.length; i++) {
                         var MNv = serverList[i][4];
                         var playerNumber = serverList[i][5];
@@ -7719,6 +7723,7 @@ var Loader = (function() {
                             Home.ghoulServer.push(i);
                             continue;
                         }
+
                         if (ghl === ["br"]) {
                             MNv = MNv.replace("BR", "");
                             if (Home.regions[MNv] === window.undefined)
@@ -7726,6 +7731,7 @@ var Loader = (function() {
                             Home.regions[MNv].push(i);
                             continue;
                         }
+
                         for (var j = 0; j < regions.length; j++) {
                             if (regions[j] === MNv) {
                                 MNmMv[j] += playerNumber;
@@ -7733,13 +7739,16 @@ var Loader = (function() {
                                 break;
                             }
                         }
+
                         if (j !== -1) {
                             regions.push(MNv);
                             MNmMv.push(playerNumber);
                         }
+
                     }
-                    var MnNwN = 0;
+                    var MnNwN = 1;
                     var VVmNN = 0;
+
                     for (i = 0; i < regions.length; i++) {
                         MNv = regions[i];
                         NvNnM += ((("<option disabled>" + regions[i]) + "  - ") + MNmMv[i]) + "  players</option>";
@@ -7754,6 +7763,7 @@ var Loader = (function() {
                             }
                         }
                     }
+                    
                     Home.htmlBattleRoyale = '<select id="servers"><option value="auto">Auto Select Server</option>';
                     for (var i in Home.regions) {
                         var MnNwN = 0;
@@ -7770,13 +7780,13 @@ var Loader = (function() {
                     }
                     Home.htmlGhoulServer = '<select id="servers"><option value="auto">Auto Select Server</option>';
                     for (var i in Home.ghoulServer) {
-                        Home.htmlGhoulServer += '<option value="' + serverListserverList[Home.ghoulServer[i]][0] + '\">' + serverList[Home.ghoulServer[i]][4].replace("GHOUL", "") + "  - " + serverList[Home.ghoulServer[i]][5] + "  players</option>";
+                        Home.htmlGhoulServer += '<option value="' + serverListserverList[Home.ghoulServer[i]][0] + '">' + serverList[Home.ghoulServer[i]][4].replace("GHOUL", "") + "  - " + serverList[Home.ghoulServer[i]][5] + "  players</option>";
                     }
                     NvNnM += ("<option disabled>All servers  - " + NnMvV) + "  players</option></select>";
                     Home.htmlBattleRoyale += ("<option disabled>All servers  - " + NnMvV) + "  players</option></select>";
                     Home.htmlPrivateServer += ("<option disabled>All servers  - " + NnMvV) + "  players</option></select>";
                     Home.htmlGhoulServer += ("<option disabled>All servers  - " + NnMvV) + "  players</option></select>";
-                    
+
                     window.document.getElementById("serverList").innerHTML = NvNnM;
                     window.document.getElementById("servers").selectedIndex = VVmNN;
                     
@@ -7812,7 +7822,7 @@ var Loader = (function() {
                         Client.serverList[selectedServer][3] = 0;
                     }
                 };
-                Client.types = ["BR", "PRIV", "HIDDEN", "ghoul"];
+                Client.types = ["BR", "PRIV", "HIDDEN", "GHOUL"];
                 Client.getServerList(function() {
                     vvWNV();
                     Loader.quit(Home);
@@ -7876,14 +7886,17 @@ var Home = (function() {
                     throw new Error('Unknown game mode',Home.gameMode);
             }
         }
-        var _lobbys = document.getElementById('servers').value, lobbiesFind, _0x19bb6a;
+
+        var _lobbys = document.getElementById('servers').value,
+        lobbiesFind,
+        _modes;
+        
         _lobbys == 'auto' ? (lobbiesFind = 'https://matchmaker.api.rivet.gg/v1/lobbies/find',
-        _0x19bb6a = {
-            'game_modes': [board]
-        }) : (lobbiesFind = 'https://matchmaker.api.rivet.gg/v1/lobbies/join',
-        _0x19bb6a = {
-            'lobby_id': _lobbys
-        });
+
+        _modes = { 'game_modes': [board] }) : (lobbiesFind = 'https://matchmaker.api.rivet.gg/v1/lobbies/join',
+
+        _modes = { 'lobby_id': _lobbys });
+
         Client['joiningServer'] = !![];
         let _0x521bb0 = {};
         _0x521bb0['Accept'] = 'application/json',
@@ -7892,7 +7905,7 @@ var Home = (function() {
         fetch(lobbiesFind, {
             'method': 'POST',
             'headers': _0x521bb0,
-            'body': JSON.stringify(_0x19bb6a)
+            'body': JSON.stringify(_modes)
         })['then'](_0x4c43da=>{
             if (_0x4c43da['ok'])
                 return _0x4c43da.json();
@@ -7905,8 +7918,8 @@ var Home = (function() {
             Client['connectedLobby'] = _0xc7afeb,
             Client['startConnection'](document.getElementById('nicknameInput').value, 0, _0xc7afeb['player']['token']);
         }
-        )['catch'](_0x3bfe82=>{
-            alert('Failed to join server');
+        )['catch'](err=>{
+            console.log('Failed to join server' + err);
         }
         );
 
@@ -7963,7 +7976,7 @@ var Home = (function() {
     mnMMV[0].isLoaded = 1;
     mnMMV[1].isLoaded = 1;
     mnMMV[2].isLoaded = 1;
-    var wMMNm = GUI.createButton(mnMMV[0].Wvw, mnMMV[0].mNm, window.undefined, mnMMV);
+    var wMMNm = GUI.createButton(mnMMV[0].wh, mnMMV[0].h2, window.undefined, mnMMV);
     var wvmwM = GUI.createButton(120, 67, WWNWM.button);
     var WnwMN = {
         W: null
@@ -9078,13 +9091,13 @@ var Game = (function() {
             Nnw -= delta;
             if (Nnw > 2500) ctx.globalAlpha = MathUtils.Ease.inOutQuad((3000 - Nnw) / 500);
             else if (Nnw < 500) ctx.globalAlpha = MathUtils.Ease.inOutQuad(Nnw / 500);
-            ctx.drawImage(VWWvn, copypastebutton.pos.x - (85 * scaleby), copypastebutton.pos.y - (40 * scaleby), VWWvn.Wvw * scaleby, VWWvn.mNm * scaleby);
+            ctx.drawImage(VWWvn, copypastebutton.pos.x - (85 * scaleby), copypastebutton.pos.y - (40 * scaleby), VWWvn.wh * scaleby, VWWvn.h2 * scaleby);
             ctx.globalAlpha = 1;
         }
         if (NVVNW[World.PLAYER._j] === window.undefined) NVVNW[World.PLAYER._j] = [];
         if (NVVNW[World.PLAYER._j][World.PLAYER._i] === window.undefined) NVVNW[World.PLAYER._j][World.PLAYER._i] = GUI.renderText(((("(" + World.PLAYER._j) + ",") + World.PLAYER._i) + ")", "'Viga', sans-serif", "#FFFFFF", 30, 300, "#000000", 22, 22, window.undefined, window.undefined, 0.4, window.undefined, "#000000", 15.6);
         var W = NVVNW[World.PLAYER._j][World.PLAYER._i];
-        ctx.drawImage(W, 5 * scaleby, fullscreenimg.pos.y, W.Wvw * scaleby, W.mNm * scaleby);
+        ctx.drawImage(W, 5 * scaleby, fullscreenimg.pos.y, W.wh * scaleby, W.h2 * scaleby);
     };
 
     var NVVNW = [];
@@ -11410,13 +11423,13 @@ var Editor = (function() {
             Nnw -= delta;
             if (Nnw > 2500) ctx.globalAlpha = MathUtils.Ease.inOutQuad((3000 - Nnw) / 500);
             else if (Nnw < 500) ctx.globalAlpha = MathUtils.Ease.inOutQuad(Nnw / 500);
-            ctx.drawImage(VWWvn, copypastebutton.pos.x - (85 * scaleby), copypastebutton.pos.y - (40 * scaleby), VWWvn.Wvw * scaleby, VWWvn.mNm * scaleby);
+            ctx.drawImage(VWWvn, copypastebutton.pos.x - (85 * scaleby), copypastebutton.pos.y - (40 * scaleby), VWWvn.wh * scaleby, VWWvn.h2 * scaleby);
             ctx.globalAlpha = 1;
         }
         if (NVVNW[World.PLAYER._j] === window.undefined) NVVNW[World.PLAYER._j] = [];
         if (NVVNW[World.PLAYER._j][World.PLAYER._i] === window.undefined) NVVNW[World.PLAYER._j][World.PLAYER._i] = GUI.renderText(((("(" + World.PLAYER._j) + ",") + World.PLAYER._i) + ")", "'Viga', sans-serif", "#FFFFFF", 52, 455, "#000000", 22, 22, window.undefined, window.undefined, 0.4, window.undefined, "#000000", 15.6);
         var W = NVVNW[World.PLAYER._j][World.PLAYER._i];
-        ctx.drawImage(W, 5 * scaleby, zoombutton.pos.y - (42 * scaleby), W.Wvw * scaleby, W.mNm * scaleby);
+        ctx.drawImage(W, 5 * scaleby, zoombutton.pos.y - (42 * scaleby), W.wh * scaleby, W.h2 * scaleby);
     };
 
     function markposition() {
@@ -11424,13 +11437,13 @@ var Editor = (function() {
             Nnw -= delta;
             if (Nnw > 2500) ctx.globalAlpha = MathUtils.Ease.inOutQuad((3000 - Nnw) / 500);
             else if (Nnw < 500) ctx.globalAlpha = MathUtils.Ease.inOutQuad(Nnw / 500);
-            ctx.drawImage(VWWvn, copypastebutton.pos.x - (85 * scaleby), copypastebutton.pos.y - (40 * scaleby), VWWvn.Wvw * scaleby, VWWvn.mNm * scaleby);
+            ctx.drawImage(VWWvn, copypastebutton.pos.x - (85 * scaleby), copypastebutton.pos.y - (40 * scaleby), VWWvn.wh * scaleby, VWWvn.h2 * scaleby);
             ctx.globalAlpha = 1;
         }
         if (NVVNW[World.PLAYER._j] === window.undefined) NVVNW[World.PLAYER._j] = [];
         if (NVVNW[World.PLAYER._j][World.PLAYER._i] === window.undefined) NVVNW[World.PLAYER._j][World.PLAYER._i] = GUI.renderText(((("(" + World.PLAYER._j) + ",") + World.PLAYER._i) + ")", "'Viga', sans-serif", "#FFFFFF", 52, 455, "#000000", 22, 22, window.undefined, window.undefined, 0.4, window.undefined, "#000000", 15.6);
         var W = NVVNW[World.PLAYER._j][World.PLAYER._i];
-        ctx.drawImage(W, 5 * scaleby, zoombutton.pos.y - (42 * scaleby), W.Wvw * scaleby, W.mNm * scaleby);
+        ctx.drawImage(W, 5 * scaleby, zoombutton.pos.y - (42 * scaleby), W.wh * scaleby, W.h2 * scaleby);
     };
     var VWWvn = null;
     var VWWvn = null;
@@ -13067,8 +13080,8 @@ try {
         canvasZ.width = vWw;
         canvasZ.height = wvNVM;
         canvasZ.isLoaded = 1;
-        canvasZ.Wvw = canvasZ.width / 2;
-        canvasZ.mNm = canvasZ.height / 2;
+        canvasZ.wh = canvasZ.width / 2;
+        canvasZ.h2 = canvasZ.height / 2;
         var MWNMV = {
             W: canvasZ
         };
@@ -13077,8 +13090,8 @@ try {
         canvasD.width = vWw;
         canvasD.height = wvNVM;
         canvasD.isLoaded = 1;
-        canvasD.Wvw = canvasZ.width / 2;
-        canvasD.mNm = canvasZ.height / 2;
+        canvasD.wh = canvasZ.width / 2;
+        canvasD.h2 = canvasZ.height / 2;
         var MMvWn = {
             W: canvasD
         };
@@ -13091,8 +13104,8 @@ try {
                 for (var i = 0; i < 8; i++) {
                     for (var j = 0; j < 8; j++) {
                         var wVvnN = World.PLAYER.Mwwnw[i][j];
-                        if (wVvnN === 7) context2dZ.drawImage(vMnmm, 2 + (j * wVNMN), (i * wVNMN) + 1, vMnmm.Wvw, vMnmm.mNm);
-                        else context2dZ.drawImage(VmnwN, 2 + (j * wVNMN), (i * wVNMN) + 1, vMnmm.Wvw, vMnmm.mNm);
+                        if (wVvnN === 7) context2dZ.drawImage(vMnmm, 2 + (j * wVNMN), (i * wVNMN) + 1, vMnmm.wh, vMnmm.h2);
+                        else context2dZ.drawImage(VmnwN, 2 + (j * wVNMN), (i * wVNMN) + 1, vMnmm.wh, vMnmm.h2);
                     }
                 }
             } else {
@@ -13103,7 +13116,7 @@ try {
                     var i = MWW[0];
                     var j = MWW[1];
                     if (i === -1) continue;
-                    context2dD.drawImage(vMnmm, 2 + (j * wVNMN), (i * wVNMN) + 1, vMnmm.Wvw, vMnmm.mNm);
+                    context2dD.drawImage(vMnmm, 2 + (j * wVNMN), (i * wVNMN) + 1, vMnmm.wh, vMnmm.h2);
                 }
             };
         };
@@ -13744,10 +13757,10 @@ try {
                 if (Home.alertDelay > 2500) ctx.globalAlpha = MathUtils.Ease.inOutQuad((3000 - Home.alertDelay) / 500);
                 else if (Home.alertDelay > 500) ctx.globalAlpha = 1;
                 else ctx.globalAlpha = MathUtils.Ease.inOutQuad(Home.alertDelay / 500);
-                if (Home.alertId === 0) CanvasUtils.drawImageHd(WWwmW, canw2ns, WWwmW.W.mNm / 2, 0, 0, 0, 1);
-                else if (Home.alertId === 1) CanvasUtils.drawImageHd(VVvnW, canw2ns, VVvnW.W.mNm / 2, 0, 0, 0, 1);
-                else if (Home.alertId === 2) CanvasUtils.drawImageHd(MnNnW, canw2ns, MnNnW.W.mNm / 2, 0, 0, 0, 1);
-                else if (Home.alertId === 3) CanvasUtils.drawImageHd(nWvvv, canw2ns, nWvvv.W.mNm / 2, 0, 0, 0, 1);
+                if (Home.alertId === 0) CanvasUtils.drawImageHd(WWwmW, canw2ns, WWwmW.W.h2 / 2, 0, 0, 0, 1);
+                else if (Home.alertId === 1) CanvasUtils.drawImageHd(VVvnW, canw2ns, VVvnW.W.h2 / 2, 0, 0, 0, 1);
+                else if (Home.alertId === 2) CanvasUtils.drawImageHd(MnNnW, canw2ns, MnNnW.W.h2 / 2, 0, 0, 0, 1);
+                else if (Home.alertId === 3) CanvasUtils.drawImageHd(nWvvv, canw2ns, nWvvv.W.h2 / 2, 0, 0, 0, 1);
                 ctx.globalAlpha = 1;
                 Home.alertDelay -= delta;
             }
@@ -13774,8 +13787,8 @@ try {
                 }
                 var PLAYER = World.socket[World.PLAYER.wNw];
                 if (PLAYER.nicknameLabel === null) PLAYER.nicknameLabel = GUI.renderText(PLAYER.nickname, "'Viga', sans-serif", "#FFFFFF", 38, 400, window.undefined, 16, 25, window.undefined, window.undefined, window.undefined, window.undefined, "#000000", 12);
-                ctx.drawImage(teambox, WX, WY, scaleby * teambox.Wvw, scaleby * teambox.mNm);
-                if ((PLAYER.nicknameLabel.width !== 0) && (PLAYER.nicknameLabel.height !== 0)) ctx.drawImage(PLAYER.nicknameLabel, WX + (20 * scaleby), WY + (6 * scaleby), PLAYER.nicknameLabel.Wvw * scaleby, PLAYER.nicknameLabel.mNm * scaleby);
+                ctx.drawImage(teambox, WX, WY, scaleby * teambox.wh, scaleby * teambox.h2);
+                if ((PLAYER.nicknameLabel.width !== 0) && (PLAYER.nicknameLabel.height !== 0)) ctx.drawImage(PLAYER.nicknameLabel, WX + (20 * scaleby), WY + (6 * scaleby), PLAYER.nicknameLabel.wh * scaleby, PLAYER.nicknameLabel.h2 * scaleby);
                 Game.nVNMM.draw();
                 Game.nWvnm.draw();
                 if (World.PLAYER.wMnNv < 333) ctx.globalAlpha = 1;
@@ -13963,7 +13976,7 @@ try {
                 }
                 if ((nNmVw !== null) && (teamName.length !== 0)) {
                     CanvasUtils.fillRect(ctx, (WX / scaleby) + 39, (WY / scaleby) + 14, 122, 16.5, "#000000");
-                    ctx.drawImage(nNmVw, WX + (35 * scaleby), WY + (14.5 * scaleby), nNmVw.Wvw * scaleby, nNmVw.mNm * scaleby);
+                    ctx.drawImage(nNmVw, WX + (35 * scaleby), WY + (14.5 * scaleby), nNmVw.wh * scaleby, nNmVw.h2 * scaleby);
                 }
                 NnvmN.pos.x = WX + (172 * scaleby);
                 NnvmN.pos.y = WY + (6 * scaleby);
@@ -13978,7 +13991,7 @@ try {
                     var team = World.clans[i];
                     if (team.leader === 0) continue;
                     if (team.label === null) team.label = GUI.renderText(team.name, "'Viga', sans-serif", "#FFFFFF", 30, 400);
-                    ctx.drawImage(team.label, WX + ((20 + ((j % 3) * 163)) * scaleby), WY + ((58.5 + (window.Math.floor(j / 3) * 36)) * scaleby), team.label.Wvw * scaleby, team.label.mNm * scaleby);
+                    ctx.drawImage(team.label, WX + ((20 + ((j % 3) * 163)) * scaleby), WY + ((58.5 + (window.Math.floor(j / 3) * 36)) * scaleby), team.label.wh * scaleby, team.label.h2 * scaleby);
                     var wm = Game.join[j];
                     wm.pos.x = WX + ((84 + ((j % 3) * 163)) * scaleby);
                     wm.pos.y = WY + ((48 + (window.Math.floor(j / 3) * 36)) * scaleby);
@@ -13995,7 +14008,7 @@ try {
                 WY = mMnVm.pos.y;
                 var team = World.clans[World.PLAYER.team];
                 if (team.label === null) team.label = GUI.renderText(team.name, "'Viga', sans-serif", "#FFFFFF", 30, 400);
-                ctx.drawImage(team.label, WX + (144 * scaleby), WY + (13 * scaleby), team.label.Wvw * scaleby, team.label.mNm * scaleby);
+                ctx.drawImage(team.label, WX + (144 * scaleby), WY + (13 * scaleby), team.label.wh * scaleby, team.label.h2 * scaleby);
                 mMnVm.draw();
                 closebutt.pos.x = WX + (512 * scaleby);
                 closebutt.pos.y = WY + (34.5 * scaleby);
@@ -14017,7 +14030,7 @@ try {
                         var PLAYER = World.socket[i];
                         if ((team.uid !== PLAYER.teamUid) || (PLAYER.team !== team.id)) continue;
                         if (PLAYER.nicknameLabel === null) PLAYER.nicknameLabel = GUI.renderText(PLAYER.nickname, "'Viga', sans-serif", "#FFFFFF", 38, 400, window.undefined, 16, 25, window.undefined, window.undefined, window.undefined, window.undefined, "#000000", 12);
-                        if ((PLAYER.nicknameLabel.width !== 0) && (PLAYER.nicknameLabel.height !== 0)) ctx.drawImage(PLAYER.nicknameLabel, WX + ((26 + ((j % 3) * 166.5)) * scaleby), WY + ((53 + (window.Math.floor(j / 3) * 29.5)) * scaleby), (PLAYER.nicknameLabel.Wvw * scaleby) / 2.2, (PLAYER.nicknameLabel.mNm * scaleby) / 2.2);
+                        if ((PLAYER.nicknameLabel.width !== 0) && (PLAYER.nicknameLabel.height !== 0)) ctx.drawImage(PLAYER.nicknameLabel, WX + ((26 + ((j % 3) * 166.5)) * scaleby), WY + ((53 + (window.Math.floor(j / 3) * 29.5)) * scaleby), (PLAYER.nicknameLabel.wh * scaleby) / 2.2, (PLAYER.nicknameLabel.h2 * scaleby) / 2.2);
                         var wm = Game.kick[j];
                         wm.pos.x = WX + ((132 + ((j % 3) * 166.5)) * scaleby);
                         wm.pos.y = WY + ((48.5 + (window.Math.floor(j / 3) * 29.5)) * scaleby);
@@ -14038,7 +14051,7 @@ try {
                         var PLAYER = World.socket[i];
                         if ((team.uid !== PLAYER.teamUid) || (PLAYER.team !== team.id)) continue;
                         if (PLAYER.nicknameLabel === null) PLAYER.nicknameLabel = GUI.renderText(PLAYER.nickname, "'Viga', sans-serif", "#FFFFFF", 38, 400, window.undefined, 16, 25, window.undefined, window.undefined, window.undefined, window.undefined, "#000000", 12);
-                        if ((PLAYER.nicknameLabel.width !== 0) && (PLAYER.nicknameLabel.height !== 0)) ctx.drawImage(PLAYER.nicknameLabel, WX + ((26 + ((j % 3) * 166.5)) * scaleby), WY + ((53 + (window.Math.floor(j / 3) * 29.5)) * scaleby), (PLAYER.nicknameLabel.Wvw * scaleby) / 2.2, (PLAYER.nicknameLabel.mNm * scaleby) / 2.2);
+                        if ((PLAYER.nicknameLabel.width !== 0) && (PLAYER.nicknameLabel.height !== 0)) ctx.drawImage(PLAYER.nicknameLabel, WX + ((26 + ((j % 3) * 166.5)) * scaleby), WY + ((53 + (window.Math.floor(j / 3) * 29.5)) * scaleby), (PLAYER.nicknameLabel.wh * scaleby) / 2.2, (PLAYER.nicknameLabel.h2 * scaleby) / 2.2);
                         j++;
                     }
                 }
@@ -14500,7 +14513,7 @@ try {
             if (PLAYER.nicknameLabel === null) PLAYER.nicknameLabel = GUI.renderText(PLAYER.nickname, "'Viga', sans-serif", "#FFFFFF", 38, 400, window.undefined, 16, 25, window.undefined, window.undefined, window.undefined, window.undefined, "#000000", 12);
             var W = PLAYER.nicknameLabel;
             var WY = 90;
-            if (PLAYER.team === -1) ctx.drawImage(W, ((vertst + player.x) - (W.Wvw / 2)) * scaleby, ((horist + player.y) - WY) * scaleby, W.Wvw * scaleby, W.mNm * scaleby);
+            if (PLAYER.team === -1) ctx.drawImage(W, ((vertst + player.x) - (W.wh / 2)) * scaleby, ((horist + player.y) - WY) * scaleby, W.wh * scaleby, W.h2 * scaleby);
             else if (PLAYER.team !== -1) {
                 var team = World.clans[PLAYER.team];
                 if (team.uid === PLAYER.teamUid) {
@@ -14510,8 +14523,8 @@ try {
                         team.WWMWm = GUI.renderText(("[" + team.name) + "]", "'Viga', sans-serif", "#000000", 38, 400, window.undefined, 16, 25, window.undefined, window.undefined, window.undefined, window.undefined, "#83F6A4", 12); //#699CBB
                     } else team.WWMWm = GUI.renderText(("[" + team.name) + "]", "'Viga', sans-serif", "#FFFFFF", 38, 400, window.undefined, 16, 25, window.undefined, window.undefined, window.undefined, window.undefined, "#000000", 12); //#699CBB
                     var wvMMv = team.WWMWm;
-                    ctx.drawImage(wvMMv, ((((vertst + player.x) - (W.Wvw / 2)) - (wvMMv.Wvw / 2)) - 0.5) * scaleby, ((horist + player.y) - WY) * scaleby, wvMMv.Wvw * scaleby, wvMMv.mNm * scaleby);
-                    if ((W.width !== 0) && (W.height !== 0)) ctx.drawImage(W, (((vertst + player.x) - (W.Wvw / 2)) + (wvMMv.Wvw / 2)) * scaleby, ((horist + player.y) - WY) * scaleby, W.Wvw * scaleby, W.mNm * scaleby);
+                    ctx.drawImage(wvMMv, ((((vertst + player.x) - (W.wh / 2)) - (wvMMv.wh / 2)) - 0.5) * scaleby, ((horist + player.y) - WY) * scaleby, wvMMv.wh * scaleby, wvMMv.h2 * scaleby);
+                    if ((W.width !== 0) && (W.height !== 0)) ctx.drawImage(W, (((vertst + player.x) - (W.wh / 2)) + (wvMMv.wh / 2)) * scaleby, ((horist + player.y) - WY) * scaleby, W.wh * scaleby, W.h2 * scaleby);
                 } else PLAYER.team = -1;
             }
         };
@@ -14753,12 +14766,12 @@ try {
                     } else WMw.delay -= delta;
                     var vW = MathUtils.Ease.outQuart(window.Math.max(0, WMw.delay / 750));
                     var VwW = (((scaleby * (WMw.size + 1)) * vW) * W.width) / 7;
-                    var Wvw = -VwW / 2;
+                    var wh = -VwW / 2;
                     ctx.save();
                     ctx.translate((vertst + WMw.x) * scaleby, (horist + WMw.y) * scaleby);
                     ctx.rotate(WMw.angle);
                     ctx.globalAlpha = window.Math.max(0, vW * vW);
-                    ctx.drawImage(W, Wvw, Wvw, VwW, VwW);
+                    ctx.drawImage(W, wh, wh, VwW, VwW);
                     ctx.restore();
                 }
             }
