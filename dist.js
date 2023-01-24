@@ -1001,7 +1001,7 @@ function onHandshake(buf, unit8) {
             old: 0,
             id: 0
         };
-    World.PLAYER.VwVVw = 0;
+    World.PLAYER.karma = 0;
     World.PLAYER.VvWnm = 0;
     if (World.gameMode === World.__BR__)
         World.PLAYER.VVvMn = 0.2;
@@ -1088,7 +1088,7 @@ function onHandshake(buf, unit8) {
         PLAYER.tokenId = unit16[VmvnN + 3];
         PLAYER.score = MathUtils.inflateNumber(unit16[VmvnN + 4]) + 1;
         window.console.log("id", PLAYER.id, "score", PLAYER.score);
-        PLAYER.wMWWv = MathUtils.simplifyNumber(PLAYER.score - 1);
+        PLAYER.scoreSimplified = MathUtils.simplifyNumber(PLAYER.score - 1);
     }
     World.PLAYER.ghoul = World.socket[World.PLAYER.id].ghoul;
     localStorage.setItem("tokenId", World.socket[World.PLAYER.id].tokenId);
@@ -1537,7 +1537,7 @@ function onRadOff() {
 
 function onAcceptedTeam(PLAYER, team) {
     World.socket[PLAYER].team = team;
-    World.socket[PLAYER].wwV = World.clans[team].uid;
+    World.socket[PLAYER].teamUid = World.clans[team].uid;
     if (PLAYER === World.PLAYER.id)
         World.PLAYER.team = team;
 };
@@ -1596,8 +1596,8 @@ function onTeamPosition(unit8) {
 };
 
 
-function onKarma(VwVVw) {
-    World.PLAYER.VwVVw = VwVVw;
+function onKarma(karma) {
+    World.PLAYER.karma = karma;
 };
 
 function onBadKarma(unit8) {
@@ -1605,7 +1605,7 @@ function onBadKarma(unit8) {
         var PLAYER = World.socket[unit8[1]];
         PLAYER.x = unit8[2] * Render.nnmMW;
         PLAYER.y = unit8[3] * Render.nnmMW;
-        PLAYER.VwVVw = unit8[4];
+        PLAYER.karma = unit8[4];
         World.PLAYER.karmaplayerid = PLAYER.id;
         World.PLAYER.VvWnm = 14000;
     }
@@ -1801,7 +1801,7 @@ function onNewTeam(buf) {
     team.leader = buf[2];
     team.name = buf[3];
     var PLAYER = World.socket[team.leader];
-    PLAYER.wwV = team.uid;
+    PLAYER.teamUid = team.uid;
     PLAYER.teamLeader = 1;
     PLAYER.team = team.id;
     if (team.leader === World.PLAYER.id) {
@@ -2440,9 +2440,9 @@ var World = (function() {
         this.skin = 0;
         this.ghoul = 0;
         this.score = 0;
-        this.wMWWv = 0;
+        this.scoreSimplified = 0;
         this.team = -1;
-        this.wwV = 0;
+        this.teamUid = 0;
         this.teamLeader = 0;
         this.repellent = 0;
         this.withdrawal = 0;
@@ -2507,17 +2507,17 @@ var World = (function() {
         this.orientation = 1;
         this.punch = 1;
         this.consumable = -1;
-        this.MMvnN = 0;
+        this.consumableLast = 0;
         this.leaderboardLabel = null;
         this.nicknameLabel = null;
-        this.MNn = null;
+        this.scoreLabel = null;
         this.locatePlayer = -1;
         this.frameId = -1;
         this.x = 0;
         this.y = 0;
         this.rx = 0;
         this.ry = 0;
-        this.VwVVw = 0;
+        this.karma = 0;
     };
 
     function allocateTeam(clans) {
@@ -2540,7 +2540,7 @@ var World = (function() {
         if (World.PLAYER.id === WwnMv.id)
             World.PLAYER.team = Wn;
         WwnMv.team = Wn;
-        WwnMv.wwV = World.clans[Wn].uid;
+        WwnMv.teamUid = World.clans[Wn].uid;
     };
 
     function MMVmW() {
@@ -2559,11 +2559,11 @@ var World = (function() {
         var team = World.clans[Wn];
         team.label = null;
         team.WWMWm = null;
-        team.uid = wwV++;
+        team.uid = teamUid++;
         team.leader = 0;
         team.name = "";
     };
-    var wwV = 0;
+    var teamUid = 0;
 
     function MmvWv(Wn, Mwv) {
         this.id = Wn;
@@ -2571,7 +2571,7 @@ var World = (function() {
         this.label = null;
         this.WWMWm = null;
         this.leader = 0;
-        this.uid = wwV++;
+        this.uid = teamUid++;
     };
 
     function updatePosition() {
@@ -2652,11 +2652,11 @@ var World = (function() {
             var score = unit16[2 + (i * 2)];
             var PLAYER = World.socket[Wn];
             PLAYER.score = MathUtils.inflateNumber(score);
-            PLAYER.VwVVw = unit8[3 + (i * 4)];
-            var wMWWv = MathUtils.simplifyNumber(PLAYER.score);
-            if (wMWWv !== PLAYER.wMWWv)
-                PLAYER.MNn = null;
-            PLAYER.wMWWv = wMWWv;
+            PLAYER.karma = unit8[3 + (i * 4)];
+            var scoreSimplified = MathUtils.simplifyNumber(PLAYER.score);
+            if (scoreSimplified !== PLAYER.scoreSimplified)
+                PLAYER.scoreLabel = null;
+            PLAYER.scoreSimplified = scoreSimplified;
             World.leaderboard[i] = Wn;
         }
         World.WnNNv = 1;
@@ -2972,7 +2972,7 @@ var World = (function() {
         score: 0,
         WMWVW: -1,
         MnWnn: 0,
-        MNn: null,
+        scoreLabel: null,
         click: 0,
         inventory: [],
         nMnmW: 0,
@@ -3058,7 +3058,7 @@ var World = (function() {
         team: -1,
         MVmNm: [],
         nnnVN: 0,
-        VwVVw: 0,
+        karma: 0,
         karmaplayerid: 0,
         VvWnm: 0,
         vVVnm: null,
@@ -7770,12 +7770,13 @@ var Loader = (function() {
                     }
                     Home.htmlGhoulServer = '<select id="servers"><option value="auto">Auto Select Server</option>';
                     for (var i in Home.ghoulServer) {
-                        Home.htmlGhoulServer += '<option value="' + serverListserverList[Home.ghoulServer[i]][0] + '\x22>' + serverList[Home.ghoulServer[i]][4].replace("GHOUL", "") + '\x20-\x20' + serverList[Home.ghoulServer[i]][5] + "  players</option>";
+                        Home.htmlGhoulServer += '<option value="' + serverListserverList[Home.ghoulServer[i]][0] + '\">' + serverList[Home.ghoulServer[i]][4].replace("GHOUL", "") + "  - " + serverList[Home.ghoulServer[i]][5] + "  players</option>";
                     }
                     NvNnM += ("<option disabled>All servers  - " + NnMvV) + "  players</option></select>";
                     Home.htmlBattleRoyale += ("<option disabled>All servers  - " + NnMvV) + "  players</option></select>";
                     Home.htmlPrivateServer += ("<option disabled>All servers  - " + NnMvV) + "  players</option></select>";
                     Home.htmlGhoulServer += ("<option disabled>All servers  - " + NnMvV) + "  players</option></select>";
+                    
                     window.document.getElementById("serverList").innerHTML = NvNnM;
                     window.document.getElementById("servers").selectedIndex = VVmNN;
                     
@@ -7836,6 +7837,7 @@ var Loader = (function() {
     };
 })();
 var Home = (function() {
+
     function joinServer() {
         try {
             window.document.getElementsByClassName("ympb_target")[0].id;
@@ -9511,7 +9513,7 @@ var Game = (function() {
                             continue;
                         }
                         var PLAYER = World.socket[i];
-                        if ((PLAYER.team === team.id) && (PLAYER.wwV === team.uid)) {
+                        if ((PLAYER.team === team.id) && (PLAYER.teamUid === team.uid)) {
                             kick[j].trigger();
                             j++;
                         }
@@ -9901,7 +9903,7 @@ var Game = (function() {
                             continue;
                         }
                         var PLAYER = World.socket[i];
-                        if ((PLAYER.team === team.id) && (PLAYER.wwV === team.uid)) {
+                        if ((PLAYER.team === team.id) && (PLAYER.teamUid === team.uid)) {
                             if (kick[j].trigger() === 1) {
                                 Client.sendPacket(window.JSON.stringify([32, PLAYER.id]));
                                 AudioUtils.playFx(AudioUtils._fx.button, 1, 0);
@@ -10087,7 +10089,7 @@ var Game = (function() {
                             continue;
                         }
                         var PLAYER = World.socket[i];
-                        if ((PLAYER.team === team.id) && (PLAYER.wwV === team.uid)) {
+                        if ((PLAYER.team === team.id) && (PLAYER.teamUid === team.uid)) {
                             kick[j].trigger();
                             j++;
                         }
@@ -10543,7 +10545,7 @@ var Score = (function() {
     var MnvWv = {
         W: null
     };
-    var MNn = null;
+    var scoreLabel = null;
     var vvWmM = -1;
     var VMnMw = null;
     var vMMnW = {
@@ -10555,10 +10557,10 @@ var Score = (function() {
         var WY = mNw.pos.y;
         var wVw = WX / scaleby;
         var VVm = WY / scaleby;
-        if ((MNn === null) || (WMWVW !== World.PLAYER.exp)) {
+        if ((scoreLabel === null) || (WMWVW !== World.PLAYER.exp)) {
             WMWVW = World.PLAYER.exp;
-            MNn = GUI.renderText(WMWVW + "", "'Viga', sans-serif", "#FFFFFF", 38, 400, window.undefined, 16, 25, window.undefined, window.undefined, window.undefined, window.undefined, "#000000", 12);
-            MnvWv.W = MNn;
+            scoreLabel = GUI.renderText(WMWVW + "", "'Viga', sans-serif", "#FFFFFF", 38, 400, window.undefined, 16, 25, window.undefined, window.undefined, window.undefined, window.undefined, "#000000", 12);
+            MnvWv.W = scoreLabel;
             MnvWv.W.isLoaded = 1;
         }
         CanvasUtils.drawImageHd(MnvWv, wVw + 280, VVm + 117, 0, 0, 0, 1);
@@ -13640,18 +13642,18 @@ try {
                         if (PLAYER.id === World.PLAYER.id) PLAYER.leaderboardLabel = GUI.renderText(PLAYER.nickname, "'Viga', sans-serif", "#D6C823", 40, 350, window.undefined, 0, 12);
                         else PLAYER.leaderboardLabel = GUI.renderText(PLAYER.nickname, "'Viga', sans-serif", "#ffffff", 40, 350, window.undefined, 0, 12);
                     }
-                    if (PLAYER.MNn === null) {
-                        if (PLAYER.id === World.PLAYER.id) PLAYER.MNn = GUI.renderText(PLAYER.wMWWv, "'Viga', sans-serif", "#D6C823", 40, 150, window.undefined, 5, 12);
-                        else PLAYER.MNn = GUI.renderText(PLAYER.wMWWv, "'Viga', sans-serif", "#ffffff", 40, 150, window.undefined, 5, 12);
+                    if (PLAYER.scoreLabel === null) {
+                        if (PLAYER.id === World.PLAYER.id) PLAYER.scoreLabel = GUI.renderText(PLAYER.scoreSimplified, "'Viga', sans-serif", "#D6C823", 40, 150, window.undefined, 5, 12);
+                        else PLAYER.scoreLabel = GUI.renderText(PLAYER.scoreSimplified, "'Viga', sans-serif", "#ffffff", 40, 150, window.undefined, 5, 12);
                     }
                     if ((PLAYER.leaderboardLabel.width !== 0) && (PLAYER.leaderboardLabel.height !== 0)) context2dF.drawImage(PLAYER.leaderboardLabel, 90, 114 + (i * 50), PLAYER.leaderboardLabel.width, PLAYER.leaderboardLabel.height);
-                    context2dF.drawImage(PLAYER.MNn, 484, 114 + (i * 50), PLAYER.MNn.width, PLAYER.MNn.height);
-                    var W = karma[PLAYER.VwVVw].W;
+                    context2dF.drawImage(PLAYER.scoreLabel, 484, 114 + (i * 50), PLAYER.scoreLabel.width, PLAYER.scoreLabel.height);
+                    var W = karma[PLAYER.karma].W;
                     if (W.isLoaded === 1) context2dF.drawImage(W, 612, 114 + (i * 50), W.width, W.height);
                 }
                 World.PLAYER.MnWnn = nWnWm;
                 if (nWnWm === 1) {
-                    var W = karma[World.PLAYER.VwVVw].W;
+                    var W = karma[World.PLAYER.karma].W;
                     if (W.isLoaded === 1) context2dF.drawImage(W, 375, 645, W.width * 1.5, W.height * 1.5);
                 }
             }
@@ -13661,9 +13663,9 @@ try {
                 context2dF.clearRect(480, 657, 112, 60);
                 if (score !== World.PLAYER.WMWVW) {
                     World.PLAYER.WMWVW = score;
-                    PLAYER.MNn = GUI.renderText(MathUtils.simplifyNumber(score), "'Viga', sans-serif", "#ffffff", 40, 150, window.undefined, 5, 12);
+                    PLAYER.scoreLabel = GUI.renderText(MathUtils.simplifyNumber(score), "'Viga', sans-serif", "#ffffff", 40, 150, window.undefined, 5, 12);
                 }
-                context2dF.drawImage(PLAYER.MNn, 484, 662, PLAYER.MNn.width, PLAYER.MNn.height);
+                context2dF.drawImage(PLAYER.scoreLabel, 484, 662, PLAYER.scoreLabel.width, PLAYER.scoreLabel.height);
             }
             ctx.drawImage(canvasF, WX, WY, (Vwwmw / 3) * scaleby, (nvnwM / 3) * scaleby);
         };
@@ -13729,7 +13731,7 @@ try {
 
             if (World.PLAYER.VvWnm > 0) {
                 var PLAYER = World.socket[World.PLAYER.karmaplayerid];
-                CanvasUtils.drawImageHd(karma[PLAYER.VwVVw], window.Math.floor(wVw + window.Math.min(window.Math.max(10, PLAYER.rx * mvMnV), 400)), window.Math.floor(VVm + window.Math.min(window.Math.max(10, PLAYER.ry * mvMnV), 400)), 0, 0, 0, 1.25);
+                CanvasUtils.drawImageHd(karma[PLAYER.karma], window.Math.floor(wVw + window.Math.min(window.Math.max(10, PLAYER.rx * mvMnV), 400)), window.Math.floor(VVm + window.Math.min(window.Math.max(10, PLAYER.ry * mvMnV), 400)), 0, 0, 0, 1.25);
             }
             
 
@@ -13912,7 +13914,7 @@ try {
                     PLAYER.x = WMv.x;
                     PLAYER.y = WMv.y;
                 }
-                CanvasUtils.drawImageHd(karma[PLAYER.VwVVw], wVw + window.Math.max(15, window.Math.min(WWn - 15, (mnmvW - 3) + ((PLAYER.rx - NmM) * nwMnv))), VVm + window.Math.max(15, window.Math.min(WWn - 15, (vNwWN - 3) + ((PLAYER.ry - WWV) * nwMnv))), 0, 0, 0, 1.25);
+                CanvasUtils.drawImageHd(karma[PLAYER.karma], wVw + window.Math.max(15, window.Math.min(WWn - 15, (mnmvW - 3) + ((PLAYER.rx - NmM) * nwMnv))), VVm + window.Math.max(15, window.Math.min(WWn - 15, (vNwWN - 3) + ((PLAYER.ry - WWV) * nwMnv))), 0, 0, 0, 1.25);
             }
 
             var inmapx = wVw + (mnmvW - 3);
@@ -14013,7 +14015,7 @@ try {
                     var j = 0;
                     for (var i = 0; i < World.socket.length; i++) {
                         var PLAYER = World.socket[i];
-                        if ((team.uid !== PLAYER.wwV) || (PLAYER.team !== team.id)) continue;
+                        if ((team.uid !== PLAYER.teamUid) || (PLAYER.team !== team.id)) continue;
                         if (PLAYER.nicknameLabel === null) PLAYER.nicknameLabel = GUI.renderText(PLAYER.nickname, "'Viga', sans-serif", "#FFFFFF", 38, 400, window.undefined, 16, 25, window.undefined, window.undefined, window.undefined, window.undefined, "#000000", 12);
                         if ((PLAYER.nicknameLabel.width !== 0) && (PLAYER.nicknameLabel.height !== 0)) ctx.drawImage(PLAYER.nicknameLabel, WX + ((26 + ((j % 3) * 166.5)) * scaleby), WY + ((53 + (window.Math.floor(j / 3) * 29.5)) * scaleby), (PLAYER.nicknameLabel.Wvw * scaleby) / 2.2, (PLAYER.nicknameLabel.mNm * scaleby) / 2.2);
                         var wm = Game.kick[j];
@@ -14034,7 +14036,7 @@ try {
                     var j = 0;
                     for (var i = 0; i < World.socket.length; i++) {
                         var PLAYER = World.socket[i];
-                        if ((team.uid !== PLAYER.wwV) || (PLAYER.team !== team.id)) continue;
+                        if ((team.uid !== PLAYER.teamUid) || (PLAYER.team !== team.id)) continue;
                         if (PLAYER.nicknameLabel === null) PLAYER.nicknameLabel = GUI.renderText(PLAYER.nickname, "'Viga', sans-serif", "#FFFFFF", 38, 400, window.undefined, 16, 25, window.undefined, window.undefined, window.undefined, window.undefined, "#000000", 12);
                         if ((PLAYER.nicknameLabel.width !== 0) && (PLAYER.nicknameLabel.height !== 0)) ctx.drawImage(PLAYER.nicknameLabel, WX + ((26 + ((j % 3) * 166.5)) * scaleby), WY + ((53 + (window.Math.floor(j / 3) * 29.5)) * scaleby), (PLAYER.nicknameLabel.Wvw * scaleby) / 2.2, (PLAYER.nicknameLabel.mNm * scaleby) / 2.2);
                         j++;
@@ -14494,17 +14496,17 @@ try {
 
         function mVwvw(player) {
             var PLAYER = World.socket[player.pid];
-            if (((((player.extra & 255) === 16) && (World.PLAYER.admin !== 1)) && (player.pid !== World.PLAYER.id)) && (((PLAYER.team === -1) || (World.clans[PLAYER.team].uid !== PLAYER.wwV)) || (World.PLAYER.team !== PLAYER.team))) return;
+            if (((((player.extra & 255) === 16) && (World.PLAYER.admin !== 1)) && (player.pid !== World.PLAYER.id)) && (((PLAYER.team === -1) || (World.clans[PLAYER.team].uid !== PLAYER.teamUid)) || (World.PLAYER.team !== PLAYER.team))) return;
             if (PLAYER.nicknameLabel === null) PLAYER.nicknameLabel = GUI.renderText(PLAYER.nickname, "'Viga', sans-serif", "#FFFFFF", 38, 400, window.undefined, 16, 25, window.undefined, window.undefined, window.undefined, window.undefined, "#000000", 12);
             var W = PLAYER.nicknameLabel;
             var WY = 90;
             if (PLAYER.team === -1) ctx.drawImage(W, ((vertst + player.x) - (W.Wvw / 2)) * scaleby, ((horist + player.y) - WY) * scaleby, W.Wvw * scaleby, W.mNm * scaleby);
             else if (PLAYER.team !== -1) {
                 var team = World.clans[PLAYER.team];
-                if (team.uid === PLAYER.wwV) {
+                if (team.uid === PLAYER.teamUid) {
                     if (team.WWMWm === null)
                     var isInClan = 0;
-                    if (((player.pid === World.PLAYER.id) || (((World.PLAYER.team !== -1) && (World.PLAYER.team === World.socket[player.pid].team)) && (World.socket[player.pid].wwV === World.clans[World.PLAYER.team].uid)))) { isInClan = 1;
+                    if (((player.pid === World.PLAYER.id) || (((World.PLAYER.team !== -1) && (World.PLAYER.team === World.socket[player.pid].team)) && (World.socket[player.pid].teamUid === World.clans[World.PLAYER.team].uid)))) { isInClan = 1;
                         team.WWMWm = GUI.renderText(("[" + team.name) + "]", "'Viga', sans-serif", "#000000", 38, 400, window.undefined, 16, 25, window.undefined, window.undefined, window.undefined, window.undefined, "#83F6A4", 12); //#699CBB
                     } else team.WWMWm = GUI.renderText(("[" + team.name) + "]", "'Viga', sans-serif", "#FFFFFF", 38, 400, window.undefined, 16, 25, window.undefined, window.undefined, window.undefined, window.undefined, "#000000", 12); //#699CBB
                     var wvMMv = team.WWMWm;
@@ -14781,8 +14783,8 @@ try {
             if (Vmwnn === 4) {
                 if (PLAYER.consumable === -1) {
                     var MNmnm = (player.extra >> 8) & 255;
-                    if ((AudioUtils._fx.shot[MNmnm] !== 0) && ((Render.MmW - PLAYER.MMvnN) > 800)) {
-                        PLAYER.MMvnN = Render.MmW;
+                    if ((AudioUtils._fx.shot[MNmnm] !== 0) && ((Render.MmW - PLAYER.consumableLast) > 800)) {
+                        PLAYER.consumableLast = Render.MmW;
                         var VVmnw = window.Math.floor(window.Math.random() * weapon.soundLen);
                         AudioUtils.playFx(AudioUtils._fx.shot[MNmnm][VVmnw], weapon.soundVolume, Math2d.dist(World.PLAYER.x, World.PLAYER.y, player.x, player.y) / 4, weapon.soundDelay);
                     }
@@ -15743,7 +15745,7 @@ try {
             var isInClan = 0;
             var VmnmV = 1;
             if ((player.state & 16) === 16) VmnmV = 0;
-            if (((player.pid === World.PLAYER.id) || (((World.PLAYER.team !== -1) && (World.PLAYER.team === World.socket[player.pid].team)) && (World.socket[player.pid].wwV === World.clans[World.PLAYER.team].uid))) || (Math2d.fastDist(NmM, WWV, player.x, player.y) < 52000)) isInClan = 1;
+            if (((player.pid === World.PLAYER.id) || (((World.PLAYER.team !== -1) && (World.PLAYER.team === World.socket[player.pid].team)) && (World.socket[player.pid].teamUid === World.clans[World.PLAYER.team].uid))) || (Math2d.fastDist(NmM, WWV, player.x, player.y) < 52000)) isInClan = 1;
             if (VmnmV === 0) {
                 if (player.hurt2 === 0) vNwNM(player, item.particles, item.Mwm, 5);
                 if (player.hurt2 < 300) {
@@ -15780,7 +15782,7 @@ try {
 
         function landminefunc(item, player, WX, WY, Rot, imgMovement) {
             var isInClan = 0;
-            if (((player.pid === World.PLAYER.id) || (((World.PLAYER.team !== -1) && (World.PLAYER.team === World.socket[player.pid].team)) && (World.socket[player.pid].wwV === World.clans[World.PLAYER.team].uid))) || (Math2d.fastDist(NmM, WWV, player.x, player.y) < 52000)) isInClan = 1;
+            if (((player.pid === World.PLAYER.id) || (((World.PLAYER.team !== -1) && (World.PLAYER.team === World.socket[player.pid].team)) && (World.socket[player.pid].teamUid === World.clans[World.PLAYER.team].uid))) || (Math2d.fastDist(NmM, WWV, player.x, player.y) < 52000)) isInClan = 1;
             if (isInClan === 1) {
                 player.breath = window.Math.min(300, player.breath + delta);
                 ctx.globalAlpha = MathUtils.Ease.inOutQuad(player.breath / 300);
@@ -15816,7 +15818,7 @@ try {
         };
 
         function nearme(item, player, MMwnn) {
-            if ((((player.removed === 0) && (World.PLAYER.interaction !== 1)) && (World.PLAYER.VVn !== 1)) && (((MMwnn === 0) || (player.pid === World.PLAYER.id)) || (((World.PLAYER.team !== -1) && (World.PLAYER.team === World.socket[player.pid].team)) && (World.socket[player.pid].wwV === World.clans[World.PLAYER.team].uid)))) {
+            if ((((player.removed === 0) && (World.PLAYER.interaction !== 1)) && (World.PLAYER.VVn !== 1)) && (((MMwnn === 0) || (player.pid === World.PLAYER.id)) || (((World.PLAYER.team !== -1) && (World.PLAYER.team === World.socket[player.pid].team)) && (World.socket[player.pid].teamUid === World.clans[World.PLAYER.team].uid)))) {
                 var dist = Math2d.fastDist(NmM, WWV, player.x, player.y);
                 if (dist < vnVmM) {
                     World.PLAYER.NnN = item.NnN;
