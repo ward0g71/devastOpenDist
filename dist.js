@@ -1092,8 +1092,8 @@ function onHandshake(buf, unit8) {
         var PLAYER = World.players[unit8[WVnMV]];
         PLAYER.id = unit8[WVnMV];
         World.addToTeam(PLAYER, unit8[WVnMV + 1]);
-        PLAYER.repellent = (unit8[WVnMV + 2] === 0) ? 0 : (Render.MmW + (unit8[WVnMV + 2] * 2000));
-        PLAYER.withdrawal = (unit8[WVnMV + 3] === 0) ? 0 : (Render.MmW + (unit8[WVnMV + 3] * 1000));
+        PLAYER.repellent = (unit8[WVnMV + 2] === 0) ? 0 : (Render.globalTime + (unit8[WVnMV + 2] * 2000));
+        PLAYER.withdrawal = (unit8[WVnMV + 3] === 0) ? 0 : (Render.globalTime + (unit8[WVnMV + 3] * 1000));
         PLAYER.ghoul = unit8[WVnMV + 4];
         if (PLAYER.ghoul !== 0)
             World.playerAlive--;
@@ -1508,7 +1508,7 @@ function onModdedGaugesValues(buf) {
 };
 
 function onShakeExplosionState(shake) {
-    Render.nwNWm = -shake;
+    Render.explosionShake = -shake;
 };
 
 function onFullChest(unit8) {
@@ -1599,8 +1599,8 @@ function onTeamPosition(unit8) {
             var PLAYER = World.players[Wn];
             pos[j].id = Wn;
             pos[j].old = 14000;
-            PLAYER.x = WX * Render.nnmMW;
-            PLAYER.y = WY * Render.nnmMW;
+            PLAYER.x = WX * Render.__TRANSFORM__;
+            PLAYER.y = WY * Render.__TRANSFORM__;
             if (Math2d.fastDist(PLAYER.rx, PLAYER.ry, PLAYER.x, PLAYER.y) > 3000000) {
                 PLAYER.rx = PLAYER.x;
                 PLAYER.ry = PLAYER.y;
@@ -1619,8 +1619,8 @@ function onKarma(karma) {
 function onBadKarma(unit8) {
     if (unit8[1] !== World.PLAYER.id) {
         var PLAYER = World.players[unit8[1]];
-        PLAYER.x = unit8[2] * Render.nnmMW;
-        PLAYER.y = unit8[3] * Render.nnmMW;
+        PLAYER.x = unit8[2] * Render.__TRANSFORM__;
+        PLAYER.y = unit8[3] * Render.__TRANSFORM__;
         PLAYER.karma = unit8[4];
         World.PLAYER.badKarma = PLAYER.id;
         World.PLAYER.badKarmaDelay = 14000;
@@ -1642,7 +1642,7 @@ function onAreas(unit8) {
             World.PLAYER.lastAreas[nMm - 2][1] = j;
         }
     }
-    Render.mMWMV();
+    Render.battleRoyale();
 };
 
 function onWrongPassword() {
@@ -1666,21 +1666,21 @@ function onCitiesLocation(cities) {
 };
 
 function onPoisened(delay) {
-    Render.VvWmm(delay * 1000);
+    Render.setPoisonEffect(delay * 1000);
 };
 
 function onRepellent(Wn, delay) {
-    World.players[Wn].repellent = Render.MmW + (delay * 2000);
+    World.players[Wn].repellent = Render.globalTime + (delay * 2000);
 };
 
 function onLapadoine(Wn, delay) {
-    World.players[Wn].withdrawal = Render.MmW + (delay * 1000);
+    World.players[Wn].withdrawal = Render.globalTime + (delay * 1000);
 };
 
 function onResetDrug(Wn, withdrawal) {
     var PLAYER = World.players[Wn];
-    PLAYER.withdrawal = (withdrawal !== 0) ? Render.MmW : 0;
-    PLAYER.repellent = Render.MmW;
+    PLAYER.withdrawal = (withdrawal !== 0) ? Render.globalTime : 0;
+    PLAYER.repellent = Render.globalTime;
 };
 
 function onDramaticChrono(nnW) {
@@ -6766,42 +6766,45 @@ var ENTITIES = [{
 }];
 
 function EntitieClass(vV) {
-    this.uid = 0;
-    this.pid = 0;
-    this.id = 0;
-    this.type = vV;
-    this.subtype = 0;
-    this.angle = 0;
-    this.nangle = 0;
-    this.angleX = 0;
-    this.angleY = 0;
-    this.state = 0;
-    this.extra = 0;
-    this.broke = 0;
-    this.x = 0;
-    this.y = 0;
-    this.rx = 0;
-    this.ry = 0;
-    this.nx = -1;
-    this.ny = 0;
-    this.px = 0;
-    this.py = 0;
-    this.i = 0;
-    this.j = 0;
-    this.speed = 0;
-    this.update = 0;
-    this.removed = 0;
-    this.hit = 0;
-    this.hitMax = 0;
-    this.hurt = 0;
-    this.hurtAngle = 0;
-    this.heal = 0;
-    this.death = 0;
-    this.born = 0;
-    this.breath = 0;
-    this.breath2 = 0;
+
+    this.uid        = 0;
+    this.pid        = 0;
+    this.id         = 0;
+    this.type       = vV;
+    this.subtype    = 0;
+    this.angle      = 0;
+    this.nangle     = 0;
+    this.angleX     = 0;
+    this.angleY     = 0;
+    this.state      = 0;
+    this.extra      = 0;
+    this.broke      = 0;
+    this.x          = 0;
+    this.y          = 0;
+    this.rx         = 0;
+    this.ry         = 0;
+    this.nx         = -1;
+    this.ny         = 0;
+    this.px         = 0;
+    this.py         = 0;
+    this.i          = 0;
+    this.j          = 0;
+    this.speed      = 0;
+    this.update     = 0;
+    this.removed    = 0;
+    this.hit        = 0;
+    this.hitMax     = 0;
+    this.hurt       = 0;
+    this.hurtAngle  = 0;
+    this.heal       = 0;
+    this.death      = 0;
+    this.born       = 0;
+    this.breath     = 0;
+    this.breath2    = 0;
     this.particles = [];
-    this.draw = null;
+    this.draw       = null;
+    this.lerp       = 0.1;
+
     for (var i = 0; i < 10; i++)
         this.particles.push({
             c: 0,
@@ -6811,46 +6814,51 @@ function EntitieClass(vV) {
             mMn: 0,
             r: 0
         });
-    this.lerp = 0.1;
 };
 
 function setEntitie(MW, pid, uid, Wn, vV, WX, WY, nx, ny, extra, angle, Mnn) {
-    MW.pid = pid;
-    MW.uid = uid;
-    MW.id = Wn;
-    MW.nangle = MathUtils.reduceAngle(MW.angle, ((angle * 2) * window.Math.PI) / 255);
-    MW.state = Mnn;
-    MW.nx = nx;
-    MW.ny = ny;
-    MW.extra = extra;
+
+    MW.pid      = pid;
+    MW.uid      = uid;
+    MW.id       = Wn;
+    MW.nangle   = MathUtils.reduceAngle(MW.angle, ((angle * 2) * window.Math.PI) / 255);
+    MW.state    = Mnn;
+    MW.nx       = nx;
+    MW.ny       = ny;
+    MW.extra    = extra;
+
     if (MW.update === 0) {
-        var WvW = ENTITIES[vV];
-        MW.speed = WvW.speed;
-        MW.angle = MW.nangle;
-        MW.x = WX;
-        MW.y = WY;
-        MW.z = WvW.z;
-        MW.lerp = WvW.lerp;
-        MW.rx = WX;
-        MW.ry = WY;
-        MW.i = window.Math.floor(WY / Render.__TILE_SIZE__);
-        MW.j = window.Math.floor(WX / Render.__TILE_SIZE__);
-        MW.hit = 0;
-        MW.hitMax = 0;
-        MW.hurt = 0;
-        MW.hurt2 = 0;
-        MW.hurtAngle = 0;
-        MW.heal = 0;
-        MW.death = 0;
-        MW.breath = 0;
-        MW.breath2 = 0;
-        MW.born = 0;
-        MW.broke = 0;
-        MW.subtype = 0;
-        MW.draw = null;
+
+        var WvW         = ENTITIES[vV];
+        MW.speed        = WvW.speed;
+        MW.angle        = MW.nangle;
+        MW.x            = WX;
+        MW.y            = WY;
+        MW.z            = WvW.z;
+        MW.lerp         = WvW.lerp;
+        MW.rx           = WX;
+        MW.ry           = WY;
+        MW.i            = window.Math.floor(WY / Render.__TILE_SIZE__);
+        MW.j            = window.Math.floor(WX / Render.__TILE_SIZE__);
+        MW.hit          = 0;
+        MW.hitMax       = 0;
+        MW.hurt         = 0;
+        MW.hurt2        = 0;
+        MW.hurtAngle    = 0;
+        MW.heal         = 0;
+        MW.death        = 0;
+        MW.breath       = 0;
+        MW.breath2      = 0;
+        MW.born         = 0;
+        MW.broke        = 0;
+        MW.subtype      = 0;
+        MW.draw         = null;
+
         var init = WvW.init;
+
         if (init !== window.undefined)
             init(MW);
+
     }
     var angle = Math2d.angle(MW.rx, MW.ry, nx, ny);
     MW.angleX = window.Math.cos(angle);
@@ -9274,7 +9282,7 @@ var Game = (function() {
         Render.world();
         Render.interaction();
         Render.gauges(gauges.pos.x, gauges.pos.y);
-        Render.MvV(minimap.pos.x, minimap.pos.y);
+        Render.minimap(minimap.pos.x, minimap.pos.y);
         Render.inventory(inventoryItemNumber, inventoryAmmoNumber, MmV, bagbutt);
         gauges.draw();
         minimap.draw();
@@ -9284,7 +9292,7 @@ var Game = (function() {
         minimapbutt.draw();
         teambutt.draw();
         markposition();
-        Render.VnVVN(gauges.pos.x, gauges.pos.y);
+        Render.gaugesAfter(gauges.pos.x, gauges.pos.y);
         if (World.gameMode !== World.__BR__) {
             if (leaderboardbutt.pos.disable === 0) {
                 leaderboard.draw();
@@ -9293,10 +9301,10 @@ var Game = (function() {
             } else leaderboardbutt2.draw();
         }
         if (NmW === 1) {
-            if (isMapOpen === 1) Render.NNMwm(bordermap, closebutt);
-            else if (isSettingsOpen === 1) Render.optionsfc(settingbox, wWNnw, nvwMN, MNVVn, VmvmN, WMVVn, wvNNV, WVnnn, NmVWV, vVMWm, closebutt, wVwnm, VnWMV, wwMwv);
-            else if (isCraftOpen === 1) Render.craftfc(craftbox, closebutt, wnV, craftbutt, cancelbutt, unlockbuttout, craftList, preview, inventoryItemNumber, inventoryAmmoNumber, VWNWV, WmWwW, WwMvM, NWmNn);
-            else if (isChestOpen === 1) Render.cncwind(chestbox, closebutt, inventoryItemNumber, inventoryAmmoNumber);
+            if (isMapOpen === 1) Render.bigminimap(bordermap, closebutt);
+            else if (isSettingsOpen === 1) Render.config(settingbox, wWNnw, nvwMN, MNVVn, VmvmN, WMVVn, wvNNV, WVnnn, NmVWV, vVMWm, closebutt, wVwnm, VnWMV, wwMwv);
+            else if (isCraftOpen === 1) Render.craft(craftbox, closebutt, wnV, craftbutt, cancelbutt, unlockbuttout, craftList, preview, inventoryItemNumber, inventoryAmmoNumber, VWNWV, WmWwW, WwMvM, NWmNn);
+            else if (isChestOpen === 1) Render.chest(chestbox, closebutt, inventoryItemNumber, inventoryAmmoNumber);
             else if (isTeamOpen === 1) Render.team(closebutt, teambox, teammemberbox, leavebutt, addtimbutt, lockbutt, unlockbutt, deletebutt);
         } else if (isTouchScreen === 1) {
             if ((((Keyboard.isLeft() + Keyboard.isRight()) + Keyboard.isTop()) + Keyboard.isBottom()) >= 1) {
@@ -9639,15 +9647,15 @@ var Game = (function() {
                     AudioUtils.playFx(AudioUtils._fx.button, 1, 0);
                     return;
                 } else if (VnWMV.trigger() === 1) {
-                    Render.wvmnm(1);
+                    Render.setParticles(1);
                     AudioUtils.playFx(AudioUtils._fx.button, 1, 0);
                     return;
                 } else if (wVwnm.trigger() === 1) {
-                    Render.wvmnm(2);
+                    Render.setParticles(2);
                     AudioUtils.playFx(AudioUtils._fx.button, 1, 0);
                     return;
                 } else if (wwMwv.trigger() === 1) {
-                    Render.wvmnm(0);
+                    Render.setParticles(0);
                     AudioUtils.playFx(AudioUtils._fx.button, 1, 0);
                     return;
                 }
@@ -10540,7 +10548,7 @@ var Score = (function() {
         scaleby = scaleby - (0.3 * scaleby);
         for (var i = 0; i < len; i++) {
             var wm = inventory[i];
-            if (invtr[i][0] !== 0) Render.vmmMn(wm, invtr[i], inmapx, inmapy, Game.inventoryItemNumber, Game.inventoryAmmoNumber);
+            if (invtr[i][0] !== 0) Render.buttonInv(wm, invtr[i], inmapx, inmapy, Game.inventoryItemNumber, Game.inventoryAmmoNumber);
             inmapx += MVM;
         }
         scaleby = WnVvn;
@@ -11220,7 +11228,7 @@ var Editor = (function() {
         if (((Rot > 3) || (i >= MapManager.height)) || (j >= MapManager.height)) return;
         var building = items[NNWVv];
         if (((building === window.undefined) || (building.subtype === window.undefined)) || ((building.subtype > 0) && (building.building.length <= subtype))) return;
-        var Rot = (building.Mvw === 1) ? 0 : Rot;
+        var Rot = (building.wall === 1) ? 0 : Rot;
         var WX = (building.xCenter[Rot] + 50) + (100 * j);
         var WY = (building.yCenter[Rot] + 50) + (100 * i);
         var vV = 0;
@@ -11548,7 +11556,7 @@ var Editor = (function() {
         ctx.clearRect(0, 0, screenWidth, screenHeight);
         World.updatePosition();
         Render.world();
-        Render.MvV(minimap.pos.x, minimap.pos.y);
+        Render.minimap(minimap.pos.x, minimap.pos.y);
         minimap.draw();
         fullscreenimg.draw();
         settingsimg.draw();
@@ -11567,8 +11575,8 @@ var Editor = (function() {
         markposition();
         wWNmN();
         if (NmW === 1) {
-            if (isMapOpen === 1) Render.NNMwm(bordermap, closebutt);
-            else if (isSettingsOpen === 1) Render.optionsfc(settingbox, wWNnw, nvwMN, MNVVn, VmvmN, WMVVn, wvNNV, WVnnn, NmVWV, vVMWm, closebutt, wVwnm, VnWMV, wwMwv);
+            if (isMapOpen === 1) Render.bigminimap(bordermap, closebutt);
+            else if (isSettingsOpen === 1) Render.config(settingbox, wWNnw, nvwMN, MNVVn, VmvmN, WMVVn, wvNNV, WVnnn, NmVWV, vVMWm, closebutt, wVwnm, VnWMV, wwMwv);
         } else if (isTouchScreen === 1) {
             if ((((Keyboard.isLeft() + Keyboard.isRight()) + Keyboard.isTop()) + Keyboard.isBottom()) >= 1) {
                 ctx.globalAlpha = 0.3;
@@ -11802,7 +11810,7 @@ var Editor = (function() {
             NWw = 0;
             for (var i = 1; i < items.length; i++) {
                 var item = items[i];
-                if (((((item.Mvw === 1) || (item.VWN === 1)) || (item.WNv === 1)) || (item.chest === 1)) || (item.VVmmM === 1)) {
+                if (((((item.wall === 1) || (item.lowWall === 1)) || (item.door === 1)) || (item.chest === 1)) || (item.VVmmM === 1)) {
                     Wnw[NWw].setImages(item.img.src, item.img.W);
                     Wnw[NWw].vmM = item.id;
                     NWw++;
@@ -11910,15 +11918,15 @@ var Editor = (function() {
                     AudioUtils.playFx(AudioUtils._fx.button, 1, 0);
                     return;
                 } else if (VnWMV.trigger() === 1) {
-                    Render.wvmnm(1);
+                    Render.setParticles(1);
                     AudioUtils.playFx(AudioUtils._fx.button, 1, 0);
                     return;
                 } else if (wVwnm.trigger() === 1) {
-                    Render.wvmnm(2);
+                    Render.setParticles(2);
                     AudioUtils.playFx(AudioUtils._fx.button, 1, 0);
                     return;
                 } else if (wwMwv.trigger() === 1) {
-                    Render.wvmnm(0);
+                    Render.setParticles(0);
                     AudioUtils.playFx(AudioUtils._fx.button, 1, 0);
                     return;
                 }
@@ -12291,7 +12299,7 @@ var NVwvn = [{}, {
     W: {
         isLoaded: 0
     },
-    MvV: {
+    minimap: {
         x: 0,
         y: 0,
         h: 28,
@@ -12310,7 +12318,7 @@ var NVwvn = [{}, {
     W: {
         isLoaded: 0
     },
-    MvV: {
+    minimap: {
         x: 28,
         y: 0,
         h: 28,
@@ -12329,7 +12337,7 @@ var NVwvn = [{}, {
     W: {
         isLoaded: 0
     },
-    MvV: {
+    minimap: {
         x: 56,
         y: 0,
         h: 28,
@@ -12348,7 +12356,7 @@ var NVwvn = [{}, {
     W: {
         isLoaded: 0
     },
-    MvV: {
+    minimap: {
         x: 84,
         y: 0,
         h: 28,
@@ -12367,7 +12375,7 @@ var NVwvn = [{}, {
     W: {
         isLoaded: 0
     },
-    MvV: {
+    minimap: {
         x: 56,
         y: 28,
         h: 28,
@@ -12385,7 +12393,7 @@ var NVwvn = [{}, {
     W: {
         isLoaded: 0
     },
-    MvV: {
+    minimap: {
         x: 0,
         y: 56,
         h: 28,
@@ -12403,7 +12411,7 @@ var NVwvn = [{}, {
     W: {
         isLoaded: 0
     },
-    MvV: {
+    minimap: {
         x: 112,
         y: 0,
         h: 28,
@@ -12421,7 +12429,7 @@ var NVwvn = [{}, {
     W: {
         isLoaded: 0
     },
-    MvV: {
+    minimap: {
         x: 28,
         y: 28,
         h: 28,
@@ -12439,7 +12447,7 @@ var NVwvn = [{}, {
     W: {
         isLoaded: 0
     },
-    MvV: {
+    minimap: {
         x: 56,
         y: 56,
         h: 28,
@@ -12457,7 +12465,7 @@ var NVwvn = [{}, {
     W: {
         isLoaded: 0
     },
-    MvV: {
+    minimap: {
         x: 84,
         y: 56,
         h: 28,
@@ -12475,7 +12483,7 @@ var NVwvn = [{}, {
     W: {
         isLoaded: 0
     },
-    MvV: {
+    minimap: {
         x: 84,
         y: 28,
         h: 28,
@@ -12493,7 +12501,7 @@ var NVwvn = [{}, {
     W: {
         isLoaded: 0
     },
-    MvV: {
+    minimap: {
         x: 112,
         y: 56,
         h: 28,
@@ -12511,7 +12519,7 @@ var NVwvn = [{}, {
     W: {
         isLoaded: 0
     },
-    MvV: {
+    minimap: {
         x: 112,
         y: 28,
         h: 28,
@@ -12529,7 +12537,7 @@ var NVwvn = [{}, {
     W: {
         isLoaded: 0
     },
-    MvV: {
+    minimap: {
         x: 0,
         y: 28,
         h: 28,
@@ -12547,7 +12555,7 @@ var NVwvn = [{}, {
     W: {
         isLoaded: 0
     },
-    MvV: {
+    minimap: {
         x: 28,
         y: 56,
         h: 28,
@@ -12571,7 +12579,7 @@ try {
     var Render = (function() {
         var __TILE_SIZE__ = 100;      
         var __TILE_SIZE2__ = __TILE_SIZE__ / 2; 
-        var VNvvM = 1;
+        var __TILE_SCALE__ = 1;
         var NVmMW = 13;
         var WnWvv = 9;
         var WwmVw = 100;
@@ -12934,7 +12942,7 @@ try {
                 isLoaded: 0
             }
         };
-        var MvV = {
+        var minimap = {
             isLoaded: 0
         };
         var houseiconmap = {
@@ -13032,7 +13040,7 @@ try {
         };
         var mWWwn = 0;
 
-        function mwNmN() {
+        function _BattleRoyale() {
             if (World.PLAYER.toxicStep === 8) {
                 context2dZ.clearRect(0, 0, vWw, wvNVM);
                 context2dD.clearRect(0, 0, vWw, wvNVM);
@@ -13089,7 +13097,7 @@ try {
             this.MMNVm = 0;
             this.MmvNw = 0;
             this.NMn = 0;
-            this.Mvw = 0;
+            this.wall = 0;
             this.frameId = 0;
             this.nNNwM = 0;
             this.pid = 0;
@@ -13114,69 +13122,69 @@ try {
                 case 0:
                     if ((i + 1) < wWw) {
                         var VMV = matrix[i + 1][j];
-                        if ((VMV.mVN === frameId) && (VMV.Mvw === vV)) {
+                        if ((VMV.mVN === frameId) && (VMV.wall === vV)) {
                             if (VMV.rotate === 1) Wn += NVW;
                             else if (VMV.rotate === 3) Wn += mWn;
                         }
                     }
                     if ((j - 1) >= 0) {
                         var VMV = matrix[i][j - 1];
-                        if (((VMV.mVN === frameId) && (VMV.Mvw === vV)) && ((VMV.rotate === 3) || (VMV.rotate === 0))) Wn += WMN;
+                        if (((VMV.mVN === frameId) && (VMV.wall === vV)) && ((VMV.rotate === 3) || (VMV.rotate === 0))) Wn += WMN;
                     }
                     if ((j + 1) < NMv) {
                         var VMV = matrix[i][j + 1];
-                        if (((VMV.mVN === frameId) && (VMV.Mvw === vV)) && ((VMV.rotate === 1) || (VMV.rotate === 0))) Wn += wwm;
+                        if (((VMV.mVN === frameId) && (VMV.wall === vV)) && ((VMV.rotate === 1) || (VMV.rotate === 0))) Wn += wwm;
                     }
                     break;
                 case 1:
                     if ((j - 1) >= 0) {
                         var VMV = matrix[i][j - 1];
-                        if ((VMV.mVN === frameId) && (VMV.Mvw === vV)) {
+                        if ((VMV.mVN === frameId) && (VMV.wall === vV)) {
                             if (VMV.rotate === 0) Wn += mWn;
                             else if (VMV.rotate === 2) Wn += NVW;
                         }
                     }
                     if ((i - 1) >= 0) {
                         var VMV = matrix[i - 1][j];
-                        if (((VMV.mVN === frameId) && (VMV.Mvw === vV)) && ((VMV.rotate === 0) || (VMV.rotate === 1))) Wn += WMN;
+                        if (((VMV.mVN === frameId) && (VMV.wall === vV)) && ((VMV.rotate === 0) || (VMV.rotate === 1))) Wn += WMN;
                     }
                     if ((i + 1) < wWw) {
                         var VMV = matrix[i + 1][j];
-                        if (((VMV.mVN === frameId) && (VMV.Mvw === vV)) && ((VMV.rotate === 2) || (VMV.rotate === 1))) Wn += wwm;
+                        if (((VMV.mVN === frameId) && (VMV.wall === vV)) && ((VMV.rotate === 2) || (VMV.rotate === 1))) Wn += wwm;
                     }
                     break;
                 case 2:
                     if ((i - 1) >= 0) {
                         var VMV = matrix[i - 1][j];
-                        if ((VMV.mVN === frameId) && (VMV.Mvw === vV)) {
+                        if ((VMV.mVN === frameId) && (VMV.wall === vV)) {
                             if (VMV.rotate === 1) Wn += mWn;
                             else if (VMV.rotate === 3) Wn += NVW;
                         }
                     }
                     if ((j - 1) >= 0) {
                         var VMV = matrix[i][j - 1];
-                        if (((VMV.mVN === frameId) && (VMV.Mvw === vV)) && ((VMV.rotate === 3) || (VMV.rotate === 2))) Wn += wwm;
+                        if (((VMV.mVN === frameId) && (VMV.wall === vV)) && ((VMV.rotate === 3) || (VMV.rotate === 2))) Wn += wwm;
                     }
                     if ((j + 1) < NMv) {
                         var VMV = matrix[i][j + 1];
-                        if (((VMV.mVN === frameId) && (VMV.Mvw === vV)) && ((VMV.rotate === 1) || (VMV.rotate === 2))) Wn += WMN;
+                        if (((VMV.mVN === frameId) && (VMV.wall === vV)) && ((VMV.rotate === 1) || (VMV.rotate === 2))) Wn += WMN;
                     }
                     break;
                 case 3:
                     if ((j + 1) < NMv) {
                         var VMV = matrix[i][j + 1];
-                        if ((VMV.mVN === frameId) && (VMV.Mvw === vV)) {
+                        if ((VMV.mVN === frameId) && (VMV.wall === vV)) {
                             if (VMV.rotate === 0) Wn += NVW;
                             else if (VMV.rotate === 2) Wn += mWn;
                         }
                     }
                     if ((i - 1) >= 0) {
                         var VMV = matrix[i - 1][j];
-                        if (((VMV.mVN === frameId) && (VMV.Mvw === vV)) && ((VMV.rotate === 0) || (VMV.rotate === 3))) Wn += wwm;
+                        if (((VMV.mVN === frameId) && (VMV.wall === vV)) && ((VMV.rotate === 0) || (VMV.rotate === 3))) Wn += wwm;
                     }
                     if ((i + 1) < wWw) {
                         var VMV = matrix[i + 1][j];
-                        if (((VMV.mVN === frameId) && (VMV.Mvw === vV)) && ((VMV.rotate === 2) || (VMV.rotate === 3))) Wn += WMN;
+                        if (((VMV.mVN === frameId) && (VMV.wall === vV)) && ((VMV.rotate === 2) || (VMV.rotate === 3))) Wn += WMN;
                     }
                     break;
             }
@@ -13245,8 +13253,8 @@ try {
             if ((player.hurt > 0) || (player.removed !== 0)) return 0;
             var i = player.i;
             var j = player.j;
-            var Mvw = items[player.extra >> 7];
-            var vV = Mvw.vVwVM;
+            var wall = items[player.extra >> 7];
+            var vV = wall.vVwVM;
             var Wn = 0;
             var N = 0,
                 mMn = 0,
@@ -13254,68 +13262,68 @@ try {
                 MNMWN = 0;
             if ((i - 1) >= 0) {
                 var VMV = matrix[i - 1][j];
-                if ((VMV.mVN === frameId) && (VMV.Mvw === vV)) {
+                if ((VMV.mVN === frameId) && (VMV.wall === vV)) {
                     mMn = 1;
                     Wn += key_w;
                 }
             }
             if ((i + 1) < wWw) {
                 var VMV = matrix[i + 1][j];
-                if ((VMV.mVN === frameId) && (VMV.Mvw === vV)) {
+                if ((VMV.mVN === frameId) && (VMV.wall === vV)) {
                     Wn += key_s;
                     M = 1;
                 }
             }
             if ((j - 1) >= 0) {
                 var VMV = matrix[i][j - 1];
-                if ((VMV.mVN === frameId) && (VMV.Mvw === vV)) {
+                if ((VMV.mVN === frameId) && (VMV.wall === vV)) {
                     Wn += key_a;
                     MNMWN = 1;
                 }
             }
             if ((j + 1) < NMv) {
                 var VMV = matrix[i][j + 1];
-                if ((VMV.mVN === frameId) && (VMV.Mvw === vV)) {
+                if ((VMV.mVN === frameId) && (VMV.wall === vV)) {
                     Wn += key_d;
                     N = 1;
                 }
             }
             if ((N + mMn) === 2) {
                 var VMV = matrix[i - 1][j + 1];
-                if ((VMV.mVN === frameId) && (VMV.Mvw === vV)) Wn += Nvn;
+                if ((VMV.mVN === frameId) && (VMV.wall === vV)) Wn += Nvn;
             }
             if ((MNMWN + mMn) === 2) {
                 var VMV = matrix[i - 1][j - 1];
-                if ((VMV.mVN === frameId) && (VMV.Mvw === vV)) Wn += nwM;
+                if ((VMV.mVN === frameId) && (VMV.wall === vV)) Wn += nwM;
             }
             if ((M + N) === 2) {
                 var VMV = matrix[i + 1][j + 1];
-                if ((VMV.mVN === frameId) && (VMV.Mvw === vV)) Wn += MMn;
+                if ((VMV.mVN === frameId) && (VMV.wall === vV)) Wn += MMn;
             }
             if ((M + MNMWN) === 2) {
                 var VMV = matrix[i + 1][j - 1];
-                if ((VMV.mVN === frameId) && (VMV.Mvw === vV)) Wn += nNn;
+                if ((VMV.mVN === frameId) && (VMV.wall === vV)) Wn += nNn;
             }
             var Wn = WMV[Wn];
-            matrix[i][j].MmvNw = Mvw.MmvNw[Wn];
+            matrix[i][j].MmvNw = wall.MmvNw[Wn];
             return Wn;
         };
 
         function smallwallsfusion(player) {
             var vV = player.extra >> 7;
-            if (((items[vV].VWN !== 1) || (player.hurt > 0)) || (player.broke > 0)) return;
+            if (((items[vV].lowWall !== 1) || (player.hurt > 0)) || (player.broke > 0)) return;
             var VMV = matrix[player.i][player.j];
             VMV.mVN = frameId;
-            VMV.Mvw = vV;
+            VMV.wall = vV;
             VMV.rotate = (player.extra >> 5) & 3;
         };
 
         function bigwallsfusion(player) {
             var vV = player.extra >> 7;
-            if (((items[vV].Mvw !== 1) || (player.hurt > 0)) || (player.broke > 0)) return;
+            if (((items[vV].wall !== 1) || (player.hurt > 0)) || (player.broke > 0)) return;
             var VMV = matrix[player.i][player.j];
             VMV.mVN = frameId;
-            VMV.Mvw = items[vV].vVwVM;
+            VMV.wall = items[vV].vVwVM;
             if (World.PLAYER._j === player.j) {
                 var dist = window.Math.max(1, window.Math.abs(World.PLAYER._i - player.i));
                 if (World.PLAYER._i < player.i) NNmMN[0] = WwmVM / dist;
@@ -13329,7 +13337,7 @@ try {
 
         function floorsfusion(player) {
             var vV = player.extra >> 7;
-            if (((items[vV].Mvw !== 1) || (player.hurt > 0)) || (player.broke > 0)) return;
+            if (((items[vV].wall !== 1) || (player.hurt > 0)) || (player.broke > 0)) return;
             var VMV = matrix[player.i][player.j];
             VMV.MMNVm = frameId;
         };
@@ -13354,7 +13362,7 @@ try {
             }
         };
 
-        function vision(wVNwM, MMnVM, VmNwV) {
+        function _Reset(wVNwM, MMnVM, VmNwV) {
             bodOnResize = window.document.getElementById("bod").onresize;
             if (World.gameMode === World.__BR__) {
                 context2dZ.clearRect(0, 0, vWw, vWw);
@@ -13362,7 +13370,7 @@ try {
                 MvvNN = 0;
             }
             WNmVW = 0;
-            Render.nwNWm = 0;
+            Render.explosionShake = 0;
             Render.shake = 0;
             if (wVNwM !== window.undefined) WMWvN = 0;
             else WMWvN = mMmvV;
@@ -13388,7 +13396,7 @@ try {
             nNmVw = null;
             MapManager.width = 150;
             MapManager.height = 150;
-            Render.nnmMW = (MapManager.width * 100) / 255;
+            Render.__TRANSFORM__ = (MapManager.width * 100) / 255;
             NMv = MapManager.width;
             wWw = MapManager.height;
             WMwnW = __TILE_SIZE__ * NMv;
@@ -13407,7 +13415,7 @@ try {
         };
 
 
-        function textnumberitem(wm, invtr, WX, WY, inventoryItemNumber, inventoryAmmoNumber) {
+        function _buttonInv(wm, invtr, WX, WY, inventoryItemNumber, inventoryAmmoNumber) {
             wm.pos.x = WX;
             wm.pos.y = WY;
             wm.draw();
@@ -13461,7 +13469,7 @@ try {
             ctx.drawImage(wmvMm[Wn], WX, WY, scaleby * 190, SX);
         };
 
-        function inventoryfunc(inventoryItemNumber, inventoryAmmoNumber, MmV, bagbutt) {
+        function _Inventory(inventoryItemNumber, inventoryAmmoNumber, MmV, bagbutt) {
             //if (World.PLAYER.ghoul !== 0) return;
             var inventory = Game.inventory;
             if (nNMVM.isLoaded !== 1) {
@@ -13489,7 +13497,7 @@ try {
                     wm.pos.x = WX;
                     wm.pos.y = WY;
                     ctx.drawImage(nNMVM, WX, WY, SY, SX);
-                } else textnumberitem(wm, invtr[i], WX, WY, inventoryItemNumber, inventoryAmmoNumber);
+                } else _buttonInv(wm, invtr[i], WX, WY, inventoryItemNumber, inventoryAmmoNumber);
                 if (i === 9) {
                     WX = bagbutt.pos.x - (5 * scaleby);
                     WY = bagbutt.pos.y - MVM;
@@ -13517,7 +13525,7 @@ try {
             }
         };
 
-        function levelingaunge(WX, WY) {
+        function _GaugesAfter(WX, WY) {
             var vMN = World.PLAYER.level;
             if (NmWnM[vMN] === window.undefined) {
                 NmWnM[vMN] = {
@@ -13531,7 +13539,7 @@ try {
             CanvasUtils.drawImageHd(wmmvv, 38 + (WX / scaleby), 37 + (WY / scaleby), window.Math.PI * vW, 0, 0, 1);
         };
 
-        function wmMMm(WX, WY) {
+        function _Gauges(WX, WY) {
             var life = World.gauges.life;
             var vW = life.nnw / life._max;
             CanvasUtils.fillRect(ctx, (WX / scaleby) + 14, (WY / scaleby) + 71, vW * 189, 16, lightgreen);
@@ -13573,7 +13581,7 @@ try {
         };
 
 
-        function WnnwN(WX, WY) {
+        function _Leaderboard(WX, WY) {
             var leaderboard = World.leaderboard;
             var players = World.players;
             var nWnWm = -1;
@@ -13619,7 +13627,7 @@ try {
         };
 
 
-        function mapfunc(vWvWN, closebutt) {        
+        function _BigMinimap(vWvWN, closebutt) {        
             var SY = vWw * scaleby;
             var SX = wvNVM * scaleby;
             var WX = screencenterX - (SY / 2);
@@ -13627,7 +13635,7 @@ try {
             var wVw = WX / scaleby;
             var VVm = WY / scaleby;
             var mvMnV = vWw / WMwnW;
-            var textnumberitem = wvNVM / mmVNm;
+            var _buttonInv = wvNVM / mmVNm;
             closebutt.pos.x = window.Math.floor((WX + SY) + (0 * scaleby));
             closebutt.pos.y = window.Math.floor(WY + (0 * scaleby));
             vWvWN.draw();
@@ -13637,11 +13645,11 @@ try {
             var cities = World.PLAYER.cities;
             var len = cities.length / 2;
             if (len > 0) {
-                inmapy = window.Math.floor((WY / scaleby) + window.Math.min(window.Math.max(10, cities[0] * textnumberitem), 400));
+                inmapy = window.Math.floor((WY / scaleby) + window.Math.min(window.Math.max(10, cities[0] * _buttonInv), 400));
                 inmapx = window.Math.floor((WX / scaleby) + window.Math.min(window.Math.max(10, cities[1] * mvMnV), 400));
                 CanvasUtils.drawImageHd(cityiconmap, inmapx, inmapy, 0, 0, 0, 1);
                 for (var i = 1; i < len; i++) {
-                    inmapy = window.Math.floor((WY / scaleby) + window.Math.min(window.Math.max(10, cities[i * 2] * textnumberitem), 400));
+                    inmapy = window.Math.floor((WY / scaleby) + window.Math.min(window.Math.max(10, cities[i * 2] * _buttonInv), 400));
                     inmapx = window.Math.floor((WX / scaleby) + window.Math.min(window.Math.max(10, cities[1 + (i * 2)] * mvMnV), 400));
                     CanvasUtils.drawImageHd(houseiconmap, inmapx, inmapy, 0, 0, 0, 1);
                 }
@@ -13674,7 +13682,7 @@ try {
             }
 
             var inmapx = window.Math.floor((WX / scaleby) + window.Math.min(window.Math.max(10, NmM * mvMnV), 400));
-            var inmapy = window.Math.floor((WY / scaleby) + window.Math.min(window.Math.max(10, WWV * textnumberitem), 400));
+            var inmapy = window.Math.floor((WY / scaleby) + window.Math.min(window.Math.max(10, WWV * _buttonInv), 400));
             CanvasUtils.drawImageHd(arrowiconmap2, inmapx, inmapy, Mouse.angle, 0, 0, 1);
 
             if (World.PLAYER.badKarmaDelay > 0) {
@@ -13687,7 +13695,7 @@ try {
 
 
 
-        function MMWWn() {
+        function _AlertServer() {
             if (Home.alertDelay > 0) {
                 if (Home.alertDelay > 2500) ctx.globalAlpha = MathUtils.Ease.inOutQuad((3000 - Home.alertDelay) / 500);
                 else if (Home.alertDelay > 500) ctx.globalAlpha = 1;
@@ -13759,10 +13767,10 @@ try {
             CanvasUtils.drawImageHd(playerAlive[World.playerAlive], ((WX / scaleby) + wvwNM) - 50, 25 + (WY / scaleby), 0, 0, 0, 1);
         };
 
-        function minimapfunc(WX, WY) {
+        function _Minimap(WX, WY) {
             nmwmn(WX + (250 * scaleby), WY);
-            if (MvV.isLoaded !== 1) {
-                MvV = CanvasUtils.loadImage(bordermapbig, MvV);
+            if (minimap.isLoaded !== 1) {
+                minimap = CanvasUtils.loadImage(bordermapbig, minimap);
                 return;
             }
 
@@ -13771,7 +13779,7 @@ try {
             var sx = window.Math.min(window.Math.max(0, mnmvW - WWn), vvVMV);
             var sy = window.Math.min(window.Math.max(0, vNwWN - WWn), vvVMV);
             var SY = WWn * scaleby;
-            ctx.drawImage(MvV, sx, sy, mVmWm, mVmWm, WX, WY, SY, SY);
+            ctx.drawImage(minimap, sx, sy, mVmWm, mVmWm, WX, WY, SY, SY);
             
             if (World.gameMode === World.__GHOUL__) {
                 if (World.PLAYER.ghoul !== 0) vmnWW(-255, WY);
@@ -13885,7 +13893,7 @@ try {
         var teamName = "";
         var nNmVw = null;
 
-        function clanfunc(closebutt, VWwmm, mMnVm, wwVMn, NnvmN, mvNMv, WvvvV, deleteTeam) {
+        function _Team(closebutt, VWwmm, mMnVm, wwVMn, NnvmN, mvNMv, WvvvV, deleteTeam) {
             var WX = 0;
             var WY = 0;
             if (World.PLAYER.team === -1) {
@@ -13994,7 +14002,7 @@ try {
             closebutt.draw();
         };
 
-        function contwinfunc(chestbox, closebutt, inventoryItemNumber, inventoryAmmoNumber) {
+        function _Chest(chestbox, closebutt, inventoryItemNumber, inventoryAmmoNumber) {
             chestbox.draw();
             var WX = chestbox.pos.x;
             var WY = chestbox.pos.y;
@@ -14014,7 +14022,7 @@ try {
                     if (i === 2) inmapy += 71 * scaleby;
                 } else inmapx += 72 * scaleby;
                 if (chest[i][0] === 0) continue;
-                textnumberitem(wm[i], chest[i], inmapx, inmapy, inventoryItemNumber, inventoryAmmoNumber);
+                _buttonInv(wm[i], chest[i], inmapx, inmapy, inventoryItemNumber, inventoryAmmoNumber);
             }
         };
 
@@ -14066,7 +14074,7 @@ try {
             }
         };
 
-        function craftingfunc(craftbox, closebutt, wnV, NwnNV, VvvwN, nvmnM, craftList, preview, inventoryItemNumber, inventoryAmmoNumber, VWNWV, WmWwW, WwMvM, NWmNn) {
+        function _Craft(craftbox, closebutt, wnV, NwnNV, VvvwN, nvmnM, craftList, preview, inventoryItemNumber, inventoryAmmoNumber, VWNWV, WmWwW, WwMvM, NWmNn) {
             craftbox.draw();
             var WX = craftbox.pos.x;
             var WY = craftbox.pos.y;
@@ -14343,7 +14351,7 @@ try {
             }
         };
 
-        function optionswin(WWmVM, nmvnW, wMMmv, NNWVW, nMmMw, vNVNN, wvmWv, WmWnm, VNNMW, NVVwW, closebutt, WVVMw, vnNWN, MnvNV) {
+        function _Config(WWmVM, nmvnW, wMMmv, NNWVW, nMmMw, vNVNN, wvmWv, WmWnm, VNNMW, NVVwW, closebutt, WVVMw, vnNWN, MnvNV) {
             WWmVM.draw();
             var WX = WWmVM.pos.x;
             var WY = WWmVM.pos.y;
@@ -14560,8 +14568,8 @@ try {
                         nvVvv += (window.Math.random() * 6) - 3;
                         WvnMn += (window.Math.random() * 6) - 3;
                     }
-                    if (Render.nwNWm > 0) {
-                        Render.nwNWm -= 1;
+                    if (Render.explosionShake > 0) {
+                        Render.explosionShake -= 1;
                         nvVvv += (window.Math.random() * 18) - 9;
                         WvnMn += (window.Math.random() * 18) - 9;
                     }
@@ -14715,8 +14723,8 @@ try {
         function Wvmnw(mVn, weapon, wVn, player, imgMovement, WX, WY) {
             var PLAYER = World.players[player.pid];
             var WMW = 0;
-            var repellent = PLAYER.repellent - Render.MmW;
-            var withdrawal = PLAYER.withdrawal - Render.MmW;
+            var repellent = PLAYER.repellent - Render.globalTime;
+            var withdrawal = PLAYER.withdrawal - Render.globalTime;
             if (repellent > 0) {
                 if (withdrawal > 0) WMW = 3;
                 else if (PLAYER.withdrawal > 0) WMW = 5;
@@ -14731,8 +14739,8 @@ try {
             if (Vmwnn === 4) {
                 if (PLAYER.consumable === -1) {
                     var MNmnm = (player.extra >> 8) & 255;
-                    if ((AudioUtils._fx.shot[MNmnm] !== 0) && ((Render.MmW - PLAYER.consumableLast) > 800)) {
-                        PLAYER.consumableLast = Render.MmW;
+                    if ((AudioUtils._fx.shot[MNmnm] !== 0) && ((Render.globalTime - PLAYER.consumableLast) > 800)) {
+                        PLAYER.consumableLast = Render.globalTime;
                         var VVmnw = window.Math.floor(window.Math.random() * weapon.soundLen);
                         AudioUtils.playFx(AudioUtils._fx.shot[MNmnm][VVmnw], weapon.soundVolume, Math2d.dist(World.PLAYER.x, World.PLAYER.y, player.x, player.y) / 4, weapon.soundDelay);
                     }
@@ -14820,8 +14828,8 @@ try {
         function vwVWm(mVn, weapon, wVn, player, imgMovement, WX, WY) {
             var PLAYER = World.players[player.pid];
             var WMW = 0;
-            var repellent = PLAYER.repellent - Render.MmW;
-            var withdrawal = PLAYER.withdrawal - Render.MmW;
+            var repellent = PLAYER.repellent - Render.globalTime;
+            var withdrawal = PLAYER.withdrawal - Render.globalTime;
             if (repellent > 0) {
                 if (withdrawal > 0) WMW = 3;
                 else if (PLAYER.withdrawal > 0) WMW = 5;
@@ -14945,8 +14953,8 @@ try {
         function WVVmN(mVn, weapon, wVn, player, imgMovement, WX, WY) {
             var PLAYER = World.players[player.pid];
             var WMW = 0;
-            var repellent = PLAYER.repellent - Render.MmW;
-            var withdrawal = PLAYER.withdrawal - Render.MmW;
+            var repellent = PLAYER.repellent - Render.globalTime;
+            var withdrawal = PLAYER.withdrawal - Render.globalTime;
             if (repellent > 0) {
                 if (withdrawal > 0) WMW = 3;
                 else if (PLAYER.withdrawal > 0) WMW = 5;
@@ -15034,8 +15042,8 @@ try {
         function mWNvw(mVn, weapon, wVn, player, imgMovement, WX, WY) {
             var PLAYER = World.players[player.pid];
             var WMW = 0;
-            var repellent = PLAYER.repellent - Render.MmW;
-            var withdrawal = PLAYER.withdrawal - Render.MmW;
+            var repellent = PLAYER.repellent - Render.globalTime;
+            var withdrawal = PLAYER.withdrawal - Render.globalTime;
             if (repellent > 0) {
                 if (withdrawal > 0) WMW = 3;
                 else if (PLAYER.withdrawal > 0) WMW = 5;
@@ -15119,8 +15127,8 @@ try {
         function mvwMm(mVn, weapon, wVn, player, imgMovement, WX, WY) {
             var PLAYER = World.players[player.pid];
             var WMW = 0;
-            var repellent = PLAYER.repellent - Render.MmW;
-            var withdrawal = PLAYER.withdrawal - Render.MmW;
+            var repellent = PLAYER.repellent - Render.globalTime;
+            var withdrawal = PLAYER.withdrawal - Render.globalTime;
             if (repellent > 0) {
                 if (withdrawal > 0) WMW = 3;
                 else if (PLAYER.withdrawal > 0) WMW = 5;
@@ -15203,8 +15211,8 @@ try {
         function mmmMw(mVn, weapon, wVn, player, imgMovement, WX, WY) {
             var PLAYER = World.players[player.pid];
             var WMW = 0;
-            var repellent = PLAYER.repellent - Render.MmW;
-            var withdrawal = PLAYER.withdrawal - Render.MmW;
+            var repellent = PLAYER.repellent - Render.globalTime;
+            var withdrawal = PLAYER.withdrawal - Render.globalTime;
             if (repellent > 0) {
                 if (withdrawal > 0) WMW = 3;
                 else if (PLAYER.withdrawal > 0) WMW = 5;
@@ -15288,7 +15296,7 @@ try {
                     item.yCenter = nVWnV;
                 }
                 var angle = Mouse.angle;
-                var Rot = (item.Mvw === 1) ? 0 : World.PLAYER.buildRotate;
+                var Rot = (item.wall === 1) ? 0 : World.PLAYER.buildRotate;
                 World.PLAYER.jBuild = World.PLAYER._j + window.Math.floor((__TILE_SIZE2__ + (window.Math.cos(angle) * __TILE_SIZE__)) / __TILE_SIZE__);
                 World.PLAYER.iBuild = World.PLAYER._i + window.Math.floor((__TILE_SIZE2__ + (window.Math.sin(angle) * __TILE_SIZE__)) / __TILE_SIZE__);
                 var WX = ((item.xCenter[Rot] + vertst) + __TILE_SIZE2__) + (__TILE_SIZE__ * World.PLAYER.jBuild);
@@ -15314,7 +15322,7 @@ try {
                     hintRotate = CanvasUtils.loadImage(hintrotate, hintRotate);
                     return;
                 }
-                if ((item.Mvw === 1) || (World.PLAYER.interaction >= 0)) nwmVM = window.Math.max(0, World.PLAYER.hintRotate - delta);
+                if ((item.wall === 1) || (World.PLAYER.interaction >= 0)) nwmVM = window.Math.max(0, World.PLAYER.hintRotate - delta);
                 else nwmVM = window.Math.min(900, World.PLAYER.hintRotate + delta);
             } else nwmVM = window.Math.max(0, World.PLAYER.hintRotate - delta);
             if (nwmVM > 0) {
@@ -15332,8 +15340,8 @@ try {
         function nwMNv(mVn, weapon, wVn, player, imgMovement, WX, WY) {
             var PLAYER = World.players[player.pid];
             var WMW = 0;
-            var repellent = PLAYER.repellent - Render.MmW;
-            var withdrawal = PLAYER.withdrawal - Render.MmW;
+            var repellent = PLAYER.repellent - Render.globalTime;
+            var withdrawal = PLAYER.withdrawal - Render.globalTime;
             if (repellent > 0) {
                 if (withdrawal > 0) WMW = 3;
                 else if (PLAYER.withdrawal > 0) WMW = 5;
@@ -15516,7 +15524,7 @@ try {
             }
         };
         
-        function timeret() {
+        function _Interaction() {
             if (World.PLAYER.ghoul !== 0) return;
             var NMMmV = World.PLAYER.wrongToolTimer;
             if (NMMmV > 0) {
@@ -15678,7 +15686,7 @@ try {
             CanvasUtils.drawImageHd(W, vertst + player.x, horist + player.y, player.angle, 0, 0, 1);
         };
 
-        function dynac4func(item, player, WX, WY, Rot, imgMovement) {
+        function _Dynamite(item, player, WX, WY, Rot, imgMovement) {
             player.breath = (player.breath + delta) % 500;
             var vW = player.breath / 500;
             var mnM = 0.95 + (0.3 * MathUtils.Ease.inOutQuad(vW));
@@ -15689,7 +15697,7 @@ try {
         };
 
 
-        function spikefunc(item, player, WX, WY, Rot, imgMovement) {
+        function _Spike(item, player, WX, WY, Rot, imgMovement) {
             var isInClan = 0;
             var VmnmV = 1;
             if ((player.state & 16) === 16) VmnmV = 0;
@@ -15724,11 +15732,11 @@ try {
             }
         };
         
-        function wiresfunc(item, player, WX, WY, Rot, imgMovement) {
+        function _HiddenBuilding(item, player, WX, WY, Rot, imgMovement) {
             CanvasUtils.drawImageHd(item.building, (vertst + player.x) + WX, (horist + player.y) + WY, Rot * PIby2, 0, 0, imgMovement);
         };
 
-        function landminefunc(item, player, WX, WY, Rot, imgMovement) {
+        function _Landmine(item, player, WX, WY, Rot, imgMovement) {
             var isInClan = 0;
             if (((player.pid === World.PLAYER.id) || (((World.PLAYER.team !== -1) && (World.PLAYER.team === World.players[player.pid].team)) && (World.players[player.pid].teamUid === World.teams[World.PLAYER.team].uid))) || (Math2d.fastDist(NmM, WWV, player.x, player.y) < 52000)) isInClan = 1;
             if (isInClan === 1) {
@@ -15752,15 +15760,15 @@ try {
             }    
         };
 
-        function MWMmm(item, player, WX, WY, Rot, imgMovement) {
+        function _DefaultBuilding(item, player, WX, WY, Rot, imgMovement) {
             CanvasUtils.drawImageHd(item.building, (vertst + player.x) + WX, (horist + player.y) + WY, Rot * PIby2, 0, 0, imgMovement);
         };
 
-        function NnNvw(item, player, WX, WY, Rot, imgMovement) {
+        function _Breakable(item, player, WX, WY, Rot, imgMovement) {
             CanvasUtils.drawImageHd(item.building[player.broke], (vertst + player.x) + WX, (horist + player.y) + WY, Rot * PIby2, 0, 0, imgMovement);
         };
 
-        function mmwVM(item, player, WX, WY, Rot, imgMovement) {
+        function _Wall(item, player, WX, WY, Rot, imgMovement) {
             if (player.broke > 0) CanvasUtils.drawImageHd(item.WVW[player.broke - 1], (vertst + player.x) + WX, (horist + player.y) + WY, 0, 0, 0, imgMovement);
             else CanvasUtils.drawImageHd(item.building[WwmwN(player)], (vertst + player.x) + WX, (horist + player.y) + WY, 0, 0, 0, imgMovement);
         };
@@ -15783,7 +15791,7 @@ try {
             return 0;
         };
 
-        function nVwvm(item, player, WX, WY, Rot, imgMovement) {
+        function _Construction(item, player, WX, WY, Rot, imgMovement) {
             CanvasUtils.drawImageHd(item.WnVMV, (vertst + player.x) + WX, (horist + player.y) + WY, Rot * PIby2, 0, 0, 1);
             var vMN = (player.state >> 4) & 15;
             if (player.breath2 !== vMN) {
@@ -15807,21 +15815,21 @@ try {
             } else CanvasUtils.drawImageHd(item.building[vMN], (vertst + player.x) + WX, (horist + player.y) + WY, Rot * PIby2, 0, 0, imgMovement);
         };
 
-        function NWnmw(item, player, WX, WY, Rot, imgMovement) {
+        function _TreeSeed(item, player, WX, WY, Rot, imgMovement) {
             var vMN = (player.state >> 4) & 15;
             player.breath = (player.breath + delta) % 1000;
             var imgMovement = 1 + (0.01 * ((player.breath < 500) ? (player.breath / 500) : (1 - ((player.breath - 500) / 500))));
             CanvasUtils.drawImageHd(item.building[vMN], (vertst + player.x) + WX, (horist + player.y) + WY, Rot * PIby2, 0, 0, imgMovement);
         };
 
-        function VMWWV(item, player, WX, WY, Rot, imgMovement) {
+        function _OrangeSeed(item, player, WX, WY, Rot, imgMovement) {
             var vMN = (player.state >> 4) & 15;
             player.breath = (player.breath + delta) % 1000;
             var imgMovement = 1 + (0.03 * ((player.breath < 500) ? (player.breath / 500) : (1 - ((player.breath - 500) / 500))));
             CanvasUtils.drawImageHd(item.building[vMN], (vertst + player.x) + WX, (horist + player.y) + WY, Rot * PIby2, 0, 0, imgMovement);
         };
 
-        function nNMVN(item, player, WX, WY, Rot, imgMovement) {
+        function _LowWall(item, player, WX, WY, Rot, imgMovement) {
             var WVV = (player.broke > 0) ? item.WVW[player.broke - 1] : item.building[wmNMv(player, Rot)];
             var W = WVV.W;
             if (W.isLoaded !== 1) {
@@ -15838,7 +15846,7 @@ try {
             ctx.restore();
         };
 
-        function nvVNm(item, player, WX, WY, Rot, imgMovement) {
+        function _AutomaticDoor(item, player, WX, WY, Rot, imgMovement) {
             ctx.globalAlpha = 1;
             var MvVvv = (player.state >> 7) & 1;
             if (MvVvv === 1) player.hitMax = window.Math.min(500, player.hitMax + delta);
@@ -15852,7 +15860,7 @@ try {
             } else CanvasUtils.drawImageHd(item.building[MvVvv][player.broke], (vertst + player.x) + WX, (horist + player.y) + WY, Rot * PIby2, 0, 0, imgMovement);
         };
 
-    function switchonofffunc(item, player, WX, WY, Rot, imgMovement) {
+    function _SwitchOff(item, player, WX, WY, Rot, imgMovement) {
         nearme(item, player, 0);
         CanvasUtils.drawImageHd(item.building[(player.state >> 4) & 1], (vertst + player.x) + WX, (horist + player.y) + WY, Rot * PIby2, 0, 0, imgMovement);
             var WY = scaleby * (((player.i * 100) + horist) + 50);
@@ -15864,12 +15872,12 @@ try {
             ctx.drawImage(butlabel, WX - (SY / 2), WY - (SX / 2), SY, SX);
     };
 
-        function gatetimerfunc(item, player, WX, WY, Rot, imgMovement) {
+        function _TimerGate(item, player, WX, WY, Rot, imgMovement) {
             nearme(item, player, 0);
             CanvasUtils.drawImageHd(item.building[(player.state >> 4) & 3], (vertst + player.x) + WX, (horist + player.y) + WY, Rot * PIby2, 0, 0, imgMovement);
         };
 
-        function mWmNV(item, player, WX, WY, Rot, imgMovement) {
+        function _Lamp(item, player, WX, WY, Rot, imgMovement) {
             nearme(item, player, 0);
             var mMW = (player.state >> 7) & 1;
             if (mMW === 1) player.hitMax = window.Math.min(500, player.hitMax + delta);
@@ -15880,7 +15888,7 @@ try {
             } else CanvasUtils.drawImageHd(item.building, (vertst + player.x) + WX, (horist + player.y) + WY, Rot * PIby2, 0, 0, imgMovement);
         };
 
-        function Wnmmm(player) {
+        function _LampLight(player) {
             var item = items[player.extra >> 7];
             ctx.globalAlpha = MathUtils.Ease.outQuad(player.hitMax / 500);
             player.breath2 = (player.breath2 + delta) % 5000;
@@ -15891,7 +15899,7 @@ try {
         };
         
 
-        function doorfunc(item, player, WX, WY, Rot, imgMovement) {
+        function _Door(item, player, WX, WY, Rot, imgMovement) {
             var NVNvv = (player.state >> 4) & 1;
             var MWwVn = (player.pid === 0) ? 0 : 1;
             if ((nearme(item, player, MWwVn) === 1) && (NVNvv === 1)) World.PLAYER.eInteract = item.mMnmM;
@@ -15939,7 +15947,7 @@ try {
             }
         };
 
-        function NMwnn(item, player, WX, WY, Rot, imgMovement) {
+        function _GroundFloor(item, player, WX, WY, Rot, imgMovement) {
             var mmWVw = matrix[player.i][player.j];
             mmWVw.NMn = 0;
             mmWVw.nNNwM = frameId;
@@ -15951,7 +15959,7 @@ try {
         };
 
 
-        function containericonopen(item, player, WX, WY, Rot, imgMovement) {
+        function _Furniture(item, player, WX, WY, Rot, imgMovement) {
             var inuse = (player.state >> 4) & 1;
             var objects = items[item.id].subtype[player.subtype];
             if (inuse === 1) player.hit = window.Math.min(500, player.hit + delta);
@@ -15961,12 +15969,12 @@ try {
             if (player.hit > 0) containeropenic(player, WX, WY);
         };
 
-        function VWwMV(item, player, WX, WY, Rot, imgMovement) {
+        function _Road(item, player, WX, WY, Rot, imgMovement) {
             var objects = items[item.id].subtype[player.subtype];
             CanvasUtils.drawImageHd(objects.building, vertst + player.x, horist + player.y, 0, 0, 0, imgMovement);
         };
 
-        function NWVWn(mnn, player, WX, WY, imgMovement) {
+        function _Ghoul(mnn, player, WX, WY, imgMovement) {
             var Vmwnn = player.state & 254;
             if (Vmwnn === 2) {
                 player.state &= 65281;
@@ -16032,7 +16040,7 @@ try {
         };
 
 
-        function FCWcontainer(item, player, WX, WY, Rot, imgMovement) {
+        function _Workbench(item, player, WX, WY, Rot, imgMovement) {
             var inuse = (player.state >> 4) & 1;
             if (inuse === 1) player.hit = window.Math.min(500, player.hit + delta);
             else if (player.hit > 0) player.hit = window.Math.max(0, player.hit - delta);
@@ -16041,7 +16049,7 @@ try {
             if (player.hit > 0) containeropenic(player, WX, WY);
         };
 
-        function wVMmw(item, player, WX, WY, Rot, imgMovement) {
+        function _Workbench2(item, player, WX, WY, Rot, imgMovement) {
             var i = (Rot + 1) % 2;
             var j = Rot % 2;
             matrix[player.i + i][player.j + j].NMn = frameId;
@@ -16054,7 +16062,7 @@ try {
             CanvasUtils.drawImageHd(item.building, (vertst + player.x) + WX, (horist + player.y) + WY, Rot * PIby2, 0, 0, imgMovement);
         };
 
-        function VmMwM(item, player, WX, WY, Rot, imgMovement) {
+        function _Agitator(item, player, WX, WY, Rot, imgMovement) {
             var MWm = (player.state >> 4) & 1;
             if (MWm === 1) player.hit = window.Math.min(500, player.hit + delta);
             else if (player.hit > 0) player.hit = window.Math.max(0, player.hit - delta);
@@ -16073,7 +16081,7 @@ try {
             if (player.hit > 0) containeropenic(player, WX, WY);
         };
 
-        function wnvmM(item, player, WX, WY, Rot, imgMovement) {
+        function _Extractor(item, player, WX, WY, Rot, imgMovement) {
             var MWm = (player.state >> 4) & 1;
             if (MWm === 1) player.hit = window.Math.min(500, player.hit + delta);
             else if (player.hit > 0) player.hit = window.Math.max(0, player.hit - delta);
@@ -16110,7 +16118,7 @@ try {
             ctx.globalAlpha = 1;
         };
 
-        function nVVVm(item, player, WX, WY, Rot, imgMovement) {
+        function _Compost(item, player, WX, WY, Rot, imgMovement) {
             var MWm = (player.state >> 4) & 1;
             if (MWm === 1) player.hit = window.Math.min(500, player.hit + delta);
             else if (player.hit > 0) player.hit = window.Math.max(0, player.hit - delta);
@@ -16130,7 +16138,7 @@ try {
             if (player.hit > 0) containeropenic(player, WX, WY);
         };
 
-        function WNvww(item, player, WX, WY, Rot, imgMovement) {
+        function _Smelter(item, player, WX, WY, Rot, imgMovement) {
             var i = (Rot + 1) % 2;
             var j = Rot % 2;
             matrix[player.i + i][player.j + j].NMn = frameId;
@@ -16158,7 +16166,7 @@ try {
             if (player.hit > 0) containeropenic(player, WX, WY);
         };
 
-        function NNnwW(item, player, WX, WY, Rot, imgMovement) {
+        function _TeslaBench(item, player, WX, WY, Rot, imgMovement) {
             var i = (Rot + 1) % 2;
             var j = Rot % 2;
             matrix[player.i + i][player.j + j].NMn = frameId;
@@ -16183,7 +16191,7 @@ try {
             if (player.hit > 0) containeropenic(player, WX, WY);
         };
 
-        function NNWnW(player) {
+        function _CampfireLight(player) {
             ctx.globalAlpha = MathUtils.Ease.outQuad(player.hitMax / 500);
             player.heal = (player.heal + delta) % 1000;
             for (var i = 0; i < 3; i++) {
@@ -16198,7 +16206,7 @@ try {
             ctx.globalAlpha = 1;
         };
 
-        function fireContainer(item, player, WX, WY, Rot, imgMovement) {
+        function _Campfire(item, player, WX, WY, Rot, imgMovement) {
             
             var MWm = (player.state >> 4) & 1;
             if (MWm === 1) player.hit = window.Math.min(500, player.hit + delta);
@@ -16218,7 +16226,7 @@ try {
             var mVn = window.Math.floor(player.born / 70);
             if (mVn < 10) {
                 if (player.born === 0) {
-                    if (Render.nwNWm !== -2) Render.nwNWm = 20;
+                    if (Render.explosionShake !== -2) Render.explosionShake = 20;
                     AudioUtils.playFx(AudioUtils._fx.mwM, 0.7, Math2d.dist(World.PLAYER.x, World.PLAYER.y, player.x, player.y) / 4);
                 }
                 CanvasUtils.drawImageHd(W[mVn], vertst + player.x, horist + player.y, 0, 0, 0, 1);
@@ -16659,7 +16667,7 @@ try {
             }
         };
 
-        function stopPoisonEffect() {
+        function _StopPoisonEffect() {
             NNWWn = 0;
         };
         var bodOnResize;
@@ -16670,7 +16678,7 @@ try {
         var VnwwM = 0;
         var WvWvM = 0;
 
-        function VvWmm(delay) {
+        function _SetPoisonEffect(delay) {
             if (WvWvM === 0) {
                 nvMNv = Render.scale;
                 Render.scale = 0.8;
@@ -16776,8 +16784,8 @@ try {
             if (World.transition === 0) World.changeDayCycle();
         };
 
-        function wVVvW() {
-            Render.MmW += delta;
+        function _World() {
+            Render.globalTime += delta;
             if (WvWvM === 1) nmmMm();
             wNnvM();
             myplayerfocusinscreen();
@@ -16794,73 +16802,73 @@ try {
             wwWnm = screenHeight / scaleby;
         };
 
-        function setDetection(vW) {
+        function _SetDetection(vW) {
             WMWvN = 0;
         };
 
-        function wvmnm(vW) {
+        function _SetParticles(vW) {
             localStorage.setItem("particles", "" + vW);
             NwMVW = vW;
         };
         return {
-            MmW: window.Date.now(),
-            reset: vision,
-            world: wVVvW,
-            MvV: minimapfunc,
-            NNMwm: mapfunc,
-            gauges: wmMMm,
-            VnVVN: levelingaunge,
-            leaderboard: WnnwN,
-            inventory: inventoryfunc,
-            vmmMn: textnumberitem,
-            optionsfc: optionswin,
-            craftfc: craftingfunc,
-            cncwind: contwinfunc,
-            team: clanfunc,
-            interaction: timeret,
-            alertServer: MMWWn,
-            shake: 0,
-            nwNWm: 0,
-            scale: -0.,
-            wvmnm: wvmnm,
-            setDetection: setDetection,
-            VvWmm: VvWmm,
-            stopPoisonEffect: stopPoisonEffect,
-            VNvvM: VNvvM,
-            __TILE_SIZE__: __TILE_SIZE__,
-            __TILE_SIZE2__: __TILE_SIZE2__,
-            nnmMW: 0,
-            Mvw: mmwVM,
-            VWN: nNMVN,
-            WNv: doorfunc,
-            FCWCcont: FCWcontainer,
-            fireCont: fireContainer,
-            nnvWw: NNWnW,
-            vNvMW: WNvww,
-            vNvnV: nVVVm,
-            wNvVV: VmMwM,
-            vwMnv: wnvmM,
-            wMwnV: wVMmw,
-            nVWmn: NNnwW,
-            MWnVn: VMWWV,
-            NMVvM: NWnmw,
-            nwVWW: NMwnn,
-            mvWww: MWMmm,
-            NnMNn: wiresfunc,
-            VWWwm: NnNvw,
-            furniture: containericonopen,
-            NNnmv: VWwMV,
-            vmMNW: landminefunc,
-            VnMww: dynac4func,
-            WwVVm: spikefunc,
-            ghoul: NWVWn,
-            nMnNW: nVwvm,
-            vnVwv: mWmNV,
-            mVwvv: Wnmmm,
-            mvVVM: switchonofffunc,
-            Mvnmn: gatetimerfunc,
-            WvNvn: nvVNm,
-            mMWMV: mwNmN
+            globalTime:         window.Date.now(),
+            reset:              _Reset,
+            world:              _World,
+            minimap:            _Minimap,
+            bigminimap:         _BigMinimap,
+            gauges:             _Gauges,
+            gaugesAfter:        _GaugesAfter,
+            leaderboard:        _Leaderboard,
+            inventory:          _Inventory,
+            buttonInv:          _buttonInv,
+            config:             _Config,
+            craft:              _Craft,
+            chest:              _Chest,
+            team:               _Team,
+            interaction:        _Interaction,
+            alertServer:        _AlertServer,
+            shake:              0,
+            explosionShake:     0,
+            scale:              -0.,
+            setParticles:       _SetParticles,
+            setDetection:       _SetDetection,
+            setPoisonEffect:    _SetPoisonEffect,
+            stopPoisonEffect:   _StopPoisonEffect,
+            __TILE_SCALE__:     __TILE_SCALE__,
+            __TILE_SIZE__:      __TILE_SIZE__,
+            __TILE_SIZE2__:     __TILE_SIZE2__,
+            __TRANSFORM__:      0,
+            wall:               _Wall,
+            lowWall:            _LowWall,
+            door:               _Door,
+            workbench:          _Workbench,
+            campfire:           _Campfire,
+            campfireLight:      _CampfireLight,
+            smelter:            _Smelter,
+            compost:            _Compost,
+            agitator:           _Agitator,
+            extractor:          _Extractor,
+            workbench2:         _Workbench2,
+            teslaBench:         _TeslaBench,
+            orangeSeed:         _OrangeSeed,
+            treeSeed:           _TreeSeed,
+            groundFloor:        _GroundFloor,
+            defaultBuilding:    _DefaultBuilding,
+            hiddenBuilding:     _HiddenBuilding,
+            breakable:          _Breakable,
+            furniture:          _Furniture,
+            road:               _Road,
+            landmine:           _Landmine,
+            dynamite:           _Dynamite,
+            spike:              _Spike,
+            ghoul:              _Ghoul,
+            construction:       _Construction,
+            lamp:               _Lamp,
+            lampLight:          _LampLight,
+            switchOff:          _SwitchOff,
+            timerGate:          _TimerGate,
+            automaticDoor:      _AutomaticDoor,
+            battleRoyale:       _BattleRoyale
         };
     })();
 var MapManager = (function() {
@@ -17027,7 +17035,7 @@ ENTITIES[__ENTITIE_BUILD_TOP__].update = function updateEntitieBuilding(MW, WX, 
     MW.ny = MW.y;
     MW.px = MW.x;
     MW.py = MW.y;
-    if ((item.WNv === 1) && ((MW.state & 16) === 16)) {
+    if ((item.door === 1) && ((MW.state & 16) === 16)) {
         MW.px = ((window.Math.floor(MW.j + item.jMove[Rot]) * Render.__TILE_SIZE__) + Render.__TILE_SIZE2__) + item.xCenter[(Rot + 1) % 4];
         MW.py = ((window.Math.floor(MW.i + item.iMove[Rot]) * Render.__TILE_SIZE__) + Render.__TILE_SIZE2__) + item.yCenter[(Rot + 1) % 4];
     }
@@ -18773,14 +18781,14 @@ var items = [{
             isLoaded: 0
         }
     },
-    WNv: 0,
+    door: 0,
     mwM: 0,
     behavior: BEHAVIOR.__SEED__,
     MWv: 0,
     subtype: 0,
     MMN: 0,
     WnW: 0,
-    draw: Render.MWnVn,
+    draw: Render.orangeSeed,
     impact: SOUNDID.VNv,
     destroyaudio: SOUNDID.VNv,
     building: [{
@@ -18949,9 +18957,9 @@ var items = [{
             isLoaded: 0
         }
     },
-    Mvw: 0,
-    VWN: 0,
-    WNv: 0,
+    wall: 0,
+    lowWall: 0,
+    door: 0,
     broke: 0,
     mwM: 0,
     behavior: BEHAVIOR.__NO__,
@@ -18959,7 +18967,7 @@ var items = [{
     subtype: 0,
     MMN: 1,
     WnW: 0,
-    draw: Render.FCWCcont,
+    draw: Render.workbench,
     packetId: 16,
     wwN: {
         src: "img/e-workbench.png",
@@ -19185,10 +19193,10 @@ var items = [{
             isLoaded: 0
         }
     },
-    Mvw: 1,
+    wall: 1,
     vVwVM: item.woodenwall,
-    VWN: 0,
-    WNv: 0,
+    lowWall: 0,
+    door: 0,
     broke: 1,
     mwM: 0,
     behavior: BEHAVIOR.__NO__,
@@ -19196,7 +19204,7 @@ var items = [{
     subtype: 0,
     MMN: 1,
     WnW: 0,
-    draw: Render.Mvw,
+    draw: Render.wall,
     MmvNw: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
     WVW: [{
         src: "img/day-wood-wall-broken0.png",
@@ -19500,10 +19508,10 @@ var items = [{
             isLoaded: 0
         }
     },
-    Mvw: 1,
+    wall: 1,
     vVwVM: item.stonewall,
-    VWN: 0,
-    WNv: 0,
+    lowWall: 0,
+    door: 0,
     broke: 1,
     mwM: 0,
     behavior: BEHAVIOR.__NO__,
@@ -19511,7 +19519,7 @@ var items = [{
     subtype: 0,
     MMN: 1,
     WnW: 0,
-    draw: Render.Mvw,
+    draw: Render.wall,
     MmvNw: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
     WVW: [{
         src: "img/day-stone-wall-broken0.png",
@@ -19815,10 +19823,10 @@ var items = [{
             isLoaded: 0
         }
     },
-    Mvw: 1,
+    wall: 1,
     vVwVM: item.steelwall,
-    VWN: 0,
-    WNv: 0,
+    lowWall: 0,
+    door: 0,
     broke: 1,
     mwM: 0,
     behavior: BEHAVIOR.__NO__,
@@ -19826,7 +19834,7 @@ var items = [{
     subtype: 0,
     MMN: 1,
     WnW: 0,
-    draw: Render.Mvw,
+    draw: Render.wall,
     MmvNw: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
     WVW: [{
         src: "img/day-steel-wall-broken0.png",
@@ -20130,9 +20138,9 @@ var items = [{
             isLoaded: 0
         }
     },
-    Mvw: 0,
-    VWN: 0,
-    WNv: 1,
+    wall: 0,
+    lowWall: 0,
+    door: 1,
     broke: 1,
     mwM: 0,
     behavior: BEHAVIOR.__NO__,
@@ -20148,7 +20156,7 @@ var items = [{
     VvvNw: [100, 35, 100, 35],
     VvMvv: 6,
     MmVVV: 46,
-    draw: Render.WNv,
+    draw: Render.door,
     packetId: 15,
     wwN: {
         src: "img/e-opendoor.png",
@@ -20234,9 +20242,9 @@ var items = [{
             isLoaded: 0
         }
     },
-    Mvw: 0,
-    VWN: 0,
-    WNv: 1,
+    wall: 0,
+    lowWall: 0,
+    door: 1,
     broke: 1,
     mwM: 0,
     behavior: BEHAVIOR.__NO__,
@@ -20252,7 +20260,7 @@ var items = [{
     VvvNw: [100, 35, 100, 35],
     VvMvv: 6,
     MmVVV: 46,
-    draw: Render.WNv,
+    draw: Render.door,
     packetId: 15,
     wwN: {
         src: "img/e-opendoor.png",
@@ -20338,9 +20346,9 @@ var items = [{
             isLoaded: 0
         }
     },
-    Mvw: 0,
-    VWN: 0,
-    WNv: 1,
+    wall: 0,
+    lowWall: 0,
+    door: 1,
     broke: 1,
     mwM: 0,
     behavior: BEHAVIOR.__NO__,
@@ -20356,7 +20364,7 @@ var items = [{
     VvvNw: [100, 35, 100, 35],
     VvMvv: 6,
     MmVVV: 46,
-    draw: Render.WNv,
+    draw: Render.door,
     packetId: 15,
     wwN: {
         src: "img/e-opendoor.png",
@@ -20445,9 +20453,9 @@ var items = [{
             isLoaded: 0
         }
     },
-    Mvw: 0,
-    VWN: 0,
-    WNv: 0,
+    wall: 0,
+    lowWall: 0,
+    door: 0,
     broke: 0,
     mwM: 0,
     behavior: BEHAVIOR.__NO__,
@@ -20455,8 +20463,8 @@ var items = [{
     subtype: 0,
     MMN: 1,
     WnW: __WARM__,
-    draw: Render.fireCont,
-    VvmvM: Render.nnvWw,
+    draw: Render.campfire,
+    VvmvM: Render.campfireLight,
     packetId: 16,
     wwN: {
         src: "img/e-campfire.png",
@@ -20884,9 +20892,9 @@ var items = [{
             isLoaded: 0
         }
     },
-    Mvw: 0,
-    VWN: 0,
-    WNv: 0,
+    wall: 0,
+    lowWall: 0,
+    door: 0,
     broke: 0,
     mwM: 0,
     behavior: BEHAVIOR.__NO__,
@@ -20894,8 +20902,8 @@ var items = [{
     subtype: 0,
     MMN: 1,
     WnW: __WARM__,
-    draw: Render.fireCont,
-    VvmvM: Render.nnvWw,
+    draw: Render.campfire,
+    VvmvM: Render.campfireLight,
     packetId: 16,
     wwN: {
         src: "img/e-campfire-bbq.png",
@@ -20965,9 +20973,9 @@ var items = [{
     },
     MvWnM: [-20.5, -101.5, 20.5, 101.5],
     VmNMm: [101.5, -20.5, -101, 20.5],
-    Mvw: 0,
-    VWN: 0,
-    WNv: 0,
+    wall: 0,
+    lowWall: 0,
+    door: 0,
     broke: 0,
     mwM: 0,
     behavior: BEHAVIOR.__NO__,
@@ -20975,7 +20983,7 @@ var items = [{
     subtype: 0,
     MMN: 1,
     WnW: 0,
-    draw: Render.vNvMW,
+    draw: Render.smelter,
     packetId: 16,
     wwN: {
         src: "img/e-smelter.png",
@@ -21054,9 +21062,9 @@ var items = [{
             isLoaded: 0
         }
     },
-    Mvw: 0,
-    VWN: 0,
-    WNv: 1,
+    wall: 0,
+    lowWall: 0,
+    door: 1,
     broke: 1,
     mwM: 0,
     behavior: BEHAVIOR.__NO__,
@@ -21072,7 +21080,7 @@ var items = [{
     VvvNw: [100, 100, 100, 100],
     VvMvv: 17,
     MmVVV: 113,
-    draw: Render.WNv,
+    draw: Render.door,
     packetId: 15,
     wwN: {
         src: "img/e-opendoor.png",
@@ -21158,9 +21166,9 @@ var items = [{
             isLoaded: 0
         }
     },
-    Mvw: 0,
-    VWN: 0,
-    WNv: 1,
+    wall: 0,
+    lowWall: 0,
+    door: 1,
     broke: 1,
     mwM: 0,
     behavior: BEHAVIOR.__NO__,
@@ -21176,7 +21184,7 @@ var items = [{
     VvvNw: [100, 100, 100, 100],
     VvMvv: 17,
     MmVVV: 113,
-    draw: Render.WNv,
+    draw: Render.door,
     packetId: 15,
     wwN: {
         src: "img/e-opendoor.png",
@@ -21262,9 +21270,9 @@ var items = [{
             isLoaded: 0
         }
     },
-    Mvw: 0,
-    VWN: 0,
-    WNv: 1,
+    wall: 0,
+    lowWall: 0,
+    door: 1,
     broke: 1,
     mwM: 0,
     behavior: BEHAVIOR.__NO__,
@@ -21280,7 +21288,7 @@ var items = [{
     VvvNw: [100, 100, 100, 100],
     VvMvv: 17,
     MmVVV: 113,
-    draw: Render.WNv,
+    draw: Render.door,
     packetId: 15,
     wwN: {
         src: "img/e-opendoor.png",
@@ -21410,9 +21418,9 @@ var items = [{
             isLoaded: 0
         }
     },
-    Mvw: 0,
-    VWN: 0,
-    WNv: 0,
+    wall: 0,
+    lowWall: 0,
+    door: 0,
     broke: 0,
     mwM: 0,
     behavior: BEHAVIOR.__NO__,
@@ -21420,7 +21428,7 @@ var items = [{
     subtype: 0,
     MMN: 1,
     WnW: 0,
-    draw: Render.wMwnV,
+    draw: Render.workbench2,
     packetId: 16,
     wwN: {
         src: "img/e-workbench2.png",
@@ -21507,9 +21515,9 @@ var items = [{
             isLoaded: 0
         }
     },
-    Mvw: 0,
-    VWN: 0,
-    WNv: 0,
+    wall: 0,
+    lowWall: 0,
+    door: 0,
     broke: 0,
     mwM: 0,
     behavior: BEHAVIOR.__NO__,
@@ -21517,7 +21525,7 @@ var items = [{
     subtype: 0,
     MMN: 1,
     WnW: 0,
-    draw: Render.FCWCcont,
+    draw: Render.workbench,
     packetId: 16,
     wwN: {
         src: "img/e-weaving-machine.png",
@@ -21626,9 +21634,9 @@ var items = [{
             isLoaded: 0
         }
     },
-    Mvw: 0,
-    VWN: 0,
-    WNv: 0,
+    wall: 0,
+    lowWall: 0,
+    door: 0,
     broke: 0,
     mwM: 0,
     behavior: BEHAVIOR.__NO__,
@@ -21636,7 +21644,7 @@ var items = [{
     subtype: 0,
     MMN: 1,
     angle: window.Math.PI / 2,
-    draw: Render.FCWCcont,
+    draw: Render.workbench,
     packetId: 25,
     wwN: {
         src: "img/e-chest.png",
@@ -21703,9 +21711,9 @@ var items = [{
             isLoaded: 0
         }
     },
-    Mvw: 0,
-    VWN: 0,
-    WNv: 0,
+    wall: 0,
+    lowWall: 0,
+    door: 0,
     broke: 0,
     mwM: 0,
     behavior: BEHAVIOR.__NO__,
@@ -21713,7 +21721,7 @@ var items = [{
     subtype: 0,
     MMN: 1,
     angle: window.Math.PI / 2,
-    draw: Render.FCWCcont,
+    draw: Render.workbench,
     packetId: 25,
     wwN: {
         src: "img/e-fridge.png",
@@ -21777,10 +21785,10 @@ var items = [{
             isLoaded: 0
         }
     },
-    Mvw: 1,
+    wall: 1,
     vVwVM: item.woodfloor1,
-    VWN: 0,
-    WNv: 0,
+    lowWall: 0,
+    door: 0,
     broke: 1,
     mwM: 0,
     behavior: BEHAVIOR.__NO__,
@@ -21788,7 +21796,7 @@ var items = [{
     subtype: 0,
     MMN: 0,
     WnW: 0,
-    draw: Render.nwVWW,
+    draw: Render.groundFloor,
     WVW: [{
         src: "img/day-wood-floor-broken0.png",
         W: {
@@ -22115,14 +22123,14 @@ var items = [{
             isLoaded: 0
         }
     },
-    WNv: 0,
+    door: 0,
     mwM: 0,
     behavior: BEHAVIOR.__NO__,
     MWv: 0,
     subtype: 0,
     MMN: 0,
     WnW: 0,
-    draw: Render.mvWww,
+    draw: Render.defaultBuilding,
     impact: SOUNDID.pillow,
     destroyaudio: SOUNDID.pillowdes,
     building: {
@@ -22220,10 +22228,10 @@ var items = [{
             isLoaded: 0
         }
     },
-    Mvw: 1,
+    wall: 1,
     vVwVM: item.woodfloor2,
-    VWN: 0,
-    WNv: 0,
+    lowWall: 0,
+    door: 0,
     broke: 1,
     mwM: 0,
     behavior: BEHAVIOR.__NO__,
@@ -22231,7 +22239,7 @@ var items = [{
     subtype: 0,
     MMN: 0,
     WnW: 0,
-    draw: Render.nwVWW,
+    draw: Render.groundFloor,
     WVW: [{
         src: "img/day-wood-floor-light-broken0.png",
         W: {
@@ -22534,9 +22542,9 @@ var items = [{
             isLoaded: 0
         }
     },
-    Mvw: 0,
-    VWN: 1,
-    WNv: 0,
+    wall: 0,
+    lowWall: 1,
+    door: 0,
     broke: 1,
     mwM: 0,
     behavior: BEHAVIOR.__NO__,
@@ -22553,7 +22561,7 @@ var items = [{
     VvMvv: 6,
     MmVVV: 46,
     WnW: 0,
-    draw: Render.VWN,
+    draw: Render.lowWall,
     WVW: [{
         src: "img/day-wood-smallwalls-broken0.png",
         W: {
@@ -22821,9 +22829,9 @@ var items = [{
             isLoaded: 0
         }
     },
-    Mvw: 0,
-    VWN: 1,
-    WNv: 0,
+    wall: 0,
+    lowWall: 1,
+    door: 0,
     broke: 1,
     mwM: 0,
     behavior: BEHAVIOR.__NO__,
@@ -22840,7 +22848,7 @@ var items = [{
     VvMvv: 6,
     MmVVV: 46,
     WnW: 0,
-    draw: Render.VWN,
+    draw: Render.lowWall,
     WVW: [{
         src: "img/day-stone-smallwalls-broken0.png",
         W: {
@@ -23108,9 +23116,9 @@ var items = [{
             isLoaded: 0
         }
     },
-    Mvw: 0,
-    VWN: 1,
-    WNv: 0,
+    wall: 0,
+    lowWall: 1,
+    door: 0,
     broke: 1,
     mwM: 0,
     behavior: BEHAVIOR.__NO__,
@@ -23127,7 +23135,7 @@ var items = [{
     VvMvv: 6,
     MmVVV: 46,
     WnW: 0,
-    draw: Render.VWN,
+    draw: Render.lowWall,
     WVW: [{
         src: "img/day-steel-smallwalls-broken0.png",
         W: {
@@ -23357,9 +23365,9 @@ var items = [{
     WvV: 0,
     xCenter: [0, 0, 0, 0],
     yCenter: [0, 0, 0, 0],
-    Mvw: 0,
-    VWN: 0,
-    WNv: 0,
+    wall: 0,
+    lowWall: 0,
+    door: 0,
     broke: 0,
     mwM: 0,
     behavior: BEHAVIOR.__NO__,
@@ -23499,14 +23507,14 @@ var items = [{
             isLoaded: 0
         }
     },
-    WNv: 0,
+    door: 0,
     mwM: 0,
     behavior: BEHAVIOR.__SEED__,
     MWv: 0,
     subtype: 0,
     MMN: 0,
     WnW: 0,
-    draw: Render.MWnVn,
+    draw: Render.orangeSeed,
     impact: SOUNDID.VNv,
     destroyaudio: SOUNDID.VNv,
     building: [{
@@ -23734,10 +23742,10 @@ var items = [{
             isLoaded: 0
         }
     },
-    Mvw: 1,
+    wall: 1,
     vVwVM: item.stonefloor1,
-    VWN: 0,
-    WNv: 0,
+    lowWall: 0,
+    door: 0,
     broke: 1,
     mwM: 0,
     behavior: BEHAVIOR.__NO__,
@@ -23745,7 +23753,7 @@ var items = [{
     subtype: 0,
     MMN: 0,
     WnW: 0,
-    draw: Render.nwVWW,
+    draw: Render.groundFloor,
     WVW: [{
         src: "img/day-stone-floor-broken0.png",
         W: {
@@ -24048,10 +24056,10 @@ var items = [{
             isLoaded: 0
         }
     },
-    Mvw: 1,
+    wall: 1,
     vVwVM: item.stonefloor2,
-    VWN: 0,
-    WNv: 0,
+    lowWall: 0,
+    door: 0,
     broke: 1,
     mwM: 0,
     behavior: BEHAVIOR.__NO__,
@@ -24059,7 +24067,7 @@ var items = [{
     subtype: 0,
     MMN: 0,
     WnW: 0,
-    draw: Render.nwVWW,
+    draw: Render.groundFloor,
     WVW: [{
         src: "img/day-tiling-floor-broken0.png",
         W: {
@@ -24324,9 +24332,9 @@ var items = [{
     WvV: 0,
     xCenter: [0, 0, 0, 0],
     yCenter: [0, 0, 0, 0],
-    Mvw: 0,
-    VWN: 0,
-    WNv: 0,
+    wall: 0,
+    lowWall: 0,
+    door: 0,
     broke: 0,
     mwM: 0,
     behavior: BEHAVIOR.__NO__,
@@ -24337,7 +24345,7 @@ var items = [{
         nww: window.undefined
     },
     particles: -1,
-    draw: Render.NNnmv
+    draw: Render.road
 }, {
     id: item.chips,
     img: {
@@ -24521,9 +24529,9 @@ var items = [{
     },
     MvWnM: [-20.5, -101.5, 20.5, 101.5],
     VmNMm: [101.5, -20.5, -101, 20.5],
-    Mvw: 0,
-    VWN: 0,
-    WNv: 0,
+    wall: 0,
+    lowWall: 0,
+    door: 0,
     broke: 0,
     mwM: 0,
     behavior: BEHAVIOR.__AI_CONSTRUCTOR__,
@@ -24531,7 +24539,7 @@ var items = [{
     subtype: 0,
     MMN: 1,
     WnW: 0,
-    draw: Render.nVWmn,
+    draw: Render.teslaBench,
     packetId: 16,
     wwN: {
         src: "img/e-workbench3.png",
@@ -24689,7 +24697,7 @@ var items = [{
             isLoaded: 0
         }
     },
-    WNv: 0,
+    door: 0,
     mwM: 1,
     behavior: BEHAVIOR.__NO__,
     MWv: 0,
@@ -24698,7 +24706,7 @@ var items = [{
     damage: 200,
     WWv: 400,
     WnW: 0,
-    draw: Render.vmMNW,   //visible before - draw: Render.vmMNW
+    draw: Render.landmine,   //visible before - draw: Render.landmine
     impact: SOUNDID.metal,
     destroyaudio: SOUNDID.metaldes,
     building: [{
@@ -24768,7 +24776,7 @@ var items = [{
             isLoaded: 0
         }
     },
-    WNv: 0,
+    door: 0,
     mwM: 1,
     behavior: BEHAVIOR.__NO__,
     MWv: 0,
@@ -24777,7 +24785,7 @@ var items = [{
     damage: 180,
     WWv: 1400,
     WnW: 0,
-    draw: Render.VnMww,
+    draw: Render.dynamite,
     impact: SOUNDID.pillow,
     destroyaudio: SOUNDID.VNv,
     building: [{
@@ -24842,7 +24850,7 @@ var items = [{
             isLoaded: 0
         }
     },
-    WNv: 0,
+    door: 0,
     mwM: 1,
     behavior: BEHAVIOR.__NO__,
     MWv: 0,
@@ -24851,7 +24859,7 @@ var items = [{
     WWv: 6000,
     MMN: 0,
     WnW: 0,
-    draw: Render.VnMww,
+    draw: Render.dynamite,
     impact: SOUNDID.pillow,
     destroyaudio: SOUNDID.VNv,
     building: [{
@@ -24940,9 +24948,9 @@ var items = [{
             isLoaded: 0
         }
     },
-    Mvw: 0,
-    VWN: 0,
-    WNv: 0,
+    wall: 0,
+    lowWall: 0,
+    door: 0,
     broke: 0,
     mwM: 0,
     behavior: BEHAVIOR.__NO__,
@@ -24950,7 +24958,7 @@ var items = [{
     subtype: 0,
     MMN: 1,
     WnW: 0,
-    draw: Render.vNvnV,
+    draw: Render.compost,
     packetId: 16,
     wwN: {
         src: "img/e-composter.png",
@@ -25302,14 +25310,14 @@ var items = [{
             isLoaded: 0
         }
     },
-    WNv: 0,
+    door: 0,
     mwM: 0,
     behavior: BEHAVIOR.__NO__,
     MWv: 0,
     subtype: 0,
     MMN: 0,
     WnW: 0,
-    draw: Render.WwVVm,
+    draw: Render.spike,
     hidden: [{
         src: "img/day-wood-spike-cover1.png",
         W: {
@@ -25511,9 +25519,9 @@ var items = [{
             isLoaded: 0
         }
     },
-    Mvw: 0,
-    VWN: 0,
-    WNv: 0,
+    wall: 0,
+    lowWall: 0,
+    door: 0,
     broke: 0,
     mwM: 0,
     behavior: BEHAVIOR.__NO__,
@@ -25521,7 +25529,7 @@ var items = [{
     subtype: 0,
     MMN: 1,
     WnW: 0,
-    draw: Render.wNvVV,
+    draw: Render.agitator,
     packetId: 16,
     wwN: {
         src: "img/e-agitator.png",
@@ -25773,14 +25781,14 @@ var items = [{
             isLoaded: 0
         }
     },
-    WNv: 0,
+    door: 0,
     mwM: 0,
     behavior: BEHAVIOR.__AI_CONSTRUCTOR__,
     MWv: 0,
     subtype: 0,
     MMN: 0,
     WnW: 0,
-    draw: Render.nMnNW,
+    draw: Render.construction,
     impact: SOUNDID.metal,
     destroyaudio: SOUNDID.metaldes,
     building: [{
@@ -25925,14 +25933,14 @@ var items = [{
             isLoaded: 0
         }
     },
-    WNv: 0,
+    door: 0,
     mwM: 0,
     behavior: BEHAVIOR.__AI_CONSTRUCTOR__,
     MWv: 0,
     subtype: 0,
     MMN: 0,
     WnW: 0,
-    draw: Render.MWnVn,
+    draw: Render.orangeSeed,
     impact: SOUNDID.pillow,
     destroyaudio: SOUNDID.pillowdes,
     building: [{
@@ -26019,9 +26027,9 @@ var items = [{
             isLoaded: 0
         }
     },
-    Mvw: 0,
-    VWN: 0,
-    WNv: 0,
+    wall: 0,
+    lowWall: 0,
+    door: 0,
     broke: 0,
     mwM: 0,
     behavior: BEHAVIOR.__NO__,
@@ -26029,7 +26037,7 @@ var items = [{
     subtype: 0,
     MMN: 1,
     WnW: 0,
-    draw: Render.vwMnv,
+    draw: Render.extractor,
     packetId: 16,
     wwN: {
         src: "img/e-extractor.png",
@@ -26151,14 +26159,14 @@ var items = [{
             isLoaded: 0
         }
     },
-    WNv: 0,
+    door: 0,
     mwM: 0,
     behavior: BEHAVIOR.__SEED_RESOURCE__,
     MWv: 0,
     subtype: 0,
     MMN: 1,
     WnW: 0,
-    draw: Render.NMVvM,
+    draw: Render.treeSeed,
     impact: SOUNDID.wood,
     destroyaudio: SOUNDID.wooddes,
     building: [{
@@ -26303,14 +26311,14 @@ var items = [{
             isLoaded: 0
         }
     },
-    WNv: 0,
+    door: 0,
     mwM: 0,
     behavior: BEHAVIOR.__AI_CONSTRUCTOR__,
     MWv: 0,
     subtype: 0,
     MMN: 0,
     WnW: 0,
-    draw: Render.nMnNW,
+    draw: Render.construction,
     impact: SOUNDID.metal,
     destroyaudio: SOUNDID.metaldes,
     building: [{
@@ -26403,14 +26411,14 @@ var items = [{
             isLoaded: 0
         }
     },
-    WNv: 0,
+    door: 0,
     mwM: 0,
     behavior: BEHAVIOR.__AI_CONSTRUCTOR__,
     MWv: 0,
     subtype: 0,
     MMN: 0,
     WnW: 0,
-    draw: Render.nMnNW,
+    draw: Render.construction,
     impact: SOUNDID.metal,
     destroyaudio: SOUNDID.metaldes,
     building: [{
@@ -26498,9 +26506,9 @@ var items = [{
             isLoaded: 0
         }
     },
-    Mvw: 0,
-    VWN: 0,
-    WNv: 0,
+    wall: 0,
+    lowWall: 0,
+    door: 0,
     broke: 0,
     mwM: 0,
     behavior: BEHAVIOR.__LOGIC__,
@@ -26514,7 +26522,7 @@ var items = [{
     subtype: 0,
     MMN: 0,
     WnW: 0,
-    draw: Render.NnMNn,
+    draw: Render.hiddenBuilding,
     impact: SOUNDID.pillow,
     destroyaudio: SOUNDID.pillowdes,
     building: {
@@ -26571,9 +26579,9 @@ var items = [{
             isLoaded: 0
         }
     },
-    Mvw: 0,
-    VWN: 0,
-    WNv: 0,
+    wall: 0,
+    lowWall: 0,
+    door: 0,
     broke: 0,
     mwM: 0,
     behavior: BEHAVIOR.__LOGIC__,
@@ -26587,7 +26595,7 @@ var items = [{
     subtype: 0,
     MMN: 0,
     WnW: 0,
-    draw: Render.NnMNn,
+    draw: Render.hiddenBuilding,
     impact: SOUNDID.pillow,
     destroyaudio: SOUNDID.pillowdes,
     building: {
@@ -26644,9 +26652,9 @@ var items = [{
             isLoaded: 0
         }
     },
-    Mvw: 0,
-    VWN: 0,
-    WNv: 0,
+    wall: 0,
+    lowWall: 0,
+    door: 0,
     broke: 0,
     mwM: 0,
     behavior: BEHAVIOR.__LOGIC__,
@@ -26660,7 +26668,7 @@ var items = [{
     subtype: 0,
     MMN: 0,
     WnW: 0,
-    draw: Render.NnMNn,
+    draw: Render.hiddenBuilding,
     impact: SOUNDID.pillow,
     destroyaudio: SOUNDID.pillowdes,
     building: {
@@ -26717,9 +26725,9 @@ var items = [{
             isLoaded: 0
         }
     },
-    Mvw: 0,
-    VWN: 0,
-    WNv: 0,
+    wall: 0,
+    lowWall: 0,
+    door: 0,
     broke: 0,
     mwM: 0,
     behavior: BEHAVIOR.__LOGIC__,
@@ -26733,7 +26741,7 @@ var items = [{
     subtype: 0,
     MMN: 0,
     WnW: 0,
-    draw: Render.NnMNn,
+    draw: Render.hiddenBuilding,
     impact: SOUNDID.pillow,
     destroyaudio: SOUNDID.pillowdes,
     building: {
@@ -26791,9 +26799,9 @@ var items = [{
             isLoaded: 0
         }
     },
-    Mvw: 0,
-    VWN: 0,
-    WNv: 0,
+    wall: 0,
+    lowWall: 0,
+    door: 0,
     broke: 0,
     mwM: 0,
     behavior: BEHAVIOR.__LOGIC__,
@@ -26807,7 +26815,7 @@ var items = [{
     subtype: 0,
     MMN: 0,
     WnW: 0,
-    draw: Render.mvVVM,
+    draw: Render.switchOff,
     packetId: 37,
     wwN: {
         src: "img/e-turnon.png",
@@ -26877,9 +26885,9 @@ var items = [{
             isLoaded: 0
         }
     },
-    Mvw: 0,
-    VWN: 0,
-    WNv: 0,
+    wall: 0,
+    lowWall: 0,
+    door: 0,
     broke: 0,
     mwM: 0,
     behavior: BEHAVIOR.__LOGIC__,
@@ -26893,7 +26901,7 @@ var items = [{
     subtype: 0,
     MMN: 0,
     WnW: 0,
-    draw: Render.NnMNn,
+    draw: Render.hiddenBuilding,
     impact: SOUNDID.metal,
     destroyaudio: SOUNDID.metaldes,
     building: {
@@ -26951,9 +26959,9 @@ var items = [{
             isLoaded: 0
         }
     },
-    Mvw: 0,
-    VWN: 0,
-    WNv: 0,
+    wall: 0,
+    lowWall: 0,
+    door: 0,
     broke: 0,
     mwM: 0,
     behavior: BEHAVIOR.__LOGIC__,
@@ -26967,7 +26975,7 @@ var items = [{
     subtype: 0,
     MMN: 0,
     WnW: 0,
-    draw: Render.NnMNn,
+    draw: Render.hiddenBuilding,
     impact: SOUNDID.metal,
     destroyaudio: SOUNDID.metaldes,
     building: {
@@ -27025,9 +27033,9 @@ var items = [{
             isLoaded: 0
         }
     },
-    Mvw: 0,
-    VWN: 0,
-    WNv: 0,
+    wall: 0,
+    lowWall: 0,
+    door: 0,
     broke: 0,
     mwM: 0,
     behavior: BEHAVIOR.__LOGIC__,
@@ -27041,7 +27049,7 @@ var items = [{
     subtype: 0,
     MMN: 0,
     WnW: 0,
-    draw: Render.NnMNn,
+    draw: Render.hiddenBuilding,
     impact: SOUNDID.metal,
     destroyaudio: SOUNDID.metaldes,
     building: {
@@ -27099,9 +27107,9 @@ var items = [{
             isLoaded: 0
         }
     },
-    Mvw: 0,
-    VWN: 0,
-    WNv: 0,
+    wall: 0,
+    lowWall: 0,
+    door: 0,
     broke: 0,
     mwM: 0,
     behavior: BEHAVIOR.__LOGIC__,
@@ -27116,8 +27124,8 @@ var items = [{
     MMN: 2,
     radius: 22,
     WnW: 0,
-    draw: Render.vnVwv,
-    VvmvM: Render.mVwvv,
+    draw: Render.lamp,
+    VvmvM: Render.lampLight,
     packetId: 36,
     wwN: {
         src: "img/e-light.png",
@@ -27254,9 +27262,9 @@ var items = [{
             isLoaded: 0
         }
     },
-    Mvw: 0,
-    VWN: 0,
-    WNv: 0,
+    wall: 0,
+    lowWall: 0,
+    door: 0,
     broke: 1,
     mwM: 0,
     behavior: BEHAVIOR.__LOGIC__,
@@ -27270,7 +27278,7 @@ var items = [{
     subtype: 0,
     MMN: 1,
     WnW: 0,
-    draw: Render.VWWwm,
+    draw: Render.breakable,
     impact: SOUNDID.metal,
     destroyaudio: SOUNDID.metaldes,
     building: [{
@@ -27344,9 +27352,9 @@ var items = [{
             isLoaded: 0
         }
     },
-    Mvw: 0,
-    VWN: 0,
-    WNv: 0,
+    wall: 0,
+    lowWall: 0,
+    door: 0,
     broke: 1,
     mwM: 0,
     behavior: BEHAVIOR.__LOGIC__,
@@ -27360,7 +27368,7 @@ var items = [{
     subtype: 0,
     MMN: 1,
     WnW: 0,
-    draw: Render.WvNvn,
+    draw: Render.automaticDoor,
     impact: SOUNDID.metal,
     destroyaudio: SOUNDID.metaldes,
     building: [
@@ -27456,9 +27464,9 @@ var items = [{
             isLoaded: 0
         }
     },
-    Mvw: 0,
-    VWN: 0,
-    WNv: 0,
+    wall: 0,
+    lowWall: 0,
+    door: 0,
     broke: 0,
     mwM: 0,
     behavior: BEHAVIOR.__LOGIC__,
@@ -27472,7 +27480,7 @@ var items = [{
     subtype: 0,
     MMN: 0,
     WnW: 0,
-    draw: Render.mvWww,
+    draw: Render.defaultBuilding,
     impact: SOUNDID.metal,
     destroyaudio: SOUNDID.metaldes,
     building: {
@@ -27529,10 +27537,10 @@ var items = [{
             isLoaded: 0
         }
     },
-    Mvw: 1,
+    wall: 1,
     vVwVM: item.stonecave,
-    VWN: 0,
-    WNv: 0,
+    lowWall: 0,
+    door: 0,
     broke: 1,
     mwM: 0,
     behavior: BEHAVIOR.__NO__,
@@ -27540,7 +27548,7 @@ var items = [{
     subtype: 0,
     MMN: 1,
     WnW: 0,
-    draw: Render.Mvw,
+    draw: Render.wall,
     MmvNw: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
     WVW: [{
         src: "img/day-stone-cave-broken0.png",
@@ -27845,10 +27853,10 @@ var items = [{
             isLoaded: 0
         }
     },
-    Mvw: 1,
+    wall: 1,
     vVwVM: item.stonecave,
-    VWN: 0,
-    WNv: 0,
+    lowWall: 0,
+    door: 0,
     broke: 1,
     mwM: 0,
     behavior: BEHAVIOR.__NO__,
@@ -27856,7 +27864,7 @@ var items = [{
     subtype: 0,
     MMN: 1,
     WnW: 0,
-    draw: Render.Mvw,
+    draw: Render.wall,
     MmvNw: [1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
     WVW: [{
         src: "img/day-bunker-wall-broken0.png",
@@ -28160,10 +28168,10 @@ var items = [{
             isLoaded: 0
         }
     },
-    Mvw: 1,
+    wall: 1,
     vVwVM: item.mustardfloor,
-    VWN: 0,
-    WNv: 0,
+    lowWall: 0,
+    door: 0,
     broke: 1,
     mwM: 0,
     behavior: BEHAVIOR.__NO__,
@@ -28171,7 +28179,7 @@ var items = [{
     subtype: 0,
     MMN: 0,
     WnW: 0,
-    draw: Render.nwVWW,
+    draw: Render.groundFloor,
     WVW: [{
         src: "img/day-mustard-floor-broken0.png",
         W: {
@@ -28474,10 +28482,10 @@ var items = [{
             isLoaded: 0
         }
     },
-    Mvw: 1,
+    wall: 1,
     vVwVM: item.redfloor,
-    VWN: 0,
-    WNv: 0,
+    lowWall: 0,
+    door: 0,
     broke: 1,
     mwM: 0,
     behavior: BEHAVIOR.__NO__,
@@ -28485,7 +28493,7 @@ var items = [{
     subtype: 0,
     MMN: 0,
     WnW: 0,
-    draw: Render.nwVWW,
+    draw: Render.groundFloor,
     WVW: [{
         src: "img/day-red-floor-broken0.png",
         W: {
@@ -28791,9 +28799,9 @@ var items = [{
             isLoaded: 0
         }
     },
-    Mvw: 0,
-    VWN: 0,
-    WNv: 0,
+    wall: 0,
+    lowWall: 0,
+    door: 0,
     broke: 0,
     mwM: 0,
     behavior: BEHAVIOR.__NO__,
@@ -28801,7 +28809,7 @@ var items = [{
     subtype: 0,
     MMN: 1,
     WnW: 0,
-    draw: Render.FCWCcont,
+    draw: Render.workbench,
     packetId: 16,
     wwN: {
         src: "img/e-welding-machine.png",
@@ -28865,9 +28873,9 @@ var items = [{
             isLoaded: 0
         }
     },
-    Mvw: 0,
-    VWN: 0,
-    WNv: 0,
+    wall: 0,
+    lowWall: 0,
+    door: 0,
     broke: 0,
     mwM: 0,
     behavior: BEHAVIOR.__LOGIC__,
@@ -28881,7 +28889,7 @@ var items = [{
     subtype: 0,
     MMN: 0,
     WnW: 0,
-    draw: Render.NnMNn,
+    draw: Render.hiddenBuilding,
     impact: SOUNDID.pillow,
     destroyaudio: SOUNDID.pillowdes,
     building: {
@@ -28939,9 +28947,9 @@ var items = [{
             isLoaded: 0
         }
     },
-    Mvw: 0,
-    VWN: 0,
-    WNv: 0,
+    wall: 0,
+    lowWall: 0,
+    door: 0,
     broke: 0,
     mwM: 0,
     behavior: BEHAVIOR.__LOGIC__,
@@ -28955,7 +28963,7 @@ var items = [{
     subtype: 0,
     MMN: 0,
     WnW: 0,
-    draw: Render.Mvnmn,
+    draw: Render.timerGate,
     packetId: 38,
     wwN: {
         src: "img/e-light.png",
@@ -29035,9 +29043,9 @@ var items = [{
             isLoaded: 0
         }
     },
-    Mvw: 0,
-    VWN: 0,
-    WNv: 0,
+    wall: 0,
+    lowWall: 0,
+    door: 0,
     broke: 0,
     mwM: 0,
     behavior: BEHAVIOR.__LOGIC__,
@@ -29051,7 +29059,7 @@ var items = [{
     subtype: 0,
     MMN: 0,
     WnW: 0,
-    draw: Render.NnMNn,
+    draw: Render.hiddenBuilding,
     impact: SOUNDID.metal,
     destroyaudio: SOUNDID.metaldes,
     building: {
@@ -29255,7 +29263,7 @@ var nW = {
     bedpart: COUNTER++,
     bedpart2: COUNTER++,
     vWVWW: COUNTER++,
-    textnumberitem: COUNTER++,
+    _buttonInv: COUNTER++,
     WNVMm: COUNTER++,
     NvWVV: COUNTER++,
     NMvVn: COUNTER++,
@@ -29471,12 +29479,12 @@ VV[nW.nVwnn].particles = particulesitems.steel;
 VV[nW.nVwnn].detail = new vn("", "", -1, [
     [item.shapedmetal, 8]
 ]);
-VV[nW.textnumberitem] = window.JSON.parse(window.JSON.stringify(VV[nW.sofapart]));
-VV[nW.textnumberitem].building.src = "img/day-tv0.png";
-VV[nW.textnumberitem].impact = SOUNDID.metal;
-VV[nW.textnumberitem].destroyaudio = SOUNDID.metaldes;
-VV[nW.textnumberitem].particles = particulesitems.safepart;
-VV[nW.textnumberitem].detail = new vn("", "", -1, [
+VV[nW._buttonInv] = window.JSON.parse(window.JSON.stringify(VV[nW.sofapart]));
+VV[nW._buttonInv].building.src = "img/day-tv0.png";
+VV[nW._buttonInv].impact = SOUNDID.metal;
+VV[nW._buttonInv].destroyaudio = SOUNDID.metaldes;
+VV[nW._buttonInv].particles = particulesitems.safepart;
+VV[nW._buttonInv].detail = new vn("", "", -1, [
     [item.electronicpart, 4],
     [item.shapedmetal, 16],
     [item.smallwire, 4],
