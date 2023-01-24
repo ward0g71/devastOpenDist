@@ -1,2 +1,2 @@
-# devastOpenDist
+Devast.io Open dist.js
  
