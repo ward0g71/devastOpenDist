@@ -972,28 +972,32 @@ function onLeaderboard(buf, unit8) {
 };
 
 function onHandshake(buf, unit8) {
-    World.PLAYER.id = unit8[1];
-    var unit16 = new window.Uint16Array(buf);
-    var nnW = unit16[3] << 5;
+
+    World.PLAYER.id     = unit8[1];
+    var unit16          = new window.Uint16Array(buf);
+    var nnW             = unit16[3] << 5;
+
     World.initDayCycle((nnW >= World.__DAY__) ? 1 : 0, nnW);
     Client.handshake();
     Render.reset();
-    Entitie.unitsPerPlayer = unit16[1];
-    World.playerNumber = unit8[4];
-    World.gameMode = unit8[5];
-    World.PLAYER.lastScore = -1;
-    World.PLAYER.exp = 0;
-    World.PLAYER.click = 0;
-    World.PLAYER.notification = [];
-    World.PLAYER.notificationLevel = [];
-    World.PLAYER.drag.begin = 0;
-    World.PLAYER.interaction = -1;
-    World.PLAYER.interactionDelay = 0;
-    World.PLAYER.WMnWv = 0;
-    World.PLAYER.blueprint = 0;
-    World.PLAYER.buildRotate = 0;
-    World.PLAYER.hintRotate = 0;
-    World.PLAYER.grid = 0;
+
+    Entitie.unitsPerPlayer          = unit16[1];
+    World.playerNumber              = unit8[4];
+    World.gameMode                  = unit8[5];
+    World.PLAYER.lastScore          = -1;
+    World.PLAYER.exp                = 0;
+    World.PLAYER.click              = 0;
+    World.PLAYER.notification       = [];
+    World.PLAYER.notificationLevel  = [];
+    World.PLAYER.drag.begin         = 0;
+    World.PLAYER.interaction        = -1;
+    World.PLAYER.interactionDelay   = 0;
+    World.PLAYER.WMnWv              = 0;
+    World.PLAYER.blueprint          = 0;
+    World.PLAYER.buildRotate        = 0;
+    World.PLAYER.hintRotate         = 0;
+    World.PLAYER.grid               = 0;
+
     for (var i = 0; i < World.PLAYER.gridPrev.length; i++)
         World.PLAYER.gridPrev[i] = 0;
     for (var i = 0; i < 8; i++)
@@ -1001,14 +1005,17 @@ function onHandshake(buf, unit8) {
             old: 0,
             id: 0
         };
-    World.PLAYER.karma = 0;
-    World.PLAYER.badKarmaDelay = 0;
+
+    World.PLAYER.karma          = 0;
+    World.PLAYER.badKarmaDelay  = 0;
+
     if (World.gameMode === World.__BR__)
         World.PLAYER.craftFactor = 0.2;
     else if (World.gameMode === World.__GHOUL__)
         World.PLAYER.craftFactor = 0.4;
     else
         World.PLAYER.craftFactor = 1;
+
     World.PLAYER.lastAreas = [
         [-1, -1],
         [-1, -1],
@@ -1023,54 +1030,59 @@ function onHandshake(buf, unit8) {
         [-1, -1],
         [-1, -1]
     ];
-    if (World.gameMode !== World.__GHOUL__)
-        World.PLAYER.nextAreas = 10000000;
-    World.PLAYER.badKarma = 0;
-    World.PLAYER.gridPrev[i] = 0;
-    World.PLAYER.isBuilding = 0;
-    World.PLAYER.warm = 0;
-    World.PLAYER.wrongTool = 0;
-    World.PLAYER.wrongToolTimer = 0;
-    World.PLAYER.teamLeader = 0;
-    World.PLAYER.teamDelay = 0;
-    World.PLAYER.teamQueue = [0, 0, 0, 0, 0];
-    World.PLAYER.teamCreateDelay = 0;
-    World.PLAYER.teamEffect = 0;
-    World.PLAYER.teamJoin = 0;
-    World.PLAYER.team = -1;
-    World.PLAYER.craftLen = 0;
-    World.PLAYER.craftArea = -1;
-    World.PLAYER.craftCategory = -1;
-    World.PLAYER.craftSelected = -1;
-    World.PLAYER.crafting = 0;
-    World.PLAYER.craftList = [];
-    World.PLAYER.craftAvailable = [];
-    World.PLAYER.recipeAvailable = [];
-    World.PLAYER.recipeList = [];
-    World.PLAYER.recipeLen = 0;
-    World.PLAYER.mwVMN = 0;
-    World.PLAYER.wNvNm = 0;
-    World.PLAYER.toolsList = [];
-    World.PLAYER.toolsLen = 0;
-    World.PLAYER.skillUnlocked = [];
-    World.PLAYER.level = 0;
-    World.PLAYER.kill = 0;
-    World.PLAYER.xp = 0;
-    World.PLAYER.skillPoint = 0;
-    World.PLAYER.nextLevel = 0;
-    World.PLAYER.isInBuilding = 0;
-    World.PLAYER.isInChest = 0;
-    World.PLAYER.extraLoot = 0;
-    Render.scale = 0;
-    World.PLAYER.toxicMap = [];
-    World.PLAYER.toxicStep = 0;
+
+    if (World.gameMode !== World.__GHOUL__) World.PLAYER.nextAreas = 10000000;
+
+    World.PLAYER.badKarma           = 0;
+    World.PLAYER.gridPrev[i]        = 0;
+    World.PLAYER.isBuilding         = 0;
+    World.PLAYER.warm               = 0;
+    World.PLAYER.wrongTool          = 0;
+    World.PLAYER.wrongToolTimer     = 0;
+    World.PLAYER.teamLeader         = 0;
+    World.PLAYER.teamDelay          = 0;
+    World.PLAYER.teamQueue          = [0, 0, 0, 0, 0];
+    World.PLAYER.teamCreateDelay    = 0;
+    World.PLAYER.teamEffect         = 0;
+    World.PLAYER.teamJoin           = 0;
+    World.PLAYER.team               = -1;
+    World.PLAYER.craftLen           = 0;
+    World.PLAYER.craftArea          = -1;
+    World.PLAYER.craftCategory      = -1;
+    World.PLAYER.craftSelected      = -1;
+    World.PLAYER.crafting           = 0;
+    World.PLAYER.craftList          = [];
+    World.PLAYER.craftAvailable     = [];
+    World.PLAYER.recipeAvailable    = [];
+    World.PLAYER.recipeList         = [];
+    World.PLAYER.recipeLen          = 0;
+    World.PLAYER.craftSpeed         = 0;
+    World.PLAYER.craftGauge         = 0;
+    World.PLAYER.toolsList          = [];
+    World.PLAYER.toolsLen           = 0;
+    World.PLAYER.skillUnlocked      = [];
+    World.PLAYER.level              = 0;
+    World.PLAYER.kill               = 0;
+    World.PLAYER.xp                 = 0;
+    World.PLAYER.skillPoint         = 0;
+    World.PLAYER.nextLevel          = 0;
+    World.PLAYER.isInBuilding       = 0;
+    World.PLAYER.isInChest          = 0;
+    World.PLAYER.extraLoot          = 0;
+    Render.scale                    = 0;
+    World.PLAYER.toxicMap           = [];
+    World.PLAYER.toxicStep          = 0;
+
     for (var i = 0; i < 8; i++) {
         World.PLAYER.toxicMap[i] = [];
         for (var j = 0; j < 8; j++)
             World.PLAYER.toxicMap[i][j] = 0;
     }
+    
     var len = ENTITIES[__ENTITIE_PLAYER__].inventorySize;
+    
     World.PLAYER.inventory = [];
+
     for (var i = 0; i < len; i++)
         World.PLAYER.inventory[i] = [0, 0, 0, 0];
     var len = (buf.byteLength - 8) / 10;
@@ -1090,11 +1102,13 @@ function onHandshake(buf, unit8) {
         window.console.log("id", PLAYER.id, "score", PLAYER.score);
         PLAYER.scoreSimplified = MathUtils.simplifyNumber(PLAYER.score - 1);
     }
+
     World.PLAYER.ghoul = World.players[World.PLAYER.id].ghoul;
     localStorage.setItem("tokenId", World.players[World.PLAYER.id].tokenId);
     localStorage.setItem("userId", World.PLAYER.id);
     World.sortLeaderboard();
     World.initGauges();
+
 };
 
 
@@ -1114,11 +1128,13 @@ function onNotification(unit8) {
 
 function onGauges(buf) {
     var gauges = World.gauges;
-    gauges.life.value = buf[1];
-    gauges.food.value = buf[2];
-    gauges.cold.value = buf[3];
-    gauges.stamina.value = buf[4];
-    gauges.rad.value = buf[5];
+    
+    gauges.life.value       = buf[1];
+    gauges.food.value       = buf[2];
+    gauges.cold.value       = buf[3];
+    gauges.stamina.value    = buf[4];
+    gauges.rad.value        = buf[5];
+
 };
 
 function onScore(buf) {
@@ -7311,11 +7327,11 @@ var AudioUtils = (function() {
     MmVnn = null;
     NnwNv = null;
 
-    function nmwNW() {
+    function getLastRecord() {
         return MmVnn;
     };
 
-    function nnnww() {
+    function initStream() {
         VvNWN = NVNWw.createMediaStreamDestination();
         WVVnV = new window.MediaRecorder(VvNWN.stream);
         WVVnV.ondataavailable = function(event) {
@@ -7328,14 +7344,14 @@ var AudioUtils = (function() {
         };
     };
 
-    function nVvwn() {
+    function startRecordStream() {
         NnwNv = null;
         MmVnn = null;
         mvWnN = [];
         WVVnV.start();
     };
 
-    function mvnWw() {
+    function stopRecordStream() {
         WVVnV.stop();
     };
     var options = {
@@ -7360,22 +7376,22 @@ var AudioUtils = (function() {
         }
     }
 
-    function Vnwmn(vW) {
+    function setAudio(vW) {
         if ((vW === 0) && (options.nNmMV !== vW)) {
-            for (var mmnNv in AudioUtils.wMm) {
-                var wMm = AudioUtils.wMm[mmnNv];
-                vWwvv(wMm);
+            for (var mmnNv in AudioUtils.audio) {
+                var audio = AudioUtils.audio[mmnNv];
+                stopSound(audio);
             }
         }
         options.nNmMV = vW;
         localStorage.setItem("isAudio", "" + vW);
     };
 
-    function wNnMM(vW) {
+    function setFx(vW) {
         if ((vW === 0) && (options.VWVWW !== vW)) {
             for (var Nnnmm in AudioUtils._fx) {
                 var _fx = AudioUtils._fx[Nnnmm];
-                vWwvv(_fx);
+                stopSound(_fx);
             }
         }
         options.VWVWW = vW;
@@ -7387,11 +7403,11 @@ var AudioUtils = (function() {
             return;
         VwV = (1 - (dist / nnnMV)) * VwV;
         _fx.volume = VwV;
-        MMwVn(_fx, 0, NwnmN);
+        playSound(_fx, 0, NwnmN);
         _fx.run = 0;
     };
 
-    function mmn(mMm, VwV, nMnwM, _fx) {
+    function Sound(mMm, VwV, nMnwM, _fx) {
         this.url = mMm;
         this.buffer = null;
         this.source = null;
@@ -7414,12 +7430,12 @@ var AudioUtils = (function() {
         this.nvnWn = 0;
     };
 
-    function WWVVN(sound, vW) {
+    function changeVolume(sound, vW) {
         sound.mwnnM.gain.value = vW;
         sound.volume = vW;
     };
 
-    function vWwvv(sound) {
+    function stopSound(sound) {
         if (sound.run === 1) {
             sound.run = 0;
             sound.wNvnw = -1;
@@ -7428,7 +7444,7 @@ var AudioUtils = (function() {
         }
     };
 
-    function MmwVw(sound, nnW, WMw) {
+    function fadeSound(sound, nnW, WMw) {
         if (sound.vVNVm !== -1)
             sound.volume = sound.vVNVm;
         sound.Nvmvn = 0;
@@ -7437,7 +7453,7 @@ var AudioUtils = (function() {
         window.console.log("FADE", sound.url);
     };
 
-    function MMwVn(sound, nnW, NwnmN) {
+    function playSound(sound, nnW, NwnmN) {
         if (sound._fx === 0) {
             if (options.nNmMV === 0)
                 return;
@@ -7445,7 +7461,7 @@ var AudioUtils = (function() {
             return;
         if (sound.run === 1) {
             if (((sound.wNvnw !== -1) && (sound.wNnwn === 0)) && ((previousTimestamp - sound.wNvnw) > WMNnN)) {
-                vWwvv(sound);
+                stopSound(sound);
                 return;
             }
             if (sound.wNnwn > 0) {
@@ -7469,14 +7485,14 @@ var AudioUtils = (function() {
         if (((sound.wNnwn === 0) && (sound.Nvmvn === 0)) && (sound.volume === 0))
             return;
         if (sound.isLoaded !== 1) {
-            vmv(sound);
+            loadSound(sound);
             return;
         }
         var WNm = NVNWw.createBufferSource();
         var mwnnM = NVNWw.createGain();
         sound.source = WNm;
         sound.mwnnM = mwnnM;
-        WWVVN(sound, sound.volume);
+        changeVolume(sound, sound.volume);
         WNm.buffer = sound.buffer;
         WNm.connect(mwnnM);
         if (VvNWN !== null)
@@ -7494,7 +7510,7 @@ var AudioUtils = (function() {
         window.console.log("Start", sound.url, sound.Nvmvn, sound.wNnwn, nnW);
     };
 
-    function vmv(sound) {
+    function loadSound(sound) {
         if (sound.isLoaded === 2)
             return;
         window.console.log("LOAD", sound);
@@ -7513,22 +7529,22 @@ var AudioUtils = (function() {
         return;
     };
     return {
-        mmn: mmn,
-        vmv: vmv,
-        MMwVn: MMwVn,
-        playFx: playFx,
-        vWwvv: vWwvv,
-        MmwVw: MmwVw,
-        WWVVN: WWVVN,
-        options: options,
-        Vnwmn: Vnwmn,
-        wNnMM: wNnMM,
-        nnnww: nnnww,
-        nVvwn: nVvwn,
-        mvnWw: mvnWw,
-        nmwNW: nmwNW,
-        wMm: {},
-        _fx: {}
+        Sound:              Sound,
+        loadSound:          loadSound,
+        playSound:          playSound,
+        playFx:             playFx,
+        stopSound:          stopSound,
+        fadeSound:          fadeSound,
+        changeVolume:       changeVolume,
+        options:            options,
+        setAudio:           setAudio,
+        setFx:              setFx,
+        initStream:         initStream,
+        startRecordStream:  startRecordStream,
+        stopRecordStream:   stopRecordStream,
+        getLastRecord:      getLastRecord,
+        audio:              {},
+        _fx:                {}
     };
 })();
 var Loader = (function() {
@@ -7846,12 +7862,12 @@ var Home = (function() {
 
     function onError(Mnn) {};
 
-    function NvwNv() {
+    function quitGame() {
         quit(Game);
     };
 
     function onOpen() {
-        NvwNv();
+        quitGame();
     };
     var vmV = 0;
 
@@ -7968,7 +7984,7 @@ var Home = (function() {
         Home.alertId = 0;
         Home.alertDelay = 0;
         window.document.getElementById("nicknameInput").value = localStorage.getItem("nickname", nickname);
-        AudioUtils.MmwVw(AudioUtils.wMm.title, 1000, AudioManager.mvVWW);
+        AudioUtils.fadeSound(AudioUtils.audio.title, 1000, AudioManager.mvVWW);
         Entitie.removeAll();
         Render.reset(1);
         vmV = 0;
@@ -9177,7 +9193,7 @@ var Game = (function() {
     function quit(wMN) {
         chatvisible = 0;
         nVN();
-        AudioManager.NvwNv();
+        AudioManager.quitGame();
         MVv = wMN;
         VVwMW();
         MNw = VWm;
@@ -9607,19 +9623,19 @@ var Game = (function() {
                     AudioUtils.playFx(AudioUtils._fx.button, 1, 0);
                     return;
                 } else if (wvNNV.trigger() === 1) {
-                    AudioUtils.Vnwmn(1);
+                    AudioUtils.setAudio(1);
                     AudioUtils.playFx(AudioUtils._fx.button, 1, 0);
                     return;
                 } else if (WVnnn.trigger() === 1) {
-                    AudioUtils.Vnwmn(0);
+                    AudioUtils.setAudio(0);
                     AudioUtils.playFx(AudioUtils._fx.button, 1, 0);
                     return;
                 } else if (NmVWV.trigger() === 1) {
-                    AudioUtils.wNnMM(1);
+                    AudioUtils.setFx(1);
                     AudioUtils.playFx(AudioUtils._fx.button, 1, 0);
                     return;
                 } else if (vVMWm.trigger() === 1) {
-                    AudioUtils.wNnMM(0);
+                    AudioUtils.setFx(0);
                     AudioUtils.playFx(AudioUtils._fx.button, 1, 0);
                     return;
                 } else if (VnWMV.trigger() === 1) {
@@ -10449,12 +10465,12 @@ var Game = (function() {
 var Score = (function() {
     function onError(Mnn) {};
 
-    function NvwNv() {
+    function quitGame() {
         quit(Game);
     };
 
     function onOpen() {
-        NvwNv();
+        quitGame();
     };
     var NNN = 0;
     var nMwNn = {
@@ -10774,12 +10790,12 @@ var Score = (function() {
 var Rank = (function() {
     function onError(Mnn) {};
 
-    function NvwNv() {
+    function quitGame() {
         quit(Game);
     };
 
     function onOpen() {
-        NvwNv();
+        quitGame();
     };
     var NNN = 0;
     var vWvVM = -1;
@@ -11469,7 +11485,7 @@ var Editor = (function() {
 
     function quit(wMN) {
         nVN();
-        AudioManager.NvwNv();
+        AudioManager.quitGame();
         MVv = wMN;
         VVwMW();
         MNw = VWm;
@@ -11878,19 +11894,19 @@ var Editor = (function() {
                     AudioUtils.playFx(AudioUtils._fx.button, 1, 0);
                     return;
                 } else if (wvNNV.trigger() === 1) {
-                    AudioUtils.Vnwmn(1);
+                    AudioUtils.setAudio(1);
                     AudioUtils.playFx(AudioUtils._fx.button, 1, 0);
                     return;
                 } else if (WVnnn.trigger() === 1) {
-                    AudioUtils.Vnwmn(0);
+                    AudioUtils.setAudio(0);
                     AudioUtils.playFx(AudioUtils._fx.button, 1, 0);
                     return;
                 } else if (NmVWV.trigger() === 1) {
-                    AudioUtils.wNnMM(1);
+                    AudioUtils.setFx(1);
                     AudioUtils.playFx(AudioUtils._fx.button, 1, 0);
                     return;
                 } else if (vVMWm.trigger() === 1) {
-                    AudioUtils.wNnMM(0);
+                    AudioUtils.setFx(0);
                     AudioUtils.playFx(AudioUtils._fx.button, 1, 0);
                     return;
                 } else if (VnWMV.trigger() === 1) {
@@ -12868,7 +12884,7 @@ try {
         var wWNmv = {
             isLoaded: 0
         };
-        var wNvNm = {
+        var craftGauge = {
             isLoaded: 0
         };
         var vvNWN = {
@@ -14146,8 +14162,8 @@ try {
                     VvvwN.pos.y = WY + (153 * scaleby);
                     VvvwN.draw();
                 }
-                if (wNvNm.isLoaded !== 1) {
-                    wNvNm = CanvasUtils.loadImage(craftgauge, wNvNm);
+                if (craftGauge.isLoaded !== 1) {
+                    craftGauge = CanvasUtils.loadImage(craftgauge, craftGauge);
                     return;
                 }
 
@@ -14164,15 +14180,15 @@ try {
                 }
 
                 Nnv = window.Math.min(1, window.Math.max(0, Nnv));
-                SY = (scaleby * wNvNm.width) / 2;
-                SX = (scaleby * wNvNm.height) / 2;
+                SY = (scaleby * craftGauge.width) / 2;
+                SX = (scaleby * craftGauge.height) / 2;
                 var posx = WX + (356 * scaleby);
                 var posy = WY + (206 * scaleby);
                 ctx.fillStyle = "#A29742";
                 MVM = 3 * scaleby;
                 mnMmm = 2 * MVM;
                 ctx.fillRect(window.Math.floor(posx + MVM), window.Math.floor(posy + MVM), window.Math.floor((SY - mnMmm) * Nnv), window.Math.floor(SX - mnMmm));
-                ctx.drawImage(wNvNm, posx, posy, SY, SX);
+                ctx.drawImage(craftGauge, posx, posy, SY, SX);
                 
             } else {
                 var nwVvN = World.PLAYER.craftAvailable[World.PLAYER.craftIdSelected];
@@ -42206,39 +42222,39 @@ var AudioManager = (function() {
     var mvVWW = 0.45;
     var VNWVM = 0;
     var NNwwM = 0;
-    AudioUtils.wMm.end = new AudioUtils.mmn("audio/end.mp3", 0, true);
-    AudioUtils.wMm.title = new AudioUtils.mmn("audio/title.mp3", 0, true);
-    AudioUtils.wMm.vwMNW = new AudioUtils.mmn("audio/geiger.mp3", 0, true);
-    AudioUtils.wMm.NvWWW = new AudioUtils.mmn("audio/ambient1.mp3", 0, true);
-    AudioUtils.wMm.mWNVV = new AudioUtils.mmn("audio/ambient2.mp3", 0, true);
-    AudioUtils.wMm.MWvmM = new AudioUtils.mmn("audio/ambient3.mp3", 0, true);
-    AudioUtils.wMm.VWmmW = new AudioUtils.mmn("audio/ambient4.mp3", 0, true);
-    AudioUtils.wMm.wNWMw = new AudioUtils.mmn("audio/ambient5.mp3", 0, true);
-    AudioUtils.wMm.Nmwnw = new AudioUtils.mmn("audio/ambient6.mp3", 0, true);
-    AudioUtils.wMm.wnMvV = new AudioUtils.mmn("audio/ambient7.mp3", 0, true);
-    AudioUtils.wMm.MmmnV = new AudioUtils.mmn("audio/ambient8.mp3", 0, true);
-    wMw.push(AudioUtils.wMm.NvWWW);
-    wMw.push(AudioUtils.wMm.mWNVV);
-    wMw.push(AudioUtils.wMm.MWvmM);
-    wMw.push(AudioUtils.wMm.VWmmW);
-    wMw.push(AudioUtils.wMm.wNWMw);
-    wMw.push(AudioUtils.wMm.Nmwnw);
-    wMw.push(AudioUtils.wMm.wnMvV);
-    wMw.push(AudioUtils.wMm.MmmnV);
-    AudioUtils._fx.open = new AudioUtils.mmn("audio/open.mp3", 1, false, 1);
-    AudioUtils._fx.drag = new AudioUtils.mmn("audio/drag.mp3", 1, false, 1);
-    AudioUtils._fx.play = new AudioUtils.mmn("audio/play.mp3", 1, false, 1);
-    AudioUtils._fx.nwVvN = new AudioUtils.mmn("audio/skill.mp3", 1, false, 1);
-    AudioUtils._fx.craft = new AudioUtils.mmn("audio/craft.mp3", 1, false, 1);
-    AudioUtils._fx.button = new AudioUtils.mmn("audio/button.mp3", 1, false, 1);
-    AudioUtils._fx.wWwnM = new AudioUtils.mmn("audio/throwLoot.mp3", 1, false, 1);
-    AudioUtils._fx.nNwmw = new AudioUtils.mmn("audio/levelup.mp3", 1, false, 1);
-    AudioUtils._fx.mwM = new AudioUtils.mmn("audio/explosion.mp3", 1, false, 1);
-    AudioUtils._fx.NwMWW = new AudioUtils.mmn("audio/zipper-on.mp3", 0.7, false, 1);
-    AudioUtils._fx.NwmVN = new AudioUtils.mmn("audio/zipper-off.mp3", 0.7, false, 1);
-    AudioUtils._fx.WmnwN = [new AudioUtils.mmn("audio/eat-1s-0.mp3", 1, false, 1), new AudioUtils.mmn("audio/eat-1s-1.mp3", 1, false, 1), new AudioUtils.mmn("audio/eat-1s-2.mp3", 1, false, 1)];
+    AudioUtils.audio.end = new AudioUtils.Sound("audio/end.mp3", 0, true);
+    AudioUtils.audio.title = new AudioUtils.Sound("audio/title.mp3", 0, true);
+    AudioUtils.audio.vwMNW = new AudioUtils.Sound("audio/geiger.mp3", 0, true);
+    AudioUtils.audio.NvWWW = new AudioUtils.Sound("audio/ambient1.mp3", 0, true);
+    AudioUtils.audio.mWNVV = new AudioUtils.Sound("audio/ambient2.mp3", 0, true);
+    AudioUtils.audio.MWvmM = new AudioUtils.Sound("audio/ambient3.mp3", 0, true);
+    AudioUtils.audio.VWmmW = new AudioUtils.Sound("audio/ambient4.mp3", 0, true);
+    AudioUtils.audio.wNWMw = new AudioUtils.Sound("audio/ambient5.mp3", 0, true);
+    AudioUtils.audio.Nmwnw = new AudioUtils.Sound("audio/ambient6.mp3", 0, true);
+    AudioUtils.audio.wnMvV = new AudioUtils.Sound("audio/ambient7.mp3", 0, true);
+    AudioUtils.audio.MmmnV = new AudioUtils.Sound("audio/ambient8.mp3", 0, true);
+    wMw.push(AudioUtils.audio.NvWWW);
+    wMw.push(AudioUtils.audio.mWNVV);
+    wMw.push(AudioUtils.audio.MWvmM);
+    wMw.push(AudioUtils.audio.VWmmW);
+    wMw.push(AudioUtils.audio.wNWMw);
+    wMw.push(AudioUtils.audio.Nmwnw);
+    wMw.push(AudioUtils.audio.wnMvV);
+    wMw.push(AudioUtils.audio.MmmnV);
+    AudioUtils._fx.open = new AudioUtils.Sound("audio/open.mp3", 1, false, 1);
+    AudioUtils._fx.drag = new AudioUtils.Sound("audio/drag.mp3", 1, false, 1);
+    AudioUtils._fx.play = new AudioUtils.Sound("audio/play.mp3", 1, false, 1);
+    AudioUtils._fx.nwVvN = new AudioUtils.Sound("audio/skill.mp3", 1, false, 1);
+    AudioUtils._fx.craft = new AudioUtils.Sound("audio/craft.mp3", 1, false, 1);
+    AudioUtils._fx.button = new AudioUtils.Sound("audio/button.mp3", 1, false, 1);
+    AudioUtils._fx.wWwnM = new AudioUtils.Sound("audio/throwLoot.mp3", 1, false, 1);
+    AudioUtils._fx.nNwmw = new AudioUtils.Sound("audio/levelup.mp3", 1, false, 1);
+    AudioUtils._fx.mwM = new AudioUtils.Sound("audio/explosion.mp3", 1, false, 1);
+    AudioUtils._fx.NwMWW = new AudioUtils.Sound("audio/zipper-on.mp3", 0.7, false, 1);
+    AudioUtils._fx.NwmVN = new AudioUtils.Sound("audio/zipper-off.mp3", 0.7, false, 1);
+    AudioUtils._fx.WmnwN = [new AudioUtils.Sound("audio/eat-1s-0.mp3", 1, false, 1), new AudioUtils.Sound("audio/eat-1s-1.mp3", 1, false, 1), new AudioUtils.Sound("audio/eat-1s-2.mp3", 1, false, 1)];
     AudioUtils._fx.damage = [];
-    for (var i = 1; i < SOUND.length; i++) AudioUtils._fx.damage[i] = new AudioUtils.mmn(SOUND[i], 1, false, 1);
+    for (var i = 1; i < SOUND.length; i++) AudioUtils._fx.damage[i] = new AudioUtils.Sound(SOUND[i], 1, false, 1);
     AudioUtils._fx.shot = [];
     var weapons = ENTITIES[__ENTITIE_PLAYER__].weapons;
     for (var i = 0; i < weapons.length; i++) {
@@ -42247,77 +42263,77 @@ var AudioManager = (function() {
         else if (typeof weapon.sound === "number") AudioUtils._fx.shot[i] = weapon.sound;
         else {
             AudioUtils._fx.shot[i] = [];
-            for (var j = 0; j < weapon.sound.length; j++) AudioUtils._fx.shot[i][j] = new AudioUtils.mmn(weapon.sound[j], 1, false, 1);
+            for (var j = 0; j < weapon.sound.length; j++) AudioUtils._fx.shot[i][j] = new AudioUtils.Sound(weapon.sound[j], 1, false, 1);
         }
     }
     if (AudioUtils.options.nNmMV === 1) {
-        AudioUtils.vmv(wMw[WvwmM]);
-        AudioUtils.vmv(AudioUtils.wMm.title);
+        AudioUtils.loadSound(wMw[WvwmM]);
+        AudioUtils.loadSound(AudioUtils.audio.title);
     }
     for (var i = 0; i < AudioUtils._fx.shot.length; i++) {
         var sound = AudioUtils._fx.shot[i];
         if (sound === 1) AudioUtils._fx.shot[i] = AudioUtils._fx.WmnwN;
     }
     if (AudioUtils.options.VWVWW === 1) {
-        AudioUtils.vmv(AudioUtils._fx.open);
-        AudioUtils.vmv(AudioUtils._fx.play);
-        AudioUtils.vmv(AudioUtils._fx.drag);
-        AudioUtils.vmv(AudioUtils._fx.nwVvN);
-        AudioUtils.vmv(AudioUtils._fx.craft);
-        AudioUtils.vmv(AudioUtils._fx.button);
-        AudioUtils.vmv(AudioUtils._fx.nNwmw);
-        AudioUtils.vmv(AudioUtils._fx.mwM);
-        for (var i = 0; i < AudioUtils._fx.WmnwN.length; i++) AudioUtils.vmv(AudioUtils._fx.WmnwN[i]);
-        for (var i = 1; i < AudioUtils._fx.damage.length; i++) AudioUtils.vmv(AudioUtils._fx.damage[i]);
+        AudioUtils.loadSound(AudioUtils._fx.open);
+        AudioUtils.loadSound(AudioUtils._fx.play);
+        AudioUtils.loadSound(AudioUtils._fx.drag);
+        AudioUtils.loadSound(AudioUtils._fx.nwVvN);
+        AudioUtils.loadSound(AudioUtils._fx.craft);
+        AudioUtils.loadSound(AudioUtils._fx.button);
+        AudioUtils.loadSound(AudioUtils._fx.nNwmw);
+        AudioUtils.loadSound(AudioUtils._fx.mwM);
+        for (var i = 0; i < AudioUtils._fx.WmnwN.length; i++) AudioUtils.loadSound(AudioUtils._fx.WmnwN[i]);
+        for (var i = 1; i < AudioUtils._fx.damage.length; i++) AudioUtils.loadSound(AudioUtils._fx.damage[i]);
         for (var i = 0; i < AudioUtils._fx.shot.length; i++) {
             var sound = AudioUtils._fx.shot[i];
             if (sound !== 0) {
-                for (var j = 0; j < sound.length; j++) AudioUtils.vmv(sound[j]);
+                for (var j = 0; j < sound.length; j++) AudioUtils.loadSound(sound[j]);
             }
         }
     }
 
     function scheduler() {
-        AudioUtils.MMwVn(AudioUtils.wMm.title);
-        AudioUtils.MMwVn(AudioUtils.wMm.end);
-        for (var i = 0; i < wMw.length; i++) AudioUtils.MMwVn(wMw[i]);
+        AudioUtils.playSound(AudioUtils.audio.title);
+        AudioUtils.playSound(AudioUtils.audio.end);
+        for (var i = 0; i < wMw.length; i++) AudioUtils.playSound(wMw[i]);
         if (AudioUtils.options.VWVWW === 1) {
             var wmNWn = AudioUtils.options.nNmMV;
             AudioUtils.options.nNmMV = 1;
-            AudioUtils.MMwVn(AudioUtils.wMm.vwMNW);
+            AudioUtils.playSound(AudioUtils.audio.vwMNW);
             AudioUtils.options.nNmMV = wmNWn;
         }
         if ((NNwwM !== AudioManager.vwMNW) && (mWWVV === 1)) {
             if (VNWVM === 0) {
                 VNWVM = 1000;
                 var dist = AudioManager.vwMNW - NNwwM;
-                AudioUtils.MmwVw(AudioUtils.wMm.vwMNW, 250, dist);
+                AudioUtils.fadeSound(AudioUtils.audio.vwMNW, 250, dist);
                 NNwwM = AudioManager.vwMNW;
             }
             VNWVM = window.Math.max(0, VNWVM - delta);
         }
         if ((mvnmN === 0) && (mWWVV === 1)) {
-            AudioUtils.MmwVw(wMw[WvwmM], 5000, -mvVWW);
+            AudioUtils.fadeSound(wMw[WvwmM], 5000, -mvVWW);
             WvwmM = (WvwmM + 1) % wMw.length;
             mvnmN = wwwvv[WvwmM] - 5000;
-            AudioUtils.MmwVw(wMw[WvwmM], 5000, mvVWW);
+            AudioUtils.fadeSound(wMw[WvwmM], 5000, mvVWW);
         }
         mvnmN = window.Math.max(0, mvnmN - delta);
     };
 
-    function NvwNv() {
+    function quitGame() {
         mWWVV = 0;
         vmwnm = 1;
-        AudioUtils.MmwVw(AudioUtils.wMm.vwMNW, 250, -NNwwM);
+        AudioUtils.fadeSound(AudioUtils.audio.vwMNW, 250, -NNwwM);
         NNwwM = 0;
         AudioManager.vwMNW = 0;
-        AudioUtils.MmwVw(wMw[WvwmM], 500, -mvVWW);
-        AudioUtils.MmwVw(AudioUtils.wMm.end, 1000, AudioManager.mvVWW);
+        AudioUtils.fadeSound(wMw[WvwmM], 500, -mvVWW);
+        AudioUtils.fadeSound(AudioUtils.audio.end, 1000, AudioManager.mvVWW);
     };
 
     function MWwnM() {
-        if (vmwnm === 0) AudioUtils.MmwVw(AudioUtils.wMm.title, 500, -mvVWW);
-        else AudioUtils.MmwVw(AudioUtils.wMm.end, 500, -mvVWW);
+        if (vmwnm === 0) AudioUtils.fadeSound(AudioUtils.audio.title, 500, -mvVWW);
+        else AudioUtils.fadeSound(AudioUtils.audio.end, 500, -mvVWW);
     };
 
     function nMvWM() {
@@ -42325,11 +42341,11 @@ var AudioManager = (function() {
         MWwnM();
         if (mvnmN === 0) WvwmM = (WvwmM + 1) % wMw.length;
         mvnmN = wwwvv[WvwmM] - 5000;
-        AudioUtils.MmwVw(wMw[WvwmM], 5000, mvVWW);
+        AudioUtils.fadeSound(wMw[WvwmM], 5000, mvVWW);
     };
     return {
         nMvWM: nMvWM,
-        NvwNv: NvwNv,
+        quitGame: quitGame,
         scheduler: scheduler,
         MWwnM: MWwnM,
         mvVWW: mvVWW,
