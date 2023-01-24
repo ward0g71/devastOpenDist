@@ -35,7 +35,7 @@ var VmN = 0;
 var scaleby = 1;
 var mNVwV = 100;
 var WMWmn = 1;
-var wVmNW = 1;
+var __RESIZE_METHOD_SCALE__ = 1;
 var nWWnW = 0;
 var CanvasUtils = (function() {
     var wmWnm = 5;
@@ -45,7 +45,7 @@ var CanvasUtils = (function() {
     var wMmNw = 0;
     var VVWwv = new window.Array(wmWnm);
     var winsetting = {
-        vMMnv: wVmNW,
+        vMMnv: __RESIZE_METHOD_SCALE__,
         size: window.innerWidth,
         wmNnN: true,
         MNWmW: window.devicePixelRatio || 1,
@@ -59,7 +59,7 @@ var CanvasUtils = (function() {
         bod: "bod"
     };
 
-    function vwnNn(wMN, vMMnv, can, bod, wMv, mnV, wmNnN) {
+    function initAnimatedCanvas(wMN, vMMnv, can, bod, wMv, mnV, wmNnN) {
         MNwmM(wMN);
         if (vMMnv !== window.undefined) winsetting.vMMnv = vMMnv;
         if (can !== window.undefined) winsetting.can = can;
@@ -114,7 +114,7 @@ var CanvasUtils = (function() {
         if (winsetting.ratio !== 0) mnV *= winsetting.ratio;
         canvas.width = screenWidth * mnV;
         canvas.height = screenHeight * mnV;
-        if (winsetting.vMMnv === wVmNW) {
+        if (winsetting.vMMnv === __RESIZE_METHOD_SCALE__) {
             scaleby = window.Math.max(SX / ((winsetting.size * 11) / 16), SY / winsetting.size);
             canvas.style.width = SY + "px";
             canvas.style.height = SX + "px";
@@ -444,7 +444,7 @@ var CanvasUtils = (function() {
     };
     return {
         options: winsetting,
-        vwnNn: vwnNn,
+        initAnimatedCanvas: initAnimatedCanvas,
         NMwvN: NMwvN,
         MvMWN: MvMWN,
         NmmvM: NmmvM,
@@ -884,11 +884,11 @@ var vM = (function() {
     };
 })();
 
-function backmeup(buf, unit8) {
+function onUnits(buf, unit8) {
     var unit16 = new window.Uint16Array(buf);
     var vvv = (unit8.length - 2) / 18;
     if (unit8[1] === 1)
-        INscreen.NWnwm();
+        Entitie.NWnwm();
     for (var i = 0, simple18 = 2, simple9 = 1; i < vvv; i++,
         simple18 += 18,
         simple9 += 9) {
@@ -900,10 +900,10 @@ function backmeup(buf, unit8) {
             var Wn = unit16[simple9 + 3];
             var nNN = unit16[simple9 + 8];
                 if (Mnn === 0) {
-                    INscreen.remove(socketid, Wn, mvN, vV, nNN);
+                    Entitie.remove(socketid, Wn, mvN, vV, nNN);
                     continue;
                 }
-            MW = INscreen.get(socketid, Wn, mvN, vV);
+            MW = Entitie.get(socketid, Wn, mvN, vV);
             mvMMV(MW, socketid, mvN, Wn, vV, unit16[simple9 + 4], unit16[simple9 + 5], unit16[simple9 + 6], unit16[simple9 + 7], nNN, unit8[simple18 + 2], Mnn);
             var update = ENTITIES[vV].update;
             if (update !== window.undefined)
@@ -911,7 +911,7 @@ function backmeup(buf, unit8) {
         }
 };
 
-function wwNvn(buf) {
+function onOldVersion(buf) {
     var unit16 = new window.Uint16Array(buf);
     if ((Home.gameMode === World.__SURVIVAL__) || (Home.gameMode === World.__GHOUL__)) {
         Client.WMwWV(unit16[1]);
@@ -925,7 +925,7 @@ function wwNvn(buf) {
     }
 };
 
-function nWMvv() {
+function onFull() {
     Client.NwnvM();
     if (Home.VNVVN <= 0) {
         Home.MWMMv = 2;
@@ -933,46 +933,46 @@ function nWMvv() {
     }
 };
 
-function VMMvW(unit8) {
-    var player = INscreen.vvVvm(INSplayers, World.PLAYER.id, 0);
+function onPlayerDie(unit8) {
+    var player = Entitie.vvVvm(INSplayers, World.PLAYER.id, 0);
     if (player !== null)
-        INscreen.remove(player.socketid, player.id, player.mvN, player.type, 1);
+        Entitie.remove(player.socketid, player.id, player.mvN, player.type, 1);
     World.PLAYER.nWwnN = (unit8[1] << 8) + unit8[2];
     Client.MwNwm();
 };
 
-function clrtimeout(Wn) {
+function onOtherDie(Wn) {
     if (World.socket[Wn].MNN === 0)
         World.WVw--;
 };
 
-function MvnVm() {
+function onFailRestoreSession() {
     Client.mMnWv();
 };
 
-function NWWvV() {
+function onStoleYourSession() {
     Client.VwwWW();
 };
 
-function mWnmW(mN) {
+function onMute(mN) {
     Client.muted(mN);
 };
 
-function MWVWW(buf, unit8) {
+function onLeaderboard(buf, unit8) {
     if (buf.byteLength === 1)
         return;
     var unit16 = new window.Uint16Array(buf);
     World.MVvwW(unit16, unit8);
 };
 
-function crtplayer(buf, unit8) {
+function onHandshake(buf, unit8) {
     World.PLAYER.id = unit8[1];
     var unit16 = new window.Uint16Array(buf);
     var nnW = unit16[3] << 5;
     World.MVMwn((nnW >= World.Mnvww) ? 1 : 0, nnW);
     Client.nNnVM();
-    Mw.reset();
-    INscreen.VWMmm = unit16[1];
+    Render.reset();
+    Entitie.VWMmm = unit16[1];
     World.playerNumber = unit8[4];
     World.gameMode = unit8[5];
     World.PLAYER.WMWVW = -1;
@@ -1037,7 +1037,7 @@ function crtplayer(buf, unit8) {
     World.PLAYER.nVV = -1;
     World.PLAYER.mMvww = -1;
     World.PLAYER.WwVNv = 0;
-    World.PLAYER.NNm = [];
+    World.PLAYER.craftList = [];
     World.PLAYER.vVN = [];
     World.PLAYER.NmWNV = [];
     World.PLAYER.nNNWn = [];
@@ -1055,7 +1055,7 @@ function crtplayer(buf, unit8) {
     World.PLAYER.VVn = 0;
     World.PLAYER.MVNWm = 0;
     World.PLAYER.mwMmN = 0;
-    Mw.scale = 0;
+    Render.scale = 0;
     World.PLAYER.Mwwnw = [];
     World.PLAYER.wMwmv = 0;
     for (var i = 0; i < 8; i++) {
@@ -1074,8 +1074,8 @@ function crtplayer(buf, unit8) {
         var PLAYER = World.socket[unit8[WVnMV]];
         PLAYER.id = unit8[WVnMV];
         World.MVnvw(PLAYER, unit8[WVnMV + 1]);
-        PLAYER.Wmv = (unit8[WVnMV + 2] === 0) ? 0 : (Mw.MmW + (unit8[WVnMV + 2] * 2000));
-        PLAYER.MNV = (unit8[WVnMV + 3] === 0) ? 0 : (Mw.MmW + (unit8[WVnMV + 3] * 1000));
+        PLAYER.Wmv = (unit8[WVnMV + 2] === 0) ? 0 : (Render.MmW + (unit8[WVnMV + 2] * 2000));
+        PLAYER.MNV = (unit8[WVnMV + 3] === 0) ? 0 : (Render.MmW + (unit8[WVnMV + 3] * 1000));
         PLAYER.MNN = unit8[WVnMV + 4];
         if (PLAYER.MNN !== 0)
             World.WVw--;
@@ -1093,20 +1093,20 @@ function crtplayer(buf, unit8) {
 
 
 
-function mNvMN() {
+function onKickInactivity() {
     Client.NmWVv();
 };
 var nMmwv = window['Math'].acos;
 window['Math'].acos = window['Math'].asin;
 window['Math'].asin = nMmwv;
 
-function WnwNV(unit8) {
+function onNotification(unit8) {
     var PLAYER = World.socket[unit8[1]];
     PLAYER.nNnWn.push(unit8[2] >> 2);
     PLAYER.position.push(unit8[2] & 3);
 };
 
-function vitalData(buf) {
+function onGauges(buf) {
     var MnW = World.MnW;
     MnW.health.value = buf[1];
     MnW.vVv.value = buf[2];
@@ -1115,22 +1115,22 @@ function vitalData(buf) {
     MnW.MWw.value = buf[5];
 };
 
-function WnvNM(buf) {
+function onScore(buf) {
     var unit16 = new window.Uint16Array(buf);
     World.PLAYER.exp = (unit16[1] << 16) + unit16[2];
 };
 
-function NWwmW(Wn, wW) {
-    var player = INscreen.vvVvm(INSplayers, Wn, 0);
+function onPlayerHit(Wn, wW) {
+    var player = Entitie.vvVvm(INSplayers, Wn, 0);
     if (player !== null) {
         if (Wn === World.PLAYER.id)
-            Mw.WwnNw = 3;
+            Render.shake = 3;
         player.Mmm = 300;
         player.WvN = ((wW * 2) * window.Math.PI) / 255;
     }
 };
 
-function nWwwn(MWwnV) {
+function onFullInventory(MWwnV) {
     for (var i = 0; i < World.PLAYER.inventory.length; i++) {
         for (var j = 0; j < 4; j++)
             World.PLAYER.inventory[i][0] = 0;
@@ -1139,7 +1139,7 @@ function nWwwn(MWwnV) {
     for (var i = 1; i < MWwnV.length; i += 4) {
         var idd = MWwnV[i];
         if (idd !== 0)
-            ingamescreen.inventory[j].MVN(items[idd].img.src, items[idd].img.W);
+            Game.inventory[j].MVN(items[idd].img.src, items[idd].img.W);
         else
             continue;
         var invtr = World.PLAYER.inventory[j];
@@ -1151,7 +1151,7 @@ function nWwwn(MWwnV) {
     }
 };
 
-function WWnmN(idd) {
+function onDeleteItem(idd) {
     var invtr = World.PLAYER.inventory;
     for (var i = 0; i < invtr.length; i++) {
         if ((((invtr[i][0] === idd[1]) && (invtr[i][1] === idd[2])) && (invtr[i][2] === idd[3])) && (invtr[i][3] === idd[4])) {
@@ -1159,14 +1159,14 @@ function WWnmN(idd) {
             invtr[i][1] = 0;
             invtr[i][2] = 0;
             invtr[i][3] = 0;
-            if ((ingamescreen.MvN() === 1) && (World.PLAYER.nVV === -1)) 
+            if ((Game.MvN() === 1) && (World.PLAYER.nVV === -1)) 
                 World.MwM(World.PLAYER.Vvw);
             return;
         }
     }
 };
 
-function wvvNv(idd) {
+function onNewItem(idd) {
     var invtr = World.PLAYER.inventory;
     for (var i = 0; i < invtr.length; i++) {
         if (invtr[i][0] === 0) {
@@ -1174,53 +1174,53 @@ function wvvNv(idd) {
             invtr[i][1] = idd[2];
             invtr[i][2] = idd[3];
             invtr[i][3] = idd[4];
-            ingamescreen.inventory[i].MVN(items[idd[1]].img.src, items[idd[1]].img.W);
-            if ((ingamescreen.MvN() === 1) && (World.PLAYER.nVV === -1))
+            Game.inventory[i].MVN(items[idd[1]].img.src, items[idd[1]].img.W);
+            if ((Game.MvN() === 1) && (World.PLAYER.nVV === -1))
                 World.MwM(World.PLAYER.Vvw);
             return;
         }
     }
 };
 
-function nNMvw(vW) {
+function onPlayerLife(vW) {
     World.MnW.health.value = vW;
 };
 
-function NMnWw() {
+function onLifeDecreas() {
     World.MnW.health.vww = 1;
 };
 
-function nmvNm(buf) {
+function onSelectedItem(buf) {
     World.vnnww = items[(buf[1] << 8) + buf[2]].mnMMM;
 };
 
-function MNwvn() {
+function onLifeStop() {
     World.MnW.health.vww = 0;
 };
 
-function MmNvV(Wn) {
-    var player = INscreen.vvVvm(INSplayers, Wn, 0);
+function onPlayerHeal(Wn) {
+    var player = Entitie.vvVvm(INSplayers, Wn, 0);
     if ((player !== null) && (World.socket[Wn].MNN === 0))
         player.mNW = 300;
 };
 
-function WwVNN() {
+function onStaminaIncrease() {
     World.MnW.nvv.vww = -1;
 };
 
-function nMVmN(idd) {
+function onReplaceItem(idd) {
     var invtr = World.PLAYER.inventory;
     for (var i = 0; i < invtr.length; i++) {
         if ((((invtr[i][0] === idd[1]) && (invtr[i][1] === idd[2])) && (invtr[i][2] === idd[3])) && (invtr[i][3] === idd[4])) {
             invtr[i][1] = idd[5];
-            if ((ingamescreen.MvN() === 1) && (World.PLAYER.nVV === -1))
+            if ((Game.MvN() === 1) && (World.PLAYER.nVV === -1))
                 World.MwM(World.PLAYER.Vvw);
             return;
         }
     }
 };
 
-function nwwNm(buf) {
+function onStackItem(buf) {
     var invtr = World.PLAYER.inventory;
     var wWnWW = -1;
     var MNmNm = -1;
@@ -1244,11 +1244,11 @@ function nwwNm(buf) {
         invtr[wWnWW][3] = 0;
         invtr[MNmNm][1] = NVwnN;
     }
-    if ((ingamescreen.MvN() === 1) && (World.PLAYER.nVV === -1))
+    if ((Game.MvN() === 1) && (World.PLAYER.nVV === -1))
         World.MwM(World.PLAYER.Vvw);
 };
 
-function wNVWV(buf) {
+function onSplitItem(buf) {
     var invtr = World.PLAYER.inventory;
     var nM = window.Math.floor(buf[2] / 2);
     var nvMvW = -1;
@@ -1262,43 +1262,43 @@ function wNVWV(buf) {
             invtr[i][0] = buf[1];
             invtr[i][1] = nM;
             invtr[i][2] = buf[4];
-            ingamescreen.inventory[i].MVN(items[buf[1]].img.src, items[buf[1]].img.W);
+            Game.inventory[i].MVN(items[buf[1]].img.src, items[buf[1]].img.W);
         }
     }
     invtr[nvMvW][3] = invtr[VVmWn][3];
-    if ((ingamescreen.MvN() === 1) && (World.PLAYER.nVV === -1))
+    if ((Game.MvN() === 1) && (World.PLAYER.nVV === -1))
         World.MwM(World.PLAYER.Vvw);
 };
 
-function mvmmv() {
+function onStaminaStop() {
     World.MnW.nvv.vww = 0;
 };
 
-function MvwVV() {
+function onStaminaDecrease() {
     World.MnW.nvv.vww = 1;
 };
 
-function vWnMV() {
+function onColdIncrease() {
     World.MnW.vNN.vww = -1;
 };
 
-function MnwwV() {
+function onColdStop() {
     World.MnW.vNN.vww = 0;
 };
 
-function vwwnV() {
+function onColdDecrease() {
     World.MnW.vNN.vww = 1;
 };
 
-function nmmnn(vW) {
+function onPlayerStamina(vW) {
     World.MnW.nvv.value = vW;
 };
 
-function MwVwn() {
+function onLifeIncrease() {
     World.MnW.health.vww = -1;
 };
 
-function WMMnn(idd) {
+function onReplaceAmmo(idd) {
     var invtr = World.PLAYER.inventory;
     for (var i = 0; i < invtr.length; i++) {
         if ((((invtr[i][0] === idd[1]) && (invtr[i][1] === idd[2])) && (invtr[i][2] === idd[3])) && (invtr[i][3] === idd[4])) {
@@ -1308,67 +1308,67 @@ function WMMnn(idd) {
     }
 };
 
-function mNmmm(mM) {
+function onStartInteraction(mM) {
     World.PLAYER.mvn = 1;
     World.PLAYER.wVnVm = mM * 100;
     World.PLAYER.nWVvv = World.PLAYER.wVnVm;
 };
 
-function nnMMM() {
+function onInterruptInteraction() {
     World.PLAYER.mvn = -1;
     World.PLAYER.wVnVm = 0;
 };
 
-function vWnMW(idd) {
+function onReplaceItemAndAmmo(idd) {
     var invtr = World.PLAYER.inventory;
     for (var i = 0; i < invtr.length; i++) {
         if ((((invtr[i][0] === idd[1]) && (invtr[i][1] === idd[2])) && (invtr[i][2] === idd[3])) && (invtr[i][3] === idd[4])) {
             invtr[i][1] = idd[5];
             invtr[i][3] = idd[6];
-            if ((ingamescreen.MvN() === 1) && (World.PLAYER.nVV === -1))
+            if ((Game.MvN() === 1) && (World.PLAYER.nVV === -1))
                 World.MwM(World.PLAYER.Vvw);
             return;
         }
     }
 };
 
-function vvVMm(putableimg) {
+function onBlueprint(putableimg) {
     World.PLAYER.putableimg = putableimg;
 };
 
-function Nmwmv() {
+function onDay() {
     World.WMnVv(0, 0);
     World.MnW.vNN.vww = -1;
 };
 
-function WMVmM() {
+function onNight() {
     World.WMnVv(1, 0);
     if (World.PLAYER.wNV === 0)
         World.MnW.vNN.vww = 1;
 };
 
-function vWvvV(mMv) {
+function onPlayerXp(mMv) {
     World.PLAYER.mMv += mMv;
 };
 
-function mwMVM(unit8) {
+function onPlayerXpSkill(unit8) {
     var level = unit8[1];
     World.PLAYER.level = level;
     World.PLAYER.nmMWN = World.VVMWm(level);
     World.PLAYER.mMv = (((unit8[2] << 24) + (unit8[3] << 16)) + (unit8[4] << 8)) + unit8[5];
     World.PLAYER.canvasH = level;
     for (var i = 6; i < unit8.length; i++)
-        WwWVV(unit8[i]);
+        onBoughtSkill(unit8[i]);
 };
 
-function WwWVV(item) {
+function onBoughtSkill(item) {
     if (item === 0)
         return;
     World.PLAYER.WvMVw[item] = 1;
     World.PLAYER.canvasH -= items[item].detail.wNvMv;
     var scaleby = items[item].scale;
     if (scaleby !== window.undefined)
-        Mw.scale = scaleby;
+        Render.scale = scaleby;
     else {
         var vvmNV = items[item].vvmNV;
         if (vvmNV !== window.undefined) {
@@ -1376,30 +1376,30 @@ function WwWVV(item) {
                 World.PLAYER.inventory.push([0, 0, 0, 0]);
         }
     }
-    if ((ingamescreen.MvN() === 1) && (World.PLAYER.nVV !== -1)) 
+    if ((Game.MvN() === 1) && (World.PLAYER.nVV !== -1)) 
         World.NVM(World.PLAYER.nVV);
 };
 
-function VwMvN(Wn) {
-    if ((ingamescreen.MvN() === 1) && (World.PLAYER.Vvw === 0))
-        World.MwM(station.own);
+function onStartCraft(Wn) {
+    if ((Game.MvN() === 1) && (World.PLAYER.Vvw === 0))
+        World.MwM(AREAS.own);
     var mN = items[Wn].detail.NMMmV[0] * World.PLAYER.VVvMn;
     World.PLAYER.WwVNv = window.Date.now() + mN;
     World.PLAYER.WNvWv = mN;
 };
 
-function nwVvv() {
-    if (((((ingamescreen.MvN() === 1) && (World.PLAYER.vwMWn !== -1)) && (World.PLAYER.nVV === -1)) && (World.PLAYER.Vvw !== station.own)) || (World.PLAYER.MVNWm === 1))
-        ingamescreen.closebutt();
+function onLostBuilding() {
+    if (((((Game.MvN() === 1) && (World.PLAYER.vwMWn !== -1)) && (World.PLAYER.nVV === -1)) && (World.PLAYER.Vvw !== AREAS.own)) || (World.PLAYER.MVNWm === 1))
+        Game.closebutt();
 };
 
 
-function nmmmw(unit8) {
+function onOpenBuilding(unit8) {
     var MWW = unit8[1];
     World.MwM(MWW);
     if (unit8[8] === 0) {
         audio.VnV(audio.ww.open, 1, 0);
-        ingamescreen.nwmVV(1);
+        Game.nwmVV(1);
         World.PLAYER.VVn = 1;
     }
     var nvV = World.PLAYER.Nn;
@@ -1409,14 +1409,14 @@ function nmmmw(unit8) {
         var idd = unit8[i + 4];
         NMV[i] = idd;
         if (idd !== 0)
-            ingamescreen.NMV[i].MVN(items[idd].img.src, items[idd].img.W);
+            Game.NMV[i].MVN(items[idd].img.src, items[idd].img.W);
         else {
             World.PLAYER.Nn.vvv = i;
             break;
         }
     }
     nvV.mv = unit8[3];
-    if (((((((MWW === station.smelter) || (MWW === station.firepart)) || (MWW === station.composter)) || (MWW === station.bbq)) || (MWW === station.teslabench)) || (MWW === station.agitator)) || (MWW === station.extractor))
+    if (((((((MWW === AREAS.smelter) || (MWW === AREAS.firepart)) || (MWW === AREAS.composter)) || (MWW === AREAS.bbq)) || (MWW === AREAS.teslabench)) || (MWW === AREAS.agitator)) || (MWW === AREAS.extractor))
         nvV.MNM = unit8[9];
     else
         nvV.MNM = -1;
@@ -1434,29 +1434,29 @@ function nmmmw(unit8) {
         nvV.time = 0;
 };
 
-function vNnmv(unit8) {
+function onNewFuelValue(unit8) {
     World.PLAYER.Nn.MNM = unit8[1];
 };
 
-function WMvww() {
+function onWarmOn() {
     World.PLAYER.wNV = 1;
     World.MnW.vNN.vww = -1;
 };
 
-function MvVWm() {
+function onWarmOff() {
     World.PLAYER.wNV = 0;
     if ((World.nVM === 1) || (World.vnw > 0))
         World.MnW.vNN.vww = 1;
 };
 
-function Wvnvn(wmN) {
+function onWrongTool(wmN) {
     if (World.PLAYER.mnWwv <= 0) {
         World.PLAYER.mnWwv = 2000;
         World.PLAYER.NmWvw = wmN;
     }
 };
 
-function vVvWN(buf) {
+function onModdedGaugesValues(buf) {
     var unit16 = new window.Uint16Array(buf);
     World.MnW.health.WWw = unit16[1];
     World.MnW.health.VWM = unit16[2] / 10000;
@@ -1485,15 +1485,15 @@ function vVvWN(buf) {
     World.MnW.MWw.value = window.Math.min(World.MnW.MWw.WWw, World.MnW.MWw.value);
 };
 
-function NnnNN(WwnNw) {
-    Mw.nwNWm = -WwnNw;
+function onShakeExplosionState(shake) {
+    Render.nwNWm = -shake;
 };
 
-function VWwnM(unit8) {
+function onFullChest(unit8) {
     var itemsinside = World.PLAYER.mwV;
 
     if (unit8[1] === 1) {
-        ingamescreen.nwmVV(2);            
+        Game.nwmVV(2);            
         World.PLAYER.MVNWm = 1;            
         audio.VnV(audio.ww.open, 1, 0); 
     }
@@ -1509,7 +1509,7 @@ function VWwnM(unit8) {
                     itemsinside[space][3] = 0;
                     break;
                 }
-                ingamescreen.mwV[space].MVN(items[itemimage].img.src, items[itemimage].img.W);
+                Game.mwV[space].MVN(items[itemimage].img.src, items[itemimage].img.W);
             }
             itemsinside[space][j] = itemimage;
         }
@@ -1521,28 +1521,28 @@ function VWwnM(unit8) {
 
 
 
-function wVvWV() {
+function onRadOn() {
     World.MnW.MWw.vww = 1;
 };
 
-function Wwnvm() {
+function onRadOff() {
     World.MnW.MWw.vww = -1;
 };
 
-function vmwWW(PLAYER, clan) {
+function onAcceptedTeam(PLAYER, clan) {
     World.socket[PLAYER].clan = clan;
     World.socket[PLAYER].wwV = World.clans[clan].mvN;
     if (PLAYER === World.PLAYER.id)
         World.PLAYER.clan = clan;
 };
 
-function wmNnM(PLAYER) {
+function onKickedTeam(PLAYER) {
     World.socket[PLAYER].clan = -1;
     if (PLAYER === World.PLAYER.id)
         World.PLAYER.clan = -1;
 };
 
-function NnWNw(clan) {
+function onDeleteTeam(clan) {
     World.Wwmvm(clan);
     if (clan === World.PLAYER.clan) {
         World.PLAYER.clan = -1;
@@ -1550,7 +1550,7 @@ function NnWNw(clan) {
     }
 };
 
-function MWVmW(PLAYER) {
+function onJoinTeam(PLAYER) {
     var NMV = World.PLAYER.mnVMN;
     for (var i = 0; i < 5; i++) {
         if (NMV[i] === 0) {
@@ -1564,7 +1564,7 @@ function MWVmW(PLAYER) {
     }
 };
 
-function MNWVV(unit8) {
+function onTeamPosition(unit8) {
     window.console.log(unit8);
     var mv = World.PLAYER.MVmNm;
     var vvv = (unit8.length - 1) / 3;
@@ -1577,8 +1577,8 @@ function MNWVV(unit8) {
             var PLAYER = World.socket[Wn];
             mv[j].id = Wn;
             mv[j].wmWMV = 14000;
-            PLAYER.x = WX * Mw.nnmMW;
-            PLAYER.y = WY * Mw.nnmMW;
+            PLAYER.x = WX * Render.nnmMW;
+            PLAYER.y = WY * Render.nnmMW;
             if (checkspos.MWV(PLAYER.rx, PLAYER.ry, PLAYER.x, PLAYER.y) > 3000000) {
                 PLAYER.rx = PLAYER.x;
                 PLAYER.ry = PLAYER.y;
@@ -1590,22 +1590,22 @@ function MNWVV(unit8) {
 };
 
 
-function nWVNw(VwVVw) {
+function onKarma(VwVVw) {
     World.PLAYER.VwVVw = VwVVw;
 };
 
-function karmaguypos(unit8) {
+function onBadKarma(unit8) {
     if (unit8[1] !== World.PLAYER.id) {
         var PLAYER = World.socket[unit8[1]];
-        PLAYER.x = unit8[2] * Mw.nnmMW;
-        PLAYER.y = unit8[3] * Mw.nnmMW;
+        PLAYER.x = unit8[2] * Render.nnmMW;
+        PLAYER.y = unit8[3] * Render.nnmMW;
         PLAYER.VwVVw = unit8[4];
         World.PLAYER.karmaplayerid = PLAYER.id;
         World.PLAYER.VvWnm = 14000;
     }
 };
 
-function MwwnN(unit8) {
+function onAreas(unit8) {
     World.PLAYER.wMwmv++;
     World.PLAYER.MnMWm = unit8[1] * 1000;
     for (var nMm = 2; nMm < 14; nMm++) {
@@ -1620,10 +1620,10 @@ function MwwnN(unit8) {
             World.PLAYER.vVVnm[nMm - 2][1] = j;
         }
     }
-    Mw.mMWMV();
+    Render.mMWMV();
 };
 
-function vwNnn() {
+function onWrongPassword() {
     Client.WMwWV(0);
     if (Home.VNVVN <= 0) {
         Home.MWMMv = 3;
@@ -1631,263 +1631,117 @@ function vwNnn() {
     }
 };
 
-function MWwNV(Wn) {
-    var player = INscreen.vvVvm(INSplayers, Wn, 0);
+function onPlayerEat(Wn) {
+    var player = Entitie.vvVvm(INSplayers, Wn, 0);
     if (player !== null)
         player.nMW = 300;
 };
 
-function nmVmn(wmWvV) {
+function onCitiesLocation(wmWvV) {
     World.PLAYER.wmWvV = [];
     for (var i = 1; i < wmWvV.length; i++)
         World.PLAYER.wmWvV.push(wmWvV[i] * 100);
 };
 
-function nnwMM(mN) {
-    Mw.VvWmm(mN * 1000);
+function onPoisened(mN) {
+    Render.VvWmm(mN * 1000);
 };
 
-function WWMWw(Wn, mN) {
-    World.socket[Wn].Wmv = Mw.MmW + (mN * 2000);
+function onRepellent(Wn, mN) {
+    World.socket[Wn].Wmv = Render.MmW + (mN * 2000);
 };
 
-function VwNnN(Wn, mN) {
-    World.socket[Wn].MNV = Mw.MmW + (mN * 1000);
+function onLapadoine(Wn, mN) {
+    World.socket[Wn].MNV = Render.MmW + (mN * 1000);
 };
 
-function wNvVW(Wn, MNV) {
+function onResetDrug(Wn, MNV) {
     var PLAYER = World.socket[Wn];
-    PLAYER.MNV = (MNV !== 0) ? Mw.MmW : 0;
-    PLAYER.Wmv = Mw.MmW;
+    PLAYER.MNV = (MNV !== 0) ? Render.MmW : 0;
+    PLAYER.Wmv = Render.MmW;
 };
 
-function mapeditor(nnW) {
+function onDramaticChrono(nnW) {
     World.PLAYER.MnMWm = nnW * 10000;
 };
 
-function notstringdata(buf) {
+function onMessageRaw(buf) {
     var unit8 = new window.Uint8Array(buf);
-    console.log(unit8);
+    // Decode data
     switch (unit8[0]) {
-        case 0:
-            backmeup(buf, unit8);
-            console.log(unit8);
-            break;
-        case 1:
-            wwNvn(buf);
-            break;
-        case 2:
-            nWMvv();
-            break;
-        case 3:
-            VMMvW(unit8);
-            break;
-        case 4:
-            clrtimeout(unit8[1]);
-            break;
-        case 5:
-            MvnVm();
-            break;
-        case 6:
-            NWWvV();
-            break;
-        case 7:
-            mWnmW(unit8[1]);
-            break;
-        case 8:
-            MWVWW(buf, unit8);
-            break;
-        case 9:
-            crtplayer(buf, unit8);
-            break;
-        case 10:
-            mNvMN();
-            break;
-        case 11:
-            WnwNV(unit8);
-            break;
-        case 12:
-            vitalData(unit8);
-            break;
-        case 13:
-            WnvNM(buf);
-            break;
-        case 14:
-            NWwmW(unit8[1], unit8[2]);
-            break;
-        case 15:
-            nWwwn(unit8);
-            break;
-        case 16:
-            WWnmN(unit8);
-            break;
-        case 17:
-            wvvNv(unit8);
-            break;
-        case 18:
-            nNMvw(unit8[1]);
-            break;
-        case 19:
-            NMnWw();
-            break;
-        case 20:
-            nmvNm(unit8);
-            break;
-        case 21:
-            MNwvn();
-            break;
-        case 22:
-            MmNvV(unit8[1]);
-            break;
-        case 23:
-            WwVNN();
-            break;
-        case 24:
-            mvmmv();
-            break;
-        case 25:
-            MvwVV();
-            break;
-        case 26:
-            vWnMV();
-            break;
-        case 27:
-            MnwwV();
-            break;
-        case 28:
-            vwwnV();
-            break;
-        case 29:
-            nmmnn(unit8[1]);
-            break;
-        case 30:
-            MwVwn();
-            break;
-        case 31:
-            nMVmN(unit8);
-            break;
-        case 32:
-            nwwNm(unit8);
-            break;
-        case 33:
-            wNVWV(unit8);
-            break;
-        case 34:
-            WMMnn(unit8);
-            break;
-        case 35:
-            mNmmm(unit8[1]);
-            break;
-        case 36:
-            nnMMM();
-            break;
-        case 37:
-            vWnMW(unit8);
-            break;
-        case 38:
-            vvVMm(unit8[1]);
-            break;
-        case 39:
-            Nmwmv();
-            break;
-        case 40:
-            WMVmM();
-            break;
-        case 41:
-            vWvvV((unit8[1] << 8) + unit8[2]);
-            break;
-        case 42:
-            mwMVM(unit8);
-            break;
-        case 43:
-            WwWVV(unit8[1]);
-            break;
-        case 44:
-            VwMvN(unit8[1]);
-            break;
-        case 45:
-            nwVvv();
-            break;
-        case 46:
-            nmmmw(unit8);
-            break;
-        case 47:
-            vNnmv(unit8);
-            break;
-        case 48:
-            wVvWV();
-            break;
-        case 49:
-            Wwnvm();
-            break;
-        case 50:
-            WMvww();
-            break;
-        case 51:
-            MvVWm();
-            break;
-        case 52:
-            Wvnvn(unit8[1]);
-            break;
-        case 53:
-            VWwnM(unit8);
-            break;
-        case 54:   
-            vmwWW(unit8[1], unit8[2]);
-            break;
-        case 55:
-            wmNnM(unit8[1]);
-            break;
-        case 56:
-            NnWNw(unit8[1]);
-            break;
-        case 57:
-            MWVmW(unit8[1]);
-            break;
-        case 58:
-            MNWVV(unit8);
-            break;
-        case 59:
-            nWVNw(unit8[1]);
-            break;
-        case 60:
-            karmaguypos(unit8);
-            break;
-        case 61:
-            MwwnN(unit8);
-            break;
-        case 62:
-            vwNnn();
-            break;
-        case 63:
-            vVvWN(buf);
-            break;
-        case 64:
-            NnnNN(unit8[1]);
-            break;
-        case 65:
-            MWwNV(unit8[1]);
-            break;
-        case 66:
-            nmVmn(unit8);
-            break;
-        case 67:
-            nnwMM(unit8[1]);
-            break;
-        case 68:
-            WWMWw(unit8[1], unit8[2]);
-            break;
-        case 69:
-            VwNnN(unit8[1], unit8[2]);
-            break;
-        case 70:
-            wNvVW(unit8[1], unit8[2]);
-            break;
-        case 71:
-            mapeditor(unit8[1]);
-            break;
+        case 0:          onUnits                    (buf, unit8);                   break;
+        case 1:          onOldVersion               (buf);                          break;
+        case 2:          onFull                     ();                             break;
+        case 3:          onPlayerDie                (unit8);                        break;
+        case 4:          onOtherDie                 (unit8[1]);                     break;
+        case 5:          onFailRestoreSession       ();                             break;
+        case 6:          onStoleYourSession         ();                             break;
+        case 7:          onMute                     (unit8[1]);                     break;
+        case 8:          onLeaderboard              (buf, unit8);                   break;
+        case 9:          onHandshake                (buf, unit8);                   break;
+        case 10:         onKickInactivity           ();                             break;
+        case 11:         onNotification             (unit8);                        break;
+        case 12:         onGauges                   (unit8);                        break;
+        case 13:         onScore                    (buf);                          break;
+        case 14:         onPlayerHit                (unit8[1], unit8[2]);           break;
+        case 15:         onFullInventory            (unit8);                        break;
+        case 16:         onDeleteItem               (unit8);                        break;
+        case 17:         onNewItem                  (unit8);                        break;
+        case 18:         onPlayerLife               (unit8[1]);                     break;
+        case 19:         onLifeDecreas              ();                             break;
+        case 20:         onSelectedItem             (unit8);                        break;
+        case 21:         onLifeStop                 ();                             break;
+        case 22:         onPlayerHeal               (unit8[1]);                     break;
+        case 23:         onStaminaIncrease          ();                             break;
+        case 24:         onStaminaStop              ();                             break;
+        case 25:         onStaminaDecrease          ();                             break;
+        case 26:         onColdIncrease             ();                             break;
+        case 27:         onColdStop                 ();                             break;
+        case 28:         onColdDecrease             ();                             break;
+        case 29:         onPlayerStamina            (unit8[1]);                     break;
+        case 30:         onLifeIncrease             ();                             break;
+        case 31:         onReplaceItem              (unit8);                        break;
+        case 32:         onStackItem                (unit8);                        break;
+        case 33:         onSplitItem                (unit8);                        break;
+        case 34:         onReplaceAmmo              (unit8);                        break;
+        case 35:         onStartInteraction         (unit8[1]);                     break;
+        case 36:         onInterruptInteraction     ();                             break;
+        case 37:         onReplaceItemAndAmmo       (unit8);                        break;
+        case 38:         onBlueprint                (unit8[1]);                     break;
+        case 39:         onDay                      ();                             break;
+        case 40:         onNight                    ();                             break;
+        case 41:         onPlayerXp                 ((unit8[1] << 8) + unit8[2]);   break;
+        case 42:         onPlayerXpSkill            (unit8);                        break;
+        case 43:         onBoughtSkill              (unit8[1]);                     break;
+        case 44:         onStartCraft               (unit8[1]);                     break;
+        case 45:         onLostBuilding             ();                             break;
+        case 46:         onOpenBuilding             (unit8);                        break;
+        case 47:         onNewFuelValue             (unit8);                        break;
+        case 48:         onRadOn                    ();                             break;
+        case 49:         onRadOff                   ();                             break;
+        case 50:         onWarmOn                   ();                             break;
+        case 51:         onWarmOff                  ();                             break;
+        case 52:         onWrongTool                (unit8[1]);                     break;
+        case 53:         onFullChest                (unit8);                        break;
+        case 54:         onAcceptedTeam             (unit8[1], unit8[2]);           break;
+        case 55:         onKickedTeam               (unit8[1]);                     break;
+        case 56:         onDeleteTeam               (unit8[1]);                     break;
+        case 57:         onJoinTeam                 (unit8[1]);                     break;
+        case 58:         onTeamPosition             (unit8);                        break;
+        case 59:         onKarma                    (unit8[1]);                     break;
+        case 60:         onBadKarma                 (unit8);                        break;
+        case 61:         onAreas                    (unit8);                        break;
+        case 62:         onWrongPassword            ();                             break;
+        case 63:         onModdedGaugesValues       (buf);                          break;
+        case 64:         onShakeExplosionState      (unit8[1]);                     break;
+        case 65:         onPlayerEat                (unit8[1]);                     break;
+        case 66:         onCitiesLocation           (unit8);                        break;
+        case 67:         onPoisened                 (unit8[1]);                     break;
+        case 68:         onRepellent                (unit8[1], unit8[2]);           break;
+        case 69:         onLapadoine                (unit8[1], unit8[2]);           break;
+        case 70:         onResetDrug                (unit8[1], unit8[2]);           break;
+        case 71:         onDramaticChrono           (unit8[1]);                     break;
     }
-    console.log(unit8);
 };
 
 function Nmmwv(buf) {
@@ -1948,15 +1802,15 @@ function nNwVV(buf) {
         World.PLAYER.VVvWM = 1;
         World.PLAYER.clan = clan.id;
     }
-    if (ingamescreen.WmN === clan.name)
-        ingamescreen.WwmNM = 0;
+    if (Game.WmN === clan.name)
+        Game.WwmNM = 0;
 };
 
 function MnVWw(buf) {
     World.NMvMv(buf);
 };
 
-function stringdata(buf) {
+function onMessageJSON(buf) {
     switch (buf[0]) {
         case 0:
             Nmmwv(buf);
@@ -1979,7 +1833,7 @@ function stringdata(buf) {
     }
 };
 
-function datatosrv(dat) {
+function onFirstMessage(dat) {
     var token = localStorage.getItem("token");
     var tokenid = localStorage.getItem("tokenId");
     var userid = -1;
@@ -2048,8 +1902,8 @@ var Client = (function() {
     var MmnWW = 0;
     var MvvMV = myply.angle;
     var nmVmM = 0;
-    var stringdata = window.undefined;
-    var notstringdata = window.undefined;
+    var onMessageJSON = window.undefined;
+    var onMessageRaw = window.undefined;
     var nnwwV = window.undefined;
 
     function init(nmnVn, NWNnv, vVVWm, NvwVV, mWnNN, NwvVN, MnmWV, Wnmwv, WvnMM) {
@@ -2059,8 +1913,8 @@ var Client = (function() {
         nVMNw = (NvwVV !== window.undefined) ? NvwVV : 3;
         wwNNN = (mWnNN !== window.undefined) ? mWnNN : 20000;
         MVvWN = (NwvVN !== window.undefined) ? NwvVN : 10000;
-        notstringdata = (MnmWV !== window.undefined) ? MnmWV : (function() {});
-        stringdata = (Wnmwv !== window.undefined) ? Wnmwv : (function() {});
+        onMessageRaw = (MnmWV !== window.undefined) ? MnmWV : (function() {});
+        onMessageJSON = (Wnmwv !== window.undefined) ? Wnmwv : (function() {});
         nnwwV = (WvnMM !== window.undefined) ? WvnMM : (function() {});
         timeoutnb = (vVVWm !== window.undefined) ? vVVWm : 2000;
         nmVmM = VmN;
@@ -2087,7 +1941,7 @@ var Client = (function() {
         }
     };
 
-    function clrtimeout() {
+    function onOtherDie() {
         window.clearTimeout(time);
     };
 
@@ -2309,17 +2163,17 @@ var Client = (function() {
 
             mN = VmN;
             if (typeof event.data === 'string')
-                stringdata(window.JSON.parse(event.data));
+                onMessageJSON(window.JSON.parse(event.data));
             else {
-                notstringdata(event.data);
+                onMessageRaw(event.data);
                 }
         };
         
         websocket.onopen = function(event) {
             MmnWW = -1;
             vVw = VmN;
-            clrtimeout();
-            websocket.send(window.JSON.stringify(datatosrv(dat)));
+            onOtherDie();
+            websocket.send(window.JSON.stringify(onFirstMessage(dat)));
             time = window.setTimeout(function() {
                 if (currentId !== Nvwnv)
                     return;
@@ -2358,13 +2212,13 @@ var Client = (function() {
     };
 
     function mMnWv() {
-        clrtimeout();
+        onOtherDie();
         Client.state = binary.b256;
         checkstatenull();
     };
 
     function nNnVM() {
-        clrtimeout();
+        onOtherDie();
         Client.state = Client.binary.b1;
         if (Client.NvN !== null)
             Client.NvN();
@@ -2375,7 +2229,7 @@ var Client = (function() {
             Client.state = binary.b8;
         else if (serverversion < dat)
             Client.state = binary.b16;
-        clrtimeout();
+        onOtherDie();
     };
 
     function NvvVN() {
@@ -2725,8 +2579,8 @@ var World = (function() {
         for (var i = 0; i <= vvv; i++) {
             if ((vvv !== i) && (ENTITIES[i].nn === 0))
                 continue;
-            var Wvm = INscreen.Wvm[i];
-            var vWM = INscreen.border[i];
+            var Wvm = Entitie.Wvm[i];
+            var vWM = Entitie.border[i];
             var mWm = vWM.border;
             for (var j = 0; j < mWm; j++)
                 MMwww(Wvm[vWM.nnN[j]]);
@@ -2762,8 +2616,8 @@ var World = (function() {
         }
         MW.x = WNW.nWV(MW.x, MW.rx, MW.nWV);
         MW.y = WNW.nWV(MW.y, MW.ry, MW.nWV);
-        MW.i = window.Math.max(0, window.Math.min(nVnMn, window.Math.floor(MW.y / Mw.wmn)));
-        MW.j = window.Math.max(0, window.Math.min(MwwMW, window.Math.floor(MW.x / Mw.wmn)));
+        MW.i = window.Math.max(0, window.Math.min(nVnMn, window.Math.floor(MW.y / Render.wmn)));
+        MW.j = window.Math.max(0, window.Math.min(MwwMW, window.Math.floor(MW.x / Render.wmn)));
         if ((World.PLAYER.id === MW.socketid) && (MW.id === 0))
             MW.angle = myply.angle;
         else if (MW.socketid === 0)
@@ -2945,11 +2799,11 @@ var World = (function() {
     function NvwNN(Wn) {
         var vvv = 0;
         var idd = items[Wn];
-        ingamescreen.vwvvm.MVN(idd.img.src, idd.img.W);
+        Game.vwvvm.MVN(idd.img.src, idd.img.W);
         var MWVwN = idd.detail.WVn;
         var canvasZ = idd.detail.MWW;
-        var WVn = ingamescreen.WVn;
-        var VnmwN = ingamescreen.VnmwN;
+        var WVn = Game.WVn;
+        var VnmwN = Game.VnmwN;
         var nNNWn = PLAYER.nNNWn;
         PLAYER.mMvww = Wn;
         if (canvasZ !== window.undefined) {
@@ -3023,8 +2877,8 @@ var World = (function() {
         var nnNVM = 0;
         var vVWmn = 0;
         var vvv = 0;
-        var nvV = PLAYER.NNm;
-        var NNm = ingamescreen.nvV;
+        var nvV = PLAYER.craftList;
+        var craftList = Game.nvV;
         var vVN = PLAYER.vVN;
         for (var i = 1; i < items.length; i++) {
             var idd = items[i];
@@ -3033,7 +2887,7 @@ var World = (function() {
                     nnNVM = i;
                     vVWmn = vvv;
                 }
-                NNm[vvv].MVN(idd.img.src, idd.img.W);
+                craftList[vvv].MVN(idd.img.src, idd.img.W);
                 nvV[vvv] = i;
                 vVN[vvv] = NMvWv(i, idd.detail);
                 vvv++;
@@ -3047,7 +2901,7 @@ var World = (function() {
     };
 
     function MwM(MWW) {
-        if (MWW === station.own) {
+        if (MWW === AREAS.own) {
             World.MNNMM();
             PLAYER.Nn.MNM = -1;
         }
@@ -3055,9 +2909,9 @@ var World = (function() {
         var vVWmn = 0;
         var WnNmW = World.PLAYER.mMvww;
         var vvv = 0;
-        var nvV = PLAYER.NNm;
+        var nvV = PLAYER.craftList;
         var vVN = PLAYER.vVN;
-        var NNm = ingamescreen.nvV;
+        var craftList = Game.nvV;
         for (var i = 1; i < items.length; i++) {
             var idd = items[i];
             var NW = idd.detail;
@@ -3066,7 +2920,7 @@ var World = (function() {
                     nnNVM = i;
                     vVWmn = vvv;
                 }
-                NNm[vvv].MVN(idd.img.src, idd.img.W);
+                craftList[vvv].MVN(idd.img.src, idd.img.W);
                 nvV[vvv] = i;
                 vVN[vvv] = MMMWN(NW.WVn);
                 vvv++;
@@ -3096,7 +2950,7 @@ var World = (function() {
                 MnW.mMv.value = 0;
                 PLAYER.level++;
                 PLAYER.canvasH++;
-                if ((ingamescreen.MvN() === 1) && (PLAYER.nVV !== -1))
+                if ((Game.MvN() === 1) && (PLAYER.nVV !== -1))
                     NVM(PLAYER.nVV);
                 audio.VnV(audio.ww.nNwmw, 1, 0);
                 return;
@@ -3138,7 +2992,7 @@ var World = (function() {
         nmMWN: 0,
         canvasH: 0,
         nNNWn: [],
-        NNm: [],
+        craftList: [],
         vVN: [],
         NmWNV: [],
         WwVNv: 0,
@@ -3256,7 +3110,7 @@ var World = (function() {
         VVMWm: VVMWm
     };
 })();
-var INscreen = (function() {
+var Entitie = (function() {
     var MwvWW = 0;
     var Wvm = [];
     var vWM = [];
@@ -3264,16 +3118,16 @@ var INscreen = (function() {
     var MnMWW = 0;
 
     function init(WvwVn, WwNMN, nVvmm) {
-        INscreen.WwNMN = (WwNMN === window.undefined) ? 0 : WwNMN;
-        INscreen.nVvmm = (nVvmm === window.undefined) ? 0 : nVvmm;
-        MnMWW = INscreen.nVvmm + INscreen.WwNMN;
+        Entitie.WwNMN = (WwNMN === window.undefined) ? 0 : WwNMN;
+        Entitie.nVvmm = (nVvmm === window.undefined) ? 0 : nVvmm;
+        MnMWW = Entitie.nVvmm + Entitie.WwNMN;
         MwvWW = ENTITIES.length;
         var vvv = ENTITIES.length + 1;
         for (var i = 0; i < vvv; i++) {
             vWM[i] = new VNWvV.VNWvV(WvwVn);
             Wvm[i] = [];
             for (var j = 0; j < WvwVn; j++)
-                Wvm[i][j] = INscreen.create(i);
+                Wvm[i][j] = Entitie.create(i);
         }
     };
 
@@ -3289,7 +3143,7 @@ var INscreen = (function() {
 
     function NMM(socketid, Wn, mvN, vV, nVmNV) {
         var i = 0;
-        var mMnVn = (((socketid === 0) ? 0 : MnMWW) + (socketid * INscreen.VWMmm)) + Wn;
+        var mMnVn = (((socketid === 0) ? 0 : MnMWW) + (socketid * Entitie.VWMmm)) + Wn;
         var MW = WVMvm[mMnVn];
         if (((MW !== window.undefined) && (MW.type === vV)) && (MW.mvN === mvN))
             WVMvm[mMnVn] = window.undefined;
@@ -3312,14 +3166,14 @@ var INscreen = (function() {
     };
 
     function wWm(socketid, Wn, mvN, vV) {
-        var mMnVn = (((socketid === 0) ? 0 : MnMWW) + (socketid * INscreen.VWMmm)) + Wn;
+        var mMnVn = (((socketid === 0) ? 0 : MnMWW) + (socketid * Entitie.VWMmm)) + Wn;
         var MW = WVMvm[mMnVn];
         if ((MW === window.undefined) || (MW.mvN !== mvN)) {
             var wmWnw = VNWvV.MMvvm(vWM[vV]);
             MW = Wvm[vV][wmWnw];
             if (MW === window.undefined) {
                 window.console.log("Memory Warn: new entitie created");
-                Wvm[vV][wmWnw] = INscreen.create(vV);
+                Wvm[vV][wmWnw] = Entitie.create(vV);
                 MW = Wvm[vV][wmWnw];
             }
             WVMvm[mMnVn] = MW;
@@ -7042,8 +6896,8 @@ function mvMMV(MW, socketid, mvN, Wn, vV, WX, WY, wnw, WVM, nNN, wW, Mnn) {
         MW.nWV = WvW.nWV;
         MW.rx = WX;
         MW.ry = WY;
-        MW.i = window.Math.floor(WY / Mw.wmn);
-        MW.j = window.Math.floor(WX / Mw.wmn);
+        MW.i = window.Math.floor(WY / Render.wmn);
+        MW.j = window.Math.floor(WX / Render.wmn);
         MW.VMn = 0;
         MW.nWM = 0;
         MW.Mmm = 0;
@@ -8051,7 +7905,7 @@ var Home = (function() {
     function checkstatenull(Mnn) {};
 
     function NvwNv() {
-        quit(ingamescreen);
+        quit(Game);
     };
 
     function NvN() {
@@ -8060,13 +7914,13 @@ var Home = (function() {
     var vmV = 0;
 
     function nnn(vV, WX, WY, wW, MMWWm, Mmwvn) {
-        var MW = INscreen.get(0, vmV, vmV, vV);
+        var MW = Entitie.get(0, vmV, vmV, vV);
         mvMMV(MW, 0, vmV, vmV, vV, WX, WY, WX, WY, (MMWWm << 5) + (Mmwvn << 10), wW, 1);
         vmV++;
     };
 
     function Vnvmv(vV, WX, WY, Rot, Mnn, nvN) {
-        var MW = INscreen.get(0, vmV, vmV, vV);
+        var MW = Entitie.get(0, vmV, vmV, vV);
         mvMMV(MW, 0, vmV, vmV, vV, WX, WY, WX, WY, (nvN << 7) + (Rot << 5), 0, Mnn);
         vmV++;
     };
@@ -8173,8 +8027,8 @@ var Home = (function() {
         Home.VNVVN = 0;
         window.document.getElementById("nicknameInput").value = localStorage.getItem("nickname", nick);
         audio.MmwVw(audio.wMm.title, 1000, vWn.mvVWW);
-        INscreen.NWnwm();
-        Mw.reset(1);
+        Entitie.NWnwm();
+        Render.reset(1);
         vmV = 0;
 
         nnn(mWmnn, 200, 0, 127, object.stone, 3);
@@ -8340,8 +8194,8 @@ var Home = (function() {
         Client.NvN = NvN;
         World.PLAYER.wvM = 0;
         World.PLAYER.id = 0;
-        Mw.vVwvn(0);
-        Mw.NvwNm();
+        Render.vVwvn(0);
+        Render.NvwNm();
         if (Home.gameMode === 1) {
             VMm.vnN();
             wnm.vnN();
@@ -8615,7 +8469,7 @@ var Home = (function() {
     function draw() {
         if (MMVwV() === 0) return;
         ctx.clearRect(0, 0, screenWidth, screenHeight);
-        Mw.VMMWm();
+        Render.VMMWm();
         if (MNw > 0) {
             NNN = mwn(1 - (MNw / WwM));
             if (mwm === 1) NNN = 1 - window.Math.abs(NNN);
@@ -8653,7 +8507,7 @@ var Home = (function() {
         privateServer.draw();
         vvmMm.draw();
         if (WnwMN.W === null) {
-            WnwMN.W = vM.showtxt((('0.' + mMwwv[0]) + '.') + mMwwv[1], "'Viga', sans-serif", "#d6ddde", 24, 400, window.undefined, 16, 25, window.undefined, window.undefined, window.undefined, window.undefined, "#2b3c3e", 8);
+            WnwMN.W = vM.showtxt((('0.' + versionInf[0]) + '.') + versionInf[1], "'Viga', sans-serif", "#d6ddde", 24, 400, window.undefined, 16, 25, window.undefined, window.undefined, window.undefined, window.undefined, "#2b3c3e", 8);
             WnwMN.W.m = 1;
         }
         CanvasUtils.putonscreen(WnwMN, (VmV.mv.x / scaleby) + 484.5, (VmV.mv.y / scaleby) + 124, 0, 0, 0, 1);
@@ -8663,7 +8517,7 @@ var Home = (function() {
         wMMNm.mv.x = WMmmM.mv.x + (34 * scaleby);
         wMMNm.mv.y = WMmmM.mv.y + (399 * scaleby);
         wMMNm.draw();
-        Mw.vMNVm();
+        Render.vMNVm();
         vWn.nwwnv();
     };
 
@@ -8924,7 +8778,7 @@ var Home = (function() {
         }
         if (vvmMm.mw() === 1) {
             vnm = 1;
-            Home.quit(mapeditor);
+            Home.quit(Editor);
             audio.VnV(audio.ww.play, 1, 0);
         }
         if ((wvmwM.mw() === 1) || (wMMNm.mw() === 1)) {
@@ -9057,11 +8911,11 @@ var Home = (function() {
         draw: draw
     };
 })();
-var ingamescreen = (function() {
+var Game = (function() {
     function checkstatenull(Mnn) {
         window.console.log("onError", Mnn);
-        if (World.gameMode === 1) quit(WvvMV);
-        else quit(nmmVv);
+        if (World.gameMode === 1) quit(Rank);
+        else quit(Score);
     };
 
     function NvN() {};
@@ -9113,7 +8967,7 @@ var ingamescreen = (function() {
     var bagbutt = vM.vMM(64, 63, ["img/bag-button-out.png", "img/bag-button-in.png", "img/bag-button-click.png"]);
     bagbutt.open = 0;
     var wnV = [];
-    var NNm = [];
+    var craftList = [];
     var nmMMm = 0;
     var closebutt = vM.vMM(43, 43, ["img/close-box-out.png", "img/close-box-in.png", "img/close-box-click.png"]);
     var highpartout = [CanvasUtils.loadImage("img/high-particules-out.png"), CanvasUtils.loadImage("img/high-particules-in.png"), CanvasUtils.loadImage("img/high-particules-click.png")];
@@ -9261,52 +9115,52 @@ var ingamescreen = (function() {
         for (i = 0; i < 3; i++) VnmwN.push(vM.vMM(wMv, wMv, null, WwvNM));
         for (i = 0; i < 9; i++) WvNMn.push(vM.vMM(29, 27, null, removebuttout));
         for (i = 0; i < 18; i++) nmMvw.push(vM.vMM(44, 33, null, joinbuttout));
-        ingamescreen.closebutt = nVN;
-        ingamescreen.nwmVV = MVVMv;
-        ingamescreen.inventory = inventory;
-        ingamescreen.nvV = nvV;
-        ingamescreen.WVn = WVn;
-        ingamescreen.vwvvm = vwvvm;
-        ingamescreen.NMV = NMV;
-        ingamescreen.VnmwN = VnmwN;
-        ingamescreen.mwV = mwV;
-        ingamescreen.WvNMn = WvNMn;
-        ingamescreen.join = nmMvw;
-        ingamescreen.MvN = MvN;
-        ingamescreen.Wnmnv = Wnmnv;
-        ingamescreen.WmN = "";
-        ingamescreen.nVNMM = joinbutt;
-        ingamescreen.nWvnm = deletebuttout;
-        ingamescreen.vwn = vwn;
-        ingamescreen.WMn = WMn;
-        ingamescreen.mNNwM = 0;
-        ingamescreen.nNwMM = 0;
-        ingamescreen.vwVnW = 0;
-        ingamescreen.mnNnW = 0;
-        ingamescreen.mmNWn = 0;
-        ingamescreen.vmwNV = 0;
-        wnV[Ww.building] = vM.vMM(42, 42, ["img/building-button-out.png", "img/building-button-in.png", "img/building-button-click.png"]);
-        wnV[Ww.skill] = vM.vMM(42, 42, ["img/skill-button-out.png", "img/skill-button-in.png", "img/skill-button-click.png"]);
-        wnV[Ww.clothe] = vM.vMM(42, 42, ["img/clothe-button-out.png", "img/clothe-button-in.png", "img/clothe-button-click.png"]);
-        wnV[Ww.plant] = vM.vMM(42, 42, ["img/plant-button-out.png", "img/plant-button-in.png", "img/plant-button-click.png"]);
-        wnV[Ww.medicine] = vM.vMM(42, 42, ["img/medecine-button-out.png", "img/medecine-button-in.png", "img/medecine-button-click.png"]);
-        wnV[Ww.resources] = vM.vMM(42, 42, ["img/resources-button-out.png", "img/resources-button-in.png", "img/resources-button-click.png"]);
-        wnV[Ww.survival] = vM.vMM(42, 42, ["img/survival-button-out.png", "img/survival-button-in.png", "img/survival-button-click.png"]);
-        wnV[Ww.tool] = vM.vMM(42, 42, ["img/tool-button-out.png", "img/tool-button-in.png", "img/tool-button-click.png"]);
-        wnV[Ww.weapon] = vM.vMM(42, 42, ["img/weapon-button-out.png", "img/weapon-button-in.png", "img/weapon-button-click.png"]);
-        wnV[Ww.cable] = vM.vMM(42, 42, ["img/cable-button-out.png", "img/cable-button-in.png", "img/cable-button-click.png"]);
-        NNm[station.own] = vM.vMM(42, 42, ["img/own-button-out.png", "img/own-button-in.png", "img/own-button-click.png"]);
-        NNm[station.firepart] = vM.vMM(42, 42, ["img/fire-button-out.png", "img/fire-button-in.png", "img/fire-button-click.png"]);
-        NNm[station.workbench] = vM.vMM(42, 42, ["img/workbench1-button-out.png", "img/workbench1-button-in.png", "img/workbench1-button-click.png"]);
-        NNm[station.bbq] = vM.vMM(42, 42, ["img/bbq-button-out.png", "img/bbq-button-in.png", "img/bbq-button-click.png"]);
-        NNm[station.composter] = vM.vMM(42, 42, ["img/composter-button-out.png", "img/composter-button-in.png", "img/composter-button-click.png"]);
-        NNm[station.weavingmachine] = vM.vMM(42, 42, ["img/weaving-machine-button-out.png", "img/weaving-machine-button-in.png", "img/weaving-machine-button-click.png"]);
-        NNm[station.weldingmachine] = vM.vMM(42, 42, ["img/welding-machine-button-out.png", "img/welding-machine-button-in.png", "img/welding-machine-button-click.png"]);
-        NNm[station.researchbench] = vM.vMM(42, 42, ["img/workbench2-button-out.png", "img/workbench2-button-in.png", "img/workbench2-button-click.png"]);
-        NNm[station.smelter] = vM.vMM(42, 42, ["img/smelter-button-out.png", "img/smelter-button-in.png", "img/smelter-button-click.png"]);
-        NNm[station.teslabench] = vM.vMM(42, 42, ["img/workbench3-button-out.png", "img/workbench3-button-in.png", "img/workbench3-button-click.png"]);
-        NNm[station.agitator] = vM.vMM(42, 42, ["img/agitator-button-out.png", "img/agitator-button-in.png", "img/agitator-button-click.png"]);
-        NNm[station.extractor] = vM.vMM(42, 42, ["img/extractor-button-out.png", "img/extractor-button-in.png", "img/extractor-button-click.png"]);
+        Game.closebutt = nVN;
+        Game.nwmVV = MVVMv;
+        Game.inventory = inventory;
+        Game.nvV = nvV;
+        Game.WVn = WVn;
+        Game.vwvvm = vwvvm;
+        Game.NMV = NMV;
+        Game.VnmwN = VnmwN;
+        Game.mwV = mwV;
+        Game.WvNMn = WvNMn;
+        Game.join = nmMvw;
+        Game.MvN = MvN;
+        Game.Wnmnv = Wnmnv;
+        Game.WmN = "";
+        Game.nVNMM = joinbutt;
+        Game.nWvnm = deletebuttout;
+        Game.vwn = vwn;
+        Game.WMn = WMn;
+        Game.mNNwM = 0;
+        Game.nNwMM = 0;
+        Game.vwVnW = 0;
+        Game.mnNnW = 0;
+        Game.mmNWn = 0;
+        Game.vmwNV = 0;
+        wnV[SKILLS.__BUILDING__] = vM.vMM(42, 42, ["img/building-button-out.png", "img/building-button-in.png", "img/building-button-click.png"]);
+        wnV[SKILLS.__SKILL__] = vM.vMM(42, 42, ["img/skill-button-out.png", "img/skill-button-in.png", "img/skill-button-click.png"]);
+        wnV[SKILLS.__CLOTHE__] = vM.vMM(42, 42, ["img/clothe-button-out.png", "img/clothe-button-in.png", "img/clothe-button-click.png"]);
+        wnV[SKILLS.__PLANT__] = vM.vMM(42, 42, ["img/plant-button-out.png", "img/plant-button-in.png", "img/plant-button-click.png"]);
+        wnV[SKILLS.__DRUG__] = vM.vMM(42, 42, ["img/medecine-button-out.png", "img/medecine-button-in.png", "img/medecine-button-click.png"]);
+        wnV[SKILLS.__MINERAL__] = vM.vMM(42, 42, ["img/resources-button-out.png", "img/resources-button-in.png", "img/resources-button-click.png"]);
+        wnV[SKILLS.__SURVIVAL__] = vM.vMM(42, 42, ["img/survival-button-out.png", "img/survival-button-in.png", "img/survival-button-click.png"]);
+        wnV[SKILLS.__TOOL__] = vM.vMM(42, 42, ["img/tool-button-out.png", "img/tool-button-in.png", "img/tool-button-click.png"]);
+        wnV[SKILLS.__WEAPON__] = vM.vMM(42, 42, ["img/weapon-button-out.png", "img/weapon-button-in.png", "img/weapon-button-click.png"]);
+        wnV[SKILLS.__LOGIC__] = vM.vMM(42, 42, ["img/cable-button-out.png", "img/cable-button-in.png", "img/cable-button-click.png"]);
+        craftList[AREAS.own] = vM.vMM(42, 42, ["img/own-button-out.png", "img/own-button-in.png", "img/own-button-click.png"]);
+        craftList[AREAS.firepart] = vM.vMM(42, 42, ["img/fire-button-out.png", "img/fire-button-in.png", "img/fire-button-click.png"]);
+        craftList[AREAS.workbench] = vM.vMM(42, 42, ["img/workbench1-button-out.png", "img/workbench1-button-in.png", "img/workbench1-button-click.png"]);
+        craftList[AREAS.bbq] = vM.vMM(42, 42, ["img/bbq-button-out.png", "img/bbq-button-in.png", "img/bbq-button-click.png"]);
+        craftList[AREAS.composter] = vM.vMM(42, 42, ["img/composter-button-out.png", "img/composter-button-in.png", "img/composter-button-click.png"]);
+        craftList[AREAS.weavingmachine] = vM.vMM(42, 42, ["img/weaving-machine-button-out.png", "img/weaving-machine-button-in.png", "img/weaving-machine-button-click.png"]);
+        craftList[AREAS.weldingmachine] = vM.vMM(42, 42, ["img/welding-machine-button-out.png", "img/welding-machine-button-in.png", "img/welding-machine-button-click.png"]);
+        craftList[AREAS.researchbench] = vM.vMM(42, 42, ["img/workbench2-button-out.png", "img/workbench2-button-in.png", "img/workbench2-button-click.png"]);
+        craftList[AREAS.smelter] = vM.vMM(42, 42, ["img/smelter-button-out.png", "img/smelter-button-in.png", "img/smelter-button-click.png"]);
+        craftList[AREAS.teslabench] = vM.vMM(42, 42, ["img/workbench3-button-out.png", "img/workbench3-button-in.png", "img/workbench3-button-click.png"]);
+        craftList[AREAS.agitator] = vM.vMM(42, 42, ["img/agitator-button-out.png", "img/agitator-button-in.png", "img/agitator-button-click.png"]);
+        craftList[AREAS.extractor] = vM.vMM(42, 42, ["img/extractor-button-out.png", "img/extractor-button-in.png", "img/extractor-button-click.png"]);
         gauges = vM.mVV(255, 174, "img/profile-player2.png");
         settingbox = vM.mVV(269, 267, "img/settings-box.png");
         chestbox = vM.mVV(162, 165, "img/chest-box4.png");
@@ -9356,8 +9210,8 @@ var ingamescreen = (function() {
         window.document.getElementById("bod").style.backgroundColor = "#46664D";
         nmMMm = 0;
         Home.ads++;
-        ingamescreen.WmN = "";
-        ingamescreen.WwmNM = 0;
+        Game.WmN = "";
+        Game.WwmNM = 0;
         vWn.nMvWM();
         if (World.gameMode === World.__BR__) {
             teambutt.vnN();
@@ -9370,7 +9224,7 @@ var ingamescreen = (function() {
             teambutt.show();
             craftbutton.show();
         }
-        CanvasUtils.MNwmM(ingamescreen);
+        CanvasUtils.MNwmM(Game);
         MNw = Nmv;
         WwM = Nmv;
         mwn = WVWWm;
@@ -9459,11 +9313,11 @@ var ingamescreen = (function() {
         ctx.clearRect(0, 0, screenWidth, screenHeight);
         World.NNNMv();
         World.WnMvm();
-        Mw.VMMWm();
-        Mw.mvn();
-        Mw.MnW(gauges.mv.x, gauges.mv.y);
-        Mw.MvV(minimap.mv.x, minimap.mv.y);
-        Mw.inventory(vwn, WMn, MmV, bagbutt);
+        Render.VMMWm();
+        Render.mvn();
+        Render.MnW(gauges.mv.x, gauges.mv.y);
+        Render.MvV(minimap.mv.x, minimap.mv.y);
+        Render.inventory(vwn, WMn, MmV, bagbutt);
         gauges.draw();
         minimap.draw();
         fullscreenimg.draw();
@@ -9472,20 +9326,20 @@ var ingamescreen = (function() {
         minimapbutt.draw();
         teambutt.draw();
         markposition();
-        Mw.VnVVN(gauges.mv.x, gauges.mv.y);
+        Render.VnVVN(gauges.mv.x, gauges.mv.y);
         if (World.gameMode !== World.__BR__) {
             if (leaderboardbutt.mv.disable === 0) {
                 leaderboard.draw();
-                Mw.leaderboard(leaderboard.mv.x, leaderboard.mv.y);
+                Render.leaderboard(leaderboard.mv.x, leaderboard.mv.y);
                 leaderboardbutt.draw();
             } else leaderboardbutt2.draw();
         }
         if (NmW === 1) {
-            if (bordmapwin === 1) Mw.NNMwm(bordermap, closebutt);
-            else if (settingwin === 1) Mw.optionsfc(settingbox, wWNnw, nvwMN, MNVVn, VmvmN, WMVVn, wvNNV, WVnnn, NmVWV, vVMWm, closebutt, wVwnm, VnWMV, wwMwv);
-            else if (craftwin === 1) Mw.craftfc(craftbox, closebutt, wnV, craftbutt, cancelbutt, unlockbuttout, NNm, vwvvm, vwn, WMn, VWNWV, WmWwW, WwMvM, NWmNn);
-            else if (containerwin === 1) Mw.cncwind(chestbox, closebutt, vwn, WMn);
-            else if (teamwin === 1) Mw.clan(closebutt, teambox, teammemberbox, leavebutt, addtimbutt, lockbutt, unlockbutt, deletebutt);
+            if (bordmapwin === 1) Render.NNMwm(bordermap, closebutt);
+            else if (settingwin === 1) Render.optionsfc(settingbox, wWNnw, nvwMN, MNVVn, VmvmN, WMVVn, wvNNV, WVnnn, NmVWV, vVMWm, closebutt, wVwnm, VnWMV, wwMwv);
+            else if (craftwin === 1) Render.craftfc(craftbox, closebutt, wnV, craftbutt, cancelbutt, unlockbuttout, craftList, vwvvm, vwn, WMn, VWNWV, WmWwW, WwMvM, NWmNn);
+            else if (containerwin === 1) Render.cncwind(chestbox, closebutt, vwn, WMn);
+            else if (teamwin === 1) Render.clan(closebutt, teambox, teammemberbox, leavebutt, addtimbutt, lockbutt, unlockbutt, deletebutt);
         } else if (mobile === 1) {
             if ((((keys.leftgo() + keys.rightgo()) + keys.straightgo()) + keys.downgo()) >= 1) {
                 ctx.globalAlpha = 0.3;
@@ -9587,12 +9441,12 @@ var ingamescreen = (function() {
                 if (World.PLAYER.nVV === -1) {
                     if ((World.PLAYER.WwVNv === 0) || (World.PLAYER.VVn === 1)) craftbutt.mw();
                     else cancelbutt.mw();
-                    if ((((World.PLAYER.Vvw === station.firepart) || (World.PLAYER.Vvw === station.bbq)) || (World.PLAYER.Vvw === station.composter)) && (World.PLAYER.Nn.MNM !== 255)) VWNWV.mw();
-                    else if ((((World.PLAYER.Vvw === station.smelter) || (World.PLAYER.Vvw === station.extractor)) || (World.PLAYER.Vvw === station.agitator)) && (World.PLAYER.Nn.MNM !== 255)) WmWwW.mw();
+                    if ((((World.PLAYER.Vvw === AREAS.firepart) || (World.PLAYER.Vvw === AREAS.bbq)) || (World.PLAYER.Vvw === AREAS.composter)) && (World.PLAYER.Nn.MNM !== 255)) VWNWV.mw();
+                    else if ((((World.PLAYER.Vvw === AREAS.smelter) || (World.PLAYER.Vvw === AREAS.extractor)) || (World.PLAYER.Vvw === AREAS.agitator)) && (World.PLAYER.Nn.MNM !== 255)) WmWwW.mw();
                 } else unlockbuttout.mw();
                 for (var i = 0; i < wnV.length; i++) wnV[i].mw();
-                for (i = 0; i < NNm.length; i++) {
-                    if ((World.PLAYER.vWMmW === i) || (i === 0)) NNm[i].mw();
+                for (i = 0; i < craftList.length; i++) {
+                    if ((World.PLAYER.vWMmW === i) || (i === 0)) craftList[i].mw();
                 }
                 var vvv = World.PLAYER.MNvMn;
                 for (var i = 0; i < vvv; i++) nvV[i].mw();
@@ -9689,7 +9543,7 @@ var ingamescreen = (function() {
                     nVN();
                     NmW = 1;
                     craftwin = 1;
-                    World.MwM(station.own);
+                    World.MwM(AREAS.own);
                     audio.VnV(audio.ww.open, 1, 0);
                     return;
                 } else {
@@ -9827,15 +9681,15 @@ var ingamescreen = (function() {
                     audio.VnV(audio.ww.button, 1, 0);
                     return;
                 } else if (VnWMV.mw() === 1) {
-                    Mw.wvmnm(1);
+                    Render.wvmnm(1);
                     audio.VnV(audio.ww.button, 1, 0);
                     return;
                 } else if (wVwnm.mw() === 1) {
-                    Mw.wvmnm(2);
+                    Render.wvmnm(2);
                     audio.VnV(audio.ww.button, 1, 0);
                     return;
                 } else if (wwMwv.mw() === 1) {
-                    Mw.wvmnm(0);
+                    Render.wvmnm(0);
                     audio.VnV(audio.ww.button, 1, 0);
                     return;
                 }
@@ -9881,58 +9735,58 @@ var ingamescreen = (function() {
                         }
                     }
                 }
-                if (wnV[Ww.skill].mw() === 1) {
-                    World.NVM(Ww.skill);
+                if (wnV[SKILLS.__SKILL__].mw() === 1) {
+                    World.NVM(SKILLS.__SKILL__);
                     audio.VnV(audio.ww.button, 1, 0);
-                } else if (wnV[Ww.building].mw() === 1) {
-                    World.NVM(Ww.building);
+                } else if (wnV[SKILLS.__BUILDING__].mw() === 1) {
+                    World.NVM(SKILLS.__BUILDING__);
                     audio.VnV(audio.ww.button, 1, 0);
-                } else if (wnV[Ww.clothe].mw() === 1) {
-                    World.NVM(Ww.clothe);
+                } else if (wnV[SKILLS.__CLOTHE__].mw() === 1) {
+                    World.NVM(SKILLS.__CLOTHE__);
                     audio.VnV(audio.ww.button, 1, 0);
-                } else if (wnV[Ww.plant].mw() === 1) {
-                    World.NVM(Ww.plant);
+                } else if (wnV[SKILLS.__PLANT__].mw() === 1) {
+                    World.NVM(SKILLS.__PLANT__);
                     audio.VnV(audio.ww.button, 1, 0);
-                } else if (wnV[Ww.medicine].mw() === 1) {
-                    World.NVM(Ww.medicine);
+                } else if (wnV[SKILLS.__DRUG__].mw() === 1) {
+                    World.NVM(SKILLS.__DRUG__);
                     audio.VnV(audio.ww.button, 1, 0);
-                } else if (wnV[Ww.resources].mw() === 1) {
-                    World.NVM(Ww.resources);
+                } else if (wnV[SKILLS.__MINERAL__].mw() === 1) {
+                    World.NVM(SKILLS.__MINERAL__);
                     audio.VnV(audio.ww.button, 1, 0);
-                } else if (wnV[Ww.cable].mw() === 1) {
-                    World.NVM(Ww.cable);
+                } else if (wnV[SKILLS.__LOGIC__].mw() === 1) {
+                    World.NVM(SKILLS.__LOGIC__);
                     audio.VnV(audio.ww.button, 1, 0);
-                } else if (wnV[Ww.survival].mw() === 1) {
-                    World.NVM(Ww.survival);
+                } else if (wnV[SKILLS.__SURVIVAL__].mw() === 1) {
+                    World.NVM(SKILLS.__SURVIVAL__);
                     audio.VnV(audio.ww.button, 1, 0);
-                } else if (wnV[Ww.tool].mw() === 1) {
-                    World.NVM(Ww.tool);
+                } else if (wnV[SKILLS.__TOOL__].mw() === 1) {
+                    World.NVM(SKILLS.__TOOL__);
                     audio.VnV(audio.ww.button, 1, 0);
-                } else if (wnV[Ww.weapon].mw() === 1) {
-                    World.NVM(Ww.weapon);
+                } else if (wnV[SKILLS.__WEAPON__].mw() === 1) {
+                    World.NVM(SKILLS.__WEAPON__);
                     audio.VnV(audio.ww.button, 1, 0);
-                } else if (NNm[station.own].mw() === 1) {
-                    World.MwM(station.own);
+                } else if (craftList[AREAS.own].mw() === 1) {
+                    World.MwM(AREAS.own);
                     audio.VnV(audio.ww.button, 1, 0);
-                } else if (((NNm[station.firepart].mw() === 1) || (NNm[station.bbq].mw() === 1)) || (NNm[station.composter].mw() === 1)) {
+                } else if (((craftList[AREAS.firepart].mw() === 1) || (craftList[AREAS.bbq].mw() === 1)) || (craftList[AREAS.composter].mw() === 1)) {
                     Client.sendwsmsg(window.JSON.stringify([World.PLAYER.NnN, World.PLAYER.MnMwn, World.PLAYER.MNMvN]));
                     audio.VnV(audio.ww.button, 1, 0);
-                } else if (NNm[station.workbench].mw() === 1) {
+                } else if (craftList[AREAS.workbench].mw() === 1) {
                     Client.sendwsmsg(window.JSON.stringify([World.PLAYER.NnN, World.PLAYER.MnMwn, World.PLAYER.MNMvN]));
                     audio.VnV(audio.ww.button, 1, 0);
-                } else if (NNm[station.weldingmachine].mw() === 1) {
+                } else if (craftList[AREAS.weldingmachine].mw() === 1) {
                     Client.sendwsmsg(window.JSON.stringify([World.PLAYER.NnN, World.PLAYER.MnMwn, World.PLAYER.MNMvN]));
                     audio.VnV(audio.ww.button, 1, 0);
-                } else if (NNm[station.weavingmachine].mw() === 1) {
+                } else if (craftList[AREAS.weavingmachine].mw() === 1) {
                     Client.sendwsmsg(window.JSON.stringify([World.PLAYER.NnN, World.PLAYER.MnMwn, World.PLAYER.MNMvN]));
                     audio.VnV(audio.ww.button, 1, 0);
-                } else if (NNm[station.researchbench].mw() === 1) {
+                } else if (craftList[AREAS.researchbench].mw() === 1) {
                     Client.sendwsmsg(window.JSON.stringify([World.PLAYER.NnN, World.PLAYER.MnMwn, World.PLAYER.MNMvN]));
                     audio.VnV(audio.ww.button, 1, 0);
-                } else if (NNm[station.teslabench].mw() === 1) {
+                } else if (craftList[AREAS.teslabench].mw() === 1) {
                     Client.sendwsmsg(window.JSON.stringify([World.PLAYER.NnN, World.PLAYER.MnMwn, World.PLAYER.MNMvN]));
                     audio.VnV(audio.ww.button, 1, 0);
-                } else if (((NNm[station.smelter].mw() === 1) || (NNm[station.extractor].mw() === 1)) || (NNm[station.agitator].mw() === 1)) {
+                } else if (((craftList[AREAS.smelter].mw() === 1) || (craftList[AREAS.extractor].mw() === 1)) || (craftList[AREAS.agitator].mw() === 1)) {
                     Client.sendwsmsg(window.JSON.stringify([World.PLAYER.NnN, World.PLAYER.MnMwn, World.PLAYER.MNMvN]));
                     audio.VnV(audio.ww.button, 1, 0);
                 } else {
@@ -9940,7 +9794,7 @@ var ingamescreen = (function() {
                     for (var i = 0; i < vvv; i++) {
                         if (nvV[i].mw() === 1) {
                             World.PLAYER.VNwww = i;
-                            World.NvwNN(World.PLAYER.NNm[i]);
+                            World.NvwNN(World.PLAYER.craftList[i]);
                             audio.VnV(audio.ww.button, 1, 0);
                             return;
                         }
@@ -9957,19 +9811,19 @@ var ingamescreen = (function() {
                                 return;
                             }
                         }
-                        if (((World.PLAYER.Vvw === station.firepart) || (World.PLAYER.Vvw === station.bbq)) || (World.PLAYER.Vvw === station.composter)) {
+                        if (((World.PLAYER.Vvw === AREAS.firepart) || (World.PLAYER.Vvw === AREAS.bbq)) || (World.PLAYER.Vvw === AREAS.composter)) {
                             if ((World.PLAYER.Nn.MNM !== 255) && (VWNWV.mw() === 1)) {
                                 Client.sendwsmsg(window.JSON.stringify([24]));
                                 audio.VnV(audio.ww.button, 1, 0);
                                 return;
                             }
-                        } else if (((World.PLAYER.Vvw === station.smelter) || (World.PLAYER.Vvw === station.extractor)) || (World.PLAYER.Vvw === station.agitator)) {
+                        } else if (((World.PLAYER.Vvw === AREAS.smelter) || (World.PLAYER.Vvw === AREAS.extractor)) || (World.PLAYER.Vvw === AREAS.agitator)) {
                             if ((World.PLAYER.Nn.MNM !== 255) && (WmWwW.mw() === 1)) {
                                 Client.sendwsmsg(window.JSON.stringify([24]));
                                 audio.VnV(audio.ww.button, 1, 0);
                                 return;
                             }
-                        } else if (World.PLAYER.Vvw === station.teslabench) {
+                        } else if (World.PLAYER.Vvw === AREAS.teslabench) {
                             if ((World.PLAYER.Nn.MNM !== 255) && (WwMvM.mw() === 1)) {
                                 Client.sendwsmsg(window.JSON.stringify([24]));
                                 audio.VnV(audio.ww.button, 1, 0);
@@ -9996,7 +9850,7 @@ var ingamescreen = (function() {
             } else if (teamwin === 1) {
                 if (World.PLAYER.clan === -1) {
                     if (((addtimbutt.mw() === 1) && (World.PLAYER.WwmNM === 1)) && ((window.Date.now() - World.PLAYER.mVVmv) > 30500)) {
-                        Client.sendwsmsg(window.JSON.stringify([28, ingamescreen.WmN]));
+                        Client.sendwsmsg(window.JSON.stringify([28, Game.WmN]));
                         audio.VnV(audio.ww.button, 1, 0);
                         World.PLAYER.mVVmv = window.Date.now();
                     }
@@ -10092,8 +9946,8 @@ var ingamescreen = (function() {
                         invtr[holditem.id][1] = nM;
                         invtr[holditem.id][2] = vmM;
                         invtr[holditem.id][3] = wvmvw;
-                        if (idd !== 0) ingamescreen.inventory[holditem.id].MVN(items[idd].img.src, items[idd].img.W);
-                        ingamescreen.inventory[i].MVN(items[invtr[i][0]].img.src, items[invtr[i][0]].img.W);
+                        if (idd !== 0) Game.inventory[holditem.id].MVN(items[idd].img.src, items[idd].img.W);
+                        Game.inventory[i].MVN(items[invtr[i][0]].img.src, items[invtr[i][0]].img.W);
                         World.PLAYER.holditem.inclick = 0;
                         audio.VnV(audio.ww.holditem, 1, 0);
                         return;
@@ -10180,8 +10034,8 @@ var ingamescreen = (function() {
                     else cancelbutt.mw();
                 } else unlockbuttout.mw();
                 for (var i = 0; i < wnV.length; i++) wnV[i].mw();
-                for (i = 0; i < NNm.length; i++) {
-                    if ((World.PLAYER.vWMmW === i) || (i === 0)) NNm[i].mw();
+                for (i = 0; i < craftList.length; i++) {
+                    if ((World.PLAYER.vWMmW === i) || (i === 0)) craftList[i].mw();
                 }
                 var vvv = World.PLAYER.MNvMn;
                 for (var i = 0; i < vvv; i++) nvV[i].mw();
@@ -10192,8 +10046,8 @@ var ingamescreen = (function() {
                 }
                 if (World.PLAYER.VVn === 1) {
                     for (i = 0; i < World.PLAYER.Nn.vvv; i++) NMV[i].mw();
-                    if ((((World.PLAYER.Vvw === station.firepart) || (World.PLAYER.Vvw === station.bbq)) || (World.PLAYER.Vvw === station.composter)) && (World.PLAYER.Nn.MNM !== 255)) VWNWV.mw();
-                    else if ((((World.PLAYER.Vvw === station.smelter) || (World.PLAYER.Vvw === station.extractor)) || (World.PLAYER.Vvw === station.agitator)) && (World.PLAYER.Nn.MNM !== 255)) WmWwW.mw();
+                    if ((((World.PLAYER.Vvw === AREAS.firepart) || (World.PLAYER.Vvw === AREAS.bbq)) || (World.PLAYER.Vvw === AREAS.composter)) && (World.PLAYER.Nn.MNM !== 255)) VWNWV.mw();
+                    else if ((((World.PLAYER.Vvw === AREAS.smelter) || (World.PLAYER.Vvw === AREAS.extractor)) || (World.PLAYER.Vvw === AREAS.agitator)) && (World.PLAYER.Nn.MNM !== 255)) WmWwW.mw();
                 }
                 vvv = World.PLAYER.nWwmM;
                 for (i = 0; i < vvv; i++) VnmwN[i].mw();
@@ -10248,12 +10102,12 @@ var ingamescreen = (function() {
     function NmN(event) {
         keys.WvMvV(event);
         if ((teamwin === 1) && (World.PLAYER.clan === -1)) {
-            if ((event.keyCode === 8) && (ingamescreen.WmN.length > 0)) {
-                ingamescreen.WmN = ingamescreen.WmN.substring(0, ingamescreen.WmN.length - 1);
+            if ((event.keyCode === 8) && (Game.WmN.length > 0)) {
+                Game.WmN = Game.WmN.substring(0, Game.WmN.length - 1);
                 event.preventDefault();
                 return;
             } else if (((event.keyCode >= 65) && (event.keyCode <= 90)) || ((event.keyCode >= 48) && (event.keyCode <= 57))) {
-                if (ingamescreen.WmN.length < 5) ingamescreen.WmN += window.String.fromCharCode(event.keyCode);
+                if (Game.WmN.length < 5) Game.WmN += window.String.fromCharCode(event.keyCode);
             }
         } else if ((chatvisible === 1) && (event.keyCode === 27)) {
             chatvisible = 0;
@@ -10345,7 +10199,7 @@ var ingamescreen = (function() {
                     nVN();
                     NmW = 1;
                     craftwin = 1;
-                    World.MwM(station.own);
+                    World.MwM(AREAS.own);
                     audio.VnV(audio.ww.open, 1, 0);
                 } else {
                     audio.VnV(audio.ww.open, 1, 0);
@@ -10394,7 +10248,7 @@ var ingamescreen = (function() {
                 var nmW = window.Math.floor(NWV.clientY * CanvasUtils.options.WWvvm);
                 switch (World.PLAYER.mvn) {
                     case 2:
-                        if (((((World.PLAYER.mwMmN === 1) && (nVm > ingamescreen.mmNWn)) && (nmW > ingamescreen.vmwNV)) && (nVm < (ingamescreen.mmNWn + ingamescreen.vwVnW))) && (nmW < (ingamescreen.vmwNV + ingamescreen.mnNnW))) {
+                        if (((((World.PLAYER.mwMmN === 1) && (nVm > Game.mmNWn)) && (nmW > Game.vmwNV)) && (nVm < (Game.mmNWn + Game.vwVnW))) && (nmW < (Game.vmwNV + Game.mnNnW))) {
                             nvnNv = 1;
                             nNw.keyCode = 70;
                             nNw.charCode = 70;
@@ -10402,7 +10256,7 @@ var ingamescreen = (function() {
                             continue;
                         }
                         case 0:
-                            if ((((nVm > ingamescreen.mNNwM) && (nmW > ingamescreen.nNwMM)) && (nVm < (ingamescreen.mNNwM + ingamescreen.vwVnW))) && (nmW < (ingamescreen.nNwMM + ingamescreen.mnNnW))) {
+                            if ((((nVm > Game.mNNwM) && (nmW > Game.nNwMM)) && (nVm < (Game.mNNwM + Game.vwVnW))) && (nmW < (Game.nNwMM + Game.mnNnW))) {
                                 nvnNv = 1;
                                 nNw.keyCode = 69;
                                 nNw.charCode = 69;
@@ -10613,7 +10467,7 @@ var ingamescreen = (function() {
     function MouseWheelHandler(e)
     {
         var e = window.event || e;
-            Mw.scale += (e.wheelDelta / 5000);
+            Render.scale += (e.wheelDelta / 5000);
         return false;
     };
 
@@ -10650,11 +10504,11 @@ var ingamescreen = (function() {
         draw: draw
     };
 })();
-var nmmVv = (function() {
+var Score = (function() {
     function checkstatenull(Mnn) {};
 
     function NvwNv() {
-        quit(ingamescreen);
+        quit(Game);
     };
 
     function NvN() {
@@ -10718,7 +10572,7 @@ var nmmVv = (function() {
             vMMnW.W.m = 1;
         }
         CanvasUtils.putonscreen(vMMnW, wVw + 453, VVm + 117, 0, 0, 0, 1);
-        var inventory = ingamescreen.inventory;
+        var inventory = Game.inventory;
         var invtr = World.PLAYER.inventory;
         var vvv = invtr.length;
         var MVM = 50 * scaleby;
@@ -10728,7 +10582,7 @@ var nmmVv = (function() {
         scaleby = scaleby - (0.3 * scaleby);
         for (var i = 0; i < vvv; i++) {
             var wm = inventory[i];
-            if (invtr[i][0] !== 0) Mw.vmmMn(wm, invtr[i], inmapx, inmapy, ingamescreen.vwn, ingamescreen.WMn);
+            if (invtr[i][0] !== 0) Render.vmmMn(wm, invtr[i], inmapx, inmapy, Game.vwn, Game.WMn);
             inmapx += MVM;
         }
         scaleby = WnVvn;
@@ -10772,15 +10626,15 @@ var nmmVv = (function() {
         Client.NvN = NvN;
         World.PLAYER.wvM = 0;
         World.PLAYER.id = 0;
-        Mw.vVwvn(0);
-        Mw.NvwNm();
+        Render.vVwvn(0);
+        Render.NvwNm();
         for (var i = 0; i < World.PLAYER.inventory.length; i++) {
             for (var j = 0; j < 4; j++) World.PLAYER.inventory[i][j] = 0;
         }
         var MWMwV = mvv[window.Math.min(mvv.length - 1, World.PLAYER.level)];
         for (var i = 0; i < MWMwV.length; i++) {
             var idd = MWMwV[i];
-            if (idd.id !== 0) ingamescreen.inventory[i].MVN(items[idd.id].img.src, items[idd.id].img.W);
+            if (idd.id !== 0) Game.inventory[i].MVN(items[idd.id].img.src, items[idd.id].img.W);
             var invtr = World.PLAYER.inventory[i];
             invtr[1] = idd.nM;
             invtr[2] = 0;
@@ -10791,7 +10645,7 @@ var nmmVv = (function() {
         if (Loader.getURLData("admin") === null) {
             window["YMPB"]["refresh"]();
         }
-        CanvasUtils.MNwmM(nmmVv);
+        CanvasUtils.MNwmM(Score);
         MNw = Nmv;
         WwM = Nmv;
         mwn = WVWWm;
@@ -10835,7 +10689,7 @@ var nmmVv = (function() {
     function draw() {
         if (MMVwV() === 0) return;
         ctx.clearRect(0, 0, screenWidth, screenHeight);
-        Mw.VMMWm();
+        Render.VMMWm();
         if (MNw > 0) {
             NNN = mwn(1 - (MNw / WwM));
             if (mwm === 1) NNN = 1 - window.Math.abs(NNN);
@@ -10848,7 +10702,7 @@ var nmmVv = (function() {
         mNw.draw();
         vWv.draw();
         nmNnw();
-        Mw.vMNVm();
+        Render.vMNVm();
         vWn.nwwnv();
         if (waitAds > 0) {
             waitAds = window.Math.max(0, waitAds - delta);
@@ -10975,11 +10829,11 @@ var nmmVv = (function() {
         draw: draw
     };
 })();
-var WvvMV = (function() {
+var Rank = (function() {
     function checkstatenull(Mnn) {};
 
     function NvwNv() {
-        quit(ingamescreen);
+        quit(Game);
     };
 
     function NvN() {
@@ -11064,11 +10918,11 @@ var WvvMV = (function() {
         Client.NvN = NvN;
         World.PLAYER.wvM = 0;
         World.PLAYER.id = 0;
-        Mw.vVwvn(0);
-        Mw.NvwNm();
+        Render.vVwvn(0);
+        Render.NvwNm();
         waitAds = 5000;
         window["YMPB"]["refresh"]();
-        CanvasUtils.MNwmM(WvvMV);
+        CanvasUtils.MNwmM(Rank);
         MNw = Nmv;
         WwM = Nmv;
         mwn = WVWWm;
@@ -11111,7 +10965,7 @@ var WvvMV = (function() {
     function draw() {
         if (MMVwV() === 0) return;
         ctx.clearRect(0, 0, screenWidth, screenHeight);
-        Mw.VMMWm();
+        Render.VMMWm();
         if (MNw > 0) {
             NNN = mwn(1 - (MNw / WwM));
             if (mwm === 1) NNN = 1 - window.Math.abs(NNN);
@@ -11124,7 +10978,7 @@ var WvvMV = (function() {
         mNw.draw();
         vWv.draw();
         nmNnw();
-        Mw.vMNVm();
+        Render.vMNVm();
         vWn.nwwnv();
         if (waitAds > 0) {
             waitAds = window.Math.max(0, waitAds - delta);
@@ -11273,8 +11127,8 @@ var Nnw = 0;
 
 function wMNww(vV) {
     var NvV = "";
-    var Nvw = INscreen.Wvm[vV];
-    var wWv = INscreen.border[vV];
+    var Nvw = Entitie.Wvm[vV];
+    var wWv = Entitie.border[vV];
     var wVN = wWv.border;
     for (i = 0; i < wVN; i++) {
         var player = Nvw[wWv.nnN[i]];
@@ -11286,7 +11140,7 @@ function wMNww(vV) {
     return NvV;
 };
 
-var mapeditor = (function() {
+var Editor = (function() {
     var NmW = 0;
     var bordmapwin = 0;
     var settingwin = 0;
@@ -11322,9 +11176,9 @@ var mapeditor = (function() {
         World.MnW.MWw.vww = -1;
         World.VwvMN([0, window.document.getElementById("nicknameInput").value]);
         World.MVMwn(0, 0);
-        Mw.reset(window.undefined, 0, 0.07);
-        Mw.scale = 0;
-        INscreen.NWnwm();
+        Render.reset(window.undefined, 0, 0.07);
+        Render.scale = 0;
+        Entitie.NWnwm();
         World.PLAYER.nvMwN = 0;
         World.PLAYER.putableimg = 0;
         vmV = 0;
@@ -11383,7 +11237,7 @@ var mapeditor = (function() {
     var vmV = 0;
 
     function mnnMn(socketid, vV, WX, WY, nNN, Mnn) {
-        var MW = INscreen.get(socketid, vmV, vmV, vV);
+        var MW = Entitie.get(socketid, vmV, vmV, vV);
         mvMMV(MW, socketid, vmV, vmV, vV, WX, WY, WX, WY, nNN, 0, Mnn);
         vmV++;
     };
@@ -11430,7 +11284,7 @@ var mapeditor = (function() {
     };
 
     function nWMWn(socketid, vV, WX, WY, Rot, Mnn, nvN) {
-        var MW = INscreen.get(socketid, vmV, vmV, vV);
+        var MW = Entitie.get(socketid, vmV, vmV, vV);
         mvMMV(MW, socketid, vmV, vmV, vV, WX, WY, WX, WY, (nvN << 7) + (Rot << 5), 0, Mnn);
         var update = ENTITIES[vV].update;
         if (update !== window.undefined) update(MW, WX, WY);
@@ -11439,8 +11293,8 @@ var mapeditor = (function() {
 
     function wMNww(vV) {
         var NvV = "";
-        var Nvw = INscreen.Wvm[vV];
-        var wWv = INscreen.border[vV];
+        var Nvw = Entitie.Wvm[vV];
+        var wWv = Entitie.border[vV];
         var wVN = wWv.border;
         for (i = 0; i < wVN; i++) {
             var player = Nvw[wWv.nnN[i]];
@@ -11453,13 +11307,13 @@ var mapeditor = (function() {
     };
 
     function nwmMw(vV, WX, WY) {
-        var Nvw = INscreen.Wvm[vV];
-        var wWv = INscreen.border[vV];
+        var Nvw = Entitie.Wvm[vV];
+        var wWv = Entitie.border[vV];
         var wVN = wWv.border;
         for (i = 0; i < wVN; i++) {
             var Nn = Nvw[wWv.nnN[i]];
             if ((((Nn.x >= WX) && (Nn.x <= (WX + 100))) && (Nn.y >= WY)) && (Nn.y <= (WY + 100))) {
-                INscreen.remove(Nn.socketid, Nn.id, Nn.mvN, vV, Nn.nNN);
+                Entitie.remove(Nn.socketid, Nn.id, Nn.mvN, vV, Nn.nNN);
                 return;
             }
         }
@@ -11499,7 +11353,7 @@ var mapeditor = (function() {
         if (nn > 0) {
             var socketid = World.socket[1].nnmnv;
             if (socketid === -1) return;
-            var PLAYER = INscreen.Wvm[INSplayers][socketid];
+            var PLAYER = Entitie.Wvm[INSplayers][socketid];
             WvvVn = (((nn & 3) && (nn & 12)) ? NnMMn : 1) * ((keys.shiftgo() === 0) ? (delta * 1.5) : (delta * 11));
             if (nn & 1) PLAYER.rx = PLAYER.x - WvvVn;
             else if (nn & 2) PLAYER.rx = PLAYER.x + WvvVn;
@@ -11663,7 +11517,7 @@ var mapeditor = (function() {
             }
         }
         MVWMn();
-        CanvasUtils.MNwmM(mapeditor);
+        CanvasUtils.MNwmM(Editor);
         MNw = Nmv;
         WwM = Nmv;
         mwn = WVWWm;
@@ -11735,8 +11589,8 @@ var mapeditor = (function() {
         nNvvV();
         ctx.clearRect(0, 0, screenWidth, screenHeight);
         World.NNNMv();
-        Mw.VMMWm();
-        Mw.MvV(minimap.mv.x, minimap.mv.y);
+        Render.VMMWm();
+        Render.MvV(minimap.mv.x, minimap.mv.y);
         minimap.draw();
         fullscreenimg.draw();
         settingsimg.draw();
@@ -11755,8 +11609,8 @@ var mapeditor = (function() {
         markposition();
         wWNmN();
         if (NmW === 1) {
-            if (bordmapwin === 1) Mw.NNMwm(bordermap, closebutt);
-            else if (settingwin === 1) Mw.optionsfc(settingbox, wWNnw, nvwMN, MNVVn, VmvmN, WMVVn, wvNNV, WVnnn, NmVWV, vVMWm, closebutt, wVwnm, VnWMV, wwMwv);
+            if (bordmapwin === 1) Render.NNMwm(bordermap, closebutt);
+            else if (settingwin === 1) Render.optionsfc(settingbox, wWNnw, nvwMN, MNVVn, VmvmN, WMVVn, wvNNV, WVnnn, NmVWV, vVMWm, closebutt, wVwnm, VnWMV, wwMwv);
         } else if (mobile === 1) {
             if ((((keys.leftgo() + keys.rightgo()) + keys.straightgo()) + keys.downgo()) >= 1) {
                 ctx.globalAlpha = 0.3;
@@ -11938,7 +11792,7 @@ var mapeditor = (function() {
             NWw = 0;
             for (var i = 1; i < items.length; i++) {
                 var idd = items[i];
-                if (idd.behavior === vWN.cable) {
+                if (idd.behavior === BEHAVIOR.__LOGIC__) {
                     Wnw[NWw].MVN(idd.img.src, idd.img.W);
                     Wnw[NWw].vmM = idd.id;
                     NWw++;
@@ -12001,21 +11855,21 @@ var mapeditor = (function() {
 
         if (zoombutton.mw() === 1) {
             vnm = 1;
-            if (Mw.scale < 1.5) {
-                Mw.scale += 0.1;
+            if (Render.scale < 1.5) {
+                Render.scale += 0.1;
                 audio.VnV(audio.ww.button, 1, 0);
                 unzoombutton.show();
-                if (Mw.scale >= 1.5) zoombutton.vnN();
+                if (Render.scale >= 1.5) zoombutton.vnN();
             }
         }
         if (unzoombutton.mw() === 1) {
             vnm = 1;
-            if (Mw.scale > -0.95) {
-                if (Mw.scale < 0) Mw.scale -= 0.05;
-                else Mw.scale -= 0.1;
+            if (Render.scale > -0.95) {
+                if (Render.scale < 0) Render.scale -= 0.05;
+                else Render.scale -= 0.1;
                 audio.VnV(audio.ww.button, 1, 0);
                 zoombutton.show();
-                if (Mw.scale <= -0.95) unzoombutton.vnN();
+                if (Render.scale <= -0.95) unzoombutton.vnN();
             }
         }
 
@@ -12039,7 +11893,7 @@ var mapeditor = (function() {
         }
         if (homebutton.mw() === 1) {
             vnm = 1;
-            mapeditor.quit(Home);
+            Editor.quit(Home);
             audio.VnV(audio.ww.play, 1, 0);
         }
         if (NmW === 1) {
@@ -12098,15 +11952,15 @@ var mapeditor = (function() {
                     audio.VnV(audio.ww.button, 1, 0);
                     return;
                 } else if (VnWMV.mw() === 1) {
-                    Mw.wvmnm(1);
+                    Render.wvmnm(1);
                     audio.VnV(audio.ww.button, 1, 0);
                     return;
                 } else if (wVwnm.mw() === 1) {
-                    Mw.wvmnm(2);
+                    Render.wvmnm(2);
                     audio.VnV(audio.ww.button, 1, 0);
                     return;
                 } else if (wwMwv.mw() === 1) {
-                    Mw.wvmnm(0);
+                    Render.wvmnm(0);
                     audio.VnV(audio.ww.button, 1, 0);
                     return;
                 }
@@ -12756,7 +12610,7 @@ try {
     }
 } catch (error) {}
 
-    var Mw = (function() {
+    var Render = (function() {
         var wmn = 100;      
         var nwn = wmn / 2; 
         var VNvvM = 1;
@@ -13550,8 +13404,8 @@ try {
                 MvvNN = 0;
             }
             WNmVW = 0;
-            Mw.nwNWm = 0;
-            Mw.WwnNw = 0;
+            Render.nwNWm = 0;
+            Render.shake = 0;
             if (wVNwM !== window.undefined) WMWvN = 0;
             else WMWvN = mMmvV;
             if (VmNwV !== window.undefined) vwMWM = VmNwV;
@@ -13576,7 +13430,7 @@ try {
             nNmVw = null;
             nmn.width = 150;
             nmn.height = 150;
-            Mw.nnmMW = (nmn.width * 100) / 255;
+            Render.nnmMW = (nmn.width * 100) / 255;
             NMv = nmn.width;
             wWw = nmn.height;
             WMwnW = wmn * NMv;
@@ -13590,7 +13444,7 @@ try {
                 matrix[i] = [];
                 for (var j = 0; j < NMv; j++) matrix[i][j] = new MmmnN;
             }
-            var vvv = INscreen.Wvm[0].length;
+            var vvv = Entitie.Wvm[0].length;
             for (i = 0; i < vvv; i++) WvnvV[i] = null;
         };
 
@@ -13651,7 +13505,7 @@ try {
 
         function inventoryfunc(vwn, WMn, MmV, bagbutt) {
             //if (World.PLAYER.ghoul !== 0) return;
-            var inventory = ingamescreen.inventory;
+            var inventory = Game.inventory;
             if (nNMVM.m !== 1) {
                 nNMVM = CanvasUtils.loadImage(emptyinventoryicon, nNMVM);
                 return;
@@ -13847,7 +13701,7 @@ try {
             closebutt.draw();
 
             if ((World.PLAYER.clan !== -1) || (World.PLAYER.ghoul !== 0) && (World.WVw < 6)) {
-                var socket = INscreen.Wvm[INSplayers];
+                var socket = Entitie.Wvm[INSplayers];
                 for (var i = 0; i < World.PLAYER.nnnVN; i++) {
                     var nmmvN = World.PLAYER.MVmNm[i];
                     if (nmmvN.wmWMV < 0) continue;
@@ -13894,10 +13748,10 @@ try {
                 teambox = CanvasUtils.loadImage(invbox, teambox);
                 return;
             }
-            ingamescreen.nVNMM.mv.x = WX + (241 * scaleby);
-            ingamescreen.nVNMM.mv.y = WY + (6 * scaleby);
-            ingamescreen.nWvnm.mv.x = WX + (290 * scaleby);
-            ingamescreen.nWvnm.mv.y = WY + (6 * scaleby);
+            Game.nVNMM.mv.x = WX + (241 * scaleby);
+            Game.nVNMM.mv.y = WY + (6 * scaleby);
+            Game.nWvnm.mv.x = WX + (290 * scaleby);
+            Game.nWvnm.mv.y = WY + (6 * scaleby);
             if ((World.PLAYER.wNw !== 0) || (World.PLAYER.wMnNv > 0)) {
                 if (World.PLAYER.wNw !== 0) {
                     if (World.PLAYER.wMnNv < 333) {
@@ -13912,8 +13766,8 @@ try {
                 if (PLAYER.mMw === null) PLAYER.mMw = vM.showtxt(PLAYER.nick, "'Viga', sans-serif", "#FFFFFF", 38, 400, window.undefined, 16, 25, window.undefined, window.undefined, window.undefined, window.undefined, "#000000", 12);
                 ctx.drawImage(teambox, WX, WY, scaleby * teambox.Wvw, scaleby * teambox.mNm);
                 if ((PLAYER.mMw.width !== 0) && (PLAYER.mMw.height !== 0)) ctx.drawImage(PLAYER.mMw, WX + (20 * scaleby), WY + (6 * scaleby), PLAYER.mMw.Wvw * scaleby, PLAYER.mMw.mNm * scaleby);
-                ingamescreen.nVNMM.draw();
-                ingamescreen.nWvnm.draw();
+                Game.nVNMM.draw();
+                Game.nWvnm.draw();
                 if (World.PLAYER.wMnNv < 333) ctx.globalAlpha = 1;
             }
         };
@@ -14015,7 +13869,7 @@ try {
 
 
             if ((World.PLAYER.clan !== -1) || ((World.PLAYER.ghoul !== 0) && (World.WVw < 6))) {
-                var socket = INscreen.Wvm[INSplayers];
+                var socket = Entitie.Wvm[INSplayers];
                 for (var i = 0; i < World.PLAYER.nnnVN; i++) {
                     var nmmvN = World.PLAYER.MVmNm[i];
                     if (nmmvN.wmWMV < 0) continue;
@@ -14041,7 +13895,7 @@ try {
             if (World.PLAYER.VvWnm > 0) {
                 var PLAYER = World.socket[World.PLAYER.karmaplayerid];
                 if (MNW === (PLAYER.MNW + 1)) {
-                    var socket = INscreen.Wvm[INSplayers];
+                    var socket = Entitie.Wvm[INSplayers];
                     var WMv = socket[PLAYER.nnmnv];
                     if (checkspos.MWV(PLAYER.rx, PLAYER.ry, WMv.x, WMv.y) < 1000) {
                         PLAYER.rx = WMv.x;
@@ -14064,7 +13918,7 @@ try {
                 ctx.globalAlpha = WNW.mWV.wWM(wnW.WMw);
                 CanvasUtils.putonscreen(wnW, WX, WY + 31, 0, 0, 0, 1);
                 ctx.globalAlpha = 1;
-                if ((World.PLAYER.canvasH <= 0) || (ingamescreen.MvN() === 1)) wnW.WMw = window.Math.max(0, wnW.WMw - (delta / 500));
+                if ((World.PLAYER.canvasH <= 0) || (Game.MvN() === 1)) wnW.WMw = window.Math.max(0, wnW.WMw - (delta / 500));
                 else if (wnW.WMw < 1) wnW.WMw = window.Math.min(1, wnW.WMw + (delta / 500));
             }
         };
@@ -14078,10 +13932,10 @@ try {
             var WY = 0;
             if (World.PLAYER.clan === -1) {
                 var WwmNM = 1;
-                if (ingamescreen.WmN.length === 0) WwmNM = 0;
+                if (Game.WmN.length === 0) WwmNM = 0;
                 else {
                     for (var i = 0; i < World.clans.length; i++) {
-                        if (World.clans[i].name === ingamescreen.WmN) {
+                        if (World.clans[i].name === Game.WmN) {
                             WwmNM = 0;
                             break;
                         }
@@ -14093,8 +13947,8 @@ try {
                 VWwmm.draw();
                 closebutt.mv.x = WX + (513 * scaleby);
                 closebutt.mv.y = WY + (2 * scaleby);
-                if (WmN !== ingamescreen.WmN) {
-                    WmN = ingamescreen.WmN;
+                if (WmN !== Game.WmN) {
+                    WmN = Game.WmN;
                     nNmVw = vM.showtxt(WmN, "'Viga', sans-serif", "#FFFFFF", 30, 400);
                 }
                 if ((nNmVw !== null) && (WmN.length !== 0)) {
@@ -14115,7 +13969,7 @@ try {
                     if (clan.MvvWw === 0) continue;
                     if (clan.label === null) clan.label = vM.showtxt(clan.name, "'Viga', sans-serif", "#FFFFFF", 30, 400);
                     ctx.drawImage(clan.label, WX + ((20 + ((j % 3) * 163)) * scaleby), WY + ((58.5 + (window.Math.floor(j / 3) * 36)) * scaleby), clan.label.Wvw * scaleby, clan.label.mNm * scaleby);
-                    var wm = ingamescreen.join[j];
+                    var wm = Game.join[j];
                     wm.mv.x = WX + ((84 + ((j % 3) * 163)) * scaleby);
                     wm.mv.y = WY + ((48 + (window.Math.floor(j / 3) * 36)) * scaleby);
                     if ((window.Date.now() - World.PLAYER.Mwnwv) < 10500) {
@@ -14154,7 +14008,7 @@ try {
                         if ((clan.mvN !== PLAYER.wwV) || (PLAYER.clan !== clan.id)) continue;
                         if (PLAYER.mMw === null) PLAYER.mMw = vM.showtxt(PLAYER.nick, "'Viga', sans-serif", "#FFFFFF", 38, 400, window.undefined, 16, 25, window.undefined, window.undefined, window.undefined, window.undefined, "#000000", 12);
                         if ((PLAYER.mMw.width !== 0) && (PLAYER.mMw.height !== 0)) ctx.drawImage(PLAYER.mMw, WX + ((26 + ((j % 3) * 166.5)) * scaleby), WY + ((53 + (window.Math.floor(j / 3) * 29.5)) * scaleby), (PLAYER.mMw.Wvw * scaleby) / 2.2, (PLAYER.mMw.mNm * scaleby) / 2.2);
-                        var wm = ingamescreen.WvNMn[j];
+                        var wm = Game.WvNMn[j];
                         wm.mv.x = WX + ((132 + ((j % 3) * 166.5)) * scaleby);
                         wm.mv.y = WY + ((48.5 + (window.Math.floor(j / 3) * 29.5)) * scaleby);
                         if (((window.Date.now() - World.PLAYER.Mwnwv) < 10500) || (PLAYER.id === World.PLAYER.id)) {
@@ -14194,7 +14048,7 @@ try {
             var mwV = World.PLAYER.mwV;
             var inmapx;
             var inmapy = WY + (14 * scaleby);
-            var wm = ingamescreen.mwV;
+            var wm = Game.mwV;
 
             for (var i = 0; i < 4; i++) {
                 if ((i % 2) === 0) {
@@ -14254,7 +14108,7 @@ try {
             }
         };
 
-        function craftingfunc(craftbox, closebutt, wnV, NwnNV, VvvwN, nvmnM, NNm, vwvvm, vwn, WMn, VWNWV, WmWwW, WwMvM, NWmNn) {
+        function craftingfunc(craftbox, closebutt, wnV, NwnNV, VvvwN, nvmnM, craftList, vwvvm, vwn, WMn, VWNWV, WmWwW, WwMvM, NWmNn) {
             craftbox.draw();
             var WX = craftbox.mv.x;
             var WY = craftbox.mv.y;
@@ -14275,9 +14129,9 @@ try {
                 wm.draw();
             }
             var j = 0;
-            for (i = 0; i < NNm.length; i++) {
+            for (i = 0; i < craftList.length; i++) {
                 if ((i === MWW) && (World.PLAYER.VVn === 1)) {} else if ((i !== World.PLAYER.vWMmW) && (i !== 0)) continue;
-                var wm = NNm[i];
+                var wm = craftList[i];
                 if (i === MWW) wm.NNv(vM.Mwn);
                 wm.mv.x = WX - (40 * scaleby);
                 wm.mv.y = ((10 * scaleby) + WY) + ((j * 43) * scaleby);
@@ -14287,7 +14141,7 @@ try {
             vwvvm.mv.x = WX + (364 * scaleby);
             vwvvm.mv.y = WY + (27 * scaleby);
             vwvvm.draw();
-            var nvV = ingamescreen.nvV;
+            var nvV = Game.nvV;
             var vvv = World.PLAYER.MNvMn;
             var SY = 49 * scaleby;
             var SX = 49 * scaleby;
@@ -14418,8 +14272,8 @@ try {
                 var nM = World.PLAYER.Nn.MNM;
                 if (nM >= 0) {
                     var wm;
-                    if (((MWW === station.smelter) || (MWW === station.extractor)) || (MWW === station.agitator)) wm = WmWwW;
-                    else if (MWW === station.teslabench) wm = WwMvM;
+                    if (((MWW === AREAS.smelter) || (MWW === AREAS.extractor)) || (MWW === AREAS.agitator)) wm = WmWwW;
+                    else if (MWW === AREAS.teslabench) wm = WwMvM;
                     else wm = VWNWV;
                     wm.mv.x = WX + (532 * scaleby);
                     wm.mv.y = WY + (153 * scaleby);
@@ -14438,7 +14292,7 @@ try {
                     }
                     CanvasUtils.putonscreen(WMn[nM], (wm.mv.x / scaleby) + 42, (wm.mv.y / scaleby) + 42, -0.5, 0, 0, 0.9);
                 }
-                var NMV = ingamescreen.NMV;
+                var NMV = Game.NMV;
                 var WMnmM = World.PLAYER.Nn.mv;
                 vvv = World.PLAYER.Nn.vvv;
                 SY = 40 * scaleby;
@@ -14464,7 +14318,7 @@ try {
                     wm.draw();
                 }
             }
-            var VnmwN = ingamescreen.VnmwN;
+            var VnmwN = Game.VnmwN;
             vvv = World.PLAYER.nWwmM;
             MVM = 45 * scaleby;
             mnMmm = 356 * scaleby;
@@ -14500,7 +14354,7 @@ try {
                 if (World.PLAYER.canvasH <= 0) wvV.WMw = window.Math.max(0, wvV.WMw - (delta / 500));
                 else if (wvV.WMw < 1) wvV.WMw = window.Math.min(1, wvV.WMw + (delta / 500));
             }
-            var WVn = ingamescreen.WVn;
+            var WVn = Game.WVn;
             vvv = World.PLAYER.nMnmW;
             SY = 40 * scaleby;
             SX = 40 * scaleby;
@@ -14702,7 +14556,7 @@ try {
         };
 
         function wNnvM() {
-            WvmnV = CanvasUtils.nWV(WvmnV, (((Mw.scale + NNmMN[0]) + NNmMN[1]) + NNmMN[2]) + NNmMN[3], vwMWM);
+            WvmnV = CanvasUtils.nWV(WvmnV, (((Render.scale + NNmMN[0]) + NNmMN[1]) + NNmMN[2]) + NNmMN[3], vwMWM);
             wWWNM = scaleby;
             scaleby += WvmnV * scaleby;
             wvwNM = screenWidth / scaleby;
@@ -14710,8 +14564,8 @@ try {
         };
 
         function myplayerfocusinscreen() {
-            var socket = INscreen.Wvm[INSplayers];
-            var vWM = INscreen.border[INSplayers];
+            var socket = Entitie.Wvm[INSplayers];
+            var vWM = Entitie.border[INSplayers];
             var vvv = vWM.border;
             for (var i = 0; i < vvv; i++) {
                 var PLAYER = socket[vWM.nnN[i]];
@@ -14743,13 +14597,13 @@ try {
                     Nvmmn = CanvasUtils.nWV(Nvmmn, WY, WMNWw);
                     var nvVvv = 0;
                     var WvnMn = 0;
-                    if (Mw.WwnNw > 0) {
-                        Mw.WwnNw -= 1;
+                    if (Render.shake > 0) {
+                        Render.shake -= 1;
                         nvVvv += (window.Math.random() * 6) - 3;
                         WvnMn += (window.Math.random() * 6) - 3;
                     }
-                    if (Mw.nwNWm > 0) {
-                        Mw.nwNWm -= 1;
+                    if (Render.nwNWm > 0) {
+                        Render.nwNWm -= 1;
                         nvVvv += (window.Math.random() * 18) - 9;
                         WvnMn += (window.Math.random() * 18) - 9;
                     }
@@ -14903,8 +14757,8 @@ try {
         function Wvmnw(mVn, nV, wVn, player, imgMovement, WX, WY) {
             var PLAYER = World.socket[player.socketid];
             var WMW = 0;
-            var Wmv = PLAYER.Wmv - Mw.MmW;
-            var MNV = PLAYER.MNV - Mw.MmW;
+            var Wmv = PLAYER.Wmv - Render.MmW;
+            var MNV = PLAYER.MNV - Render.MmW;
             if (Wmv > 0) {
                 if (MNV > 0) WMW = 3;
                 else if (PLAYER.MNV > 0) WMW = 5;
@@ -14919,8 +14773,8 @@ try {
             if (Vmwnn === 4) {
                 if (PLAYER.mWv === -1) {
                     var MNmnm = (player.nNN >> 8) & 255;
-                    if ((audio.ww.Nnn[MNmnm] !== 0) && ((Mw.MmW - PLAYER.MMvnN) > 800)) {
-                        PLAYER.MMvnN = Mw.MmW;
+                    if ((audio.ww.Nnn[MNmnm] !== 0) && ((Render.MmW - PLAYER.MMvnN) > 800)) {
+                        PLAYER.MMvnN = Render.MmW;
                         var VVmnw = window.Math.floor(window.Math.random() * nV.mVM);
                         audio.VnV(audio.ww.Nnn[MNmnm][VVmnw], nV.vnM, checkspos.mappos(World.PLAYER.x, World.PLAYER.y, player.x, player.y) / 4, nV.Mnv);
                     }
@@ -15008,8 +14862,8 @@ try {
         function vwVWm(mVn, nV, wVn, player, imgMovement, WX, WY) {
             var PLAYER = World.socket[player.socketid];
             var WMW = 0;
-            var Wmv = PLAYER.Wmv - Mw.MmW;
-            var MNV = PLAYER.MNV - Mw.MmW;
+            var Wmv = PLAYER.Wmv - Render.MmW;
+            var MNV = PLAYER.MNV - Render.MmW;
             if (Wmv > 0) {
                 if (MNV > 0) WMW = 3;
                 else if (PLAYER.MNV > 0) WMW = 5;
@@ -15133,8 +14987,8 @@ try {
         function WVVmN(mVn, nV, wVn, player, imgMovement, WX, WY) {
             var PLAYER = World.socket[player.socketid];
             var WMW = 0;
-            var Wmv = PLAYER.Wmv - Mw.MmW;
-            var MNV = PLAYER.MNV - Mw.MmW;
+            var Wmv = PLAYER.Wmv - Render.MmW;
+            var MNV = PLAYER.MNV - Render.MmW;
             if (Wmv > 0) {
                 if (MNV > 0) WMW = 3;
                 else if (PLAYER.MNV > 0) WMW = 5;
@@ -15222,8 +15076,8 @@ try {
         function mWNvw(mVn, nV, wVn, player, imgMovement, WX, WY) {
             var PLAYER = World.socket[player.socketid];
             var WMW = 0;
-            var Wmv = PLAYER.Wmv - Mw.MmW;
-            var MNV = PLAYER.MNV - Mw.MmW;
+            var Wmv = PLAYER.Wmv - Render.MmW;
+            var MNV = PLAYER.MNV - Render.MmW;
             if (Wmv > 0) {
                 if (MNV > 0) WMW = 3;
                 else if (PLAYER.MNV > 0) WMW = 5;
@@ -15307,8 +15161,8 @@ try {
         function mvwMm(mVn, nV, wVn, player, imgMovement, WX, WY) {
             var PLAYER = World.socket[player.socketid];
             var WMW = 0;
-            var Wmv = PLAYER.Wmv - Mw.MmW;
-            var MNV = PLAYER.MNV - Mw.MmW;
+            var Wmv = PLAYER.Wmv - Render.MmW;
+            var MNV = PLAYER.MNV - Render.MmW;
             if (Wmv > 0) {
                 if (MNV > 0) WMW = 3;
                 else if (PLAYER.MNV > 0) WMW = 5;
@@ -15391,8 +15245,8 @@ try {
         function mmmMw(mVn, nV, wVn, player, imgMovement, WX, WY) {
             var PLAYER = World.socket[player.socketid];
             var WMW = 0;
-            var Wmv = PLAYER.Wmv - Mw.MmW;
-            var MNV = PLAYER.MNV - Mw.MmW;
+            var Wmv = PLAYER.Wmv - Render.MmW;
+            var MNV = PLAYER.MNV - Render.MmW;
             if (Wmv > 0) {
                 if (MNV > 0) WMW = 3;
                 else if (PLAYER.MNV > 0) WMW = 5;
@@ -15484,10 +15338,10 @@ try {
                 if ((((World.PLAYER.Vmm >= 0) && (World.PLAYER.NNV >= 0)) && (World.PLAYER.Vmm < NMv)) && (World.PLAYER.NNV < wWw)) {
                     var VMV = matrix[World.PLAYER.NNV][World.PLAYER.Vmm];
                     var clan = (World.PLAYER.clan === -1) ? -2 : World.PLAYER.clan;
-                    if ((VMV.NMn === MNW) && (((idd.WvV !== 2) || (VMV.wMV === 0)) || (VMV.nww === Ww.plant))) {
+                    if ((VMV.NMn === MNW) && (((idd.WvV !== 2) || (VMV.wMV === 0)) || (VMV.nww === SKILLS.__PLANT__))) {
                         World.PLAYER.nwVMm = 1; // before 0
                         CanvasUtils.putonscreen(idd.notputableimg, WX, WY, Rot * PIby2, 0, 0, 1);
-                    } else if ((((idd.detail.nww === Ww.plant) || (idd.WvV === 2)) || (((VMV.socketid !== 0) && (VMV.socketid !== World.PLAYER.id)) && (World.socket[VMV.socketid].clan !== clan))) && (VMV.nNNwM === MNW)) {
+                    } else if ((((idd.detail.nww === SKILLS.__PLANT__) || (idd.WvV === 2)) || (((VMV.socketid !== 0) && (VMV.socketid !== World.PLAYER.id)) && (World.socket[VMV.socketid].clan !== clan))) && (VMV.nNNwM === MNW)) {
                         World.PLAYER.nwVMm = 0;
                         CanvasUtils.putonscreen(idd.notputableimg, WX, WY, Rot * PIby2, 0, 0, 1);
                     } else if ((idd.MMnVm !== window.undefined) && ((((Rot % 2) === 0) && ((((((World.PLAYER.NNV < 1) || (World.PLAYER.NNV >= (wWw - 1))) || (matrix[World.PLAYER.NNV + 1][World.PLAYER.Vmm].NMn === MNW)) || ((matrix[World.PLAYER.NNV + 1][World.PLAYER.Vmm].nNNwM === MNW) && (((matrix[World.PLAYER.NNV + 1][World.PLAYER.Vmm].socketid !== World.PLAYER.id) && (matrix[World.PLAYER.NNV + 1][World.PLAYER.Vmm].socketid !== 0)) && (World.socket[matrix[World.PLAYER.NNV + 1][World.PLAYER.Vmm].socketid].clan !== clan)))) || (matrix[World.PLAYER.NNV - 1][World.PLAYER.Vmm].NMn === MNW)) || ((matrix[World.PLAYER.NNV - 1][World.PLAYER.Vmm].nNNwM === MNW) && (((matrix[World.PLAYER.NNV - 1][World.PLAYER.Vmm].socketid !== World.PLAYER.id) && (matrix[World.PLAYER.NNV - 1][World.PLAYER.Vmm].socketid !== 0)) && (World.socket[matrix[World.PLAYER.NNV - 1][World.PLAYER.Vmm].socketid].clan !== clan))))) || (((Rot % 2) === 1) && (((((((World.PLAYER.Vmm < 1) || (World.PLAYER.Vmm >= (NMv - 1))) || (matrix[World.PLAYER.NNV][World.PLAYER.Vmm + 1].NMn === MNW)) || ((matrix[World.PLAYER.NNV][World.PLAYER.Vmm + 1].nNNwM === MNW) && (((matrix[World.PLAYER.NNV][World.PLAYER.Vmm + 1].socketid !== World.PLAYER.id) && (matrix[World.PLAYER.NNV][World.PLAYER.Vmm + 1].socketid !== 0)) && (World.socket[matrix[World.PLAYER.NNV][World.PLAYER.Vmm + 1].socketid].clan !== clan)))) || (matrix[World.PLAYER.NNV][World.PLAYER.Vmm - 1].NMn === MNW)) || ((matrix[World.PLAYER.NNV][World.PLAYER.Vmm - 1].nNNwM === MNW) && (((matrix[World.PLAYER.NNV][World.PLAYER.Vmm - 1].socketid !== World.PLAYER.id) && (matrix[World.PLAYER.NNV][World.PLAYER.Vmm - 1].socketid !== 0)) && (World.socket[matrix[World.PLAYER.NNV][World.PLAYER.Vmm - 1].socketid].clan !== clan)))) || (World.PLAYER.NWM === World.PLAYER.NNV))))) {
@@ -15520,8 +15374,8 @@ try {
         function nwMNv(mVn, nV, wVn, player, imgMovement, WX, WY) {
             var PLAYER = World.socket[player.socketid];
             var WMW = 0;
-            var Wmv = PLAYER.Wmv - Mw.MmW;
-            var MNV = PLAYER.MNV - Mw.MmW;
+            var Wmv = PLAYER.Wmv - Render.MmW;
+            var MNV = PLAYER.MNV - Render.MmW;
             if (Wmv > 0) {
                 if (MNV > 0) WMW = 3;
                 else if (PLAYER.MNV > 0) WMW = 5;
@@ -15732,10 +15586,10 @@ try {
                     var posx = ((vertst + NmM) * imgMovement) - (scalex / 2);
                     var posy = window.Math.max(10 * scaleby, ((((horist + WWV) * imgMovement) - (scaley / 2)) - (65 * imgMovement)) - (60 * scaleby));
                     if (mobile === 1) {
-                        ingamescreen.mNNwM = posx;
-                        ingamescreen.nNwMM = posy;
-                        ingamescreen.vwVnW = scalex;
-                        ingamescreen.mnNnW = scaley;
+                        Game.mNNwM = posx;
+                        Game.nNwMM = posy;
+                        Game.vwVnW = scalex;
+                        Game.mnNnW = scaley;
                     }
                     ctx.drawImage(nMWVv, posx, posy, scalex, scaley);
                     var loot = VNN[World.PLAYER.loot];
@@ -15796,10 +15650,10 @@ try {
                     else posx = ((vertst + NmM) * imgMovement) - (scalex / 2);
                     var posy = window.Math.max(10 * scaleby, ((((horist + WWV) * imgMovement) - (scaley / 2)) - (65 * imgMovement)) - (60 * scaleby));
                     if (mobile === 1) {
-                        ingamescreen.mNNwM = posx;
-                        ingamescreen.nNwMM = posy;
-                        ingamescreen.vwVnW = scalex;
-                        ingamescreen.mnNnW = scaley;
+                        Game.mNNwM = posx;
+                        Game.nNwMM = posy;
+                        Game.vwVnW = scalex;
+                        Game.mnNnW = scaley;
                     }
                     ctx.drawImage(W, posx, posy, scalex, scaley);
                     if (World.PLAYER.mwMmN === 1) {
@@ -15814,8 +15668,8 @@ try {
                         posx += scalex + (10 * scaleby);
                         posy = window.Math.max(10 * scaleby, ((((horist + WWV) * imgMovement) - (scaley / 2)) - (65 * imgMovement)) - (60 * scaleby));
                         if (mobile === 1) {
-                            ingamescreen.mmNWn = posx;
-                            ingamescreen.vmwNV = posy;
+                            Game.mmNWn = posx;
+                            Game.vmwNV = posy;
                         }
                         ctx.drawImage(VWvVN, posx, posy, scalex, scaley);
                         var loot = VNN[World.PLAYER.loot];
@@ -15836,16 +15690,16 @@ try {
         function vNwNM(player, Wn, mappos, nM) {
             if ((NwMVW === vMNWw) || (Wn === particulesitems.woodtree)) return;
             else if (NwMVW === nWNMn) nM *= 3;
-            if ((INscreen.border[vvwvw].border + nM) >= wnNWM) return;
+            if ((Entitie.border[vvwvw].border + nM) >= wnNWM) return;
             for (var i = 0; i < nM; i++) {
                 var N = window.Math.random();
                 var wW = ((N * 10) % 1) * WNVNM;
                 var MMwmm = mappos + (((N * 10000) % 1) * 25);
                 mappos += 8;
                 WvWmM = (WvWmM + 1) % wnNWM;
-                var wmWnw = WvWmM + INscreen.WwNMN;
+                var wmWnw = WvWmM + Entitie.WwNMN;
                 nMVNv += 1;
-                var NVm = INscreen.get(0, wmWnw, nMVNv, vvwvw);
+                var NVm = Entitie.get(0, wmWnw, nMVNv, vvwvw);
                 mvMMV(NVm, 0, nMVNv, wmWnw, vvwvw, player.WWwMm, player.Vmnvm, player.WWwMm + (window.Math.cos(wW) * MMwmm), player.Vmnvm + (window.Math.sin(wW) * MMwmm), window.Math.floor(N * VNw[Wn].length), ((N * 100) % 1) * 255, Wn);
             }
         };
@@ -16406,7 +16260,7 @@ try {
             var mVn = window.Math.floor(player.Mnm / 70);
             if (mVn < 10) {
                 if (player.Mnm === 0) {
-                    if (Mw.nwNWm !== -2) Mw.nwNWm = 20;
+                    if (Render.nwNWm !== -2) Render.nwNWm = 20;
                     audio.VnV(audio.ww.mwM, 0.7, checkspos.mappos(World.PLAYER.x, World.PLAYER.y, player.x, player.y) / 4);
                 }
                 CanvasUtils.putonscreen(W[mVn], vertst + player.x, horist + player.y, 0, 0, 0, 1);
@@ -16588,7 +16442,7 @@ try {
                     for (var nMm = 0; nMm < vvv; nMm++) {
                         var WvW = M[nMm];
                         var vV = WvW.type;
-                        var mvnVn = INscreen.Wvm[vV][WvW.nnN];
+                        var mvnVn = Entitie.Wvm[vV][WvW.nnN];
                         if (((mvnVn.socketid !== World.PLAYER.id)) && (checkspos.mappos(mvnVn.x, mvnVn.y, player.x, player.y) < (ENTITIES[vV].wwW - 4))) {
                             window.console.log("DETECTED");
                             player.rx = player.x;
@@ -16624,7 +16478,7 @@ try {
             if (loot.VMn !== 0) {
                 var PLAYER = World.socket[loot.VMn];
                 if (MNW === PLAYER.MNW) {
-                    var socket = INscreen.Wvm[INSplayers];
+                    var socket = Entitie.Wvm[INSplayers];
                     var WMv = socket[PLAYER.nnmnv];
                     loot.wnw = WMv.x;
                     loot.WVM = WMv.y;
@@ -16678,15 +16532,15 @@ try {
             World.PLAYER.MnMwn = -1;
             World.PLAYER.vWMmW = -1;
             if (World.PLAYER.mvn !== 1) World.PLAYER.mvn = -1;
-            var MvW = INscreen.Wvm[ENTITIES.length];
-            var Wwn = INscreen.border[ENTITIES.length];
+            var MvW = Entitie.Wvm[ENTITIES.length];
+            var Wwn = Entitie.border[ENTITIES.length];
             var WWM = Wwn.border;
-            var Nvw = INscreen.Wvm[nnvNN];
-            var wWv = INscreen.border[nnvNN];
+            var Nvw = Entitie.Wvm[nnvNN];
+            var wWv = Entitie.border[nnvNN];
             var wVN = wWv.border;
             for (i = 0; i < wVN; i++) bigwallsfusion(Nvw[wWv.nnN[i]]);
-            Nvw = INscreen.Wvm[NWWvM];
-            wWv = INscreen.border[NWWvM];
+            Nvw = Entitie.Wvm[NWWvM];
+            wWv = Entitie.border[NWWvM];
             wVN = wWv.border;
             for (i = 0; i < wVN; i++) floorsfusion(Nvw[wWv.nnN[i]]);
             for (i = 0; i < wVN; i++) objectsinscreenfunc(Nvw[wWv.nnN[i]]);
@@ -16695,33 +16549,33 @@ try {
                 if (player.type === NWWvM) objectsinscreenfunc(player);
             }
             if (NwMVW !== vMNWw) {
-                var NWm = INscreen.Wvm[vvwvw];
-                var wWv = INscreen.border[vvwvw];
+                var NWm = Entitie.Wvm[vvwvw];
+                var wWv = Entitie.border[vvwvw];
                 var wVN = wWv.border;
                 for (i = 0; i < wVN; i++) mWNvV(NWm[wWv.nnN[i]]);
                 if (VwmMm.id !== -1) {
-                    INscreen.remove(0, VwmMm.id, VwmMm.mvN, vvwvw);
+                    Entitie.remove(0, VwmMm.id, VwmMm.mvN, vvwvw);
                     VwmMm.id = -1;
                 }
             }
-            var Nvw = INscreen.Wvm[MNvmw];
-            var wWv = INscreen.border[MNvmw];
+            var Nvw = Entitie.Wvm[MNvmw];
+            var wWv = Entitie.border[MNvmw];
             var wVN = wWv.border;
             for (i = 0; i < wVN; i++) objectsinscreenfunc(Nvw[wWv.nnN[i]]);
             for (i = 0; i < WWM; i++) {
                 var player = MvW[Wwn.nnN[i]];
                 if (player.type === MNvmw) objectsinscreenfunc(player);
             }
-            WMmMN = INscreen.Wvm[mWmnn];
-            VmwNm = INscreen.border[mWmnn];
+            WMmMN = Entitie.Wvm[mWmnn];
+            VmwNm = Entitie.border[mWmnn];
             vMwWm = VmwNm.border;
             for (i = 0; i < vMwWm; i++) natureinscreenfunc(WMmMN[VmwNm.nnN[i]]);
             for (i = 0; i < WWM; i++) {
                 var player = MvW[Wwn.nnN[i]];
                 if (player.type === mWmnn) natureinscreenfunc(player);
             }
-            var Nvw = INscreen.Wvm[wNnwm];
-            var wWv = INscreen.border[wNnwm];
+            var Nvw = Entitie.Wvm[wNnwm];
+            var wWv = Entitie.border[wNnwm];
             var wVN = wWv.border;
             for (i = 0; i < wVN; i++) smallwallsfusion(Nvw[wWv.nnN[i]]);
             for (i = 0; i < wVN; i++) objectsinscreenfunc(Nvw[wWv.nnN[i]]);
@@ -16729,8 +16583,8 @@ try {
                 var player = MvW[Wwn.nnN[i]];
                 if (player.type === wNnwm) objectsinscreenfunc(player);
             }
-            var socket = INscreen.Wvm[INSplayers];
-            var vWM = INscreen.border[INSplayers];
+            var socket = Entitie.Wvm[INSplayers];
+            var vWM = Entitie.border[INSplayers];
             var vvv = vWM.border;
             for (i = 0; i < vvv; i++) {
                 var mv = vWM.nnN[i];
@@ -16743,24 +16597,24 @@ try {
             }
             World.PLAYER.loot = -1;
             World.PLAYER.lootsrvID = -1;
-            var MMwVW = INscreen.Wvm[WmVMw];
-            var vmwvW = INscreen.border[WmVMw];
+            var MMwVW = Entitie.Wvm[WmVMw];
+            var vmwvW = Entitie.border[WmVMw];
             var MVMVw = vmwvW.border;
             for (i = 0; i < MVMVw; i++) lootinscreenfunc(MMwVW[vmwvW.nnN[i]]);
             for (i = 0; i < WWM; i++) {
                 var player = MvW[Wwn.nnN[i]];
                 if (player.type === WmVMw) lootinscreenfunc(player);
             }
-            var Mmvnv = INscreen.Wvm[VmnMw];
-            var Mmwnm = INscreen.border[VmnMw];
+            var Mmvnv = Entitie.Wvm[VmnMw];
+            var Mmwnm = Entitie.border[VmnMw];
             var MNmmw = Mmwnm.border;
             for (i = 0; i < MNmmw; i++) projectilefunc(Mmvnv[Mmwnm.nnN[i]]);
             for (i = 0; i < WWM; i++) {
                 var player = MvW[Wwn.nnN[i]];
                 if (player.type === VmnMw) projectilefunc(player);
             }
-            WMmMN = INscreen.Wvm[NWvMw];
-            VmwNm = INscreen.border[NWvMw];
+            WMmMN = Entitie.Wvm[NWvMw];
+            VmwNm = Entitie.border[NWvMw];
             vMwWm = VmwNm.border;
             for (i = 0; i < vMwWm; i++) natureinscreenfunc(WMmMN[VmwNm.nnN[i]]);
             for (i = 0; i < WWM; i++) {
@@ -16799,16 +16653,16 @@ try {
                     }
                 }
             }
-            var mnn = INscreen.Wvm[MNWNM];
-            var WwVvW = INscreen.border[MNWNM];
+            var mnn = Entitie.Wvm[MNWNM];
+            var WwVvW = Entitie.border[MNWNM];
             var nWwNn = WwVvW.border;
             for (i = 0; i < nWwNn; i++) creaturesinscreenfunc(mnn[WwVvW.nnN[i]]);
             for (i = 0; i < WWM; i++) {
                 var player = MvW[Wwn.nnN[i]];
                 if (player.type === MNWNM) creaturesinscreenfunc(player);
             }
-            Nvw = INscreen.Wvm[nnvNN];
-            wWv = INscreen.border[nnvNN];
+            Nvw = Entitie.Wvm[nnvNN];
+            wWv = Entitie.border[nnvNN];
             wVN = wWv.border;
             for (i = 0; i < wVN; i++) objectsinscreenfunc(Nvw[wWv.nnN[i]]);
             for (i = 0; i < WWM; i++) {
@@ -16820,24 +16674,24 @@ try {
                 idd.VvmvM(WvnvV[i]);
                 WvnvV[i] = null;
             }
-            WMmMN = INscreen.Wvm[MmvmN];
-            VmwNm = INscreen.border[MmvmN];
+            WMmMN = Entitie.Wvm[MmvmN];
+            VmwNm = Entitie.border[MmvmN];
             vMwWm = VmwNm.border;
             for (i = 0; i < vMwWm; i++) natureinscreenfunc(WMmMN[VmwNm.nnN[i]]);
             for (i = 0; i < WWM; i++) {
                 var player = MvW[Wwn.nnN[i]];
                 if (player.type === MmvmN) natureinscreenfunc(player);
             }
-            WMmMN = INscreen.Wvm[MVm];
-            VmwNm = INscreen.border[MVm];
+            WMmMN = Entitie.Wvm[MVm];
+            VmwNm = Entitie.border[MVm];
             vMwWm = VmwNm.border;
             for (i = 0; i < vMwWm; i++) natureinscreenfunc(WMmMN[VmwNm.nnN[i]]);
             for (i = 0; i < WWM; i++) {
                 var player = MvW[Wwn.nnN[i]];
                 if (player.type === MVm) natureinscreenfunc(player);
             }
-            explosions = INscreen.Wvm[__ENTITIE_EXPLOSION__];
-            VMnwn = INscreen.border[__ENTITIE_EXPLOSION__];
+            explosions = Entitie.Wvm[__ENTITIE_EXPLOSION__];
+            VMnwn = Entitie.border[__ENTITIE_EXPLOSION__];
             WNnmw = VMnwn.border;
             for (i = 0; i < WNnmw; i++) nVmNm(explosions[VMnwn.nnN[i]]);
             for (i = 0; i < vvv; i++) vWMWW(socket[vWM.nnN[i]]);
@@ -16860,8 +16714,8 @@ try {
 
         function VvWmm(mN) {
             if (WvWvM === 0) {
-                nvMNv = Mw.scale;
-                Mw.scale = 0.8;
+                nvMNv = Render.scale;
+                Render.scale = 0.8;
                 wMmwW = 0;
                 NNWWn = mN;
                 VnwwM = 0;
@@ -16885,7 +16739,7 @@ try {
                 vW = (0.5 * WmNnV) + (vW * (1 - 0.5));
             } else if (VnwwM > 750) vW = 0.5 + (vW * (1 - 0.5));
             var mvWMM = vW * 20;
-            Mw.scale = nvMNv + vW;
+            Render.scale = nvMNv + vW;
             CanvasUtils.options.NmwvV = CanvasUtils.options.MNWmW / (vmvNw + mvWMM);
             bodOnResize();
         };
@@ -16965,7 +16819,7 @@ try {
         };
 
         function wVVvW() {
-            Mw.MmW += delta;
+            Render.MmW += delta;
             if (WvWvM === 1) nmmMm();
             wNnvM();
             myplayerfocusinscreen();
@@ -16974,9 +16828,9 @@ try {
             checkobjonscreen(); 
             placingobj();
             if (World.vnw > 0) nvVmw();
-            INscreen.nVvvw();
+            Entitie.nVvvw();
             MNW++;
-            for (var i = 0; i < wmNWm; i++) WMnvM[i] = 0;
+            for (var i = 0; i < SOUND_LENGTH; i++) WMnvM[i] = 0;
             scaleby = wWWNM;
             wvwNM = screenWidth / scaleby;
             wwWnm = screenHeight / scaleby;
@@ -17007,7 +16861,7 @@ try {
             clan: clanfunc,
             mvn: timeret,
             vMNVm: MMWWn,
-            WwnNw: 0,
+            shake: 0,
             nwNWm: 0,
             scale: -0.,
             wvmnm: wvmnm,
@@ -17171,14 +17025,14 @@ ENTITIES[VmnMw].init = function wwwnnnm(MW) {
     switch (Wn) {
         case 4:
         case 8:
-            var player = INscreen.vvVvm(INSplayers, MW.socketid, 0);
+            var player = Entitie.vvVvm(INSplayers, MW.socketid, 0);
             if (player !== null) {
                 player.nNN = player.nNN & 255;
                 player.VMn = 0;
             }
             break;
         case 3:
-            var player = INscreen.vvVvm(INSplayers, MW.socketid, 0);
+            var player = Entitie.vvVvm(INSplayers, MW.socketid, 0);
             if (player !== null) player.VMn = 0;
             break;
     }
@@ -17205,8 +17059,8 @@ ENTITIES[nnvNN].update = function VvWVm(MW, WX, WY) {
     MW.Vvm = MW.state >> 14;
     MW.state = MW.state & 16383;
     var idd = items[MW.nNN >> 7];
-    MW.x = ((window.Math.floor(WX / Mw.wmn) * Mw.wmn) + Mw.nwn) + idd.Wwv[Rot];
-    MW.y = ((window.Math.floor(WY / Mw.wmn) * Mw.wmn) + Mw.nwn) + idd.nWn[Rot];
+    MW.x = ((window.Math.floor(WX / Render.wmn) * Render.wmn) + Render.nwn) + idd.Wwv[Rot];
+    MW.y = ((window.Math.floor(WY / Render.wmn) * Render.wmn) + Render.nwn) + idd.nWn[Rot];
     MW.rx = MW.x;
     MW.ry = MW.y;
     MW.wnw = MW.x;
@@ -17214,466 +17068,473 @@ ENTITIES[nnvNN].update = function VvWVm(MW, WX, WY) {
     MW.WWwMm = MW.x;
     MW.Vmnvm = MW.y;
     if ((idd.WNv === 1) && ((MW.state & 16) === 16)) {
-        MW.WWwMm = ((window.Math.floor(MW.j + idd.wmvvV[Rot]) * Mw.wmn) + Mw.nwn) + idd.Wwv[(Rot + 1) % 4];
-        MW.Vmnvm = ((window.Math.floor(MW.i + idd.NVvMw[Rot]) * Mw.wmn) + Mw.nwn) + idd.nWn[(Rot + 1) % 4];
+        MW.WWwMm = ((window.Math.floor(MW.j + idd.wmvvV[Rot]) * Render.wmn) + Render.nwn) + idd.Wwv[(Rot + 1) % 4];
+        MW.Vmnvm = ((window.Math.floor(MW.i + idd.NVvMw[Rot]) * Render.wmn) + Render.nwn) + idd.nWn[(Rot + 1) % 4];
     }
 };
 ENTITIES[wNnwm].update = ENTITIES[nnvNN].update;
 ENTITIES[MNvmw].update = ENTITIES[nnvNN].update;
 ENTITIES[NWWvM].update = ENTITIES[nnvNN].update;
 try {
-    Mw.WwnNw;
+    Render.shake;
 } catch (error) {
-    var Mw = {};
+    var Render = {};
 }
-var WvNnv = 1;
-var WMWwm = 2;
-var Nw = 0;
-var station = {
-    own: Nw++,
-    firepart: Nw++,
-    workbench: Nw++,
-    bbq: Nw++,
-    weavingmachine: Nw++,
-    researchbench: Nw++,
-    smelter: Nw++,
-    teslabench: Nw++,
-    composter: Nw++,
-    agitator: Nw++,
-    extractor: Nw++,
-    weldingmachine: Nw++
+var __WARM__      = 1;
+var __RADIATION__ = 2;
+
+
+var COUNTER = 0;
+var AREAS = {
+    own: COUNTER++,
+    firepart: COUNTER++,
+    workbench: COUNTER++,
+    bbq: COUNTER++,
+    weavingmachine: COUNTER++,
+    researchbench: COUNTER++,
+    smelter: COUNTER++,
+    teslabench: COUNTER++,
+    composter: COUNTER++,
+    agitator: COUNTER++,
+    extractor: COUNTER++,
+    weldingmachine: COUNTER++
 };
-Nw = 0;
-var objectaudio = {
-    VNv: Nw++,
-    wood: Nw++,
-    stone: Nw++,
-    stone2: Nw++,
-    metal: Nw++,
-    wooddes: Nw++,
-    stonedes: Nw++,
-    metaldes: Nw++,
-    pillow: Nw++,
-    pillowdes: Nw++
+COUNTER = 0;
+var SOUNDID = {
+    VNv: COUNTER++,
+    wood: COUNTER++,
+    stone: COUNTER++,
+    stone2: COUNTER++,
+    metal: COUNTER++,
+    wooddes: COUNTER++,
+    stonedes: COUNTER++,
+    metaldes: COUNTER++,
+    pillow: COUNTER++,
+    pillowdes: COUNTER++
 };
-var audiodes = [];
-audiodes[objectaudio.wood] = "audio/wood-impact.mp3";
-audiodes[objectaudio.stone] = "audio/stone-impact2.mp3";
-audiodes[objectaudio.stone2] = "audio/stone-impact.mp3";
-audiodes[objectaudio.metal] = "audio/metal-impact2.mp3";
-audiodes[objectaudio.pillow] = "audio/pillow-impact.mp3";
-audiodes[objectaudio.wooddes] = "audio/wood-destroy3.mp3";
-audiodes[objectaudio.stonedes] = "audio/stone-destroy.mp3";
-audiodes[objectaudio.metaldes] = "audio/metal-destroy2.mp3";
-audiodes[objectaudio.pillowdes] = "audio/pillow-destroy.mp3";
-var wmNWm = audiodes.length;
-Nw = 0;
-var vWN = {
-    nwv: Nw++,
-    VvMVW: Nw++,
-    Mwmnm: Nw++,
-    cable: Nw++,
-    mMwmV: Nw++
+var SOUND = [];
+SOUND[SOUNDID.wood] = "audio/wood-impact.mp3";
+SOUND[SOUNDID.stone] = "audio/stone-impact2.mp3";
+SOUND[SOUNDID.stone2] = "audio/stone-impact.mp3";
+SOUND[SOUNDID.metal] = "audio/metal-impact2.mp3";
+SOUND[SOUNDID.pillow] = "audio/pillow-impact.mp3";
+SOUND[SOUNDID.wooddes] = "audio/wood-destroy3.mp3";
+SOUND[SOUNDID.stonedes] = "audio/stone-destroy.mp3";
+SOUND[SOUNDID.metaldes] = "audio/metal-destroy2.mp3";
+SOUND[SOUNDID.pillowdes] = "audio/pillow-destroy.mp3";
+
+var SOUND_LENGTH = SOUND.length;
+
+COUNTER = 0;
+var BEHAVIOR = {
+    __NO__:             COUNTER++,
+    __SEED__:           COUNTER++,
+    __SEED_RESOURCE__:  COUNTER++,
+    __LOGIC__:          COUNTER++,
+    __AI_CONSTRUCTOR__: COUNTER++
 };
-Nw = 0;
-var creatures = {
-    normghoul: Nw++,
-    speedghoul: Nw++,
-    bombghoul: Nw++,
-    radghoul: Nw++,
-    armoredghoul: Nw++,
-    pumpkinghoul: Nw++,
-    lapabot: Nw++,
-    halbot: Nw++,
-    teslabot: Nw++
+
+COUNTER = 0;
+var AIID = {
+    __NORMAL_GHOUL__:       COUNTER++,
+    __FAST_GHOUL__:         COUNTER++,
+    __EXPLOSIVE_GHOUL__:    COUNTER++,
+    __RADIOACTIVE_GHOUL__:  COUNTER++,
+    __ARMORED_GHOUL__:      COUNTER++,
+    __PUMPKIN_GHOUL__:      COUNTER++,
+    __LAPABOT_REPAIR__:     COUNTER++,
+    __HAL_BOT__:            COUNTER++,
+    __TESLA_BOT__:          COUNTER++
 };
-Nw = 0;
-var Ww = {
-    skill: Nw++,
-    survival: Nw++,
-    clothe: Nw++,
-    building: Nw++,
-    tool: Nw++,
-    weapon: Nw++,
-    plant: Nw++,
-    medicine: Nw++,
-    resources: Nw++,
-    cable: Nw++
+
+COUNTER = 0;
+var SKILLS = {
+    __SKILL__:      COUNTER++,
+    __SURVIVAL__:   COUNTER++,
+    __CLOTHE__:     COUNTER++,
+    __BUILDING__:   COUNTER++,
+    __TOOL__:       COUNTER++,
+    __WEAPON__:     COUNTER++,
+    __PLANT__:      COUNTER++,
+    __DRUG__:       COUNTER++,
+    __MINERAL__:    COUNTER++,
+    __LOGIC__:      COUNTER++
 };
-Nw = 1;
+
+COUNTER = 1;
 var item = {
-    wood: Nw++,
-    stone: Nw++,
-    steel: Nw++,
-    animalfat: Nw++,
-    animaltendon: Nw++,
-    string: Nw++,
-    leather: Nw++,
-    shapedmetal: Nw++,
-    rawsteak: Nw++,
-    cookedsteak: Nw++,
-    rottensteak: Nw++,
-    orange: Nw++,
-    rottenorange: Nw++,
-    seedorange: Nw++,
-    hachet: Nw++,
-    stonepickaxe: Nw++,
-    steelpickaxe: Nw++,
-    stoneaxe: Nw++,
-    workbench: Nw++,
-    spear: Nw++,
-    bow: Nw++,
-    pistol: Nw++,
-    deserteagle: Nw++,
-    shotgun: Nw++,
-    ak47: Nw++,
-    sniper: Nw++,
-    woodenwall: Nw++,
-    stonewall: Nw++,
-    steelwall: Nw++,
-    wooddoor: Nw++,
-    stonedoor: Nw++,
-    steeldoor: Nw++,
-    campfire: Nw++,
-    bullet9mm: Nw++,
-    bulletshotgun: Nw++,
-    sniperbullet: Nw++,
-    medkit: Nw++,
-    bandage: Nw++,
-    soda: Nw++,
-    mp5: Nw++,
-    headscarf: Nw++,
-    chapka: Nw++,
-    coat: Nw++,
-    gazmask: Nw++,
-    gazprotection: Nw++,
-    radiationsuit: Nw++,
-    woodarrow: Nw++,
-    campfirebbq: Nw++,
-    smelter: Nw++,
-    wooddoor1: Nw++,
-    stonedoor1: Nw++,
-    steeldoor1: Nw++,
-    sulfur: Nw++,
-    shapeduranium: Nw++,
-    researchbench: Nw++,
-    uranium: Nw++,
-    weavingmachine: Nw++,
-    gasoline: Nw++,
-    sulfurpickaxe: Nw++,
-    chest: Nw++,
-    fridge: Nw++,
-    woodfloor1: Nw++,
-    hammer: Nw++,
-    sleepingbag: Nw++,
-    repairhammer: Nw++,
-    nails: Nw++,
-    woodfloor2: Nw++,
-    smallwoodwall: Nw++,
-    smallstonewall: Nw++,
-    smallsteelwall: Nw++,
-    MMnVW: Nw++,
-    tomatosoup: Nw++,
-    syringe: Nw++,
-    chemicalcomponent: Nw++,
-    radway: Nw++,
-    tomatoseed: Nw++,
-    tomato: Nw++,
-    rottentomato: Nw++,
-    can: Nw++,
-    crossbow: Nw++,
-    crossarrow: Nw++,
-    nailgun: Nw++,
-    sawedoff: Nw++,
-    stonefloor1: Nw++,
-    stonefloor2: Nw++,
-    NvMvM: Nw++,
-    chips: Nw++,
-    rottenchips: Nw++,
-    electronicpart: Nw++,
-    junk: Nw++,
-    wires: Nw++,
-    energycell: Nw++,
-    laserpistol: Nw++,
-    teslabench: Nw++,
-    alloys: Nw++,
-    sulfuraxe: Nw++,
-    landmine: Nw++,
-    dynamite: Nw++,
-    c4bomb: Nw++,
-    joystic: Nw++,
-    composter: Nw++,
-    metalhelmet: Nw++,
-    weldinghelmet: Nw++,
-    gladiatorhelmet: Nw++,
-    leatherjacket: Nw++,
-    kevlarsuit: Nw++,
-    SWATsuit: Nw++,
-    protectivesuit: Nw++,
-    tesla1: Nw++,
-    tesla2: Nw++,
-    woodespike: Nw++,
-    lasersubmachine: Nw++,
-    granade: Nw++,
-    superhammer: Nw++,
-    ghoulblood: Nw++,
-    camouflage: Nw++,
-    agitator: Nw++,
-    ghouldrug: Nw++,
-    mushroom: Nw++,
-    mushroom2: Nw++,
-    mushroom3: Nw++,
-    rottenmushroom1: Nw++,
-    rottenmushroom2: Nw++,
-    rottenmushroom3: Nw++,
-    lapadoine: Nw++,
-    lapabot: Nw++,
-    smallwire: Nw++,
-    pumpkin: Nw++,
-    rottenpumpkin: Nw++,
-    ghoulseed: Nw++,
-    extractor: Nw++,
-    antidote: Nw++,
-    antidoteflower: Nw++,
-    treeseed: Nw++,
-    acorn: Nw++,
-    rottenacorn: Nw++,
-    lasersniper: Nw++,
-    halbot: Nw++,
-    teslabot: Nw++,
-    cable: Nw++,
-    cable2: Nw++,
-    cable3: Nw++,
-    cable4: Nw++,
-    switch: Nw++,
-    orgate: Nw++,
-    andgate: Nw++,
-    notgate: Nw++,
-    lamp: Nw++,
-    cablewall: Nw++,
-    autodoor: Nw++,
-    platform: Nw++,
-    stonecave: Nw++,
-    bunkerwall: Nw++,
-    mustardfloor: Nw++,
-    redfloor: Nw++,
-    weldingmachine: Nw++,
-    cable4: Nw++,
-    timer: Nw++,
-    xorgate: Nw++,
-    skilleye1: Nw++,
-    skilleye2: Nw++,
-    skilleye3: Nw++,
-    builderskill1: Nw++,
-    builderskill2: Nw++,
-    inventoryskill1: Nw++,
-    inventoryskill2: Nw++,
-    inventoryskill3: Nw++,
-    inventoryskill4: Nw++,
-    inventoryskill5: Nw++,
-    lightweightskill: Nw++
+    wood: COUNTER++,
+    stone: COUNTER++,
+    steel: COUNTER++,
+    animalfat: COUNTER++,
+    animaltendon: COUNTER++,
+    string: COUNTER++,
+    leather: COUNTER++,
+    shapedmetal: COUNTER++,
+    rawsteak: COUNTER++,
+    cookedsteak: COUNTER++,
+    rottensteak: COUNTER++,
+    orange: COUNTER++,
+    rottenorange: COUNTER++,
+    seedorange: COUNTER++,
+    hachet: COUNTER++,
+    stonepickaxe: COUNTER++,
+    steelpickaxe: COUNTER++,
+    stoneaxe: COUNTER++,
+    workbench: COUNTER++,
+    spear: COUNTER++,
+    bow: COUNTER++,
+    pistol: COUNTER++,
+    deserteagle: COUNTER++,
+    shotgun: COUNTER++,
+    ak47: COUNTER++,
+    sniper: COUNTER++,
+    woodenwall: COUNTER++,
+    stonewall: COUNTER++,
+    steelwall: COUNTER++,
+    wooddoor: COUNTER++,
+    stonedoor: COUNTER++,
+    steeldoor: COUNTER++,
+    campfire: COUNTER++,
+    bullet9mm: COUNTER++,
+    bulletshotgun: COUNTER++,
+    sniperbullet: COUNTER++,
+    medkit: COUNTER++,
+    bandage: COUNTER++,
+    soda: COUNTER++,
+    mp5: COUNTER++,
+    headscarf: COUNTER++,
+    chapka: COUNTER++,
+    coat: COUNTER++,
+    gazmask: COUNTER++,
+    gazprotection: COUNTER++,
+    radiationsuit: COUNTER++,
+    woodarrow: COUNTER++,
+    campfirebbq: COUNTER++,
+    smelter: COUNTER++,
+    wooddoor1: COUNTER++,
+    stonedoor1: COUNTER++,
+    steeldoor1: COUNTER++,
+    sulfur: COUNTER++,
+    shapeduranium: COUNTER++,
+    researchbench: COUNTER++,
+    uranium: COUNTER++,
+    weavingmachine: COUNTER++,
+    gasoline: COUNTER++,
+    sulfurpickaxe: COUNTER++,
+    chest: COUNTER++,
+    fridge: COUNTER++,
+    woodfloor1: COUNTER++,
+    hammer: COUNTER++,
+    sleepingbag: COUNTER++,
+    repairhammer: COUNTER++,
+    nails: COUNTER++,
+    woodfloor2: COUNTER++,
+    smallwoodwall: COUNTER++,
+    smallstonewall: COUNTER++,
+    smallsteelwall: COUNTER++,
+    MMnVW: COUNTER++,
+    tomatosoup: COUNTER++,
+    syringe: COUNTER++,
+    chemicalcomponent: COUNTER++,
+    radway: COUNTER++,
+    tomatoseed: COUNTER++,
+    tomato: COUNTER++,
+    rottentomato: COUNTER++,
+    can: COUNTER++,
+    crossbow: COUNTER++,
+    crossarrow: COUNTER++,
+    nailgun: COUNTER++,
+    sawedoff: COUNTER++,
+    stonefloor1: COUNTER++,
+    stonefloor2: COUNTER++,
+    NvMvM: COUNTER++,
+    chips: COUNTER++,
+    rottenchips: COUNTER++,
+    electronicpart: COUNTER++,
+    junk: COUNTER++,
+    wires: COUNTER++,
+    energycell: COUNTER++,
+    laserpistol: COUNTER++,
+    teslabench: COUNTER++,
+    alloys: COUNTER++,
+    sulfuraxe: COUNTER++,
+    landmine: COUNTER++,
+    dynamite: COUNTER++,
+    c4bomb: COUNTER++,
+    joystic: COUNTER++,
+    composter: COUNTER++,
+    metalhelmet: COUNTER++,
+    weldinghelmet: COUNTER++,
+    gladiatorhelmet: COUNTER++,
+    leatherjacket: COUNTER++,
+    kevlarsuit: COUNTER++,
+    SWATsuit: COUNTER++,
+    protectivesuit: COUNTER++,
+    tesla1: COUNTER++,
+    tesla2: COUNTER++,
+    woodespike: COUNTER++,
+    lasersubmachine: COUNTER++,
+    granade: COUNTER++,
+    superhammer: COUNTER++,
+    ghoulblood: COUNTER++,
+    camouflage: COUNTER++,
+    agitator: COUNTER++,
+    ghouldrug: COUNTER++,
+    mushroom: COUNTER++,
+    mushroom2: COUNTER++,
+    mushroom3: COUNTER++,
+    rottenmushroom1: COUNTER++,
+    rottenmushroom2: COUNTER++,
+    rottenmushroom3: COUNTER++,
+    lapadoine: COUNTER++,
+    lapabot: COUNTER++,
+    smallwire: COUNTER++,
+    pumpkin: COUNTER++,
+    rottenpumpkin: COUNTER++,
+    ghoulseed: COUNTER++,
+    extractor: COUNTER++,
+    antidote: COUNTER++,
+    antidoteflower: COUNTER++,
+    treeseed: COUNTER++,
+    acorn: COUNTER++,
+    rottenacorn: COUNTER++,
+    lasersniper: COUNTER++,
+    halbot: COUNTER++,
+    teslabot: COUNTER++,
+    cable: COUNTER++,
+    cable2: COUNTER++,
+    cable3: COUNTER++,
+    cable4: COUNTER++,
+    switch: COUNTER++,
+    orgate: COUNTER++,
+    andgate: COUNTER++,
+    notgate: COUNTER++,
+    lamp: COUNTER++,
+    cablewall: COUNTER++,
+    autodoor: COUNTER++,
+    platform: COUNTER++,
+    stonecave: COUNTER++,
+    bunkerwall: COUNTER++,
+    mustardfloor: COUNTER++,
+    redfloor: COUNTER++,
+    weldingmachine: COUNTER++,
+    cable4: COUNTER++,
+    timer: COUNTER++,
+    xorgate: COUNTER++,
+    skilleye1: COUNTER++,
+    skilleye2: COUNTER++,
+    skilleye3: COUNTER++,
+    builderskill1: COUNTER++,
+    builderskill2: COUNTER++,
+    inventoryskill1: COUNTER++,
+    inventoryskill2: COUNTER++,
+    inventoryskill3: COUNTER++,
+    inventoryskill4: COUNTER++,
+    inventoryskill5: COUNTER++,
+    lightweightskill: COUNTER++
 };
-Nw = 0;
+COUNTER = 0;
 var Mv = {
-    mvnnv: Nw++,
-    wWvMW: Nw++,
-    wood: Nw++,
-    mnVVV: Nw++,
-    vWVMv: Nw++,
-    stone: Nw++,
-    steel: Nw++,
-    animalfat: Nw++,
-    animaltendon: Nw++,
-    string: Nw++,
-    leather: Nw++,
-    shapedmetal: Nw++,
-    rawsteak: Nw++,
-    cookedsteak: Nw++,
-    rottensteak: Nw++,
-    orange: Nw++,
-    rottenorange: Nw++,
-    seedorange: Nw++,
-    hachet: Nw++,
-    stonepickaxe: Nw++,
-    steelpickaxe: Nw++,
-    stoneaxe: Nw++,
-    workbench: Nw++,
-    spear: Nw++,
-    bow: Nw++,
-    pistol: Nw++,
-    deserteagle: Nw++,
-    shotgun: Nw++,
-    ak47: Nw++,
-    sniper: Nw++,
-    woodenwall: Nw++,
-    stonewall: Nw++,
-    steelwall: Nw++,
-    wooddoor: Nw++,
-    stonedoor: Nw++,
-    steeldoor: Nw++,
-    campfire: Nw++,
-    bullet9mm: Nw++,
-    bulletshotgun: Nw++,
-    sniperbullet: Nw++,
-    medkit: Nw++,
-    bandage: Nw++,
-    soda: Nw++,
-    mp5: Nw++,
-    headscarf: Nw++,
-    chapka: Nw++,
-    coat: Nw++,
-    gazmask: Nw++,
-    gazprotection: Nw++,
-    radiationsuit: Nw++,
-    woodarrow: Nw++,
-    campfirebbq: Nw++,
-    smelter: Nw++,
-    wooddoor1: Nw++,
-    stonedoor1: Nw++,
-    steeldoor1: Nw++,
-    sulfur: Nw++,
-    shapeduranium: Nw++,
-    researchbench: Nw++,
-    uranium: Nw++,
-    weavingmachine: Nw++,
-    gasoline: Nw++,
-    sulfurpickaxe: Nw++,
-    chest: Nw++,
-    fridge: Nw++,
-    woodfloor1: Nw++,
-    hammer: Nw++,
-    sleepingbag: Nw++,
-    repairhammer: Nw++,
-    nails: Nw++,
-    woodfloor2: Nw++,
-    smallwoodwall: Nw++,
-    smallstonewall: Nw++,
-    smallsteelwall: Nw++,
-    tomatosoup: Nw++,
-    syringe: Nw++,
-    chemicalcomponent: Nw++,
-    radway: Nw++,
-    tomatoseed: Nw++,
-    tomato: Nw++,
-    rottentomato: Nw++,
-    can: Nw++,
-    crossbow: Nw++,
-    crossarrow: Nw++,
-    nailgun: Nw++,
-    sawedoff: Nw++,
-    stonefloor1: Nw++,
-    stonefloor2: Nw++,
-    chips: Nw++,
-    rottenchips: Nw++,
-    electronicpart: Nw++,
-    junk: Nw++,
-    wires: Nw++,
-    energycell: Nw++,
-    laserpistol: Nw++,
-    teslabench: Nw++,
-    alloys: Nw++,
-    sulfuraxe: Nw++,
-    landmine: Nw++,
-    dynamite: Nw++,
-    c4bomb: Nw++,
-    joystic: Nw++,
-    composter: Nw++,
-    metalhelmet: Nw++,
-    weldinghelmet: Nw++,
-    gladiatorhelmet: Nw++,
-    leatherjacket: Nw++,
-    kevlarsuit: Nw++,
-    SWATsuit: Nw++,
-    protectivesuit: Nw++,
-    tesla1: Nw++,
-    tesla2: Nw++,
-    woodespike: Nw++,
-    lasersubmachine: Nw++,
-    granade: Nw++,
-    superhammer: Nw++,
-    ghoulblood: Nw++,
-    camouflage: Nw++,
-    agitator: Nw++,
-    ghouldrug: Nw++,
-    mushroom: Nw++,
-    mushroom2: Nw++,
-    mushroom3: Nw++,
-    rottenmushroom1: Nw++,
-    rottenmushroom2: Nw++,
-    rottenmushroom3: Nw++,
-    lapadoine: Nw++,
-    lapabot: Nw++,
-    smallwire: Nw++,
-    pumpkin: Nw++,
-    rottenpumpkin: Nw++,
-    ghoulseed: Nw++,
-    extractor: Nw++,
-    antidote: Nw++,
-    antidoteflower: Nw++,
-    treeseed: Nw++,
-    acorn: Nw++,
-    rottenacorn: Nw++,
-    lasersniper: Nw++,
-    halbot: Nw++,
-    teslabot: Nw++,
-    cable: Nw++,
-    cable2: Nw++,
-    cable3: Nw++,
-    cable4: Nw++,
-    switch: Nw++,
-    orgate: Nw++,
-    andgate: Nw++,
-    notgate: Nw++,
-    lamp: Nw++,
-    cablewall: Nw++,
-    autodoor: Nw++,
-    platform: Nw++,
-    stonecave: Nw++,
-    bunkerwall: Nw++,
-    mustardfloor: Nw++,
-    redfloor: Nw++,
-    weldingmachine: Nw++,
-    cable4: Nw++,
-    timer: Nw++,
-    xorgate: Nw++
+    mvnnv: COUNTER++,
+    wWvMW: COUNTER++,
+    wood: COUNTER++,
+    mnVVV: COUNTER++,
+    vWVMv: COUNTER++,
+    stone: COUNTER++,
+    steel: COUNTER++,
+    animalfat: COUNTER++,
+    animaltendon: COUNTER++,
+    string: COUNTER++,
+    leather: COUNTER++,
+    shapedmetal: COUNTER++,
+    rawsteak: COUNTER++,
+    cookedsteak: COUNTER++,
+    rottensteak: COUNTER++,
+    orange: COUNTER++,
+    rottenorange: COUNTER++,
+    seedorange: COUNTER++,
+    hachet: COUNTER++,
+    stonepickaxe: COUNTER++,
+    steelpickaxe: COUNTER++,
+    stoneaxe: COUNTER++,
+    workbench: COUNTER++,
+    spear: COUNTER++,
+    bow: COUNTER++,
+    pistol: COUNTER++,
+    deserteagle: COUNTER++,
+    shotgun: COUNTER++,
+    ak47: COUNTER++,
+    sniper: COUNTER++,
+    woodenwall: COUNTER++,
+    stonewall: COUNTER++,
+    steelwall: COUNTER++,
+    wooddoor: COUNTER++,
+    stonedoor: COUNTER++,
+    steeldoor: COUNTER++,
+    campfire: COUNTER++,
+    bullet9mm: COUNTER++,
+    bulletshotgun: COUNTER++,
+    sniperbullet: COUNTER++,
+    medkit: COUNTER++,
+    bandage: COUNTER++,
+    soda: COUNTER++,
+    mp5: COUNTER++,
+    headscarf: COUNTER++,
+    chapka: COUNTER++,
+    coat: COUNTER++,
+    gazmask: COUNTER++,
+    gazprotection: COUNTER++,
+    radiationsuit: COUNTER++,
+    woodarrow: COUNTER++,
+    campfirebbq: COUNTER++,
+    smelter: COUNTER++,
+    wooddoor1: COUNTER++,
+    stonedoor1: COUNTER++,
+    steeldoor1: COUNTER++,
+    sulfur: COUNTER++,
+    shapeduranium: COUNTER++,
+    researchbench: COUNTER++,
+    uranium: COUNTER++,
+    weavingmachine: COUNTER++,
+    gasoline: COUNTER++,
+    sulfurpickaxe: COUNTER++,
+    chest: COUNTER++,
+    fridge: COUNTER++,
+    woodfloor1: COUNTER++,
+    hammer: COUNTER++,
+    sleepingbag: COUNTER++,
+    repairhammer: COUNTER++,
+    nails: COUNTER++,
+    woodfloor2: COUNTER++,
+    smallwoodwall: COUNTER++,
+    smallstonewall: COUNTER++,
+    smallsteelwall: COUNTER++,
+    tomatosoup: COUNTER++,
+    syringe: COUNTER++,
+    chemicalcomponent: COUNTER++,
+    radway: COUNTER++,
+    tomatoseed: COUNTER++,
+    tomato: COUNTER++,
+    rottentomato: COUNTER++,
+    can: COUNTER++,
+    crossbow: COUNTER++,
+    crossarrow: COUNTER++,
+    nailgun: COUNTER++,
+    sawedoff: COUNTER++,
+    stonefloor1: COUNTER++,
+    stonefloor2: COUNTER++,
+    chips: COUNTER++,
+    rottenchips: COUNTER++,
+    electronicpart: COUNTER++,
+    junk: COUNTER++,
+    wires: COUNTER++,
+    energycell: COUNTER++,
+    laserpistol: COUNTER++,
+    teslabench: COUNTER++,
+    alloys: COUNTER++,
+    sulfuraxe: COUNTER++,
+    landmine: COUNTER++,
+    dynamite: COUNTER++,
+    c4bomb: COUNTER++,
+    joystic: COUNTER++,
+    composter: COUNTER++,
+    metalhelmet: COUNTER++,
+    weldinghelmet: COUNTER++,
+    gladiatorhelmet: COUNTER++,
+    leatherjacket: COUNTER++,
+    kevlarsuit: COUNTER++,
+    SWATsuit: COUNTER++,
+    protectivesuit: COUNTER++,
+    tesla1: COUNTER++,
+    tesla2: COUNTER++,
+    woodespike: COUNTER++,
+    lasersubmachine: COUNTER++,
+    granade: COUNTER++,
+    superhammer: COUNTER++,
+    ghoulblood: COUNTER++,
+    camouflage: COUNTER++,
+    agitator: COUNTER++,
+    ghouldrug: COUNTER++,
+    mushroom: COUNTER++,
+    mushroom2: COUNTER++,
+    mushroom3: COUNTER++,
+    rottenmushroom1: COUNTER++,
+    rottenmushroom2: COUNTER++,
+    rottenmushroom3: COUNTER++,
+    lapadoine: COUNTER++,
+    lapabot: COUNTER++,
+    smallwire: COUNTER++,
+    pumpkin: COUNTER++,
+    rottenpumpkin: COUNTER++,
+    ghoulseed: COUNTER++,
+    extractor: COUNTER++,
+    antidote: COUNTER++,
+    antidoteflower: COUNTER++,
+    treeseed: COUNTER++,
+    acorn: COUNTER++,
+    rottenacorn: COUNTER++,
+    lasersniper: COUNTER++,
+    halbot: COUNTER++,
+    teslabot: COUNTER++,
+    cable: COUNTER++,
+    cable2: COUNTER++,
+    cable3: COUNTER++,
+    cable4: COUNTER++,
+    switch: COUNTER++,
+    orgate: COUNTER++,
+    andgate: COUNTER++,
+    notgate: COUNTER++,
+    lamp: COUNTER++,
+    cablewall: COUNTER++,
+    autodoor: COUNTER++,
+    platform: COUNTER++,
+    stonecave: COUNTER++,
+    bunkerwall: COUNTER++,
+    mustardfloor: COUNTER++,
+    redfloor: COUNTER++,
+    weldingmachine: COUNTER++,
+    cable4: COUNTER++,
+    timer: COUNTER++,
+    xorgate: COUNTER++
 };
-Nw = 0;
+COUNTER = 0;
 var particulesitems = {
-    woodtree: Nw++,
-    wood: Nw++,
-    stone: Nw++,
-    steel: Nw++,
-    uranium: Nw++,
-    sulfur: Nw++,
-    leaf: Nw++,
-    leaftree: Nw++,
-    orange: Nw++,
-    blood: Nw++,
-    firepart: Nw++,
-    furpart: Nw++,
-    bedpart: Nw++,
-    bedpart2: Nw++,
-    sofapart: Nw++,
-    sofapart2: Nw++,
-    sofapart3: Nw++,
-    toilet: Nw++,
-    woodpart: Nw++,
-    safepart: Nw++,
-    garbagepart: Nw++,
-    fridge: Nw++,
-    plot: Nw++,
-    barrel: Nw++,
-    barrel2: Nw++,
-    metalpart: Nw++,
-    tomato: Nw++,
-    greysteelpart: Nw++,
-    bluesteelpart: Nw++,
-    redsteelpart: Nw++,
-    kakipart: Nw++,
-    mushroom: Nw++,
-    mushroom2: Nw++,
-    mushroom3: Nw++,
-    gold: Nw++
+    woodtree: COUNTER++,
+    wood: COUNTER++,
+    stone: COUNTER++,
+    steel: COUNTER++,
+    uranium: COUNTER++,
+    sulfur: COUNTER++,
+    leaf: COUNTER++,
+    leaftree: COUNTER++,
+    orange: COUNTER++,
+    blood: COUNTER++,
+    firepart: COUNTER++,
+    furpart: COUNTER++,
+    bedpart: COUNTER++,
+    bedpart2: COUNTER++,
+    sofapart: COUNTER++,
+    sofapart2: COUNTER++,
+    sofapart3: COUNTER++,
+    toilet: COUNTER++,
+    woodpart: COUNTER++,
+    safepart: COUNTER++,
+    garbagepart: COUNTER++,
+    fridge: COUNTER++,
+    plot: COUNTER++,
+    barrel: COUNTER++,
+    barrel2: COUNTER++,
+    metalpart: COUNTER++,
+    tomato: COUNTER++,
+    greysteelpart: COUNTER++,
+    bluesteelpart: COUNTER++,
+    redsteelpart: COUNTER++,
+    kakipart: COUNTER++,
+    mushroom: COUNTER++,
+    mushroom2: COUNTER++,
+    mushroom3: COUNTER++,
+    gold: COUNTER++
 };
 var adswait = [{
     src: "img/wait-ads-1.png",
@@ -18688,8 +18549,8 @@ var items = [{
             m: 0
         }]
     },
-    detail: new vn("Stone", "Find it on the ground or on the rock.", Ww.resources, [], 0, [
-        [station.extractor, 80000]
+    detail: new vn("Stone", "Find it on the ground or on the rock.", SKILLS.__MINERAL__, [], 0, [
+        [AREAS.extractor, 80000]
     ]),
     wwnWm: 50,
     MwMvv: 200,
@@ -18708,8 +18569,8 @@ var items = [{
             m: 0
         }]
     },
-    detail: new vn("Iron", "Melt it on a Firepit or a Smelter", Ww.resources, [], 0, [
-        [station.extractor, 120000]
+    detail: new vn("Iron", "Melt it on a Firepit or a Smelter", SKILLS.__MINERAL__, [], 0, [
+        [AREAS.extractor, 120000]
     ]),
     wwnWm: 4,
     MwMvv: 8,
@@ -18760,10 +18621,10 @@ var items = [{
             m: 0
         }]
     },
-    detail: new vn("String", "Useful to craft many items.", Ww.survival, [
+    detail: new vn("String", "Useful to craft many items.", SKILLS.__SURVIVAL__, [
         [item.animaltendon, 2]
     ], 1, [
-        [station.workbench, 20000]
+        [AREAS.workbench, 20000]
     ]),
     stack: 255,
     loot: Mv.string
@@ -18795,11 +18656,11 @@ var items = [{
             m: 0
         }]
     },
-    detail: new vn("Shaped Metal", "To craft improved items.", Ww.resources, [
+    detail: new vn("Shaped Metal", "To craft improved items.", SKILLS.__MINERAL__, [
         [item.steel, 2]
     ], 1, [
-        [station.smelter, 3000],
-        [station.bbq, 30000]
+        [AREAS.smelter, 3000],
+        [AREAS.bbq, 30000]
     ]),
     stack: 255,
     loot: Mv.shapedmetal
@@ -18835,11 +18696,11 @@ var items = [{
             m: 0
         }]
     },
-    detail: new vn("Cooked Steak", "Rare or medium?", Ww.survival, [
+    detail: new vn("Cooked Steak", "Rare or medium?", SKILLS.__SURVIVAL__, [
         [item.rawsteak, 1]
     ], 1, [
-        [station.firepart, 20000],
-        [station.bbq, 10000]
+        [AREAS.firepart, 20000],
+        [AREAS.bbq, 10000]
     ]),
     stack: 10,
     loot: Mv.cookedsteak,
@@ -18897,10 +18758,10 @@ var items = [{
             m: 0
         }]
     },
-    detail: new vn("Rotten Orange", "Go on, have a bite!", Ww.plant, [
+    detail: new vn("Rotten Orange", "Go on, have a bite!", SKILLS.__PLANT__, [
         [item.orange, 4]
     ], 8, [
-        [station.composter, 40000]
+        [AREAS.composter, 40000]
     ]),
     stack: 20,
     loot: Mv.rottenorange,
@@ -18919,11 +18780,11 @@ var items = [{
             m: 0
         }]
     },
-    detail: new vn("Orange Seed", "Fill up on Vitame C?", Ww.plant, [
+    detail: new vn("Orange Seed", "Fill up on Vitame C?", SKILLS.__PLANT__, [
         [item.orange, 4]
     ], 1, [
-        [station.firepart, 20000],
-        [station.bbq, 15000]
+        [AREAS.firepart, 20000],
+        [AREAS.bbq, 15000]
     ]),
     stack: 40,
     loot: Mv.seedorange,
@@ -18954,14 +18815,14 @@ var items = [{
     },
     WNv: 0,
     mwM: 0,
-    behavior: vWN.VvMVW,
+    behavior: BEHAVIOR.__SEED__,
     MWv: 0,
     nvN: 0,
     MMN: 0,
     WnW: 0,
-    draw: Mw.MWnVn,
-    impactaudio: objectaudio.VNv,
-    destroyaudio: objectaudio.VNv,
+    draw: Render.MWnVn,
+    impactaudio: SOUNDID.VNv,
+    destroyaudio: SOUNDID.VNv,
     Nn: [{
         src: "img/day-plant0-orange.png",
         W: {
@@ -19005,12 +18866,12 @@ var items = [{
             m: 0
         }]
     },
-    detail: new vn("Hatchet", "Harvest Wood and Stone.", Ww.tool, [
+    detail: new vn("Hatchet", "Harvest Wood and Stone.", SKILLS.__TOOL__, [
         [item.wood, 10],  
         [item.stone, 2]
     ], 1, [
-        [station.own, 5000],
-        [station.workbench, 10000]
+        [AREAS.own, 5000],
+        [AREAS.workbench, 10000]
     ]),
     mnw: 3,     
     stack: 1,
@@ -19028,11 +18889,11 @@ var items = [{
             m: 0
         }]
     },
-    detail: new vn("Stone Pickaxe", "Mine Stone and Iron.", Ww.tool, [
+    detail: new vn("Stone Pickaxe", "Mine Stone and Iron.", SKILLS.__TOOL__, [
         [item.wood, 100],
         [item.stone, 30]
     ], 1, [
-        [station.workbench, 30000]
+        [AREAS.workbench, 30000]
     ]),
     mnw: 1,     
     stack: 1,
@@ -19050,11 +18911,11 @@ var items = [{
             m: 0
         }]
     },
-    detail: new vn("Metal Pickaxe", "Mine also Sulfur", Ww.tool, [
+    detail: new vn("Metal Pickaxe", "Mine also Sulfur", SKILLS.__TOOL__, [
         [item.stone, 150],
         [item.shapedmetal, 6]
     ], 1, [
-        [station.researchbench, 60000]
+        [AREAS.researchbench, 60000]
     ], 6),
     mnw: 2,     
     stack: 1,
@@ -19072,11 +18933,11 @@ var items = [{
             m: 0
         }]
     },
-    detail: new vn("Metal Axe", "Harvest a lot of Wood", Ww.tool, [
+    detail: new vn("Metal Axe", "Harvest a lot of Wood", SKILLS.__TOOL__, [
         [item.wood, 150],
         [item.shapedmetal, 7]
     ], 1, [
-        [station.researchbench, 80000]
+        [AREAS.researchbench, 80000]
     ], 5),
     mnw: 4,     
     stack: 1,
@@ -19094,18 +18955,18 @@ var items = [{
             m: 0
         }]
     },
-    detail: new vn("Workbench", "Allow you to make new items.", Ww.survival, [
+    detail: new vn("Workbench", "Allow you to make new items.", SKILLS.__SURVIVAL__, [
         [item.wood, 40],
         [item.stone, 20]
     ], 1, [
-        [station.own, 15000],
-        [station.workbench, 15000]
+        [AREAS.own, 15000],
+        [AREAS.workbench, 15000]
     ]),
     mnw: 21,     
     MNM: -1,
     WvV: 0,
     z: 1,
-    MWW: station.workbench,
+    MWW: AREAS.workbench,
     stack: 255,
     loot: Mv.workbench,
     wait: 10,
@@ -19133,12 +18994,12 @@ var items = [{
     WNv: 0,
     Vvm: 0,
     mwM: 0,
-    behavior: vWN.nwv,
+    behavior: BEHAVIOR.__NO__,
     MWv: 0,
     nvN: 0,
     MMN: 1,
     WnW: 0,
-    draw: Mw.FCWCcont,
+    draw: Render.FCWCcont,
     NnN: 16,
     wwN: {
         src: "img/e-workbench.png",
@@ -19146,8 +19007,8 @@ var items = [{
             m: 0
         }
     },
-    impactaudio: objectaudio.wood,
-    destroyaudio: objectaudio.wooddes,
+    impactaudio: SOUNDID.wood,
+    destroyaudio: SOUNDID.wooddes,
     Nn: {
         src: "img/day-workbench.png",
         W: {
@@ -19171,11 +19032,11 @@ var items = [{
             m: 0
         }]
     },
-    detail: new vn("Wood Spear", "Don't forget to pick it up.", Ww.weapon, [
+    detail: new vn("Wood Spear", "Don't forget to pick it up.", SKILLS.__WEAPON__, [
         [item.wood, 70]
     ], 1, [
-        [station.own, 15000],
-        [station.workbench, 20000]
+        [AREAS.own, 15000],
+        [AREAS.workbench, 20000]
     ]),
     mnw: 5,     
     stack: 1,
@@ -19193,12 +19054,12 @@ var items = [{
             m: 0
         }]
     },
-    detail: new vn("Wood Bow", "Where are the cowboys?", Ww.weapon, [
+    detail: new vn("Wood Bow", "Where are the cowboys?", SKILLS.__WEAPON__, [
         [item.wood, 60],
         [item.animaltendon, 2]
     ], 1, [
-        [station.own, 35000],
-        [station.workbench, 50000]
+        [AREAS.own, 35000],
+        [AREAS.workbench, 50000]
     ]),
     vMv: item.woodarrow,
     mMVwm: 1,
@@ -19218,11 +19079,11 @@ var items = [{
             m: 0
         }]
     },
-    detail: new vn("9MM", "I hope you know how to aim.", Ww.weapon, [
+    detail: new vn("9MM", "I hope you know how to aim.", SKILLS.__WEAPON__, [
         [item.junk, 6],
         [item.shapedmetal, 9]
     ], 1, [
-        [station.researchbench, 160000]
+        [AREAS.researchbench, 160000]
     ], 7),
     mnw: 8,     
     vMv: item.bullet9mm,
@@ -19241,11 +19102,11 @@ var items = [{
             m: 0
         }]
     },
-    detail: new vn("Desert Eagle", "Pretty useful for self-defense.", Ww.weapon, [
+    detail: new vn("Desert Eagle", "Pretty useful for self-defense.", SKILLS.__WEAPON__, [
         [item.alloys, 4],
         [item.shapedmetal, 2]
     ], 1, [
-        [station.researchbench, 180000]
+        [AREAS.researchbench, 180000]
     ], 9, item.pistol),
     mnw: 9,     
     vMv: item.bullet9mm,
@@ -19264,11 +19125,11 @@ var items = [{
             m: 0
         }]
     },
-    detail: new vn("Shotgun", "He's dead now, don't you think?", Ww.weapon, [
+    detail: new vn("Shotgun", "He's dead now, don't you think?", SKILLS.__WEAPON__, [
         [item.alloys, 6],
         [item.shapedmetal, 6]
     ], 1, [
-        [station.researchbench, 200000]
+        [AREAS.researchbench, 200000]
     ], 11),
     mnw: 7,     
     vMv: item.bulletshotgun,
@@ -19287,11 +19148,11 @@ var items = [{
             m: 0
         }]
     },
-    detail: new vn("AK47", "Revolution time", Ww.weapon, [
+    detail: new vn("AK47", "Revolution time", SKILLS.__WEAPON__, [
         [item.alloys, 14],
         [item.shapedmetal, 8]
     ], 1, [
-        [station.researchbench, 180000]
+        [AREAS.researchbench, 180000]
     ], 12, item.mp5),
     mnw: 10,     
     vMv: item.sniperbullet,
@@ -19310,11 +19171,11 @@ var items = [{
             m: 0
         }]
     },
-    detail: new vn("Sniper", "For the very angry shy", Ww.weapon, [
+    detail: new vn("Sniper", "For the very angry shy", SKILLS.__WEAPON__, [
         [item.alloys, 10],
         [item.shapedmetal, 8]
     ], 1, [
-        [station.researchbench, 180000]
+        [AREAS.researchbench, 180000]
     ], 13),
     mnw: 11,     
     vMv: item.sniperbullet,
@@ -19333,10 +19194,10 @@ var items = [{
             m: 0
         }]
     },
-    detail: new vn("Wooden Wall", "Protected from the wind.", Ww.building, [
+    detail: new vn("Wooden Wall", "Protected from the wind.", SKILLS.__BUILDING__, [
         [item.wood, 20] 
     ], 1, [
-        [station.workbench, 10000]
+        [AREAS.workbench, 10000]
     ]),
     mnw: 21,     
     MNM: -1,
@@ -19370,12 +19231,12 @@ var items = [{
     WNv: 0,
     Vvm: 1,
     mwM: 0,
-    behavior: vWN.nwv,
+    behavior: BEHAVIOR.__NO__,
     MWv: 0,
     nvN: 0,
     MMN: 1,
     WnW: 0,
-    draw: Mw.Mvw,
+    draw: Render.Mvw,
     MmvNw: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
     WVW: [{
         src: "img/day-wood-wall-broken0.png",
@@ -19393,8 +19254,8 @@ var items = [{
             m: 0
         }
     }],
-    impactaudio: objectaudio.wood,
-    destroyaudio: objectaudio.wooddes,
+    impactaudio: SOUNDID.wood,
+    destroyaudio: SOUNDID.wooddes,
     Nn: [{
         src: "img/day-wood-wall0.png",
         W: {
@@ -19648,10 +19509,10 @@ var items = [{
             m: 0
         }]
     },
-    detail: new vn("Stone Wall", "Saved the 3 little pigs.", Ww.building, [
+    detail: new vn("Stone Wall", "Saved the 3 little pigs.", SKILLS.__BUILDING__, [
         [item.stone, 20]
     ], 1, [
-        [station.workbench, 15000]
+        [AREAS.workbench, 15000]
     ], 3),
     mnw: 21,     
     MNM: -1,
@@ -19685,12 +19546,12 @@ var items = [{
     WNv: 0,
     Vvm: 1,
     mwM: 0,
-    behavior: vWN.nwv,
+    behavior: BEHAVIOR.__NO__,
     MWv: 0,
     nvN: 0,
     MMN: 1,
     WnW: 0,
-    draw: Mw.Mvw,
+    draw: Render.Mvw,
     MmvNw: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
     WVW: [{
         src: "img/day-stone-wall-broken0.png",
@@ -19708,8 +19569,8 @@ var items = [{
             m: 0
         }
     }],
-    impactaudio: objectaudio.stone,
-    destroyaudio: objectaudio.stonedes,
+    impactaudio: SOUNDID.stone,
+    destroyaudio: SOUNDID.stonedes,
     Nn: [{
         src: "img/day-stone-wall0.png",
         W: {
@@ -19963,10 +19824,10 @@ var items = [{
             m: 0
         }]
     },
-    detail: new vn("Metal Wall", "Afraid we'll find you?", Ww.building, [
+    detail: new vn("Metal Wall", "Afraid we'll find you?", SKILLS.__BUILDING__, [
         [item.shapedmetal, 3]
     ], 1, [
-        [station.researchbench, 20000]
+        [AREAS.researchbench, 20000]
     ], 6, item.stonewall),
     mnw: 21,     
     MNM: -1,
@@ -20000,12 +19861,12 @@ var items = [{
     WNv: 0,
     Vvm: 1,
     mwM: 0,
-    behavior: vWN.nwv,
+    behavior: BEHAVIOR.__NO__,
     MWv: 0,
     nvN: 0,
     MMN: 1,
     WnW: 0,
-    draw: Mw.Mvw,
+    draw: Render.Mvw,
     MmvNw: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
     WVW: [{
         src: "img/day-steel-wall-broken0.png",
@@ -20023,8 +19884,8 @@ var items = [{
             m: 0
         }
     }],
-    impactaudio: objectaudio.metal,
-    destroyaudio: objectaudio.metaldes,
+    impactaudio: SOUNDID.metal,
+    destroyaudio: SOUNDID.metaldes,
     Nn: [{
         src: "img/day-steel-wall0.png",
         W: {
@@ -20278,10 +20139,10 @@ var items = [{
             m: 0
         }]
     },
-    detail: new vn("Wooden Low Door", "You can shoot through it.", Ww.building, [
+    detail: new vn("Wooden Low Door", "You can shoot through it.", SKILLS.__BUILDING__, [
         [item.wood, 40]
     ], 1, [
-        [station.workbench, 15000]
+        [AREAS.workbench, 15000]
     ]),
     mnw: 21,     
     MNM: -1,
@@ -20314,7 +20175,7 @@ var items = [{
     WNv: 1,
     Vvm: 1,
     mwM: 0,
-    behavior: vWN.nwv,
+    behavior: BEHAVIOR.__NO__,
     MWv: 0,
     nvN: 0,
     MMN: 1,
@@ -20327,7 +20188,7 @@ var items = [{
     VvvNw: [100, 35, 100, 35],
     VvMvv: 6,
     MmVVV: 46,
-    draw: Mw.WNv,
+    draw: Render.WNv,
     NnN: 15,
     wwN: {
         src: "img/e-opendoor.png",
@@ -20357,8 +20218,8 @@ var items = [{
             m: 0
         }
     }],
-    impactaudio: objectaudio.wood,
-    destroyaudio: objectaudio.wooddes,
+    impactaudio: SOUNDID.wood,
+    destroyaudio: SOUNDID.wooddes,
     Nn: {
         src: "img/day-wood-door.png",
         W: {
@@ -20382,10 +20243,10 @@ var items = [{
             m: 0
         }]
     },
-    detail: new vn("Stone Low Door", "You can shoot through it.", Ww.building, [
+    detail: new vn("Stone Low Door", "You can shoot through it.", SKILLS.__BUILDING__, [
         [item.stone, 40]
     ], 1, [
-        [station.workbench, 15000]
+        [AREAS.workbench, 15000]
     ], 3),
     mnw: 21,     
     MNM: -1,
@@ -20418,7 +20279,7 @@ var items = [{
     WNv: 1,
     Vvm: 1,
     mwM: 0,
-    behavior: vWN.nwv,
+    behavior: BEHAVIOR.__NO__,
     MWv: 0,
     nvN: 0,
     MMN: 1,
@@ -20431,7 +20292,7 @@ var items = [{
     VvvNw: [100, 35, 100, 35],
     VvMvv: 6,
     MmVVV: 46,
-    draw: Mw.WNv,
+    draw: Render.WNv,
     NnN: 15,
     wwN: {
         src: "img/e-opendoor.png",
@@ -20461,8 +20322,8 @@ var items = [{
             m: 0
         }
     }],
-    impactaudio: objectaudio.stone,
-    destroyaudio: objectaudio.stonedes,
+    impactaudio: SOUNDID.stone,
+    destroyaudio: SOUNDID.stonedes,
     Nn: {
         src: "img/day-stone-door.png",
         W: {
@@ -20486,10 +20347,10 @@ var items = [{
             m: 0
         }]
     },
-    detail: new vn("Metal Low Door", "Killing at home, for more comfort.", Ww.building, [
+    detail: new vn("Metal Low Door", "Killing at home, for more comfort.", SKILLS.__BUILDING__, [
         [item.shapedmetal, 6]
     ], 1, [
-        [station.researchbench, 30000]
+        [AREAS.researchbench, 30000]
     ], 6, item.stonedoor),
     mnw: 21,     
     MNM: -1,
@@ -20522,7 +20383,7 @@ var items = [{
     WNv: 1,
     Vvm: 1,
     mwM: 0,
-    behavior: vWN.nwv,
+    behavior: BEHAVIOR.__NO__,
     MWv: 0,
     nvN: 0,
     MMN: 1,
@@ -20535,7 +20396,7 @@ var items = [{
     VvvNw: [100, 35, 100, 35],
     VvMvv: 6,
     MmVVV: 46,
-    draw: Mw.WNv,
+    draw: Render.WNv,
     NnN: 15,
     wwN: {
         src: "img/e-opendoor.png",
@@ -20565,8 +20426,8 @@ var items = [{
             m: 0
         }
     }],
-    impactaudio: objectaudio.metal,
-    destroyaudio: objectaudio.metaldes,
+    impactaudio: SOUNDID.metal,
+    destroyaudio: SOUNDID.metaldes,
     Nn: {
         src: "img/day-steel-door.png",
         W: {
@@ -20590,18 +20451,18 @@ var items = [{
             m: 0
         }]
     },
-    detail: new vn("Campfire", "Warm you when you're cold.", Ww.survival, [
+    detail: new vn("Campfire", "Warm you when you're cold.", SKILLS.__SURVIVAL__, [
         [item.wood, 30],
         [item.stone, 5]
     ], 1, [
-        [station.own, 8000],
-        [station.workbench, 15000]
+        [AREAS.own, 8000],
+        [AREAS.workbench, 15000]
     ]),
     mnw: 21,     
     MNM: 15000,
     WvV: -1,
     z: 0,
-    MWW: station.firepart,
+    MWW: AREAS.firepart,
     stack: 255,
     loot: Mv.campfire,
     wait: 10,
@@ -20629,13 +20490,13 @@ var items = [{
     WNv: 0,
     Vvm: 0,
     mwM: 0,
-    behavior: vWN.nwv,
+    behavior: BEHAVIOR.__NO__,
     MWv: 0,
     nvN: 0,
     MMN: 1,
-    WnW: WvNnv,
-    draw: Mw.fireCont,
-    VvmvM: Mw.nnvWw,
+    WnW: __WARM__,
+    draw: Render.fireCont,
+    VvmvM: Render.nnvWw,
     NnN: 16,
     wwN: {
         src: "img/e-campfire.png",
@@ -20643,8 +20504,8 @@ var items = [{
             m: 0
         }
     },
-    impactaudio: objectaudio.wood,
-    destroyaudio: objectaudio.wooddes,
+    impactaudio: SOUNDID.wood,
+    destroyaudio: SOUNDID.wooddes,
     Nn: {
         src: "img/day-campfire.png",
         W: {
@@ -20668,12 +20529,12 @@ var items = [{
             m: 0
         }]
     },
-    detail: new vn("Bullet", "For 9MM, Desert Eagle, and MP5 ", Ww.weapon, [
+    detail: new vn("Bullet", "For 9MM, Desert Eagle, and MP5 ", SKILLS.__WEAPON__, [
         [item.sulfur, 3],
         [item.shapedmetal, 3],
         [item.animalfat, 3]
     ], 30, [
-        [station.researchbench, 10000]
+        [AREAS.researchbench, 10000]
     ], 6),
     stack: 255,
     loot: Mv.bullet9mm
@@ -20689,12 +20550,12 @@ var items = [{
             m: 0
         }]
     },
-    detail: new vn("Cartridge", "For Shotgun", Ww.weapon, [
+    detail: new vn("Cartridge", "For Shotgun", SKILLS.__WEAPON__, [
         [item.alloys, 1],
         [item.shapedmetal, 4],
         [item.animalfat, 4]
     ], 15, [
-        [station.researchbench, 10000]
+        [AREAS.researchbench, 10000]
     ], 10),
     stack: 255,
     loot: Mv.bulletshotgun
@@ -20710,12 +20571,12 @@ var items = [{
             m: 0
         }]
     },
-    detail: new vn("Heavy Bullet", "For Sniper, and AK47", Ww.weapon, [
+    detail: new vn("Heavy Bullet", "For Sniper, and AK47", SKILLS.__WEAPON__, [
         [item.alloys, 1],
         [item.shapedmetal, 4],
         [item.animalfat, 4]
     ], 30, [
-        [station.researchbench, 10000]
+        [AREAS.researchbench, 10000]
     ], 11),
     stack: 255,
     loot: Mv.sniperbullet
@@ -20731,13 +20592,13 @@ var items = [{
             m: 0
         }]
     },
-    detail: new vn("Medkit", "Regenerate your life.", Ww.medicine, [
+    detail: new vn("Medkit", "Regenerate your life.", SKILLS.__DRUG__, [
         [item.string, 2],
         [item.bandage, 1],
         [item.leather, 2],
         [item.shapedmetal, 2]
     ], 1, [
-        [station.researchbench, 80000]
+        [AREAS.researchbench, 80000]
     ], 10),
     mnw: 17,     
     stack: 2,
@@ -20755,11 +20616,11 @@ var items = [{
             m: 0
         }]
     },
-    detail: new vn("Bandage", "To heal the boo-boos.", Ww.medicine, [
+    detail: new vn("Bandage", "To heal the boo-boos.", SKILLS.__DRUG__, [
         [item.string, 1],
         [item.leather, 2]
     ], 1, [
-        [station.weavingmachine, 20000]
+        [AREAS.weavingmachine, 20000]
     ]),
     mnw: 18,     
     stack: 5,
@@ -20777,13 +20638,13 @@ var items = [{
             m: 0
         }]
     },
-    detail: new vn("Soda", "Give energy.", Ww.survival, [
+    detail: new vn("Soda", "Give energy.", SKILLS.__SURVIVAL__, [
         [item.ghoulblood, 1],
         [item.chemicalcomponent, 1],
         [item.can, 1]
     ], 1, [
-        [station.firepart, 40000],
-        [station.bbq, 40000]
+        [AREAS.firepart, 40000],
+        [AREAS.bbq, 40000]
     ], 5),
     mnw: 19,     
     stack: 5,
@@ -20803,11 +20664,11 @@ var items = [{
             m: 0
         }]
     },
-    detail: new vn("MP5", "Not bad.", Ww.weapon, [
+    detail: new vn("MP5", "Not bad.", SKILLS.__WEAPON__, [
         [item.alloys, 6],
         [item.shapedmetal, 6]
     ], 1, [
-        [station.researchbench, 200000]
+        [AREAS.researchbench, 200000]
     ], 10),
     mnw: 20,     
     vMv: item.bullet9mm,
@@ -20826,11 +20687,11 @@ var items = [{
             m: 0
         }]
     },
-    detail: new vn("Headscarf", "Warm you up.", Ww.clothe, [
+    detail: new vn("Headscarf", "Warm you up.", SKILLS.__CLOTHE__, [
         [item.string, 1],
         [item.leather, 1]
     ], 1, [
-        [station.weavingmachine, 60000]
+        [AREAS.weavingmachine, 60000]
     ]),
     nwm: 1,
     stack: 1,
@@ -20855,12 +20716,12 @@ var items = [{
             m: 0
         }]
     },
-    detail: new vn("Chapka", "You look like a real woodcutter.", Ww.clothe, [
+    detail: new vn("Chapka", "You look like a real woodcutter.", SKILLS.__CLOTHE__, [
         [item.string, 6],
         [item.leather, 8],
         [item.headscarf, 1]
     ], 1, [
-        [station.weavingmachine, 120000]
+        [AREAS.weavingmachine, 120000]
     ], 7),
     nwm: 2,
     stack: 1,
@@ -20885,12 +20746,12 @@ var items = [{
             m: 0
         }]
     },
-    detail: new vn("Winter Coat", "Is the weather really that cold?", Ww.clothe, [
+    detail: new vn("Winter Coat", "Is the weather really that cold?", SKILLS.__CLOTHE__, [
         [item.string, 15],
         [item.leather, 20],
         [item.chapka, 1]
     ], 1, [
-        [station.weavingmachine, 180000]
+        [AREAS.weavingmachine, 180000]
     ], 9, item.chapka),
     nwm: 3,
     stack: 1,
@@ -20915,12 +20776,12 @@ var items = [{
             m: 0
         }]
     },
-    detail: new vn("Radiation Mask", "Protect you from Radioactivity.", Ww.clothe, [
+    detail: new vn("Radiation Mask", "Protect you from Radioactivity.", SKILLS.__CLOTHE__, [
         [item.shapedmetal, 1],
         [item.string, 1],
         [item.leather, 2]
     ], 1, [
-        [station.weavingmachine, 60000]
+        [AREAS.weavingmachine, 60000]
     ]),
     nwm: 4,
     stack: 1,
@@ -20945,14 +20806,14 @@ var items = [{
             m: 0
         }]
     },
-    detail: new vn("Min. Radiation Suit", "Previously, on Breaking Bad.", Ww.clothe, [
+    detail: new vn("Min. Radiation Suit", "Previously, on Breaking Bad.", SKILLS.__CLOTHE__, [
         [item.alloys, 2],
         [item.shapedmetal, 2],
         [item.string, 4],
         [item.leather, 4],
         [item.gazmask, 1]
     ], 1, [
-        [station.weavingmachine, 90000]
+        [AREAS.weavingmachine, 90000]
     ], 8),
     nwm: 5,
     stack: 1,
@@ -20977,14 +20838,14 @@ var items = [{
             m: 0
         }]
     },
-    detail: new vn("Radiation Suit", "Let's not grow a second head.", Ww.clothe, [
+    detail: new vn("Radiation Suit", "Let's not grow a second head.", SKILLS.__CLOTHE__, [
         [item.alloys, 6],
         [item.shapedmetal, 4],
         [item.string, 8],
         [item.leather, 20],
         [item.gazprotection, 1]
     ], 1, [
-        [station.weavingmachine, 180000]
+        [AREAS.weavingmachine, 180000]
     ], 10, item.gazprotection),
     nwm: 6,
     stack: 1,
@@ -21009,11 +20870,11 @@ var items = [{
             m: 0
         }]
     },
-    detail: new vn("Wood Arrow", "Needed to use bow.", Ww.weapon, [
+    detail: new vn("Wood Arrow", "Needed to use bow.", SKILLS.__WEAPON__, [
         [item.wood, 40]
     ], 5, [
-        [station.own, 15000],
-        [station.workbench, 10000]
+        [AREAS.own, 15000],
+        [AREAS.workbench, 10000]
     ]),
     stack: 255,
     loot: Mv.woodarrow
@@ -21029,18 +20890,18 @@ var items = [{
             m: 0
         }]
     },
-    detail: new vn("Firepit", "Warm up and melt iron slowly.", Ww.survival, [
+    detail: new vn("Firepit", "Warm up and melt iron slowly.", SKILLS.__SURVIVAL__, [
         [item.wood, 120],
         [item.stone, 20],
         [item.steel, 4]
     ], 1, [
-        [station.workbench, 20000]
+        [AREAS.workbench, 20000]
     ], 3),
     mnw: 21,     
     MNM: 20000,
     WvV: -1,
     z: 0,
-    MWW: station.bbq,
+    MWW: AREAS.bbq,
     stack: 255,
     loot: Mv.campfirebbq,
     wait: 10,
@@ -21068,13 +20929,13 @@ var items = [{
     WNv: 0,
     Vvm: 0,
     mwM: 0,
-    behavior: vWN.nwv,
+    behavior: BEHAVIOR.__NO__,
     MWv: 0,
     nvN: 0,
     MMN: 1,
-    WnW: WvNnv,
-    draw: Mw.fireCont,
-    VvmvM: Mw.nnvWw,
+    WnW: __WARM__,
+    draw: Render.fireCont,
+    VvmvM: Render.nnvWw,
     NnN: 16,
     wwN: {
         src: "img/e-campfire-bbq.png",
@@ -21082,8 +20943,8 @@ var items = [{
             m: 0
         }
     },
-    impactaudio: objectaudio.wood,
-    destroyaudio: objectaudio.wooddes,
+    impactaudio: SOUNDID.wood,
+    destroyaudio: SOUNDID.wooddes,
     Nn: {
         src: "img/day-campfire-bbq.png",
         W: {
@@ -21107,17 +20968,17 @@ var items = [{
             m: 0
         }]
     },
-    detail: new vn("Smelter", "Melt iron, uranium and alloys", Ww.survival, [
+    detail: new vn("Smelter", "Melt iron, uranium and alloys", SKILLS.__SURVIVAL__, [
         [item.shapedmetal, 6],
         [item.electronicpart, 1]
     ], 1, [
-        [station.researchbench, 100000]
+        [AREAS.researchbench, 100000]
     ], 10),
     mnw: 21,     
     MNM: 42000,
     WvV: 1,
     z: 1,
-    MWW: station.smelter,
+    MWW: AREAS.smelter,
     stack: 255,
     loot: Mv.smelter,
     wait: 10,
@@ -21149,12 +21010,12 @@ var items = [{
     WNv: 0,
     Vvm: 0,
     mwM: 0,
-    behavior: vWN.nwv,
+    behavior: BEHAVIOR.__NO__,
     MWv: 0,
     nvN: 0,
     MMN: 1,
     WnW: 0,
-    draw: Mw.vNvMW,
+    draw: Render.vNvMW,
     NnN: 16,
     wwN: {
         src: "img/e-smelter.png",
@@ -21162,8 +21023,8 @@ var items = [{
             m: 0
         }
     },
-    impactaudio: objectaudio.metal,
-    destroyaudio: objectaudio.metaldes,
+    impactaudio: SOUNDID.metal,
+    destroyaudio: SOUNDID.metaldes,
     Nn: [{
         src: "img/day-smelter-off.png",
         W: {
@@ -21202,10 +21063,10 @@ var items = [{
             m: 0
         }]
     },
-    detail: new vn("Wooden Door", "Let's hope it holds.", Ww.building, [
+    detail: new vn("Wooden Door", "Let's hope it holds.", SKILLS.__BUILDING__, [
         [item.wood, 60]
     ], 1, [
-        [station.workbench, 20000]
+        [AREAS.workbench, 20000]
     ]),
     mnw: 21,     
     MNM: -1,
@@ -21238,7 +21099,7 @@ var items = [{
     WNv: 1,
     Vvm: 1,
     mwM: 0,
-    behavior: vWN.nwv,
+    behavior: BEHAVIOR.__NO__,
     MWv: 0,
     nvN: 0,
     MMN: 1,
@@ -21251,7 +21112,7 @@ var items = [{
     VvvNw: [100, 100, 100, 100],
     VvMvv: 17,
     MmVVV: 113,
-    draw: Mw.WNv,
+    draw: Render.WNv,
     NnN: 15,
     wwN: {
         src: "img/e-opendoor.png",
@@ -21281,8 +21142,8 @@ var items = [{
             m: 0
         }
     }],
-    impactaudio: objectaudio.wood,
-    destroyaudio: objectaudio.wooddes,
+    impactaudio: SOUNDID.wood,
+    destroyaudio: SOUNDID.wooddes,
     Nn: {
         src: "img/day-wood-door1.png",
         W: {
@@ -21306,10 +21167,10 @@ var items = [{
             m: 0
         }]
     },
-    detail: new vn("Stone Door", "Not too heavy to open, I hope.", Ww.building, [
+    detail: new vn("Stone Door", "Not too heavy to open, I hope.", SKILLS.__BUILDING__, [
         [item.stone, 60]
     ], 1, [
-        [station.workbench, 20000]
+        [AREAS.workbench, 20000]
     ], 3),
     mnw: 21,     
     MNM: -1,
@@ -21342,7 +21203,7 @@ var items = [{
     WNv: 1,
     Vvm: 1,
     mwM: 0,
-    behavior: vWN.nwv,
+    behavior: BEHAVIOR.__NO__,
     MWv: 0,
     nvN: 0,
     MMN: 1,
@@ -21355,7 +21216,7 @@ var items = [{
     VvvNw: [100, 100, 100, 100],
     VvMvv: 17,
     MmVVV: 113,
-    draw: Mw.WNv,
+    draw: Render.WNv,
     NnN: 15,
     wwN: {
         src: "img/e-opendoor.png",
@@ -21385,8 +21246,8 @@ var items = [{
             m: 0
         }
     }],
-    impactaudio: objectaudio.stone,
-    destroyaudio: objectaudio.stonedes,
+    impactaudio: SOUNDID.stone,
+    destroyaudio: SOUNDID.stonedes,
     Nn: {
         src: "img/day-stone-door1.png",
         W: {
@@ -21410,10 +21271,10 @@ var items = [{
             m: 0
         }]
     },
-    detail: new vn("Metal Door", "I guess you're safe.", Ww.building, [
+    detail: new vn("Metal Door", "I guess you're safe.", SKILLS.__BUILDING__, [
         [item.shapedmetal, 9]
     ], 1, [
-        [station.researchbench, 40000]
+        [AREAS.researchbench, 40000]
     ], 6, item.stonedoor1),
     mnw: 21,     
     MNM: -1,
@@ -21446,7 +21307,7 @@ var items = [{
     WNv: 1,
     Vvm: 1,
     mwM: 0,
-    behavior: vWN.nwv,
+    behavior: BEHAVIOR.__NO__,
     MWv: 0,
     nvN: 0,
     MMN: 1,
@@ -21459,7 +21320,7 @@ var items = [{
     VvvNw: [100, 100, 100, 100],
     VvMvv: 17,
     MmVVV: 113,
-    draw: Mw.WNv,
+    draw: Render.WNv,
     NnN: 15,
     wwN: {
         src: "img/e-opendoor.png",
@@ -21489,8 +21350,8 @@ var items = [{
             m: 0
         }
     }],
-    impactaudio: objectaudio.metal,
-    destroyaudio: objectaudio.metaldes,
+    impactaudio: SOUNDID.metal,
+    destroyaudio: SOUNDID.metaldes,
     Nn: {
         src: "img/day-steel-door1.png",
         W: {
@@ -21514,8 +21375,8 @@ var items = [{
             m: 0
         }]
     },
-    detail: new vn("Sulfur", "Sulfur in such a cold landscape?", Ww.resources, [], 0, [
-        [station.extractor, 240000]
+    detail: new vn("Sulfur", "Sulfur in such a cold landscape?", SKILLS.__MINERAL__, [], 0, [
+        [AREAS.extractor, 240000]
     ]),
     wwnWm: 4,
     MwMvv: 8,
@@ -21534,10 +21395,10 @@ var items = [{
             m: 0
         }]
     },
-    detail: new vn("Shaped Uranium", "Are you out of your mind?", Ww.resources, [
+    detail: new vn("Shaped Uranium", "Are you out of your mind?", SKILLS.__MINERAL__, [
         [item.uranium, 1]
     ], 1, [
-        [station.smelter, 20000]
+        [AREAS.smelter, 20000]
     ]),
     stack: 255,
     loot: Mv.shapeduranium,
@@ -21554,17 +21415,17 @@ var items = [{
             m: 0
         }]
     },
-    detail: new vn("Research Bench", "Allow you to make new items", Ww.survival, [
+    detail: new vn("Research Bench", "Allow you to make new items", SKILLS.__SURVIVAL__, [
         [item.shapedmetal, 6],
         [item.electronicpart, 1]
     ], 1, [
-        [station.workbench, 50000]
+        [AREAS.workbench, 50000]
     ], 6),
     mnw: 21,     
     MNM: -1,
     WvV: 0,
     z: 1,
-    MWW: station.researchbench,
+    MWW: AREAS.researchbench,
     stack: 255,
     loot: Mv.researchbench,
     wait: 10,
@@ -21594,12 +21455,12 @@ var items = [{
     WNv: 0,
     Vvm: 0,
     mwM: 0,
-    behavior: vWN.nwv,
+    behavior: BEHAVIOR.__NO__,
     MWv: 0,
     nvN: 0,
     MMN: 1,
     WnW: 0,
-    draw: Mw.wMwnV,
+    draw: Render.wMwnV,
     NnN: 16,
     wwN: {
         src: "img/e-workbench2.png",
@@ -21607,8 +21468,8 @@ var items = [{
             m: 0
         }
     },
-    impactaudio: objectaudio.metal,
-    destroyaudio: objectaudio.metaldes,
+    impactaudio: SOUNDID.metal,
+    destroyaudio: SOUNDID.metaldes,
     Nn: {
         src: "img/day-workbench2.png",
         W: {
@@ -21632,8 +21493,8 @@ var items = [{
             m: 0
         }]
     },
-    detail: new vn("Uranium", "Do you want to end up as Marie Curie?", Ww.resources, [], 0, [
-        [station.extractor, 240000]
+    detail: new vn("Uranium", "Do you want to end up as Marie Curie?", SKILLS.__MINERAL__, [], 0, [
+        [AREAS.extractor, 240000]
     ]),
     wwnWm: 2,
     MwMvv: 4,
@@ -21652,18 +21513,18 @@ var items = [{
             m: 0
         }]
     },
-    detail: new vn("Weaving Machine", "Allow you to sew clothes", Ww.survival, [
+    detail: new vn("Weaving Machine", "Allow you to sew clothes", SKILLS.__SURVIVAL__, [
         [item.wood, 80],
         [item.stone, 20],
         [item.string, 2]
     ], 1, [
-        [station.workbench, 60000]
+        [AREAS.workbench, 60000]
     ]),
     mnw: 21,     
     MNM: -1,
     WvV: 0,
     z: 1,
-    MWW: station.weavingmachine,
+    MWW: AREAS.weavingmachine,
     stack: 255,
     loot: Mv.weavingmachine,
     wait: 10,
@@ -21691,12 +21552,12 @@ var items = [{
     WNv: 0,
     Vvm: 0,
     mwM: 0,
-    behavior: vWN.nwv,
+    behavior: BEHAVIOR.__NO__,
     MWv: 0,
     nvN: 0,
     MMN: 1,
     WnW: 0,
-    draw: Mw.FCWCcont,
+    draw: Render.FCWCcont,
     NnN: 16,
     wwN: {
         src: "img/e-weaving-machine.png",
@@ -21704,8 +21565,8 @@ var items = [{
             m: 0
         }
     },
-    impactaudio: objectaudio.wood,
-    destroyaudio: objectaudio.wooddes,
+    impactaudio: SOUNDID.wood,
+    destroyaudio: SOUNDID.wooddes,
     Nn: {
         src: "img/day-weaving-machine.png",
         W: {
@@ -21729,11 +21590,11 @@ var items = [{
             m: 0
         }]
     },
-    detail: new vn("Gasoline", "Fuel for Smelter", Ww.survival, [
+    detail: new vn("Gasoline", "Fuel for Smelter", SKILLS.__SURVIVAL__, [
         [item.rottenorange, 4],
         [item.sulfur, 1]
     ], 1, [
-        [station.researchbench, 20000]
+        [AREAS.researchbench, 20000]
     ]),
     stack: 255,
     loot: Mv.gasoline
@@ -21749,12 +21610,12 @@ var items = [{
             m: 0
         }]
     },
-    detail: new vn("Sulfur Pickaxe", "Mine also Uranium", Ww.tool, [
+    detail: new vn("Sulfur Pickaxe", "Mine also Uranium", SKILLS.__TOOL__, [
         [item.alloys, 2],
         [item.shapedmetal, 6],
         [item.sulfur, 6]
     ], 1, [
-        [station.researchbench, 90000]
+        [AREAS.researchbench, 90000]
     ], 9, item.steelpickaxe),
     mnw: 22,     
     stack: 1,
@@ -21772,11 +21633,11 @@ var items = [{
             m: 0
         }]
     },
-    detail: new vn("Wood chest", "You can't store food in.", Ww.building, [
+    detail: new vn("Wood chest", "You can't store food in.", SKILLS.__BUILDING__, [
         [item.wood, 50],
         [item.stone, 20]
     ], 1, [
-        [station.workbench, 30000]
+        [AREAS.workbench, 30000]
     ], 8),
     mnw: 21,     
     MNM: -1,
@@ -21810,12 +21671,12 @@ var items = [{
     WNv: 0,
     Vvm: 0,
     mwM: 0,
-    behavior: vWN.nwv,
+    behavior: BEHAVIOR.__NO__,
     MWv: 0,
     nvN: 0,
     MMN: 1,
     angle: window.Math.PI / 2,
-    draw: Mw.FCWCcont,
+    draw: Render.FCWCcont,
     NnN: 25,
     wwN: {
         src: "img/e-chest.png",
@@ -21823,8 +21684,8 @@ var items = [{
             m: 0
         }
     },
-    impactaudio: objectaudio.wood,
-    destroyaudio: objectaudio.wooddes,
+    impactaudio: SOUNDID.wood,
+    destroyaudio: SOUNDID.wooddes,
     Nn: {
         src: "img/day-chest.png",
         W: {
@@ -21848,11 +21709,11 @@ var items = [{
             m: 0
         }]
     },
-    detail: new vn("Fridge", "Save your food.", Ww.building, [
+    detail: new vn("Fridge", "Save your food.", SKILLS.__BUILDING__, [
         [item.shapedmetal, 5],
         [item.energycell, 4]
     ], 1, [
-        [station.researchbench, 90000]
+        [AREAS.researchbench, 90000]
     ], 9),
     mnw: 21,     
     MNM: -1,
@@ -21887,12 +21748,12 @@ var items = [{
     WNv: 0,
     Vvm: 0,
     mwM: 0,
-    behavior: vWN.nwv,
+    behavior: BEHAVIOR.__NO__,
     MWv: 0,
     nvN: 0,
     MMN: 1,
     angle: window.Math.PI / 2,
-    draw: Mw.FCWCcont,
+    draw: Render.FCWCcont,
     NnN: 25,
     wwN: {
         src: "img/e-fridge.png",
@@ -21900,8 +21761,8 @@ var items = [{
             m: 0
         }
     },
-    impactaudio: objectaudio.metal,
-    destroyaudio: objectaudio.metaldes,
+    impactaudio: SOUNDID.metal,
+    destroyaudio: SOUNDID.metaldes,
     Nn: {
         src: "img/day-fridge.png",
         W: {
@@ -21925,10 +21786,10 @@ var items = [{
             m: 0
         }]
     },
-    detail: new vn("Wood floor", "Players can't spawn on it", Ww.building, [
+    detail: new vn("Wood floor", "Players can't spawn on it", SKILLS.__BUILDING__, [
         [item.wood, 15]
     ], 2, [
-        [station.workbench, 15000]
+        [AREAS.workbench, 15000]
     ]),
     stack: 255,
     loot: Mv.woodfloor1,
@@ -21962,12 +21823,12 @@ var items = [{
     WNv: 0,
     Vvm: 1,
     mwM: 0,
-    behavior: vWN.nwv,
+    behavior: BEHAVIOR.__NO__,
     MWv: 0,
     nvN: 0,
     MMN: 0,
     WnW: 0,
-    draw: Mw.nwVWW,
+    draw: Render.nwVWW,
     WVW: [{
         src: "img/day-wood-floor-broken0.png",
         W: {
@@ -21984,8 +21845,8 @@ var items = [{
             m: 0
         }
     }],
-    impactaudio: objectaudio.VNv,
-    destroyaudio: objectaudio.wooddes,
+    impactaudio: SOUNDID.VNv,
+    destroyaudio: SOUNDID.wooddes,
     Nn: [{
         src: "img/day-wood-floor-0.png",
         W: {
@@ -22239,11 +22100,11 @@ var items = [{
             m: 0
         }]
     },
-    detail: new vn("Hammer", "Destroy walls quickly.", Ww.tool, [
+    detail: new vn("Hammer", "Destroy walls quickly.", SKILLS.__TOOL__, [
         [item.wood, 100],
         [item.shapedmetal, 10]
     ], 1, [
-        [station.researchbench, 30000]
+        [AREAS.researchbench, 30000]
     ], 7),
     mnw: 23,     
     stack: 1,
@@ -22261,12 +22122,12 @@ var items = [{
             m: 0
         }]
     },
-    detail: new vn("Sleeping Bag", "Once dead, you keep your base", Ww.survival, [
+    detail: new vn("Sleeping Bag", "Once dead, you keep your base", SKILLS.__SURVIVAL__, [
         [item.leather, 7],
         [item.animalfat, 7],
         [item.string, 7]
     ], 1, [
-        [station.weavingmachine, 20000]
+        [AREAS.weavingmachine, 20000]
     ], 9),
     stack: 255,
     loot: Mv.sleepingbag,
@@ -22296,14 +22157,14 @@ var items = [{
     },
     WNv: 0,
     mwM: 0,
-    behavior: vWN.nwv,
+    behavior: BEHAVIOR.__NO__,
     MWv: 0,
     nvN: 0,
     MMN: 0,
     WnW: 0,
-    draw: Mw.mvWww,
-    impactaudio: objectaudio.pillow,
-    destroyaudio: objectaudio.pillowdes,
+    draw: Render.mvWww,
+    impactaudio: SOUNDID.pillow,
+    destroyaudio: SOUNDID.pillowdes,
     Nn: {
         src: "img/day-sleeping-bag.png",
         W: {
@@ -22327,11 +22188,11 @@ var items = [{
             m: 0
         }]
     },
-    detail: new vn("Repair Hammer", "Repair walls but require nails.", Ww.tool, [
+    detail: new vn("Repair Hammer", "Repair walls but require nails.", SKILLS.__TOOL__, [
         [item.wood, 120],
         [item.shapedmetal, 2]
     ], 1, [
-        [station.workbench, 30000]
+        [AREAS.workbench, 30000]
     ], 5),
     mnw: 24,     
     stack: 1,
@@ -22349,10 +22210,10 @@ var items = [{
             m: 0
         }]
     },
-    detail: new vn("Nails", "Needed to repair walls.", Ww.survival, [
+    detail: new vn("Nails", "Needed to repair walls.", SKILLS.__SURVIVAL__, [
         [item.shapedmetal, 2]
     ], 85, [
-        [station.workbench, 20000]
+        [AREAS.workbench, 20000]
     ]),
     stack: 255,
     loot: Mv.nails
@@ -22368,10 +22229,10 @@ var items = [{
             m: 0
         }]
     },
-    detail: new vn("Light Wood Floor", "Players can't spawn on it", Ww.building, [
+    detail: new vn("Light Wood Floor", "Players can't spawn on it", SKILLS.__BUILDING__, [
         [item.wood, 15]
     ], 2, [
-        [station.workbench, 15000]
+        [AREAS.workbench, 15000]
     ]),
     stack: 255,
     loot: Mv.woodfloor2,
@@ -22405,12 +22266,12 @@ var items = [{
     WNv: 0,
     Vvm: 1,
     mwM: 0,
-    behavior: vWN.nwv,
+    behavior: BEHAVIOR.__NO__,
     MWv: 0,
     nvN: 0,
     MMN: 0,
     WnW: 0,
-    draw: Mw.nwVWW,
+    draw: Render.nwVWW,
     WVW: [{
         src: "img/day-wood-floor-light-broken0.png",
         W: {
@@ -22427,8 +22288,8 @@ var items = [{
             m: 0
         }
     }],
-    impactaudio: objectaudio.VNv,
-    destroyaudio: objectaudio.wooddes,
+    impactaudio: SOUNDID.VNv,
+    destroyaudio: SOUNDID.wooddes,
     Nn: [{
         src: "img/day-wood-floor-light-0.png",
         W: {
@@ -22682,10 +22543,10 @@ var items = [{
             m: 0
         }]
     },
-    detail: new vn("Wooden Low Wall", "You can shoot through it.", Ww.building, [
+    detail: new vn("Wooden Low Wall", "You can shoot through it.", SKILLS.__BUILDING__, [
         [item.wood, 10]
     ], 1, [
-        [station.workbench, 10000]
+        [AREAS.workbench, 10000]
     ]),
     mnw: 21,     
     MNM: -1,
@@ -22718,7 +22579,7 @@ var items = [{
     WNv: 0,
     Vvm: 1,
     mwM: 0,
-    behavior: vWN.nwv,
+    behavior: BEHAVIOR.__NO__,
     MWv: 0,
     nvN: 0,
     MMN: 1,
@@ -22732,7 +22593,7 @@ var items = [{
     VvMvv: 6,
     MmVVV: 46,
     WnW: 0,
-    draw: Mw.VWN,
+    draw: Render.VWN,
     WVW: [{
         src: "img/day-wood-smallwalls-broken0.png",
         W: {
@@ -22749,8 +22610,8 @@ var items = [{
             m: 0
         }
     }],
-    impactaudio: objectaudio.wood,
-    destroyaudio: objectaudio.wooddes,
+    impactaudio: SOUNDID.wood,
+    destroyaudio: SOUNDID.wooddes,
     Nn: [{
         src: "img/day-wood-smallwalls-0.png",
         W: {
@@ -22969,10 +22830,10 @@ var items = [{
             m: 0
         }]
     },
-    detail: new vn("Stone Low Wall", "You can shoot through it.", Ww.building, [
+    detail: new vn("Stone Low Wall", "You can shoot through it.", SKILLS.__BUILDING__, [
         [item.stone, 10]
     ], 1, [
-        [station.workbench, 15000]
+        [AREAS.workbench, 15000]
     ], 3),
     mnw: 21,     
     MNM: -1,
@@ -23005,7 +22866,7 @@ var items = [{
     WNv: 0,
     Vvm: 1,
     mwM: 0,
-    behavior: vWN.nwv,
+    behavior: BEHAVIOR.__NO__,
     MWv: 0,
     nvN: 0,
     MMN: 1,
@@ -23019,7 +22880,7 @@ var items = [{
     VvMvv: 6,
     MmVVV: 46,
     WnW: 0,
-    draw: Mw.VWN,
+    draw: Render.VWN,
     WVW: [{
         src: "img/day-stone-smallwalls-broken0.png",
         W: {
@@ -23036,8 +22897,8 @@ var items = [{
             m: 0
         }
     }],
-    impactaudio: objectaudio.stone,
-    destroyaudio: objectaudio.stonedes,
+    impactaudio: SOUNDID.stone,
+    destroyaudio: SOUNDID.stonedes,
     Nn: [{
         src: "img/day-stone-smallwalls-0.png",
         W: {
@@ -23256,10 +23117,10 @@ var items = [{
             m: 0
         }]
     },
-    detail: new vn("Metal Low Wall", "You can shoot through it.", Ww.building, [
+    detail: new vn("Metal Low Wall", "You can shoot through it.", SKILLS.__BUILDING__, [
         [item.shapedmetal, 2]
     ], 1, [
-        [station.researchbench, 20000]
+        [AREAS.researchbench, 20000]
     ], 6, item.smallstonewall),
     mnw: 21,     
     MNM: -1,
@@ -23292,7 +23153,7 @@ var items = [{
     WNv: 0,
     Vvm: 1,
     mwM: 0,
-    behavior: vWN.nwv,
+    behavior: BEHAVIOR.__NO__,
     MWv: 0,
     nvN: 0,
     MMN: 1,
@@ -23306,7 +23167,7 @@ var items = [{
     VvMvv: 6,
     MmVVV: 46,
     WnW: 0,
-    draw: Mw.VWN,
+    draw: Render.VWN,
     WVW: [{
         src: "img/day-steel-smallwalls-broken0.png",
         W: {
@@ -23323,8 +23184,8 @@ var items = [{
             m: 0
         }
     }],
-    impactaudio: objectaudio.metal,
-    destroyaudio: objectaudio.metaldes,
+    impactaudio: SOUNDID.metal,
+    destroyaudio: SOUNDID.metaldes,
     Nn: [{
         src: "img/day-steel-smallwalls-0.png",
         W: {
@@ -23541,14 +23402,14 @@ var items = [{
     WNv: 0,
     Vvm: 0,
     mwM: 0,
-    behavior: vWN.nwv,
+    behavior: BEHAVIOR.__NO__,
     MWv: 0,
     nvN: [],
     detail: {
         nww: window.undefined
     },
     NWm: -1,
-    draw: Mw.mWmnv
+    draw: Render.mWmnv
 }, {
     id: item.tomatosoup,
     img: {
@@ -23561,12 +23422,12 @@ var items = [{
             m: 0
         }]
     },
-    detail: new vn("Tomato Soup", "Has not yet been opened.", Ww.survival, [
+    detail: new vn("Tomato Soup", "Has not yet been opened.", SKILLS.__SURVIVAL__, [
         [item.can, 1],
         [item.tomato, 2]
     ], 1, [
-        [station.firepart, 15000],
-        [station.bbq, 7000]
+        [AREAS.firepart, 15000],
+        [AREAS.bbq, 7000]
     ]),
     mnw: 25,     
     stack: 5,
@@ -23586,10 +23447,10 @@ var items = [{
             m: 0
         }]
     },
-    detail: new vn("Syringe", "Useful to make drugs.", Ww.medicine, [
+    detail: new vn("Syringe", "Useful to make drugs.", SKILLS.__DRUG__, [
         [item.junk, 1]
     ], 1, [
-        [station.researchbench, 30000]
+        [AREAS.researchbench, 30000]
     ]),
     stack: 20,
     loot: Mv.syringe,
@@ -23622,12 +23483,12 @@ var items = [{
             m: 0
         }]
     },
-    detail: new vn("RadAway", "Reduce your radioactivity a lot.", Ww.medicine, [
+    detail: new vn("RadAway", "Reduce your radioactivity a lot.", SKILLS.__DRUG__, [
         [item.syringe, 1],
         [item.chemicalcomponent, 1],
         [item.mushroom2, 1]
     ], 1, [
-        [station.agitator, 45000]
+        [AREAS.agitator, 45000]
     ]),
     mnw: 26,     
     stack: 5,
@@ -23645,11 +23506,11 @@ var items = [{
             m: 0
         }]
     },
-    detail: new vn("Tomato Seed", "A fruit or vegetable?", Ww.plant, [
+    detail: new vn("Tomato Seed", "A fruit or vegetable?", SKILLS.__PLANT__, [
         [item.tomato, 4]
     ], 1, [
-        [station.firepart, 30000],
-        [station.bbq, 20000]
+        [AREAS.firepart, 30000],
+        [AREAS.bbq, 20000]
     ]),
     stack: 40,
     loot: Mv.tomatoseed,
@@ -23680,14 +23541,14 @@ var items = [{
     },
     WNv: 0,
     mwM: 0,
-    behavior: vWN.VvMVW,
+    behavior: BEHAVIOR.__SEED__,
     MWv: 0,
     nvN: 0,
     MMN: 0,
     WnW: 0,
-    draw: Mw.MWnVn,
-    impactaudio: objectaudio.VNv,
-    destroyaudio: objectaudio.VNv,
+    draw: Render.MWnVn,
+    impactaudio: SOUNDID.VNv,
+    destroyaudio: SOUNDID.VNv,
     Nn: [{
         src: "img/day-plant0-tomato.png",
         W: {
@@ -23769,10 +23630,10 @@ var items = [{
             m: 0
         }]
     },
-    detail: new vn("Can", "Useful to craft food can.", Ww.survival, [
+    detail: new vn("Can", "Useful to craft food can.", SKILLS.__SURVIVAL__, [
         [item.shapedmetal, 1]
     ], 1, [
-        [station.workbench, 20000]
+        [AREAS.workbench, 20000]
     ]),
     mnw: 0,     
     stack: 255,
@@ -23789,12 +23650,12 @@ var items = [{
             m: 0
         }]
     },
-    detail: new vn("Wood Crossbow", "Shoot faster, reload slower", Ww.weapon, [
+    detail: new vn("Wood Crossbow", "Shoot faster, reload slower", SKILLS.__WEAPON__, [
         [item.wood, 200],
         [item.string, 2],
         [item.shapedmetal, 1]
     ], 1, [
-        [station.workbench, 50000]
+        [AREAS.workbench, 50000]
     ], 6),
     mnw: 29,     
     vMv: item.crossarrow,
@@ -23813,11 +23674,11 @@ var items = [{
             m: 0
         }]
     },
-    detail: new vn("Crossbow Arrows", "Needed to use crossbow.", Ww.weapon, [
+    detail: new vn("Crossbow Arrows", "Needed to use crossbow.", SKILLS.__WEAPON__, [
         [item.wood, 40],
         [item.shapedmetal, 1]
     ], 10, [
-        [station.workbench, 30000]
+        [AREAS.workbench, 30000]
     ]),
     stack: 255,
     loot: Mv.crossarrow
@@ -23833,13 +23694,13 @@ var items = [{
             m: 0
         }]
     },
-    detail: new vn("Nail Gun", "Repair walls from a distance", Ww.tool, [
+    detail: new vn("Nail Gun", "Repair walls from a distance", SKILLS.__TOOL__, [
         [item.shapedmetal, 3],
         [item.smallwire, 1],
         [item.junk, 1],
         [item.energycell, 4]
     ], 1, [
-        [station.researchbench, 30000]
+        [AREAS.researchbench, 30000]
     ], 7),
     mnw: 30,     
     vMv: item.nails,
@@ -23858,12 +23719,12 @@ var items = [{
             m: 0
         }]
     },
-    detail: new vn("Sawed Off", "Shoot less far, do more damages", Ww.weapon, [
+    detail: new vn("Sawed Off", "Shoot less far, do more damages", SKILLS.__WEAPON__, [
         [item.shotgun, 1],
         [item.alloys, 6],
         [item.shapedmetal, 6]
     ], 1, [
-        [station.researchbench, 200000]
+        [AREAS.researchbench, 200000]
     ], 13, item.shotgun),
     mnw: 31,     
     vMv: item.bulletshotgun,
@@ -23882,10 +23743,10 @@ var items = [{
             m: 0
         }]
     },
-    detail: new vn("Stone floor", "Players can't spawn on it", Ww.building, [
+    detail: new vn("Stone floor", "Players can't spawn on it", SKILLS.__BUILDING__, [
         [item.stone, 15]
     ], 2, [
-        [station.workbench, 15000]
+        [AREAS.workbench, 15000]
     ], 4),
     stack: 255,
     loot: Mv.stonefloor1,
@@ -23919,12 +23780,12 @@ var items = [{
     WNv: 0,
     Vvm: 1,
     mwM: 0,
-    behavior: vWN.nwv,
+    behavior: BEHAVIOR.__NO__,
     MWv: 0,
     nvN: 0,
     MMN: 0,
     WnW: 0,
-    draw: Mw.nwVWW,
+    draw: Render.nwVWW,
     WVW: [{
         src: "img/day-stone-floor-broken0.png",
         W: {
@@ -23941,8 +23802,8 @@ var items = [{
             m: 0
         }
     }],
-    impactaudio: objectaudio.VNv,
-    destroyaudio: objectaudio.stonedes,
+    impactaudio: SOUNDID.VNv,
+    destroyaudio: SOUNDID.stonedes,
     Nn: [{
         src: "img/day-stone-floor-0.png",
         W: {
@@ -24196,10 +24057,10 @@ var items = [{
             m: 0
         }]
     },
-    detail: new vn("Tiling floor", "Players can't spawn on it", Ww.building, [
+    detail: new vn("Tiling floor", "Players can't spawn on it", SKILLS.__BUILDING__, [
         [item.stone, 15]
     ], 2, [
-        [station.workbench, 15000]
+        [AREAS.workbench, 15000]
     ], 4),
     stack: 255,
     loot: Mv.stonefloor2,
@@ -24233,12 +24094,12 @@ var items = [{
     WNv: 0,
     Vvm: 1,
     mwM: 0,
-    behavior: vWN.nwv,
+    behavior: BEHAVIOR.__NO__,
     MWv: 0,
     nvN: 0,
     MMN: 0,
     WnW: 0,
-    draw: Mw.nwVWW,
+    draw: Render.nwVWW,
     WVW: [{
         src: "img/day-tiling-floor-broken0.png",
         W: {
@@ -24255,8 +24116,8 @@ var items = [{
             m: 0
         }
     }],
-    impactaudio: objectaudio.VNv,
-    destroyaudio: objectaudio.stonedes,
+    impactaudio: SOUNDID.VNv,
+    destroyaudio: SOUNDID.stonedes,
     Nn: [{
         src: "img/day-tiling-floor-0.png",
         W: {
@@ -24508,7 +24369,7 @@ var items = [{
     WNv: 0,
     Vvm: 0,
     mwM: 0,
-    behavior: vWN.nwv,
+    behavior: BEHAVIOR.__NO__,
     MWv: 0,
     nvN: [],
     Nvw: [],
@@ -24516,7 +24377,7 @@ var items = [{
         nww: window.undefined
     },
     NWm: -1,
-    draw: Mw.NNnmv
+    draw: Render.NNnmv
 }, {
     id: item.chips,
     img: {
@@ -24598,7 +24459,7 @@ var items = [{
             m: 0
         }]
     },
-    detail: new vn("Big Wire", "Break big computers in power station (in the city)"),
+    detail: new vn("Big Wire", "Break big computers in power AREAS (in the city)"),
     stack: 255,
     loot: Mv.wires,
     mW: 40
@@ -24614,11 +24475,11 @@ var items = [{
             m: 0
         }]
     },
-    detail: new vn("Energy Cells", "Used for energy weapons/buildings", Ww.survival, [
+    detail: new vn("Energy Cells", "Used for energy weapons/buildings", SKILLS.__SURVIVAL__, [
         [item.alloys, 1],
         [item.shapeduranium, 1]
     ], 30, [
-        [station.teslabench, 28000]
+        [AREAS.teslabench, 28000]
     ], 6),
     stack: 255,
     loot: Mv.energycell
@@ -24634,14 +24495,14 @@ var items = [{
             m: 0
         }]
     },
-    detail: new vn("Laser Pistol", "Bullets are faster.", Ww.weapon, [
+    detail: new vn("Laser Pistol", "Bullets are faster.", SKILLS.__WEAPON__, [
         [item.shapeduranium, 2],
         [item.wires, 1],
         [item.electronicpart, 2],
         [item.alloys, 1],
         [item.shapedmetal, 4]
     ], 1, [
-        [station.teslabench, 180000]
+        [AREAS.teslabench, 180000]
     ], 14),
     mnw: 34,     
     vMv: item.energycell,
@@ -24660,20 +24521,20 @@ var items = [{
             m: 0
         }]
     },
-    detail: new vn("Tesla Bench", "Allow you to make powerful items", Ww.survival, [
+    detail: new vn("Tesla Bench", "Allow you to make powerful items", SKILLS.__SURVIVAL__, [
         [item.alloys, 4],
         [item.shapedmetal, 6],
         [item.electronicpart, 3],
         [item.wires, 4],
         [item.shapeduranium, 2]
     ], 1, [
-        [station.researchbench, 120000]
+        [AREAS.researchbench, 120000]
     ], 10, item.researchbench),
     mnw: 21,     
     MNM: 60000,
     WvV: 0,
     z: 1,
-    MWW: station.teslabench,
+    MWW: AREAS.teslabench,
     stack: 255,
     loot: Mv.teslabench,
     wait: 10,
@@ -24705,12 +24566,12 @@ var items = [{
     WNv: 0,
     Vvm: 0,
     mwM: 0,
-    behavior: vWN.mMwmV,
+    behavior: BEHAVIOR.__AI_CONSTRUCTOR__,
     MWv: 0,
     nvN: 0,
     MMN: 1,
     WnW: 0,
-    draw: Mw.nVWmn,
+    draw: Render.nVWmn,
     NnN: 16,
     wwN: {
         src: "img/e-workbench3.png",
@@ -24718,8 +24579,8 @@ var items = [{
             m: 0
         }
     },
-    impactaudio: objectaudio.metal,
-    destroyaudio: objectaudio.metaldes,
+    impactaudio: SOUNDID.metal,
+    destroyaudio: SOUNDID.metaldes,
     Nn: [{
         src: "img/day-workbench3.png",
         W: {
@@ -24789,12 +24650,12 @@ var items = [{
             m: 0
         }]
     },
-    detail: new vn("Alloys", "To craft powerful items", Ww.resources, [
+    detail: new vn("Alloys", "To craft powerful items", SKILLS.__MINERAL__, [
         [item.steel, 1],
         [item.junk, 1],
         [item.sulfur, 1]
     ], 1, [
-        [station.smelter, 10000]
+        [AREAS.smelter, 10000]
     ]),
     stack: 255,
     loot: Mv.alloys
@@ -24810,13 +24671,13 @@ var items = [{
             m: 0
         }]
     },
-    detail: new vn("Sulfur Axe", "You look cool with it.", Ww.tool, [
+    detail: new vn("Sulfur Axe", "You look cool with it.", SKILLS.__TOOL__, [
         [item.stoneaxe, 1],
         [item.alloys, 8],
         [item.shapedmetal, 10],
         [item.sulfur, 20]
     ], 1, [
-        [station.researchbench, 200000]
+        [AREAS.researchbench, 200000]
     ], 10, item.stoneaxe),
     mnw: 35,     
     stack: 1,
@@ -24834,13 +24695,13 @@ var items = [{
             m: 0
         }]
     },
-    detail: new vn("Landmine", "When you feel it, it's too late", Ww.weapon, [
+    detail: new vn("Landmine", "When you feel it, it's too late", SKILLS.__WEAPON__, [
         [item.shapedmetal, 4],
         [item.junk, 1],
         [item.sulfur, 2],
         [item.animalfat, 2]
     ], 1, [
-        [station.researchbench, 40000]
+        [AREAS.researchbench, 40000]
     ], 9),
     stack: 20,
     loot: Mv.landmine,
@@ -24870,16 +24731,16 @@ var items = [{
     },
     WNv: 0,
     mwM: 1,
-    behavior: vWN.nwv,
+    behavior: BEHAVIOR.__NO__,
     MWv: 0,
     nvN: 0,
     MMN: 0,
     damage: 200,
     WWv: 400,
     WnW: 0,
-    draw: Mw.vmMNW,   //visible before - draw: Mw.vmMNW
-    impactaudio: objectaudio.metal,
-    destroyaudio: objectaudio.metaldes,
+    draw: Render.vmMNW,   //visible before - draw: Render.vmMNW
+    impactaudio: SOUNDID.metal,
+    destroyaudio: SOUNDID.metaldes,
     Nn: [{
         src: "img/day-landmine-0.png",
         W: {
@@ -24913,13 +24774,13 @@ var items = [{
             m: 0
         }]
     },
-    detail: new vn("Dynamite", "Get out of here, it gonna blow!", Ww.weapon, [
+    detail: new vn("Dynamite", "Get out of here, it gonna blow!", SKILLS.__WEAPON__, [
         [item.string, 1],
         [item.animalfat, 2],
         [item.sulfur, 2],
         [item.junk, 1]
     ], 1, [
-        [station.researchbench, 40000]
+        [AREAS.researchbench, 40000]
     ], 9),
     stack: 10,
     loot: Mv.dynamite,
@@ -24949,16 +24810,16 @@ var items = [{
     },
     WNv: 0,
     mwM: 1,
-    behavior: vWN.nwv,
+    behavior: BEHAVIOR.__NO__,
     MWv: 0,
     nvN: 0,
     MMN: 0,
     damage: 180,
     WWv: 1400,
     WnW: 0,
-    draw: Mw.VnMww,
-    impactaudio: objectaudio.pillow,
-    destroyaudio: objectaudio.VNv,
+    draw: Render.VnMww,
+    impactaudio: SOUNDID.pillow,
+    destroyaudio: SOUNDID.VNv,
     Nn: [{
         src: "img/day-dynamite.png",
         W: {
@@ -24987,13 +24848,13 @@ var items = [{
             m: 0
         }]
     },
-    detail: new vn("C4", "Explode when you hit the trigger!", Ww.weapon, [
+    detail: new vn("C4", "Explode when you hit the trigger!", SKILLS.__WEAPON__, [
         [item.dynamite, 2],
         [item.smallwire, 1],
         [item.alloys, 2],
         [item.electronicpart, 1]
     ], 1, [
-        [station.researchbench, 60000]
+        [AREAS.researchbench, 60000]
     ], 16, item.dynamite),
     stack: 5,
     loot: Mv.c4bomb,
@@ -25023,16 +24884,16 @@ var items = [{
     },
     WNv: 0,
     mwM: 1,
-    behavior: vWN.nwv,
+    behavior: BEHAVIOR.__NO__,
     MWv: 0,
     nvN: 0,
     damage: 255,
     WWv: 6000,
     MMN: 0,
     WnW: 0,
-    draw: Mw.VnMww,
-    impactaudio: objectaudio.pillow,
-    destroyaudio: objectaudio.VNv,
+    draw: Render.VnMww,
+    impactaudio: SOUNDID.pillow,
+    destroyaudio: SOUNDID.VNv,
     Nn: [{
         src: "img/day-C4.png",
         W: {
@@ -25061,13 +24922,13 @@ var items = [{
             m: 0
         }]
     },
-    detail: new vn("C4 Trigger", "Don't press the button or else...", Ww.weapon, [
+    detail: new vn("C4 Trigger", "Don't press the button or else...", SKILLS.__WEAPON__, [
         [item.shapedmetal, 5],
         [item.electronicpart, 1],
         [item.energycell, 8],
         [item.smallwire, 1]
     ], 1, [
-        [station.researchbench, 100000]
+        [AREAS.researchbench, 100000]
     ], 16, item.c4bomb),
     stack: 1,
     loot: Mv.joystic,
@@ -25086,17 +24947,17 @@ var items = [{
             m: 0
         }]
     },
-    detail: new vn("Compost", "Allows to accelerate rotting", Ww.survival, [
+    detail: new vn("Compost", "Allows to accelerate rotting", SKILLS.__SURVIVAL__, [
         [item.shapedmetal, 4],
         [item.electronicpart, 1]
     ], 1, [
-        [station.researchbench, 100000]
+        [AREAS.researchbench, 100000]
     ], 8),
     mnw: 21,     
     MNM: 10000,
     WvV: 0,
     z: 1,
-    MWW: station.composter,
+    MWW: AREAS.composter,
     stack: 255,
     loot: Mv.composter,
     wait: 10,
@@ -25124,12 +24985,12 @@ var items = [{
     WNv: 0,
     Vvm: 0,
     mwM: 0,
-    behavior: vWN.nwv,
+    behavior: BEHAVIOR.__NO__,
     MWv: 0,
     nvN: 0,
     MMN: 1,
     WnW: 0,
-    draw: Mw.vNvnV,
+    draw: Render.vNvnV,
     NnN: 16,
     wwN: {
         src: "img/e-composter.png",
@@ -25137,8 +24998,8 @@ var items = [{
             m: 0
         }
     },
-    impactaudio: objectaudio.metal,
-    destroyaudio: objectaudio.metaldes,
+    impactaudio: SOUNDID.metal,
+    destroyaudio: SOUNDID.metaldes,
     Nn: [{
         src: "img/day-composter-off.png",
         W: {
@@ -25167,13 +25028,13 @@ var items = [{
             m: 0
         }]
     },
-    detail: new vn("Metal Helmet", "Protects you from melee weapons", Ww.clothe, [
+    detail: new vn("Metal Helmet", "Protects you from melee weapons", SKILLS.__CLOTHE__, [
         [item.shapedmetal, 3],
         [item.animaltendon, 3],
         [item.leather, 3],
         [item.nails, 80]
     ], 1, [
-        [station.workbench, 70000]
+        [AREAS.workbench, 70000]
     ]),
     nwm: 7,
     stack: 1,
@@ -25198,14 +25059,14 @@ var items = [{
             m: 0
         }]
     },
-    detail: new vn("Welding Helmet", "Protects you from melee weapons", Ww.clothe, [
+    detail: new vn("Welding Helmet", "Protects you from melee weapons", SKILLS.__CLOTHE__, [
         [item.shapedmetal, 10],
         [item.alloys, 2],
         [item.leather, 3],
         [item.nails, 160],
         [item.metalhelmet, 1]
     ], 1, [
-        [station.researchbench, 140000]
+        [AREAS.researchbench, 140000]
     ], 7),
     nwm: 8,
     stack: 1,
@@ -25230,14 +25091,14 @@ var items = [{
             m: 0
         }]
     },
-    detail: new vn("Gladiator Helmet", "Strength and honor.", Ww.clothe, [
+    detail: new vn("Gladiator Helmet", "Strength and honor.", SKILLS.__CLOTHE__, [
         [item.shapedmetal, 12],
         [item.alloys, 6],
         [item.leather, 4],
         [item.nails, 255],
         [item.weldinghelmet, 1]
     ], 1, [
-        [station.researchbench, 300000]
+        [AREAS.researchbench, 300000]
     ], 17, item.weldinghelmet),
     nwm: 9,
     stack: 1,
@@ -25262,11 +25123,11 @@ var items = [{
             m: 0
         }]
     },
-    detail: new vn("Leather Jacket", "Protects you from guns", Ww.clothe, [
+    detail: new vn("Leather Jacket", "Protects you from guns", SKILLS.__CLOTHE__, [
         [item.string, 2],
         [item.leather, 4]
     ], 1, [
-        [station.weavingmachine, 70000]
+        [AREAS.weavingmachine, 70000]
     ]),
     nwm: 10,
     stack: 1,
@@ -25291,14 +25152,14 @@ var items = [{
             m: 0
         }]
     },
-    detail: new vn("Kevlar Suit", "Protects you from guns", Ww.clothe, [
+    detail: new vn("Kevlar Suit", "Protects you from guns", SKILLS.__CLOTHE__, [
         [item.shapedmetal, 6],
         [item.string, 4],
         [item.leather, 6],
         [item.alloys, 2],
         [item.leatherjacket, 1]
     ], 1, [
-        [station.weavingmachine, 100000]
+        [AREAS.weavingmachine, 100000]
     ], 12),
     nwm: 11,
     stack: 1,
@@ -25323,14 +25184,14 @@ var items = [{
             m: 0
         }]
     },
-    detail: new vn("SWAT Suit", "Protects you from guns", Ww.clothe, [
+    detail: new vn("SWAT Suit", "Protects you from guns", SKILLS.__CLOTHE__, [
         [item.shapedmetal, 10],
         [item.string, 10],
         [item.leather, 10],
         [item.alloys, 4],
         [item.kevlarsuit, 1]
     ], 1, [
-        [station.weavingmachine, 200000]
+        [AREAS.weavingmachine, 200000]
     ], 18, item.kevlarsuit),
     nwm: 12,
     stack: 1,
@@ -25355,13 +25216,13 @@ var items = [{
             m: 0
         }]
     },
-    detail: new vn("Protective Suit", "Protects you from explosives", Ww.clothe, [
+    detail: new vn("Protective Suit", "Protects you from explosives", SKILLS.__CLOTHE__, [
         [item.shapedmetal, 6],
         [item.string, 6],
         [item.leather, 6],
         [item.alloys, 2]
     ], 1, [
-        [station.weavingmachine, 200000]
+        [AREAS.weavingmachine, 200000]
     ], 12, item.lightweightskill),
     nwm: 13,
     stack: 1,
@@ -25386,14 +25247,14 @@ var items = [{
             m: 0
         }]
     },
-    detail: new vn("Power Armor", "Protects you from energy weapons", Ww.clothe, [
+    detail: new vn("Power Armor", "Protects you from energy weapons", SKILLS.__CLOTHE__, [
         [item.shapedmetal, 20],
         [item.shapeduranium, 2],
         [item.electronicpart, 1],
         [item.wires, 2],
         [item.alloys, 2]
     ], 1, [
-        [station.teslabench, 150000]
+        [AREAS.teslabench, 150000]
     ], 10),
     nwm: 14,
     stack: 1,
@@ -25418,14 +25279,14 @@ var items = [{
             m: 0
         }]
     },
-    detail: new vn("Tesla Armor", "Protects you from energy weapons", Ww.clothe, [
+    detail: new vn("Tesla Armor", "Protects you from energy weapons", SKILLS.__CLOTHE__, [
         [item.tesla1, 1],
         [item.shapeduranium, 10],
         [item.electronicpart, 5],
         [item.wires, 5],
         [item.alloys, 10]
     ], 1, [
-        [station.teslabench, 300000]
+        [AREAS.teslabench, 300000]
     ], 18, item.tesla1, 3),
     nwm: 15,
     stack: 1,
@@ -25450,10 +25311,10 @@ var items = [{
             m: 0
         }]
     },
-    detail: new vn("Wooden Spike", "Hurt and slow down", Ww.building, [
+    detail: new vn("Wooden Spike", "Hurt and slow down", SKILLS.__BUILDING__, [
         [item.wood, 80]
     ], 1, [
-        [station.workbench, 25000]
+        [AREAS.workbench, 25000]
     ]),
     mnw: 21,     
     MNM: -1,
@@ -25483,12 +25344,12 @@ var items = [{
     },
     WNv: 0,
     mwM: 0,
-    behavior: vWN.nwv,
+    behavior: BEHAVIOR.__NO__,
     MWv: 0,
     nvN: 0,
     MMN: 0,
     WnW: 0,
-    draw: Mw.WwVVm,
+    draw: Render.WwVVm,
     hidden: [{
         src: "img/day-wood-spike-cover1.png",
         W: {
@@ -25538,14 +25399,14 @@ var items = [{
             m: 0
         }]
     },
-    detail: new vn("Laser Submachine", "It's the best weapon", Ww.weapon, [
+    detail: new vn("Laser Submachine", "It's the best weapon", SKILLS.__WEAPON__, [
         [item.alloys, 10],
         [item.shapedmetal, 6],
         [item.shapeduranium, 6],
         [item.wires, 2],
         [item.electronicpart, 3]
     ], 1, [
-        [station.teslabench, 180000]
+        [AREAS.teslabench, 180000]
     ], 14, item.laserpistol, 2),
     mnw: 37,     
     vMv: item.energycell,
@@ -25564,13 +25425,13 @@ var items = [{
             m: 0
         }]
     },
-    detail: new vn("Grenade", "Explodes when you throw it away.", Ww.weapon, [
+    detail: new vn("Grenade", "Explodes when you throw it away.", SKILLS.__WEAPON__, [
         [item.shapedmetal, 2],
         [item.junk, 2],
         [item.sulfur, 2],
         [item.animalfat, 2]
     ], 2, [
-        [station.researchbench, 30000]
+        [AREAS.researchbench, 30000]
     ], 10),
     mnw: 38,     
     damage: 130,
@@ -25625,12 +25486,12 @@ var items = [{
             m: 0
         }]
     },
-    detail: new vn("Camouflage Gear", "Hide you in the forest", Ww.clothe, [
+    detail: new vn("Camouflage Gear", "Hide you in the forest", SKILLS.__CLOTHE__, [
         [item.wood, 90],
         [item.string, 2],
         [item.leather, 2]
     ], 1, [
-        [station.weavingmachine, 40000]
+        [AREAS.weavingmachine, 40000]
     ]),
     nwm: 16,
     stack: 1,
@@ -25657,17 +25518,17 @@ var items = [{
             m: 0
         }]
     },
-    detail: new vn("Agitator", "Allows to craft drugs", Ww.survival, [
+    detail: new vn("Agitator", "Allows to craft drugs", SKILLS.__SURVIVAL__, [
         [item.shapedmetal, 6],
         [item.electronicpart, 1]
     ], 1, [
-        [station.researchbench, 100000]
+        [AREAS.researchbench, 100000]
     ], 8),
     mnw: 21,     
     MNM: 100000,
     WvV: 0,
     z: 1,
-    MWW: station.agitator,
+    MWW: AREAS.agitator,
     stack: 255,
     loot: Mv.agitator,
     wait: 10,
@@ -25695,12 +25556,12 @@ var items = [{
     WNv: 0,
     Vvm: 0,
     mwM: 0,
-    behavior: vWN.nwv,
+    behavior: BEHAVIOR.__NO__,
     MWv: 0,
     nvN: 0,
     MMN: 1,
     WnW: 0,
-    draw: Mw.wNvVV,
+    draw: Render.wNvVV,
     NnN: 16,
     wwN: {
         src: "img/e-agitator.png",
@@ -25708,8 +25569,8 @@ var items = [{
             m: 0
         }
     },
-    impactaudio: objectaudio.metal,
-    destroyaudio: objectaudio.metaldes,
+    impactaudio: SOUNDID.metal,
+    destroyaudio: SOUNDID.metaldes,
     Nn: [{
         src: "img/day-agitator1-off.png",
         W: {
@@ -25754,14 +25615,14 @@ var items = [{
             m: 0
         }]
     },
-    detail: new vn("Ghoul Drug", "Ghouls does not attack you.", Ww.medicine, [
+    detail: new vn("Ghoul Drug", "Ghouls does not attack you.", SKILLS.__DRUG__, [
         [item.syringe, 1],
         [item.chemicalcomponent, 1],
         [item.mushroom2, 1],
         [item.mushroom3, 1],
         [item.ghoulblood, 1]
     ], 1, [
-        [station.agitator, 30000]
+        [AREAS.agitator, 30000]
     ], 10),
     mnw: 40,     
     stack: 5,
@@ -25893,13 +25754,13 @@ var items = [{
             m: 0
         }]
     },
-    detail: new vn("Lapadone", "You are faster a certain time.", Ww.medicine, [
+    detail: new vn("Lapadone", "You are faster a certain time.", SKILLS.__DRUG__, [
         [item.syringe, 1],
         [item.chemicalcomponent, 1],
         [item.mushroom, 1],
         [item.ghoulblood, 1]
     ], 1, [
-        [station.agitator, 45000]
+        [AREAS.agitator, 45000]
     ], 14),
     mnw: 47,     
     stack: 5,
@@ -25917,13 +25778,13 @@ var items = [{
             m: 0
         }]
     },
-    detail: new vn("LapaBot", "Repair your base for you", Ww.survival, [
+    detail: new vn("LapaBot", "Repair your base for you", SKILLS.__SURVIVAL__, [
         [item.shapedmetal, 6],
         [item.electronicpart, 1],
         [item.smallwire, 1],
         [item.alloys, 1]
     ], 1, [
-        [station.researchbench, 100000]
+        [AREAS.researchbench, 100000]
     ], 8),
     stack: 5,
     loot: Mv.lapabot,
@@ -25954,14 +25815,14 @@ var items = [{
     },
     WNv: 0,
     mwM: 0,
-    behavior: vWN.mMwmV,
+    behavior: BEHAVIOR.__AI_CONSTRUCTOR__,
     MWv: 0,
     nvN: 0,
     MMN: 0,
     WnW: 0,
-    draw: Mw.nMnNW,
-    impactaudio: objectaudio.metal,
-    destroyaudio: objectaudio.metaldes,
+    draw: Render.nMnNW,
+    impactaudio: SOUNDID.metal,
+    destroyaudio: SOUNDID.metaldes,
     Nn: [{
         src: "img/lapabot0.png",
         W: {
@@ -26000,7 +25861,7 @@ var items = [{
     health: 250,
     mW: 0,
     nMnVw: 315360000000,
-    vvMMW: creatures.lapabot,
+    vvMMW: AIID.__LAPABOT_REPAIR__,
     vMvvV: 20000,
     mmNMn: 4,
     VVvmM: 1
@@ -26074,8 +25935,8 @@ var items = [{
         [item.pumpkin, 1],
         [item.ghoulblood, 1]
     ], 1, [
-        [station.firepart, 30000],
-        [station.bbq, 20000]
+        [AREAS.firepart, 30000],
+        [AREAS.bbq, 20000]
     ], 99),
     stack: 40,
     loot: Mv.ghoulseed,
@@ -26106,14 +25967,14 @@ var items = [{
     },
     WNv: 0,
     mwM: 0,
-    behavior: vWN.mMwmV,
+    behavior: BEHAVIOR.__AI_CONSTRUCTOR__,
     MWv: 0,
     nvN: 0,
     MMN: 0,
     WnW: 0,
-    draw: Mw.MWnVn,
-    impactaudio: objectaudio.pillow,
-    destroyaudio: objectaudio.pillowdes,
+    draw: Render.MWnVn,
+    impactaudio: SOUNDID.pillow,
+    destroyaudio: SOUNDID.pillowdes,
     Nn: [{
         src: "img/day-root0-ghoul.png",
         W: {
@@ -26146,7 +26007,7 @@ var items = [{
     health: 250,
     mW: 0,
     nMnVw: 120000,
-    vvMMW: creatures.pumpkinghoul,
+    vvMMW: AIID.__PUMPKIN_GHOUL__,
     vMvvV: 15000,
     mmNMn: 3,
     VVvmM: 0
@@ -26162,20 +26023,20 @@ var items = [{
             m: 0
         }]
     },
-    detail: new vn("Extractor", "Allows you to extract minerals from the ground", Ww.survival, [
+    detail: new vn("Extractor", "Allows you to extract minerals from the ground", SKILLS.__SURVIVAL__, [
         [item.alloys, 2],
         [item.shapedmetal, 10],
         [item.shapeduranium, 2],
         [item.smallwire, 2],
         [item.electronicpart, 1]
     ], 1, [
-        [station.researchbench, 100000]
+        [AREAS.researchbench, 100000]
     ], 12),
     mnw: 21,     
     MNM: 740000,
     WvV: 0,
     z: 1,
-    MWW: station.extractor,
+    MWW: AREAS.extractor,
     stack: 255,
     loot: Mv.extractor,
     wait: 10,
@@ -26203,12 +26064,12 @@ var items = [{
     WNv: 0,
     Vvm: 0,
     mwM: 0,
-    behavior: vWN.nwv,
+    behavior: BEHAVIOR.__NO__,
     MWv: 0,
     nvN: 0,
     MMN: 1,
     WnW: 0,
-    draw: Mw.vwMnv,
+    draw: Render.vwMnv,
     NnN: 16,
     wwN: {
         src: "img/e-extractor.png",
@@ -26216,8 +26077,8 @@ var items = [{
             m: 0
         }
     },
-    impactaudio: objectaudio.metal,
-    destroyaudio: objectaudio.metaldes,
+    impactaudio: SOUNDID.metal,
+    destroyaudio: SOUNDID.metaldes,
     Nn: [{
         src: "img/day-extractor.png",
         W: {
@@ -26257,13 +26118,13 @@ var items = [{
             m: 0
         }]
     },
-    detail: new vn("Antidote", "Remove the withdrawal effects (pink skin)", Ww.medicine, [
+    detail: new vn("Antidote", "Remove the withdrawal effects (pink skin)", SKILLS.__DRUG__, [
         [item.syringe, 1],
         [item.chemicalcomponent, 1],
         [item.mushroom, 1],
         [item.antidoteflower, 1]
     ], 1, [
-        [station.agitator, 45000]
+        [AREAS.agitator, 45000]
     ], 14),
     mnw: 50,     
     stack: 5,
@@ -26297,11 +26158,11 @@ var items = [{
             m: 0
         }]
     },
-    detail: new vn("Tree Seed", "Plant your forest", Ww.plant, [
+    detail: new vn("Tree Seed", "Plant your forest", SKILLS.__PLANT__, [
         [item.acorn, 1]
     ], 5, [
-        [station.firepart, 60000],
-        [station.bbq, 40000]
+        [AREAS.firepart, 60000],
+        [AREAS.bbq, 40000]
     ]),
     stack: 100,
     loot: Mv.treeseed,
@@ -26332,14 +26193,14 @@ var items = [{
     },
     WNv: 0,
     mwM: 0,
-    behavior: vWN.Mwmnm,
+    behavior: BEHAVIOR.__SEED_RESOURCE__,
     MWv: 0,
     nvN: 0,
     MMN: 1,
     WnW: 0,
-    draw: Mw.NMVvM,
-    impactaudio: objectaudio.wood,
-    destroyaudio: objectaudio.wooddes,
+    draw: Render.NMVvM,
+    impactaudio: SOUNDID.wood,
+    destroyaudio: SOUNDID.wooddes,
     Nn: [{
         src: "img/day-plant-tree0.png",
         W: {
@@ -26421,14 +26282,14 @@ var items = [{
             m: 0
         }]
     },
-    detail: new vn("Laser Sniper", "Faster than a sniper", Ww.weapon, [
+    detail: new vn("Laser Sniper", "Faster than a sniper", SKILLS.__WEAPON__, [
         [item.alloys, 8],
         [item.shapedmetal, 6],
         [item.shapeduranium, 5],
         [item.wires, 3],
         [item.electronicpart, 3]
     ], 1, [
-        [station.teslabench, 180000]
+        [AREAS.teslabench, 180000]
     ], 14, item.laserpistol, 2),
     mnw: 53,     
     vMv: item.energycell,
@@ -26447,13 +26308,13 @@ var items = [{
             m: 0
         }]
     },
-    detail: new vn("HAL Bot", "Protect you", Ww.survival, [
+    detail: new vn("HAL Bot", "Protect you", SKILLS.__SURVIVAL__, [
         [item.shapedmetal, 6],
         [item.electronicpart, 1],
         [item.smallwire, 1],
         [item.alloys, 1]
     ], 1, [
-        [station.researchbench, 100000]
+        [AREAS.researchbench, 100000]
     ], 8),
     stack: 5,
     loot: Mv.halbot,
@@ -26484,14 +26345,14 @@ var items = [{
     },
     WNv: 0,
     mwM: 0,
-    behavior: vWN.mMwmV,
+    behavior: BEHAVIOR.__AI_CONSTRUCTOR__,
     MWv: 0,
     nvN: 0,
     MMN: 0,
     WnW: 0,
-    draw: Mw.nMnNW,
-    impactaudio: objectaudio.metal,
-    destroyaudio: objectaudio.metaldes,
+    draw: Render.nMnNW,
+    impactaudio: SOUNDID.metal,
+    destroyaudio: SOUNDID.metaldes,
     Nn: [{
         src: "img/hal-bot0.png",
         W: {
@@ -26530,7 +26391,7 @@ var items = [{
     health: 400,
     mW: 0,
     nMnVw: 315360000000,
-    vvMMW: creatures.halbot,
+    vvMMW: AIID.__HAL_BOT__,
     vMvvV: 8000,
     mmNMn: 4,
     VVvmM: 1
@@ -26546,14 +26407,14 @@ var items = [{
             m: 0
         }]
     },
-    detail: new vn("Tesla Bot", "Protect you", Ww.survival, [
+    detail: new vn("Tesla Bot", "Protect you", SKILLS.__SURVIVAL__, [
         [item.shapeduranium, 3],
         [item.electronicpart, 1],
         [item.smallwire, 3],
         [item.wires, 3],
         [item.alloys, 3]
     ], 1, [
-        [station.teslabench, 200000]
+        [AREAS.teslabench, 200000]
     ], 16),
     stack: 5,
     loot: Mv.teslabot,
@@ -26584,14 +26445,14 @@ var items = [{
     },
     WNv: 0,
     mwM: 0,
-    behavior: vWN.mMwmV,
+    behavior: BEHAVIOR.__AI_CONSTRUCTOR__,
     MWv: 0,
     nvN: 0,
     MMN: 0,
     WnW: 0,
-    draw: Mw.nMnNW,
-    impactaudio: objectaudio.metal,
-    destroyaudio: objectaudio.metaldes,
+    draw: Render.nMnNW,
+    impactaudio: SOUNDID.metal,
+    destroyaudio: SOUNDID.metaldes,
     Nn: [{
         src: "img/tesla-bot0.png",
         W: {
@@ -26630,7 +26491,7 @@ var items = [{
     health: 500,
     mW: 0,
     nMnVw: 315360000000,
-    vvMMW: creatures.teslabot,
+    vvMMW: AIID.__TESLA_BOT__,
     vMvvV: 20000,
     mmNMn: 4,
     VVvmM: 1
@@ -26646,10 +26507,10 @@ var items = [{
             m: 0
         }]
     },
-    detail: new vn("Cable", "Create automatic mechanisms", Ww.cable, [
+    detail: new vn("Cable", "Create automatic mechanisms", SKILLS.__LOGIC__, [
         [item.smallwire, 1]
     ], 3, [
-        [station.weldingmachine, 15000]
+        [AREAS.weldingmachine, 15000]
     ]),
     stack: 255,
     loot: Mv.cable,
@@ -26682,7 +26543,7 @@ var items = [{
     WNv: 0,
     Vvm: 0,
     mwM: 0,
-    behavior: vWN.cable,
+    behavior: BEHAVIOR.__LOGIC__,
     mwv: 0,
     MWv: [
         [1, 1, 0, 0],
@@ -26693,9 +26554,9 @@ var items = [{
     nvN: 0,
     MMN: 0,
     WnW: 0,
-    draw: Mw.NnMNn,
-    impactaudio: objectaudio.pillow,
-    destroyaudio: objectaudio.pillowdes,
+    draw: Render.NnMNn,
+    impactaudio: SOUNDID.pillow,
+    destroyaudio: SOUNDID.pillowdes,
     Nn: {
         src: "img/day-wire0.png",
         W: {
@@ -26719,10 +26580,10 @@ var items = [{
             m: 0
         }]
     },
-    detail: new vn("Cable", "Create automatic mechanisms", Ww.cable, [
+    detail: new vn("Cable", "Create automatic mechanisms", SKILLS.__LOGIC__, [
         [item.smallwire, 1]
     ], 3, [
-        [station.weldingmachine, 15000]
+        [AREAS.weldingmachine, 15000]
     ]),
     stack: 255,
     loot: Mv.cable2,
@@ -26755,7 +26616,7 @@ var items = [{
     WNv: 0,
     Vvm: 0,
     mwM: 0,
-    behavior: vWN.cable,
+    behavior: BEHAVIOR.__LOGIC__,
     mwv: 0,
     MWv: [
         [1, 1, 1, 1],
@@ -26766,9 +26627,9 @@ var items = [{
     nvN: 0,
     MMN: 0,
     WnW: 0,
-    draw: Mw.NnMNn,
-    impactaudio: objectaudio.pillow,
-    destroyaudio: objectaudio.pillowdes,
+    draw: Render.NnMNn,
+    impactaudio: SOUNDID.pillow,
+    destroyaudio: SOUNDID.pillowdes,
     Nn: {
         src: "img/day-wire1.png",
         W: {
@@ -26792,10 +26653,10 @@ var items = [{
             m: 0
         }]
     },
-    detail: new vn("Cable", "Create automatic mechanisms", Ww.cable, [
+    detail: new vn("Cable", "Create automatic mechanisms", SKILLS.__LOGIC__, [
         [item.smallwire, 1]
     ], 3, [
-        [station.weldingmachine, 15000]
+        [AREAS.weldingmachine, 15000]
     ]),
     stack: 255,
     loot: Mv.cable3,
@@ -26828,7 +26689,7 @@ var items = [{
     WNv: 0,
     Vvm: 0,
     mwM: 0,
-    behavior: vWN.cable,
+    behavior: BEHAVIOR.__LOGIC__,
     mwv: 0,
     MWv: [
         [0, 1, 0, 1],
@@ -26839,9 +26700,9 @@ var items = [{
     nvN: 0,
     MMN: 0,
     WnW: 0,
-    draw: Mw.NnMNn,
-    impactaudio: objectaudio.pillow,
-    destroyaudio: objectaudio.pillowdes,
+    draw: Render.NnMNn,
+    impactaudio: SOUNDID.pillow,
+    destroyaudio: SOUNDID.pillowdes,
     Nn: {
         src: "img/day-wire2.png",
         W: {
@@ -26865,10 +26726,10 @@ var items = [{
             m: 0
         }]
     },
-    detail: new vn("Cable", "Create automatic mechanisms", Ww.cable, [
+    detail: new vn("Cable", "Create automatic mechanisms", SKILLS.__LOGIC__, [
         [item.smallwire, 1]
     ], 3, [
-        [station.weldingmachine, 15000]
+        [AREAS.weldingmachine, 15000]
     ]),
     stack: 255,
     loot: Mv.cable4,
@@ -26901,7 +26762,7 @@ var items = [{
     WNv: 0,
     Vvm: 0,
     mwM: 0,
-    behavior: vWN.cable,
+    behavior: BEHAVIOR.__LOGIC__,
     mwv: 0,
     MWv: [
         [0, 1, 1, 1],
@@ -26912,9 +26773,9 @@ var items = [{
     nvN: 0,
     MMN: 0,
     WnW: 0,
-    draw: Mw.NnMNn,
-    impactaudio: objectaudio.pillow,
-    destroyaudio: objectaudio.pillowdes,
+    draw: Render.NnMNn,
+    impactaudio: SOUNDID.pillow,
+    destroyaudio: SOUNDID.pillowdes,
     Nn: {
         src: "img/day-wire3.png",
         W: {
@@ -26938,11 +26799,11 @@ var items = [{
             m: 0
         }]
     },
-    detail: new vn("Switch", "Turn on/off mechanisms", Ww.cable, [
+    detail: new vn("Switch", "Turn on/off mechanisms", SKILLS.__LOGIC__, [
         [item.shapedmetal, 1],
         [item.smallwire, 1]
     ], 3, [
-        [station.weldingmachine, 15000]
+        [AREAS.weldingmachine, 15000]
     ]),
     stack: 255,
     loot: Mv.switch,
@@ -26975,7 +26836,7 @@ var items = [{
     WNv: 0,
     Vvm: 0,
     mwM: 0,
-    behavior: vWN.cable,
+    behavior: BEHAVIOR.__LOGIC__,
     mwv: 1,
     MWv: [
         [1, 1, 1, 1],
@@ -26986,7 +26847,7 @@ var items = [{
     nvN: 0,
     MMN: 0,
     WnW: 0,
-    draw: Mw.mvVVM,
+    draw: Render.mvVVM,
     NnN: 37,
     wwN: {
         src: "img/e-turnon.png",
@@ -26994,8 +26855,8 @@ var items = [{
             m: 0
         }
     },
-    impactaudio: objectaudio.metal,
-    destroyaudio: objectaudio.metaldes,
+    impactaudio: SOUNDID.metal,
+    destroyaudio: SOUNDID.metaldes,
     Nn: [{
         src: "img/day-switch-off.png",
         W: {
@@ -27024,11 +26885,11 @@ var items = [{
             m: 0
         }]
     },
-    detail: new vn("Gate OR", "Activate only if an entry is on.", Ww.cable, [
+    detail: new vn("Gate OR", "Activate only if an entry is on.", SKILLS.__LOGIC__, [
         [item.shapedmetal, 1],
         [item.smallwire, 1]
     ], 3, [
-        [station.weldingmachine, 15000]
+        [AREAS.weldingmachine, 15000]
     ]),
     stack: 255,
     loot: Mv.orgate,
@@ -27061,7 +26922,7 @@ var items = [{
     WNv: 0,
     Vvm: 0,
     mwM: 0,
-    behavior: vWN.cable,
+    behavior: BEHAVIOR.__LOGIC__,
     mwv: 1,
     MWv: [
         [1, 0, 0, 0],
@@ -27072,9 +26933,9 @@ var items = [{
     nvN: 0,
     MMN: 0,
     WnW: 0,
-    draw: Mw.NnMNn,
-    impactaudio: objectaudio.metal,
-    destroyaudio: objectaudio.metaldes,
+    draw: Render.NnMNn,
+    impactaudio: SOUNDID.metal,
+    destroyaudio: SOUNDID.metaldes,
     Nn: {
         src: "img/day-switch-or.png",
         W: {
@@ -27098,11 +26959,11 @@ var items = [{
             m: 0
         }]
     },
-    detail: new vn("Gate AND", "Activate only if all entries are on.", Ww.cable, [
+    detail: new vn("Gate AND", "Activate only if all entries are on.", SKILLS.__LOGIC__, [
         [item.shapedmetal, 1],
         [item.smallwire, 1]
     ], 3, [
-        [station.weldingmachine, 15000]
+        [AREAS.weldingmachine, 15000]
     ]),
     stack: 255,
     loot: Mv.andgate,
@@ -27135,7 +26996,7 @@ var items = [{
     WNv: 0,
     Vvm: 0,
     mwM: 0,
-    behavior: vWN.cable,
+    behavior: BEHAVIOR.__LOGIC__,
     mwv: 1,
     MWv: [
         [1, 0, 0, 0],
@@ -27146,9 +27007,9 @@ var items = [{
     nvN: 0,
     MMN: 0,
     WnW: 0,
-    draw: Mw.NnMNn,
-    impactaudio: objectaudio.metal,
-    destroyaudio: objectaudio.metaldes,
+    draw: Render.NnMNn,
+    impactaudio: SOUNDID.metal,
+    destroyaudio: SOUNDID.metaldes,
     Nn: {
         src: "img/day-switch-and.png",
         W: {
@@ -27172,11 +27033,11 @@ var items = [{
             m: 0
         }]
     },
-    detail: new vn("Gate NOT", "Activate only if no entry is on.", Ww.cable, [
+    detail: new vn("Gate NOT", "Activate only if no entry is on.", SKILLS.__LOGIC__, [
         [item.shapedmetal, 1],
         [item.smallwire, 1]
     ], 3, [
-        [station.weldingmachine, 15000]
+        [AREAS.weldingmachine, 15000]
     ]),
     stack: 255,
     loot: Mv.notgate,
@@ -27209,7 +27070,7 @@ var items = [{
     WNv: 0,
     Vvm: 0,
     mwM: 0,
-    behavior: vWN.cable,
+    behavior: BEHAVIOR.__LOGIC__,
     mwv: 1,
     MWv: [
         [1, 0, 1, 1],
@@ -27220,9 +27081,9 @@ var items = [{
     nvN: 0,
     MMN: 0,
     WnW: 0,
-    draw: Mw.NnMNn,
-    impactaudio: objectaudio.metal,
-    destroyaudio: objectaudio.metaldes,
+    draw: Render.NnMNn,
+    impactaudio: SOUNDID.metal,
+    destroyaudio: SOUNDID.metaldes,
     Nn: {
         src: "img/day-switch-reverse.png",
         W: {
@@ -27246,11 +27107,11 @@ var items = [{
             m: 0
         }]
     },
-    detail: new vn("Lamp", "Turn on when connected, damage ghoul", Ww.cable, [
+    detail: new vn("Lamp", "Turn on when connected, damage ghoul", SKILLS.__LOGIC__, [
         [item.shapedmetal, 1],
         [item.smallwire, 1]
     ], 3, [
-        [station.weldingmachine, 15000]
+        [AREAS.weldingmachine, 15000]
     ]),
     stack: 255,
     loot: Mv.lamp,
@@ -27283,7 +27144,7 @@ var items = [{
     WNv: 0,
     Vvm: 0,
     mwM: 0,
-    behavior: vWN.cable,
+    behavior: BEHAVIOR.__LOGIC__,
     mwv: 0,
     MWv: [
         [1, 1, 1, 1],
@@ -27295,8 +27156,8 @@ var items = [{
     MMN: 2,
     wwW: 22,
     WnW: 0,
-    draw: Mw.vnVwv,
-    VvmvM: Mw.mVwvv,
+    draw: Render.vnVwv,
+    VvmvM: Render.mVwvv,
     NnN: 36,
     wwN: {
         src: "img/e-light.png",
@@ -27304,8 +27165,8 @@ var items = [{
             m: 0
         }
     },
-    impactaudio: objectaudio.metal,
-    destroyaudio: objectaudio.metaldes,
+    impactaudio: SOUNDID.metal,
+    destroyaudio: SOUNDID.metaldes,
     Nn: {
         src: "img/day-lamp-off.png",
         W: {
@@ -27401,11 +27262,11 @@ var items = [{
             m: 0
         }]
     },
-    detail: new vn("Cable  - Wall", "Wall that can be connected to a cable", Ww.cable, [
+    detail: new vn("Cable  - Wall", "Wall that can be connected to a cable", SKILLS.__LOGIC__, [
         [item.shapedmetal, 8],
         [item.smallwire, 1]
     ], 1, [
-        [station.weldingmachine, 15000]
+        [AREAS.weldingmachine, 15000]
     ], 7),
     stack: 255,
     loot: Mv.cablewall,
@@ -27438,7 +27299,7 @@ var items = [{
     WNv: 0,
     Vvm: 1,
     mwM: 0,
-    behavior: vWN.cable,
+    behavior: BEHAVIOR.__LOGIC__,
     mwv: 0,
     MWv: [
         [1, 1, 0, 0],
@@ -27449,9 +27310,9 @@ var items = [{
     nvN: 0,
     MMN: 1,
     WnW: 0,
-    draw: Mw.VWWwm,
-    impactaudio: objectaudio.metal,
-    destroyaudio: objectaudio.metaldes,
+    draw: Render.VWWwm,
+    impactaudio: SOUNDID.metal,
+    destroyaudio: SOUNDID.metaldes,
     Nn: [{
         src: "img/day-cable-wall.png",
         W: {
@@ -27490,12 +27351,12 @@ var items = [{
             m: 0
         }]
     },
-    detail: new vn("Automatic Door", "Connect it to a switch to open and close it.", Ww.cable, [
+    detail: new vn("Automatic Door", "Connect it to a switch to open and close it.", SKILLS.__LOGIC__, [
         [item.shapedmetal, 8],
         [item.smallwire, 2],
         [item.electronicpart, 1]
     ], 1, [
-        [station.weldingmachine, 15000]
+        [AREAS.weldingmachine, 15000]
     ], 7),
     stack: 255,
     loot: Mv.autodoor,
@@ -27528,7 +27389,7 @@ var items = [{
     WNv: 0,
     Vvm: 1,
     mwM: 0,
-    behavior: vWN.cable,
+    behavior: BEHAVIOR.__LOGIC__,
     mwv: 0,
     MWv: [
         [0, 1, 1, 1],
@@ -27539,9 +27400,9 @@ var items = [{
     nvN: 0,
     MMN: 1,
     WnW: 0,
-    draw: Mw.WvNvn,
-    impactaudio: objectaudio.metal,
-    destroyaudio: objectaudio.metaldes,
+    draw: Render.WvNvn,
+    impactaudio: SOUNDID.metal,
+    destroyaudio: SOUNDID.metaldes,
     Nn: [
         [{
             src: "img/day-automatic-door-off.png",
@@ -27603,11 +27464,11 @@ var items = [{
             m: 0
         }]
     },
-    detail: new vn("Platform", "Weight detector", Ww.cable, [
+    detail: new vn("Platform", "Weight detector", SKILLS.__LOGIC__, [
         [item.shapedmetal, 1],
         [item.smallwire, 1]
     ], 3, [
-        [station.weldingmachine, 15000]
+        [AREAS.weldingmachine, 15000]
     ]),
     stack: 255,
     loot: Mv.platform,
@@ -27640,7 +27501,7 @@ var items = [{
     WNv: 0,
     Vvm: 0,
     mwM: 0,
-    behavior: vWN.cable,
+    behavior: BEHAVIOR.__LOGIC__,
     mwv: 1,
     MWv: [
         [1, 1, 1, 1],
@@ -27651,9 +27512,9 @@ var items = [{
     nvN: 0,
     MMN: 0,
     WnW: 0,
-    draw: Mw.mvWww,
-    impactaudio: objectaudio.metal,
-    destroyaudio: objectaudio.metaldes,
+    draw: Render.mvWww,
+    impactaudio: SOUNDID.metal,
+    destroyaudio: SOUNDID.metaldes,
     Nn: {
         src: "img/day-platform-off.png",
         W: {
@@ -27680,7 +27541,7 @@ var items = [{
     detail: new vn("Stone Cave", "Build mountains.", -1, [
         [item.stone, 140]
     ], 1, [
-        [station.workbench, 30000]
+        [AREAS.workbench, 30000]
     ], 99),
     mnw: 21,     
     MNM: -1,
@@ -27714,12 +27575,12 @@ var items = [{
     WNv: 0,
     Vvm: 1,
     mwM: 0,
-    behavior: vWN.nwv,
+    behavior: BEHAVIOR.__NO__,
     MWv: 0,
     nvN: 0,
     MMN: 1,
     WnW: 0,
-    draw: Mw.Mvw,
+    draw: Render.Mvw,
     MmvNw: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
     WVW: [{
         src: "img/day-stone-cave-broken0.png",
@@ -27737,8 +27598,8 @@ var items = [{
             m: 0
         }
     }],
-    impactaudio: objectaudio.stone,
-    destroyaudio: objectaudio.stonedes,
+    impactaudio: SOUNDID.stone,
+    destroyaudio: SOUNDID.stonedes,
     Nn: [{
         src: "img/day-stone-cave0.png",
         W: {
@@ -27996,7 +27857,7 @@ var items = [{
         [item.stone, 150],
         [item.shapedmetal, 12]
     ], 1, [
-        [station.workbench, 30000]
+        [AREAS.workbench, 30000]
     ], 99),
     mnw: 21,     
     MNM: -1,
@@ -28030,12 +27891,12 @@ var items = [{
     WNv: 0,
     Vvm: 1,
     mwM: 0,
-    behavior: vWN.nwv,
+    behavior: BEHAVIOR.__NO__,
     MWv: 0,
     nvN: 0,
     MMN: 1,
     WnW: 0,
-    draw: Mw.Mvw,
+    draw: Render.Mvw,
     MmvNw: [1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
     WVW: [{
         src: "img/day-bunker-wall-broken0.png",
@@ -28053,8 +27914,8 @@ var items = [{
             m: 0
         }
     }],
-    impactaudio: objectaudio.metal,
-    destroyaudio: objectaudio.metaldes,
+    impactaudio: SOUNDID.metal,
+    destroyaudio: SOUNDID.metaldes,
     Nn: [{
         src: "img/day-bunker-wall0.png",
         W: {
@@ -28308,10 +28169,10 @@ var items = [{
             m: 0
         }]
     },
-    detail: new vn("Golden Floor", "Players can't spawn on it", Ww.building, [
+    detail: new vn("Golden Floor", "Players can't spawn on it", SKILLS.__BUILDING__, [
         [item.leather, 2]
     ], 2, [
-        [station.workbench, 15000]
+        [AREAS.workbench, 15000]
     ]),
     stack: 255,
     loot: Mv.mustardfloor,
@@ -28345,12 +28206,12 @@ var items = [{
     WNv: 0,
     Vvm: 1,
     mwM: 0,
-    behavior: vWN.nwv,
+    behavior: BEHAVIOR.__NO__,
     MWv: 0,
     nvN: 0,
     MMN: 0,
     WnW: 0,
-    draw: Mw.nwVWW,
+    draw: Render.nwVWW,
     WVW: [{
         src: "img/day-mustard-floor-broken0.png",
         W: {
@@ -28367,8 +28228,8 @@ var items = [{
             m: 0
         }
     }],
-    impactaudio: objectaudio.VNv,
-    destroyaudio: objectaudio.pillowdes,
+    impactaudio: SOUNDID.VNv,
+    destroyaudio: SOUNDID.pillowdes,
     Nn: [{
         src: "img/day-mustard-floor-0.png",
         W: {
@@ -28622,10 +28483,10 @@ var items = [{
             m: 0
         }]
     },
-    detail: new vn("Red floor", "Players can't spawn on it", Ww.building, [
+    detail: new vn("Red floor", "Players can't spawn on it", SKILLS.__BUILDING__, [
         [item.leather, 2]
     ], 2, [
-        [station.workbench, 15000]
+        [AREAS.workbench, 15000]
     ]),
     stack: 255,
     loot: Mv.redfloor,
@@ -28659,12 +28520,12 @@ var items = [{
     WNv: 0,
     Vvm: 1,
     mwM: 0,
-    behavior: vWN.nwv,
+    behavior: BEHAVIOR.__NO__,
     MWv: 0,
     nvN: 0,
     MMN: 0,
     WnW: 0,
-    draw: Mw.nwVWW,
+    draw: Render.nwVWW,
     WVW: [{
         src: "img/day-red-floor-broken0.png",
         W: {
@@ -28681,8 +28542,8 @@ var items = [{
             m: 0
         }
     }],
-    impactaudio: objectaudio.VNv,
-    destroyaudio: objectaudio.pillowdes,
+    impactaudio: SOUNDID.VNv,
+    destroyaudio: SOUNDID.pillowdes,
     Nn: [{
         src: "img/day-red-floor-0.png",
         W: {
@@ -28936,18 +28797,18 @@ var items = [{
             m: 0
         }]
     },
-    detail: new vn("Welding Machine", "Allow you to make logic gates", Ww.survival, [
+    detail: new vn("Welding Machine", "Allow you to make logic gates", SKILLS.__SURVIVAL__, [
         [item.junk, 2],
         [item.shapedmetal, 4],
         [item.electronicpart, 1]
     ], 1, [
-        [station.workbench, 50000]
+        [AREAS.workbench, 50000]
     ]),
     mnw: 21,     
     MNM: -1,
     WvV: 0,
     z: 1,
-    MWW: station.weldingmachine,
+    MWW: AREAS.weldingmachine,
     stack: 255,
     loot: Mv.weldingmachine,
     wait: 10,
@@ -28975,12 +28836,12 @@ var items = [{
     WNv: 0,
     Vvm: 0,
     mwM: 0,
-    behavior: vWN.nwv,
+    behavior: BEHAVIOR.__NO__,
     MWv: 0,
     nvN: 0,
     MMN: 1,
     WnW: 0,
-    draw: Mw.FCWCcont,
+    draw: Render.FCWCcont,
     NnN: 16,
     wwN: {
         src: "img/e-welding-machine.png",
@@ -28988,8 +28849,8 @@ var items = [{
             m: 0
         }
     },
-    impactaudio: objectaudio.metal,
-    destroyaudio: objectaudio.metaldes,
+    impactaudio: SOUNDID.metal,
+    destroyaudio: SOUNDID.metaldes,
     Nn: {
         src: "img/day-welding-machine.png",
         W: {
@@ -29013,10 +28874,10 @@ var items = [{
             m: 0
         }]
     },
-    detail: new vn("Cable  - Bridge", "Create automatic mechanisms", Ww.cable, [
+    detail: new vn("Cable  - Bridge", "Create automatic mechanisms", SKILLS.__LOGIC__, [
         [item.smallwire, 1]
     ], 3, [
-        [station.weldingmachine, 15000]
+        [AREAS.weldingmachine, 15000]
     ]),
     stack: 255,
     loot: Mv.cable4,
@@ -29049,7 +28910,7 @@ var items = [{
     WNv: 0,
     Vvm: 0,
     mwM: 0,
-    behavior: vWN.cable,
+    behavior: BEHAVIOR.__LOGIC__,
     mwv: 0,
     MWv: [
         [1, 1, 1, 1],
@@ -29060,9 +28921,9 @@ var items = [{
     nvN: 0,
     MMN: 0,
     WnW: 0,
-    draw: Mw.NnMNn,
-    impactaudio: objectaudio.pillow,
-    destroyaudio: objectaudio.pillowdes,
+    draw: Render.NnMNn,
+    impactaudio: SOUNDID.pillow,
+    destroyaudio: SOUNDID.pillowdes,
     Nn: {
         src: "img/day-wire4.png",
         W: {
@@ -29086,11 +28947,11 @@ var items = [{
             m: 0
         }]
     },
-    detail: new vn("Gate Timer", "Emit a signal regularly.", Ww.cable, [
+    detail: new vn("Gate Timer", "Emit a signal regularly.", SKILLS.__LOGIC__, [
         [item.shapedmetal, 1],
         [item.smallwire, 1]
     ], 3, [
-        [station.weldingmachine, 15000]
+        [AREAS.weldingmachine, 15000]
     ]),
     stack: 255,
     loot: Mv.timer,
@@ -29123,7 +28984,7 @@ var items = [{
     WNv: 0,
     Vvm: 0,
     mwM: 0,
-    behavior: vWN.cable,
+    behavior: BEHAVIOR.__LOGIC__,
     mwv: 1,
     MWv: [
         [1, 1, 1, 1],
@@ -29134,7 +28995,7 @@ var items = [{
     nvN: 0,
     MMN: 0,
     WnW: 0,
-    draw: Mw.Mvnmn,
+    draw: Render.Mvnmn,
     NnN: 38,
     wwN: {
         src: "img/e-light.png",
@@ -29142,8 +29003,8 @@ var items = [{
             m: 0
         }
     },
-    impactaudio: objectaudio.metal,
-    destroyaudio: objectaudio.metaldes,
+    impactaudio: SOUNDID.metal,
+    destroyaudio: SOUNDID.metaldes,
     Nn: [{
         src: "img/day-timer-0.png",
         W: {
@@ -29182,11 +29043,11 @@ var items = [{
             m: 0
         }]
     },
-    detail: new vn("Gate Xor", "Activate only if only one entry is on.", Ww.cable, [
+    detail: new vn("Gate Xor", "Activate only if only one entry is on.", SKILLS.__LOGIC__, [
         [item.shapedmetal, 1],
         [item.smallwire, 1]
     ], 3, [
-        [station.weldingmachine, 15000]
+        [AREAS.weldingmachine, 15000]
     ]),
     stack: 255,
     loot: Mv.xorgate,
@@ -29219,7 +29080,7 @@ var items = [{
     WNv: 0,
     Vvm: 0,
     mwM: 0,
-    behavior: vWN.cable,
+    behavior: BEHAVIOR.__LOGIC__,
     mwv: 1,
     MWv: [
         [1, 0, 0, 0],
@@ -29230,9 +29091,9 @@ var items = [{
     nvN: 0,
     MMN: 0,
     WnW: 0,
-    draw: Mw.NnMNn,
-    impactaudio: objectaudio.metal,
-    destroyaudio: objectaudio.metaldes,
+    draw: Render.NnMNn,
+    impactaudio: SOUNDID.metal,
+    destroyaudio: SOUNDID.metaldes,
     Nn: {
         src: "img/day-xor.png",
         W: {
@@ -29260,7 +29121,7 @@ var items = [{
             m: 0
         }]
     },
-    detail: new vn("Vision 1", "Improve your vision", Ww.skill, window.undefined, window.undefined, window.undefined, 0),
+    detail: new vn("Vision 1", "Improve your vision", SKILLS.__SKILL__, window.undefined, window.undefined, window.undefined, 0),
     scale: -0.25
 },
 
@@ -29276,7 +29137,7 @@ var items = [{
             m: 0
         }]
     },
-    detail: new vn("Vision 2", "Improve your vision", Ww.skill, window.undefined, window.undefined, window.undefined, 5, item.skilleye1),
+    detail: new vn("Vision 2", "Improve your vision", SKILLS.__SKILL__, window.undefined, window.undefined, window.undefined, 5, item.skilleye1),
     scale: -0.35
 },
 
@@ -29292,7 +29153,7 @@ var items = [{
             m: 0
         }]
     },
-    detail: new vn("Vision 3", "Improve your vision", Ww.skill, window.undefined, window.undefined, window.undefined, 7, item.skilleye2),
+    detail: new vn("Vision 3", "Improve your vision", SKILLS.__SKILL__, window.undefined, window.undefined, window.undefined, 7, item.skilleye2),
     scale: -0.45
 },
 
@@ -29309,7 +29170,7 @@ var items = [{
             m: 0
         }]
     },
-    detail: new vn("Builder 1", "Multiplies some craft by two", Ww.skill, window.undefined, window.undefined, window.undefined, 6, window.undefined, 2)
+    detail: new vn("Builder 1", "Multiplies some craft by two", SKILLS.__SKILL__, window.undefined, window.undefined, window.undefined, 6, window.undefined, 2)
 }, {
     id: item.builderskill2,
     img: {
@@ -29322,7 +29183,7 @@ var items = [{
             m: 0
         }]
     },
-    detail: new vn("Builder 2", "Repair much faster", Ww.skill, window.undefined, window.undefined, window.undefined, 18, item.builderskill1)
+    detail: new vn("Builder 2", "Repair much faster", SKILLS.__SKILL__, window.undefined, window.undefined, window.undefined, 18, item.builderskill1)
 },
 
 
@@ -29339,7 +29200,7 @@ var items = [{
             m: 0
         }]
     },
-    detail: new vn("Inventory 1", "Add a slot in your inventory", Ww.skill, window.undefined, window.undefined, window.undefined, 0),
+    detail: new vn("Inventory 1", "Add a slot in your inventory", SKILLS.__SKILL__, window.undefined, window.undefined, window.undefined, 0),
     vvmNV: 1
 },
 
@@ -29355,7 +29216,7 @@ var items = [{
             m: 0
         }]
     },
-    detail: new vn("Inventory 2", "Add a slot in your inventory", Ww.skill, window.undefined, window.undefined, window.undefined, 5, item.inventoryskill1),
+    detail: new vn("Inventory 2", "Add a slot in your inventory", SKILLS.__SKILL__, window.undefined, window.undefined, window.undefined, 5, item.inventoryskill1),
     vvmNV: 1
 },
 
@@ -29371,7 +29232,7 @@ var items = [{
             m: 0
         }]
     },
-    detail: new vn("Inventory 3", "Add a slot in your bag", Ww.skill, window.undefined, window.undefined, window.undefined, 7, item.inventoryskill2),
+    detail: new vn("Inventory 3", "Add a slot in your bag", SKILLS.__SKILL__, window.undefined, window.undefined, window.undefined, 7, item.inventoryskill2),
     vvmNV: 1
 },
 
@@ -29387,7 +29248,7 @@ var items = [{
             m: 0
         }]
     },
-    detail: new vn("Inventory 4", "Add two slots in your bag", Ww.skill, window.undefined, window.undefined, window.undefined, 10, item.inventoryskill3, 2),
+    detail: new vn("Inventory 4", "Add two slots in your bag", SKILLS.__SKILL__, window.undefined, window.undefined, window.undefined, 10, item.inventoryskill3, 2),
     vvmNV: 2
 },
 
@@ -29403,7 +29264,7 @@ var items = [{
             m: 0
         }]
     },
-    detail: new vn("Inventory 5", "Add three slots in your bag", Ww.skill, window.undefined, window.undefined, window.undefined, 12, item.inventoryskill4, 3),
+    detail: new vn("Inventory 5", "Add three slots in your bag", SKILLS.__SKILL__, window.undefined, window.undefined, window.undefined, 12, item.inventoryskill4, 3),
     vvmNV: 3
 },
 
@@ -29422,79 +29283,79 @@ var items = [{
             m: 0
         }]
     },
-    detail: new vn("Light Weight", "Less likely to trigger traps.", Ww.skill, window.undefined, window.undefined, window.undefined, 8)
+    detail: new vn("Light Weight", "Less likely to trigger traps.", SKILLS.__SKILL__, window.undefined, window.undefined, window.undefined, 8)
 }];
-Nw = 0;
+COUNTER = 0;
 var nW = {
-    sofapart: Nw++,
-    sofapart2: Nw++,
-    sofapart3: Nw++,
-    WwvNW: Nw++,
-    NWNnm: Nw++,
-    bedpart: Nw++,
-    bedpart2: Nw++,
-    vWVWW: Nw++,
-    textnumberitem: Nw++,
-    WNVMm: Nw++,
-    NvWVV: Nw++,
-    NMvVn: Nw++,
-    VWw: Nw++,
-    MVvwm: Nw++,
-    mmV: Nw++,
-    wwVWW: Nw++,
-    NwvnV: Nw++,
-    vWwVv: Nw++,
-    safepart: Nw++,
-    vwNWV: Nw++,
-    wnMNM: Nw++,
-    WNWVm: Nw++,
-    nWwvV: Nw++,
-    MnWmv: Nw++,
-    vVV: Nw++,
-    vMw: Nw++,
-    garbagepart: Nw++,
-    mmwVV: Nw++,
-    VVvnV: Nw++,
-    nnMmW: Nw++,
-    MNmWW: Nw++,
-    NnwvW: Nw++,
-    Vnwmv: Nw++,
-    mmmwn: Nw++,
-    nNnVv: Nw++,
-    nnM: Nw++,
-    NvmwW: Nw++,
-    vwmnW: Nw++,
-    nmWMm: Nw++,
-    wNmMv: Nw++,
-    vWwmV: Nw++,
-    NNvnv: Nw++,
-    vNWWv: Nw++,
-    VWnwN: Nw++,
-    NWwwM: Nw++,
-    NMWVV: Nw++,
-    WVWWM: Nw++,
-    wVmWM: Nw++,
-    WmNvV: Nw++,
-    WmmNw: Nw++,
-    Mmvmn: Nw++,
-    VwWNv: Nw++,
-    NwwNM: Nw++,
-    NvVmW: Nw++,
-    MMmnW: Nw++,
-    nWNnm: Nw++,
-    nVwnn: Nw++,
-    VmNVm: Nw++,
-    NVwVM: Nw++
+    sofapart: COUNTER++,
+    sofapart2: COUNTER++,
+    sofapart3: COUNTER++,
+    WwvNW: COUNTER++,
+    NWNnm: COUNTER++,
+    bedpart: COUNTER++,
+    bedpart2: COUNTER++,
+    vWVWW: COUNTER++,
+    textnumberitem: COUNTER++,
+    WNVMm: COUNTER++,
+    NvWVV: COUNTER++,
+    NMvVn: COUNTER++,
+    VWw: COUNTER++,
+    MVvwm: COUNTER++,
+    mmV: COUNTER++,
+    wwVWW: COUNTER++,
+    NwvnV: COUNTER++,
+    vWwVv: COUNTER++,
+    safepart: COUNTER++,
+    vwNWV: COUNTER++,
+    wnMNM: COUNTER++,
+    WNWVm: COUNTER++,
+    nWwvV: COUNTER++,
+    MnWmv: COUNTER++,
+    vVV: COUNTER++,
+    vMw: COUNTER++,
+    garbagepart: COUNTER++,
+    mmwVV: COUNTER++,
+    VVvnV: COUNTER++,
+    nnMmW: COUNTER++,
+    MNmWW: COUNTER++,
+    NnwvW: COUNTER++,
+    Vnwmv: COUNTER++,
+    mmmwn: COUNTER++,
+    nNnVv: COUNTER++,
+    nnM: COUNTER++,
+    NvmwW: COUNTER++,
+    vwmnW: COUNTER++,
+    nmWMm: COUNTER++,
+    wNmMv: COUNTER++,
+    vWwmV: COUNTER++,
+    NNvnv: COUNTER++,
+    vNWWv: COUNTER++,
+    VWnwN: COUNTER++,
+    NWwwM: COUNTER++,
+    NMWVV: COUNTER++,
+    WVWWM: COUNTER++,
+    wVmWM: COUNTER++,
+    WmNvV: COUNTER++,
+    WmmNw: COUNTER++,
+    Mmvmn: COUNTER++,
+    VwWNv: COUNTER++,
+    NwwNM: COUNTER++,
+    NvVmW: COUNTER++,
+    MMmnW: COUNTER++,
+    nWNnm: COUNTER++,
+    nVwnn: COUNTER++,
+    VmNVm: COUNTER++,
+    NVwVM: COUNTER++
 };
-Nw = 0;
+COUNTER = 0;
 var MwmnM = items[item.NvMvM].nvN;
-MwmnM[Nw] = {
+MwmnM[COUNTER] = {
     width: [100, 100, 100, 100],
     height: [100, 100, 100, 100],
     inmapx: [0, 0, 0, 0],
     inmapy: [0, 0, 0, 0],
-    impactaudio: objectaudio.VNv,
-    destroyaudio: objectaudio.VNv,
+    impactaudio: SOUNDID.VNv,
+    destroyaudio: SOUNDID.VNv,
     Nn: {
         src: "img/day-road0.png",
         W: {
@@ -29519,9 +29380,9 @@ MwmnM[Nw] = {
     WmW: 315360000000
 };
 for (var i = 0; i < 45; i++) {
-    Nw++;
-    MwmnM[Nw] = window.JSON.parse(window.JSON.stringify(MwmnM[0]));
-    MwmnM[Nw].Nn.src = ("img/day-road" + Nw) + ".png";
+    COUNTER++;
+    MwmnM[COUNTER] = window.JSON.parse(window.JSON.stringify(MwmnM[0]));
+    MwmnM[COUNTER].Nn.src = ("img/day-road" + COUNTER) + ".png";
 }
 var VV = items[item.MMnVW].nvN;
 VV[nW.sofapart] = {
@@ -29529,8 +29390,8 @@ VV[nW.sofapart] = {
     height: [100, 100, 100, 100],
     inmapx: [0, 0, 0, 0],
     inmapy: [0, 0, 0, 0],
-    impactaudio: objectaudio.pillow,
-    destroyaudio: objectaudio.pillowdes,
+    impactaudio: SOUNDID.pillow,
+    destroyaudio: SOUNDID.pillowdes,
     Nn: {
         src: "img/day-sofa0.png",
         W: {
@@ -29581,8 +29442,8 @@ VV[nW.NNvnv].detail = new vn("", "", -1, [
 VV[nW.NNvnv].health = 7000;
 VV[nW.mmmwn] = window.JSON.parse(window.JSON.stringify(VV[nW.sofapart]));
 VV[nW.mmmwn].Nn.src = "img/day-electronic-box0.png";
-VV[nW.mmmwn].impactaudio = objectaudio.metal;
-VV[nW.mmmwn].destroyaudio = objectaudio.metaldes;
+VV[nW.mmmwn].impactaudio = SOUNDID.metal;
+VV[nW.mmmwn].destroyaudio = SOUNDID.metaldes;
 VV[nW.mmmwn].NWm = particulesitems.steel;
 VV[nW.mmmwn].detail = new vn("", "", -1, [
     [item.energycell, 8],
@@ -29628,8 +29489,8 @@ VV[nW.WmNvV].detail = new vn("", "", -1, [
 ]);
 VV[nW.vWVWW] = window.JSON.parse(window.JSON.stringify(VV[nW.sofapart]));
 VV[nW.vWVWW].Nn.src = "img/day-table0.png";
-VV[nW.vWVWW].impactaudio = objectaudio.wood;
-VV[nW.vWVWW].destroyaudio = objectaudio.wooddes;
+VV[nW.vWVWW].impactaudio = SOUNDID.wood;
+VV[nW.vWVWW].destroyaudio = SOUNDID.wooddes;
 VV[nW.vWVWW].NWm = particulesitems.wood;
 VV[nW.vWVWW].detail = new vn("", "", -1, [
     [item.wood, 200]
@@ -29644,16 +29505,16 @@ VV[nW.WVWWM].inmapx = [0, -90, 0, -90];
 VV[nW.WVWWM].inmapy = [-90, 0, -90, 0];
 VV[nW.nVwnn] = window.JSON.parse(window.JSON.stringify(VV[nW.vWVWW]));
 VV[nW.nVwnn].Nn.src = "img/day-table2.png";
-VV[nW.nVwnn].impactaudio = objectaudio.metal;
-VV[nW.nVwnn].destroyaudio = objectaudio.metaldes;
+VV[nW.nVwnn].impactaudio = SOUNDID.metal;
+VV[nW.nVwnn].destroyaudio = SOUNDID.metaldes;
 VV[nW.nVwnn].NWm = particulesitems.steel;
 VV[nW.nVwnn].detail = new vn("", "", -1, [
     [item.shapedmetal, 8]
 ]);
 VV[nW.textnumberitem] = window.JSON.parse(window.JSON.stringify(VV[nW.sofapart]));
 VV[nW.textnumberitem].Nn.src = "img/day-tv0.png";
-VV[nW.textnumberitem].impactaudio = objectaudio.metal;
-VV[nW.textnumberitem].destroyaudio = objectaudio.metaldes;
+VV[nW.textnumberitem].impactaudio = SOUNDID.metal;
+VV[nW.textnumberitem].destroyaudio = SOUNDID.metaldes;
 VV[nW.textnumberitem].NWm = particulesitems.safepart;
 VV[nW.textnumberitem].detail = new vn("", "", -1, [
     [item.electronicpart, 4],
@@ -29663,8 +29524,8 @@ VV[nW.textnumberitem].detail = new vn("", "", -1, [
 ]);
 VV[nW.WNVMm] = window.JSON.parse(window.JSON.stringify(VV[nW.sofapart]));
 VV[nW.WNVMm].Nn.src = "img/day-computer0.png";
-VV[nW.WNVMm].impactaudio = objectaudio.metal;
-VV[nW.WNVMm].destroyaudio = objectaudio.metaldes;
+VV[nW.WNVMm].impactaudio = SOUNDID.metal;
+VV[nW.WNVMm].destroyaudio = SOUNDID.metaldes;
 VV[nW.WNVMm].NWm = particulesitems.metalpart;
 VV[nW.WNVMm].detail = new vn("", "", -1, [
     [item.smallwire, 4],
@@ -29692,8 +29553,8 @@ VV[nW.NvVmW].detail = new vn("", "", -1, [
 ]);
 VV[nW.NMvVn] = window.JSON.parse(window.JSON.stringify(VV[nW.sofapart]));
 VV[nW.NMvVn].Nn.src = "img/day-washbasin0.png";
-VV[nW.NMvVn].impactaudio = objectaudio.wood;
-VV[nW.NMvVn].destroyaudio = objectaudio.wooddes;
+VV[nW.NMvVn].impactaudio = SOUNDID.wood;
+VV[nW.NMvVn].destroyaudio = SOUNDID.wooddes;
 VV[nW.NMvVn].NWm = particulesitems.woodpart;
 VV[nW.NMvVn].detail = new vn("", "", -1, [
     [item.wood, 150],
@@ -29705,8 +29566,8 @@ VV[nW.VVvnV].detail = new vn("", "", -1, [
     [item.shapedmetal, 8],
     [item.stone, 60]
 ]);
-VV[nW.VVvnV].impactaudio = objectaudio.stone;
-VV[nW.VVvnV].destroyaudio = objectaudio.stonedes;
+VV[nW.VVvnV].impactaudio = SOUNDID.stone;
+VV[nW.VVvnV].destroyaudio = SOUNDID.stonedes;
 VV[nW.VVvnV].NWm = particulesitems.toilet;
 VV[nW.VVvnV].WvwVM = 1;
 VV[nW.VVvnV].loot = [
@@ -29722,8 +29583,8 @@ VV[nW.nWNnm].detail = new vn("", "", -1, [
     [item.shapedmetal, 8],
     [item.stone, 60]
 ]);
-VV[nW.nWNnm].impactaudio = objectaudio.stone;
-VV[nW.nWNnm].destroyaudio = objectaudio.stonedes;
+VV[nW.nWNnm].impactaudio = SOUNDID.stone;
+VV[nW.nWNnm].destroyaudio = SOUNDID.stonedes;
 VV[nW.nWNnm].NWm = particulesitems.toilet;
 VV[nW.nWNnm].width = [70, 100, 70, 100];
 VV[nW.nWNnm].height = [100, 70, 100, 70];
@@ -29772,8 +29633,8 @@ VV[nW.wwVWW] = window.JSON.parse(window.JSON.stringify(VV[nW.mmV]));
 VV[nW.wwVWW].Nn.src = "img/day-furniture3.png";
 VV[nW.WmmNw] = window.JSON.parse(window.JSON.stringify(VV[nW.MVvwm]));
 VV[nW.WmmNw].Nn.src = "img/day-furniture4.png";
-VV[nW.WmmNw].impactaudio = objectaudio.metal;
-VV[nW.WmmNw].destroyaudio = objectaudio.metaldes;
+VV[nW.WmmNw].impactaudio = SOUNDID.metal;
+VV[nW.WmmNw].destroyaudio = SOUNDID.metaldes;
 VV[nW.WmmNw].NWm = particulesitems.greysteelpart;
 VV[nW.WmmNw].loot = [
     [item.headscarf, 1, 0.004],
@@ -29791,15 +29652,15 @@ VV[nW.WmmNw].loot = [
 ];
 VV[nW.Mmvmn] = window.JSON.parse(window.JSON.stringify(VV[nW.mmV]));
 VV[nW.Mmvmn].Nn.src = "img/day-furniture5.png";
-VV[nW.Mmvmn].impactaudio = objectaudio.metal;
-VV[nW.Mmvmn].destroyaudio = objectaudio.metaldes;
+VV[nW.Mmvmn].impactaudio = SOUNDID.metal;
+VV[nW.Mmvmn].destroyaudio = SOUNDID.metaldes;
 VV[nW.Mmvmn].NWm = particulesitems.greysteelpart;
 VV[nW.Mmvmn].loot = window.JSON.parse(window.JSON.stringify(VV[nW.WmmNw].loot));
 VV[nW.VwWNv] = window.JSON.parse(window.JSON.stringify(VV[nW.Mmvmn]));
 VV[nW.VwWNv].Nn.src = "img/day-furniture6.png";
 VV[nW.NwvnV] = window.JSON.parse(window.JSON.stringify(VV[nW.mmV]));
-VV[nW.NwvnV].impactaudio = objectaudio.pillow;
-VV[nW.NwvnV].destroyaudio = objectaudio.pillowdes;
+VV[nW.NwvnV].impactaudio = SOUNDID.pillow;
+VV[nW.NwvnV].destroyaudio = SOUNDID.pillowdes;
 VV[nW.NwvnV].Nn.src = "img/day-carton-box0.png";
 VV[nW.NwvnV].detail = new vn("", "", -1, []);
 VV[nW.NwvnV].WvwVM = 1;
@@ -29832,8 +29693,8 @@ VV[nW.NWwwM].Nn.src = "img/day-green-chair0.png";
 VV[nW.NWwwM].NWm = particulesitems.kakipart;
 VV[nW.NMWVV] = window.JSON.parse(window.JSON.stringify(VV[nW.VWnwN]));
 VV[nW.NMWVV].Nn.src = "img/day-wood-chair0.png";
-VV[nW.NMWVV].impactaudio = objectaudio.wood;
-VV[nW.NMWVV].destroyaudio = objectaudio.wooddes;
+VV[nW.NMWVV].impactaudio = SOUNDID.wood;
+VV[nW.NMWVV].destroyaudio = SOUNDID.wooddes;
 VV[nW.NMWVV].NWm = particulesitems.woodpart;
 VV[nW.MnWmv] = window.JSON.parse(window.JSON.stringify(VV[nW.mmV]));
 VV[nW.MnWmv].Nn.src = "img/day-plot0.png";
@@ -29846,8 +29707,8 @@ VV[nW.MnWmv].detail = new vn("", "", -1, [
 ]);
 VV[nW.MnWmv].WvwVM = 0;
 VV[nW.VmNVm] = window.JSON.parse(window.JSON.stringify(VV[nW.MnWmv]));
-VV[nW.VmNVm].impactaudio = objectaudio.metal;
-VV[nW.VmNVm].destroyaudio = objectaudio.metaldes;
+VV[nW.VmNVm].impactaudio = SOUNDID.metal;
+VV[nW.VmNVm].destroyaudio = SOUNDID.metaldes;
 VV[nW.VmNVm].Nn.src = "img/day-blood-transfusion.png";
 VV[nW.VmNVm].NWm = particulesitems.greysteelpart;
 var wNMNN = window.console;
@@ -29859,8 +29720,8 @@ VV[nW.VmNVm].detail = new vn("", "", -1, [
 ]);
 VV[nW.vVV] = window.JSON.parse(window.JSON.stringify(VV[nW.mmV]));
 VV[nW.vVV].Nn.src = "img/day-barel0.png";
-VV[nW.vVV].impactaudio = objectaudio.metal;
-VV[nW.vVV].destroyaudio = objectaudio.VNv;
+VV[nW.vVV].impactaudio = SOUNDID.metal;
+VV[nW.vVV].destroyaudio = SOUNDID.VNv;
 VV[nW.vVV].NWm = particulesitems.barrel;
 VV[nW.vVV].mwM = 1;
 VV[nW.vVV].damage = 250;
@@ -29877,8 +29738,8 @@ VV[nW.vVV].loot = [
 ];
 VV[nW.vMw] = window.JSON.parse(window.JSON.stringify(VV[nW.mmV]));
 VV[nW.vMw].Nn.src = "img/day-barel1.png";
-VV[nW.vMw].impactaudio = objectaudio.metal;
-VV[nW.vMw].destroyaudio = objectaudio.VNv;
+VV[nW.vMw].impactaudio = SOUNDID.metal;
+VV[nW.vMw].destroyaudio = SOUNDID.VNv;
 VV[nW.vMw].NWm = particulesitems.barrel2;
 VV[nW.vMw].mwM = 1;
 VV[nW.vMw].damage = 300;
@@ -29891,11 +29752,11 @@ VV[nW.vMw].detail = new vn("", "", -1, [
     [item.shapedmetal, 8]
 ]);
 VV[nW.vMw].WvwVM = 0;
-VV[nW.vMw].WnW = WMWwm;
+VV[nW.vMw].WnW = __RADIATION__;
 VV[nW.garbagepart] = window.JSON.parse(window.JSON.stringify(VV[nW.mmV]));
 VV[nW.garbagepart].Nn.src = "img/day-garbage-bag0.png";
-VV[nW.garbagepart].impactaudio = objectaudio.pillow;
-VV[nW.garbagepart].destroyaudio = objectaudio.pillowdes;
+VV[nW.garbagepart].impactaudio = SOUNDID.pillow;
+VV[nW.garbagepart].destroyaudio = SOUNDID.pillowdes;
 VV[nW.garbagepart].NWm = particulesitems.garbagepart;
 VV[nW.garbagepart].MMN = 2;
 VV[nW.garbagepart].wwW = 30;
@@ -29916,8 +29777,8 @@ VV[nW.garbagepart].loot = [
 ];
 VV[nW.vwNWV] = window.JSON.parse(window.JSON.stringify(VV[nW.VWw]));
 VV[nW.vwNWV].Nn.src = "img/day-fridge0.png";
-VV[nW.vwNWV].impactaudio = objectaudio.metal;
-VV[nW.vwNWV].destroyaudio = objectaudio.metaldes;
+VV[nW.vwNWV].impactaudio = SOUNDID.metal;
+VV[nW.vwNWV].destroyaudio = SOUNDID.metaldes;
 VV[nW.vwNWV].NWm = particulesitems.metalpart;
 VV[nW.vwNWV].detail = new vn("", "", -1, [
     [item.shapedmetal, 16],
@@ -29938,8 +29799,8 @@ VV[nW.wnMNM].Nn.src = "img/day-fridge1.png";
 VV[nW.wnMNM].NWm = particulesitems.fridge;
 VV[nW.wNmMv] = window.JSON.parse(window.JSON.stringify(VV[nW.VWw]));
 VV[nW.wNmMv].Nn.src = "img/day-vending-machine0.png";
-VV[nW.wNmMv].impactaudio = objectaudio.metal;
-VV[nW.wNmMv].destroyaudio = objectaudio.metaldes;
+VV[nW.wNmMv].impactaudio = SOUNDID.metal;
+VV[nW.wNmMv].destroyaudio = SOUNDID.metaldes;
 VV[nW.wNmMv].NWm = particulesitems.redsteelpart;
 VV[nW.wNmMv].detail = new vn("", "", -1, [
     [item.shapedmetal, 16],
@@ -29965,8 +29826,8 @@ VV[nW.MMmnW].loot = [
 ];
 VV[nW.vWwmV] = window.JSON.parse(window.JSON.stringify(VV[nW.MVvwm]));
 VV[nW.vWwmV].Nn.src = "img/day-cash-machine0.png";
-VV[nW.vWwmV].impactaudio = objectaudio.metal;
-VV[nW.vWwmV].destroyaudio = objectaudio.metaldes;
+VV[nW.vWwmV].impactaudio = SOUNDID.metal;
+VV[nW.vWwmV].destroyaudio = SOUNDID.metaldes;
 VV[nW.vWwmV].NWm = particulesitems.greysteelpart;
 VV[nW.vWwmV].detail = new vn("", "", -1, [
     [item.shapedmetal, 16],
@@ -29979,8 +29840,8 @@ VV[nW.mmwVV] = window.JSON.parse(window.JSON.stringify(VV[nW.VWw]));
 VV[nW.mmwVV].Nn.src = "img/day-cupboard0.png";
 VV[nW.mmwVV].NWm = particulesitems.wood;
 VV[nW.nnM] = window.JSON.parse(window.JSON.stringify(VV[nW.VWw]));
-VV[nW.nnM].impactaudio = objectaudio.metal;
-VV[nW.nnM].destroyaudio = objectaudio.metaldes;
+VV[nW.nnM].impactaudio = SOUNDID.metal;
+VV[nW.nnM].destroyaudio = SOUNDID.metaldes;
 VV[nW.nnM].Nn.src = "img/day-electronic-box2.png";
 VV[nW.nnM].NWm = particulesitems.steel;
 VV[nW.nnM].detail = new vn("", "", -1, [
@@ -30092,8 +29953,8 @@ VV[nW.nnMmW].loot = [
     [item.lasersubmachine, 1, 0.0005]
 ];
 VV[nW.NnwvW] = window.JSON.parse(window.JSON.stringify(VV[nW.nnMmW]));
-VV[nW.NnwvW].impactaudio = objectaudio.metal;
-VV[nW.NnwvW].destroyaudio = objectaudio.metaldes;
+VV[nW.NnwvW].impactaudio = SOUNDID.metal;
+VV[nW.NnwvW].destroyaudio = SOUNDID.metaldes;
 VV[nW.NnwvW].Nn.src = "img/day-ammo-locker1.png";
 VV[nW.NnwvW].NWm = particulesitems.greysteelpart;
 VV[nW.NnwvW].detail = new vn("", "", -1, [
@@ -30101,8 +29962,8 @@ VV[nW.NnwvW].detail = new vn("", "", -1, [
     [item.sulfur, 12]
 ]);
 VV[nW.Vnwmv] = window.JSON.parse(window.JSON.stringify(VV[nW.nnMmW]));
-VV[nW.Vnwmv].impactaudio = objectaudio.metal;
-VV[nW.Vnwmv].destroyaudio = objectaudio.metaldes;
+VV[nW.Vnwmv].impactaudio = SOUNDID.metal;
+VV[nW.Vnwmv].destroyaudio = SOUNDID.metaldes;
 VV[nW.Vnwmv].Nn.src = "img/day-ammo-locker2.png";
 VV[nW.Vnwmv].NWm = particulesitems.greysteelpart;
 VV[nW.Vnwmv].detail = new vn("", "", -1, [
@@ -30110,8 +29971,8 @@ VV[nW.Vnwmv].detail = new vn("", "", -1, [
     [item.sulfur, 12]
 ]);
 VV[nW.MNmWW] = window.JSON.parse(window.JSON.stringify(VV[nW.nnMmW]));
-VV[nW.MNmWW].impactaudio = objectaudio.metal;
-VV[nW.MNmWW].destroyaudio = objectaudio.metaldes;
+VV[nW.MNmWW].impactaudio = SOUNDID.metal;
+VV[nW.MNmWW].destroyaudio = SOUNDID.metaldes;
 VV[nW.MNmWW].Nn.src = "img/day-ammo-locker0.png";
 VV[nW.MNmWW].NWm = particulesitems.bluesteelpart;
 VV[nW.MNmWW].width = [70, 50, 70, 50];
@@ -30123,8 +29984,8 @@ VV[nW.MNmWW].detail = new vn("", "", -1, [
     [item.sulfur, 12]
 ]);
 VV[nW.safepart] = window.JSON.parse(window.JSON.stringify(VV[nW.VWw]));
-VV[nW.safepart].impactaudio = objectaudio.metal;
-VV[nW.safepart].destroyaudio = objectaudio.metaldes;
+VV[nW.safepart].impactaudio = SOUNDID.metal;
+VV[nW.safepart].destroyaudio = SOUNDID.metaldes;
 VV[nW.safepart].Nn.src = "img/day-safe0.png";
 VV[nW.safepart].NWm = particulesitems.safepart;
 VV[nW.safepart].detail = new vn("", "", -1, [
@@ -30165,8 +30026,8 @@ VV[nW.wVmWM] = window.JSON.parse(window.JSON.stringify(VV[nW.mmV]));
 VV[nW.wVmWM].Nn.src = "img/day-small-light-off.png";
 VV[nW.wVmWM].NWm = particulesitems.greysteelpart;
 VV[nW.WNWVm] = window.JSON.parse(window.JSON.stringify(VV[nW.vwNWV]));
-VV[nW.WNWVm].impactaudio = objectaudio.stone;
-VV[nW.WNWVm].destroyaudio = objectaudio.stonedes;
+VV[nW.WNWVm].impactaudio = SOUNDID.stone;
+VV[nW.WNWVm].destroyaudio = SOUNDID.stonedes;
 VV[nW.WNWVm].NWm = particulesitems.toilet;
 VV[nW.WNWVm].Nn.src = "img/day-toilet0.png";
 VV[nW.WNWVm].width = [50, 70, 50, 70];
@@ -31796,22 +31657,22 @@ var VNN = [{
     scale: 0.8,
     angle: 0
 }];
-var Nw = 0;
+var COUNTER = 0;
 var object = {
-    branchtree: Nw++,
-    stone: Nw++,
-    MNvVW: Nw++,
-    uranium: Nw++,
-    WnNVw: Nw++,
-    tree: Nw++,
-    orangebush: Nw++,
-    wVMnM: Nw++,
-    nVvNw: Nw++,
-    WmNvW: Nw++,
-    NNNNV: Nw++,
-    VvnNm: Nw++,
-    VWMMv: Nw++,
-    MMWwv: Nw++
+    branchtree: COUNTER++,
+    stone: COUNTER++,
+    MNvVW: COUNTER++,
+    uranium: COUNTER++,
+    WnNVw: COUNTER++,
+    tree: COUNTER++,
+    orangebush: COUNTER++,
+    wVMnM: COUNTER++,
+    nVvNw: COUNTER++,
+    WmNvW: COUNTER++,
+    NNNNV: COUNTER++,
+    VvnNm: COUNTER++,
+    VWMMv: COUNTER++,
+    MMWwv: COUNTER++
 };
 var nnv = [];
 var vMMww = 8;
@@ -31901,8 +31762,8 @@ nnv[object.branchtree] = {
         wwW: 30
     }],
     NWm: particulesitems.wood,
-    impactaudio: objectaudio.wood,
-    destroyaudio: objectaudio.wooddes,
+    impactaudio: SOUNDID.wood,
+    destroyaudio: SOUNDID.wooddes,
     mW: 5
 };
 nnv[object.tree] = {
@@ -32048,8 +31909,8 @@ nnv[object.tree] = {
         wwW: 54
     }],
     NWm: particulesitems.leaftree,
-    impactaudio: objectaudio.wood,
-    destroyaudio: objectaudio.wooddes,
+    impactaudio: SOUNDID.wood,
+    destroyaudio: SOUNDID.wooddes,
     mW: 5
 };
 nnv[object.stone] = {
@@ -32150,8 +32011,8 @@ nnv[object.stone] = {
         wwW: 41
     }],
     NWm: particulesitems.stone,
-    impactaudio: objectaudio.stone2,
-    destroyaudio: objectaudio.stonedes,
+    impactaudio: SOUNDID.stone2,
+    destroyaudio: SOUNDID.stonedes,
     mW: 15
 };
 nnv[object.MNvVW] = {
@@ -32222,8 +32083,8 @@ nnv[object.MNvVW] = {
         wwW: 50
     }],
     NWm: particulesitems.steel,
-    impactaudio: objectaudio.stone2,
-    destroyaudio: objectaudio.stonedes,
+    impactaudio: SOUNDID.stone2,
+    destroyaudio: SOUNDID.stonedes,
     mW: 40
 };
 nnv[object.WnNVw] = {
@@ -32279,8 +32140,8 @@ nnv[object.WnNVw] = {
         wwW: 38
     }],
     NWm: particulesitems.sulfur,
-    impactaudio: objectaudio.stone2,
-    destroyaudio: objectaudio.stonedes,
+    impactaudio: SOUNDID.stone2,
+    destroyaudio: SOUNDID.stonedes,
     mW: 70
 };
 nnv[object.uranium] = {
@@ -32288,7 +32149,7 @@ nnv[object.uranium] = {
     mvW: [0.3, 0.45, 0.6, 1],
     wmN: [item.sulfurpickaxe],
     WMw: [1],
-    WnW: WMWwm,
+    WnW: __RADIATION__,
     type: [{
         health: 6000,
         W: {
@@ -32336,8 +32197,8 @@ nnv[object.uranium] = {
         wwW: 42
     }],
     NWm: particulesitems.uranium,
-    impactaudio: objectaudio.stone2,
-    destroyaudio: objectaudio.stonedes,
+    impactaudio: SOUNDID.stone2,
+    destroyaudio: SOUNDID.stonedes,
     mW: 140
 };
 nnv[object.orangebush] = {
@@ -32429,8 +32290,8 @@ nnv[object.orangebush] = {
         wwW: 45
     }],
     NWm: particulesitems.orange,
-    impactaudio: objectaudio.VNv,
-    destroyaudio: objectaudio.VNv,
+    impactaudio: SOUNDID.VNv,
+    destroyaudio: SOUNDID.VNv,
     mW: 50
 };
 nnv[object.wVMnM] = {
@@ -32522,8 +32383,8 @@ nnv[object.wVMnM] = {
         wwW: 45
     }],
     NWm: particulesitems.tomato,
-    impactaudio: objectaudio.VNv,
-    destroyaudio: objectaudio.VNv,
+    impactaudio: SOUNDID.VNv,
+    destroyaudio: SOUNDID.VNv,
     mW: 50
 };
 nnv[object.nVvNw] = {
@@ -32549,8 +32410,8 @@ nnv[object.nVvNw] = {
         wwW: 47
     }],
     NWm: particulesitems.blood,
-    impactaudio: objectaudio.VNv,
-    destroyaudio: objectaudio.VNv,
+    impactaudio: SOUNDID.VNv,
+    destroyaudio: SOUNDID.VNv,
     mW: 40
 };
 nnv[object.WmNvW] = {
@@ -32576,8 +32437,8 @@ nnv[object.WmNvW] = {
         wwW: 53
     }],
     NWm: particulesitems.blood,
-    impactaudio: objectaudio.VNv,
-    destroyaudio: objectaudio.VNv,
+    impactaudio: SOUNDID.VNv,
+    destroyaudio: SOUNDID.VNv,
     mW: 40
 };
 nnv[object.NNNNV] = {
@@ -32648,8 +32509,8 @@ nnv[object.NNNNV] = {
         wwW: 32
     }],
     NWm: particulesitems.mushroom,
-    impactaudio: objectaudio.VNv,
-    destroyaudio: objectaudio.VNv,
+    impactaudio: SOUNDID.VNv,
+    destroyaudio: SOUNDID.VNv,
     mW: 40
 };
 nnv[object.MMWwv] = {
@@ -32675,8 +32536,8 @@ nnv[object.MMWwv] = {
         wwW: 32
     }],
     NWm: particulesitems.flower,
-    impactaudio: objectaudio.VNv,
-    destroyaudio: objectaudio.VNv,
+    impactaudio: SOUNDID.VNv,
+    destroyaudio: SOUNDID.VNv,
     mW: 1000
 };
 nnv[object.VvnNm] = {
@@ -32747,8 +32608,8 @@ nnv[object.VvnNm] = {
         wwW: 32
     }],
     NWm: particulesitems.mushroom2,
-    impactaudio: objectaudio.VNv,
-    destroyaudio: objectaudio.VNv,
+    impactaudio: SOUNDID.VNv,
+    destroyaudio: SOUNDID.VNv,
     mW: 40
 };
 nnv[object.VWMMv] = {
@@ -32819,8 +32680,8 @@ nnv[object.VWMMv] = {
         wwW: 32
     }],
     NWm: particulesitems.mushroom3,
-    impactaudio: objectaudio.VNv,
-    destroyaudio: objectaudio.VNv,
+    impactaudio: SOUNDID.VNv,
+    destroyaudio: SOUNDID.VNv,
     mW: 40
 };
 var wNWWn = [-26, 25, -7, 0];
@@ -32887,20 +32748,20 @@ var karma = [{
         m: 0
     }
 }];
-var Nw = 0;
+var COUNTER = 0;
 var vMW = {
-    mVVvn: Nw++,
-    mVmnm: Nw++,
-    MwWnV: Nw++,
-    wMmmw: Nw++,
-    vVMwW: Nw++,
-    MnmmV: Nw++,
-    VnMvm: Nw++,
-    MMVVM: Nw++,
-    nvMmm: Nw++,
-    VVVnN: Nw++,
-    vNmvW: Nw++,
-    vnMwV: Nw++
+    mVVvn: COUNTER++,
+    mVmnm: COUNTER++,
+    MwWnV: COUNTER++,
+    wMmmw: COUNTER++,
+    vVMwW: COUNTER++,
+    MnmmV: COUNTER++,
+    VnMvm: COUNTER++,
+    MMVVM: COUNTER++,
+    nvMmm: COUNTER++,
+    VVVnN: COUNTER++,
+    vNmvW: COUNTER++,
+    vnMwV: COUNTER++
 };
 var nWW = [];
 var vnwNv = {};
@@ -35360,7 +35221,7 @@ try {
         nWW[vMW.vNmvW] = {
             width: 0,
             height: 0,
-            nVv: WMWwm,
+            nVv: __RADIATION__,
             Nn: [
                 [nN],
                 [nN, nN, nN, nN, nN, nN, nN, nN, nN, nN, nN, nN, nN, nN, {
@@ -40732,16 +40593,16 @@ for (var i = 0; i < nWW.length; i++) {
         VnVmm.width = window.Math.max(vVNnW[j].length, VnVmm.width);
 }
 var VmwwM = [];
-VmwwM[station.firepart] = item.campfire;
-VmwwM[station.bbq] = item.campfirebbq;
-VmwwM[station.workbench] = item.workbench;
-VmwwM[station.researchbench] = item.researchbench;
-VmwwM[station.teslabench] = item.teslabench;
-VmwwM[station.smelter] = item.smelter;
-VmwwM[station.weavingmachine] = item.weavingmachine;
-VmwwM[station.composter] = item.composter;
-VmwwM[station.agitator] = item.agitator;
-VmwwM[station.extractor] = item.extractor;
+VmwwM[AREAS.firepart] = item.campfire;
+VmwwM[AREAS.bbq] = item.campfirebbq;
+VmwwM[AREAS.workbench] = item.workbench;
+VmwwM[AREAS.researchbench] = item.researchbench;
+VmwwM[AREAS.teslabench] = item.teslabench;
+VmwwM[AREAS.smelter] = item.smelter;
+VmwwM[AREAS.weavingmachine] = item.weavingmachine;
+VmwwM[AREAS.composter] = item.composter;
+VmwwM[AREAS.agitator] = item.agitator;
+VmwwM[AREAS.extractor] = item.extractor;
 var NWVnn = null;
 var ENTITIES2 = null;
 var NWwVV = null;
@@ -40765,8 +40626,8 @@ var nNnVn = [{
     health: 255
 }];
 var mvv = [];
-Nw = 0;
-mvv[Nw++] = [{
+COUNTER = 0;
+mvv[COUNTER++] = [{
     id: item.hachet,
     nM: 1,
     health: 255
@@ -40783,7 +40644,7 @@ mvv[Nw++] = [{
     nM: 1,
     health: 255
 }];
-mvv[Nw++] = [{
+mvv[COUNTER++] = [{
     id: item.hachet,
     nM: 1,
     health: 255
@@ -40800,7 +40661,7 @@ mvv[Nw++] = [{
     nM: 3,
     health: 255
 }];
-mvv[Nw++] = [{
+mvv[COUNTER++] = [{
     id: item.hachet,
     nM: 1,
     health: 255
@@ -40821,7 +40682,7 @@ mvv[Nw++] = [{
     nM: 4,
     health: 255
 }];
-mvv[Nw++] = [{
+mvv[COUNTER++] = [{
     id: item.hachet,
     nM: 1,
     health: 255
@@ -40846,7 +40707,7 @@ mvv[Nw++] = [{
     nM: 5,
     health: 255
 }];
-mvv[Nw++] = [{
+mvv[COUNTER++] = [{
     id: item.hachet,
     nM: 1,
     health: 255
@@ -40871,7 +40732,7 @@ mvv[Nw++] = [{
     nM: 1,
     health: 255
 }];
-mvv[Nw++] = [{
+mvv[COUNTER++] = [{
     id: item.hachet,
     nM: 1,
     health: 255
@@ -40896,7 +40757,7 @@ mvv[Nw++] = [{
     nM: 1,
     health: 255
 }];
-mvv[Nw++] = [{
+mvv[COUNTER++] = [{
     id: item.hachet,
     nM: 1,
     health: 255
@@ -40917,7 +40778,7 @@ mvv[Nw++] = [{
     nM: 2,
     health: 255
 }];
-mvv[Nw++] = [{
+mvv[COUNTER++] = [{
     id: item.hachet,
     nM: 1,
     health: 255
@@ -40942,7 +40803,7 @@ mvv[Nw++] = [{
     nM: 2,
     health: 255
 }];
-mvv[Nw++] = [{
+mvv[COUNTER++] = [{
     id: item.hachet,
     nM: 1,
     health: 255
@@ -40967,7 +40828,7 @@ mvv[Nw++] = [{
     nM: 3,
     health: 255
 }];
-mvv[Nw++] = [{
+mvv[COUNTER++] = [{
     id: item.hachet,
     nM: 1,
     health: 255
@@ -40996,7 +40857,7 @@ mvv[Nw++] = [{
     nM: 4,
     health: 255
 }];
-mvv[Nw++] = [{
+mvv[COUNTER++] = [{
     id: item.hachet,
     nM: 1,
     health: 255
@@ -41025,7 +40886,7 @@ mvv[Nw++] = [{
     nM: 4,
     health: 255
 }];
-mvv[Nw++] = [{
+mvv[COUNTER++] = [{
     id: item.hachet,
     nM: 1,
     health: 255
@@ -41054,7 +40915,7 @@ mvv[Nw++] = [{
     nM: 4,
     health: 255
 }];
-mvv[Nw++] = [{
+mvv[COUNTER++] = [{
     id: item.hachet,
     nM: 1,
     health: 255
@@ -41083,7 +40944,7 @@ mvv[Nw++] = [{
     nM: 4,
     health: 255
 }];
-mvv[Nw++] = [{
+mvv[COUNTER++] = [{
     id: item.hachet,
     nM: 1,
     health: 255
@@ -41116,7 +40977,7 @@ mvv[Nw++] = [{
     nM: 4,
     health: 255
 }];
-mvv[Nw++] = [{
+mvv[COUNTER++] = [{
     id: item.hachet,
     nM: 1,
     health: 255
@@ -41149,7 +41010,7 @@ mvv[Nw++] = [{
     nM: 4,
     health: 255
 }];
-mvv[Nw++] = [{
+mvv[COUNTER++] = [{
     id: item.hachet,
     nM: 1,
     health: 255
@@ -41182,7 +41043,7 @@ mvv[Nw++] = [{
     nM: 4,
     health: 255
 }];
-mvv[Nw++] = [{
+mvv[COUNTER++] = [{
     id: item.hachet,
     nM: 1,
     health: 255
@@ -41215,7 +41076,7 @@ mvv[Nw++] = [{
     nM: 4,
     health: 255
 }];
-mvv[Nw++] = [{
+mvv[COUNTER++] = [{
     id: item.hachet,
     nM: 1,
     health: 255
@@ -41248,7 +41109,7 @@ mvv[Nw++] = [{
     nM: 4,
     health: 255
 }];
-mvv[Nw++] = [{
+mvv[COUNTER++] = [{
     id: item.stoneaxe,
     nM: 1,
     health: 255
@@ -41281,7 +41142,7 @@ mvv[Nw++] = [{
     nM: 4,
     health: 255
 }];
-mvv[Nw++] = [{
+mvv[COUNTER++] = [{
     id: item.stoneaxe,
     nM: 1,
     health: 255
@@ -41314,7 +41175,7 @@ mvv[Nw++] = [{
     nM: 4,
     health: 255
 }];
-mvv[Nw++] = [{
+mvv[COUNTER++] = [{
     id: item.stoneaxe,
     nM: 1,
     health: 255
@@ -41347,7 +41208,7 @@ mvv[Nw++] = [{
     nM: 8,
     health: 255
 }];
-mvv[Nw++] = [{
+mvv[COUNTER++] = [{
     id: item.stoneaxe,
     nM: 1,
     health: 255
@@ -41380,7 +41241,7 @@ mvv[Nw++] = [{
     nM: 8,
     health: 255
 }];
-mvv[Nw++] = [{
+mvv[COUNTER++] = [{
     id: item.stoneaxe,
     nM: 1,
     health: 255
@@ -41413,7 +41274,7 @@ mvv[Nw++] = [{
     nM: 1,
     health: 255
 }];
-mvv[Nw++] = [{
+mvv[COUNTER++] = [{
     id: item.sulfurpickaxe,
     nM: 1,
     health: 255
@@ -41446,7 +41307,7 @@ mvv[Nw++] = [{
     nM: 1,
     health: 255
 }];
-mvv[Nw++] = [{
+mvv[COUNTER++] = [{
     id: item.sulfurpickaxe,
     nM: 1,
     health: 255
@@ -41479,7 +41340,7 @@ mvv[Nw++] = [{
     nM: 1,
     health: 255
 }];
-mvv[Nw++] = [{
+mvv[COUNTER++] = [{
     id: item.sulfurpickaxe,
     nM: 1,
     health: 255
@@ -41512,7 +41373,7 @@ mvv[Nw++] = [{
     nM: 1,
     health: 255
 }];
-mvv[Nw++] = [{
+mvv[COUNTER++] = [{
     id: item.sulfurpickaxe,
     nM: 1,
     health: 255
@@ -41545,7 +41406,7 @@ mvv[Nw++] = [{
     nM: 1,
     health: 255
 }];
-mvv[Nw++] = [{
+mvv[COUNTER++] = [{
     id: item.sulfurpickaxe,
     nM: 1,
     health: 255
@@ -41578,7 +41439,7 @@ mvv[Nw++] = [{
     nM: 1,
     health: 255
 }];
-mvv[Nw++] = [{
+mvv[COUNTER++] = [{
     id: item.sulfurpickaxe,
     nM: 1,
     health: 255
@@ -41611,7 +41472,7 @@ mvv[Nw++] = [{
     nM: 1,
     health: 255
 }];
-mvv[Nw++] = [{
+mvv[COUNTER++] = [{
     id: item.sulfurpickaxe,
     nM: 1,
     health: 255
@@ -41644,7 +41505,7 @@ mvv[Nw++] = [{
     nM: 1,
     health: 255
 }];
-mvv[Nw++] = [{
+mvv[COUNTER++] = [{
     id: item.sulfurpickaxe,
     nM: 1,
     health: 255
@@ -41677,20 +41538,20 @@ mvv[Nw++] = [{
     nM: 1,
     health: 255
 }];
-Nw = 0;
+COUNTER = 0;
 var hostile = {
-    yes: Nw++,
-    no: Nw++
+    yes: COUNTER++,
+    no: COUNTER++
 };
 var VVv = [];
-VVv[creatures.normghoul] = {
+VVv[AIID.__NORMAL_GHOUL__] = {
     vmWVv: 700,
     WVVvW: 550,
     NNNMM: 0.5,
     Wnwvw: 1,
     mode: hostile.yes,
     vNWnv: ((2 * 8) * 60) * 1000,
-    draw: Mw.MNN,
+    draw: Render.MNN,
     Vw: 0.05,
     NVwvN: 6,
     mMM: {
@@ -41751,14 +41612,14 @@ VVv[creatures.normghoul] = {
     WmW: ((2 * 8) * 60) * 1000,
     mW: 1200
 };
-VVv[creatures.speedghoul] = {
+VVv[AIID.__FAST_GHOUL__] = {
     vmWVv: 300,
     WVVvW: 150,
     NNNMM: 0.5,
     Wnwvw: 2,
     mode: hostile.yes,
     vNWnv: (((2 * 2) * 8) * 60) * 1000,
-    draw: Mw.MNN,
+    draw: Render.MNN,
     Vw: 0.05,
     NVwvN: 6,
     mMM: {
@@ -41819,14 +41680,14 @@ VVv[creatures.speedghoul] = {
     WmW: ((2 * 8) * 60) * 1000,
     mW: 1000
 };
-VVv[creatures.bombghoul] = {
+VVv[AIID.__EXPLOSIVE_GHOUL__] = {
     vmWVv: 500,
     WVVvW: 350,
     NNNMM: 0.5,
     Wnwvw: 4,
     mode: hostile.yes,
     vNWnv: (((3 * 2) * 8) * 60) * 1000,
-    draw: Mw.MNN,
+    draw: Render.MNN,
     Vw: 0.05,
     NVwvN: 6,
     mMM: {
@@ -41889,14 +41750,14 @@ VVv[creatures.bombghoul] = {
     WmW: ((2 * 8) * 60) * 1000,
     mW: 500
 };
-VVv[creatures.radghoul] = {
+VVv[AIID.__RADIOACTIVE_GHOUL__] = {
     vmWVv: 500,
     WVVvW: 350,
     NNNMM: 0.5,
     Wnwvw: 8,
     mode: hostile.yes,
     vNWnv: (((4 * 2) * 8) * 60) * 1000,
-    draw: Mw.MNN,
+    draw: Render.MNN,
     Vw: 0.05,
     NVwvN: 6,
     mMM: {
@@ -41946,7 +41807,7 @@ VVv[creatures.radghoul] = {
         [item.uranium, 4, Mv.uranium]
     ],
     mMW: 1,
-    WnW: WMWwm,
+    WnW: __RADIATION__,
     mwM: 0,
     mMNNv: 0,
     WWv: 0,
@@ -41957,14 +41818,14 @@ VVv[creatures.radghoul] = {
     WmW: ((2 * 8) * 60) * 1000,
     mW: 1500
 };
-VVv[creatures.armoredghoul] = {
+VVv[AIID.__ARMORED_GHOUL__] = {
     vmWVv: 700,
     WVVvW: 550,
     NNNMM: 0.5,
     Wnwvw: 16,
     mode: hostile.yes,
     vNWnv: (((5 * 2) * 8) * 60) * 1000,
-    draw: Mw.MNN,
+    draw: Render.MNN,
     Vw: 0.05,
     NVwvN: 6,
     mMM: {
@@ -42026,14 +41887,14 @@ VVv[creatures.armoredghoul] = {
     WmW: ((4 * 8) * 60) * 1000,
     mW: 5000
 };
-VVv[creatures.pumpkinghoul] = {
+VVv[AIID.__PUMPKIN_GHOUL__] = {
     vmWVv: 700,
     WVVvW: 550,
     NNNMM: 0.5,
     Wnwvw: 32,
     mode: hostile.yes,
     vNWnv: ((2 * 8) * 60) * 1000,
-    draw: Mw.MNN,
+    draw: Render.MNN,
     Vw: 0.05,
     NVwvN: 6,
     mMM: {
@@ -42093,14 +41954,14 @@ VVv[creatures.pumpkinghoul] = {
     WmW: ((2 * 8) * 60) * 1000,
     mW: 100
 };
-VVv[creatures.lapabot] = {
+VVv[AIID.__LAPABOT_REPAIR__] = {
     vmWVv: 700,
     WVVvW: 550,
     NNNMM: 0.5,
     Wnwvw: 0,
     mode: hostile.no,
     vNWnv: 0,
-    draw: Mw.MNN,
+    draw: Render.MNN,
     Vw: 0.05,
     NVwvN: 6,
     mMM: {
@@ -42160,14 +42021,14 @@ VVv[creatures.lapabot] = {
     WmW: ((2 * 8) * 60) * 1000,
     mW: 100
 };
-VVv[creatures.halbot] = {
+VVv[AIID.__HAL_BOT__] = {
     vmWVv: 550,
     WVVvW: 400,
     NNNMM: 0.5,
     Wnwvw: 0,
     mode: hostile.yes,
     vNWnv: 0,
-    draw: Mw.MNN,
+    draw: Render.MNN,
     Vw: 0.05,
     NVwvN: 6,
     mMM: {
@@ -42227,14 +42088,14 @@ VVv[creatures.halbot] = {
     WmW: ((2 * 8) * 60) * 1000,
     mW: 500
 };
-VVv[creatures.teslabot] = {
+VVv[AIID.__TESLA_BOT__] = {
     vmWVv: 700,
     WVVvW: 550,
     NNNMM: 0.5,
     Wnwvw: 0,
     mode: hostile.yes,
     vNWnv: 0,
-    draw: Mw.MNN,
+    draw: Render.MNN,
     Vw: 0.05,
     NVwvN: 6,
     mMM: {
@@ -42306,13 +42167,13 @@ try {
         VwM.Mv = Mv;
         VwM.object = object;
         VwM.nnv = nnv;
-        VwM.station = station;
-        VwM.Ww = Ww;
+        VwM.AREAS = AREAS;
+        VwM.SKILLS = SKILLS;
         VwM.mvv = mvv;
         VwM.nNnVn = nNnVn;
         VwM.VVv = VVv;
-        VwM.creatures = creatures;
-        VwM.vWN = vWN;
+        VwM.AIID = AIID;
+        VwM.BEHAVIOR = BEHAVIOR;
         for (var nMm = 0; nMm < 3; nMm++) {
             for (var i = 1; i < items.length; i++) {
                 var idd = items[i];
@@ -42433,7 +42294,7 @@ var vWn = (function() {
     audio.ww.NwmVN = new audio.mmn("audio/zipper-off.mp3", 0.7, false, 1);
     audio.ww.WmnwN = [new audio.mmn("audio/eat-1s-0.mp3", 1, false, 1), new audio.mmn("audio/eat-1s-1.mp3", 1, false, 1), new audio.mmn("audio/eat-1s-2.mp3", 1, false, 1)];
     audio.ww.damage = [];
-    for (var i = 1; i < audiodes.length; i++) audio.ww.damage[i] = new audio.mmn(audiodes[i], 1, false, 1);
+    for (var i = 1; i < SOUND.length; i++) audio.ww.damage[i] = new audio.mmn(SOUND[i], 1, false, 1);
     audio.ww.Nnn = [];
     var mNMNW = ENTITIES[INSplayers].mNMNW;
     for (var i = 0; i < mNMNW.length; i++) {
@@ -42532,11 +42393,11 @@ var vWn = (function() {
     };
 })();
 try {
-    wwwMN;
+    debugMode;
 } catch (error) {
-    wwwMN = window.undefined;
+    debugMode = window.undefined;
 }
-if (wwwMN === window.undefined) {
+if (debugMode === window.undefined) {
     window.aiptag = window.aiptag || ({});
     window.aiptag["consented"] = true;
     window.aiptag["cmd"] = window.aiptag["cmd"] || ([]);
@@ -42563,11 +42424,11 @@ if (wwwMN === window.undefined) {
     window.aiptag["cmd"]["player"].push(vNWmm); */
 }
 
-function NmwmN() {
+function reloadIframe() {
     try {
         if (window.self !== window.top) {
-            mVmvN = localStorage.getItem("inIframe");
-            if (mVmvN === "1") localStorage.setItem("inIframe", "0");
+            loaded = localStorage.getItem("inIframe");
+            if (loaded === "1") localStorage.setItem("inIframe", "0");
             else {
                 localStorage.setItem("inIframe", "1");
                 window.location.href = window.location.href + "";
@@ -42575,32 +42436,32 @@ function NmwmN() {
         }
     } catch (error) {}
 };
-NmwmN();
-var mMwwv = [30, 1758];
+reloadIframe();
+var versionInf = [30, 1758];
 try {
-    wwwMN;
+    debugMode;
 } catch (error) {
-    wwwMN = window.undefined;
+    debugMode = window.undefined;
 }
-INscreen.init(600, 30000, 5000);
-Client.init(30, 15000, 2000, 3, 60000, 10000, notstringdata, stringdata, datatosrv);
+Entitie.init(600, 30000, 5000);
+Client.init(30, 15000, 2000, 3, 60000, 10000, onMessageRaw, onMessageJSON, onFirstMessage);
 
-function loadmainscreen() {
-    siteelements = ((((((((true && (window.document.getElementById("nickname") !== null)) && (window.document.getElementById("terms") !== null)) && (window.document.getElementById("serverList") !== null)) && (window.document.getElementById("changelog") !== null)) && (window.document.getElementById("howtoplay") !== null)) && (window.document.getElementById("featuredVideo") !== null)) && (window.document.getElementById("trevda") !== null)) && (window.document.getElementById("preroll") !== null)) && (window.document.getElementById("chat") !== null);
-    if (siteelements === true) {
+function waitHTMLAndRun() {
+    htmlLoaded = ((((((((true && (window.document.getElementById("nickname") !== null)) && (window.document.getElementById("terms") !== null)) && (window.document.getElementById("serverList") !== null)) && (window.document.getElementById("changelog") !== null)) && (window.document.getElementById("howtoplay") !== null)) && (window.document.getElementById("featuredVideo") !== null)) && (window.document.getElementById("trevda") !== null)) && (window.document.getElementById("preroll") !== null)) && (window.document.getElementById("chat") !== null);
+    if (htmlLoaded === true) {
         Loader.init();
         Home.init();
-        ingamescreen.init();
-        nmmVv.init();
-        WvvMV.init();
-        mapeditor.init();
-        CanvasUtils.vwnNn(Loader, wVmNW, "can", "bod", 1280, window.undefined, true);
+        Game.init();
+        Score.init();
+        Rank.init();
+        Editor.init();
+        CanvasUtils.initAnimatedCanvas(Loader, __RESIZE_METHOD_SCALE__, "can", "bod", 1280, window.undefined, true);
         Loader.run();
-    } else window.setTimeout(loadmainscreen, 100);
+    } else window.setTimeout(waitHTMLAndRun, 100);
 };
 
 window.onbeforeunload = function() {
     if (Client.state & Client.binary.b1) return "Are you sure you want quit?";
 };
-loadmainscreen();
+waitHTMLAndRun();
 
