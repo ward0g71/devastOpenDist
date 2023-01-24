@@ -943,7 +943,7 @@ function onPlayerDie(unit8) {
     var player = Entitie.findEntitie(__ENTITIE_PLAYER__, World.PLAYER.id, 0);
     if (player !== null)
         Entitie.remove(player.pid, player.id, player.uid, player.type, 1);
-    World.PLAYER.nWwnN = (unit8[1] << 8) + unit8[2];
+    World.PLAYER.kill = (unit8[1] << 8) + unit8[2];
     Client.closeClient();
 };
 
@@ -981,35 +981,35 @@ function onHandshake(buf, unit8) {
     Entitie.unitsPerPlayer = unit16[1];
     World.playerNumber = unit8[4];
     World.gameMode = unit8[5];
-    World.PLAYER.WMWVW = -1;
+    World.PLAYER.lastScore = -1;
     World.PLAYER.exp = 0;
     World.PLAYER.click = 0;
     World.PLAYER.notification = [];
     World.PLAYER.notificationLevel = [];
-    World.PLAYER.holditem.inclick = 0;
+    World.PLAYER.drag.begin = 0;
     World.PLAYER.interaction = -1;
-    World.PLAYER.wVnVm = 0;
+    World.PLAYER.interactionDelay = 0;
     World.PLAYER.WMnWv = 0;
-    World.PLAYER.putableimg = 0;
+    World.PLAYER.blueprint = 0;
     World.PLAYER.buildRotate = 0;
-    World.PLAYER.NvwMN = 0;
+    World.PLAYER.hintRotate = 0;
     World.PLAYER.grid = 0;
-    for (var i = 0; i < World.PLAYER.Wvv.length; i++)
-        World.PLAYER.Wvv[i] = 0;
+    for (var i = 0; i < World.PLAYER.gridPrev.length; i++)
+        World.PLAYER.gridPrev[i] = 0;
     for (var i = 0; i < 8; i++)
-        World.PLAYER.MVmNm[i] = {
+        World.PLAYER.teamPos[i] = {
             old: 0,
             id: 0
         };
     World.PLAYER.karma = 0;
-    World.PLAYER.VvWnm = 0;
+    World.PLAYER.badKarmaDelay = 0;
     if (World.gameMode === World.__BR__)
-        World.PLAYER.VVvMn = 0.2;
+        World.PLAYER.craftFactor = 0.2;
     else if (World.gameMode === World.__GHOUL__)
-        World.PLAYER.VVvMn = 0.4;
+        World.PLAYER.craftFactor = 0.4;
     else
-        World.PLAYER.VVvMn = 1;
-    World.PLAYER.vVVnm = [
+        World.PLAYER.craftFactor = 1;
+    World.PLAYER.lastAreas = [
         [-1, -1],
         [-1, -1],
         [-1, -1],
@@ -1024,50 +1024,50 @@ function onHandshake(buf, unit8) {
         [-1, -1]
     ];
     if (World.gameMode !== World.__GHOUL__)
-        World.PLAYER.MnMWm = 10000000;
-    World.PLAYER.karmaplayerid = 0;
-    World.PLAYER.Wvv[i] = 0;
+        World.PLAYER.nextAreas = 10000000;
+    World.PLAYER.badKarma = 0;
+    World.PLAYER.gridPrev[i] = 0;
     World.PLAYER.isBuilding = 0;
-    World.PLAYER.wNV = 0;
-    World.PLAYER.NmWvw = 0;
-    World.PLAYER.mnWwv = 0;
+    World.PLAYER.warm = 0;
+    World.PLAYER.wrongTool = 0;
+    World.PLAYER.wrongToolTimer = 0;
     World.PLAYER.teamLeader = 0;
-    World.PLAYER.Mwnwv = 0;
-    World.PLAYER.mnVMN = [0, 0, 0, 0, 0];
-    World.PLAYER.mVVmv = 0;
-    World.PLAYER.wMnNv = 0;
-    World.PLAYER.wNw = 0;
+    World.PLAYER.teamDelay = 0;
+    World.PLAYER.teamQueue = [0, 0, 0, 0, 0];
+    World.PLAYER.teamCreateDelay = 0;
+    World.PLAYER.teamEffect = 0;
+    World.PLAYER.teamJoin = 0;
     World.PLAYER.team = -1;
-    World.PLAYER.MNvMn = 0;
-    World.PLAYER.Vvw = -1;
-    World.PLAYER.nVV = -1;
-    World.PLAYER.mMvww = -1;
-    World.PLAYER.WwVNv = 0;
+    World.PLAYER.craftLen = 0;
+    World.PLAYER.craftArea = -1;
+    World.PLAYER.craftCategory = -1;
+    World.PLAYER.craftSelected = -1;
+    World.PLAYER.crafting = 0;
     World.PLAYER.craftList = [];
-    World.PLAYER.vVN = [];
-    World.PLAYER.NmWNV = [];
-    World.PLAYER.nNNWn = [];
-    World.PLAYER.nMnmW = 0;
+    World.PLAYER.craftAvailable = [];
+    World.PLAYER.recipeAvailable = [];
+    World.PLAYER.recipeList = [];
+    World.PLAYER.recipeLen = 0;
     World.PLAYER.mwVMN = 0;
     World.PLAYER.wNvNm = 0;
-    World.PLAYER.nwnWV = [];
-    World.PLAYER.nWwmM = 0;
-    World.PLAYER.WvMVw = [];
+    World.PLAYER.toolsList = [];
+    World.PLAYER.toolsLen = 0;
+    World.PLAYER.skillUnlocked = [];
     World.PLAYER.level = 0;
-    World.PLAYER.nWwnN = 0;
-    World.PLAYER.mMv = 0;
-    World.PLAYER.canvasH = 0;
-    World.PLAYER.nmMWN = 0;
-    World.PLAYER.VVn = 0;
-    World.PLAYER.MVNWm = 0;
-    World.PLAYER.mwMmN = 0;
+    World.PLAYER.kill = 0;
+    World.PLAYER.xp = 0;
+    World.PLAYER.skillPoint = 0;
+    World.PLAYER.nextLevel = 0;
+    World.PLAYER.isInBuilding = 0;
+    World.PLAYER.isInChest = 0;
+    World.PLAYER.extraLoot = 0;
     Render.scale = 0;
-    World.PLAYER.Mwwnw = [];
-    World.PLAYER.wMwmv = 0;
+    World.PLAYER.toxicMap = [];
+    World.PLAYER.toxicStep = 0;
     for (var i = 0; i < 8; i++) {
-        World.PLAYER.Mwwnw[i] = [];
+        World.PLAYER.toxicMap[i] = [];
         for (var j = 0; j < 8; j++)
-            World.PLAYER.Mwwnw[i][j] = 0;
+            World.PLAYER.toxicMap[i][j] = 0;
     }
     var len = ENTITIES[__ENTITIE_PLAYER__].inventorySize;
     World.PLAYER.inventory = [];
@@ -1165,8 +1165,8 @@ function onDeleteItem(item) {
             invtr[i][1] = 0;
             invtr[i][2] = 0;
             invtr[i][3] = 0;
-            if ((Game.MvN() === 1) && (World.PLAYER.nVV === -1)) 
-                World.MwM(World.PLAYER.Vvw);
+            if ((Game.MvN() === 1) && (World.PLAYER.craftCategory === -1)) 
+                World.MwM(World.PLAYER.craftArea);
             return;
         }
     }
@@ -1181,8 +1181,8 @@ function onNewItem(item) {
             invtr[i][2] = item[3];
             invtr[i][3] = item[4];
             Game.inventory[i].setImages(items[item[1]].img.src, items[item[1]].img.W);
-            if ((Game.MvN() === 1) && (World.PLAYER.nVV === -1))
-                World.MwM(World.PLAYER.Vvw);
+            if ((Game.MvN() === 1) && (World.PLAYER.craftCategory === -1))
+                World.MwM(World.PLAYER.craftArea);
             return;
         }
     }
@@ -1219,8 +1219,8 @@ function onReplaceItem(item) {
     for (var i = 0; i < invtr.length; i++) {
         if ((((invtr[i][0] === item[1]) && (invtr[i][1] === item[2])) && (invtr[i][2] === item[3])) && (invtr[i][3] === item[4])) {
             invtr[i][1] = item[5];
-            if ((Game.MvN() === 1) && (World.PLAYER.nVV === -1))
-                World.MwM(World.PLAYER.Vvw);
+            if ((Game.MvN() === 1) && (World.PLAYER.craftCategory === -1))
+                World.MwM(World.PLAYER.craftArea);
             return;
         }
     }
@@ -1250,8 +1250,8 @@ function onStackItem(buf) {
         invtr[wWnWW][3] = 0;
         invtr[MNmNm][1] = NVwnN;
     }
-    if ((Game.MvN() === 1) && (World.PLAYER.nVV === -1))
-        World.MwM(World.PLAYER.Vvw);
+    if ((Game.MvN() === 1) && (World.PLAYER.craftCategory === -1))
+        World.MwM(World.PLAYER.craftArea);
 };
 
 function onSplitItem(buf) {
@@ -1272,8 +1272,8 @@ function onSplitItem(buf) {
         }
     }
     invtr[nvMvW][3] = invtr[VVmWn][3];
-    if ((Game.MvN() === 1) && (World.PLAYER.nVV === -1))
-        World.MwM(World.PLAYER.Vvw);
+    if ((Game.MvN() === 1) && (World.PLAYER.craftCategory === -1))
+        World.MwM(World.PLAYER.craftArea);
 };
 
 function onStaminaStop() {
@@ -1316,13 +1316,13 @@ function onReplaceAmmo(item) {
 
 function onStartInteraction(mM) {
     World.PLAYER.interaction = 1;
-    World.PLAYER.wVnVm = mM * 100;
-    World.PLAYER.nWVvv = World.PLAYER.wVnVm;
+    World.PLAYER.interactionDelay = mM * 100;
+    World.PLAYER.interactionWait = World.PLAYER.interactionDelay;
 };
 
 function onInterruptInteraction() {
     World.PLAYER.interaction = -1;
-    World.PLAYER.wVnVm = 0;
+    World.PLAYER.interactionDelay = 0;
 };
 
 function onReplaceItemAndAmmo(item) {
@@ -1331,15 +1331,15 @@ function onReplaceItemAndAmmo(item) {
         if ((((invtr[i][0] === item[1]) && (invtr[i][1] === item[2])) && (invtr[i][2] === item[3])) && (invtr[i][3] === item[4])) {
             invtr[i][1] = item[5];
             invtr[i][3] = item[6];
-            if ((Game.MvN() === 1) && (World.PLAYER.nVV === -1))
-                World.MwM(World.PLAYER.Vvw);
+            if ((Game.MvN() === 1) && (World.PLAYER.craftCategory === -1))
+                World.MwM(World.PLAYER.craftArea);
             return;
         }
     }
 };
 
-function onBlueprint(putableimg) {
-    World.PLAYER.putableimg = putableimg;
+function onBlueprint(blueprint) {
+    World.PLAYER.blueprint = blueprint;
 };
 
 function onDay() {
@@ -1349,20 +1349,20 @@ function onDay() {
 
 function onNight() {
     World.WMnVv(1, 0);
-    if (World.PLAYER.wNV === 0)
+    if (World.PLAYER.warm === 0)
         World.gauges.cold.vww = 1;
 };
 
-function onPlayerXp(mMv) {
-    World.PLAYER.mMv += mMv;
+function onPlayerXp(xp) {
+    World.PLAYER.xp += xp;
 };
 
 function onPlayerXpSkill(unit8) {
     var level = unit8[1];
     World.PLAYER.level = level;
-    World.PLAYER.nmMWN = World.VVMWm(level);
-    World.PLAYER.mMv = (((unit8[2] << 24) + (unit8[3] << 16)) + (unit8[4] << 8)) + unit8[5];
-    World.PLAYER.canvasH = level;
+    World.PLAYER.nextLevel = World.VVMWm(level);
+    World.PLAYER.xp = (((unit8[2] << 24) + (unit8[3] << 16)) + (unit8[4] << 8)) + unit8[5];
+    World.PLAYER.skillPoint = level;
     for (var i = 6; i < unit8.length; i++)
         onBoughtSkill(unit8[i]);
 };
@@ -1370,8 +1370,8 @@ function onPlayerXpSkill(unit8) {
 function onBoughtSkill(item) {
     if (item === 0)
         return;
-    World.PLAYER.WvMVw[item] = 1;
-    World.PLAYER.canvasH -= items[item].detail.wNvMv;
+    World.PLAYER.skillUnlocked[item] = 1;
+    World.PLAYER.skillPoint -= items[item].detail.wNvMv;
     var scaleby = items[item].scale;
     if (scaleby !== window.undefined)
         Render.scale = scaleby;
@@ -1382,20 +1382,20 @@ function onBoughtSkill(item) {
                 World.PLAYER.inventory.push([0, 0, 0, 0]);
         }
     }
-    if ((Game.MvN() === 1) && (World.PLAYER.nVV !== -1)) 
-        World.NVM(World.PLAYER.nVV);
+    if ((Game.MvN() === 1) && (World.PLAYER.craftCategory !== -1)) 
+        World.NVM(World.PLAYER.craftCategory);
 };
 
 function onStartCraft(Wn) {
-    if ((Game.MvN() === 1) && (World.PLAYER.Vvw === 0))
+    if ((Game.MvN() === 1) && (World.PLAYER.craftArea === 0))
         World.MwM(AREAS.own);
-    var delay = items[Wn].detail.NMMmV[0] * World.PLAYER.VVvMn;
-    World.PLAYER.WwVNv = window.Date.now() + delay;
-    World.PLAYER.WNvWv = delay;
+    var delay = items[Wn].detail.NMMmV[0] * World.PLAYER.craftFactor;
+    World.PLAYER.crafting = window.Date.now() + delay;
+    World.PLAYER.craftingMax = delay;
 };
 
 function onLostBuilding() {
-    if (((((Game.MvN() === 1) && (World.PLAYER.vwMWn !== -1)) && (World.PLAYER.nVV === -1)) && (World.PLAYER.Vvw !== AREAS.own)) || (World.PLAYER.MVNWm === 1))
+    if (((((Game.MvN() === 1) && (World.PLAYER.vwMWn !== -1)) && (World.PLAYER.craftCategory === -1)) && (World.PLAYER.craftArea !== AREAS.own)) || (World.PLAYER.isInChest === 1))
         Game.closebutt();
 };
 
@@ -1406,59 +1406,59 @@ function onOpenBuilding(unit8) {
     if (unit8[8] === 0) {
         AudioUtils.playFx(AudioUtils._fx.open, 1, 0);
         Game.nwmVV(1);
-        World.PLAYER.VVn = 1;
+        World.PLAYER.isInBuilding = 1;
     }
-    var craft = World.PLAYER.Nn;
+    var craft = World.PLAYER.building;
     var queue = craft.queue;
-    World.PLAYER.Nn.len = 4;
+    World.PLAYER.building.len = 4;
     for (var i = 0; i < 4; i++) {
         var item = unit8[i + 4];
         queue[i] = item;
         if (item !== 0)
             Game.queue[i].setImages(items[item].img.src, items[item].img.W);
         else {
-            World.PLAYER.Nn.len = i;
+            World.PLAYER.building.len = i;
             break;
         }
     }
     craft.pos = unit8[3];
     if (((((((MWW === AREAS.smelter) || (MWW === AREAS.firepart)) || (MWW === AREAS.composter)) || (MWW === AREAS.bbq)) || (MWW === AREAS.teslabench)) || (MWW === AREAS.agitator)) || (MWW === AREAS.extractor))
-        craft.MNM = unit8[9];
+        craft.fuel = unit8[9];
     else
-        craft.MNM = -1;
+        craft.fuel = -1;
     if (((queue[0] !== 0) && (craft.pos !== 4)) && (queue[craft.pos] !== 0)) {
         var item = items[queue[craft.pos]];
         var canvasZ = item.detail.MWW;
         for (i = 0; i < canvasZ.length; i++) {
             if (canvasZ[i] === MWW) {
-                craft.WWNVM = item.detail.NMMmV[i] * World.PLAYER.VVvMn;
+                craft.timeMax = item.detail.NMMmV[i] * World.PLAYER.craftFactor;
                 break;
             }
         }
-        craft.time = window.Date.now() + (craft.WWNVM * (unit8[2] / 255));
-    } else if (World.PLAYER.Nn.len === craft.pos)
+        craft.time = window.Date.now() + (craft.timeMax * (unit8[2] / 255));
+    } else if (World.PLAYER.building.len === craft.pos)
         craft.time = 0;
 };
 
 function onNewFuelValue(unit8) {
-    World.PLAYER.Nn.MNM = unit8[1];
+    World.PLAYER.building.fuel = unit8[1];
 };
 
 function onWarmOn() {
-    World.PLAYER.wNV = 1;
+    World.PLAYER.warm = 1;
     World.gauges.cold.vww = -1;
 };
 
 function onWarmOff() {
-    World.PLAYER.wNV = 0;
+    World.PLAYER.warm = 0;
     if ((World.nVM === 1) || (World.transition > 0))
         World.gauges.cold.vww = 1;
 };
 
 function onWrongTool(wmN) {
-    if (World.PLAYER.mnWwv <= 0) {
-        World.PLAYER.mnWwv = 2000;
-        World.PLAYER.NmWvw = wmN;
+    if (World.PLAYER.wrongToolTimer <= 0) {
+        World.PLAYER.wrongToolTimer = 2000;
+        World.PLAYER.wrongTool = wmN;
     }
 };
 
@@ -1500,7 +1500,7 @@ function onFullChest(unit8) {
 
     if (unit8[1] === 1) {
         Game.nwmVV(2);            
-        World.PLAYER.MVNWm = 1;            
+        World.PLAYER.isInChest = 1;            
         AudioUtils.playFx(AudioUtils._fx.open, 1, 0); 
     }
 
@@ -1557,12 +1557,12 @@ function onDeleteTeam(team) {
 };
 
 function onJoinTeam(PLAYER) {
-    var queue = World.PLAYER.mnVMN;
+    var queue = World.PLAYER.teamQueue;
     for (var i = 0; i < 5; i++) {
         if (queue[i] === 0) {
-            if (World.PLAYER.wNw === 0) {
-                World.PLAYER.wNw = PLAYER;
-                World.PLAYER.Mwnwv = 0;
+            if (World.PLAYER.teamJoin === 0) {
+                World.PLAYER.teamJoin = PLAYER;
+                World.PLAYER.teamDelay = 0;
             } else
                 queue[i] = PLAYER;
             return;
@@ -1572,7 +1572,7 @@ function onJoinTeam(PLAYER) {
 
 function onTeamPosition(unit8) {
     window.console.log(unit8);
-    var pos = World.PLAYER.MVmNm;
+    var pos = World.PLAYER.teamPos;
     var len = (unit8.length - 1) / 3;
     var j = 0;
     for (var i = 0; i < len; i++) {
@@ -1592,7 +1592,7 @@ function onTeamPosition(unit8) {
             j++;
         }
     }
-    World.PLAYER.nnnVN = j;
+    World.PLAYER.teamLength = j;
 };
 
 
@@ -1606,24 +1606,24 @@ function onBadKarma(unit8) {
         PLAYER.x = unit8[2] * Render.nnmMW;
         PLAYER.y = unit8[3] * Render.nnmMW;
         PLAYER.karma = unit8[4];
-        World.PLAYER.karmaplayerid = PLAYER.id;
-        World.PLAYER.VvWnm = 14000;
+        World.PLAYER.badKarma = PLAYER.id;
+        World.PLAYER.badKarmaDelay = 14000;
     }
 };
 
 function onAreas(unit8) {
-    World.PLAYER.wMwmv++;
-    World.PLAYER.MnMWm = unit8[1] * 1000;
+    World.PLAYER.toxicStep++;
+    World.PLAYER.nextAreas = unit8[1] * 1000;
     for (var nMm = 2; nMm < 14; nMm++) {
         if (unit8[nMm] === 100) {
-            World.PLAYER.vVVnm[nMm - 2][0] = -1;
-            World.PLAYER.vVVnm[nMm - 2][1] = -1;
+            World.PLAYER.lastAreas[nMm - 2][0] = -1;
+            World.PLAYER.lastAreas[nMm - 2][1] = -1;
         } else {
             var i = window.Math.floor(unit8[nMm] / 8);
             var j = unit8[nMm] % 8;
-            World.PLAYER.Mwwnw[i][j] = World.PLAYER.wMwmv;
-            World.PLAYER.vVVnm[nMm - 2][0] = i;
-            World.PLAYER.vVVnm[nMm - 2][1] = j;
+            World.PLAYER.toxicMap[i][j] = World.PLAYER.toxicStep;
+            World.PLAYER.lastAreas[nMm - 2][0] = i;
+            World.PLAYER.lastAreas[nMm - 2][1] = j;
         }
     }
     Render.mMWMV();
@@ -1643,10 +1643,10 @@ function onPlayerEat(Wn) {
         player.hurt2 = 300;
 };
 
-function onCitiesLocation(wmWvV) {
-    World.PLAYER.wmWvV = [];
-    for (var i = 1; i < wmWvV.length; i++)
-        World.PLAYER.wmWvV.push(wmWvV[i] * 100);
+function onCitiesLocation(cities) {
+    World.PLAYER.cities = [];
+    for (var i = 1; i < cities.length; i++)
+        World.PLAYER.cities.push(cities[i] * 100);
 };
 
 function onPoisened(delay) {
@@ -1668,7 +1668,7 @@ function onResetDrug(Wn, withdrawal) {
 };
 
 function onDramaticChrono(nnW) {
-    World.PLAYER.MnMWm = nnW * 10000;
+    World.PLAYER.nextAreas = nnW * 10000;
 };
 
 function onMessageRaw(buf) {
@@ -2463,15 +2463,15 @@ var World = (function() {
     };
 
     function MMVmW() {
-        PLAYER.wNw = 0;
-        for (var i = 0; i < PLAYER.mnVMN.length; i++) {
-            if (PLAYER.mnVMN[i] !== 0) {
-                PLAYER.wNw = PLAYER.mnVMN[i];
-                PLAYER.mnVMN[i] = 0;
+        PLAYER.teamJoin = 0;
+        for (var i = 0; i < PLAYER.teamQueue.length; i++) {
+            if (PLAYER.teamQueue[i] !== 0) {
+                PLAYER.teamJoin = PLAYER.teamQueue[i];
+                PLAYER.teamQueue[i] = 0;
                 return;
             }
         }
-        PLAYER.wMnNv = 0;
+        PLAYER.teamEffect = 0;
     };
 
     function Wwmvm(Wn) {
@@ -2505,8 +2505,8 @@ var World = (function() {
                 MMwww(units[border.cycle[j]]);
         }
         if (World.PLAYER.team !== -1) {
-            for (var i = 0; i < PLAYER.nnnVN; i++) {
-                var nmmvN = PLAYER.MVmNm[i];
+            for (var i = 0; i < PLAYER.teamLength; i++) {
+                var nmmvN = PLAYER.teamPos[i];
                 if (nmmvN.old < 0)
                     continue;
                 var wmW = World.socket[nmmvN.id];
@@ -2515,11 +2515,11 @@ var World = (function() {
                 nmmvN.old -= delta;
             }
         }
-        if (World.PLAYER.VvWnm > 0) {
-            var wmW = World.socket[World.PLAYER.karmaplayerid];
+        if (World.PLAYER.badKarmaDelay > 0) {
+            var wmW = World.socket[World.PLAYER.badKarma];
             wmW.rx = CanvasUtils.lerp(wmW.rx, wmW.x, 0.03);
             wmW.ry = CanvasUtils.lerp(wmW.ry, wmW.y, 0.03);
-            World.PLAYER.VvWnm -= delta;
+            World.PLAYER.badKarmaDelay -= delta;
         }
     };
 
@@ -2615,10 +2615,10 @@ var World = (function() {
             nVnwv(gauges.stamina, WvW.stamina._max, WvW.stamina.speedInc * 2, WvW.stamina.speedDec / 2, -1);
             nVnwv(gauges.rad, WvW.rad._max, WvW.rad.speedInc, 0, 0);
         }
-        nVnwv(gauges.mMv, 255, 0, 0, 0);
-        gauges.mMv.value = 0;
-        gauges.mMv.nnw = 0;
-        PLAYER.nmMWN = NwwNn;
+        nVnwv(gauges.xp, 255, 0, 0, 0);
+        gauges.xp.value = 0;
+        gauges.xp.nnw = 0;
+        PLAYER.nextLevel = NwwNn;
         if (nVM === NwVWM)
             gauges.cold.vww = 1;
     };
@@ -2637,7 +2637,7 @@ var World = (function() {
         nMmNW(gauges.cold);
         nMmNW(gauges.rad);
         nMmNW(gauges.stamina);
-        nMmNW(gauges.mMv);
+        nMmNW(gauges.xp);
         World.PLAYER.VWMmM += delta;
         if (gauges.rad.nnw > 254)
             AudioManager.vwMNW = 0;
@@ -2651,7 +2651,7 @@ var World = (function() {
         cold: new VmmnM,
         rad: new VmmnM,
         stamina: new VmmnM,
-        mMv: new VmmnM
+        xp: new VmmnM
     };
     var NwVWM = 1;
     var Mnvww = 0;
@@ -2723,8 +2723,8 @@ var World = (function() {
         var canvasZ = item.detail.MWW;
         var recipe = Game.recipe;
         var tools = Game.tools;
-        var nNNWn = PLAYER.nNNWn;
-        PLAYER.mMvww = Wn;
+        var recipeList = PLAYER.recipeList;
+        PLAYER.craftSelected = Wn;
         if (canvasZ !== window.undefined) {
             for (var i = 0; i < canvasZ.length; i++) {
                 var wmN = VmwwM[canvasZ[i]];
@@ -2735,30 +2735,30 @@ var World = (function() {
                 }
             }
         }
-        PLAYER.nWwmM = len;
+        PLAYER.toolsLen = len;
         len = 0;
         if (MWVwN !== window.undefined) {
             for (i = 0; i < MWVwN.length; i++) {
                 item = items[MWVwN[i][0]];
                 recipe[len].setImages(item.img.src, item.img.W);
-                nNNWn[len] = item.id;
+                recipeList[len] = item.id;
                 len++;
             }
         }
-        PLAYER.nMnmW = len;
+        PLAYER.recipeLen = len;
         MMMWN(MWVwN);
     };
 
     function NMvWv(Wn, NW) {
-        if ((PLAYER.WvMVw[Wn] === 1) || (NW.level === -1))
+        if ((PLAYER.skillUnlocked[Wn] === 1) || (NW.level === -1))
             return 2;
-        else if (((NW.level > PLAYER.level) || (PLAYER.canvasH < NW.wNvMv)) || ((NW.WnNmW !== -1) && (PLAYER.WvMVw[NW.WnNmW] === window.undefined)))
+        else if (((NW.level > PLAYER.level) || (PLAYER.skillPoint < NW.wNvMv)) || ((NW.WnNmW !== -1) && (PLAYER.skillUnlocked[NW.WnNmW] === window.undefined)))
             return 0;
         return 1;
     };
 
     function MMMWN(recipe) {
-        var MvmWv = PLAYER.NmWNV;
+        var MvmWv = PLAYER.recipeAvailable;
         var invtr = PLAYER.inventory;
         var mNmnm = 1;
         if (recipe === window.undefined)
@@ -2784,9 +2784,9 @@ var World = (function() {
     };
 
     function releaseBuilding() {
-        if ((World.PLAYER.VVn === 1) || (World.PLAYER.MVNWm === 1)) {
-            World.PLAYER.VVn = 0;
-            World.PLAYER.MVNWm = 0;
+        if ((World.PLAYER.isInBuilding === 1) || (World.PLAYER.isInChest === 1)) {
+            World.PLAYER.isInBuilding = 0;
+            World.PLAYER.isInChest = 0;
             Client.sendPacket("[17]");
         }
     };
@@ -2798,7 +2798,7 @@ var World = (function() {
         var len = 0;
         var craft = PLAYER.craftList;
         var craftList = Game.craft;
-        var vVN = PLAYER.vVN;
+        var craftAvailable = PLAYER.craftAvailable;
         for (var i = 1; i < items.length; i++) {
             var item = items[i];
             if (item.detail.nww === nww) {
@@ -2808,47 +2808,47 @@ var World = (function() {
                 }
                 craftList[len].setImages(item.img.src, item.img.W);
                 craft[len] = i;
-                vVN[len] = NMvWv(i, item.detail);
+                craftAvailable[len] = NMvWv(i, item.detail);
                 len++;
             }
         }
-        PLAYER.MNvMn = len;
-        PLAYER.Vvw = -1;
-        PLAYER.nVV = nww;
-        PLAYER.VNwww = vVWmn;
+        PLAYER.craftLen = len;
+        PLAYER.craftArea = -1;
+        PLAYER.craftCategory = nww;
+        PLAYER.craftIdSelected = vVWmn;
         NvwNN(nnNVM);
     };
 
     function MwM(MWW) {
         if (MWW === AREAS.own) {
             World.releaseBuilding();
-            PLAYER.Nn.MNM = -1;
+            PLAYER.building.fuel = -1;
         }
         var nnNVM = 0;
         var vVWmn = 0;
-        var WnNmW = World.PLAYER.mMvww;
+        var WnNmW = World.PLAYER.craftSelected;
         var len = 0;
         var craft = PLAYER.craftList;
-        var vVN = PLAYER.vVN;
+        var craftAvailable = PLAYER.craftAvailable;
         var craftList = Game.craft;
         for (var i = 1; i < items.length; i++) {
             var item = items[i];
             var NW = item.detail;
-            if (((NW.MWW !== window.undefined) && (NW.MWW.indexOf(MWW) !== -1)) && ((NW.level === -1) || (PLAYER.WvMVw[item.id] === 1))) {
+            if (((NW.MWW !== window.undefined) && (NW.MWW.indexOf(MWW) !== -1)) && ((NW.level === -1) || (PLAYER.skillUnlocked[item.id] === 1))) {
                 if ((nnNVM === 0) || (WnNmW === i)) {
                     nnNVM = i;
                     vVWmn = len;
                 }
                 craftList[len].setImages(item.img.src, item.img.W);
                 craft[len] = i;
-                vVN[len] = MMMWN(NW.recipe);
+                craftAvailable[len] = MMMWN(NW.recipe);
                 len++;
             }
         }
-        PLAYER.MNvMn = len;
-        PLAYER.Vvw = MWW;
-        PLAYER.nVV = -1;
-        PLAYER.VNwww = vVWmn;
+        PLAYER.craftLen = len;
+        PLAYER.craftArea = MWW;
+        PLAYER.craftCategory = -1;
+        PLAYER.craftIdSelected = vVWmn;
         if (nnNVM > 0)
             NvwNN(nnNVM);
     };
@@ -2856,30 +2856,30 @@ var World = (function() {
     wnvmW = 1.105;
 
     function VVMWm(vMN) {
-        var mMv = NwwNn;
+        var xp = NwwNn;
         for (var i = 0; i < vMN; i++)
-            mMv = window.Math.floor(mMv * wnvmW);
-        return mMv;
+            xp = window.Math.floor(xp * wnvmW);
+        return xp;
     };
 
     function vNvmW() {
-        if ((PLAYER.mMv > 0) && (window.Math.abs(gauges.mMv.nnw - gauges.mMv.value) < 0.6)) {
-            if (gauges.mMv.value === 255) {
-                gauges.mMv.nnw = 0;
-                gauges.mMv.value = 0;
+        if ((PLAYER.xp > 0) && (window.Math.abs(gauges.xp.nnw - gauges.xp.value) < 0.6)) {
+            if (gauges.xp.value === 255) {
+                gauges.xp.nnw = 0;
+                gauges.xp.value = 0;
                 PLAYER.level++;
-                PLAYER.canvasH++;
-                if ((Game.MvN() === 1) && (PLAYER.nVV !== -1))
-                    NVM(PLAYER.nVV);
+                PLAYER.skillPoint++;
+                if ((Game.MvN() === 1) && (PLAYER.craftCategory !== -1))
+                    NVM(PLAYER.craftCategory);
                 AudioUtils.playFx(AudioUtils._fx.nNwmw, 1, 0);
                 return;
             }
-            if (PLAYER.mMv >= PLAYER.nmMWN) {
-                gauges.mMv.value = 255;
-                PLAYER.mMv -= PLAYER.nmMWN;
-                PLAYER.nmMWN = window.Math.floor(PLAYER.nmMWN * wnvmW);
+            if (PLAYER.xp >= PLAYER.nextLevel) {
+                gauges.xp.value = 255;
+                PLAYER.xp -= PLAYER.nextLevel;
+                PLAYER.nextLevel = window.Math.floor(PLAYER.nextLevel * wnvmW);
             } else
-                gauges.mMv.value = window.Math.floor((255 * PLAYER.mMv) / PLAYER.nmMWN);
+                gauges.xp.value = window.Math.floor((255 * PLAYER.xp) / PLAYER.nextLevel);
         }
     };
     var PLAYER = {
@@ -2889,106 +2889,106 @@ var World = (function() {
         _i: 0,
         _j: 0,
         score: 0,
-        WMWVW: -1,
-        MnWnn: 0,
+        lastScore: -1,
+        inLeaderboard: 0,
         scoreLabel: null,
         click: 0,
         inventory: [],
-        nMnmW: 0,
-        nWwmM: 0,
-        nwnWV: 0,
-        MNvMn: 0,
-        VVn: 0,
-        MVNWm: 0,
-        Vvw: -1,
-        nVV: -1,
-        mMvww: -1,
-        VNwww: -1,
-        WvMVw: [],
+        recipeLen: 0,
+        toolsLen: 0,
+        toolsList: 0,
+        craftLen: 0,
+        isInBuilding: 0,
+        isInChest: 0,
+        craftArea: -1,
+        craftCategory: -1,
+        craftSelected: -1,
+        craftIdSelected: -1,
+        skillUnlocked: [],
         level: 0,
-        nWwnN: 0,
-        mMv: 0,
-        nmMWN: 0,
-        canvasH: 0,
-        nNNWn: [],
+        kill: 0,
+        xp: 0,
+        nextLevel: 0,
+        skillPoint: 0,
+        recipeList: [],
         craftList: [],
-        vVN: [],
-        NmWNV: [],
-        WwVNv: 0,
-        WNvWv: 0,
-        holditem: {
-            inclick: 0,
+        craftAvailable: [],
+        recipeAvailable: [],
+        crafting: 0,
+        craftingMax: 0,
+        drag: {
+            begin: 0,
             x: 0,
             y: 0,
             id: 0
         },
-        MWVMV: null,
+        eInteract: null,
         interaction: -1,
-        wVnVm: 0,
-        nWVvv: 0,
+        interactionDelay: 0,
+        interactionWait: 0,
         loot: -1,
-        lootsrvID: -1,
-        mwMmN: 0,
-        NnN: -1,
-        vWMmW: -1,
-        MnMwn: -1,
-        MNMvN: -1,
+        lootId: -1,
+        extraLoot: 0,
+        packetId: -1,
+        buildingArea: -1,
+        buildingId: -1,
+        buildingPid: -1,
         chest: [
             [0, 0, 0, 0],
             [0, 0, 0, 0],
             [0, 0, 0, 0],
             [0, 0, 0, 0]
         ],
-        mwmVM: 0,
-        Nn: {
+        chestLen: 0,
+        building: {
             queue: [0, 0, 0, 0],
             pos: 0,
             time: 0,
-            WWNVM: 0,
+            timeMax: 0,
             len: 0,
-            MNM: 0
+            fuel: 0
         },
-        putableimg: 0,
-        mWmnv: 0,
+        blueprint: 0,
+        furniture: 0,
         buildRotate: 0,
-        NvwMN: 0,
+        hintRotate: 0,
         grid: 0,
-        Wvv: [0, 0, 0],
-        VWVWw: 0,
-        vNwMm: 0,
-        NVNMw: [0, 0, 0],
-        NmVnm: [0, 0, 0],
+        gridPrev: [0, 0, 0],
+        iGrid: 0,
+        jGrid: 0,
+        iGridPrev: [0, 0, 0],
+        jGridPrev: [0, 0, 0],
         isBuilding: 0,
         iBuild: 0,
         jBuild: 0,
         canBuild: 0,
-        wNV: 0,
-        NmWvw: 0,
-        mnWwv: 0,
-        wMnNv: 0,
+        warm: 0,
+        wrongTool: 0,
+        wrongToolTimer: 0,
+        teamEffect: 0,
         teamLeader: 0,
-        WnNvv: 0,
-        Mwnwv: 0,
+        teamLocked: 0,
+        teamDelay: 0,
         teamNameValid: 0,
-        mVVmv: 0,
-        mnVMN: [0, 0, 0, 0, 0],
-        wNw: 0,
-        Mwnwv: 0,
+        teamCreateDelay: 0,
+        teamQueue: [0, 0, 0, 0, 0],
+        teamJoin: 0,
+        teamDelay: 0,
         team: -1,
-        MVmNm: [],
-        nnnVN: 0,
+        teamPos: [],
+        teamLength: 0,
         karma: 0,
-        karmaplayerid: 0,
-        VvWnm: 0,
-        vVVnm: null,
-        MnMWm: 0,
-        VVvMn: 1,
-        VmNwm: 0,
-        Mwwnw: 0,
-        wMwmv: 0,
+        badKarma: 0,
+        badKarmaDelay: 0,
+        lastAreas: null,
+        nextAreas: 0,
+        craftFactor: 1,
+        timePlayed: 0,
+        toxicMap: 0,
+        toxicStep: 0,
         admin: 0,
         ghoul: 0,
-        wmWvV: []
+        cities: []
     };
     return {
         __SURVIVAL__: 0,
@@ -4836,7 +4836,7 @@ var ENTITIES = [{
         breath: 0.05,
         move: 3,
         malusSpeed: 0,
-        putableimg: {
+        blueprint: {
             src: "img/day-hand-craft.png",
             W: {
                 isLoaded: 0
@@ -9329,7 +9329,7 @@ var Game = (function() {
             update();
             if (MNw < 0) {
                 mwm = 0;
-                World.PLAYER.VmNwm = window.Date.now();
+                World.PLAYER.timePlayed = window.Date.now();
                 MmNNN();
             }
             MNw -= delta;
@@ -9361,7 +9361,7 @@ var Game = (function() {
         if (leaderboardbutt2.trigger() === 1) {
             vnm = 1;
         }
-        if (World.PLAYER.wNw !== 0) {
+        if (World.PLAYER.teamJoin !== 0) {
             if ((joinbutt.trigger() === 1) || (deletebuttout.trigger() === 1)) vnm = 1;
         }
         if (NmW === 1) {
@@ -9380,24 +9380,24 @@ var Game = (function() {
                 wVwnm.trigger();
                 wwMwv.trigger();
             } else if (isCraftOpen === 1) {
-                if (World.PLAYER.nVV === -1) {
-                    if ((World.PLAYER.WwVNv === 0) || (World.PLAYER.VVn === 1)) craftbutt.trigger();
+                if (World.PLAYER.craftCategory === -1) {
+                    if ((World.PLAYER.crafting === 0) || (World.PLAYER.isInBuilding === 1)) craftbutt.trigger();
                     else cancelbutt.trigger();
-                    if ((((World.PLAYER.Vvw === AREAS.firepart) || (World.PLAYER.Vvw === AREAS.bbq)) || (World.PLAYER.Vvw === AREAS.composter)) && (World.PLAYER.Nn.MNM !== 255)) VWNWV.trigger();
-                    else if ((((World.PLAYER.Vvw === AREAS.smelter) || (World.PLAYER.Vvw === AREAS.extractor)) || (World.PLAYER.Vvw === AREAS.agitator)) && (World.PLAYER.Nn.MNM !== 255)) WmWwW.trigger();
+                    if ((((World.PLAYER.craftArea === AREAS.firepart) || (World.PLAYER.craftArea === AREAS.bbq)) || (World.PLAYER.craftArea === AREAS.composter)) && (World.PLAYER.building.fuel !== 255)) VWNWV.trigger();
+                    else if ((((World.PLAYER.craftArea === AREAS.smelter) || (World.PLAYER.craftArea === AREAS.extractor)) || (World.PLAYER.craftArea === AREAS.agitator)) && (World.PLAYER.building.fuel !== 255)) WmWwW.trigger();
                 } else unlockbuttout.trigger();
                 for (var i = 0; i < wnV.length; i++) wnV[i].trigger();
                 for (i = 0; i < craftList.length; i++) {
-                    if ((World.PLAYER.vWMmW === i) || (i === 0)) craftList[i].trigger();
+                    if ((World.PLAYER.buildingArea === i) || (i === 0)) craftList[i].trigger();
                 }
-                var len = World.PLAYER.MNvMn;
+                var len = World.PLAYER.craftLen;
                 for (var i = 0; i < len; i++) craft[i].trigger();
-                len = World.PLAYER.nMnmW;
+                len = World.PLAYER.recipeLen;
                 for (i = 0; i < len; i++) recipe[i].trigger();
-                if (World.PLAYER.VVn === 1) {
-                    for (i = 0; i < World.PLAYER.Nn.len; i++) queue[i].trigger();
+                if (World.PLAYER.isInBuilding === 1) {
+                    for (i = 0; i < World.PLAYER.building.len; i++) queue[i].trigger();
                 }
-                len = World.PLAYER.nWwmM;
+                len = World.PLAYER.toolsLen;
                 for (i = 0; i < len; i++) tools[i].trigger();
                 preview.trigger();
             }
@@ -9410,12 +9410,12 @@ var Game = (function() {
             if (inventory[i].trigger() === 1) {
                 vnm = 1;
                 if (invtr[i][0] !== 0) {
-                    var holditem = World.PLAYER.holditem;
-                    if (holditem.inclick === 0) {
-                        holditem.inclick = 1;
-                        holditem.x = Mouse.x;
-                        holditem.y = Mouse.y;
-                        holditem.id = i;
+                    var drag = World.PLAYER.drag;
+                    if (drag.begin === 0) {
+                        drag.begin = 1;
+                        drag.x = Mouse.x;
+                        drag.y = Mouse.y;
+                        drag.id = i;
                     }
                 }
             } else if (isChestOpen === 1) {
@@ -9553,10 +9553,10 @@ var Game = (function() {
             AudioUtils.playFx(AudioUtils._fx.button, 1, 0);
             return;
         }
-        var holditem = World.PLAYER.holditem;
-        if (World.PLAYER.wNw !== 0) {
+        var drag = World.PLAYER.drag;
+        if (World.PLAYER.teamJoin !== 0) {
             if (joinbutt.trigger() === 1) {
-                Client.sendPacket(window.JSON.stringify([31, World.PLAYER.wNw]));
+                Client.sendPacket(window.JSON.stringify([31, World.PLAYER.teamJoin]));
                 AudioUtils.playFx(AudioUtils._fx.button, 1, 0);
                 World.MMVmW();
                 return;
@@ -9649,30 +9649,30 @@ var Game = (function() {
                     return;
                 }
             } else if (isCraftOpen === 1) {
-                if (World.PLAYER.nVV === -1) {
-                    if ((World.PLAYER.WwVNv === 0) || (World.PLAYER.VVn === 1)) {
-                        if ((World.PLAYER.vVN[World.PLAYER.VNwww] === 1) && (craftbutt.trigger() === 1)) {
-                            if (World.PLAYER.VVn === 1) {
-                                if ((World.PLAYER.Nn.MNM !== 0) && (World.PLAYER.Nn.len < 4)) {
-                                    Client.sendPacket(window.JSON.stringify([18, World.PLAYER.mMvww]));
+                if (World.PLAYER.craftCategory === -1) {
+                    if ((World.PLAYER.crafting === 0) || (World.PLAYER.isInBuilding === 1)) {
+                        if ((World.PLAYER.craftAvailable[World.PLAYER.craftIdSelected] === 1) && (craftbutt.trigger() === 1)) {
+                            if (World.PLAYER.isInBuilding === 1) {
+                                if ((World.PLAYER.building.fuel !== 0) && (World.PLAYER.building.len < 4)) {
+                                    Client.sendPacket(window.JSON.stringify([18, World.PLAYER.craftSelected]));
                                     AudioUtils.playFx(AudioUtils._fx.craft, 0.8, 0);
                                 }
                             } else {
-                                Client.sendPacket(window.JSON.stringify([22, World.PLAYER.mMvww]));
+                                Client.sendPacket(window.JSON.stringify([22, World.PLAYER.craftSelected]));
                                 AudioUtils.playFx(AudioUtils._fx.craft, 0.8, 0);
                             }
                             craftbutt.setState(GUI.__BUTTON_OUT__);
                         }
                     } else if (cancelbutt.trigger() === 1) {
                         Client.sendPacket(window.JSON.stringify([23]));
-                        World.PLAYER.WwVNv = 0;
+                        World.PLAYER.crafting = 0;
                         cancelbutt.setState(GUI.__BUTTON_OUT__);
                         AudioUtils.playFx(AudioUtils._fx.button, 1, 0);
                     }
                 } else {
                     if (unlockbuttout.trigger() === 1) {
-                        if (World.PLAYER.vVN[World.PLAYER.VNwww] === 1) {
-                            Client.sendPacket(window.JSON.stringify([21, World.PLAYER.mMvww]));
+                        if (World.PLAYER.craftAvailable[World.PLAYER.craftIdSelected] === 1) {
+                            Client.sendPacket(window.JSON.stringify([21, World.PLAYER.craftSelected]));
                             AudioUtils.playFx(AudioUtils._fx.nwVvN, 1, 0);
                         }
                     }
@@ -9711,62 +9711,62 @@ var Game = (function() {
                     World.MwM(AREAS.own);
                     AudioUtils.playFx(AudioUtils._fx.button, 1, 0);
                 } else if (((craftList[AREAS.firepart].trigger() === 1) || (craftList[AREAS.bbq].trigger() === 1)) || (craftList[AREAS.composter].trigger() === 1)) {
-                    Client.sendPacket(window.JSON.stringify([World.PLAYER.NnN, World.PLAYER.MnMwn, World.PLAYER.MNMvN]));
+                    Client.sendPacket(window.JSON.stringify([World.PLAYER.packetId, World.PLAYER.buildingId, World.PLAYER.buildingPid]));
                     AudioUtils.playFx(AudioUtils._fx.button, 1, 0);
                 } else if (craftList[AREAS.workbench].trigger() === 1) {
-                    Client.sendPacket(window.JSON.stringify([World.PLAYER.NnN, World.PLAYER.MnMwn, World.PLAYER.MNMvN]));
+                    Client.sendPacket(window.JSON.stringify([World.PLAYER.packetId, World.PLAYER.buildingId, World.PLAYER.buildingPid]));
                     AudioUtils.playFx(AudioUtils._fx.button, 1, 0);
                 } else if (craftList[AREAS.weldingmachine].trigger() === 1) {
-                    Client.sendPacket(window.JSON.stringify([World.PLAYER.NnN, World.PLAYER.MnMwn, World.PLAYER.MNMvN]));
+                    Client.sendPacket(window.JSON.stringify([World.PLAYER.packetId, World.PLAYER.buildingId, World.PLAYER.buildingPid]));
                     AudioUtils.playFx(AudioUtils._fx.button, 1, 0);
                 } else if (craftList[AREAS.weavingmachine].trigger() === 1) {
-                    Client.sendPacket(window.JSON.stringify([World.PLAYER.NnN, World.PLAYER.MnMwn, World.PLAYER.MNMvN]));
+                    Client.sendPacket(window.JSON.stringify([World.PLAYER.packetId, World.PLAYER.buildingId, World.PLAYER.buildingPid]));
                     AudioUtils.playFx(AudioUtils._fx.button, 1, 0);
                 } else if (craftList[AREAS.researchbench].trigger() === 1) {
-                    Client.sendPacket(window.JSON.stringify([World.PLAYER.NnN, World.PLAYER.MnMwn, World.PLAYER.MNMvN]));
+                    Client.sendPacket(window.JSON.stringify([World.PLAYER.packetId, World.PLAYER.buildingId, World.PLAYER.buildingPid]));
                     AudioUtils.playFx(AudioUtils._fx.button, 1, 0);
                 } else if (craftList[AREAS.teslabench].trigger() === 1) {
-                    Client.sendPacket(window.JSON.stringify([World.PLAYER.NnN, World.PLAYER.MnMwn, World.PLAYER.MNMvN]));
+                    Client.sendPacket(window.JSON.stringify([World.PLAYER.packetId, World.PLAYER.buildingId, World.PLAYER.buildingPid]));
                     AudioUtils.playFx(AudioUtils._fx.button, 1, 0);
                 } else if (((craftList[AREAS.smelter].trigger() === 1) || (craftList[AREAS.extractor].trigger() === 1)) || (craftList[AREAS.agitator].trigger() === 1)) {
-                    Client.sendPacket(window.JSON.stringify([World.PLAYER.NnN, World.PLAYER.MnMwn, World.PLAYER.MNMvN]));
+                    Client.sendPacket(window.JSON.stringify([World.PLAYER.packetId, World.PLAYER.buildingId, World.PLAYER.buildingPid]));
                     AudioUtils.playFx(AudioUtils._fx.button, 1, 0);
                 } else {
-                    var len = World.PLAYER.MNvMn;
+                    var len = World.PLAYER.craftLen;
                     for (var i = 0; i < len; i++) {
                         if (craft[i].trigger() === 1) {
-                            World.PLAYER.VNwww = i;
+                            World.PLAYER.craftIdSelected = i;
                             World.NvwNN(World.PLAYER.craftList[i]);
                             AudioUtils.playFx(AudioUtils._fx.button, 1, 0);
                             return;
                         }
                     }
-                    len = World.PLAYER.nMnmW;
+                    len = World.PLAYER.recipeLen;
                     for (i = 0; i < len; i++) {
                         if (recipe[i].trigger() === 1) return;
                     }
-                    if (World.PLAYER.VVn === 1) {
-                        for (i = 0; i < World.PLAYER.Nn.len; i++) {
+                    if (World.PLAYER.isInBuilding === 1) {
+                        for (i = 0; i < World.PLAYER.building.len; i++) {
                             if (queue[i].trigger() === 1) {
                                 Client.sendPacket(window.JSON.stringify([19, i]));
                                 AudioUtils.playFx(AudioUtils._fx.button, 1, 0);
                                 return;
                             }
                         }
-                        if (((World.PLAYER.Vvw === AREAS.firepart) || (World.PLAYER.Vvw === AREAS.bbq)) || (World.PLAYER.Vvw === AREAS.composter)) {
-                            if ((World.PLAYER.Nn.MNM !== 255) && (VWNWV.trigger() === 1)) {
+                        if (((World.PLAYER.craftArea === AREAS.firepart) || (World.PLAYER.craftArea === AREAS.bbq)) || (World.PLAYER.craftArea === AREAS.composter)) {
+                            if ((World.PLAYER.building.fuel !== 255) && (VWNWV.trigger() === 1)) {
                                 Client.sendPacket(window.JSON.stringify([24]));
                                 AudioUtils.playFx(AudioUtils._fx.button, 1, 0);
                                 return;
                             }
-                        } else if (((World.PLAYER.Vvw === AREAS.smelter) || (World.PLAYER.Vvw === AREAS.extractor)) || (World.PLAYER.Vvw === AREAS.agitator)) {
-                            if ((World.PLAYER.Nn.MNM !== 255) && (WmWwW.trigger() === 1)) {
+                        } else if (((World.PLAYER.craftArea === AREAS.smelter) || (World.PLAYER.craftArea === AREAS.extractor)) || (World.PLAYER.craftArea === AREAS.agitator)) {
+                            if ((World.PLAYER.building.fuel !== 255) && (WmWwW.trigger() === 1)) {
                                 Client.sendPacket(window.JSON.stringify([24]));
                                 AudioUtils.playFx(AudioUtils._fx.button, 1, 0);
                                 return;
                             }
-                        } else if (World.PLAYER.Vvw === AREAS.teslabench) {
-                            if ((World.PLAYER.Nn.MNM !== 255) && (WwMvM.trigger() === 1)) {
+                        } else if (World.PLAYER.craftArea === AREAS.teslabench) {
+                            if ((World.PLAYER.building.fuel !== 255) && (WwMvM.trigger() === 1)) {
                                 Client.sendPacket(window.JSON.stringify([24]));
                                 AudioUtils.playFx(AudioUtils._fx.button, 1, 0);
                                 return;
@@ -9774,7 +9774,7 @@ var Game = (function() {
                         }
                     }
                     var nNMwN = craftbox.pos;
-                    if (((holditem.inclick !== 1) && !event.ctrlKey) && ((((Mouse.sx < nNMwN.x) || (Mouse.sx > (nNMwN.x + (595 * scaleby)))) || (Mouse.sy < nNMwN.y)) || (Mouse.sy > (nNMwN.y + (325 * scaleby))))) {
+                    if (((drag.begin !== 1) && !event.ctrlKey) && ((((Mouse.sx < nNMwN.x) || (Mouse.sx > (nNMwN.x + (595 * scaleby)))) || (Mouse.sy < nNMwN.y)) || (Mouse.sy > (nNMwN.y + (325 * scaleby))))) {
                         nVN();
                         AudioUtils.playFx(AudioUtils._fx.open, 1, 0);
                         return;
@@ -9785,40 +9785,40 @@ var Game = (function() {
                 for (var nMm = 0; nMm < 4; nMm++) {
                     if ((wVMVN[nMm][0] !== 0) && (chest[nMm].trigger() === 1)) {
                         Client.sendPacket(window.JSON.stringify([27, nMm]));
-                        AudioUtils.playFx(AudioUtils._fx.holditem, 1, 0);
+                        AudioUtils.playFx(AudioUtils._fx.drag, 1, 0);
                         return;
                     }
                 }
             } else if (isTeamOpen === 1) {
                 if (World.PLAYER.team === -1) {
-                    if (((addtimbutt.trigger() === 1) && (World.PLAYER.teamNameValid === 1)) && ((window.Date.now() - World.PLAYER.mVVmv) > 30500)) {
+                    if (((addtimbutt.trigger() === 1) && (World.PLAYER.teamNameValid === 1)) && ((window.Date.now() - World.PLAYER.teamCreateDelay) > 30500)) {
                         Client.sendPacket(window.JSON.stringify([28, Game.teamName]));
                         AudioUtils.playFx(AudioUtils._fx.button, 1, 0);
-                        World.PLAYER.mVVmv = window.Date.now();
+                        World.PLAYER.teamCreateDelay = window.Date.now();
                     }
-                    if ((window.Date.now() - World.PLAYER.Mwnwv) > 10500) {
+                    if ((window.Date.now() - World.PLAYER.teamDelay) > 10500) {
                         var j = 0;
                         for (var i = 0; i < nmMvw.length; i++) {
                             if (World.clans[i].leader !== 0) {
                                 if (nmMvw[j].trigger() === 1) {
                                     Client.sendPacket(window.JSON.stringify([30, i]));
                                     AudioUtils.playFx(AudioUtils._fx.button, 1, 0);
-                                    World.PLAYER.Mwnwv = window.Date.now();
+                                    World.PLAYER.teamDelay = window.Date.now();
                                 }
                                 j++;
                             }
                         }
                     }
                 } else if (World.PLAYER.teamLeader === 1) {
-                    if ((lockbutt.trigger() === 1) && (World.PLAYER.WnNvv === 0)) {
+                    if ((lockbutt.trigger() === 1) && (World.PLAYER.teamLocked === 0)) {
                         Client.sendPacket(window.JSON.stringify([33]));
-                        World.PLAYER.WnNvv = 1;
+                        World.PLAYER.teamLocked = 1;
                         AudioUtils.playFx(AudioUtils._fx.button, 1, 0);
                         return;
                     }
-                    if ((unlockbutt.trigger() === 1) && (World.PLAYER.WnNvv === 1)) {
+                    if ((unlockbutt.trigger() === 1) && (World.PLAYER.teamLocked === 1)) {
                         Client.sendPacket(window.JSON.stringify([34]));
-                        World.PLAYER.WnNvv = 0;
+                        World.PLAYER.teamLocked = 0;
                         AudioUtils.playFx(AudioUtils._fx.button, 1, 0);
                         return;
                     }
@@ -9870,42 +9870,42 @@ var Game = (function() {
                 var vmM = invtr[i][2];
                 var wvmvw = invtr[i][3];
                 var vV = items[item];
-                if (holditem.inclick === 1) {
-                    if (holditem.id !== i) {
-                        if (invtr[i][0] === invtr[holditem.id][0]) {
-                            if ((vV.stack > invtr[i][1]) && (vV.stack > invtr[holditem.id][1])) {
-                                Client.sendPacket(window.JSON.stringify([10, invtr[holditem.id][0], invtr[holditem.id][1], invtr[holditem.id][2], invtr[i][1], invtr[i][2]]));
-                                World.PLAYER.holditem.inclick = 0;
-                                AudioUtils.playFx(AudioUtils._fx.holditem, 1, 0);
+                if (drag.begin === 1) {
+                    if (drag.id !== i) {
+                        if (invtr[i][0] === invtr[drag.id][0]) {
+                            if ((vV.stack > invtr[i][1]) && (vV.stack > invtr[drag.id][1])) {
+                                Client.sendPacket(window.JSON.stringify([10, invtr[drag.id][0], invtr[drag.id][1], invtr[drag.id][2], invtr[i][1], invtr[i][2]]));
+                                World.PLAYER.drag.begin = 0;
+                                AudioUtils.playFx(AudioUtils._fx.drag, 1, 0);
                                 return;
                             }
                         }
-                        invtr[i][0] = invtr[holditem.id][0];
-                        invtr[i][1] = invtr[holditem.id][1];
-                        invtr[i][2] = invtr[holditem.id][2];
-                        invtr[i][3] = invtr[holditem.id][3];
-                        invtr[holditem.id][0] = item;
-                        invtr[holditem.id][1] = nM;
-                        invtr[holditem.id][2] = vmM;
-                        invtr[holditem.id][3] = wvmvw;
-                        if (item !== 0) Game.inventory[holditem.id].setImages(items[item].img.src, items[item].img.W);
+                        invtr[i][0] = invtr[drag.id][0];
+                        invtr[i][1] = invtr[drag.id][1];
+                        invtr[i][2] = invtr[drag.id][2];
+                        invtr[i][3] = invtr[drag.id][3];
+                        invtr[drag.id][0] = item;
+                        invtr[drag.id][1] = nM;
+                        invtr[drag.id][2] = vmM;
+                        invtr[drag.id][3] = wvmvw;
+                        if (item !== 0) Game.inventory[drag.id].setImages(items[item].img.src, items[item].img.W);
                         Game.inventory[i].setImages(items[invtr[i][0]].img.src, items[invtr[i][0]].img.W);
-                        World.PLAYER.holditem.inclick = 0;
-                        AudioUtils.playFx(AudioUtils._fx.holditem, 1, 0);
+                        World.PLAYER.drag.begin = 0;
+                        AudioUtils.playFx(AudioUtils._fx.drag, 1, 0);
                         return;
                     }
-                    World.PLAYER.holditem.inclick = 0;
+                    World.PLAYER.drag.begin = 0;
                 }
                 if (item !== 0) {
                     if ((isChestOpen === 1) && (event.which !== 3)) {
                         Client.sendPacket(window.JSON.stringify([26, item, nM, vmM, wvmvw]));
-                        AudioUtils.playFx(AudioUtils._fx.holditem, 1, 0);
+                        AudioUtils.playFx(AudioUtils._fx.drag, 1, 0);
                     } else if (event.which === 3) {
                         Client.sendPacket(window.JSON.stringify([9, item, nM, vmM, wvmvw]));
                         AudioUtils.playFx(AudioUtils._fx.wWwnM, 1, 0);
                     } else {
                         if (event.ctrlKey) {
-                            AudioUtils.playFx(AudioUtils._fx.holditem, 0.6, 0);
+                            AudioUtils.playFx(AudioUtils._fx.drag, 0.6, 0);
                             Client.sendPacket(window.JSON.stringify([11, item, nM, vmM]));
                         } else Client.sendPacket(window.JSON.stringify([8, item, nM, vmM, wvmvw]));
                     }
@@ -9919,12 +9919,12 @@ var Game = (function() {
                 AudioUtils.playFx(AudioUtils._fx.open, 1, 0);
             }
         }
-        if (holditem.inclick === 1) {
-            var i = holditem.id;
+        if (drag.begin === 1) {
+            var i = drag.id;
             Client.sendPacket(window.JSON.stringify([9, invtr[i][0], invtr[i][1], invtr[i][2], invtr[i][3]]));
             AudioUtils.playFx(AudioUtils._fx.wWwnM, 1, 0);
         }
-        holditem.inclick = 0;
+        drag.begin = 0;
     };
 
     function wVv(event) {
@@ -9951,7 +9951,7 @@ var Game = (function() {
         if (leaderboardbutt2.trigger() === 1) {
             vnm = 1;
         }
-        if (World.PLAYER.wNw !== 0) {
+        if (World.PLAYER.teamJoin !== 0) {
             joinbutt.trigger();
             deletebuttout.trigger();
         }
@@ -9971,27 +9971,27 @@ var Game = (function() {
                 wVwnm.trigger();
                 wwMwv.trigger();
             } else if (isCraftOpen === 1) {
-                if (World.PLAYER.nVV === -1) {
-                    if ((World.PLAYER.WwVNv === 0) || (World.PLAYER.VVn === 1)) craftbutt.trigger();
+                if (World.PLAYER.craftCategory === -1) {
+                    if ((World.PLAYER.crafting === 0) || (World.PLAYER.isInBuilding === 1)) craftbutt.trigger();
                     else cancelbutt.trigger();
                 } else unlockbuttout.trigger();
                 for (var i = 0; i < wnV.length; i++) wnV[i].trigger();
                 for (i = 0; i < craftList.length; i++) {
-                    if ((World.PLAYER.vWMmW === i) || (i === 0)) craftList[i].trigger();
+                    if ((World.PLAYER.buildingArea === i) || (i === 0)) craftList[i].trigger();
                 }
-                var len = World.PLAYER.MNvMn;
+                var len = World.PLAYER.craftLen;
                 for (var i = 0; i < len; i++) craft[i].trigger();
                 NWmNn = -1;
-                len = World.PLAYER.nMnmW;
+                len = World.PLAYER.recipeLen;
                 for (i = 0; i < len; i++) {
                     if (recipe[i].trigger() === 1) NWmNn = i;
                 }
-                if (World.PLAYER.VVn === 1) {
-                    for (i = 0; i < World.PLAYER.Nn.len; i++) queue[i].trigger();
-                    if ((((World.PLAYER.Vvw === AREAS.firepart) || (World.PLAYER.Vvw === AREAS.bbq)) || (World.PLAYER.Vvw === AREAS.composter)) && (World.PLAYER.Nn.MNM !== 255)) VWNWV.trigger();
-                    else if ((((World.PLAYER.Vvw === AREAS.smelter) || (World.PLAYER.Vvw === AREAS.extractor)) || (World.PLAYER.Vvw === AREAS.agitator)) && (World.PLAYER.Nn.MNM !== 255)) WmWwW.trigger();
+                if (World.PLAYER.isInBuilding === 1) {
+                    for (i = 0; i < World.PLAYER.building.len; i++) queue[i].trigger();
+                    if ((((World.PLAYER.craftArea === AREAS.firepart) || (World.PLAYER.craftArea === AREAS.bbq)) || (World.PLAYER.craftArea === AREAS.composter)) && (World.PLAYER.building.fuel !== 255)) VWNWV.trigger();
+                    else if ((((World.PLAYER.craftArea === AREAS.smelter) || (World.PLAYER.craftArea === AREAS.extractor)) || (World.PLAYER.craftArea === AREAS.agitator)) && (World.PLAYER.building.fuel !== 255)) WmWwW.trigger();
                 }
-                len = World.PLAYER.nWwmM;
+                len = World.PLAYER.toolsLen;
                 for (i = 0; i < len; i++) tools[i].trigger();
                 preview.trigger();
             } else if (isChestOpen === 1) {
@@ -10105,19 +10105,19 @@ var Game = (function() {
             } else if ((event.keyCode === 69) || (event.keyCode === 32)) {
                 switch (World.PLAYER.interaction) {
                     case 0:
-                        Client.sendPacket(window.JSON.stringify([12, World.PLAYER.lootsrvID]));
+                        Client.sendPacket(window.JSON.stringify([12, World.PLAYER.lootId]));
                         break;
                     case 2:
-                        Client.sendPacket(window.JSON.stringify([World.PLAYER.NnN, World.PLAYER.MnMwn, World.PLAYER.MNMvN]));
+                        Client.sendPacket(window.JSON.stringify([World.PLAYER.packetId, World.PLAYER.buildingId, World.PLAYER.buildingPid]));
                         break;
                 }
             } else if (event.keyCode === 70) {
-                if (World.PLAYER.mwMmN === 1) Client.sendPacket(window.JSON.stringify([12, World.PLAYER.lootsrvID]));
+                if (World.PLAYER.extraLoot === 1) Client.sendPacket(window.JSON.stringify([12, World.PLAYER.lootId]));
             } else if (event.keyCode === 82) {
                 if (World.PLAYER.isBuilding === 1) World.PLAYER.buildRotate = (World.PLAYER.buildRotate + 1) % 4;
                 else Client.sendPacket(window.JSON.stringify([13]));
             } else if ((event.keyCode >= 49) && (event.keyCode <= 57)) {
-                if (World.PLAYER.holditem.inclick !== 1) {
+                if (World.PLAYER.drag.begin !== 1) {
                     var i = event.keyCode - 49;
                     var invtr = World.PLAYER.inventory;
                     if (i < invtr.length) {
@@ -10130,7 +10130,7 @@ var Game = (function() {
                             AudioUtils.playFx(AudioUtils._fx.wWwnM, 1, 0);
                         } else {
                             if (event.ctrlKey) {
-                                AudioUtils.playFx(AudioUtils._fx.holditem, 0.6, 0);
+                                AudioUtils.playFx(AudioUtils._fx.drag, 0.6, 0);
                                 Client.sendPacket(window.JSON.stringify([11, item, nM, vmM]));
                             } else Client.sendPacket(window.JSON.stringify([8, item, nM, vmM, wvmvw]));
                         }
@@ -10185,12 +10185,12 @@ var Game = (function() {
                     continue;
                 }
             }
-            if ((World.PLAYER.holditem.inclick === 0) && (NmW === 0)) {
+            if ((World.PLAYER.drag.begin === 0) && (NmW === 0)) {
                 var sx = window.Math.floor(NWV.clientX * CanvasUtils.options.ratioX);
                 var sy = window.Math.floor(NWV.clientY * CanvasUtils.options.ratioY);
                 switch (World.PLAYER.interaction) {
                     case 2:
-                        if (((((World.PLAYER.mwMmN === 1) && (sx > Game.mmNWn)) && (sy > Game.vmwNV)) && (sx < (Game.mmNWn + Game.vwVnW))) && (sy < (Game.vmwNV + Game.mnNnW))) {
+                        if (((((World.PLAYER.extraLoot === 1) && (sx > Game.mmNWn)) && (sy > Game.vmwNV)) && (sx < (Game.mmNWn + Game.vwVnW))) && (sy < (Game.vmwNV + Game.mnNnW))) {
                             nvnNv = 1;
                             nNw.keyCode = 70;
                             nNw.charCode = 70;
@@ -10277,7 +10277,7 @@ var Game = (function() {
             NWV.clientY = WNmmw;
             vNm(NWV);
             return;
-        } else if (((World.PLAYER.holditem.inclick === 0) && (sx < screencenterX)) && (sy < (screenHeight - (70 * scaleby)))) {
+        } else if (((World.PLAYER.drag.begin === 0) && (sx < screencenterX)) && (sy < (screenHeight - (70 * scaleby)))) {
             if ((sx < (240 * scaleby)) && (sy < (160 * scaleby))) vNm(NWV);
         } else vNm(NWV);
         if (mWM !== 0) {
@@ -10324,7 +10324,7 @@ var Game = (function() {
                     continue;
                 }
             }
-            if ((World.PLAYER.holditem.inclick === 0) && (NmW === 0)) {
+            if ((World.PLAYER.drag.begin === 0) && (NmW === 0)) {
                 var sx = window.Math.floor(NWV.clientX * CanvasUtils.options.ratioX);
                 var sy = window.Math.floor(NWV.clientY * CanvasUtils.options.ratioY);
                 if (sy < (screenHeight - (70 * scaleby))) {
@@ -10473,7 +10473,7 @@ var Score = (function() {
     var nwWMv = {
         W: null
     };
-    var WMWVW = -1;
+    var lastScore = -1;
     var MnvWv = {
         W: null
     };
@@ -10489,9 +10489,9 @@ var Score = (function() {
         var WY = mNw.pos.y;
         var wVw = WX / scaleby;
         var VVm = WY / scaleby;
-        if ((scoreLabel === null) || (WMWVW !== World.PLAYER.exp)) {
-            WMWVW = World.PLAYER.exp;
-            scoreLabel = GUI.renderText(WMWVW + "", "'Viga', sans-serif", "#FFFFFF", 38, 400, window.undefined, 16, 25, window.undefined, window.undefined, window.undefined, window.undefined, "#000000", 12);
+        if ((scoreLabel === null) || (lastScore !== World.PLAYER.exp)) {
+            lastScore = World.PLAYER.exp;
+            scoreLabel = GUI.renderText(lastScore + "", "'Viga', sans-serif", "#FFFFFF", 38, 400, window.undefined, 16, 25, window.undefined, window.undefined, window.undefined, window.undefined, "#000000", 12);
             MnvWv.W = scoreLabel;
             MnvWv.W.isLoaded = 1;
         }
@@ -10507,8 +10507,8 @@ var Score = (function() {
         }
         CanvasUtils.drawImageHd(WMwMN, wVw + 108, VVm + 117, 0, 0, 0, 1);
         CanvasUtils.drawImageHd(nwWMv, wVw + 288, VVm + 147, 0, 0, 0, 1);
-        if ((VMnMw === null) || (vvWmM !== World.PLAYER.nWwnN)) {
-            vvWmM = World.PLAYER.nWwnN;
+        if ((VMnMw === null) || (vvWmM !== World.PLAYER.kill)) {
+            vvWmM = World.PLAYER.kill;
             VMnMw = GUI.renderText(vvWmM + "", "'Viga', sans-serif", "#FFFFFF", 38, 400, window.undefined, 16, 25, window.undefined, window.undefined, window.undefined, window.undefined, "#000000", 12);
             vMMnW.W = VMnMw;
             vMMnW.W.isLoaded = 1;
@@ -10810,9 +10810,9 @@ var Rank = (function() {
             mmvMV.W.isLoaded = 1;
         }
         CanvasUtils.drawImageHd(mmvMV, wVw + 207, VVm + 93, 0, 0, 0, 1);
-        if ((VmvNV === null) || (vWvVM !== World.PLAYER.VmNwm)) {
-            vWvVM = World.PLAYER.VmNwm;
-            var vMWwM = window.Math.floor((window.Date.now() - World.PLAYER.VmNwm) / 1000);
+        if ((VmvNV === null) || (vWvVM !== World.PLAYER.timePlayed)) {
+            vWvVM = World.PLAYER.timePlayed;
+            var vMWwM = window.Math.floor((window.Date.now() - World.PLAYER.timePlayed) / 1000);
             var wWvWM = window.Math.floor(vMWwM / 60);
             var NNvMn = vMWwM % 60;
             VmvNV = GUI.renderText((((((wWvWM < 10) ? "0" : "") + wWvWM) + ":") + ((NNvMn < 10) ? "0" : "")) + NNvMn, "'Viga', sans-serif", "#FFFFFF", 38, 400, window.undefined, 16, 25, window.undefined, window.undefined, window.undefined, window.undefined, "#000000", 12);
@@ -10820,8 +10820,8 @@ var Rank = (function() {
             vnvvM.W.isLoaded = 1;
         }
         CanvasUtils.drawImageHd(vnvvM, wVw + 110, VVm + 100, 0, 0, 0, 1);
-        if ((VMnMw === null) || (vvWmM !== World.PLAYER.nWwnN)) {
-            vvWmM = World.PLAYER.nWwnN;
+        if ((VMnMw === null) || (vvWmM !== World.PLAYER.kill)) {
+            vvWmM = World.PLAYER.kill;
             VMnMw = GUI.renderText(vvWmM + "", "'Viga', sans-serif", "#FFFFFF", 38, 400, window.undefined, 16, 25, window.undefined, window.undefined, window.undefined, window.undefined, "#000000", 12);
             vMMnW.W = VMnMw;
             vMMnW.W.isLoaded = 1;
@@ -11096,11 +11096,11 @@ var Editor = (function() {
         World.PLAYER.id = 1;
         World.playerNumber = 2;
         World.gameMode = 0;
-        World.PLAYER.canvasH = 0;
-        World.PLAYER.Wvv[i] = 0;
+        World.PLAYER.skillPoint = 0;
+        World.PLAYER.gridPrev[i] = 0;
         World.PLAYER.isBuilding = 1;
-        World.PLAYER.wNw = 0;
-        World.PLAYER.vVVnm = [
+        World.PLAYER.teamJoin = 0;
+        World.PLAYER.lastAreas = [
             [-1, -1],
             [-1, -1],
             [-1, -1],
@@ -11122,7 +11122,7 @@ var Editor = (function() {
         Render.scale = 0;
         Entitie.removeAll();
         World.PLAYER.buildRotate = 0;
-        World.PLAYER.putableimg = 0;
+        World.PLAYER.blueprint = 0;
         vmV = 0;
         mnnMn(1, __ENTITIE_PLAYER__, 550, 550, 21 << 8, 0);
     };
@@ -11189,9 +11189,9 @@ var Editor = (function() {
         MWwVN = MWwVN.split("!b=");
         MWwVN.shift();
         for (var i = 0; i < MWwVN.length; i++) {
-            var Nn = MWwVN[i].split(":");
-            if (Nn.length > 4) Vnvmv(Nn[0], Nn[1], Nn[3], Nn[2], Nn[4]);
-            else Vnvmv(Nn[0], 0, Nn[2], Nn[1], Nn[3]);
+            var building = MWwVN[i].split(":");
+            if (building.length > 4) Vnvmv(building[0], building[1], building[3], building[2], building[4]);
+            else Vnvmv(building[0], 0, building[2], building[1], building[3]);
         }
     };
 
@@ -11202,13 +11202,13 @@ var Editor = (function() {
         j = window.Number(j) >>> 0;
         Rot = window.Number(Rot) >>> 0;
         if (((Rot > 3) || (i >= MapManager.height)) || (j >= MapManager.height)) return;
-        var Nn = items[NNWVv];
-        if (((Nn === window.undefined) || (Nn.subtype === window.undefined)) || ((Nn.subtype > 0) && (Nn.Nn.length <= subtype))) return;
-        var Rot = (Nn.Mvw === 1) ? 0 : Rot;
-        var WX = (Nn.xCenter[Rot] + 50) + (100 * j);
-        var WY = (Nn.yCenter[Rot] + 50) + (100 * i);
+        var building = items[NNWVv];
+        if (((building === window.undefined) || (building.subtype === window.undefined)) || ((building.subtype > 0) && (building.building.length <= subtype))) return;
+        var Rot = (building.Mvw === 1) ? 0 : Rot;
+        var WX = (building.xCenter[Rot] + 50) + (100 * j);
+        var WY = (building.yCenter[Rot] + 50) + (100 * i);
         var vV = 0;
-        switch ((Nn.subtype === 0) ? Nn.WvV : Nn.subtype[subtype].WvV) {
+        switch ((building.subtype === 0) ? building.WvV : building.subtype[subtype].WvV) {
             case 0:
                 vV = __ENTITIE_BUILD_DOWN__;
                 break;
@@ -11222,7 +11222,7 @@ var Editor = (function() {
                 vV = __ENTITIE_BUILD_GROUND__;
                 break;
         }
-        nWMWn(1, vV, WX, WY, Rot, 1 + ((Nn.subtype === 0) ? 0 : (subtype << 5)), Nn.id);
+        nWMWn(1, vV, WX, WY, Rot, 1 + ((building.subtype === 0) ? 0 : (subtype << 5)), building.id);
     };
 
     function nWMWn(pid, vV, WX, WY, Rot, Mnn, subtype) {
@@ -11253,9 +11253,9 @@ var Editor = (function() {
         var wWv = Entitie.border[vV];
         var wVN = wWv.border;
         for (i = 0; i < wVN; i++) {
-            var Nn = Nvw[wWv.cycle[i]];
-            if ((((Nn.x >= WX) && (Nn.x <= (WX + 100))) && (Nn.y >= WY)) && (Nn.y <= (WY + 100))) {
-                Entitie.remove(Nn.pid, Nn.id, Nn.uid, vV, Nn.extra);
+            var building = Nvw[wWv.cycle[i]];
+            if ((((building.x >= WX) && (building.x <= (WX + 100))) && (building.y >= WY)) && (building.y <= (WY + 100))) {
+                Entitie.remove(building.pid, building.id, building.uid, vV, building.extra);
                 return;
             }
         }
@@ -11267,7 +11267,7 @@ var Editor = (function() {
             if (World.PLAYER.isBuilding === 1) {
                 World.PLAYER.click = -1;
                 if (World.PLAYER.canBuild === 1) {
-                    if ((((World.PLAYER.jBuild !== -1) && (World.PLAYER.iBuild !== -1)) && (World.PLAYER.jBuild !== MapManager.width)) && (World.PLAYER.iBuild !== MapManager.height)) Vnvmv(World.PLAYER.putableimg, World.PLAYER.mWmnv, World.PLAYER.iBuild, World.PLAYER.jBuild, World.PLAYER.buildRotate);
+                    if ((((World.PLAYER.jBuild !== -1) && (World.PLAYER.iBuild !== -1)) && (World.PLAYER.jBuild !== MapManager.width)) && (World.PLAYER.iBuild !== MapManager.height)) Vnvmv(World.PLAYER.blueprint, World.PLAYER.furniture, World.PLAYER.iBuild, World.PLAYER.jBuild, World.PLAYER.buildRotate);
                 } else {
                     var WX = 100 * World.PLAYER.jBuild;
                     var WY = 100 * World.PLAYER.iBuild;
@@ -11433,7 +11433,7 @@ var Editor = (function() {
             for (var i = 0; i < vnvwV.length; i++) {
                 var item = vnvwV[i];
                 item.img = {
-                    src: [item.Nn.src, "img/useless.png", "img/useless.png"],
+                    src: [item.building.src, "img/useless.png", "img/useless.png"],
                     W: [{
                         isLoaded: 0
                     }, {
@@ -11447,7 +11447,7 @@ var Editor = (function() {
             for (var i = 0; i < vnvwV.length; i++) {
                 var item = vnvwV[i];
                 item.img = {
-                    src: [item.Nn.src, "img/useless.png", "img/useless.png"],
+                    src: [item.building.src, "img/useless.png", "img/useless.png"],
                     W: [{
                         isLoaded: 0
                     }, {
@@ -11924,9 +11924,9 @@ var Editor = (function() {
             for (var i = 0; i < NWw; i++) {
                 if (Wnw[i].trigger() === 1) {
                     AudioUtils.playFx(AudioUtils._fx.button, 1, 0);
-                    World.PLAYER.putableimg = Wnw[i].vmM;
-                    World.PLAYER.mWmnv = Wnw[i].nVWnM;
-                    if (World.PLAYER.putableimg === item.NvMvM) World.PLAYER.buildRotate = 0;
+                    World.PLAYER.blueprint = Wnw[i].vmM;
+                    World.PLAYER.furniture = Wnw[i].nVWnM;
+                    if (World.PLAYER.blueprint === item.NvMvM) World.PLAYER.buildRotate = 0;
                 }
             }
         }
@@ -12017,7 +12017,7 @@ var Editor = (function() {
             AudioUtils.playFx(AudioUtils._fx.open, 1, 0);
             nVN();
         } else if (event.keyCode === 82) {
-            if ((World.PLAYER.isBuilding === 1) && (World.PLAYER.putableimg !== item.NvMvM)) World.PLAYER.buildRotate = (World.PLAYER.buildRotate + 1) % 4;
+            if ((World.PLAYER.isBuilding === 1) && (World.PLAYER.blueprint !== item.NvMvM)) World.PLAYER.buildRotate = (World.PLAYER.buildRotate + 1) % 4;
         }
     };
 
@@ -12108,7 +12108,7 @@ var Editor = (function() {
             NWV.clientY = WNmmw;
             vNm(NWV);
             return;
-        } else if (((World.PLAYER.holditem.inclick === 0) && (sx < screencenterX)) && (sy < (screenHeight - (70 * scaleby)))) {
+        } else if (((World.PLAYER.drag.begin === 0) && (sx < screencenterX)) && (sy < (screenHeight - (70 * scaleby)))) {
             if ((sx < (240 * scaleby)) && (sy < (160 * scaleby))) vNm(NWV);
         } else vNm(NWV);
         if (mWM !== 0) {
@@ -12137,7 +12137,7 @@ var Editor = (function() {
         var mWVWv = 0;
         for (var wVV = 0; wVV < event.touches.length; wVV++) {
             Mouse.touchToMouseEvent(NWV, event, event.touches[wVV]);
-            if ((World.PLAYER.holditem.inclick === 0) && (NmW === 0)) {
+            if ((World.PLAYER.drag.begin === 0) && (NmW === 0)) {
                 var sx = window.Math.floor(NWV.clientX * CanvasUtils.options.ratioX);
                 var sy = window.Math.floor(NWV.clientY * CanvasUtils.options.ratioY);
                 if (sy < (screenHeight - (70 * scaleby))) {
@@ -12784,7 +12784,7 @@ try {
         var nNMVM = {
             isLoaded: 0
         };
-        var NvwMN = {
+        var hintRotate = {
             isLoaded: 0
         };
         var wnW = {
@@ -12878,7 +12878,7 @@ try {
             }
         };
         var VnwNw = 0;
-        var NmWvw = {
+        var wrongTool = {
             src: wrongtool,
             W: {
                 isLoaded: 0
@@ -13017,12 +13017,12 @@ try {
         var mWWwn = 0;
 
         function mwNmN() {
-            if (World.PLAYER.wMwmv === 8) {
+            if (World.PLAYER.toxicStep === 8) {
                 context2dZ.clearRect(0, 0, vWw, wvNVM);
                 context2dD.clearRect(0, 0, vWw, wvNVM);
                 for (var i = 0; i < 8; i++) {
                     for (var j = 0; j < 8; j++) {
-                        var wVvnN = World.PLAYER.Mwwnw[i][j];
+                        var wVvnN = World.PLAYER.toxicMap[i][j];
                         if (wVvnN === 7) context2dZ.drawImage(vMnmm, 2 + (j * wVNMN), (i * wVNMN) + 1, vMnmm.wh, vMnmm.h2);
                         else context2dZ.drawImage(VmnwN, 2 + (j * wVNMN), (i * wVNMN) + 1, vMnmm.wh, vMnmm.h2);
                     }
@@ -13031,7 +13031,7 @@ try {
                 context2dZ.drawImage(canvasD, 0, 0);
                 context2dD.clearRect(0, 0, vWw, wvNVM);
                 for (var nMm = 0; nMm < 12; nMm++) {
-                    var MWW = World.PLAYER.vVVnm[nMm];
+                    var MWW = World.PLAYER.lastAreas[nMm];
                     var i = MWW[0];
                     var j = MWW[1];
                     if (i === -1) continue;
@@ -13057,10 +13057,10 @@ try {
         var mwwNm = -1;
         var wmvMm = [];
         var nmMMW = [];
-        var canvasH = window.document.createElement("canvas");
-        var context2H = canvasH.getContext("2d");
-        canvasH.width = 280;
-        canvasH.height = 50;
+        var skillPoint = window.document.createElement("canvas");
+        var context2H = skillPoint.getContext("2d");
+        skillPoint.width = 280;
+        skillPoint.height = 50;
         var wmmVm = -1;
         var canvasJ = window.document.createElement("canvas");
         var context2J = canvasJ.getContext("2d");
@@ -13483,9 +13483,9 @@ try {
                 } else if (i > 9) WY -= MVM;
                 else WX += MVM;
             }
-            var holditem = World.PLAYER.holditem;
-            if (((holditem.inclick === 1) && (Mouse.state === Mouse.__MOUSE_DOWN__)) && (Math2d.dist(holditem.x, holditem.y, Mouse.x, Mouse.y) > (4 * scaleby))) {
-                var item = invtr[holditem.id][0];
+            var drag = World.PLAYER.drag;
+            if (((drag.begin === 1) && (Mouse.state === Mouse.__MOUSE_DOWN__)) && (Math2d.dist(drag.x, drag.y, Mouse.x, Mouse.y) > (4 * scaleby))) {
+                var item = invtr[drag.id][0];
                 if (item > 0) {
                     var W = items[item].img.W[0];
                     if (W.isLoaded === 0) W = NWVnn[item].img.W[0];
@@ -13528,8 +13528,8 @@ try {
             var stamina = World.gauges.stamina;
             var vW = stamina.nnw / stamina._max;
             CanvasUtils.fillRect(ctx, (WX / scaleby) + 150, (WY / scaleby) + 162, 54, -vW * 63, yellow);
-            var mMv = World.gauges.mMv;
-            var vW = mMv.nnw / mMv._max;
+            var xp = World.gauges.xp;
+            var vW = xp.nnw / xp._max;
             CanvasUtils.fillRect(ctx, (WX / scaleby) + 226, (WY / scaleby) + 172, 16, -vW * 77, white);
             var wVnVV = World.NvVVW();
             var W;
@@ -13583,18 +13583,18 @@ try {
                     var W = karma[PLAYER.karma].W;
                     if (W.isLoaded === 1) context2dF.drawImage(W, 612, 114 + (i * 50), W.width, W.height);
                 }
-                World.PLAYER.MnWnn = nWnWm;
+                World.PLAYER.inLeaderboard = nWnWm;
                 if (nWnWm === 1) {
                     var W = karma[World.PLAYER.karma].W;
                     if (W.isLoaded === 1) context2dF.drawImage(W, 375, 645, W.width * 1.5, W.height * 1.5);
                 }
             }
             var score = World.PLAYER.exp;
-            if ((nWnWm === 1) || ((World.PLAYER.MnWnn === 1) && (score !== World.PLAYER.WMWVW))) {
+            if ((nWnWm === 1) || ((World.PLAYER.inLeaderboard === 1) && (score !== World.PLAYER.lastScore))) {
                 var PLAYER = socket[World.PLAYER.id];
                 context2dF.clearRect(480, 657, 112, 60);
-                if (score !== World.PLAYER.WMWVW) {
-                    World.PLAYER.WMWVW = score;
+                if (score !== World.PLAYER.lastScore) {
+                    World.PLAYER.lastScore = score;
                     PLAYER.scoreLabel = GUI.renderText(MathUtils.simplifyNumber(score), "'Viga', sans-serif", "#ffffff", 40, 150, window.undefined, 5, 12);
                 }
                 context2dF.drawImage(PLAYER.scoreLabel, 484, 662, PLAYER.scoreLabel.width, PLAYER.scoreLabel.height);
@@ -13618,15 +13618,15 @@ try {
 
 
 
-            var wmWvV = World.PLAYER.wmWvV;
-            var len = wmWvV.length / 2;
+            var cities = World.PLAYER.cities;
+            var len = cities.length / 2;
             if (len > 0) {
-                inmapy = window.Math.floor((WY / scaleby) + window.Math.min(window.Math.max(10, wmWvV[0] * textnumberitem), 400));
-                inmapx = window.Math.floor((WX / scaleby) + window.Math.min(window.Math.max(10, wmWvV[1] * mvMnV), 400));
+                inmapy = window.Math.floor((WY / scaleby) + window.Math.min(window.Math.max(10, cities[0] * textnumberitem), 400));
+                inmapx = window.Math.floor((WX / scaleby) + window.Math.min(window.Math.max(10, cities[1] * mvMnV), 400));
                 CanvasUtils.drawImageHd(cityiconmap, inmapx, inmapy, 0, 0, 0, 1);
                 for (var i = 1; i < len; i++) {
-                    inmapy = window.Math.floor((WY / scaleby) + window.Math.min(window.Math.max(10, wmWvV[i * 2] * textnumberitem), 400));
-                    inmapx = window.Math.floor((WX / scaleby) + window.Math.min(window.Math.max(10, wmWvV[1 + (i * 2)] * mvMnV), 400));
+                    inmapy = window.Math.floor((WY / scaleby) + window.Math.min(window.Math.max(10, cities[i * 2] * textnumberitem), 400));
+                    inmapx = window.Math.floor((WX / scaleby) + window.Math.min(window.Math.max(10, cities[1 + (i * 2)] * mvMnV), 400));
                     CanvasUtils.drawImageHd(houseiconmap, inmapx, inmapy, 0, 0, 0, 1);
                 }
             }
@@ -13644,8 +13644,8 @@ try {
 
             if ((World.PLAYER.team !== -1) || (World.PLAYER.ghoul !== 0) && (World.playerAlive < 6)) {
                 var socket = Entitie.units[__ENTITIE_PLAYER__];
-                for (var i = 0; i < World.PLAYER.nnnVN; i++) {
-                    var nmmvN = World.PLAYER.MVmNm[i];
+                for (var i = 0; i < World.PLAYER.teamLength; i++) {
+                    var nmmvN = World.PLAYER.teamPos[i];
                     if (nmmvN.old < 0) continue;
                     var PLAYER = World.socket[nmmvN.id];
                     var inmapx = window.Math.floor(wVw + window.Math.min(window.Math.max(10, PLAYER.rx * mvMnV), 400));
@@ -13661,8 +13661,8 @@ try {
             var inmapy = window.Math.floor((WY / scaleby) + window.Math.min(window.Math.max(10, WWV * textnumberitem), 400));
             CanvasUtils.drawImageHd(arrowiconmap2, inmapx, inmapy, Mouse.angle, 0, 0, 1);
 
-            if (World.PLAYER.VvWnm > 0) {
-                var PLAYER = World.socket[World.PLAYER.karmaplayerid];
+            if (World.PLAYER.badKarmaDelay > 0) {
+                var PLAYER = World.socket[World.PLAYER.badKarma];
                 CanvasUtils.drawImageHd(karma[PLAYER.karma], window.Math.floor(wVw + window.Math.min(window.Math.max(10, PLAYER.rx * mvMnV), 400)), window.Math.floor(VVm + window.Math.min(window.Math.max(10, PLAYER.ry * mvMnV), 400)), 0, 0, 0, 1.25);
             }
             
@@ -13694,29 +13694,29 @@ try {
             Game.nVNMM.pos.y = WY + (6 * scaleby);
             Game.nWvnm.pos.x = WX + (290 * scaleby);
             Game.nWvnm.pos.y = WY + (6 * scaleby);
-            if ((World.PLAYER.wNw !== 0) || (World.PLAYER.wMnNv > 0)) {
-                if (World.PLAYER.wNw !== 0) {
-                    if (World.PLAYER.wMnNv < 333) {
-                        ctx.globalAlpha = World.PLAYER.wMnNv / 333;
-                        World.PLAYER.wMnNv += delta;
+            if ((World.PLAYER.teamJoin !== 0) || (World.PLAYER.teamEffect > 0)) {
+                if (World.PLAYER.teamJoin !== 0) {
+                    if (World.PLAYER.teamEffect < 333) {
+                        ctx.globalAlpha = World.PLAYER.teamEffect / 333;
+                        World.PLAYER.teamEffect += delta;
                     }
                 } else {
-                    ctx.globalAlpha = World.PLAYER.wMnNv / 333;
-                    World.PLAYER.wMnNv = window.Math.max(0, World.PLAYER.wMnNv - delta);
+                    ctx.globalAlpha = World.PLAYER.teamEffect / 333;
+                    World.PLAYER.teamEffect = window.Math.max(0, World.PLAYER.teamEffect - delta);
                 }
-                var PLAYER = World.socket[World.PLAYER.wNw];
+                var PLAYER = World.socket[World.PLAYER.teamJoin];
                 if (PLAYER.nicknameLabel === null) PLAYER.nicknameLabel = GUI.renderText(PLAYER.nickname, "'Viga', sans-serif", "#FFFFFF", 38, 400, window.undefined, 16, 25, window.undefined, window.undefined, window.undefined, window.undefined, "#000000", 12);
                 ctx.drawImage(teambox, WX, WY, scaleby * teambox.wh, scaleby * teambox.h2);
                 if ((PLAYER.nicknameLabel.width !== 0) && (PLAYER.nicknameLabel.height !== 0)) ctx.drawImage(PLAYER.nicknameLabel, WX + (20 * scaleby), WY + (6 * scaleby), PLAYER.nicknameLabel.wh * scaleby, PLAYER.nicknameLabel.h2 * scaleby);
                 Game.nVNMM.draw();
                 Game.nWvnm.draw();
-                if (World.PLAYER.wMnNv < 333) ctx.globalAlpha = 1;
+                if (World.PLAYER.teamEffect < 333) ctx.globalAlpha = 1;
             }
         };
 
         function timeleftfunc(WX, WY, wNWnn) {
-            World.PLAYER.MnMWm -= delta;
-            var nnW = window.Math.max(0, window.Math.floor(World.PLAYER.MnMWm / 1000));
+            World.PLAYER.nextAreas -= delta;
+            var nnW = window.Math.max(0, window.Math.floor(World.PLAYER.nextAreas / 1000));
             if (nnW < 3000) {
                 CanvasUtils.drawImageHd(timeleft, (WX / scaleby) + 51, (WY / scaleby) + 145, 0, 0, 0, 1);
                 if (wVVVn[nnW] === window.undefined) {
@@ -13764,8 +13764,8 @@ try {
 
 
             if (World.gameMode === World.__BR__) {
-                var wVvnN = World.PLAYER.Mwwnw[window.Math.floor(WWV / NnWnv)][window.Math.floor(NmM / NnWnv)];
-                if (((wVvnN !== 0) && (wVvnN < World.PLAYER.wMwmv)) && (World.PLAYER.wMwmv !== 8)) {
+                var wVvnN = World.PLAYER.toxicMap[window.Math.floor(WWV / NnWnv)][window.Math.floor(NmM / NnWnv)];
+                if (((wVvnN !== 0) && (wVvnN < World.PLAYER.toxicStep)) && (World.PLAYER.toxicStep !== 8)) {
                     MvvNN = window.Math.min(1000, MvvNN + delta);
                     ctx.globalAlpha = MathUtils.Ease.inQuad(MvvNN / 500);
                     CanvasUtils.drawImageHd(WWmMW, canw2ns, 58, 0, 0, 0, 1);
@@ -13812,8 +13812,8 @@ try {
 
             if ((World.PLAYER.team !== -1) || ((World.PLAYER.ghoul !== 0) && (World.playerAlive < 6))) {
                 var socket = Entitie.units[__ENTITIE_PLAYER__];
-                for (var i = 0; i < World.PLAYER.nnnVN; i++) {
-                    var nmmvN = World.PLAYER.MVmNm[i];
+                for (var i = 0; i < World.PLAYER.teamLength; i++) {
+                    var nmmvN = World.PLAYER.teamPos[i];
                     if (nmmvN.old < 0) continue;
                     var PLAYER = World.socket[nmmvN.id];
                     var angle;
@@ -13834,8 +13834,8 @@ try {
             }
 
 
-            if (World.PLAYER.VvWnm > 0) {
-                var PLAYER = World.socket[World.PLAYER.karmaplayerid];
+            if (World.PLAYER.badKarmaDelay > 0) {
+                var PLAYER = World.socket[World.PLAYER.badKarma];
                 if (frameId === (PLAYER.frameId + 1)) {
                     var socket = Entitie.units[__ENTITIE_PLAYER__];
                     var WMv = socket[PLAYER.locatePlayer];
@@ -13852,7 +13852,7 @@ try {
             var inmapx = wVw + (mnmvW - 3);
             var inmapy = VVm + (vNwWN - 3);
             CanvasUtils.drawImageHd(arrowiconmap2, inmapx, inmapy, Mouse.angle, 0, 0, 1);
-            if ((World.PLAYER.ghoul === 0) && ((World.PLAYER.canvasH > 0) || (wnW.WMw > 0))) {
+            if ((World.PLAYER.ghoul === 0) && ((World.PLAYER.skillPoint > 0) || (wnW.WMw > 0))) {
                 var move = (wnW.move + delta) % 1000;
                 wnW.move = move;
                 if (wnW.move < 500) WX += 260 + (15 * MathUtils.Ease.inOutQuad(move / 500));
@@ -13860,7 +13860,7 @@ try {
                 ctx.globalAlpha = MathUtils.Ease.inQuad(wnW.WMw);
                 CanvasUtils.drawImageHd(wnW, WX, WY + 31, 0, 0, 0, 1);
                 ctx.globalAlpha = 1;
-                if ((World.PLAYER.canvasH <= 0) || (Game.MvN() === 1)) wnW.WMw = window.Math.max(0, wnW.WMw - (delta / 500));
+                if ((World.PLAYER.skillPoint <= 0) || (Game.MvN() === 1)) wnW.WMw = window.Math.max(0, wnW.WMw - (delta / 500));
                 else if (wnW.WMw < 1) wnW.WMw = window.Math.min(1, wnW.WMw + (delta / 500));
             }
         };
@@ -13899,7 +13899,7 @@ try {
                 }
                 NnvmN.pos.x = WX + (172 * scaleby);
                 NnvmN.pos.y = WY + (6 * scaleby);
-                if ((teamNameValid === 0) || ((window.Date.now() - World.PLAYER.mVVmv) < 30500)) {
+                if ((teamNameValid === 0) || ((window.Date.now() - World.PLAYER.teamCreateDelay) < 30500)) {
                     NnvmN.setState(GUI.__BUTTON_OUT__);
                     ctx.globalAlpha = 0.5;
                     NnvmN.draw();
@@ -13914,7 +13914,7 @@ try {
                     var wm = Game.join[j];
                     wm.pos.x = WX + ((84 + ((j % 3) * 163)) * scaleby);
                     wm.pos.y = WY + ((48 + (window.Math.floor(j / 3) * 36)) * scaleby);
-                    if ((window.Date.now() - World.PLAYER.Mwnwv) < 10500) {
+                    if ((window.Date.now() - World.PLAYER.teamDelay) < 10500) {
                         wm.setState(GUI.__BUTTON_OUT__);
                         ctx.globalAlpha = 0.5;
                         wm.draw();
@@ -13932,7 +13932,7 @@ try {
                 closebutt.pos.x = WX + (512 * scaleby);
                 closebutt.pos.y = WY + (34.5 * scaleby);
                 if (World.PLAYER.teamLeader === 1) {
-                    if (World.PLAYER.WnNvv === 0) {
+                    if (World.PLAYER.teamLocked === 0) {
                         mvNMv.pos.x = WX + (259 * scaleby);
                         mvNMv.pos.y = WY + (5 * scaleby);
                         mvNMv.draw();
@@ -13953,7 +13953,7 @@ try {
                         var wm = Game.kick[j];
                         wm.pos.x = WX + ((132 + ((j % 3) * 166.5)) * scaleby);
                         wm.pos.y = WY + ((48.5 + (window.Math.floor(j / 3) * 29.5)) * scaleby);
-                        if (((window.Date.now() - World.PLAYER.Mwnwv) < 10500) || (PLAYER.id === World.PLAYER.id)) {
+                        if (((window.Date.now() - World.PLAYER.teamDelay) < 10500) || (PLAYER.id === World.PLAYER.id)) {
                             wm.setState(GUI.__BUTTON_OUT__);
                             ctx.globalAlpha = 0.5;
                             wm.draw();
@@ -14059,10 +14059,10 @@ try {
             closebutt.pos.x = WX + (594 * scaleby);
             closebutt.pos.y = WY + (0 * scaleby);
             closebutt.draw();
-            var vVN = World.PLAYER.vVN;
-            var NmWNV = World.PLAYER.NmWNV;
-            var nww = World.PLAYER.nVV;
-            var MWW = World.PLAYER.Vvw;
+            var craftAvailable = World.PLAYER.craftAvailable;
+            var recipeAvailable = World.PLAYER.recipeAvailable;
+            var nww = World.PLAYER.craftCategory;
+            var MWW = World.PLAYER.craftArea;
             for (var i = 0; i < wnV.length; i++) {
                 var wm = wnV[i];
                 if (i === nww) wm.setState(GUI.__BUTTON_CLICK__);
@@ -14072,7 +14072,7 @@ try {
             }
             var j = 0;
             for (i = 0; i < craftList.length; i++) {
-                if ((i === MWW) && (World.PLAYER.VVn === 1)) {} else if ((i !== World.PLAYER.vWMmW) && (i !== 0)) continue;
+                if ((i === MWW) && (World.PLAYER.isInBuilding === 1)) {} else if ((i !== World.PLAYER.buildingArea) && (i !== 0)) continue;
                 var wm = craftList[i];
                 if (i === MWW) wm.setState(GUI.__BUTTON_CLICK__);
                 wm.pos.x = WX - (40 * scaleby);
@@ -14084,7 +14084,7 @@ try {
             preview.pos.y = WY + (27 * scaleby);
             preview.draw();
             var craft = Game.craft;
-            var len = World.PLAYER.MNvMn;
+            var len = World.PLAYER.craftLen;
             var SY = 49 * scaleby;
             var SX = 49 * scaleby;
             var MVM = 58 * scaleby;
@@ -14104,7 +14104,7 @@ try {
                 var wm = craft[i];
                 wm.pos.x = (mnMmm + WX) + ((i % 5) * MVM);
                 wm.pos.y = (NWNmV + WY) + (window.Math.floor(i / 5) * MVM);
-                var MvmWv = vVN[i];
+                var MvmWv = craftAvailable[i];
                 if (MvmWv === 0) {
                     ctx.globalAlpha = 0.45;
                     wm.draw();
@@ -14120,21 +14120,21 @@ try {
                 }
             }
             var Nnv = 0;
-            if (World.PLAYER.nVV === -1) {
-                if (World.PLAYER.VVn === 1) {
+            if (World.PLAYER.craftCategory === -1) {
+                if (World.PLAYER.isInBuilding === 1) {
                     NwnNV.pos.x = WX + (454 * scaleby);
                     NwnNV.pos.y = WY + (153 * scaleby);
-                    if (((World.PLAYER.vVN[World.PLAYER.VNwww] === 1) && (World.PLAYER.Nn.len < 4)) && (World.PLAYER.Nn.MNM !== 0)) NwnNV.draw();
+                    if (((World.PLAYER.craftAvailable[World.PLAYER.craftIdSelected] === 1) && (World.PLAYER.building.len < 4)) && (World.PLAYER.building.fuel !== 0)) NwnNV.draw();
                     else {
                         ctx.globalAlpha = 0.5;
                         NwnNV.setState(GUI.__BUTTON_OUT__);
                         NwnNV.draw();
                         ctx.globalAlpha = 1;
                     }
-                } else if (World.PLAYER.WwVNv === 0) {
+                } else if (World.PLAYER.crafting === 0) {
                     NwnNV.pos.x = WX + (454 * scaleby);
                     NwnNV.pos.y = WY + (153 * scaleby);
-                    if (World.PLAYER.vVN[World.PLAYER.VNwww] === 1) NwnNV.draw();
+                    if (World.PLAYER.craftAvailable[World.PLAYER.craftIdSelected] === 1) NwnNV.draw();
                     else {
                         ctx.globalAlpha = 0.5;
                         NwnNV.setState(GUI.__BUTTON_OUT__);
@@ -14151,16 +14151,16 @@ try {
                     return;
                 }
 
-                if (World.PLAYER.VVn === 1) {
-                    if ((World.PLAYER.Nn.time !== 0) && (World.PLAYER.Nn.MNM !== 0)) {
-                        Nnv = World.PLAYER.Nn.time - window.Date.now();
-                        if (Nnv < 0) World.PLAYER.Nn.time = 0;
-                        Nnv = MathUtils.Ease.inOutQuad(1 - (Nnv / World.PLAYER.Nn.WWNVM));
+                if (World.PLAYER.isInBuilding === 1) {
+                    if ((World.PLAYER.building.time !== 0) && (World.PLAYER.building.fuel !== 0)) {
+                        Nnv = World.PLAYER.building.time - window.Date.now();
+                        if (Nnv < 0) World.PLAYER.building.time = 0;
+                        Nnv = MathUtils.Ease.inOutQuad(1 - (Nnv / World.PLAYER.building.timeMax));
                     }
-                } else if (World.PLAYER.WwVNv !== 0) {
-                    Nnv = World.PLAYER.WwVNv - window.Date.now();
-                    if (Nnv < 0) World.PLAYER.WwVNv = 0;
-                    Nnv = MathUtils.Ease.inOutQuad(1 - (Nnv / World.PLAYER.WNvWv));
+                } else if (World.PLAYER.crafting !== 0) {
+                    Nnv = World.PLAYER.crafting - window.Date.now();
+                    if (Nnv < 0) World.PLAYER.crafting = 0;
+                    Nnv = MathUtils.Ease.inOutQuad(1 - (Nnv / World.PLAYER.craftingMax));
                 }
 
                 Nnv = window.Math.min(1, window.Math.max(0, Nnv));
@@ -14175,7 +14175,7 @@ try {
                 ctx.drawImage(wNvNm, posx, posy, SY, SX);
                 
             } else {
-                var nwVvN = World.PLAYER.vVN[World.PLAYER.VNwww];
+                var nwVvN = World.PLAYER.craftAvailable[World.PLAYER.craftIdSelected];
                 nvmnM.pos.x = WX + (454 * scaleby);
                 nvmnM.pos.y = WY + (153 * scaleby);
                 if (nwVvN === 1) nvmnM.draw();
@@ -14184,9 +14184,9 @@ try {
                     nvmnM.setState(GUI.__BUTTON_OUT__);
                     nvmnM.draw();
                     ctx.globalAlpha = 1;
-                    if (World.PLAYER.mMvww !== MMNWW) {
+                    if (World.PLAYER.craftSelected !== MMNWW) {
                         context2J.clearRect(0, 0, 420, 148);
-                        MMNWW = World.PLAYER.mMvww;
+                        MMNWW = World.PLAYER.craftSelected;
                         var NW = items[MMNWW].detail;
                         var MwNwV = 20;
                         if (NW.level > World.PLAYER.level) {
@@ -14194,12 +14194,12 @@ try {
                             context2J.drawImage(Nvm, 20, MwNwV);
                             MwNwV += 50;
                         }
-                        if ((NW.WnNmW !== -1) && (World.PLAYER.WvMVw[NW.WnNmW] === window.undefined)) {
+                        if ((NW.WnNmW !== -1) && (World.PLAYER.skillUnlocked[NW.WnNmW] === window.undefined)) {
                             var Nvm = GUI.renderText(("Unlock " + items[NW.WnNmW].detail.name) + " before", "'Viga', sans-serif", "#D8BA3D", 30, 600);
                             context2J.drawImage(Nvm, 20, MwNwV);
                             MwNwV += 50;
                         }
-                        if (World.PLAYER.canvasH < NW.wNvMv) {
+                        if (World.PLAYER.skillPoint < NW.wNvMv) {
                             var Nvm = GUI.renderText((("Cost " + NW.wNvMv) + " skill point") + ((NW.wNvMv !== 1) ? "s" : ""), "'Viga', sans-serif", "#D8BA3D", 30, 600);
                             context2J.drawImage(Nvm, 20, MwNwV);
                         }
@@ -14210,8 +14210,8 @@ try {
                     nvmnM.draw();
                 }
             }
-            if (World.PLAYER.VVn === 1) {
-                var nM = World.PLAYER.Nn.MNM;
+            if (World.PLAYER.isInBuilding === 1) {
+                var nM = World.PLAYER.building.fuel;
                 if (nM >= 0) {
                     var wm;
                     if (((MWW === AREAS.smelter) || (MWW === AREAS.extractor)) || (MWW === AREAS.agitator)) wm = WmWwW;
@@ -14219,7 +14219,7 @@ try {
                     else wm = VWNWV;
                     wm.pos.x = WX + (532 * scaleby);
                     wm.pos.y = WY + (153 * scaleby);
-                    if (World.PLAYER.Nn.MNM !== 255) wm.draw();
+                    if (World.PLAYER.building.fuel !== 255) wm.draw();
                     else {
                         ctx.globalAlpha = 0.5;
                         wm.setState(GUI.__BUTTON_OUT__);
@@ -14235,8 +14235,8 @@ try {
                     CanvasUtils.drawImageHd(inventoryAmmoNumber[nM], (wm.pos.x / scaleby) + 42, (wm.pos.y / scaleby) + 42, -0.5, 0, 0, 0.9);
                 }
                 var queue = Game.queue;
-                var WMnmM = World.PLAYER.Nn.pos;
-                len = World.PLAYER.Nn.len;
+                var WMnmM = World.PLAYER.building.pos;
+                len = World.PLAYER.building.len;
                 SY = 40 * scaleby;
                 SX = 40 * scaleby;
                 MVM = 62 * scaleby;
@@ -14261,7 +14261,7 @@ try {
                 }
             }
             var tools = Game.tools;
-            len = World.PLAYER.nWwmM;
+            len = World.PLAYER.toolsLen;
             MVM = 45 * scaleby;
             mnMmm = 356 * scaleby;
             NWNmV = 151 * scaleby;
@@ -14271,20 +14271,20 @@ try {
                 wm.pos.y = NWNmV + WY;
                 wm.draw();
             }
-            if (World.PLAYER.canvasH !== wmmVm) {
+            if (World.PLAYER.skillPoint !== wmmVm) {
                 context2H.clearRect(0, 0, 280, 50);
-                wmmVm = World.PLAYER.canvasH;
+                wmmVm = World.PLAYER.skillPoint;
                 var Nvm = GUI.renderText("SKILL POINT: " + wmmVm, "'Viga', sans-serif", "#FFFFFF", 32, 400);
                 context2H.drawImage(Nvm, 24, 12);
             }
-            ctx.drawImage(canvasH, WX + (455 * scaleby), WY + (378 * scaleby), (scaleby * canvasH.width) / 2, (scaleby * canvasH.height) / 2);
-            if (World.PLAYER.mMvww !== mwwNm) {
+            ctx.drawImage(skillPoint, WX + (455 * scaleby), WY + (378 * scaleby), (scaleby * skillPoint.width) / 2, (scaleby * skillPoint.height) / 2);
+            if (World.PLAYER.craftSelected !== mwwNm) {
                 context2dG.clearRect(0, 0, 280, 148);
-                mwwNm = World.PLAYER.mMvww;
+                mwwNm = World.PLAYER.craftSelected;
                 itemstatsfunc(context2dG, mwwNm);
             }
             ctx.drawImage(canvasG, WX + (439 * scaleby), WY + (24 * scaleby), (scaleby * canvasG.width) / 2, (scaleby * canvasG.height) / 2);
-            if ((World.PLAYER.canvasH > 0) || (wvV.WMw > 0)) {
+            if ((World.PLAYER.skillPoint > 0) || (wvV.WMw > 0)) {
                 var move = (wvV.move + delta) % 1000;
                 wvV.move = move;
                 var inmapy = WY / scaleby;
@@ -14293,11 +14293,11 @@ try {
                 ctx.globalAlpha = MathUtils.Ease.inQuad(wvV.WMw);
                 CanvasUtils.drawImageHd(wvV, 266 + (craftbox.pos.x / scaleby), inmapy, 0, 0, 0, 1);
                 ctx.globalAlpha = 1;
-                if (World.PLAYER.canvasH <= 0) wvV.WMw = window.Math.max(0, wvV.WMw - (delta / 500));
+                if (World.PLAYER.skillPoint <= 0) wvV.WMw = window.Math.max(0, wvV.WMw - (delta / 500));
                 else if (wvV.WMw < 1) wvV.WMw = window.Math.min(1, wvV.WMw + (delta / 500));
             }
             var recipe = Game.recipe;
-            len = World.PLAYER.nMnmW;
+            len = World.PLAYER.recipeLen;
             SY = 40 * scaleby;
             SX = 40 * scaleby;
             MVM = 45 * scaleby;
@@ -14307,14 +14307,14 @@ try {
                 var wm = recipe[i];
                 wm.pos.x = (mnMmm + WX) + (i * MVM);
                 wm.pos.y = NWNmV + WY;
-                var nM = window.Math.abs(NmWNV[i]);
+                var nM = window.Math.abs(recipeAvailable[i]);
                 if (inventoryItemNumber[nM] === window.undefined) {
                     inventoryItemNumber[nM] = {
                         W: GUI.renderText("x" + nM, "'Black Han Sans', sans-serif", "#ffffff", 30, 250, window.undefined, 15, 12, window.undefined, window.undefined, window.undefined, window.undefined, "#000000", 12)
                     };
                     inventoryItemNumber[nM].W.isLoaded = 1;
                 }
-                if (NmWNV[i] < 0) {
+                if (recipeAvailable[i] < 0) {
                     ctx.globalAlpha = 0.45;
                     wm.draw();
                     CanvasUtils.drawImageHd(inventoryItemNumber[nM], (wm.pos.x / scaleby) + 30, (wm.pos.y / scaleby) + 32, -0.5, 0, 0, 0.9);
@@ -14323,7 +14323,7 @@ try {
                     wm.draw();
                     CanvasUtils.drawImageHd(inventoryItemNumber[nM], (wm.pos.x / scaleby) + 30, (wm.pos.y / scaleby) + 32, -0.5, 0, 0, 0.9);
                 }
-                if ((NWmNn === i) && (World.PLAYER.nNNWn[i] > 0)) NMMwN(World.PLAYER.nNNWn[i], wm.pos.x, wm.pos.y + (45 * scaleby));
+                if ((NWmNn === i) && (World.PLAYER.recipeList[i] > 0)) NMMwN(World.PLAYER.recipeList[i], wm.pos.x, wm.pos.y + (45 * scaleby));
             }
         };
 
@@ -14451,26 +14451,26 @@ try {
         
 
         function vmNmW(NMn, i, j, wVNVN, vWMwn, NVWwM, MWMvm) {
-            var Nn = NVwvn[NMn.type];
-            var W = Nn.W;
+            var building = NVwvn[NMn.type];
+            var W = building.W;
             if (W.isLoaded !== 1) {
-                Nn.W = CanvasUtils.loadImage(Nn.src, Nn.W);
+                building.W = CanvasUtils.loadImage(building.src, building.W);
                 return;
             }
             var nVNNn = NVWwM - NMn.i;
             var VwMWn = MWMvm - NMn.j;
-            var nNmvn = (i + Nn.grid.length) - nVNNn;
-            var VWMmV = (j + Nn.grid[0].length) - VwMWn;
+            var nNmvn = (i + building.grid.length) - nVNNn;
+            var VWMmV = (j + building.grid[0].length) - VwMWn;
             var nMNww = 0;
             var WvMwV = 0;
             for (var _i = i, mmWMW = 0; _i < nNmvn; _i++, mmWMW++) {
                 if (_i >= VmvVW) {
-                    nMNww = Nn.grid.length - mmWMW;
+                    nMNww = building.grid.length - mmWMW;
                     break;
                 }
                 for (var _j = j, mVvwm = 0; _j < VWMmV; _j++, mVvwm++) {
                     if (_j >= wWmnn) {
-                        WvMwV = Nn.grid[0].length - mVvwm;
+                        WvMwV = building.grid[0].length - mVvwm;
                         break;
                     } else vMnnw[_i][_j] = frameId;
                 }
@@ -14518,7 +14518,7 @@ try {
                     var gauges = World.gauges;
                     if (wVn.rad !== window.undefined) {
                         gauges.rad.mNNmw = wVn.rad;
-                        gauges.cold.mNNmw = wVn.wNV;
+                        gauges.cold.mNNmw = wVn.warm;
                     } else {
                         gauges.rad.mNNmw = 0;
                         gauges.cold.mNNmw = 0;
@@ -14561,50 +14561,50 @@ try {
         };
 
         function mNWNw() {
-            for (var i = 0; i < World.PLAYER.Wvv.length; i++) {
-                if (World.PLAYER.Wvv[i] !== 0) return 0;
+            for (var i = 0; i < World.PLAYER.gridPrev.length; i++) {
+                if (World.PLAYER.gridPrev[i] !== 0) return 0;
             }
             return 1;
         };
 
         function wmVNW() {
             if (World.PLAYER.isBuilding === 1) {
-                if ((World.PLAYER.grid > 0) && ((World.PLAYER.VWVWw !== World.PLAYER._i) || (World.PLAYER.vNwMm !== World.PLAYER._j))) {
-                    for (var i = 0; i < World.PLAYER.Wvv.length; i++) {
-                        if (World.PLAYER.Wvv[i] === 0) {
-                            World.PLAYER.Wvv[i] = World.PLAYER.grid;
-                            World.PLAYER.NVNMw[i] = World.PLAYER.VWVWw;
-                            World.PLAYER.NmVnm[i] = World.PLAYER.vNwMm;
+                if ((World.PLAYER.grid > 0) && ((World.PLAYER.iGrid !== World.PLAYER._i) || (World.PLAYER.jGrid !== World.PLAYER._j))) {
+                    for (var i = 0; i < World.PLAYER.gridPrev.length; i++) {
+                        if (World.PLAYER.gridPrev[i] === 0) {
+                            World.PLAYER.gridPrev[i] = World.PLAYER.grid;
+                            World.PLAYER.iGridPrev[i] = World.PLAYER.iGrid;
+                            World.PLAYER.jGridPrev[i] = World.PLAYER.jGrid;
                             break;
                         }
                     }
                     World.PLAYER.grid = 0;
-                    World.PLAYER.VWVWw = World.PLAYER._i;
-                    World.PLAYER.vNwMm = World.PLAYER._j;
+                    World.PLAYER.iGrid = World.PLAYER._i;
+                    World.PLAYER.jGrid = World.PLAYER._j;
                 }
                 World.PLAYER.grid = window.Math.min(Mvvwv, World.PLAYER.grid + delta);
-                for (var i = 0; i < World.PLAYER.Wvv.length; i++) World.PLAYER.Wvv[i] = window.Math.max(0, World.PLAYER.Wvv[i] - delta);
+                for (var i = 0; i < World.PLAYER.gridPrev.length; i++) World.PLAYER.gridPrev[i] = window.Math.max(0, World.PLAYER.gridPrev[i] - delta);
             } else if ((World.PLAYER.grid === 0) && (mNWNw() === 1)) return;
             else {
                 World.PLAYER.grid = window.Math.max(0, World.PLAYER.grid - delta);
-                for (var i = 0; i < World.PLAYER.Wvv.length; i++) World.PLAYER.Wvv[i] = window.Math.max(0, World.PLAYER.Wvv[i] - delta);
+                for (var i = 0; i < World.PLAYER.gridPrev.length; i++) World.PLAYER.gridPrev[i] = window.Math.max(0, World.PLAYER.gridPrev[i] - delta);
             }
             if (wWNmv.isLoaded !== 1) {
                 wWNmv = CanvasUtils.loadImage(craftgrid, wWNmv);
                 return;
             }
             ctx.globalAlpha = World.PLAYER.grid / Mvvwv;
-            var WY = scaleby * (((World.PLAYER.VWVWw * __TILE_SIZE__) + horist) + __TILE_SIZE2__);
-            var WX = scaleby * (((World.PLAYER.vNwMm * __TILE_SIZE__) + vertst) + __TILE_SIZE2__);
+            var WY = scaleby * (((World.PLAYER.iGrid * __TILE_SIZE__) + horist) + __TILE_SIZE2__);
+            var WX = scaleby * (((World.PLAYER.jGrid * __TILE_SIZE__) + vertst) + __TILE_SIZE2__);
             var SY = (scaleby * wWNmv.width) / 2;
             var SX = (scaleby * wWNmv.height) / 2;
             ctx.drawImage(wWNmv, WX - (SY / 2), WY - (SX / 2), SY, SX);
             ctx.globalAlpha = 1;
-            for (var i = 0; i < World.PLAYER.Wvv.length; i++) {
-                if (World.PLAYER.Wvv[i] > 0) {
-                    ctx.globalAlpha = World.PLAYER.Wvv[i] / Mvvwv;
-                    var WY = scaleby * (((World.PLAYER.NVNMw[i] * __TILE_SIZE__) + horist) + __TILE_SIZE2__);
-                    var WX = scaleby * (((World.PLAYER.NmVnm[i] * __TILE_SIZE__) + vertst) + __TILE_SIZE2__);
+            for (var i = 0; i < World.PLAYER.gridPrev.length; i++) {
+                if (World.PLAYER.gridPrev[i] > 0) {
+                    ctx.globalAlpha = World.PLAYER.gridPrev[i] / Mvvwv;
+                    var WY = scaleby * (((World.PLAYER.iGridPrev[i] * __TILE_SIZE__) + horist) + __TILE_SIZE2__);
+                    var WX = scaleby * (((World.PLAYER.jGridPrev[i] * __TILE_SIZE__) + vertst) + __TILE_SIZE2__);
                     var SY = (scaleby * wWNmv.width) / 2;
                     var SX = (scaleby * wWNmv.height) / 2;
                     ctx.drawImage(wWNmv, WX - (SY / 2), WY - (SX / 2), SY, SX);
@@ -15226,7 +15226,7 @@ try {
             NwM = weapon.leftArm;
             MVn = (wVn.leftArm === window.undefined) ? skin.leftArm : wVn.leftArm;
             CanvasUtils.drawImageHd(MVn, WX, WY, (-NwM.angle + player.angle) - breath, (NwM.x - (move * PLAYER.orientation)) + NNM, NwM.y, imgMovement);
-            CanvasUtils.drawImageHd(weapon.putableimg, WX, WY, ((-NwM.angle + player.angle) - breath) + (window.Math.PI / 3), ((NwM.x - (move * PLAYER.orientation)) + NNM) - 40, NwM.y - 15, imgMovement);
+            CanvasUtils.drawImageHd(weapon.blueprint, WX, WY, ((-NwM.angle + player.angle) - breath) + (window.Math.PI / 3), ((NwM.x - (move * PLAYER.orientation)) + NNM) - 40, NwM.y - 15, imgMovement);
             if (player.hurt > 0) {
                 var mnM = 1;
                 player.hurt -= delta;
@@ -15262,12 +15262,12 @@ try {
 
         function placingobj() {
             var nwmVM = 0;
-            if ((World.PLAYER.isBuilding === 1) && (World.PLAYER.putableimg !== 0)) {
-                var item = items[World.PLAYER.putableimg];
+            if ((World.PLAYER.isBuilding === 1) && (World.PLAYER.blueprint !== 0)) {
+                var item = items[World.PLAYER.blueprint];
                 if (item.subtype !== 0) {
-                    item = item.subtype[World.PLAYER.mWmnv];
-                    item.notputableimg = item.Nn;
-                    item.putableimg = item.Nn;
+                    item = item.subtype[World.PLAYER.furniture];
+                    item.notputableimg = item.building;
+                    item.blueprint = item.building;
                     item.xCenter = nVWnV;
                     item.yCenter = nVWnV;
                 }
@@ -15291,26 +15291,26 @@ try {
                         CanvasUtils.drawImageHd(item.notputableimg, WX, WY, Rot * PIby2, 0, 0, 1);
                     } else {
                         World.PLAYER.canBuild = 1;
-                        CanvasUtils.drawImageHd(item.putableimg, WX, WY, Rot * PIby2, 0, 0, 1);
+                        CanvasUtils.drawImageHd(item.blueprint, WX, WY, Rot * PIby2, 0, 0, 1);
                     }
                 }
-                if (NvwMN.isLoaded !== 1) {
-                    NvwMN = CanvasUtils.loadImage(hintrotate, NvwMN);
+                if (hintRotate.isLoaded !== 1) {
+                    hintRotate = CanvasUtils.loadImage(hintrotate, hintRotate);
                     return;
                 }
-                if ((item.Mvw === 1) || (World.PLAYER.interaction >= 0)) nwmVM = window.Math.max(0, World.PLAYER.NvwMN - delta);
-                else nwmVM = window.Math.min(900, World.PLAYER.NvwMN + delta);
-            } else nwmVM = window.Math.max(0, World.PLAYER.NvwMN - delta);
+                if ((item.Mvw === 1) || (World.PLAYER.interaction >= 0)) nwmVM = window.Math.max(0, World.PLAYER.hintRotate - delta);
+                else nwmVM = window.Math.min(900, World.PLAYER.hintRotate + delta);
+            } else nwmVM = window.Math.max(0, World.PLAYER.hintRotate - delta);
             if (nwmVM > 0) {
                 ctx.globalAlpha = MathUtils.Ease.outQuad(window.Math.max(0, nwmVM - 600) / 300);
                 var imgMovement = scaleby + (WvmnV * scaleby);
                 var vNwMN = imgMovement / scaleby;
-                var SY = (scaleby * NvwMN.width) / 2;
-                var SX = (scaleby * NvwMN.height) / 2;
-                ctx.drawImage(NvwMN, ((vertst + NmM) * scaleby) - (SY / 2), window.Math.max(10 * scaleby, ((((horist + WWV) * scaleby) - (SX / 2)) - (65 * scaleby)) - (60 * scaleby)), SY, SX);
+                var SY = (scaleby * hintRotate.width) / 2;
+                var SX = (scaleby * hintRotate.height) / 2;
+                ctx.drawImage(hintRotate, ((vertst + NmM) * scaleby) - (SY / 2), window.Math.max(10 * scaleby, ((((horist + WWV) * scaleby) - (SX / 2)) - (65 * scaleby)) - (60 * scaleby)), SY, SX);
                 ctx.globalAlpha = 1;
             }
-            World.PLAYER.NvwMN = nwmVM;
+            World.PLAYER.hintRotate = nwmVM;
         };
 
         function nwMNv(mVn, weapon, wVn, player, imgMovement, WX, WY) {
@@ -15502,16 +15502,16 @@ try {
         
         function timeret() {
             if (World.PLAYER.ghoul !== 0) return;
-            var NMMmV = World.PLAYER.mnWwv;
+            var NMMmV = World.PLAYER.wrongToolTimer;
             if (NMMmV > 0) {
                 if (NMMmV < 500) ctx.globalAlpha = MathUtils.Ease.inQuad(NMMmV / 500);
                 else if (NMMmV > 1500) ctx.globalAlpha = MathUtils.Ease.inQuad(1 - ((NMMmV - 1500) / 500));
                 else ctx.globalAlpha = 1;
-                var wmN = (World.PLAYER.NmWvw === 1) ? vwnWv : VNN[items[World.PLAYER.NmWvw].loot];
-                CanvasUtils.drawImageHd(NmWvw, canw2ns, 50, 0, 0, 0, 1);
+                var wmN = (World.PLAYER.wrongTool === 1) ? vwnWv : VNN[items[World.PLAYER.wrongTool].loot];
+                CanvasUtils.drawImageHd(wrongTool, canw2ns, 50, 0, 0, 0, 1);
                 CanvasUtils.drawImageHd(wmN, canw2ns, 50, 0, 0, 0, 1);
                 ctx.globalAlpha = 1;
-                World.PLAYER.mnWwv -= delta;
+                World.PLAYER.wrongToolTimer -= delta;
             }
             var interaction = World.PLAYER.interaction;
             switch (interaction) {
@@ -15540,10 +15540,10 @@ try {
                     CanvasUtils.drawImageHd(loot, posx + 77, posy + 33, loot.angle, 0, 0, loot.scale);
                     break;
                 case 1:
-                    var vW = World.PLAYER.wVnVm / World.PLAYER.nWVvv;
-                    var delay = World.PLAYER.nWVvv - World.PLAYER.wVnVm;
-                    World.PLAYER.wVnVm -= delta;
-                    if (World.PLAYER.wVnVm < 0) {
+                    var vW = World.PLAYER.interactionDelay / World.PLAYER.interactionWait;
+                    var delay = World.PLAYER.interactionWait - World.PLAYER.interactionDelay;
+                    World.PLAYER.interactionDelay -= delta;
+                    if (World.PLAYER.interactionDelay < 0) {
                         World.PLAYER.interaction = -1;
                         return;
                     }
@@ -15567,7 +15567,7 @@ try {
                     var posx = inmapx - (scalex / 2);
                     var posy = window.Math.max(10 * imgMovement, ((inmapy - (scaley / 2)) - (65 * imgMovement)) - (60 * scaleby));
                     if (delay < 100) ctx.globalAlpha = delay / 100;
-                    else if (World.PLAYER.wVnVm < 100) ctx.globalAlpha = World.PLAYER.wVnVm / 100;
+                    else if (World.PLAYER.interactionDelay < 100) ctx.globalAlpha = World.PLAYER.interactionDelay / 100;
                     ctx.drawImage(timer, posx, posy, scalex, scaley); 
                     ctx.save();
                     ctx.translate(inmapx, window.Math.max((10 * imgMovement) + (scaley / 2), (inmapy - (65 * imgMovement)) - (60 * scaleby)));
@@ -15578,17 +15578,17 @@ try {
                     ctx.globalAlpha = 1;
                     break;
                 case 2:
-                    var W = World.PLAYER.MWVMV.W;
+                    var W = World.PLAYER.eInteract.W;
                     if (W.isLoaded !== 1) {
-                        if (isTouchScreen === 0) World.PLAYER.MWVMV.W = CanvasUtils.loadImage(World.PLAYER.MWVMV.src, W);
-                        else World.PLAYER.MWVMV.W = CanvasUtils.loadImage(World.PLAYER.MWVMV.src.replace("e-", "e-isTouchScreen-"), W);
+                        if (isTouchScreen === 0) World.PLAYER.eInteract.W = CanvasUtils.loadImage(World.PLAYER.eInteract.src, W);
+                        else World.PLAYER.eInteract.W = CanvasUtils.loadImage(World.PLAYER.eInteract.src.replace("e-", "e-isTouchScreen-"), W);
                         return;
                     }
                     var imgMovement = scaleby + (WvmnV * scaleby);
                     var scalex = (scaleby * W.width) / 2;
                     var scaley = (scaleby * W.height) / 2;
                     var posx;
-                    if (World.PLAYER.mwMmN === 1) posx = (((vertst + NmM) - 5) * imgMovement) - scalex;
+                    if (World.PLAYER.extraLoot === 1) posx = (((vertst + NmM) - 5) * imgMovement) - scalex;
                     else posx = ((vertst + NmM) * imgMovement) - (scalex / 2);
                     var posy = window.Math.max(10 * scaleby, ((((horist + WWV) * imgMovement) - (scaley / 2)) - (65 * imgMovement)) - (60 * scaleby));
                     if (isTouchScreen === 1) {
@@ -15598,7 +15598,7 @@ try {
                         Game.mnNnW = scaley;
                     }
                     ctx.drawImage(W, posx, posy, scalex, scaley);
-                    if (World.PLAYER.mwMmN === 1) {
+                    if (World.PLAYER.extraLoot === 1) {
                         if (VWvVN.isLoaded !== 1) {
                             if (isTouchScreen === 0) VWvVN = CanvasUtils.loadImage(loot2icon, VWvVN);
                             else VWvVN = CanvasUtils.loadImage(lootmobileicon, nMWVv);
@@ -15667,9 +15667,9 @@ try {
             var vW = player.breath / 500;
             var mnM = 0.95 + (0.3 * MathUtils.Ease.inOutQuad(vW));
             ctx.globalAlpha = 1 - vW;
-            CanvasUtils.drawImageHd(item.Nn[1], (vertst + player.x) + WX, (horist + player.y) + WY, Rot * PIby2, 0, 0, mnM);
+            CanvasUtils.drawImageHd(item.building[1], (vertst + player.x) + WX, (horist + player.y) + WY, Rot * PIby2, 0, 0, mnM);
             ctx.globalAlpha = 1;
-            CanvasUtils.drawImageHd(item.Nn[0], (vertst + player.x) + WX, (horist + player.y) + WY, Rot * PIby2, 0, 0, imgMovement);
+            CanvasUtils.drawImageHd(item.building[0], (vertst + player.x) + WX, (horist + player.y) + WY, Rot * PIby2, 0, 0, imgMovement);
         };
 
 
@@ -15709,7 +15709,7 @@ try {
         };
         
         function wiresfunc(item, player, WX, WY, Rot, imgMovement) {
-            CanvasUtils.drawImageHd(item.Nn, (vertst + player.x) + WX, (horist + player.y) + WY, Rot * PIby2, 0, 0, imgMovement);
+            CanvasUtils.drawImageHd(item.building, (vertst + player.x) + WX, (horist + player.y) + WY, Rot * PIby2, 0, 0, imgMovement);
         };
 
         function landminefunc(item, player, WX, WY, Rot, imgMovement) {
@@ -15718,7 +15718,7 @@ try {
             if (isInClan === 1) {
                 player.breath = window.Math.min(300, player.breath + delta);
                 ctx.globalAlpha = MathUtils.Ease.inOutQuad(player.breath / 300);
-                CanvasUtils.drawImageHd(item.Nn[player.id % 3], (vertst + player.x) + WX, (horist + player.y) + WY, Rot * PIby2, 0, 0, imgMovement);
+                CanvasUtils.drawImageHd(item.building[player.id % 3], (vertst + player.x) + WX, (horist + player.y) + WY, Rot * PIby2, 0, 0, imgMovement);
                 ctx.globalAlpha = 0.2;
                 CanvasUtils.drawImageHd(NWWWW[5], (vertst + player.x) + WX, (horist + player.y) + WY, 0, 0, 0, 0.6);
                 ctx.globalAlpha = 1;
@@ -15727,7 +15727,7 @@ try {
             else if (isInClan === 0) {
                 player.breath = window.Math.min(300, player.breath + delta);
                 ctx.globalAlpha = MathUtils.Ease.inOutQuad(player.breath / 300);
-                CanvasUtils.drawImageHd(item.Nn[player.id % 3], (vertst + player.x) + WX, (horist + player.y) + WY, Rot * PIby2, 0, 0, imgMovement);
+                CanvasUtils.drawImageHd(item.building[player.id % 3], (vertst + player.x) + WX, (horist + player.y) + WY, Rot * PIby2, 0, 0, imgMovement);
 
                 ctx.globalAlpha = 0.2;
                 CanvasUtils.drawImageHd(NWWWW[4], (vertst + player.x) + WX, (horist + player.y) + WY, 0, 0, 0, 0.6);
@@ -15737,30 +15737,30 @@ try {
         };
 
         function MWMmm(item, player, WX, WY, Rot, imgMovement) {
-            CanvasUtils.drawImageHd(item.Nn, (vertst + player.x) + WX, (horist + player.y) + WY, Rot * PIby2, 0, 0, imgMovement);
+            CanvasUtils.drawImageHd(item.building, (vertst + player.x) + WX, (horist + player.y) + WY, Rot * PIby2, 0, 0, imgMovement);
         };
 
         function NnNvw(item, player, WX, WY, Rot, imgMovement) {
-            CanvasUtils.drawImageHd(item.Nn[player.broke], (vertst + player.x) + WX, (horist + player.y) + WY, Rot * PIby2, 0, 0, imgMovement);
+            CanvasUtils.drawImageHd(item.building[player.broke], (vertst + player.x) + WX, (horist + player.y) + WY, Rot * PIby2, 0, 0, imgMovement);
         };
 
         function mmwVM(item, player, WX, WY, Rot, imgMovement) {
             if (player.broke > 0) CanvasUtils.drawImageHd(item.WVW[player.broke - 1], (vertst + player.x) + WX, (horist + player.y) + WY, 0, 0, 0, imgMovement);
-            else CanvasUtils.drawImageHd(item.Nn[WwmwN(player)], (vertst + player.x) + WX, (horist + player.y) + WY, 0, 0, 0, imgMovement);
+            else CanvasUtils.drawImageHd(item.building[WwmwN(player)], (vertst + player.x) + WX, (horist + player.y) + WY, 0, 0, 0, imgMovement);
         };
 
         function nearme(item, player, MMwnn) {
-            if ((((player.removed === 0) && (World.PLAYER.interaction !== 1)) && (World.PLAYER.VVn !== 1)) && (((MMwnn === 0) || (player.pid === World.PLAYER.id)) || (((World.PLAYER.team !== -1) && (World.PLAYER.team === World.socket[player.pid].team)) && (World.socket[player.pid].teamUid === World.clans[World.PLAYER.team].uid)))) {
+            if ((((player.removed === 0) && (World.PLAYER.interaction !== 1)) && (World.PLAYER.isInBuilding !== 1)) && (((MMwnn === 0) || (player.pid === World.PLAYER.id)) || (((World.PLAYER.team !== -1) && (World.PLAYER.team === World.socket[player.pid].team)) && (World.socket[player.pid].teamUid === World.clans[World.PLAYER.team].uid)))) {
                 var dist = Math2d.fastDist(NmM, WWV, player.x, player.y);
                 if (dist < vnVmM) {
-                    World.PLAYER.NnN = item.NnN;
-                    World.PLAYER.MnMwn = player.id;
-                    World.PLAYER.MNMvN = player.pid;
-                    World.PLAYER.vWMmW = item.MWW;
+                    World.PLAYER.packetId = item.packetId;
+                    World.PLAYER.buildingId = player.id;
+                    World.PLAYER.buildingPid = player.pid;
+                    World.PLAYER.buildingArea = item.MWW;
                     vnVmM = dist;
-                    if (World.PLAYER.interaction === 0) World.PLAYER.mwMmN = 1;
+                    if (World.PLAYER.interaction === 0) World.PLAYER.extraLoot = 1;
                     World.PLAYER.interaction = 2;
-                    World.PLAYER.MWVMV = item.wwN;
+                    World.PLAYER.eInteract = item.wwN;
                     return 1;
                 }
             }
@@ -15779,34 +15779,34 @@ try {
             var imgMovement = 1 + (0.03 * ((player.heal < 500) ? (player.heal / 500) : (1 - ((player.heal - 500) / 500))));
             if (vMN === 0) {
                 ctx.globalAlpha = MathUtils.Ease.inOutQuad(player.breath / item.vMvvV);
-                CanvasUtils.drawImageHd(item.Nn[0], (vertst + player.x) + WX, (horist + player.y) + WY, Rot * PIby2, 0, 0, imgMovement);
+                CanvasUtils.drawImageHd(item.building[0], (vertst + player.x) + WX, (horist + player.y) + WY, Rot * PIby2, 0, 0, imgMovement);
                 ctx.globalAlpha = 1;
             } else if (player.breath < item.vMvvV) {
                 var MwMvw = MathUtils.Ease.inOutQuad(player.breath / item.vMvvV);
                 ctx.globalAlpha = 1 - MwMvw;
-                CanvasUtils.drawImageHd(item.Nn[vMN - 1], (vertst + player.x) + WX, (horist + player.y) + WY, Rot * PIby2, 0, 0, imgMovement);
+                CanvasUtils.drawImageHd(item.building[vMN - 1], (vertst + player.x) + WX, (horist + player.y) + WY, Rot * PIby2, 0, 0, imgMovement);
                 ctx.globalAlpha = MwMvw;
-                CanvasUtils.drawImageHd(item.Nn[vMN], (vertst + player.x) + WX, (horist + player.y) + WY, Rot * PIby2, 0, 0, imgMovement);
+                CanvasUtils.drawImageHd(item.building[vMN], (vertst + player.x) + WX, (horist + player.y) + WY, Rot * PIby2, 0, 0, imgMovement);
                 ctx.globalAlpha = 1;
-            } else CanvasUtils.drawImageHd(item.Nn[vMN], (vertst + player.x) + WX, (horist + player.y) + WY, Rot * PIby2, 0, 0, imgMovement);
+            } else CanvasUtils.drawImageHd(item.building[vMN], (vertst + player.x) + WX, (horist + player.y) + WY, Rot * PIby2, 0, 0, imgMovement);
         };
 
         function NWnmw(item, player, WX, WY, Rot, imgMovement) {
             var vMN = (player.state >> 4) & 15;
             player.breath = (player.breath + delta) % 1000;
             var imgMovement = 1 + (0.01 * ((player.breath < 500) ? (player.breath / 500) : (1 - ((player.breath - 500) / 500))));
-            CanvasUtils.drawImageHd(item.Nn[vMN], (vertst + player.x) + WX, (horist + player.y) + WY, Rot * PIby2, 0, 0, imgMovement);
+            CanvasUtils.drawImageHd(item.building[vMN], (vertst + player.x) + WX, (horist + player.y) + WY, Rot * PIby2, 0, 0, imgMovement);
         };
 
         function VMWWV(item, player, WX, WY, Rot, imgMovement) {
             var vMN = (player.state >> 4) & 15;
             player.breath = (player.breath + delta) % 1000;
             var imgMovement = 1 + (0.03 * ((player.breath < 500) ? (player.breath / 500) : (1 - ((player.breath - 500) / 500))));
-            CanvasUtils.drawImageHd(item.Nn[vMN], (vertst + player.x) + WX, (horist + player.y) + WY, Rot * PIby2, 0, 0, imgMovement);
+            CanvasUtils.drawImageHd(item.building[vMN], (vertst + player.x) + WX, (horist + player.y) + WY, Rot * PIby2, 0, 0, imgMovement);
         };
 
         function nNMVN(item, player, WX, WY, Rot, imgMovement) {
-            var WVV = (player.broke > 0) ? item.WVW[player.broke - 1] : item.Nn[wmNMv(player, Rot)];
+            var WVV = (player.broke > 0) ? item.WVW[player.broke - 1] : item.building[wmNMv(player, Rot)];
             var W = WVV.W;
             if (W.isLoaded !== 1) {
                 WVV.W = CanvasUtils.loadImage(WVV.src, WVV.W);
@@ -15829,16 +15829,16 @@ try {
             else if (player.hitMax > 0) player.hitMax = window.Math.max(0, player.hitMax - delta);
             if ((player.hitMax > 0) && (player.hitMax !== 500)) {
                 ctx.globalAlpha = MathUtils.Ease.outQuad(player.hitMax / 500);
-                CanvasUtils.drawImageHd(item.Nn[1][player.broke], (vertst + player.x) + WX, (horist + player.y) + WY, Rot * PIby2, 0, 0, imgMovement);
+                CanvasUtils.drawImageHd(item.building[1][player.broke], (vertst + player.x) + WX, (horist + player.y) + WY, Rot * PIby2, 0, 0, imgMovement);
                 ctx.globalAlpha = MathUtils.Ease.outQuad(1 - (player.hitMax / 500));
-                CanvasUtils.drawImageHd(item.Nn[0][player.broke], (vertst + player.x) + WX, (horist + player.y) + WY, Rot * PIby2, 0, 0, imgMovement);
+                CanvasUtils.drawImageHd(item.building[0][player.broke], (vertst + player.x) + WX, (horist + player.y) + WY, Rot * PIby2, 0, 0, imgMovement);
                 ctx.globalAlpha = 1;
-            } else CanvasUtils.drawImageHd(item.Nn[MvVvv][player.broke], (vertst + player.x) + WX, (horist + player.y) + WY, Rot * PIby2, 0, 0, imgMovement);
+            } else CanvasUtils.drawImageHd(item.building[MvVvv][player.broke], (vertst + player.x) + WX, (horist + player.y) + WY, Rot * PIby2, 0, 0, imgMovement);
         };
 
     function switchonofffunc(item, player, WX, WY, Rot, imgMovement) {
         nearme(item, player, 0);
-        CanvasUtils.drawImageHd(item.Nn[(player.state >> 4) & 1], (vertst + player.x) + WX, (horist + player.y) + WY, Rot * PIby2, 0, 0, imgMovement);
+        CanvasUtils.drawImageHd(item.building[(player.state >> 4) & 1], (vertst + player.x) + WX, (horist + player.y) + WY, Rot * PIby2, 0, 0, imgMovement);
             var WY = scaleby * (((player.i * 100) + horist) + 50);
             var WX = scaleby * (((player.j * 100) + vertst) + 50);
             var SY = (imgMovement * arv.width) / 3;
@@ -15850,7 +15850,7 @@ try {
 
         function gatetimerfunc(item, player, WX, WY, Rot, imgMovement) {
             nearme(item, player, 0);
-            CanvasUtils.drawImageHd(item.Nn[(player.state >> 4) & 3], (vertst + player.x) + WX, (horist + player.y) + WY, Rot * PIby2, 0, 0, imgMovement);
+            CanvasUtils.drawImageHd(item.building[(player.state >> 4) & 3], (vertst + player.x) + WX, (horist + player.y) + WY, Rot * PIby2, 0, 0, imgMovement);
         };
 
         function mWmNV(item, player, WX, WY, Rot, imgMovement) {
@@ -15861,7 +15861,7 @@ try {
             if (player.hitMax > 0) {
                 WvnvV[pplonscr++] = player;
                 CanvasUtils.drawImageHd(item.wVnWm[(player.state >> 4) & 7], (vertst + player.x) + WX, (horist + player.y) + WY, Rot * PIby2, 0, 0, imgMovement);
-            } else CanvasUtils.drawImageHd(item.Nn, (vertst + player.x) + WX, (horist + player.y) + WY, Rot * PIby2, 0, 0, imgMovement);
+            } else CanvasUtils.drawImageHd(item.building, (vertst + player.x) + WX, (horist + player.y) + WY, Rot * PIby2, 0, 0, imgMovement);
         };
 
         function Wnmmm(player) {
@@ -15878,7 +15878,7 @@ try {
         function doorfunc(item, player, WX, WY, Rot, imgMovement) {
             var NVNvv = (player.state >> 4) & 1;
             var MWwVn = (player.pid === 0) ? 0 : 1;
-            if ((nearme(item, player, MWwVn) === 1) && (NVNvv === 1)) World.PLAYER.MWVMV = item.mMnmM;
+            if ((nearme(item, player, MWwVn) === 1) && (NVNvv === 1)) World.PLAYER.eInteract = item.mMnmM;
             if (player.hit !== NVNvv) {
                 player.hitMax = 500;
                 player.hit = NVNvv;
@@ -15887,7 +15887,7 @@ try {
             var angle = item.angle;
             if (NVNvv === 0) angle *= MathUtils.Ease.inOutQuad(player.hitMax / 500);
             else angle *= MathUtils.Ease.inOutQuad(1 - (player.hitMax / 500));
-            var WVV = (player.broke > 0) ? item.WVW[player.broke - 1] : item.Nn;
+            var WVV = (player.broke > 0) ? item.WVW[player.broke - 1] : item.building;
             var W = WVV.W;
             if (W.isLoaded !== 1) {
                 WVV.W = CanvasUtils.loadImage(WVV.src, WVV.W);
@@ -15930,7 +15930,7 @@ try {
             mmWVw.pid = player.pid;
             if ((mmWVw.mVN !== frameId) || (mmWVw.MmvNw === 1)) {
                 if (player.broke > 0) CanvasUtils.drawImageHd(item.WVW[player.broke - 1], (vertst + player.x) + WX, (horist + player.y) + WY, 0, 0, 0, imgMovement);
-                else CanvasUtils.drawImageHd(item.Nn[Wwmwm(player)], vertst + player.x, horist + player.y, 0, 0, 0, imgMovement);
+                else CanvasUtils.drawImageHd(item.building[Wwmwm(player)], vertst + player.x, horist + player.y, 0, 0, 0, imgMovement);
             }
         };
 
@@ -15940,14 +15940,14 @@ try {
             var objects = items[item.id].subtype[player.subtype];
             if (inuse === 1) player.hit = window.Math.min(500, player.hit + delta);
             else if (player.hit > 0) player.hit = window.Math.max(0, player.hit - delta);
-            if (((inuse === 0) && (objects.WvwVM === 1)) && (nearme(objects, player, 0) === 1)) World.PLAYER.MWVMV = econtainericon;
-            CanvasUtils.drawImageHd(objects.Nn, (vertst + player.x) + WX, (horist + player.y) + WY, Rot * PIby2, 0, 0, imgMovement);
+            if (((inuse === 0) && (objects.WvwVM === 1)) && (nearme(objects, player, 0) === 1)) World.PLAYER.eInteract = econtainericon;
+            CanvasUtils.drawImageHd(objects.building, (vertst + player.x) + WX, (horist + player.y) + WY, Rot * PIby2, 0, 0, imgMovement);
             if (player.hit > 0) containeropenic(player, WX, WY);
         };
 
         function VWwMV(item, player, WX, WY, Rot, imgMovement) {
             var objects = items[item.id].subtype[player.subtype];
-            CanvasUtils.drawImageHd(objects.Nn, vertst + player.x, horist + player.y, 0, 0, 0, imgMovement);
+            CanvasUtils.drawImageHd(objects.building, vertst + player.x, horist + player.y, 0, 0, 0, imgMovement);
         };
 
         function NWVWn(mnn, player, WX, WY, imgMovement) {
@@ -16021,7 +16021,7 @@ try {
             if (inuse === 1) player.hit = window.Math.min(500, player.hit + delta);
             else if (player.hit > 0) player.hit = window.Math.max(0, player.hit - delta);
             if (inuse === 0) nearme(item, player, 0);
-            CanvasUtils.drawImageHd(item.Nn, (vertst + player.x) + WX, (horist + player.y) + WY, Rot * PIby2, 0, 0, imgMovement);
+            CanvasUtils.drawImageHd(item.building, (vertst + player.x) + WX, (horist + player.y) + WY, Rot * PIby2, 0, 0, imgMovement);
             if (player.hit > 0) containeropenic(player, WX, WY);
         };
 
@@ -16035,7 +16035,7 @@ try {
             matrix[player.i + i][player.j + j].nww = window.undefined;
             matrix[player.i - i][player.j - j].nww = window.undefined;
             nearme(item, player, 0);
-            CanvasUtils.drawImageHd(item.Nn, (vertst + player.x) + WX, (horist + player.y) + WY, Rot * PIby2, 0, 0, imgMovement);
+            CanvasUtils.drawImageHd(item.building, (vertst + player.x) + WX, (horist + player.y) + WY, Rot * PIby2, 0, 0, imgMovement);
         };
 
         function VmMwM(item, player, WX, WY, Rot, imgMovement) {
@@ -16050,10 +16050,10 @@ try {
             if (player.hitMax > 0) {
                 vW = MathUtils.Ease.outQuad(player.hitMax / 10000);
                 player.heal += (vW * delta) / 300;
-                CanvasUtils.drawImageHd(item.Nn[1], (vertst + player.x) + WX, (horist + player.y) + WY, Rot * PIby2, 0, 0, imgMovement);
-                CanvasUtils.drawImageHd(item.Nn[2], ((vertst + player.x) + WX) + item.NmVwM[Rot][0], ((horist + player.y) + WY) + item.NmVwM[Rot][1], (Rot * PIby2) + player.heal, 0, 0, imgMovement);
-                CanvasUtils.drawImageHd(item.Nn[3], (vertst + player.x) + WX, (horist + player.y) + WY, Rot * PIby2, 0, 0, imgMovement);
-            } else CanvasUtils.drawImageHd(item.Nn[0], (vertst + player.x) + WX, (horist + player.y) + WY, Rot * PIby2, 0, 0, imgMovement);
+                CanvasUtils.drawImageHd(item.building[1], (vertst + player.x) + WX, (horist + player.y) + WY, Rot * PIby2, 0, 0, imgMovement);
+                CanvasUtils.drawImageHd(item.building[2], ((vertst + player.x) + WX) + item.NmVwM[Rot][0], ((horist + player.y) + WY) + item.NmVwM[Rot][1], (Rot * PIby2) + player.heal, 0, 0, imgMovement);
+                CanvasUtils.drawImageHd(item.building[3], (vertst + player.x) + WX, (horist + player.y) + WY, Rot * PIby2, 0, 0, imgMovement);
+            } else CanvasUtils.drawImageHd(item.building[0], (vertst + player.x) + WX, (horist + player.y) + WY, Rot * PIby2, 0, 0, imgMovement);
             if (player.hit > 0) containeropenic(player, WX, WY);
         };
 
@@ -16071,9 +16071,9 @@ try {
                 WX += ((window.Math.random() * 2) - 1) * vW;
                 WY += ((window.Math.random() * 2) - 1) * vW;
                 player.heal += (vW * delta) / 300;
-                CanvasUtils.drawImageHd(item.Nn[1], ((vertst + player.x) + WX) + item.NmVwM[Rot][0], ((horist + player.y) + WY) + item.NmVwM[Rot][1], (Rot * PIby2) + player.heal, 0, 0, imgMovement);
-                CanvasUtils.drawImageHd(item.Nn[0], (vertst + player.x) + WX, (horist + player.y) + WY, Rot * PIby2, 0, 0, imgMovement);
-            } else CanvasUtils.drawImageHd(item.Nn[2], (vertst + player.x) + WX, (horist + player.y) + WY, Rot * PIby2, 0, 0, imgMovement);
+                CanvasUtils.drawImageHd(item.building[1], ((vertst + player.x) + WX) + item.NmVwM[Rot][0], ((horist + player.y) + WY) + item.NmVwM[Rot][1], (Rot * PIby2) + player.heal, 0, 0, imgMovement);
+                CanvasUtils.drawImageHd(item.building[0], (vertst + player.x) + WX, (horist + player.y) + WY, Rot * PIby2, 0, 0, imgMovement);
+            } else CanvasUtils.drawImageHd(item.building[2], (vertst + player.x) + WX, (horist + player.y) + WY, Rot * PIby2, 0, 0, imgMovement);
             if (player.hit > 0) containeropenic(player, WX, WY);
         };
 
@@ -16109,8 +16109,8 @@ try {
                 vW = MathUtils.Ease.outQuad(player.hitMax / 10000);
                 WX += ((window.Math.random() * 2) - 1) * vW;
                 WY += ((window.Math.random() * 2) - 1) * vW;
-                CanvasUtils.drawImageHd(item.Nn[0], (vertst + player.x) + WX, (horist + player.y) + WY, Rot * PIby2, 0, 0, imgMovement);
-            } else CanvasUtils.drawImageHd(item.Nn[1], (vertst + player.x) + WX, (horist + player.y) + WY, Rot * PIby2, 0, 0, imgMovement);
+                CanvasUtils.drawImageHd(item.building[0], (vertst + player.x) + WX, (horist + player.y) + WY, Rot * PIby2, 0, 0, imgMovement);
+            } else CanvasUtils.drawImageHd(item.building[1], (vertst + player.x) + WX, (horist + player.y) + WY, Rot * PIby2, 0, 0, imgMovement);
             if (player.hit > 0) containeropenic(player, WX, WY);
         };
 
@@ -16137,8 +16137,8 @@ try {
                 vW = MathUtils.Ease.outQuad(player.hitMax / 10000);
                 WX += ((window.Math.random() * 2) - 1) * vW;
                 WY += ((window.Math.random() * 2) - 1) * vW;
-                CanvasUtils.drawImageHd(item.Nn[1], (vertst + player.x) + WX, (horist + player.y) + WY, Rot * PIby2, 0, 0, imgMovement);
-            } else CanvasUtils.drawImageHd(item.Nn[0], (vertst + player.x) + WX, (horist + player.y) + WY, Rot * PIby2, 0, 0, imgMovement);
+                CanvasUtils.drawImageHd(item.building[1], (vertst + player.x) + WX, (horist + player.y) + WY, Rot * PIby2, 0, 0, imgMovement);
+            } else CanvasUtils.drawImageHd(item.building[0], (vertst + player.x) + WX, (horist + player.y) + WY, Rot * PIby2, 0, 0, imgMovement);
             if (player.hit > 0) containeropenic(player, WX, WY);
         };
 
@@ -16160,10 +16160,10 @@ try {
             else player.hitMax = 0;
             var vW = 0;
             if (player.hitMax > 0) {
-                CanvasUtils.drawImageHd(item.Nn[1 + (window.Math.floor(player.hitMax / 500) % 3)], (vertst + player.x) + WX, (horist + player.y) + WY, Rot * PIby2, 0, 0, imgMovement);
+                CanvasUtils.drawImageHd(item.building[1 + (window.Math.floor(player.hitMax / 500) % 3)], (vertst + player.x) + WX, (horist + player.y) + WY, Rot * PIby2, 0, 0, imgMovement);
                 var mMW = item.mMW[window.Math.floor(player.hitMax / 50) % item.mMW.length];
                 if (mMW !== 0) CanvasUtils.drawImageHd(mMW, (vertst + player.x) + WX, (horist + player.y) + WY, Rot * PIby2, 0, 0, imgMovement);
-            } else CanvasUtils.drawImageHd(item.Nn[0], (vertst + player.x) + WX, (horist + player.y) + WY, Rot * PIby2, 0, 0, imgMovement);
+            } else CanvasUtils.drawImageHd(item.building[0], (vertst + player.x) + WX, (horist + player.y) + WY, Rot * PIby2, 0, 0, imgMovement);
             if (player.hit > 0) containeropenic(player, WX, WY);
         };
 
@@ -16188,7 +16188,7 @@ try {
             if (MWm === 1) player.hit = window.Math.min(500, player.hit + delta);
             else if (player.hit > 0) player.hit = window.Math.max(0, player.hit - delta);
             if (MWm === 0) nearme(item, player, 0);
-            CanvasUtils.drawImageHd(item.Nn, (vertst + player.x) + WX, (horist + player.y) + WY, Rot * PIby2, 0, 0, imgMovement);
+            CanvasUtils.drawImageHd(item.building, (vertst + player.x) + WX, (horist + player.y) + WY, Rot * PIby2, 0, 0, imgMovement);
 
             var mMW = (player.state >> 5) & 1;
             if (mMW === 1) player.hitMax = window.Math.min(500, player.hitMax + delta);
@@ -16433,9 +16433,9 @@ try {
                 if (dist < wMVMm) {
                     wMVMm = dist;
                     World.PLAYER.loot = loot.extra;
-                    World.PLAYER.lootsrvID = loot.id;
+                    World.PLAYER.lootId = loot.id;
                     if (World.PLAYER.interaction <= 0) World.PLAYER.interaction = 0;
-                    else World.PLAYER.mwMmN = 1;
+                    else World.PLAYER.extraLoot = 1;
                 }
             }
             var breath = 0;
@@ -16470,9 +16470,9 @@ try {
             NNmMN[3] = 0;
             vnVmM = 12000;
             wMVMm = 12000;
-            World.PLAYER.mwMmN = 0;
-            World.PLAYER.MnMwn = -1;
-            World.PLAYER.vWMmW = -1;
+            World.PLAYER.extraLoot = 0;
+            World.PLAYER.buildingId = -1;
+            World.PLAYER.buildingArea = -1;
             if (World.PLAYER.interaction !== 1) World.PLAYER.interaction = -1;
             var MvW = Entitie.units[ENTITIES.length];
             var Wwn = Entitie.border[ENTITIES.length];
@@ -16538,7 +16538,7 @@ try {
                 MmnMv(player, pos);
             }
             World.PLAYER.loot = -1;
-            World.PLAYER.lootsrvID = -1;
+            World.PLAYER.lootId = -1;
             var MMwVW = Entitie.units[__ENTITIE_LOOT__];
             var vmwvW = Entitie.border[__ENTITIE_LOOT__];
             var MVMVw = vmwvW.border;
@@ -16832,7 +16832,7 @@ try {
             mvWww: MWMmm,
             NnMNn: wiresfunc,
             VWWwm: NnNvw,
-            mWmnv: containericonopen,
+            furniture: containericonopen,
             NNnmv: VWwMV,
             vmMNW: landminefunc,
             VnMww: dynac4func,
@@ -18735,7 +18735,7 @@ var items = [{
     MmwnN: Mv.orange,
     wait: 10,
     mnw: 21,     
-    MNM: -1,
+    fuel: -1,
     WvV: -1,
     z: 0,
     delay: 1000,
@@ -18745,7 +18745,7 @@ var items = [{
     yCenter: [0, 0, 0, 0],
     inmapx: [35, 35, 35, 35],
     inmapy: [35, 35, 35, 35],
-    putableimg: {
+    blueprint: {
         src: "img/day-clear-blue-plant2-orange.png",
         W: {
             isLoaded: 0
@@ -18767,7 +18767,7 @@ var items = [{
     draw: Render.MWnVn,
     impact: SOUNDID.VNv,
     destroyaudio: SOUNDID.VNv,
-    Nn: [{
+    building: [{
         src: "img/day-plant0-orange.png",
         W: {
             isLoaded: 0
@@ -18907,7 +18907,7 @@ var items = [{
         [AREAS.workbench, 15000]
     ]),
     mnw: 21,     
-    MNM: -1,
+    fuel: -1,
     WvV: 0,
     z: 1,
     MWW: AREAS.workbench,
@@ -18921,7 +18921,7 @@ var items = [{
     yCenter: [0, 0, 0, 0],
     inmapx: [0, 0, 0, 0],
     inmapy: [0, 0, 0, 0],
-    putableimg: {
+    blueprint: {
         src: "img/day-clear-blue-workbench.png",
         W: {
             isLoaded: 0
@@ -18944,7 +18944,7 @@ var items = [{
     MMN: 1,
     WnW: 0,
     draw: Render.FCWCcont,
-    NnN: 16,
+    packetId: 16,
     wwN: {
         src: "img/e-workbench.png",
         W: {
@@ -18953,7 +18953,7 @@ var items = [{
     },
     impact: SOUNDID.wood,
     destroyaudio: SOUNDID.wooddes,
-    Nn: {
+    building: {
         src: "img/day-workbench.png",
         W: {
             isLoaded: 0
@@ -19144,7 +19144,7 @@ var items = [{
         [AREAS.workbench, 10000]
     ]),
     mnw: 21,     
-    MNM: -1,
+    fuel: -1,
     WvV: 1,
     z: 1,
     stack: 255,
@@ -19157,7 +19157,7 @@ var items = [{
     yCenter: [0, 0, 0, 0],
     inmapx: [0, 0, 0, 0],
     inmapy: [0, 0, 0, 0],
-    putableimg: {
+    blueprint: {
         src: "img/day-clear-blue-wood-wall.png",
         W: {
             isLoaded: 0
@@ -19200,7 +19200,7 @@ var items = [{
     }],
     impact: SOUNDID.wood,
     destroyaudio: SOUNDID.wooddes,
-    Nn: [{
+    building: [{
         src: "img/day-wood-wall0.png",
         W: {
             isLoaded: 0
@@ -19459,7 +19459,7 @@ var items = [{
         [AREAS.workbench, 15000]
     ], 3),
     mnw: 21,     
-    MNM: -1,
+    fuel: -1,
     WvV: 1,
     z: 1,
     stack: 255,
@@ -19472,7 +19472,7 @@ var items = [{
     yCenter: [0, 0, 0, 0],
     inmapx: [0, 0, 0, 0],
     inmapy: [0, 0, 0, 0],
-    putableimg: {
+    blueprint: {
         src: "img/day-clear-blue-stone-wall.png",
         W: {
             isLoaded: 0
@@ -19515,7 +19515,7 @@ var items = [{
     }],
     impact: SOUNDID.stone,
     destroyaudio: SOUNDID.stonedes,
-    Nn: [{
+    building: [{
         src: "img/day-stone-wall0.png",
         W: {
             isLoaded: 0
@@ -19774,7 +19774,7 @@ var items = [{
         [AREAS.researchbench, 20000]
     ], 6, item.stonewall),
     mnw: 21,     
-    MNM: -1,
+    fuel: -1,
     WvV: 1,
     z: 1,
     stack: 255,
@@ -19787,7 +19787,7 @@ var items = [{
     yCenter: [0, 0, 0, 0],
     inmapx: [0, 0, 0, 0],
     inmapy: [0, 0, 0, 0],
-    putableimg: {
+    blueprint: {
         src: "img/day-clear-blue-stone-wall.png",
         W: {
             isLoaded: 0
@@ -19830,7 +19830,7 @@ var items = [{
     }],
     impact: SOUNDID.metal,
     destroyaudio: SOUNDID.metaldes,
-    Nn: [{
+    building: [{
         src: "img/day-steel-wall0.png",
         W: {
             isLoaded: 0
@@ -20089,7 +20089,7 @@ var items = [{
         [AREAS.workbench, 15000]
     ]),
     mnw: 21,     
-    MNM: -1,
+    fuel: -1,
     WvV: 0,
     z: 0,
     stack: 255,
@@ -20102,7 +20102,7 @@ var items = [{
     yCenter: [30, 0, -30, 0],
     inmapx: [0, 0, 0, 65],
     inmapy: [65, 0, 0, 0],
-    putableimg: {
+    blueprint: {
         src: "img/day-clear-blue-wood-door.png",
         W: {
             isLoaded: 0
@@ -20133,7 +20133,7 @@ var items = [{
     VvMvv: 6,
     MmVVV: 46,
     draw: Render.WNv,
-    NnN: 15,
+    packetId: 15,
     wwN: {
         src: "img/e-opendoor.png",
         W: {
@@ -20164,7 +20164,7 @@ var items = [{
     }],
     impact: SOUNDID.wood,
     destroyaudio: SOUNDID.wooddes,
-    Nn: {
+    building: {
         src: "img/day-wood-door.png",
         W: {
             isLoaded: 0
@@ -20193,7 +20193,7 @@ var items = [{
         [AREAS.workbench, 15000]
     ], 3),
     mnw: 21,     
-    MNM: -1,
+    fuel: -1,
     WvV: 0,
     z: 0,
     stack: 255,
@@ -20206,7 +20206,7 @@ var items = [{
     yCenter: [30, 0, -30, 0],
     inmapx: [0, 0, 0, 65],
     inmapy: [65, 0, 0, 0],
-    putableimg: {
+    blueprint: {
         src: "img/day-clear-blue-stone-door.png",
         W: {
             isLoaded: 0
@@ -20237,7 +20237,7 @@ var items = [{
     VvMvv: 6,
     MmVVV: 46,
     draw: Render.WNv,
-    NnN: 15,
+    packetId: 15,
     wwN: {
         src: "img/e-opendoor.png",
         W: {
@@ -20268,7 +20268,7 @@ var items = [{
     }],
     impact: SOUNDID.stone,
     destroyaudio: SOUNDID.stonedes,
-    Nn: {
+    building: {
         src: "img/day-stone-door.png",
         W: {
             isLoaded: 0
@@ -20297,7 +20297,7 @@ var items = [{
         [AREAS.researchbench, 30000]
     ], 6, item.stonedoor),
     mnw: 21,     
-    MNM: -1,
+    fuel: -1,
     WvV: 0,
     z: 0,
     stack: 255,
@@ -20310,7 +20310,7 @@ var items = [{
     yCenter: [30, 0, -30, 0],
     inmapx: [0, 0, 0, 65],
     inmapy: [65, 0, 0, 0],
-    putableimg: {
+    blueprint: {
         src: "img/day-clear-blue-stone-door.png",
         W: {
             isLoaded: 0
@@ -20341,7 +20341,7 @@ var items = [{
     VvMvv: 6,
     MmVVV: 46,
     draw: Render.WNv,
-    NnN: 15,
+    packetId: 15,
     wwN: {
         src: "img/e-opendoor.png",
         W: {
@@ -20372,7 +20372,7 @@ var items = [{
     }],
     impact: SOUNDID.metal,
     destroyaudio: SOUNDID.metaldes,
-    Nn: {
+    building: {
         src: "img/day-steel-door.png",
         W: {
             isLoaded: 0
@@ -20403,7 +20403,7 @@ var items = [{
         [AREAS.workbench, 15000]
     ]),
     mnw: 21,     
-    MNM: 15000,
+    fuel: 15000,
     WvV: -1,
     z: 0,
     MWW: AREAS.firepart,
@@ -20417,7 +20417,7 @@ var items = [{
     yCenter: [0, 0, 0, 0],
     inmapx: [0, 0, 0, 0],
     inmapy: [0, 0, 0, 0],
-    putableimg: {
+    blueprint: {
         src: "img/day-clear-blue-campfire.png",
         W: {
             isLoaded: 0
@@ -20441,7 +20441,7 @@ var items = [{
     WnW: __WARM__,
     draw: Render.fireCont,
     VvmvM: Render.nnvWw,
-    NnN: 16,
+    packetId: 16,
     wwN: {
         src: "img/e-campfire.png",
         W: {
@@ -20450,7 +20450,7 @@ var items = [{
     },
     impact: SOUNDID.wood,
     destroyaudio: SOUNDID.wooddes,
-    Nn: {
+    building: {
         src: "img/day-campfire.png",
         W: {
             isLoaded: 0
@@ -20641,7 +20641,7 @@ var items = [{
     stack: 1,
     loot: Mv.headscarf,
     wait: 10,
-    wNV: 0.00085,
+    warm: 0.00085,
     NVw: 0,
     MvM: 0,
     mnm: 0,
@@ -20671,7 +20671,7 @@ var items = [{
     stack: 1,
     loot: Mv.chapka,
     wait: 10,
-    wNV: 0.0017,
+    warm: 0.0017,
     NVw: 0,
     MvM: 0,
     mnm: 0,
@@ -20701,7 +20701,7 @@ var items = [{
     stack: 1,
     loot: Mv.coat,
     wait: 10,
-    wNV: 0.0026,
+    warm: 0.0026,
     NVw: 0,
     MvM: 0,
     mnm: 0,
@@ -20731,7 +20731,7 @@ var items = [{
     stack: 1,
     loot: Mv.gazmask,
     wait: 10,
-    wNV: 0,
+    warm: 0,
     NVw: 0,
     MvM: 0,
     mnm: 0,
@@ -20763,7 +20763,7 @@ var items = [{
     stack: 1,
     loot: Mv.gazprotection,
     wait: 10,
-    wNV: 0.0006,
+    warm: 0.0006,
     NVw: 0,
     MvM: 0,
     mnm: 0,
@@ -20795,7 +20795,7 @@ var items = [{
     stack: 1,
     loot: Mv.radiationsuit,
     wait: 10,
-    wNV: 0,
+    warm: 0,
     NVw: 0,
     MvM: 0,
     mnm: 0,
@@ -20842,7 +20842,7 @@ var items = [{
         [AREAS.workbench, 20000]
     ], 3),
     mnw: 21,     
-    MNM: 20000,
+    fuel: 20000,
     WvV: -1,
     z: 0,
     MWW: AREAS.bbq,
@@ -20856,7 +20856,7 @@ var items = [{
     yCenter: [0, 0, 0, 0],
     inmapx: [0, 0, 0, 0],
     inmapy: [0, 0, 0, 0],
-    putableimg: {
+    blueprint: {
         src: "img/day-clear-blue-campfire-bbq.png",
         W: {
             isLoaded: 0
@@ -20880,7 +20880,7 @@ var items = [{
     WnW: __WARM__,
     draw: Render.fireCont,
     VvmvM: Render.nnvWw,
-    NnN: 16,
+    packetId: 16,
     wwN: {
         src: "img/e-campfire-bbq.png",
         W: {
@@ -20889,7 +20889,7 @@ var items = [{
     },
     impact: SOUNDID.wood,
     destroyaudio: SOUNDID.wooddes,
-    Nn: {
+    building: {
         src: "img/day-campfire-bbq.png",
         W: {
             isLoaded: 0
@@ -20919,7 +20919,7 @@ var items = [{
         [AREAS.researchbench, 100000]
     ], 10),
     mnw: 21,     
-    MNM: 42000,
+    fuel: 42000,
     WvV: 1,
     z: 1,
     MWW: AREAS.smelter,
@@ -20935,7 +20935,7 @@ var items = [{
     inmapy: [-80, 0, -80, 0],
     MMnVm: [-1, 0, -1, 0],
     nmMVw: [0, -1, 0, -1],
-    putableimg: {
+    blueprint: {
         src: "img/day-clear-blue-smelter.png",
         W: {
             isLoaded: 0
@@ -20960,7 +20960,7 @@ var items = [{
     MMN: 1,
     WnW: 0,
     draw: Render.vNvMW,
-    NnN: 16,
+    packetId: 16,
     wwN: {
         src: "img/e-smelter.png",
         W: {
@@ -20969,7 +20969,7 @@ var items = [{
     },
     impact: SOUNDID.metal,
     destroyaudio: SOUNDID.metaldes,
-    Nn: [{
+    building: [{
         src: "img/day-smelter-off.png",
         W: {
             isLoaded: 0
@@ -21013,7 +21013,7 @@ var items = [{
         [AREAS.workbench, 20000]
     ]),
     mnw: 21,     
-    MNM: -1,
+    fuel: -1,
     WvV: 1,
     z: 1,
     stack: 255,
@@ -21026,7 +21026,7 @@ var items = [{
     yCenter: [0, 0, 0, 0],
     inmapx: [0, 0, 0, 0],
     inmapy: [0, 0, 0, 0],
-    putableimg: {
+    blueprint: {
         src: "img/day-clear-blue-wood-door1.png",
         W: {
             isLoaded: 0
@@ -21057,7 +21057,7 @@ var items = [{
     VvMvv: 17,
     MmVVV: 113,
     draw: Render.WNv,
-    NnN: 15,
+    packetId: 15,
     wwN: {
         src: "img/e-opendoor.png",
         W: {
@@ -21088,7 +21088,7 @@ var items = [{
     }],
     impact: SOUNDID.wood,
     destroyaudio: SOUNDID.wooddes,
-    Nn: {
+    building: {
         src: "img/day-wood-door1.png",
         W: {
             isLoaded: 0
@@ -21117,7 +21117,7 @@ var items = [{
         [AREAS.workbench, 20000]
     ], 3),
     mnw: 21,     
-    MNM: -1,
+    fuel: -1,
     WvV: 1,
     z: 1,
     stack: 255,
@@ -21130,7 +21130,7 @@ var items = [{
     yCenter: [0, 0, 0, 0],
     inmapx: [0, 0, 0, 0],
     inmapy: [0, 0, 0, 0],
-    putableimg: {
+    blueprint: {
         src: "img/day-clear-blue-stone-door1.png",
         W: {
             isLoaded: 0
@@ -21161,7 +21161,7 @@ var items = [{
     VvMvv: 17,
     MmVVV: 113,
     draw: Render.WNv,
-    NnN: 15,
+    packetId: 15,
     wwN: {
         src: "img/e-opendoor.png",
         W: {
@@ -21192,7 +21192,7 @@ var items = [{
     }],
     impact: SOUNDID.stone,
     destroyaudio: SOUNDID.stonedes,
-    Nn: {
+    building: {
         src: "img/day-stone-door1.png",
         W: {
             isLoaded: 0
@@ -21221,7 +21221,7 @@ var items = [{
         [AREAS.researchbench, 40000]
     ], 6, item.stonedoor1),
     mnw: 21,     
-    MNM: -1,
+    fuel: -1,
     WvV: 1,
     z: 1,
     stack: 255,
@@ -21234,7 +21234,7 @@ var items = [{
     yCenter: [0, 0, 0, 0],
     inmapx: [0, 0, 0, 0],
     inmapy: [0, 0, 0, 0],
-    putableimg: {
+    blueprint: {
         src: "img/day-clear-blue-stone-door1.png",
         W: {
             isLoaded: 0
@@ -21265,7 +21265,7 @@ var items = [{
     VvMvv: 17,
     MmVVV: 113,
     draw: Render.WNv,
-    NnN: 15,
+    packetId: 15,
     wwN: {
         src: "img/e-opendoor.png",
         W: {
@@ -21296,7 +21296,7 @@ var items = [{
     }],
     impact: SOUNDID.metal,
     destroyaudio: SOUNDID.metaldes,
-    Nn: {
+    building: {
         src: "img/day-steel-door1.png",
         W: {
             isLoaded: 0
@@ -21366,7 +21366,7 @@ var items = [{
         [AREAS.workbench, 50000]
     ], 6),
     mnw: 21,     
-    MNM: -1,
+    fuel: -1,
     WvV: 0,
     z: 1,
     MWW: AREAS.researchbench,
@@ -21382,7 +21382,7 @@ var items = [{
     inmapy: [-90, 0, -90, 0],
     MMnVm: [-1, 0, -1, 0],
     nmMVw: [0, -1, 0, -1],
-    putableimg: {
+    blueprint: {
         src: "img/day-clear-blue-workbench2.png",
         W: {
             isLoaded: 0
@@ -21405,7 +21405,7 @@ var items = [{
     MMN: 1,
     WnW: 0,
     draw: Render.wMwnV,
-    NnN: 16,
+    packetId: 16,
     wwN: {
         src: "img/e-workbench2.png",
         W: {
@@ -21414,7 +21414,7 @@ var items = [{
     },
     impact: SOUNDID.metal,
     destroyaudio: SOUNDID.metaldes,
-    Nn: {
+    building: {
         src: "img/day-workbench2.png",
         W: {
             isLoaded: 0
@@ -21465,7 +21465,7 @@ var items = [{
         [AREAS.workbench, 60000]
     ]),
     mnw: 21,     
-    MNM: -1,
+    fuel: -1,
     WvV: 0,
     z: 1,
     MWW: AREAS.weavingmachine,
@@ -21479,7 +21479,7 @@ var items = [{
     yCenter: [0, 0, 0, 0],
     inmapx: [0, 0, 0, 0],
     inmapy: [0, 0, 0, 0],
-    putableimg: {
+    blueprint: {
         src: "img/day-clear-blue-weaving-machine.png",
         W: {
             isLoaded: 0
@@ -21502,7 +21502,7 @@ var items = [{
     MMN: 1,
     WnW: 0,
     draw: Render.FCWCcont,
-    NnN: 16,
+    packetId: 16,
     wwN: {
         src: "img/e-weaving-machine.png",
         W: {
@@ -21511,7 +21511,7 @@ var items = [{
     },
     impact: SOUNDID.wood,
     destroyaudio: SOUNDID.wooddes,
-    Nn: {
+    building: {
         src: "img/day-weaving-machine.png",
         W: {
             isLoaded: 0
@@ -21584,7 +21584,7 @@ var items = [{
         [AREAS.workbench, 30000]
     ], 8),
     mnw: 21,     
-    MNM: -1,
+    fuel: -1,
     WvV: 0,
     z: 0,
     stack: 255,
@@ -21598,7 +21598,7 @@ var items = [{
     yCenter: [0, 0, 0, 0],
     inmapx: [0, 0, 0, 0],
     inmapy: [0, 0, 0, 0],
-    putableimg: {
+    blueprint: {
         src: "img/day-clear-blue-chest.png",
         W: {
             isLoaded: 0
@@ -21621,7 +21621,7 @@ var items = [{
     MMN: 1,
     angle: window.Math.PI / 2,
     draw: Render.FCWCcont,
-    NnN: 25,
+    packetId: 25,
     wwN: {
         src: "img/e-chest.png",
         W: {
@@ -21630,7 +21630,7 @@ var items = [{
     },
     impact: SOUNDID.wood,
     destroyaudio: SOUNDID.wooddes,
-    Nn: {
+    building: {
         src: "img/day-chest.png",
         W: {
             isLoaded: 0
@@ -21660,7 +21660,7 @@ var items = [{
         [AREAS.researchbench, 90000]
     ], 9),
     mnw: 21,     
-    MNM: -1,
+    fuel: -1,
     WvV: 0,
     z: 0,
     stack: 255,
@@ -21675,7 +21675,7 @@ var items = [{
     yCenter: [0, 0, 0, 0],
     inmapx: [0, 0, 50, 0],
     inmapy: [0, 0, 0, 50],
-    putableimg: {
+    blueprint: {
         src: "img/day-clear-blue-fridge.png",
         W: {
             isLoaded: 0
@@ -21698,7 +21698,7 @@ var items = [{
     MMN: 1,
     angle: window.Math.PI / 2,
     draw: Render.FCWCcont,
-    NnN: 25,
+    packetId: 25,
     wwN: {
         src: "img/e-fridge.png",
         W: {
@@ -21707,7 +21707,7 @@ var items = [{
     },
     impact: SOUNDID.metal,
     destroyaudio: SOUNDID.metaldes,
-    Nn: {
+    building: {
         src: "img/day-fridge.png",
         W: {
             isLoaded: 0
@@ -21739,7 +21739,7 @@ var items = [{
     loot: Mv.woodfloor1,
     wait: 10,
     mnw: 21,     
-    MNM: -1,
+    fuel: -1,
     WvV: 2,
     z: 0,
     delay: 1000,
@@ -21749,7 +21749,7 @@ var items = [{
     yCenter: [0, 0, 0, 0],
     inmapx: [0, 0, 0, 0],
     inmapy: [0, 0, 0, 0],
-    putableimg: {
+    blueprint: {
         src: "img/day-clear-blue-wood-floor.png",
         W: {
             isLoaded: 0
@@ -21791,7 +21791,7 @@ var items = [{
     }],
     impact: SOUNDID.VNv,
     destroyaudio: SOUNDID.wooddes,
-    Nn: [{
+    building: [{
         src: "img/day-wood-floor-0.png",
         W: {
             isLoaded: 0
@@ -22077,7 +22077,7 @@ var items = [{
     loot: Mv.sleepingbag,
     wait: 10,
     mnw: 21,     
-    MNM: -1,
+    fuel: -1,
     WvV: -1,
     z: 0,
     delay: 1000,
@@ -22087,7 +22087,7 @@ var items = [{
     yCenter: [0, 0, 0, 0],
     inmapx: [0, 0, 0, 0],
     inmapy: [0, 0, 0, 0],
-    putableimg: {
+    blueprint: {
         src: "img/day-clear-blue-sleeping-bag.png",
         W: {
             isLoaded: 0
@@ -22109,7 +22109,7 @@ var items = [{
     draw: Render.mvWww,
     impact: SOUNDID.pillow,
     destroyaudio: SOUNDID.pillowdes,
-    Nn: {
+    building: {
         src: "img/day-sleeping-bag.png",
         W: {
             isLoaded: 0
@@ -22182,7 +22182,7 @@ var items = [{
     loot: Mv.woodfloor2,
     wait: 10,
     mnw: 21,     
-    MNM: -1,
+    fuel: -1,
     WvV: 2,
     z: 0,
     delay: 1000,
@@ -22192,7 +22192,7 @@ var items = [{
     yCenter: [0, 0, 0, 0],
     inmapx: [0, 0, 0, 0],
     inmapy: [0, 0, 0, 0],
-    putableimg: {
+    blueprint: {
         src: "img/day-clear-blue-woodlight-floor.png",
         W: {
             isLoaded: 0
@@ -22234,7 +22234,7 @@ var items = [{
     }],
     impact: SOUNDID.VNv,
     destroyaudio: SOUNDID.wooddes,
-    Nn: [{
+    building: [{
         src: "img/day-wood-floor-light-0.png",
         W: {
             isLoaded: 0
@@ -22493,7 +22493,7 @@ var items = [{
         [AREAS.workbench, 10000]
     ]),
     mnw: 21,     
-    MNM: -1,
+    fuel: -1,
     WvV: 0,
     z: 0,
     stack: 255,
@@ -22506,7 +22506,7 @@ var items = [{
     yCenter: [30, 0, -30, 0],
     inmapx: [0, 0, 0, 65],
     inmapy: [65, 0, 0, 0],
-    putableimg: {
+    blueprint: {
         src: "img/day-clear-blue-wood-smallwall.png",
         W: {
             isLoaded: 0
@@ -22556,7 +22556,7 @@ var items = [{
     }],
     impact: SOUNDID.wood,
     destroyaudio: SOUNDID.wooddes,
-    Nn: [{
+    building: [{
         src: "img/day-wood-smallwalls-0.png",
         W: {
             isLoaded: 0
@@ -22780,7 +22780,7 @@ var items = [{
         [AREAS.workbench, 15000]
     ], 3),
     mnw: 21,     
-    MNM: -1,
+    fuel: -1,
     WvV: 0,
     z: 0,
     stack: 255,
@@ -22793,7 +22793,7 @@ var items = [{
     yCenter: [30, 0, -30, 0],
     inmapx: [0, 0, 0, 65],
     inmapy: [65, 0, 0, 0],
-    putableimg: {
+    blueprint: {
         src: "img/day-clear-blue-stone-smallwalls.png",
         W: {
             isLoaded: 0
@@ -22843,7 +22843,7 @@ var items = [{
     }],
     impact: SOUNDID.stone,
     destroyaudio: SOUNDID.stonedes,
-    Nn: [{
+    building: [{
         src: "img/day-stone-smallwalls-0.png",
         W: {
             isLoaded: 0
@@ -23067,7 +23067,7 @@ var items = [{
         [AREAS.researchbench, 20000]
     ], 6, item.smallstonewall),
     mnw: 21,     
-    MNM: -1,
+    fuel: -1,
     WvV: 0,
     z: 0,
     stack: 255,
@@ -23080,7 +23080,7 @@ var items = [{
     yCenter: [30, 0, -30, 0],
     inmapx: [0, 0, 0, 65],
     inmapy: [65, 0, 0, 0],
-    putableimg: {
+    blueprint: {
         src: "img/day-clear-blue-stone-smallwalls.png",
         W: {
             isLoaded: 0
@@ -23130,7 +23130,7 @@ var items = [{
     }],
     impact: SOUNDID.metal,
     destroyaudio: SOUNDID.metaldes,
-    Nn: [{
+    building: [{
         src: "img/day-steel-smallwalls-0.png",
         W: {
             isLoaded: 0
@@ -23353,7 +23353,7 @@ var items = [{
         nww: window.undefined
     },
     particles: -1,
-    draw: Render.mWmnv
+    draw: Render.furniture
 }, {
     id: item.tomatosoup,
     img: {
@@ -23461,7 +23461,7 @@ var items = [{
     MmwnN: Mv.tomato,
     wait: 10,
     mnw: 21,     
-    MNM: -1,
+    fuel: -1,
     WvV: -1,
     z: 0,
     delay: 1000,
@@ -23471,7 +23471,7 @@ var items = [{
     yCenter: [0, 0, 0, 0],
     inmapx: [35, 35, 35, 35],
     inmapy: [35, 35, 35, 35],
-    putableimg: {
+    blueprint: {
         src: "img/day-clear-blue-tomato.png",
         W: {
             isLoaded: 0
@@ -23493,7 +23493,7 @@ var items = [{
     draw: Render.MWnVn,
     impact: SOUNDID.VNv,
     destroyaudio: SOUNDID.VNv,
-    Nn: [{
+    building: [{
         src: "img/day-plant0-tomato.png",
         W: {
             isLoaded: 0
@@ -23696,7 +23696,7 @@ var items = [{
     loot: Mv.stonefloor1,
     wait: 10,
     mnw: 21,     
-    MNM: -1,
+    fuel: -1,
     WvV: 2,
     z: 0,
     delay: 1000,
@@ -23706,7 +23706,7 @@ var items = [{
     yCenter: [0, 0, 0, 0],
     inmapx: [0, 0, 0, 0],
     inmapy: [0, 0, 0, 0],
-    putableimg: {
+    blueprint: {
         src: "img/day-clear-blue-stone-floor.png",
         W: {
             isLoaded: 0
@@ -23748,7 +23748,7 @@ var items = [{
     }],
     impact: SOUNDID.VNv,
     destroyaudio: SOUNDID.stonedes,
-    Nn: [{
+    building: [{
         src: "img/day-stone-floor-0.png",
         W: {
             isLoaded: 0
@@ -24010,7 +24010,7 @@ var items = [{
     loot: Mv.stonefloor2,
     wait: 10,
     mnw: 21,     
-    MNM: -1,
+    fuel: -1,
     WvV: 2,
     z: 0,
     delay: 1000,
@@ -24020,7 +24020,7 @@ var items = [{
     yCenter: [0, 0, 0, 0],
     inmapx: [0, 0, 0, 0],
     inmapy: [0, 0, 0, 0],
-    putableimg: {
+    blueprint: {
         src: "img/day-clear-blue-tiling-floor.png",
         W: {
             isLoaded: 0
@@ -24062,7 +24062,7 @@ var items = [{
     }],
     impact: SOUNDID.VNv,
     destroyaudio: SOUNDID.stonedes,
-    Nn: [{
+    building: [{
         src: "img/day-tiling-floor-0.png",
         W: {
             isLoaded: 0
@@ -24475,7 +24475,7 @@ var items = [{
         [AREAS.researchbench, 120000]
     ], 10, item.researchbench),
     mnw: 21,     
-    MNM: 60000,
+    fuel: 60000,
     WvV: 0,
     z: 1,
     MWW: AREAS.teslabench,
@@ -24491,7 +24491,7 @@ var items = [{
     inmapy: [-80, 0, -80, 0],
     MMnVm: [-1, 0, -1, 0],
     nmMVw: [0, -1, 0, -1],
-    putableimg: {
+    blueprint: {
         src: "img/day-clear-blue-workbench3.png",
         W: {
             isLoaded: 0
@@ -24516,7 +24516,7 @@ var items = [{
     MMN: 1,
     WnW: 0,
     draw: Render.nVWmn,
-    NnN: 16,
+    packetId: 16,
     wwN: {
         src: "img/e-workbench3.png",
         W: {
@@ -24525,7 +24525,7 @@ var items = [{
     },
     impact: SOUNDID.metal,
     destroyaudio: SOUNDID.metaldes,
-    Nn: [{
+    building: [{
         src: "img/day-workbench3.png",
         W: {
             isLoaded: 0
@@ -24651,7 +24651,7 @@ var items = [{
     loot: Mv.landmine,
     wait: 10,
     mnw: 21,     
-    MNM: -1,
+    fuel: -1,
     WvV: -1,
     z: 0,
     delay: 1000,
@@ -24661,7 +24661,7 @@ var items = [{
     inmapy: [25, 25, 25, 25],
     xCenter: [0, 0, 0, 0],
     yCenter: [0, 0, 0, 0],
-    putableimg: {
+    blueprint: {
         src: "img/clear-blue-landmine.png", //image when you try to put in ground
         W: {
             isLoaded: 0
@@ -24685,7 +24685,7 @@ var items = [{
     draw: Render.vmMNW,   //visible before - draw: Render.vmMNW
     impact: SOUNDID.metal,
     destroyaudio: SOUNDID.metaldes,
-    Nn: [{
+    building: [{
         src: "img/day-landmine-0.png",
         W: {
             isLoaded: 0
@@ -24730,7 +24730,7 @@ var items = [{
     loot: Mv.dynamite,
     wait: 10,
     mnw: 21,     
-    MNM: -1,
+    fuel: -1,
     WvV: -1,
     z: 0,
     delay: 1000,
@@ -24740,7 +24740,7 @@ var items = [{
     yCenter: [0, 0, 0, 0],
     inmapx: [0, 0, 0, 0],
     inmapy: [0, 0, 0, 0],
-    putableimg: {
+    blueprint: {
         src: "img/clear-blue-dynamite.png",
         W: {
             isLoaded: 0
@@ -24764,7 +24764,7 @@ var items = [{
     draw: Render.VnMww,
     impact: SOUNDID.pillow,
     destroyaudio: SOUNDID.VNv,
-    Nn: [{
+    building: [{
         src: "img/day-dynamite.png",
         W: {
             isLoaded: 0
@@ -24804,7 +24804,7 @@ var items = [{
     loot: Mv.c4bomb,
     wait: 10,
     mnw: 21,     
-    MNM: -1,
+    fuel: -1,
     WvV: -1,
     z: 0,
     delay: 1000,
@@ -24814,7 +24814,7 @@ var items = [{
     yCenter: [0, 0, 0, 0],
     inmapx: [0, 0, 0, 0],
     inmapy: [0, 0, 0, 0],
-    putableimg: {
+    blueprint: {
         src: "img/clear-blue-C4.png",
         W: {
             isLoaded: 0
@@ -24838,7 +24838,7 @@ var items = [{
     draw: Render.VnMww,
     impact: SOUNDID.pillow,
     destroyaudio: SOUNDID.VNv,
-    Nn: [{
+    building: [{
         src: "img/day-C4.png",
         W: {
             isLoaded: 0
@@ -24898,7 +24898,7 @@ var items = [{
         [AREAS.researchbench, 100000]
     ], 8),
     mnw: 21,     
-    MNM: 10000,
+    fuel: 10000,
     WvV: 0,
     z: 1,
     MWW: AREAS.composter,
@@ -24912,7 +24912,7 @@ var items = [{
     yCenter: [0, 0, 0, 0],
     inmapx: [0, 0, 0, 0],
     inmapy: [0, 0, 0, 0],
-    putableimg: {
+    blueprint: {
         src: "img/clear-blue-composter.png",
         W: {
             isLoaded: 0
@@ -24935,7 +24935,7 @@ var items = [{
     MMN: 1,
     WnW: 0,
     draw: Render.vNvnV,
-    NnN: 16,
+    packetId: 16,
     wwN: {
         src: "img/e-composter.png",
         W: {
@@ -24944,7 +24944,7 @@ var items = [{
     },
     impact: SOUNDID.metal,
     destroyaudio: SOUNDID.metaldes,
-    Nn: [{
+    building: [{
         src: "img/day-composter-off.png",
         W: {
             isLoaded: 0
@@ -24984,7 +24984,7 @@ var items = [{
     stack: 1,
     loot: Mv.metalhelmet,
     wait: 10,
-    wNV: 0,
+    warm: 0,
     NVw: 0.15,
     MvM: 0,
     mnm: 0,
@@ -25016,7 +25016,7 @@ var items = [{
     stack: 1,
     loot: Mv.weldinghelmet,
     wait: 10,
-    wNV: 0,
+    warm: 0,
     NVw: 0.4,
     MvM: 0,
     mnm: 0,
@@ -25048,7 +25048,7 @@ var items = [{
     stack: 1,
     loot: Mv.gladiatorhelmet,
     wait: 10,
-    wNV: 0,
+    warm: 0,
     NVw: 0.6,
     MvM: 0.1,
     mnm: 0,
@@ -25077,7 +25077,7 @@ var items = [{
     stack: 1,
     loot: Mv.leatherjacket,
     wait: 10,
-    wNV: 0.0006,
+    warm: 0.0006,
     NVw: 0,
     MvM: 0.2,
     mnm: 0,
@@ -25109,7 +25109,7 @@ var items = [{
     stack: 1,
     loot: Mv.kevlarsuit,
     wait: 10,
-    wNV: 0,
+    warm: 0,
     NVw: 0,
     MvM: 0.4,
     mnm: 0,
@@ -25141,7 +25141,7 @@ var items = [{
     stack: 1,
     loot: Mv.SWATsuit,
     wait: 10,
-    wNV: 0,
+    warm: 0,
     NVw: 0.1,
     MvM: 0.7,
     mnm: 0,
@@ -25172,7 +25172,7 @@ var items = [{
     stack: 1,
     loot: Mv.protectivesuit,
     wait: 10,
-    wNV: 0.00085,
+    warm: 0.00085,
     NVw: 0,
     MvM: 0,
     mnm: 0,
@@ -25204,7 +25204,7 @@ var items = [{
     stack: 1,
     loot: Mv.tesla1,
     wait: 10,
-    wNV: 0,
+    warm: 0,
     NVw: 0,
     MvM: 0,
     mnm: 0.3,
@@ -25236,7 +25236,7 @@ var items = [{
     stack: 1,
     loot: Mv.tesla2,
     wait: 10,
-    wNV: 0.00085,
+    warm: 0.00085,
     NVw: 0.2,
     MvM: 0.2,
     mnm: 0.75,
@@ -25261,7 +25261,7 @@ var items = [{
         [AREAS.workbench, 25000]
     ]),
     mnw: 21,     
-    MNM: -1,
+    fuel: -1,
     WvV: -1,
     z: 0,
     stack: 40,
@@ -25274,7 +25274,7 @@ var items = [{
     inmapy: [25, 25, 25, 25],
     xCenter: [0, 0, 0, 0],
     yCenter: [0, 0, 0, 0],
-    putableimg: {
+    blueprint: {
         src: "img/clear-blue-wood-spike.png",
         W: {
             isLoaded: 0
@@ -25441,7 +25441,7 @@ var items = [{
     stack: 1,
     loot: Mv.camouflage,
     wait: 10,
-    wNV: 0,
+    warm: 0,
     NVw: 0,
     MvM: 0,
     mnm: 0,
@@ -25469,7 +25469,7 @@ var items = [{
         [AREAS.researchbench, 100000]
     ], 8),
     mnw: 21,     
-    MNM: 100000,
+    fuel: 100000,
     WvV: 0,
     z: 1,
     MWW: AREAS.agitator,
@@ -25483,7 +25483,7 @@ var items = [{
     yCenter: [0, 0, 0, 0],
     inmapx: [0, 0, 0, 0],
     inmapy: [0, 0, 0, 0],
-    putableimg: {
+    blueprint: {
         src: "img/clear-blue-agitator.png",
         W: {
             isLoaded: 0
@@ -25506,7 +25506,7 @@ var items = [{
     MMN: 1,
     WnW: 0,
     draw: Render.wNvVV,
-    NnN: 16,
+    packetId: 16,
     wwN: {
         src: "img/e-agitator.png",
         W: {
@@ -25515,7 +25515,7 @@ var items = [{
     },
     impact: SOUNDID.metal,
     destroyaudio: SOUNDID.metaldes,
-    Nn: [{
+    building: [{
         src: "img/day-agitator1-off.png",
         W: {
             isLoaded: 0
@@ -25735,7 +25735,7 @@ var items = [{
     MmwnN: Mv.tomato,
     wait: 10,
     mnw: 21,     
-    MNM: -1,
+    fuel: -1,
     WvV: -1,
     z: 0,
     delay: 1000,
@@ -25745,7 +25745,7 @@ var items = [{
     yCenter: [0, 0, 0, 0],
     inmapx: [35, 35, 35, 35],
     inmapy: [35, 35, 35, 35],
-    putableimg: {
+    blueprint: {
         src: "img/clear-blue-lapabot.png",
         W: {
             isLoaded: 0
@@ -25767,7 +25767,7 @@ var items = [{
     draw: Render.nMnNW,
     impact: SOUNDID.metal,
     destroyaudio: SOUNDID.metaldes,
-    Nn: [{
+    building: [{
         src: "img/lapabot0.png",
         W: {
             isLoaded: 0
@@ -25887,7 +25887,7 @@ var items = [{
     MmwnN: Mv.tomato,
     wait: 10,
     mnw: 21,     
-    MNM: -1,
+    fuel: -1,
     WvV: -1,
     z: 0,
     delay: 1000,
@@ -25897,7 +25897,7 @@ var items = [{
     yCenter: [0, 0, 0, 0],
     inmapx: [35, 35, 35, 35],
     inmapy: [35, 35, 35, 35],
-    putableimg: {
+    blueprint: {
         src: "img/clear-blue-root.png",
         W: {
             isLoaded: 0
@@ -25919,7 +25919,7 @@ var items = [{
     draw: Render.MWnVn,
     impact: SOUNDID.pillow,
     destroyaudio: SOUNDID.pillowdes,
-    Nn: [{
+    building: [{
         src: "img/day-root0-ghoul.png",
         W: {
             isLoaded: 0
@@ -25977,7 +25977,7 @@ var items = [{
         [AREAS.researchbench, 100000]
     ], 12),
     mnw: 21,     
-    MNM: 740000,
+    fuel: 740000,
     WvV: 0,
     z: 1,
     MWW: AREAS.extractor,
@@ -25991,7 +25991,7 @@ var items = [{
     yCenter: [0, 0, 0, 0],
     inmapx: [0, 0, 0, 0],
     inmapy: [0, 0, 0, 0],
-    putableimg: {
+    blueprint: {
         src: "img/clear-blue-extractor.png",
         W: {
             isLoaded: 0
@@ -26014,7 +26014,7 @@ var items = [{
     MMN: 1,
     WnW: 0,
     draw: Render.vwMnv,
-    NnN: 16,
+    packetId: 16,
     wwN: {
         src: "img/e-extractor.png",
         W: {
@@ -26023,7 +26023,7 @@ var items = [{
     },
     impact: SOUNDID.metal,
     destroyaudio: SOUNDID.metaldes,
-    Nn: [{
+    building: [{
         src: "img/day-extractor.png",
         W: {
             isLoaded: 0
@@ -26113,7 +26113,7 @@ var items = [{
     MmwnN: Mv.orange,
     wait: 10,
     mnw: 21,     
-    MNM: -1,
+    fuel: -1,
     WvV: -1,
     z: 0,
     delay: 1000,
@@ -26123,7 +26123,7 @@ var items = [{
     yCenter: [0, 0, 0, 0],
     inmapx: [35, 35, 35, 35],
     inmapy: [35, 35, 35, 35],
-    putableimg: {
+    blueprint: {
         src: "img/clear-blue-plant-tree.png",
         W: {
             isLoaded: 0
@@ -26145,7 +26145,7 @@ var items = [{
     draw: Render.NMVvM,
     impact: SOUNDID.wood,
     destroyaudio: SOUNDID.wooddes,
-    Nn: [{
+    building: [{
         src: "img/day-plant-tree0.png",
         W: {
             isLoaded: 0
@@ -26265,7 +26265,7 @@ var items = [{
     MmwnN: Mv.tomato,
     wait: 10,
     mnw: 21,     
-    MNM: -1,
+    fuel: -1,
     WvV: -1,
     z: 0,
     delay: 1000,
@@ -26275,7 +26275,7 @@ var items = [{
     yCenter: [0, 0, 0, 0],
     inmapx: [35, 35, 35, 35],
     inmapy: [35, 35, 35, 35],
-    putableimg: {
+    blueprint: {
         src: "img/clear-blue-hal-bot.png",
         W: {
             isLoaded: 0
@@ -26297,7 +26297,7 @@ var items = [{
     draw: Render.nMnNW,
     impact: SOUNDID.metal,
     destroyaudio: SOUNDID.metaldes,
-    Nn: [{
+    building: [{
         src: "img/hal-bot0.png",
         W: {
             isLoaded: 0
@@ -26365,7 +26365,7 @@ var items = [{
     MmwnN: Mv.tomato,
     wait: 10,
     mnw: 21,     
-    MNM: -1,
+    fuel: -1,
     WvV: -1,
     z: 0,
     delay: 1000,
@@ -26375,7 +26375,7 @@ var items = [{
     yCenter: [0, 0, 0, 0],
     inmapx: [35, 35, 35, 35],
     inmapy: [35, 35, 35, 35],
-    putableimg: {
+    blueprint: {
         src: "img/clear-blue-tesla-bot.png",
         W: {
             isLoaded: 0
@@ -26397,7 +26397,7 @@ var items = [{
     draw: Render.nMnNW,
     impact: SOUNDID.metal,
     destroyaudio: SOUNDID.metaldes,
-    Nn: [{
+    building: [{
         src: "img/tesla-bot0.png",
         W: {
             isLoaded: 0
@@ -26460,7 +26460,7 @@ var items = [{
     loot: Mv.cable,
     wait: 10,
     mnw: 21,     
-    MNM: -1,
+    fuel: -1,
     WvV: -1,
     z: 0,
     delay: 1000,
@@ -26470,7 +26470,7 @@ var items = [{
     yCenter: [0, 0, 0, 0],
     inmapx: [0, 0, 0, 0],
     inmapy: [0, 0, 0, 0],
-    putableimg: {
+    blueprint: {
         src: "img/clear-blue-wire0.png",
         W: {
             isLoaded: 0
@@ -26501,7 +26501,7 @@ var items = [{
     draw: Render.NnMNn,
     impact: SOUNDID.pillow,
     destroyaudio: SOUNDID.pillowdes,
-    Nn: {
+    building: {
         src: "img/day-wire0.png",
         W: {
             isLoaded: 0
@@ -26533,7 +26533,7 @@ var items = [{
     loot: Mv.cable2,
     wait: 10,
     mnw: 21,     
-    MNM: -1,
+    fuel: -1,
     WvV: -1,
     z: 0,
     delay: 1000,
@@ -26543,7 +26543,7 @@ var items = [{
     yCenter: [0, 0, 0, 0],
     inmapx: [0, 0, 0, 0],
     inmapy: [0, 0, 0, 0],
-    putableimg: {
+    blueprint: {
         src: "img/clear-blue-wire1.png",
         W: {
             isLoaded: 0
@@ -26574,7 +26574,7 @@ var items = [{
     draw: Render.NnMNn,
     impact: SOUNDID.pillow,
     destroyaudio: SOUNDID.pillowdes,
-    Nn: {
+    building: {
         src: "img/day-wire1.png",
         W: {
             isLoaded: 0
@@ -26606,7 +26606,7 @@ var items = [{
     loot: Mv.cable3,
     wait: 10,
     mnw: 21,     
-    MNM: -1,
+    fuel: -1,
     WvV: -1,
     z: 0,
     delay: 1000,
@@ -26616,7 +26616,7 @@ var items = [{
     yCenter: [0, 0, 0, 0],
     inmapx: [0, 0, 0, 0],
     inmapy: [0, 0, 0, 0],
-    putableimg: {
+    blueprint: {
         src: "img/clear-blue-wire2.png",
         W: {
             isLoaded: 0
@@ -26647,7 +26647,7 @@ var items = [{
     draw: Render.NnMNn,
     impact: SOUNDID.pillow,
     destroyaudio: SOUNDID.pillowdes,
-    Nn: {
+    building: {
         src: "img/day-wire2.png",
         W: {
             isLoaded: 0
@@ -26679,7 +26679,7 @@ var items = [{
     loot: Mv.cable4,
     wait: 10,
     mnw: 21,     
-    MNM: -1,
+    fuel: -1,
     WvV: -1,
     z: 0,
     delay: 1000,
@@ -26689,7 +26689,7 @@ var items = [{
     yCenter: [0, 0, 0, 0],
     inmapx: [0, 0, 0, 0],
     inmapy: [0, 0, 0, 0],
-    putableimg: {
+    blueprint: {
         src: "img/clear-blue-wire3.png",
         W: {
             isLoaded: 0
@@ -26720,7 +26720,7 @@ var items = [{
     draw: Render.NnMNn,
     impact: SOUNDID.pillow,
     destroyaudio: SOUNDID.pillowdes,
-    Nn: {
+    building: {
         src: "img/day-wire3.png",
         W: {
             isLoaded: 0
@@ -26753,7 +26753,7 @@ var items = [{
     loot: Mv.switch,
     wait: 10,
     mnw: 21,     
-    MNM: -1,
+    fuel: -1,
     WvV: -1,
     z: 0,
     delay: 1000,
@@ -26763,7 +26763,7 @@ var items = [{
     yCenter: [0, 0, 0, 0],
     inmapx: [0, 0, 0, 0],
     inmapy: [0, 0, 0, 0],
-    putableimg: {
+    blueprint: {
         src: "img/clear-blue-switch.png",
         W: {
             isLoaded: 0
@@ -26792,7 +26792,7 @@ var items = [{
     MMN: 0,
     WnW: 0,
     draw: Render.mvVVM,
-    NnN: 37,
+    packetId: 37,
     wwN: {
         src: "img/e-turnon.png",
         W: {
@@ -26801,7 +26801,7 @@ var items = [{
     },
     impact: SOUNDID.metal,
     destroyaudio: SOUNDID.metaldes,
-    Nn: [{
+    building: [{
         src: "img/day-switch-off.png",
         W: {
             isLoaded: 0
@@ -26839,7 +26839,7 @@ var items = [{
     loot: Mv.orgate,
     wait: 10,
     mnw: 21,     
-    MNM: -1,
+    fuel: -1,
     WvV: -1,
     z: 0,
     delay: 1000,
@@ -26849,7 +26849,7 @@ var items = [{
     yCenter: [0, 0, 0, 0],
     inmapx: [0, 0, 0, 0],
     inmapy: [0, 0, 0, 0],
-    putableimg: {
+    blueprint: {
         src: "img/clear-blue-switch-or.png",
         W: {
             isLoaded: 0
@@ -26880,7 +26880,7 @@ var items = [{
     draw: Render.NnMNn,
     impact: SOUNDID.metal,
     destroyaudio: SOUNDID.metaldes,
-    Nn: {
+    building: {
         src: "img/day-switch-or.png",
         W: {
             isLoaded: 0
@@ -26913,7 +26913,7 @@ var items = [{
     loot: Mv.andgate,
     wait: 10,
     mnw: 21,     
-    MNM: -1,
+    fuel: -1,
     WvV: -1,
     z: 0,
     delay: 1000,
@@ -26923,7 +26923,7 @@ var items = [{
     yCenter: [0, 0, 0, 0],
     inmapx: [0, 0, 0, 0],
     inmapy: [0, 0, 0, 0],
-    putableimg: {
+    blueprint: {
         src: "img/clear-blue-switch-and.png",
         W: {
             isLoaded: 0
@@ -26954,7 +26954,7 @@ var items = [{
     draw: Render.NnMNn,
     impact: SOUNDID.metal,
     destroyaudio: SOUNDID.metaldes,
-    Nn: {
+    building: {
         src: "img/day-switch-and.png",
         W: {
             isLoaded: 0
@@ -26987,7 +26987,7 @@ var items = [{
     loot: Mv.notgate,
     wait: 10,
     mnw: 21,     
-    MNM: -1,
+    fuel: -1,
     WvV: -1,
     z: 0,
     delay: 1000,
@@ -26997,7 +26997,7 @@ var items = [{
     yCenter: [0, 0, 0, 0],
     inmapx: [0, 0, 0, 0],
     inmapy: [0, 0, 0, 0],
-    putableimg: {
+    blueprint: {
         src: "img/clear-blue-switch-reverse.png",
         W: {
             isLoaded: 0
@@ -27028,7 +27028,7 @@ var items = [{
     draw: Render.NnMNn,
     impact: SOUNDID.metal,
     destroyaudio: SOUNDID.metaldes,
-    Nn: {
+    building: {
         src: "img/day-switch-reverse.png",
         W: {
             isLoaded: 0
@@ -27061,7 +27061,7 @@ var items = [{
     loot: Mv.lamp,
     wait: 10,
     mnw: 21,     
-    MNM: -1,
+    fuel: -1,
     WvV: -1,
     z: 0,
     delay: 1000,
@@ -27071,7 +27071,7 @@ var items = [{
     yCenter: [0, 0, 0, 0],
     inmapx: [0, 0, 0, 0],
     inmapy: [0, 0, 0, 0],
-    putableimg: {
+    blueprint: {
         src: "img/clear-blue-lamp.png",
         W: {
             isLoaded: 0
@@ -27102,7 +27102,7 @@ var items = [{
     WnW: 0,
     draw: Render.vnVwv,
     VvmvM: Render.mVwvv,
-    NnN: 36,
+    packetId: 36,
     wwN: {
         src: "img/e-light.png",
         W: {
@@ -27111,7 +27111,7 @@ var items = [{
     },
     impact: SOUNDID.metal,
     destroyaudio: SOUNDID.metaldes,
-    Nn: {
+    building: {
         src: "img/day-lamp-off.png",
         W: {
             isLoaded: 0
@@ -27216,7 +27216,7 @@ var items = [{
     loot: Mv.cablewall,
     wait: 10,
     mnw: 21,     
-    MNM: -1,
+    fuel: -1,
     WvV: 0,
     z: 1,
     delay: 1000,
@@ -27226,7 +27226,7 @@ var items = [{
     yCenter: [0, 0, 0, 0],
     inmapx: [0, 0, 0, 0],
     inmapy: [0, 0, 0, 0],
-    putableimg: {
+    blueprint: {
         src: "img/clear-blue-cable-wall.png",
         W: {
             isLoaded: 0
@@ -27257,7 +27257,7 @@ var items = [{
     draw: Render.VWWwm,
     impact: SOUNDID.metal,
     destroyaudio: SOUNDID.metaldes,
-    Nn: [{
+    building: [{
         src: "img/day-cable-wall.png",
         W: {
             isLoaded: 0
@@ -27306,7 +27306,7 @@ var items = [{
     loot: Mv.autodoor,
     wait: 10,
     mnw: 21,     
-    MNM: -1,
+    fuel: -1,
     WvV: 0,
     z: 1,
     delay: 1000,
@@ -27316,7 +27316,7 @@ var items = [{
     yCenter: [0, 0, 0, 0],
     inmapx: [0, 0, 0, 0],
     inmapy: [0, 0, 0, 0],
-    putableimg: {
+    blueprint: {
         src: "img/clear-blue-automatic-door.png",
         W: {
             isLoaded: 0
@@ -27347,7 +27347,7 @@ var items = [{
     draw: Render.WvNvn,
     impact: SOUNDID.metal,
     destroyaudio: SOUNDID.metaldes,
-    Nn: [
+    building: [
         [{
             src: "img/day-automatic-door-off.png",
             W: {
@@ -27418,7 +27418,7 @@ var items = [{
     loot: Mv.platform,
     wait: 10,
     mnw: 21,     
-    MNM: -1,
+    fuel: -1,
     WvV: -1,
     z: 0,
     delay: 1000,
@@ -27428,7 +27428,7 @@ var items = [{
     yCenter: [0, 0, 0, 0],
     inmapx: [0, 0, 0, 0],
     inmapy: [0, 0, 0, 0],
-    putableimg: {
+    blueprint: {
         src: "img/clear-blue-platform-off.png",
         W: {
             isLoaded: 0
@@ -27459,7 +27459,7 @@ var items = [{
     draw: Render.mvWww,
     impact: SOUNDID.metal,
     destroyaudio: SOUNDID.metaldes,
-    Nn: {
+    building: {
         src: "img/day-platform-off.png",
         W: {
             isLoaded: 0
@@ -27488,7 +27488,7 @@ var items = [{
         [AREAS.workbench, 30000]
     ], 99),
     mnw: 21,     
-    MNM: -1,
+    fuel: -1,
     WvV: 1,
     z: 1,
     stack: 255,
@@ -27501,7 +27501,7 @@ var items = [{
     yCenter: [0, 0, 0, 0],
     inmapx: [0, 0, 0, 0],
     inmapy: [0, 0, 0, 0],
-    putableimg: {
+    blueprint: {
         src: "img/clear-blue-stone-cave.png",
         W: {
             isLoaded: 0
@@ -27544,7 +27544,7 @@ var items = [{
     }],
     impact: SOUNDID.stone,
     destroyaudio: SOUNDID.stonedes,
-    Nn: [{
+    building: [{
         src: "img/day-stone-cave0.png",
         W: {
             isLoaded: 0
@@ -27804,7 +27804,7 @@ var items = [{
         [AREAS.workbench, 30000]
     ], 99),
     mnw: 21,     
-    MNM: -1,
+    fuel: -1,
     WvV: 1,
     z: 1,
     stack: 255,
@@ -27817,7 +27817,7 @@ var items = [{
     yCenter: [0, 0, 0, 0],
     inmapx: [0, 0, 0, 0],
     inmapy: [0, 0, 0, 0],
-    putableimg: {
+    blueprint: {
         src: "img/clear-blue-bunker-wall.png",
         W: {
             isLoaded: 0
@@ -27860,7 +27860,7 @@ var items = [{
     }],
     impact: SOUNDID.metal,
     destroyaudio: SOUNDID.metaldes,
-    Nn: [{
+    building: [{
         src: "img/day-bunker-wall0.png",
         W: {
             isLoaded: 0
@@ -28122,7 +28122,7 @@ var items = [{
     loot: Mv.mustardfloor,
     wait: 10,
     mnw: 21,     
-    MNM: -1,
+    fuel: -1,
     WvV: 2,
     z: 0,
     delay: 1000,
@@ -28132,7 +28132,7 @@ var items = [{
     yCenter: [0, 0, 0, 0],
     inmapx: [0, 0, 0, 0],
     inmapy: [0, 0, 0, 0],
-    putableimg: {
+    blueprint: {
         src: "img/day-clear-blue-stone-floor.png",
         W: {
             isLoaded: 0
@@ -28174,7 +28174,7 @@ var items = [{
     }],
     impact: SOUNDID.VNv,
     destroyaudio: SOUNDID.pillowdes,
-    Nn: [{
+    building: [{
         src: "img/day-mustard-floor-0.png",
         W: {
             isLoaded: 0
@@ -28436,7 +28436,7 @@ var items = [{
     loot: Mv.redfloor,
     wait: 10,
     mnw: 21,     
-    MNM: -1,
+    fuel: -1,
     WvV: 2,
     z: 0,
     delay: 1000,
@@ -28446,7 +28446,7 @@ var items = [{
     yCenter: [0, 0, 0, 0],
     inmapx: [0, 0, 0, 0],
     inmapy: [0, 0, 0, 0],
-    putableimg: {
+    blueprint: {
         src: "img/day-clear-blue-stone-floor.png",
         W: {
             isLoaded: 0
@@ -28488,7 +28488,7 @@ var items = [{
     }],
     impact: SOUNDID.VNv,
     destroyaudio: SOUNDID.pillowdes,
-    Nn: [{
+    building: [{
         src: "img/day-red-floor-0.png",
         W: {
             isLoaded: 0
@@ -28749,7 +28749,7 @@ var items = [{
         [AREAS.workbench, 50000]
     ]),
     mnw: 21,     
-    MNM: -1,
+    fuel: -1,
     WvV: 0,
     z: 1,
     MWW: AREAS.weldingmachine,
@@ -28763,7 +28763,7 @@ var items = [{
     yCenter: [0, 0, 0, 0],
     inmapx: [0, 0, 0, 0],
     inmapy: [0, 0, 0, 0],
-    putableimg: {
+    blueprint: {
         src: "img/clear-blue-welding-machine.png",
         W: {
             isLoaded: 0
@@ -28786,7 +28786,7 @@ var items = [{
     MMN: 1,
     WnW: 0,
     draw: Render.FCWCcont,
-    NnN: 16,
+    packetId: 16,
     wwN: {
         src: "img/e-welding-machine.png",
         W: {
@@ -28795,7 +28795,7 @@ var items = [{
     },
     impact: SOUNDID.metal,
     destroyaudio: SOUNDID.metaldes,
-    Nn: {
+    building: {
         src: "img/day-welding-machine.png",
         W: {
             isLoaded: 0
@@ -28827,7 +28827,7 @@ var items = [{
     loot: Mv.cable4,
     wait: 10,
     mnw: 21,     
-    MNM: -1,
+    fuel: -1,
     WvV: -1,
     z: 0,
     delay: 1000,
@@ -28837,7 +28837,7 @@ var items = [{
     yCenter: [0, 0, 0, 0],
     inmapx: [0, 0, 0, 0],
     inmapy: [0, 0, 0, 0],
-    putableimg: {
+    blueprint: {
         src: "img/clear-blue-wire4.png",
         W: {
             isLoaded: 0
@@ -28868,7 +28868,7 @@ var items = [{
     draw: Render.NnMNn,
     impact: SOUNDID.pillow,
     destroyaudio: SOUNDID.pillowdes,
-    Nn: {
+    building: {
         src: "img/day-wire4.png",
         W: {
             isLoaded: 0
@@ -28901,7 +28901,7 @@ var items = [{
     loot: Mv.timer,
     wait: 10,
     mnw: 21,     
-    MNM: -1,
+    fuel: -1,
     WvV: -1,
     z: 0,
     delay: 1000,
@@ -28911,7 +28911,7 @@ var items = [{
     yCenter: [0, 0, 0, 0],
     inmapx: [0, 0, 0, 0],
     inmapy: [0, 0, 0, 0],
-    putableimg: {
+    blueprint: {
         src: "img/clear-blue-timer.png",
         W: {
             isLoaded: 0
@@ -28940,7 +28940,7 @@ var items = [{
     MMN: 0,
     WnW: 0,
     draw: Render.Mvnmn,
-    NnN: 38,
+    packetId: 38,
     wwN: {
         src: "img/e-light.png",
         W: {
@@ -28949,7 +28949,7 @@ var items = [{
     },
     impact: SOUNDID.metal,
     destroyaudio: SOUNDID.metaldes,
-    Nn: [{
+    building: [{
         src: "img/day-timer-0.png",
         W: {
             isLoaded: 0
@@ -28997,7 +28997,7 @@ var items = [{
     loot: Mv.xorgate,
     wait: 10,
     mnw: 21,     
-    MNM: -1,
+    fuel: -1,
     WvV: -1,
     z: 0,
     delay: 1000,
@@ -29007,7 +29007,7 @@ var items = [{
     yCenter: [0, 0, 0, 0],
     inmapx: [0, 0, 0, 0],
     inmapy: [0, 0, 0, 0],
-    putableimg: {
+    blueprint: {
         src: "img/clear-blue-xor.png",
         W: {
             isLoaded: 0
@@ -29038,7 +29038,7 @@ var items = [{
     draw: Render.NnMNn,
     impact: SOUNDID.metal,
     destroyaudio: SOUNDID.metaldes,
-    Nn: {
+    building: {
         src: "img/day-xor.png",
         W: {
             isLoaded: 0
@@ -29300,7 +29300,7 @@ MwmnM[COUNTER] = {
     inmapy: [0, 0, 0, 0],
     impact: SOUNDID.VNv,
     destroyaudio: SOUNDID.VNv,
-    Nn: {
+    building: {
         src: "img/day-road0.png",
         W: {
             isLoaded: 0
@@ -29326,7 +29326,7 @@ MwmnM[COUNTER] = {
 for (var i = 0; i < 45; i++) {
     COUNTER++;
     MwmnM[COUNTER] = window.JSON.parse(window.JSON.stringify(MwmnM[0]));
-    MwmnM[COUNTER].Nn.src = ("img/day-road" + COUNTER) + ".png";
+    MwmnM[COUNTER].building.src = ("img/day-road" + COUNTER) + ".png";
 }
 var VV = items[item.MMnVW].subtype;
 VV[nW.sofapart] = {
@@ -29336,7 +29336,7 @@ VV[nW.sofapart] = {
     inmapy: [0, 0, 0, 0],
     impact: SOUNDID.pillow,
     destroyaudio: SOUNDID.pillowdes,
-    Nn: {
+    building: {
         src: "img/day-sofa0.png",
         W: {
             isLoaded: 0
@@ -29359,33 +29359,33 @@ VV[nW.sofapart] = {
     z: 1,
     WvV: 0,
     WnW: 0,
-    NnN: 25,
+    packetId: 25,
     mwM: 0,
     damage: 0,
     WWv: 0,
     timelife: 315360000000
 };
 VV[nW.sofapart2] = window.JSON.parse(window.JSON.stringify(VV[nW.sofapart]));
-VV[nW.sofapart2].Nn.src = "img/day-sofa1.png";
+VV[nW.sofapart2].building.src = "img/day-sofa1.png";
 VV[nW.sofapart2].particles = particulesitems.sofapart2;
 VV[nW.sofapart3] = window.JSON.parse(window.JSON.stringify(VV[nW.sofapart2]));
-VV[nW.sofapart3].Nn.src = "img/day-sofa2.png";
+VV[nW.sofapart3].building.src = "img/day-sofa2.png";
 VV[nW.WwvNW] = window.JSON.parse(window.JSON.stringify(VV[nW.sofapart]));
-VV[nW.WwvNW].Nn.src = "img/day-sofa3.png";
+VV[nW.WwvNW].building.src = "img/day-sofa3.png";
 VV[nW.WwvNW].particles = particulesitems.sofapart3;
 VV[nW.NWNnm] = window.JSON.parse(window.JSON.stringify(VV[nW.WwvNW]));
-VV[nW.NWNnm].Nn.src = "img/day-sofa4.png";
+VV[nW.NWNnm].building.src = "img/day-sofa4.png";
 VV[nW.vNWWv] = window.JSON.parse(window.JSON.stringify(VV[nW.WwvNW]));
-VV[nW.vNWWv].Nn.src = "img/day-sofa6.png";
+VV[nW.vNWWv].building.src = "img/day-sofa6.png";
 VV[nW.NNvnv] = window.JSON.parse(window.JSON.stringify(VV[nW.sofapart]));
-VV[nW.NNvnv].Nn.src = "img/day-renforced-door.png";
+VV[nW.NNvnv].building.src = "img/day-renforced-door.png";
 VV[nW.NNvnv].particles = particulesitems.steel;
 VV[nW.NNvnv].detail = new vn("", "", -1, [
     [item.shapedmetal, 40]
 ]);
 VV[nW.NNvnv].life = 7000;
 VV[nW.mmmwn] = window.JSON.parse(window.JSON.stringify(VV[nW.sofapart]));
-VV[nW.mmmwn].Nn.src = "img/day-electronic-box0.png";
+VV[nW.mmmwn].building.src = "img/day-electronic-box0.png";
 VV[nW.mmmwn].impact = SOUNDID.metal;
 VV[nW.mmmwn].destroyaudio = SOUNDID.metaldes;
 VV[nW.mmmwn].particles = particulesitems.steel;
@@ -29401,7 +29401,7 @@ VV[nW.mmmwn].inmapx = [0, 0, 0, 0];
 VV[nW.mmmwn].inmapy = [0, 0, 0, 0];
 VV[nW.mmmwn].life = 800;
 VV[nW.nNnVv] = window.JSON.parse(window.JSON.stringify(VV[nW.mmmwn]));
-VV[nW.nNnVv].Nn.src = "img/day-electronic-box1.png";
+VV[nW.nNnVv].building.src = "img/day-electronic-box1.png";
 VV[nW.nNnVv].width = [120, 120, 120, 120];
 VV[nW.nNnVv].height = [120, 120, 120, 120];
 VV[nW.nNnVv].inmapx = [-10, -10, -10, -10];
@@ -29414,17 +29414,17 @@ VV[nW.nNnVv].detail = new vn("", "", -1, [
 ]);
 VV[nW.nNnVv].life = 1400;
 VV[nW.bedpart] = window.JSON.parse(window.JSON.stringify(VV[nW.sofapart]));
-VV[nW.bedpart].Nn.src = "img/day-bed0.png";
+VV[nW.bedpart].building.src = "img/day-bed0.png";
 VV[nW.bedpart].particles = particulesitems.bedpart;
 VV[nW.bedpart].detail = new vn("", "", -1, [
     [item.wood, 200],
     [item.leather, 20]
 ]);
 VV[nW.bedpart2] = window.JSON.parse(window.JSON.stringify(VV[nW.bedpart]));
-VV[nW.bedpart2].Nn.src = "img/day-bed1.png";
+VV[nW.bedpart2].building.src = "img/day-bed1.png";
 VV[nW.bedpart2].particles = particulesitems.bedpart2;
 VV[nW.WmNvV] = window.JSON.parse(window.JSON.stringify(VV[nW.bedpart]));
-VV[nW.WmNvV].Nn.src = "img/day-bed2.png";
+VV[nW.WmNvV].building.src = "img/day-bed2.png";
 VV[nW.WmNvV].particles = particulesitems.greysteelpart;
 VV[nW.WmNvV].detail = new vn("", "", -1, [
     [item.shapedmetal, 12],
@@ -29432,7 +29432,7 @@ VV[nW.WmNvV].detail = new vn("", "", -1, [
     [item.animalfat, 12]
 ]);
 VV[nW.vWVWW] = window.JSON.parse(window.JSON.stringify(VV[nW.sofapart]));
-VV[nW.vWVWW].Nn.src = "img/day-table0.png";
+VV[nW.vWVWW].building.src = "img/day-table0.png";
 VV[nW.vWVWW].impact = SOUNDID.wood;
 VV[nW.vWVWW].destroyaudio = SOUNDID.wooddes;
 VV[nW.vWVWW].particles = particulesitems.wood;
@@ -29440,7 +29440,7 @@ VV[nW.vWVWW].detail = new vn("", "", -1, [
     [item.wood, 200]
 ]);
 VV[nW.WVWWM] = window.JSON.parse(window.JSON.stringify(VV[nW.vWVWW]));
-VV[nW.WVWWM].Nn.src = "img/day-table1.png";
+VV[nW.WVWWM].building.src = "img/day-table1.png";
 VV[nW.WVWWM].width = [100, 290, 100, 280];
 VV[nW.WVWWM].height = [280, 100, 280, 100];
 VV[nW.WVWWM].MMnVm = [-1, 0, -1, 0];
@@ -29448,7 +29448,7 @@ VV[nW.WVWWM].nmMVw = [0, -1, 0, -1];
 VV[nW.WVWWM].inmapx = [0, -90, 0, -90];
 VV[nW.WVWWM].inmapy = [-90, 0, -90, 0];
 VV[nW.nVwnn] = window.JSON.parse(window.JSON.stringify(VV[nW.vWVWW]));
-VV[nW.nVwnn].Nn.src = "img/day-table2.png";
+VV[nW.nVwnn].building.src = "img/day-table2.png";
 VV[nW.nVwnn].impact = SOUNDID.metal;
 VV[nW.nVwnn].destroyaudio = SOUNDID.metaldes;
 VV[nW.nVwnn].particles = particulesitems.steel;
@@ -29456,7 +29456,7 @@ VV[nW.nVwnn].detail = new vn("", "", -1, [
     [item.shapedmetal, 8]
 ]);
 VV[nW.textnumberitem] = window.JSON.parse(window.JSON.stringify(VV[nW.sofapart]));
-VV[nW.textnumberitem].Nn.src = "img/day-tv0.png";
+VV[nW.textnumberitem].building.src = "img/day-tv0.png";
 VV[nW.textnumberitem].impact = SOUNDID.metal;
 VV[nW.textnumberitem].destroyaudio = SOUNDID.metaldes;
 VV[nW.textnumberitem].particles = particulesitems.safepart;
@@ -29467,7 +29467,7 @@ VV[nW.textnumberitem].detail = new vn("", "", -1, [
     [item.junk, 12]
 ]);
 VV[nW.WNVMm] = window.JSON.parse(window.JSON.stringify(VV[nW.sofapart]));
-VV[nW.WNVMm].Nn.src = "img/day-computer0.png";
+VV[nW.WNVMm].building.src = "img/day-computer0.png";
 VV[nW.WNVMm].impact = SOUNDID.metal;
 VV[nW.WNVMm].destroyaudio = SOUNDID.metaldes;
 VV[nW.WNVMm].particles = particulesitems.metalpart;
@@ -29478,25 +29478,25 @@ VV[nW.WNVMm].detail = new vn("", "", -1, [
     [item.electronicpart, 4]
 ]);
 VV[nW.NvWVV] = window.JSON.parse(window.JSON.stringify(VV[nW.WNVMm]));
-VV[nW.NvWVV].Nn.src = "img/day-chair0.png";
+VV[nW.NvWVV].building.src = "img/day-chair0.png";
 VV[nW.NvWVV].detail = new vn("", "", -1, [
     [item.leather, 8],
     [item.shapedmetal, 8]
 ]);
 VV[nW.NwwNM] = window.JSON.parse(window.JSON.stringify(VV[nW.WNVMm]));
-VV[nW.NwwNM].Nn.src = "img/day-chair1.png";
+VV[nW.NwwNM].building.src = "img/day-chair1.png";
 VV[nW.NwwNM].detail = new vn("", "", -1, [
     [item.leather, 8],
     [item.shapedmetal, 8]
 ]);
 VV[nW.NvVmW] = window.JSON.parse(window.JSON.stringify(VV[nW.WNVMm]));
-VV[nW.NvVmW].Nn.src = "img/day-chair2.png";
+VV[nW.NvVmW].building.src = "img/day-chair2.png";
 VV[nW.NvVmW].detail = new vn("", "", -1, [
     [item.leather, 8],
     [item.shapedmetal, 8]
 ]);
 VV[nW.NMvVn] = window.JSON.parse(window.JSON.stringify(VV[nW.sofapart]));
-VV[nW.NMvVn].Nn.src = "img/day-washbasin0.png";
+VV[nW.NMvVn].building.src = "img/day-washbasin0.png";
 VV[nW.NMvVn].impact = SOUNDID.wood;
 VV[nW.NMvVn].destroyaudio = SOUNDID.wooddes;
 VV[nW.NMvVn].particles = particulesitems.woodpart;
@@ -29505,7 +29505,7 @@ VV[nW.NMvVn].detail = new vn("", "", -1, [
     [item.shapedmetal, 8]
 ]);
 VV[nW.VVvnV] = window.JSON.parse(window.JSON.stringify(VV[nW.NMvVn]));
-VV[nW.VVvnV].Nn.src = "img/day-pharma0.png";
+VV[nW.VVvnV].building.src = "img/day-pharma0.png";
 VV[nW.VVvnV].detail = new vn("", "", -1, [
     [item.shapedmetal, 8],
     [item.stone, 60]
@@ -29522,7 +29522,7 @@ VV[nW.VVvnV].loot = [
     [item.syringe, 1, 0.1]
 ];
 VV[nW.nWNnm] = window.JSON.parse(window.JSON.stringify(VV[nW.NMvVn]));
-VV[nW.nWNnm].Nn.src = "img/day-shower0.png";
+VV[nW.nWNnm].building.src = "img/day-shower0.png";
 VV[nW.nWNnm].detail = new vn("", "", -1, [
     [item.shapedmetal, 8],
     [item.stone, 60]
@@ -29535,7 +29535,7 @@ VV[nW.nWNnm].height = [100, 70, 100, 70];
 VV[nW.nWNnm].inmapx = [0, 0, 30, 0];
 VV[nW.nWNnm].inmapy = [0, 0, 0, 30];
 VV[nW.VWw] = window.JSON.parse(window.JSON.stringify(VV[nW.NMvVn]));
-VV[nW.VWw].Nn.src = "img/day-furniture0.png";
+VV[nW.VWw].building.src = "img/day-furniture0.png";
 VV[nW.VWw].width = [50, 100, 50, 100];
 VV[nW.VWw].height = [100, 50, 100, 50];
 VV[nW.VWw].inmapx = [0, 0, 50, 0];
@@ -29559,13 +29559,13 @@ VV[nW.VWw].loot = [
     [item.string, 2, 0.1]
 ];
 VV[nW.MVvwm] = window.JSON.parse(window.JSON.stringify(VV[nW.VWw]));
-VV[nW.MVvwm].Nn.src = "img/day-furniture1.png";
+VV[nW.MVvwm].building.src = "img/day-furniture1.png";
 VV[nW.MVvwm].width = [70, 100, 70, 100];
 VV[nW.MVvwm].height = [100, 70, 100, 70];
 VV[nW.MVvwm].inmapx = [0, 0, 30, 0];
 VV[nW.MVvwm].inmapy = [0, 0, 0, 30];
 VV[nW.mmV] = window.JSON.parse(window.JSON.stringify(VV[nW.VWw]));
-VV[nW.mmV].Nn.src = "img/day-furniture2.png";
+VV[nW.mmV].building.src = "img/day-furniture2.png";
 VV[nW.mmV].width = [70, 70, 70, 70];
 VV[nW.mmV].height = [70, 70, 70, 70];
 VV[nW.mmV].inmapx = [15, 15, 15, 15];
@@ -29574,9 +29574,9 @@ VV[nW.mmV].detail = new vn("", "", -1, [
     [item.wood, 100]
 ]);
 VV[nW.wwVWW] = window.JSON.parse(window.JSON.stringify(VV[nW.mmV]));
-VV[nW.wwVWW].Nn.src = "img/day-furniture3.png";
+VV[nW.wwVWW].building.src = "img/day-furniture3.png";
 VV[nW.WmmNw] = window.JSON.parse(window.JSON.stringify(VV[nW.MVvwm]));
-VV[nW.WmmNw].Nn.src = "img/day-furniture4.png";
+VV[nW.WmmNw].building.src = "img/day-furniture4.png";
 VV[nW.WmmNw].impact = SOUNDID.metal;
 VV[nW.WmmNw].destroyaudio = SOUNDID.metaldes;
 VV[nW.WmmNw].particles = particulesitems.greysteelpart;
@@ -29595,17 +29595,17 @@ VV[nW.WmmNw].loot = [
     [item.string, 2, 0.1]
 ];
 VV[nW.Mmvmn] = window.JSON.parse(window.JSON.stringify(VV[nW.mmV]));
-VV[nW.Mmvmn].Nn.src = "img/day-furniture5.png";
+VV[nW.Mmvmn].building.src = "img/day-furniture5.png";
 VV[nW.Mmvmn].impact = SOUNDID.metal;
 VV[nW.Mmvmn].destroyaudio = SOUNDID.metaldes;
 VV[nW.Mmvmn].particles = particulesitems.greysteelpart;
 VV[nW.Mmvmn].loot = window.JSON.parse(window.JSON.stringify(VV[nW.WmmNw].loot));
 VV[nW.VwWNv] = window.JSON.parse(window.JSON.stringify(VV[nW.Mmvmn]));
-VV[nW.VwWNv].Nn.src = "img/day-furniture6.png";
+VV[nW.VwWNv].building.src = "img/day-furniture6.png";
 VV[nW.NwvnV] = window.JSON.parse(window.JSON.stringify(VV[nW.mmV]));
 VV[nW.NwvnV].impact = SOUNDID.pillow;
 VV[nW.NwvnV].destroyaudio = SOUNDID.pillowdes;
-VV[nW.NwvnV].Nn.src = "img/day-carton-box0.png";
+VV[nW.NwvnV].building.src = "img/day-carton-box0.png";
 VV[nW.NwvnV].detail = new vn("", "", -1, []);
 VV[nW.NwvnV].WvwVM = 1;
 VV[nW.NwvnV].loot = [
@@ -29624,24 +29624,24 @@ VV[nW.NwvnV].loot = [
     [item.electronicpart, 1, 0.1]
 ];
 VV[nW.vWwVv] = window.JSON.parse(window.JSON.stringify(VV[nW.NwvnV]));
-VV[nW.vWwVv].Nn.src = "img/day-carton-box1.png";
+VV[nW.vWwVv].building.src = "img/day-carton-box1.png";
 VV[nW.VWnwN] = window.JSON.parse(window.JSON.stringify(VV[nW.NwvnV]));
-VV[nW.VWnwN].Nn.src = "img/day-gold-chair0.png";
+VV[nW.VWnwN].building.src = "img/day-gold-chair0.png";
 VV[nW.VWnwN].detail = new vn("", "", -1, [
     [item.wood, 40]
 ]);
 VV[nW.VWnwN].WvwVM = 0;
 VV[nW.VWnwN].particles = particulesitems.gold;
 VV[nW.NWwwM] = window.JSON.parse(window.JSON.stringify(VV[nW.VWnwN]));
-VV[nW.NWwwM].Nn.src = "img/day-green-chair0.png";
+VV[nW.NWwwM].building.src = "img/day-green-chair0.png";
 VV[nW.NWwwM].particles = particulesitems.kakipart;
 VV[nW.NMWVV] = window.JSON.parse(window.JSON.stringify(VV[nW.VWnwN]));
-VV[nW.NMWVV].Nn.src = "img/day-wood-chair0.png";
+VV[nW.NMWVV].building.src = "img/day-wood-chair0.png";
 VV[nW.NMWVV].impact = SOUNDID.wood;
 VV[nW.NMWVV].destroyaudio = SOUNDID.wooddes;
 VV[nW.NMWVV].particles = particulesitems.woodpart;
 VV[nW.MnWmv] = window.JSON.parse(window.JSON.stringify(VV[nW.mmV]));
-VV[nW.MnWmv].Nn.src = "img/day-plot0.png";
+VV[nW.MnWmv].building.src = "img/day-plot0.png";
 VV[nW.MnWmv].particles = particulesitems.plot;
 VV[nW.MnWmv].MMN = 2;
 VV[nW.MnWmv].radius = 30;
@@ -29653,7 +29653,7 @@ VV[nW.MnWmv].WvwVM = 0;
 VV[nW.VmNVm] = window.JSON.parse(window.JSON.stringify(VV[nW.MnWmv]));
 VV[nW.VmNVm].impact = SOUNDID.metal;
 VV[nW.VmNVm].destroyaudio = SOUNDID.metaldes;
-VV[nW.VmNVm].Nn.src = "img/day-blood-transfusion.png";
+VV[nW.VmNVm].building.src = "img/day-blood-transfusion.png";
 VV[nW.VmNVm].particles = particulesitems.greysteelpart;
 var wNMNN = window.console;
 wNMNN.log = wNMNN.info = wNMNN.error = wNMNN.warn = wNMNN.debug = wNMNN.NWVnW = wNMNN.trace = wNMNN.time = wNMNN.timeEnd = function() {};
@@ -29663,7 +29663,7 @@ VV[nW.VmNVm].detail = new vn("", "", -1, [
     [item.syringe, 1]
 ]);
 VV[nW.vVV] = window.JSON.parse(window.JSON.stringify(VV[nW.mmV]));
-VV[nW.vVV].Nn.src = "img/day-barel0.png";
+VV[nW.vVV].building.src = "img/day-barel0.png";
 VV[nW.vVV].impact = SOUNDID.metal;
 VV[nW.vVV].destroyaudio = SOUNDID.VNv;
 VV[nW.vVV].particles = particulesitems.barrel;
@@ -29681,7 +29681,7 @@ VV[nW.vVV].loot = [
     [item.gasoline, 1, 0.2]
 ];
 VV[nW.vMw] = window.JSON.parse(window.JSON.stringify(VV[nW.mmV]));
-VV[nW.vMw].Nn.src = "img/day-barel1.png";
+VV[nW.vMw].building.src = "img/day-barel1.png";
 VV[nW.vMw].impact = SOUNDID.metal;
 VV[nW.vMw].destroyaudio = SOUNDID.VNv;
 VV[nW.vMw].particles = particulesitems.barrel2;
@@ -29698,7 +29698,7 @@ VV[nW.vMw].detail = new vn("", "", -1, [
 VV[nW.vMw].WvwVM = 0;
 VV[nW.vMw].WnW = __RADIATION__;
 VV[nW.garbagepart] = window.JSON.parse(window.JSON.stringify(VV[nW.mmV]));
-VV[nW.garbagepart].Nn.src = "img/day-garbage-bag0.png";
+VV[nW.garbagepart].building.src = "img/day-garbage-bag0.png";
 VV[nW.garbagepart].impact = SOUNDID.pillow;
 VV[nW.garbagepart].destroyaudio = SOUNDID.pillowdes;
 VV[nW.garbagepart].particles = particulesitems.garbagepart;
@@ -29720,7 +29720,7 @@ VV[nW.garbagepart].loot = [
     [item.junk, 3, 0.4]
 ];
 VV[nW.vwNWV] = window.JSON.parse(window.JSON.stringify(VV[nW.VWw]));
-VV[nW.vwNWV].Nn.src = "img/day-fridge0.png";
+VV[nW.vwNWV].building.src = "img/day-fridge0.png";
 VV[nW.vwNWV].impact = SOUNDID.metal;
 VV[nW.vwNWV].destroyaudio = SOUNDID.metaldes;
 VV[nW.vwNWV].particles = particulesitems.metalpart;
@@ -29739,10 +29739,10 @@ VV[nW.vwNWV].loot = [
     [item.rottenchips, 1, 0.01]
 ];
 VV[nW.wnMNM] = window.JSON.parse(window.JSON.stringify(VV[nW.vwNWV]));
-VV[nW.wnMNM].Nn.src = "img/day-fridge1.png";
+VV[nW.wnMNM].building.src = "img/day-fridge1.png";
 VV[nW.wnMNM].particles = particulesitems.fridge;
 VV[nW.wNmMv] = window.JSON.parse(window.JSON.stringify(VV[nW.VWw]));
-VV[nW.wNmMv].Nn.src = "img/day-vending-machine0.png";
+VV[nW.wNmMv].building.src = "img/day-vending-machine0.png";
 VV[nW.wNmMv].impact = SOUNDID.metal;
 VV[nW.wNmMv].destroyaudio = SOUNDID.metaldes;
 VV[nW.wNmMv].particles = particulesitems.redsteelpart;
@@ -29756,7 +29756,7 @@ VV[nW.wNmMv].loot = [
     [item.chips, 1, 0.04]
 ];
 VV[nW.MMmnW] = window.JSON.parse(window.JSON.stringify(VV[nW.wNmMv]));
-VV[nW.MMmnW].Nn.src = "img/day-distributor0.png";
+VV[nW.MMmnW].building.src = "img/day-distributor0.png";
 VV[nW.MMmnW].particles = particulesitems.greysteelpart;
 VV[nW.MMmnW].detail = new vn("", "", -1, [
     [item.shapedmetal, 16],
@@ -29769,7 +29769,7 @@ VV[nW.MMmnW].loot = [
     [item.tomatosoup, 1, 0.04]
 ];
 VV[nW.vWwmV] = window.JSON.parse(window.JSON.stringify(VV[nW.MVvwm]));
-VV[nW.vWwmV].Nn.src = "img/day-cash-machine0.png";
+VV[nW.vWwmV].building.src = "img/day-cash-machine0.png";
 VV[nW.vWwmV].impact = SOUNDID.metal;
 VV[nW.vWwmV].destroyaudio = SOUNDID.metaldes;
 VV[nW.vWwmV].particles = particulesitems.greysteelpart;
@@ -29781,12 +29781,12 @@ VV[nW.vWwmV].loot = [
     [item.junk, 1, 0.05]
 ];
 VV[nW.mmwVV] = window.JSON.parse(window.JSON.stringify(VV[nW.VWw]));
-VV[nW.mmwVV].Nn.src = "img/day-cupboard0.png";
+VV[nW.mmwVV].building.src = "img/day-cupboard0.png";
 VV[nW.mmwVV].particles = particulesitems.wood;
 VV[nW.nnM] = window.JSON.parse(window.JSON.stringify(VV[nW.VWw]));
 VV[nW.nnM].impact = SOUNDID.metal;
 VV[nW.nnM].destroyaudio = SOUNDID.metaldes;
-VV[nW.nnM].Nn.src = "img/day-electronic-box2.png";
+VV[nW.nnM].building.src = "img/day-electronic-box2.png";
 VV[nW.nnM].particles = particulesitems.steel;
 VV[nW.nnM].detail = new vn("", "", -1, [
     [item.shapedmetal, 16]
@@ -29805,7 +29805,7 @@ VV[nW.nnM].loot = [
     [item.alloys, 1, 0.01]
 ];
 VV[nW.NvmwW] = window.JSON.parse(window.JSON.stringify(VV[nW.nnM]));
-VV[nW.NvmwW].Nn.src = "img/day-electronic-box3.png";
+VV[nW.NvmwW].building.src = "img/day-electronic-box3.png";
 VV[nW.NvmwW].detail = new vn("", "", -1, [
     [item.shapedmetal, 16],
     [item.electronicpart, 4]
@@ -29828,7 +29828,7 @@ VV[nW.NvmwW].loot = [
     [item.alloys, 2, 0.05]
 ];
 VV[nW.NVwVM] = window.JSON.parse(window.JSON.stringify(VV[nW.NvmwW]));
-VV[nW.NVwVM].Nn.src = "img/day-energy-box0.png";
+VV[nW.NVwVM].building.src = "img/day-energy-box0.png";
 VV[nW.NVwVM].particles = particulesitems.kakipart;
 VV[nW.NVwVM].detail = new vn("", "", -1, [
     [item.shapedmetal, 16],
@@ -29847,7 +29847,7 @@ VV[nW.NVwVM].loot = [
     [item.alloys, 2, 0.05]
 ];
 VV[nW.vwmnW] = window.JSON.parse(window.JSON.stringify(VV[nW.nnM]));
-VV[nW.vwmnW].Nn.src = "img/day-electronic-box4.png";
+VV[nW.vwmnW].building.src = "img/day-electronic-box4.png";
 VV[nW.vwmnW].loot = [
     [item.electronicpart, 2, 0.1],
     [item.junk, 4, 0.1],
@@ -29861,9 +29861,9 @@ VV[nW.vwmnW].loot = [
     [item.dynamite, 1, 0.008]
 ];
 VV[nW.nmWMm] = window.JSON.parse(window.JSON.stringify(VV[nW.nnM]));
-VV[nW.nmWMm].Nn.src = "img/day-electronic-box5.png";
+VV[nW.nmWMm].building.src = "img/day-electronic-box5.png";
 VV[nW.nnMmW] = window.JSON.parse(window.JSON.stringify(VV[nW.VWw]));
-VV[nW.nnMmW].Nn.src = "img/day-ammo-box.png";
+VV[nW.nnMmW].building.src = "img/day-ammo-box.png";
 VV[nW.nnMmW].particles = particulesitems.woodpart;
 VV[nW.nnMmW].loot = [
     [item.mp5, 1, 0.001], 
@@ -29899,7 +29899,7 @@ VV[nW.nnMmW].loot = [
 VV[nW.NnwvW] = window.JSON.parse(window.JSON.stringify(VV[nW.nnMmW]));
 VV[nW.NnwvW].impact = SOUNDID.metal;
 VV[nW.NnwvW].destroyaudio = SOUNDID.metaldes;
-VV[nW.NnwvW].Nn.src = "img/day-ammo-locker1.png";
+VV[nW.NnwvW].building.src = "img/day-ammo-locker1.png";
 VV[nW.NnwvW].particles = particulesitems.greysteelpart;
 VV[nW.NnwvW].detail = new vn("", "", -1, [
     [item.shapedmetal, 32],
@@ -29908,7 +29908,7 @@ VV[nW.NnwvW].detail = new vn("", "", -1, [
 VV[nW.Vnwmv] = window.JSON.parse(window.JSON.stringify(VV[nW.nnMmW]));
 VV[nW.Vnwmv].impact = SOUNDID.metal;
 VV[nW.Vnwmv].destroyaudio = SOUNDID.metaldes;
-VV[nW.Vnwmv].Nn.src = "img/day-ammo-locker2.png";
+VV[nW.Vnwmv].building.src = "img/day-ammo-locker2.png";
 VV[nW.Vnwmv].particles = particulesitems.greysteelpart;
 VV[nW.Vnwmv].detail = new vn("", "", -1, [
     [item.shapedmetal, 32],
@@ -29917,7 +29917,7 @@ VV[nW.Vnwmv].detail = new vn("", "", -1, [
 VV[nW.MNmWW] = window.JSON.parse(window.JSON.stringify(VV[nW.nnMmW]));
 VV[nW.MNmWW].impact = SOUNDID.metal;
 VV[nW.MNmWW].destroyaudio = SOUNDID.metaldes;
-VV[nW.MNmWW].Nn.src = "img/day-ammo-locker0.png";
+VV[nW.MNmWW].building.src = "img/day-ammo-locker0.png";
 VV[nW.MNmWW].particles = particulesitems.bluesteelpart;
 VV[nW.MNmWW].width = [70, 50, 70, 50];
 VV[nW.MNmWW].height = [50, 70, 50, 70];
@@ -29930,7 +29930,7 @@ VV[nW.MNmWW].detail = new vn("", "", -1, [
 VV[nW.safepart] = window.JSON.parse(window.JSON.stringify(VV[nW.VWw]));
 VV[nW.safepart].impact = SOUNDID.metal;
 VV[nW.safepart].destroyaudio = SOUNDID.metaldes;
-VV[nW.safepart].Nn.src = "img/day-safe0.png";
+VV[nW.safepart].building.src = "img/day-safe0.png";
 VV[nW.safepart].particles = particulesitems.safepart;
 VV[nW.safepart].detail = new vn("", "", -1, [
     [item.shapedmetal, 32],
@@ -29957,7 +29957,7 @@ VV[nW.safepart].loot = [
     [item.crossarrow, 50, 0.05]
 ];
 VV[nW.nWwvV] = window.JSON.parse(window.JSON.stringify(VV[nW.vwNWV]));
-VV[nW.nWwvV].Nn.src = "img/day-little-table0.png";
+VV[nW.nWwvV].building.src = "img/day-little-table0.png";
 VV[nW.nWwvV].width = [50, 50, 50, 50];
 VV[nW.nWwvV].height = [50, 50, 50, 50];
 VV[nW.nWwvV].inmapx = [25, 25, 25, 25];
@@ -29967,13 +29967,13 @@ VV[nW.nWwvV].detail = new vn("", "", -1, [
 ]);
 VV[nW.nWwvV].WvwVM = 0;
 VV[nW.wVmWM] = window.JSON.parse(window.JSON.stringify(VV[nW.mmV]));
-VV[nW.wVmWM].Nn.src = "img/day-small-light-off.png";
+VV[nW.wVmWM].building.src = "img/day-small-light-off.png";
 VV[nW.wVmWM].particles = particulesitems.greysteelpart;
 VV[nW.WNWVm] = window.JSON.parse(window.JSON.stringify(VV[nW.vwNWV]));
 VV[nW.WNWVm].impact = SOUNDID.stone;
 VV[nW.WNWVm].destroyaudio = SOUNDID.stonedes;
 VV[nW.WNWVm].particles = particulesitems.toilet;
-VV[nW.WNWVm].Nn.src = "img/day-toilet0.png";
+VV[nW.WNWVm].building.src = "img/day-toilet0.png";
 VV[nW.WNWVm].width = [50, 70, 50, 70];
 VV[nW.WNWVm].height = [70, 50, 70, 50];
 VV[nW.WNWVm].inmapx = [25, 30, 25, 0];
@@ -32919,7 +32919,7 @@ try {
             width: 0,
             height: 0,
             radiation: 0,
-            Nn: [
+            building: [
                 [nN],
                 [nN, wNM, wNM, wNM, {
                     v: 62,
@@ -32988,7 +32988,7 @@ try {
             width: 0,
             height: 0,
             radiation: 0,
-            Nn: [
+            building: [
                 [nN],
                 [nN, {
                     v: 0,
@@ -33238,7 +33238,7 @@ try {
             width: 0,
             height: 0,
             radiation: 0,
-            Nn: [
+            building: [
                 [nN],
                 [nN, nN, nN, MM, MM, {
                     v: 0,
@@ -33481,7 +33481,7 @@ try {
             width: 0,
             height: 0,
             radiation: 0,
-            Nn: [
+            building: [
                 [nN],
                 [nN, {
                     v: 0,
@@ -33744,7 +33744,7 @@ try {
             width: 0,
             height: 0,
             radiation: 0,
-            Nn: [
+            building: [
                 [nN],
                 [nN, VVN, VVN, VVN, VVN, {
                     v: 67,
@@ -33885,7 +33885,7 @@ try {
             width: 0,
             height: 0,
             radiation: 0,
-            Nn: [
+            building: [
                 [nN],
                 [nN, MM, MM, MM, MM, MM, MM, MM, MM, MM, MM, MM, MM, MM, MM, MM, MM],
                 [nN, MM, {
@@ -34179,7 +34179,7 @@ try {
             width: 0,
             height: 0,
             radiation: 0,
-            Nn: [
+            building: [
                 [nN],
                 [nN, wNM, wNM, wNM, {
                     v: 67,
@@ -34269,7 +34269,7 @@ try {
             width: 0,
             height: 0,
             radiation: 0,
-            Nn: [
+            building: [
                 [nN],
                 [nN, vWW, vWW, vWW, vWW, vWW, vWW, vWW, vWW],
                 [nN, vWW, {
@@ -34528,7 +34528,7 @@ try {
             width: 0,
             height: 0,
             radiation: 0,
-            Nn: [
+            building: [
                 [nN],
                 [nN, wV, {
                     v: 67,
@@ -34856,7 +34856,7 @@ try {
             width: 0,
             height: 0,
             radiation: 0,
-            Nn: [
+            building: [
                 [nN],
                 [nN, nN, nN, nN, nN, nN, {
                     v: 0,
@@ -35166,7 +35166,7 @@ try {
             width: 0,
             height: 0,
             radiation: __RADIATION__,
-            Nn: [
+            building: [
                 [nN],
                 [nN, nN, nN, nN, nN, nN, nN, nN, nN, nN, nN, nN, nN, nN, {
                     v: 0,
@@ -40381,7 +40381,7 @@ try {
             width: 0,
             height: 0,
             radiation: 0,
-            Nn: [
+            building: [
                 [nN],
                 [nN, nN, nN, nN, nN, nN, MN, MN, MN, nN, MN, MN, MN, MN, MN, MN, MN, MN],
                 [nN, nN, nN, nN, MN, MN, MN, MN, MN, MN, MN, MN, MN, MN, MN, MN, MN, MN, MN, MN, MN],
@@ -40531,7 +40531,7 @@ try {
 } catch (error) {};
 for (var i = 0; i < nWW.length; i++) {
     var VnVmm = nWW[i];
-    var vVNnW = nWW[i].Nn;
+    var vVNnW = nWW[i].building;
     VnVmm.height = vVNnW.length;
     for (var j = 0; j < vVNnW.length; j++)
         VnVmm.width = window.Math.max(vVNnW[j].length, VnVmm.width);
@@ -42182,11 +42182,11 @@ try {
                 if (nVW.rad !== window.undefined) {
                     var wVn = ENTITIES[__ENTITIE_PLAYER__].clothes[nVW.nwm];
                     wVn.rad = nVW.rad;
-                    wVn.wNV = nVW.wNV;
+                    wVn.warm = nVW.warm;
                     wVn.NVw = nVW.NVw;
                     wVn = ENTITIES2[__ENTITIE_PLAYER__].clothes[nVW.nwm];
                     wVn.rad = nVW.rad;
-                    wVn.wNV = nVW.wNV;
+                    wVn.warm = nVW.warm;
                     wVn.NVw = nVW.NVw;
                 } else VnwWm(nVW);
             }
@@ -42226,7 +42226,7 @@ var AudioManager = (function() {
     wMw.push(AudioUtils.wMm.wnMvV);
     wMw.push(AudioUtils.wMm.MmmnV);
     AudioUtils._fx.open = new AudioUtils.mmn("audio/open.mp3", 1, false, 1);
-    AudioUtils._fx.holditem = new AudioUtils.mmn("audio/drag.mp3", 1, false, 1);
+    AudioUtils._fx.drag = new AudioUtils.mmn("audio/drag.mp3", 1, false, 1);
     AudioUtils._fx.play = new AudioUtils.mmn("audio/play.mp3", 1, false, 1);
     AudioUtils._fx.nwVvN = new AudioUtils.mmn("audio/skill.mp3", 1, false, 1);
     AudioUtils._fx.craft = new AudioUtils.mmn("audio/craft.mp3", 1, false, 1);
@@ -42261,7 +42261,7 @@ var AudioManager = (function() {
     if (AudioUtils.options.VWVWW === 1) {
         AudioUtils.vmv(AudioUtils._fx.open);
         AudioUtils.vmv(AudioUtils._fx.play);
-        AudioUtils.vmv(AudioUtils._fx.holditem);
+        AudioUtils.vmv(AudioUtils._fx.drag);
         AudioUtils.vmv(AudioUtils._fx.nwVvN);
         AudioUtils.vmv(AudioUtils._fx.craft);
         AudioUtils.vmv(AudioUtils._fx.button);
