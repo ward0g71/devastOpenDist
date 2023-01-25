@@ -1163,24 +1163,24 @@ function onFullInventory(MWwnV) {
     }
     var j = 0;
     for (var i = 1; i < MWwnV.length; i += 4) {
-        var item = MWwnV[i];
-        if (item !== 0)
-            Game.inventory[j].setImages(items[item].img.src, items[item].img.W);
+        var IID = MWwnV[i];
+        if (IID !== 0)
+            Game.inventory[j].setImages(items[IID].img.src, items[IID].img.W);
         else
             continue;
         var invtr = World.PLAYER.inventory[j];
         invtr[1] = MWwnV[i + 1];
         invtr[2] = MWwnV[i + 2];
         invtr[3] = MWwnV[i + 3];
-        invtr[0] = item;
+        invtr[0] = IID;
         j++;
     }
 };
 
-function onDeleteItem(item) {
+function onDeleteItem(IID) {
     var invtr = World.PLAYER.inventory;
     for (var i = 0; i < invtr.length; i++) {
-        if ((((invtr[i][0] === item[1]) && (invtr[i][1] === item[2])) && (invtr[i][2] === item[3])) && (invtr[i][3] === item[4])) {
+        if ((((invtr[i][0] === IID[1]) && (invtr[i][1] === IID[2])) && (invtr[i][2] === IID[3])) && (invtr[i][3] === IID[4])) {
             invtr[i][0] = 0;
             invtr[i][1] = 0;
             invtr[i][2] = 0;
@@ -1192,15 +1192,15 @@ function onDeleteItem(item) {
     }
 };
 
-function onNewItem(item) {
+function onNewItem(IID) {
     var invtr = World.PLAYER.inventory;
     for (var i = 0; i < invtr.length; i++) {
         if (invtr[i][0] === 0) {
-            invtr[i][0] = item[1];
-            invtr[i][1] = item[2];
-            invtr[i][2] = item[3];
-            invtr[i][3] = item[4];
-            Game.inventory[i].setImages(items[item[1]].img.src, items[item[1]].img.W);
+            invtr[i][0] = IID[1];
+            invtr[i][1] = IID[2];
+            invtr[i][2] = IID[3];
+            invtr[i][3] = IID[4];
+            Game.inventory[i].setImages(items[IID[1]].img.src, items[IID[1]].img.W);
             if ((Game.MvN() === 1) && (World.PLAYER.craftCategory === -1))
                 World.buildCraftList(World.PLAYER.craftArea);
             return;
@@ -1234,11 +1234,11 @@ function onStaminaIncrease() {
     World.gauges.stamina.vww = -1;
 };
 
-function onReplaceItem(item) {
+function onReplaceItem(IID) {
     var invtr = World.PLAYER.inventory;
     for (var i = 0; i < invtr.length; i++) {
-        if ((((invtr[i][0] === item[1]) && (invtr[i][1] === item[2])) && (invtr[i][2] === item[3])) && (invtr[i][3] === item[4])) {
-            invtr[i][1] = item[5];
+        if ((((invtr[i][0] === IID[1]) && (invtr[i][1] === IID[2])) && (invtr[i][2] === IID[3])) && (invtr[i][3] === IID[4])) {
+            invtr[i][1] = IID[5];
             if ((Game.MvN() === 1) && (World.PLAYER.craftCategory === -1))
                 World.buildCraftList(World.PLAYER.craftArea);
             return;
@@ -1256,12 +1256,12 @@ function onStackItem(buf) {
         else if (((invtr[i][0] === buf[1]) && (invtr[i][1] === buf[4])) && (invtr[i][2] === buf[5]))
             MNmNm = i;
     }
-    var item = items[buf[1]];
+    var IID = items[buf[1]];
     var NVwnN = buf[2] + buf[4];
-    if (item.stack < NVwnN) {
-        invtr[MNmNm][3] = window.Math.min(255, window.Math.max(0, window.Math.floor(((invtr[wWnWW][3] * invtr[wWnWW][1]) + (invtr[MNmNm][3] * (item.stack - invtr[wWnWW][1]))) / item.stack)));
-        invtr[wWnWW][1] = NVwnN - item.stack;
-        invtr[MNmNm][1] = item.stack;
+    if (IID.stack < NVwnN) {
+        invtr[MNmNm][3] = window.Math.min(255, window.Math.max(0, window.Math.floor(((invtr[wWnWW][3] * invtr[wWnWW][1]) + (invtr[MNmNm][3] * (IID.stack - invtr[wWnWW][1]))) / IID.stack)));
+        invtr[wWnWW][1] = NVwnN - IID.stack;
+        invtr[MNmNm][1] = IID.stack;
     } else {
         invtr[MNmNm][3] = window.Math.min(255, window.Math.max(0, window.Math.floor(((invtr[wWnWW][3] * invtr[wWnWW][1]) + (invtr[MNmNm][3] * invtr[MNmNm][1])) / NVwnN)));
         invtr[wWnWW][0] = 0;
@@ -1276,17 +1276,17 @@ function onStackItem(buf) {
 
 function onSplitItem(buf) {
     var invtr = World.PLAYER.inventory;
-    var nM = window.Math.floor(buf[2] / 2);
+    var amount = window.Math.floor(buf[2] / 2);
     var nvMvW = -1;
     var VVmWn = -1;
     for (var i = 0; i < invtr.length; i++) {
         if ((((VVmWn === -1) && (invtr[i][0] === buf[1])) && (invtr[i][1] === buf[2])) && (invtr[i][2] === buf[3])) {
             VVmWn = i;
-            invtr[i][1] -= nM;
+            invtr[i][1] -= amount;
         } else if ((nvMvW === -1) && (invtr[i][0] === 0)) {
             nvMvW = i;
             invtr[i][0] = buf[1];
-            invtr[i][1] = nM;
+            invtr[i][1] = amount;
             invtr[i][2] = buf[4];
             Game.inventory[i].setImages(items[buf[1]].img.src, items[buf[1]].img.W);
         }
@@ -1324,11 +1324,11 @@ function onLifeIncrease() {
     World.gauges.life.vww = -1;
 };
 
-function onReplaceAmmo(item) {
+function onReplaceAmmo(IID) {
     var invtr = World.PLAYER.inventory;
     for (var i = 0; i < invtr.length; i++) {
-        if ((((invtr[i][0] === item[1]) && (invtr[i][1] === item[2])) && (invtr[i][2] === item[3])) && (invtr[i][3] === item[4])) {
-            invtr[i][3] = item[5];
+        if ((((invtr[i][0] === IID[1]) && (invtr[i][1] === IID[2])) && (invtr[i][2] === IID[3])) && (invtr[i][3] === IID[4])) {
+            invtr[i][3] = IID[5];
             return;
         }
     }
@@ -1345,12 +1345,12 @@ function onInterruptInteraction() {
     World.PLAYER.interactionDelay = 0;
 };
 
-function onReplaceItemAndAmmo(item) {
+function onReplaceItemAndAmmo(IID) {
     var invtr = World.PLAYER.inventory;
     for (var i = 0; i < invtr.length; i++) {
-        if ((((invtr[i][0] === item[1]) && (invtr[i][1] === item[2])) && (invtr[i][2] === item[3])) && (invtr[i][3] === item[4])) {
-            invtr[i][1] = item[5];
-            invtr[i][3] = item[6];
+        if ((((invtr[i][0] === IID[1]) && (invtr[i][1] === IID[2])) && (invtr[i][2] === IID[3])) && (invtr[i][3] === IID[4])) {
+            invtr[i][1] = IID[5];
+            invtr[i][3] = IID[6];
             if ((Game.MvN() === 1) && (World.PLAYER.craftCategory === -1))
                 World.buildCraftList(World.PLAYER.craftArea);
             return;
@@ -1387,16 +1387,16 @@ function onPlayerXpSkill(unit8) {
         onBoughtSkill(unit8[i]);
 };
 
-function onBoughtSkill(item) {
-    if (item === 0)
+function onBoughtSkill(IID) {
+    if (IID === 0)
         return;
-    World.PLAYER.skillUnlocked[item] = 1;
-    World.PLAYER.skillPoint -= items[item].detail.wNvMv;
-    var scaleby = items[item].scale;
+    World.PLAYER.skillUnlocked[IID] = 1;
+    World.PLAYER.skillPoint -= items[IID].detail.wNvMv;
+    var scaleby = items[IID].scale;
     if (scaleby !== window.undefined)
         Render.scale = scaleby;
     else {
-        var vvmNV = items[item].vvmNV;
+        var vvmNV = items[IID].vvmNV;
         if (vvmNV !== window.undefined) {
             for (var i = 0; i < vvmNV; i++)
                 World.PLAYER.inventory.push([0, 0, 0, 0]);
@@ -1432,10 +1432,10 @@ function onOpenBuilding(unit8) {
     var queue = craft.queue;
     World.PLAYER.building.len = 4;
     for (var i = 0; i < 4; i++) {
-        var item = unit8[i + 4];
-        queue[i] = item;
-        if (item !== 0)
-            Game.queue[i].setImages(items[item].img.src, items[item].img.W);
+        var IID = unit8[i + 4];
+        queue[i] = IID;
+        if (IID !== 0)
+            Game.queue[i].setImages(items[IID].img.src, items[IID].img.W);
         else {
             World.PLAYER.building.len = i;
             break;
@@ -1447,11 +1447,11 @@ function onOpenBuilding(unit8) {
     else
         craft.fuel = -1;
     if (((queue[0] !== 0) && (craft.pos !== 4)) && (queue[craft.pos] !== 0)) {
-        var item = items[queue[craft.pos]];
-        var canvasZ = item.detail.MWW;
+        var IID = items[queue[craft.pos]];
+        var canvasZ = IID.detail.MWW;
         for (i = 0; i < canvasZ.length; i++) {
             if (canvasZ[i] === MWW) {
-                craft.timeMax = item.detail.NMMmV[i] * World.PLAYER.craftFactor;
+                craft.timeMax = IID.detail.NMMmV[i] * World.PLAYER.craftFactor;
                 break;
             }
         }
@@ -2671,9 +2671,9 @@ var World = (function() {
         nMmNW(gauges.xp);
         World.PLAYER.VWMmM += delta;
         if (gauges.rad.current > 254)
-            AudioManager.vwMNW = 0;
+            AudioManager.geiger = 0;
         else
-            AudioManager.vwMNW = window.Math.min(1, window.Math.max(0, 1 - (gauges.rad.current / 255)));
+            AudioManager.geiger = window.Math.min(1, window.Math.max(0, 1 - (gauges.rad.current / 255)));
         vNvmW();
     };
     var gauges = {
@@ -2691,30 +2691,30 @@ var World = (function() {
 
     function changeDayCycle() {
         var mWN;
-        mWN = NWVnn;
-        NWVnn = items;
+        mWN = INVENTORY2;
+        INVENTORY2 = items;
         items = mWN;
-        mWN = NWwVV;
-        NWwVV = VNw;
+        mWN = PARTICLES2;
+        PARTICLES2 = VNw;
         VNw = mWN;
-        mWN = mwwnn;
-        mwwnn = VNN;
+        mWN = LOOT2;
+        LOOT2 = VNN;
         VNN = mWN;
-        mWN = MMNMn;
-        MMNMn = nnv;
+        mWN = RESOURCES2;
+        RESOURCES2 = nnv;
         nnv = mWN;
         mWN = ENTITIES2;
         ENTITIES2 = ENTITIES;
         ENTITIES = mWN;
-        mWN = vNNVn;
-        vNNVn = NWWWW;
+        mWN = LIGHTFIRE2;
+        LIGHTFIRE2 = NWWWW;
         NWWWW = mWN;
-        mWN = wwVWm;
-        wwVWm = MwWmN;
-        MwWmN = mWN;
-        mWN = VNVwN;
-        VNVwN = VVv;
-        VVv = mWN;
+        mWN = GROUND2;
+        GROUND2 = GROUND;
+        GROUND = mWN;
+        mWN = AI2;
+        AI2 = AI;
+        AI = mWN;
         day = (day + 1) % 2;
         World.day = day;
         if (day === 0) {
@@ -2748,20 +2748,20 @@ var World = (function() {
 
     function selectRecipe(Wn) {
         var len = 0;
-        var item = items[Wn];
-        Game.preview.setImages(item.img.src, item.img.W);
-        var MWVwN = item.detail.recipe;
-        var canvasZ = item.detail.MWW;
+        var IID = items[Wn];
+        Game.preview.setImages(IID.img.src, IID.img.W);
+        var MWVwN = IID.detail.recipe;
+        var canvasZ = IID.detail.MWW;
         var recipe = Game.recipe;
         var tools = Game.tools;
         var recipeList = PLAYER.recipeList;
         PLAYER.craftSelected = Wn;
         if (canvasZ !== window.undefined) {
             for (var i = 0; i < canvasZ.length; i++) {
-                var wmN = VmwwM[canvasZ[i]];
+                var wmN = AREASTOITEM[canvasZ[i]];
                 if (wmN !== window.undefined) {
-                    item = items[wmN];
-                    tools[len].setImages(item.img.src, item.img.W);
+                    IID = items[wmN];
+                    tools[len].setImages(IID.img.src, IID.img.W);
                     len++;
                 }
             }
@@ -2770,9 +2770,9 @@ var World = (function() {
         len = 0;
         if (MWVwN !== window.undefined) {
             for (i = 0; i < MWVwN.length; i++) {
-                item = items[MWVwN[i][0]];
-                recipe[len].setImages(item.img.src, item.img.W);
-                recipeList[len] = item.id;
+                IID = items[MWVwN[i][0]];
+                recipe[len].setImages(IID.img.src, IID.img.W);
+                recipeList[len] = IID.id;
                 len++;
             }
         }
@@ -2797,9 +2797,9 @@ var World = (function() {
         for (var i = 0; i < recipe.length; i++) {
             var VWVMW = recipe[i];
             for (var j = 0; j < invtr.length; j++) {
-                var item = invtr[j];
-                if (item[0] === VWVMW[0]) {
-                    if (item[1] >= VWVMW[1]) {
+                var IID = invtr[j];
+                if (IID[0] === VWVMW[0]) {
+                    if (IID[1] >= VWVMW[1]) {
                         MvmWv[i] = VWVMW[1];
                         break;
                     } else
@@ -2831,15 +2831,15 @@ var World = (function() {
         var craftList = Game.craft;
         var craftAvailable = PLAYER.craftAvailable;
         for (var i = 1; i < items.length; i++) {
-            var item = items[i];
-            if (item.detail.nww === nww) {
+            var IID = items[i];
+            if (IID.detail.nww === nww) {
                 if (nnNVM === 0) {
                     nnNVM = i;
                     vVWmn = len;
                 }
-                craftList[len].setImages(item.img.src, item.img.W);
+                craftList[len].setImages(IID.img.src, IID.img.W);
                 craft[len] = i;
-                craftAvailable[len] = NMvWv(i, item.detail);
+                craftAvailable[len] = NMvWv(i, IID.detail);
                 len++;
             }
         }
@@ -2863,14 +2863,14 @@ var World = (function() {
         var craftAvailable = PLAYER.craftAvailable;
         var craftList = Game.craft;
         for (var i = 1; i < items.length; i++) {
-            var item = items[i];
-            var NW = item.detail;
-            if (((NW.MWW !== window.undefined) && (NW.MWW.indexOf(MWW) !== -1)) && ((NW.level === -1) || (PLAYER.skillUnlocked[item.id] === 1))) {
+            var IID = items[i];
+            var NW = IID.detail;
+            if (((NW.MWW !== window.undefined) && (NW.MWW.indexOf(MWW) !== -1)) && ((NW.level === -1) || (PLAYER.skillUnlocked[IID.id] === 1))) {
                 if ((nnNVM === 0) || (WnNmW === i)) {
                     nnNVM = i;
                     vVWmn = len;
                 }
-                craftList[len].setImages(item.img.src, item.img.W);
+                craftList[len].setImages(IID.img.src, IID.img.W);
                 craft[len] = i;
                 craftAvailable[len] = MMMWN(NW.recipe);
                 len++;
@@ -7818,7 +7818,7 @@ var Home = (function() {
             if (((World.PLAYER.admin !== 1) && (typeof window["YMPB"] !== 'undefined')) && (typeof window["YMPB"]["preroll"] !== 'undefined')) {
                 if (Home.waitAds === 1) return;
                 if (Home.ads === 1) {
-                    AudioManager.MWwnM();
+                    AudioManager.cutTitleMusic();
                     window.document.getElementById("preroll").style.display = "block";
                     window["YMPB"]["preroll"]('preroll', function() {
                         Home.waitAds = 0;
@@ -8007,7 +8007,7 @@ var Home = (function() {
         Home.alertId = 0;
         Home.alertDelay = 0;
         window.document.getElementById("nicknameInput").value = localStorage2.getItem("nickname", nickname);
-        AudioUtils.fadeSound(AudioUtils.audio.title, 1000, AudioManager.mvVWW);
+        AudioUtils.fadeSound(AudioUtils.audio.title, 1000, AudioManager.musicVolume);
         Entitie.removeAll();
         Render.reset(1);
         vmV = 0;
@@ -8015,8 +8015,8 @@ var Home = (function() {
         nnn(__ENTITIE_RESOURCES_DOWN__, 200, 0, 127, object.stone, 3);
         nnn(__ENTITIE_RESOURCES_TOP__, 400, 100, 127, object.orangebush, 2);
         nnn(__ENTITIE_RESOURCES_STOP__, 100, 100, 127, object.tree, 0);
-        Vnvmv(__ENTITIE_BUILD_GROUND__, 900, 500, 0, 33, item.smelter);
-        Vnvmv(__ENTITIE_BUILD_DOWN__, 800, 400, 1, 1, item.workbench);
+        Vnvmv(__ENTITIE_BUILD_GROUND__, 900, 500, 0, 33, IID.smelter);
+        Vnvmv(__ENTITIE_BUILD_DOWN__, 800, 400, 1, 1, IID.workbench);
         nnn(__ENTITIE_RESOURCES_STOP__, 1100, 300, 10, object.tree, 1);
         nnn(__ENTITIE_RESOURCES_STOP__, 800, 200, 127, object.tree, 2);
         nnn(__ENTITIE_RESOURCES_STOP__, 700, 100, 127, object.tree, 3);
@@ -9193,7 +9193,7 @@ var Game = (function() {
         Home.ads++;
         Game.teamName = "";
         Game.teamNameValid = 0;
-        AudioManager.nMvWM();
+        AudioManager.startGame();
         if (World.gameMode === World.__BR__) {
             teambutt.hide();
             craftbutton.show();
@@ -9904,11 +9904,11 @@ var Game = (function() {
             if ((i > 9) && (bagbutt.open === 0)) break;
             if (inventory[i].trigger() === 1) {
                 mnWNv = 1;
-                var item = invtr[i][0];
-                var nM = invtr[i][1];
+                var IID = invtr[i][0];
+                var amount = invtr[i][1];
                 var vmM = invtr[i][2];
                 var wvmvw = invtr[i][3];
-                var vV = items[item];
+                var vV = items[IID];
                 if (drag.begin === 1) {
                     if (drag.id !== i) {
                         if (invtr[i][0] === invtr[drag.id][0]) {
@@ -9923,11 +9923,11 @@ var Game = (function() {
                         invtr[i][1] = invtr[drag.id][1];
                         invtr[i][2] = invtr[drag.id][2];
                         invtr[i][3] = invtr[drag.id][3];
-                        invtr[drag.id][0] = item;
-                        invtr[drag.id][1] = nM;
+                        invtr[drag.id][0] = IID;
+                        invtr[drag.id][1] = amount;
                         invtr[drag.id][2] = vmM;
                         invtr[drag.id][3] = wvmvw;
-                        if (item !== 0) Game.inventory[drag.id].setImages(items[item].img.src, items[item].img.W);
+                        if (IID !== 0) Game.inventory[drag.id].setImages(items[IID].img.src, items[IID].img.W);
                         Game.inventory[i].setImages(items[invtr[i][0]].img.src, items[invtr[i][0]].img.W);
                         World.PLAYER.drag.begin = 0;
                         AudioUtils.playFx(AudioUtils._fx.drag, 1, 0);
@@ -9935,18 +9935,18 @@ var Game = (function() {
                     }
                     World.PLAYER.drag.begin = 0;
                 }
-                if (item !== 0) {
+                if (IID !== 0) {
                     if ((isChestOpen === 1) && (event.which !== 3)) {
-                        Client.sendPacket(window.JSON.stringify([26, item, nM, vmM, wvmvw]));
+                        Client.sendPacket(window.JSON.stringify([26, IID, amount, vmM, wvmvw]));
                         AudioUtils.playFx(AudioUtils._fx.drag, 1, 0);
                     } else if (event.which === 3) {
-                        Client.sendPacket(window.JSON.stringify([9, item, nM, vmM, wvmvw]));
+                        Client.sendPacket(window.JSON.stringify([9, IID, amount, vmM, wvmvw]));
                         AudioUtils.playFx(AudioUtils._fx.wWwnM, 1, 0);
                     } else {
                         if (event.ctrlKey) {
                             AudioUtils.playFx(AudioUtils._fx.drag, 0.6, 0);
-                            Client.sendPacket(window.JSON.stringify([11, item, nM, vmM]));
-                        } else Client.sendPacket(window.JSON.stringify([8, item, nM, vmM, wvmvw]));
+                            Client.sendPacket(window.JSON.stringify([11, IID, amount, vmM]));
+                        } else Client.sendPacket(window.JSON.stringify([8, IID, amount, vmM, wvmvw]));
                     }
                 }
             }
@@ -10160,18 +10160,18 @@ var Game = (function() {
                     var i = event.keyCode - 49;
                     var invtr = World.PLAYER.inventory;
                     if (i < invtr.length) {
-                        var item = invtr[i][0];
-                        var nM = invtr[i][1];
+                        var IID = invtr[i][0];
+                        var amount = invtr[i][1];
                         var vmM = invtr[i][2];
                         var wvmvw = invtr[i][3];
                         if (event.altKey) {
-                            Client.sendPacket(window.JSON.stringify([9, item, nM, vmM, wvmvw]));
+                            Client.sendPacket(window.JSON.stringify([9, IID, amount, vmM, wvmvw]));
                             AudioUtils.playFx(AudioUtils._fx.wWwnM, 1, 0);
                         } else {
                             if (event.ctrlKey) {
                                 AudioUtils.playFx(AudioUtils._fx.drag, 0.6, 0);
-                                Client.sendPacket(window.JSON.stringify([11, item, nM, vmM]));
-                            } else Client.sendPacket(window.JSON.stringify([8, item, nM, vmM, wvmvw]));
+                                Client.sendPacket(window.JSON.stringify([11, IID, amount, vmM]));
+                            } else Client.sendPacket(window.JSON.stringify([8, IID, amount, vmM, wvmvw]));
                         }
                     }
                 }
@@ -10612,15 +10612,15 @@ var Score = (function() {
         for (var i = 0; i < World.PLAYER.inventory.length; i++) {
             for (var j = 0; j < 4; j++) World.PLAYER.inventory[i][j] = 0;
         }
-        var MWMwV = mvv[window.Math.min(mvv.length - 1, World.PLAYER.level)];
+        var MWMwV = KIT[window.Math.min(KIT.length - 1, World.PLAYER.level)];
         for (var i = 0; i < MWMwV.length; i++) {
-            var item = MWMwV[i];
-            if (item.id !== 0) Game.inventory[i].setImages(items[item.id].img.src, items[item.id].img.W);
+            var IID = MWMwV[i];
+            if (IID.id !== 0) Game.inventory[i].setImages(items[IID.id].img.src, items[IID.id].img.W);
             var invtr = World.PLAYER.inventory[i];
-            invtr[1] = item.nM;
+            invtr[1] = IID.amount;
             invtr[2] = 0;
-            invtr[3] = item.life;
-            invtr[0] = item.id;
+            invtr[3] = IID.life;
+            invtr[0] = IID.id;
         }
         waitAds = 5000;
         if (Loader.getURLData("admin") === null) {
@@ -11113,9 +11113,9 @@ function wMNww(vV) {
     var wVN = wWv.border;
     for (i = 0; i < wVN; i++) {
         var player = Nvw[wWv.cycle[i]];
-        var item = items[player.extra >> 7];
-        NvV += ("!b=" + item.id) + ":";
-        if (item.subtype !== 0) NvV += player.subtype + ":";
+        var IID = items[player.extra >> 7];
+        NvV += ("!b=" + IID.id) + ":";
+        if (IID.subtype !== 0) NvV += player.subtype + ":";
         NvV += (((player.j + ":") + player.i) + ":") + ((player.extra >> 5) & 3);
     }
     return NvV;
@@ -11279,9 +11279,9 @@ var Editor = (function() {
         var wVN = wWv.border;
         for (i = 0; i < wVN; i++) {
             var player = Nvw[wWv.cycle[i]];
-            var item = items[player.extra >> 7];
-            NvV += ("!b=" + item.id) + ":";
-            if (item.subtype !== 0) NvV += player.subtype + ":";
+            var IID = items[player.extra >> 7];
+            NvV += ("!b=" + IID.id) + ":";
+            if (IID.subtype !== 0) NvV += player.subtype + ":";
             NvV += (((player.j + ":") + player.i) + ":") + ((player.extra >> 5) & 3);
         }
         return NvV;
@@ -11465,14 +11465,14 @@ var Editor = (function() {
     function run() {
         window.document.getElementById("bod").style.backgroundColor = "#46664D";
         nmMMm = 0;
-        AudioManager.nMvWM();
+        AudioManager.startGame();
         if (vVnNn === 0) {
             vVnNn = 1;
-            var vnvwV = items[item.NvMvM].subtype;
+            var vnvwV = items[IID.NvMvM].subtype;
             for (var i = 0; i < vnvwV.length; i++) {
-                var item = vnvwV[i];
-                item.img = {
-                    src: [item.building.src, "img/useless.png", "img/useless.png"],
+                var IID = vnvwV[i];
+                IID.img = {
+                    src: [IID.building.src, "img/useless.png", "img/useless.png"],
                     W: [{
                         isLoaded: 0
                     }, {
@@ -11482,11 +11482,11 @@ var Editor = (function() {
                     }]
                 };
             }
-            var vnvwV = items[item.MMnVW].subtype;
+            var vnvwV = items[IID.MMnVW].subtype;
             for (var i = 0; i < vnvwV.length; i++) {
-                var item = vnvwV[i];
-                item.img = {
-                    src: [item.building.src, "img/useless.png", "img/useless.png"],
+                var IID = vnvwV[i];
+                IID.img = {
+                    src: [IID.building.src, "img/useless.png", "img/useless.png"],
                     W: [{
                         isLoaded: 0
                     }, {
@@ -11772,10 +11772,10 @@ var Editor = (function() {
             vnm = 1;
             NWw = 0;
             for (var i = 1; i < items.length; i++) {
-                var item = items[i];
-                if (item.behavior === BEHAVIOR.__LOGIC__) {
-                    Wnw[NWw].setImages(item.img.src, item.img.W);
-                    Wnw[NWw].vmM = item.id;
+                var IID = items[i];
+                if (IID.behavior === BEHAVIOR.__LOGIC__) {
+                    Wnw[NWw].setImages(IID.img.src, IID.img.W);
+                    Wnw[NWw].vmM = IID.id;
                     NWw++;
                 }
             }
@@ -11785,10 +11785,10 @@ var Editor = (function() {
             vnm = 1;
             NWw = 0;
             for (var i = 1; i < items.length; i++) {
-                var item = items[i];
-                if ((((item.id === item.landmine) || (item.id === item.c4bomb)) || (item.id === item.woodespike)) || (item.id === item.dynamite)) {
-                    Wnw[NWw].setImages(item.img.src, item.img.W);
-                    Wnw[NWw].vmM = item.id;
+                var IID = items[i];
+                if ((((IID.id === IID.landmine) || (IID.id === IID.c4bomb)) || (IID.id === IID.woodespike)) || (IID.id === IID.dynamite)) {
+                    Wnw[NWw].setImages(IID.img.src, IID.img.W);
+                    Wnw[NWw].vmM = IID.id;
                     NWw++;
                 }
             }
@@ -11797,11 +11797,11 @@ var Editor = (function() {
         if (maproadbutton.trigger() === 1) {
             vnm = 1;
             NWw = 0;
-            var vnvwV = items[item.NvMvM].subtype;
+            var vnvwV = items[IID.NvMvM].subtype;
             for (var i = 0; i < vnvwV.length; i++) {
-                var item = vnvwV[i];
-                Wnw[NWw].setImages(item.img.src, item.img.W);
-                Wnw[NWw].vmM = item.NvMvM;
+                var IID = vnvwV[i];
+                Wnw[NWw].setImages(IID.img.src, IID.img.W);
+                Wnw[NWw].vmM = IID.NvMvM;
                 Wnw[NWw].nVWnM = i;
                 NWw++;
             }
@@ -11810,11 +11810,11 @@ var Editor = (function() {
         if (mapfurniturebutton.trigger() === 1) {
             vnm = 1;
             NWw = 0;
-            var vnvwV = items[item.MMnVW].subtype;
+            var vnvwV = items[IID.MMnVW].subtype;
             for (var i = 0; i < vnvwV.length; i++) {
-                var item = vnvwV[i];
-                Wnw[NWw].setImages(item.img.src, item.img.W);
-                Wnw[NWw].vmM = item.MMnVW;
+                var IID = vnvwV[i];
+                Wnw[NWw].setImages(IID.img.src, IID.img.W);
+                Wnw[NWw].vmM = IID.MMnVW;
                 Wnw[NWw].nVWnM = i;
                 NWw++;
             }
@@ -11824,10 +11824,10 @@ var Editor = (function() {
             vnm = 1;
             NWw = 0;
             for (var i = 1; i < items.length; i++) {
-                var item = items[i];
-                if (((((item.wall === 1) || (item.lowWall === 1)) || (item.door === 1)) || (item.chest === 1)) || (item.VVmmM === 1)) {
-                    Wnw[NWw].setImages(item.img.src, item.img.W);
-                    Wnw[NWw].vmM = item.id;
+                var IID = items[i];
+                if (((((IID.wall === 1) || (IID.lowWall === 1)) || (IID.door === 1)) || (IID.chest === 1)) || (IID.VVmmM === 1)) {
+                    Wnw[NWw].setImages(IID.img.src, IID.img.W);
+                    Wnw[NWw].vmM = IID.id;
                     NWw++;
                 }
             }
@@ -11965,7 +11965,7 @@ var Editor = (function() {
                     AudioUtils.playFx(AudioUtils._fx.button, 1, 0);
                     World.PLAYER.blueprint = Wnw[i].vmM;
                     World.PLAYER.furniture = Wnw[i].nVWnM;
-                    if (World.PLAYER.blueprint === item.NvMvM) World.PLAYER.buildRotate = 0;
+                    if (World.PLAYER.blueprint === IID.NvMvM) World.PLAYER.buildRotate = 0;
                 }
             }
         }
@@ -12056,7 +12056,7 @@ var Editor = (function() {
             AudioUtils.playFx(AudioUtils._fx.open, 1, 0);
             nVN();
         } else if (event.keyCode === 82) {
-            if ((World.PLAYER.isBuilding === 1) && (World.PLAYER.blueprint !== item.NvMvM)) World.PLAYER.buildRotate = (World.PLAYER.buildRotate + 1) % 4;
+            if ((World.PLAYER.isBuilding === 1) && (World.PLAYER.blueprint !== IID.NvMvM)) World.PLAYER.buildRotate = (World.PLAYER.buildRotate + 1) % 4;
         }
     };
 
@@ -12585,9 +12585,9 @@ var NVwvn = [{}, {
     alt: [wMM.wmMVw, wMM.vnWNW]
 }];
 try {
-    if (VwM !== window.undefined) {
-        VwM.wMM = wMM;
-        VwM.NVwvn = NVwvn;
+    if (exports !== window.undefined) {
+        exports.wMM = wMM;
+        exports.NVwvn = NVwvn;
     }
 } catch (error) {}
 
@@ -13434,28 +13434,28 @@ try {
             wm.pos.x = WX;
             wm.pos.y = WY;
             wm.draw();
-            var item = items[invtr[0]];
-            var nM = invtr[1];
-            if (nM > 1) {
-                if (inventoryItemNumber[nM] === window.undefined) {
-                    inventoryItemNumber[nM] = {
-                        W: GUI.renderText("x" + nM, "'Black Han Sans', sans-serif", "#ffffff", 30, 250, window.undefined, 15, 12, window.undefined, window.undefined, window.undefined, window.undefined, "#000000", 12)
+            var IID = items[invtr[0]];
+            var amount = invtr[1];
+            if (amount > 1) {
+                if (inventoryItemNumber[amount] === window.undefined) {
+                    inventoryItemNumber[amount] = {
+                        W: GUI.renderText("x" + amount, "'Black Han Sans', sans-serif", "#ffffff", 30, 250, window.undefined, 15, 12, window.undefined, window.undefined, window.undefined, window.undefined, "#000000", 12)
                     };
-                    inventoryItemNumber[nM].W.isLoaded = 1;
+                    inventoryItemNumber[amount].W.isLoaded = 1;
                 }
-                CanvasUtils.drawImageHd(inventoryItemNumber[nM], (WX / scaleby) + 53, (WY / scaleby) + 55, -0.5, 0, 0, 1);
+                CanvasUtils.drawImageHd(inventoryItemNumber[amount], (WX / scaleby) + 53, (WY / scaleby) + 55, -0.5, 0, 0, 1);
             }
-            if ((item.vMv !== window.undefined) && (item.mMVwm === window.undefined)) {
-                var nM = invtr[3];
-                if (inventoryAmmoNumber[nM] === window.undefined) {
-                    inventoryAmmoNumber[nM] = {
-                        W: GUI.renderText("x" + nM, "'Black Han Sans', sans-serif", "#FFFF00", 30, 250, window.undefined, 15, 12, window.undefined, window.undefined, window.undefined, window.undefined, "#000000", 12)
+            if ((IID.vMv !== window.undefined) && (IID.mMVwm === window.undefined)) {
+                var amount = invtr[3];
+                if (inventoryAmmoNumber[amount] === window.undefined) {
+                    inventoryAmmoNumber[amount] = {
+                        W: GUI.renderText("x" + amount, "'Black Han Sans', sans-serif", "#FFFF00", 30, 250, window.undefined, 15, 12, window.undefined, window.undefined, window.undefined, window.undefined, "#000000", 12)
                     };
-                    inventoryAmmoNumber[nM].W.isLoaded = 1;
+                    inventoryAmmoNumber[amount].W.isLoaded = 1;
                 }
-                CanvasUtils.drawImageHd(inventoryAmmoNumber[nM], (WX / scaleby) + 53, (WY / scaleby) + 55, -0.5, 0, 0, 1);
+                CanvasUtils.drawImageHd(inventoryAmmoNumber[amount], (WX / scaleby) + 53, (WY / scaleby) + 55, -0.5, 0, 0, 1);
             }
-            if (item.vWVMV !== window.undefined) {
+            if (IID.vWVMV !== window.undefined) {
                 var VWNwv = window.Math.floor(invtr[3] / 12.8);
                 var W = wwvmV[VWNwv];
                 if (W.isLoaded !== 1) {
@@ -13524,10 +13524,10 @@ try {
             }
             var drag = World.PLAYER.drag;
             if (((drag.begin === 1) && (Mouse.state === Mouse.__MOUSE_DOWN__)) && (Math2d.dist(drag.x, drag.y, Mouse.x, Mouse.y) > (4 * scaleby))) {
-                var item = invtr[drag.id][0];
-                if (item > 0) {
-                    var W = items[item].img.W[0];
-                    if (W.isLoaded === 0) W = NWVnn[item].img.W[0];
+                var IID = invtr[drag.id][0];
+                if (IID > 0) {
+                    var W = items[IID].img.W[0];
+                    if (W.isLoaded === 0) W = INVENTORY2[IID].img.W[0];
                     ctx.globalAlpha = 0.7;
                     var SY = 68 * scaleby;
                     ctx.drawImage(W, (Mouse.x * scaleby) - (SY / 2), (Mouse.y * scaleby) - (SY / 2), SY, SY);
@@ -14043,16 +14043,16 @@ try {
 
         function vMwNm() {
             var mmMnV = vertst;
-            if (mmMnV > 0) CanvasUtils.fillRect(ctx, 0, 0, mmMnV, canhns, MwWmN);
+            if (mmMnV > 0) CanvasUtils.fillRect(ctx, 0, 0, mmMnV, canhns, GROUND);
             else mmMnV = 0;
             var wvnWn = horist;
-            if (wvnWn > 0) CanvasUtils.fillRect(ctx, mmMnV, 0, canwns - mmMnV, wvnWn, MwWmN);
+            if (wvnWn > 0) CanvasUtils.fillRect(ctx, mmMnV, 0, canwns - mmMnV, wvnWn, GROUND);
             else wvnWn = 0;
             var Mwwnn = (-vertst + canwns) - WMwnW;
-            if (Mwwnn > 0) CanvasUtils.fillRect(ctx, canwns - Mwwnn, wvnWn, Mwwnn, canhns - wvnWn, MwWmN);
+            if (Mwwnn > 0) CanvasUtils.fillRect(ctx, canwns - Mwwnn, wvnWn, Mwwnn, canhns - wvnWn, GROUND);
             else Mwwnn = 0;
             var nNnMV = (-horist + canhns) - mmVNm;
-            if (nNnMV > 0) CanvasUtils.fillRect(ctx, mmMnV, canhns - nNnMV, (canwns - mmMnV) - Mwwnn, nNnMV, MwWmN);
+            if (nNnMV > 0) CanvasUtils.fillRect(ctx, mmMnV, canhns - nNnMV, (canwns - mmMnV) - Mwwnn, nNnMV, GROUND);
         };
 
         function itemstatsfunc(wmvMm, Wn) {
@@ -14063,8 +14063,8 @@ try {
             Mwv = GUI.renderText(NW.description, "'Viga', sans-serif", "#FFFFFF", 16, 400);
             wmvMm.drawImage(Mwv, 20, 68);
             if (WvW.mnw === 21) {
-                if (WvW.WWv > 0) {
-                    Mwv = GUI.renderText((("Damage: " + WvW.damage) + "/") + WvW.WWv, "'Viga', sans-serif", "#D3BB43", 24, 400);
+                if (WvW.damageBuilding > 0) {
+                    Mwv = GUI.renderText((("Damage: " + WvW.damage) + "/") + WvW.damageBuilding, "'Viga', sans-serif", "#D3BB43", 24, 400);
                     wmvMm.drawImage(Mwv, 20, 101);
                 } else {
                     Mwv = GUI.renderText("Life: " + WvW.life, "'Viga', sans-serif", "#D3BB43", 24, 400);
@@ -14250,8 +14250,8 @@ try {
                 }
             }
             if (World.PLAYER.isInBuilding === 1) {
-                var nM = World.PLAYER.building.fuel;
-                if (nM >= 0) {
+                var amount = World.PLAYER.building.fuel;
+                if (amount >= 0) {
                     var wm;
                     if (((MWW === AREAS.smelter) || (MWW === AREAS.extractor)) || (MWW === AREAS.agitator)) wm = WmWwW;
                     else if (MWW === AREAS.teslabench) wm = WwMvM;
@@ -14265,13 +14265,13 @@ try {
                         wm.draw();
                         ctx.globalAlpha = 1;
                     }
-                    if (inventoryAmmoNumber[nM] === window.undefined) {
-                        inventoryAmmoNumber[nM] = {
-                            W: GUI.renderText("x" + nM, "'Black Han Sans', sans-serif", "#FFFF00", 30, 250, window.undefined, 15, 12, window.undefined, window.undefined, window.undefined, window.undefined, "#000000", 12)
+                    if (inventoryAmmoNumber[amount] === window.undefined) {
+                        inventoryAmmoNumber[amount] = {
+                            W: GUI.renderText("x" + amount, "'Black Han Sans', sans-serif", "#FFFF00", 30, 250, window.undefined, 15, 12, window.undefined, window.undefined, window.undefined, window.undefined, "#000000", 12)
                         };
-                        inventoryAmmoNumber[nM].W.isLoaded = 1;
+                        inventoryAmmoNumber[amount].W.isLoaded = 1;
                     }
-                    CanvasUtils.drawImageHd(inventoryAmmoNumber[nM], (wm.pos.x / scaleby) + 42, (wm.pos.y / scaleby) + 42, -0.5, 0, 0, 0.9);
+                    CanvasUtils.drawImageHd(inventoryAmmoNumber[amount], (wm.pos.x / scaleby) + 42, (wm.pos.y / scaleby) + 42, -0.5, 0, 0, 0.9);
                 }
                 var queue = Game.queue;
                 var WMnmM = World.PLAYER.building.pos;
@@ -14346,21 +14346,21 @@ try {
                 var wm = recipe[i];
                 wm.pos.x = (mnMmm + WX) + (i * MVM);
                 wm.pos.y = NWNmV + WY;
-                var nM = window.Math.abs(recipeAvailable[i]);
-                if (inventoryItemNumber[nM] === window.undefined) {
-                    inventoryItemNumber[nM] = {
-                        W: GUI.renderText("x" + nM, "'Black Han Sans', sans-serif", "#ffffff", 30, 250, window.undefined, 15, 12, window.undefined, window.undefined, window.undefined, window.undefined, "#000000", 12)
+                var amount = window.Math.abs(recipeAvailable[i]);
+                if (inventoryItemNumber[amount] === window.undefined) {
+                    inventoryItemNumber[amount] = {
+                        W: GUI.renderText("x" + amount, "'Black Han Sans', sans-serif", "#ffffff", 30, 250, window.undefined, 15, 12, window.undefined, window.undefined, window.undefined, window.undefined, "#000000", 12)
                     };
-                    inventoryItemNumber[nM].W.isLoaded = 1;
+                    inventoryItemNumber[amount].W.isLoaded = 1;
                 }
                 if (recipeAvailable[i] < 0) {
                     ctx.globalAlpha = 0.45;
                     wm.draw();
-                    CanvasUtils.drawImageHd(inventoryItemNumber[nM], (wm.pos.x / scaleby) + 30, (wm.pos.y / scaleby) + 32, -0.5, 0, 0, 0.9);
+                    CanvasUtils.drawImageHd(inventoryItemNumber[amount], (wm.pos.x / scaleby) + 30, (wm.pos.y / scaleby) + 32, -0.5, 0, 0, 0.9);
                     ctx.globalAlpha = 1;
                 } else {
                     wm.draw();
-                    CanvasUtils.drawImageHd(inventoryItemNumber[nM], (wm.pos.x / scaleby) + 30, (wm.pos.y / scaleby) + 32, -0.5, 0, 0, 0.9);
+                    CanvasUtils.drawImageHd(inventoryItemNumber[amount], (wm.pos.x / scaleby) + 30, (wm.pos.y / scaleby) + 32, -0.5, 0, 0, 0.9);
                 }
                 if ((NWmNn === i) && (World.PLAYER.recipeList[i] > 0)) NMMwN(World.PLAYER.recipeList[i], wm.pos.x, wm.pos.y + (45 * scaleby));
             }
@@ -14794,8 +14794,8 @@ try {
             CanvasUtils.drawImageHd(MVn, WX, WY, Nmm.angle + player.angle, ((Nmm.x + (move * PLAYER.orientation)) + recoil) + breath, Nmm.y, imgMovement);
             MVn = (wVn.leftArm === window.undefined) ? skin.leftArm : wVn.leftArm;
             CanvasUtils.drawImageHd(MVn, WX, WY, -VnN.angle + player.angle, ((VnN.x + (move * PLAYER.orientation)) + recoil) + breath, VnN.y, imgMovement);
-            var item = weapon.weapon;
-            CanvasUtils.drawImageHd(item, WX, WY, player.angle, ((item.x + (move * PLAYER.orientation)) + breath) + recoil, item.y, imgMovement);
+            var IID = weapon.weapon;
+            CanvasUtils.drawImageHd(IID, WX, WY, player.angle, ((IID.x + (move * PLAYER.orientation)) + breath) + recoil, IID.y, imgMovement);
             if (player.hurt2 > 0) {
                 var mnM = 1;
                 player.hurt2 -= delta;
@@ -14915,12 +14915,12 @@ try {
             CanvasUtils.drawImageHd(MVn, WX, WY, Nmm.angle + player.angle, ((Nmm.x + (move * PLAYER.orientation)) + recoil) + breath, Nmm.y, imgMovement);
             MVn = (wVn.leftArm === window.undefined) ? skin.leftArm : wVn.leftArm;
             CanvasUtils.drawImageHd(MVn, WX, WY, -VnN.angle + player.angle, ((VnN.x + (move * PLAYER.orientation)) + recoil) + breath, VnN.y, imgMovement);
-            var item = weapon.weapon;
+            var IID = weapon.weapon;
             if ((WMw >= 0) && (weapon.noEffect === 0)) {
                 var gunEffect = mVn.gunEffect[weapon.gunEffect][WMw];
-                CanvasUtils.drawImageHd(gunEffect, WX, WY, player.angle, (((item.x + (move * PLAYER.orientation)) + breath) + recoilGun) + weapon.distance, item.y, imgMovement);
+                CanvasUtils.drawImageHd(gunEffect, WX, WY, player.angle, (((IID.x + (move * PLAYER.orientation)) + breath) + recoilGun) + weapon.distance, IID.y, imgMovement);
             }
-            CanvasUtils.drawImageHd(item, WX, WY, player.angle, ((item.x + (move * PLAYER.orientation)) + breath) + recoilGun, item.y, imgMovement);
+            CanvasUtils.drawImageHd(IID, WX, WY, player.angle, ((IID.x + (move * PLAYER.orientation)) + breath) + recoilGun, IID.y, imgMovement);
             for (var i = 0; i < cartridges.length; i++) {
                 var cartridge = cartridges[i];
                 if (cartridge.delay > 0) {
@@ -15018,8 +15018,8 @@ try {
                 var WnVmv = weapon.WnVmv;
                 CanvasUtils.drawImageHd(WnVmv, WX, WY, player.angle, ((WnVmv.x - (move * PLAYER.orientation)) + breathWeapon) + NWW, WnVmv.y, imgMovement);
             }
-            var item = weapon.weapon;
-            CanvasUtils.drawImageHd(item, WX, WY, item.angle + player.angle, ((item.x + (move * PLAYER.orientation)) + breath) + NNM, item.y, imgMovement);
+            var IID = weapon.weapon;
+            CanvasUtils.drawImageHd(IID, WX, WY, IID.angle + player.angle, ((IID.x + (move * PLAYER.orientation)) + breath) + NNM, IID.y, imgMovement);
             NwM = weapon.leftArm;
             MVn = (wVn.leftArm === window.undefined) ? skin.leftArm : wVn.leftArm;
             CanvasUtils.drawImageHd(MVn, WX, WY, -NwM.angle + player.angle, ((NwM.x + (move * PLAYER.orientation)) + NNM) + breath, NwM.y, imgMovement);
@@ -15135,8 +15135,8 @@ try {
             NwM = weapon.rightArm;
             MVn = (wVn.rightArm === window.undefined) ? skin.rightArm : wVn.rightArm;
             CanvasUtils.drawImageHd(MVn, WX, WY, NwM.angle + player.angle, ((NwM.x + (move * PLAYER.orientation)) + NWW) + breathWeapon, NwM.y, imgMovement);
-            var item = weapon.weapon;
-            CanvasUtils.drawImageHd(item, WX, WY, item.angle + player.angle, ((item.x + (move * PLAYER.orientation)) + breathWeapon) + NWW, item.y, imgMovement);
+            var IID = weapon.weapon;
+            CanvasUtils.drawImageHd(IID, WX, WY, IID.angle + player.angle, ((IID.x + (move * PLAYER.orientation)) + breathWeapon) + NWW, IID.y, imgMovement);
         };
 
         function mvwMm(mVn, weapon, wVn, player, imgMovement, WX, WY) {
@@ -15186,8 +15186,8 @@ try {
             }
             var breath = weapon.breath * ((PLAYER.breath < 750) ? (PLAYER.breath / 750) : (1 - ((PLAYER.breath - 750) / 750)));
             var move = weapon.move * ((PLAYER.move < 400) ? (PLAYER.move / 400) : (1 - ((PLAYER.move - 400) / 400)));
-            var item = weapon.weapon;
-            CanvasUtils.drawImageHd2(item, WX, WY, (item.angle + player.angle) + breath, item.x + (move * PLAYER.orientation), item.y, imgMovement, nmm * item.rotation, item.x2, item.y2);
+            var IID = weapon.weapon;
+            CanvasUtils.drawImageHd2(IID, WX, WY, (IID.angle + player.angle) + breath, IID.x + (move * PLAYER.orientation), IID.y, imgMovement, nmm * IID.rotation, IID.x2, IID.y2);
             var MVn = (wVn.rightArm === window.undefined) ? skin.rightArm : wVn.rightArm;
             CanvasUtils.drawImageHd(MVn, WX, WY, ((Nmm.angle + player.angle) + breath) + (nmm * Nmm.rotation), (Nmm.x + (move * PLAYER.orientation)) + NWW, Nmm.y, imgMovement);
             MVn = (wVn.leftArm === window.undefined) ? skin.leftArm : wVn.leftArm;
@@ -15302,42 +15302,42 @@ try {
         function placingobj() {
             var nwmVM = 0;
             if ((World.PLAYER.isBuilding === 1) && (World.PLAYER.blueprint !== 0)) {
-                var item = items[World.PLAYER.blueprint];
-                if (item.subtype !== 0) {
-                    item = item.subtype[World.PLAYER.furniture];
-                    item.notputableimg = item.building;
-                    item.blueprint = item.building;
-                    item.xCenter = nVWnV;
-                    item.yCenter = nVWnV;
+                var IID = items[World.PLAYER.blueprint];
+                if (IID.subtype !== 0) {
+                    IID = IID.subtype[World.PLAYER.furniture];
+                    IID.notputableimg = IID.building;
+                    IID.blueprint = IID.building;
+                    IID.xCenter = nVWnV;
+                    IID.yCenter = nVWnV;
                 }
                 var angle = Mouse.angle;
-                var Rot = (item.wall === 1) ? 0 : World.PLAYER.buildRotate;
+                var Rot = (IID.wall === 1) ? 0 : World.PLAYER.buildRotate;
                 World.PLAYER.jBuild = World.PLAYER._j + window.Math.floor((__TILE_SIZE2__ + (window.Math.cos(angle) * __TILE_SIZE__)) / __TILE_SIZE__);
                 World.PLAYER.iBuild = World.PLAYER._i + window.Math.floor((__TILE_SIZE2__ + (window.Math.sin(angle) * __TILE_SIZE__)) / __TILE_SIZE__);
-                var WX = ((item.xCenter[Rot] + vertst) + __TILE_SIZE2__) + (__TILE_SIZE__ * World.PLAYER.jBuild);
-                var WY = ((item.yCenter[Rot] + horist) + __TILE_SIZE2__) + (__TILE_SIZE__ * World.PLAYER.iBuild);
+                var WX = ((IID.xCenter[Rot] + vertst) + __TILE_SIZE2__) + (__TILE_SIZE__ * World.PLAYER.jBuild);
+                var WY = ((IID.yCenter[Rot] + horist) + __TILE_SIZE2__) + (__TILE_SIZE__ * World.PLAYER.iBuild);
                 if ((((World.PLAYER.jBuild >= 0) && (World.PLAYER.iBuild >= 0)) && (World.PLAYER.jBuild < NMv)) && (World.PLAYER.iBuild < wWw)) {
                     var VMV = matrix[World.PLAYER.iBuild][World.PLAYER.jBuild];
                     var team = (World.PLAYER.team === -1) ? -2 : World.PLAYER.team;
-                    if ((VMV.NMn === frameId) && (((item.WvV !== 2) || (VMV.wMV === 0)) || (VMV.nww === SKILLS.__PLANT__))) {
+                    if ((VMV.NMn === frameId) && (((IID.WvV !== 2) || (VMV.wMV === 0)) || (VMV.nww === SKILLS.__PLANT__))) {
                         World.PLAYER.canBuild = 1; // before 0
-                        CanvasUtils.drawImageHd(item.notputableimg, WX, WY, Rot * PIby2, 0, 0, 1);
-                    } else if ((((item.detail.nww === SKILLS.__PLANT__) || (item.WvV === 2)) || (((VMV.pid !== 0) && (VMV.pid !== World.PLAYER.id)) && (World.players[VMV.pid].team !== team))) && (VMV.nNNwM === frameId)) {
+                        CanvasUtils.drawImageHd(IID.notputableimg, WX, WY, Rot * PIby2, 0, 0, 1);
+                    } else if ((((IID.detail.nww === SKILLS.__PLANT__) || (IID.WvV === 2)) || (((VMV.pid !== 0) && (VMV.pid !== World.PLAYER.id)) && (World.players[VMV.pid].team !== team))) && (VMV.nNNwM === frameId)) {
                         World.PLAYER.canBuild = 0;
-                        CanvasUtils.drawImageHd(item.notputableimg, WX, WY, Rot * PIby2, 0, 0, 1);
-                    } else if ((item.MMnVm !== window.undefined) && ((((Rot % 2) === 0) && ((((((World.PLAYER.iBuild < 1) || (World.PLAYER.iBuild >= (wWw - 1))) || (matrix[World.PLAYER.iBuild + 1][World.PLAYER.jBuild].NMn === frameId)) || ((matrix[World.PLAYER.iBuild + 1][World.PLAYER.jBuild].nNNwM === frameId) && (((matrix[World.PLAYER.iBuild + 1][World.PLAYER.jBuild].pid !== World.PLAYER.id) && (matrix[World.PLAYER.iBuild + 1][World.PLAYER.jBuild].pid !== 0)) && (World.players[matrix[World.PLAYER.iBuild + 1][World.PLAYER.jBuild].pid].team !== team)))) || (matrix[World.PLAYER.iBuild - 1][World.PLAYER.jBuild].NMn === frameId)) || ((matrix[World.PLAYER.iBuild - 1][World.PLAYER.jBuild].nNNwM === frameId) && (((matrix[World.PLAYER.iBuild - 1][World.PLAYER.jBuild].pid !== World.PLAYER.id) && (matrix[World.PLAYER.iBuild - 1][World.PLAYER.jBuild].pid !== 0)) && (World.players[matrix[World.PLAYER.iBuild - 1][World.PLAYER.jBuild].pid].team !== team))))) || (((Rot % 2) === 1) && (((((((World.PLAYER.jBuild < 1) || (World.PLAYER.jBuild >= (NMv - 1))) || (matrix[World.PLAYER.iBuild][World.PLAYER.jBuild + 1].NMn === frameId)) || ((matrix[World.PLAYER.iBuild][World.PLAYER.jBuild + 1].nNNwM === frameId) && (((matrix[World.PLAYER.iBuild][World.PLAYER.jBuild + 1].pid !== World.PLAYER.id) && (matrix[World.PLAYER.iBuild][World.PLAYER.jBuild + 1].pid !== 0)) && (World.players[matrix[World.PLAYER.iBuild][World.PLAYER.jBuild + 1].pid].team !== team)))) || (matrix[World.PLAYER.iBuild][World.PLAYER.jBuild - 1].NMn === frameId)) || ((matrix[World.PLAYER.iBuild][World.PLAYER.jBuild - 1].nNNwM === frameId) && (((matrix[World.PLAYER.iBuild][World.PLAYER.jBuild - 1].pid !== World.PLAYER.id) && (matrix[World.PLAYER.iBuild][World.PLAYER.jBuild - 1].pid !== 0)) && (World.players[matrix[World.PLAYER.iBuild][World.PLAYER.jBuild - 1].pid].team !== team)))) || (World.PLAYER._i === World.PLAYER.iBuild))))) {
+                        CanvasUtils.drawImageHd(IID.notputableimg, WX, WY, Rot * PIby2, 0, 0, 1);
+                    } else if ((IID.MMnVm !== window.undefined) && ((((Rot % 2) === 0) && ((((((World.PLAYER.iBuild < 1) || (World.PLAYER.iBuild >= (wWw - 1))) || (matrix[World.PLAYER.iBuild + 1][World.PLAYER.jBuild].NMn === frameId)) || ((matrix[World.PLAYER.iBuild + 1][World.PLAYER.jBuild].nNNwM === frameId) && (((matrix[World.PLAYER.iBuild + 1][World.PLAYER.jBuild].pid !== World.PLAYER.id) && (matrix[World.PLAYER.iBuild + 1][World.PLAYER.jBuild].pid !== 0)) && (World.players[matrix[World.PLAYER.iBuild + 1][World.PLAYER.jBuild].pid].team !== team)))) || (matrix[World.PLAYER.iBuild - 1][World.PLAYER.jBuild].NMn === frameId)) || ((matrix[World.PLAYER.iBuild - 1][World.PLAYER.jBuild].nNNwM === frameId) && (((matrix[World.PLAYER.iBuild - 1][World.PLAYER.jBuild].pid !== World.PLAYER.id) && (matrix[World.PLAYER.iBuild - 1][World.PLAYER.jBuild].pid !== 0)) && (World.players[matrix[World.PLAYER.iBuild - 1][World.PLAYER.jBuild].pid].team !== team))))) || (((Rot % 2) === 1) && (((((((World.PLAYER.jBuild < 1) || (World.PLAYER.jBuild >= (NMv - 1))) || (matrix[World.PLAYER.iBuild][World.PLAYER.jBuild + 1].NMn === frameId)) || ((matrix[World.PLAYER.iBuild][World.PLAYER.jBuild + 1].nNNwM === frameId) && (((matrix[World.PLAYER.iBuild][World.PLAYER.jBuild + 1].pid !== World.PLAYER.id) && (matrix[World.PLAYER.iBuild][World.PLAYER.jBuild + 1].pid !== 0)) && (World.players[matrix[World.PLAYER.iBuild][World.PLAYER.jBuild + 1].pid].team !== team)))) || (matrix[World.PLAYER.iBuild][World.PLAYER.jBuild - 1].NMn === frameId)) || ((matrix[World.PLAYER.iBuild][World.PLAYER.jBuild - 1].nNNwM === frameId) && (((matrix[World.PLAYER.iBuild][World.PLAYER.jBuild - 1].pid !== World.PLAYER.id) && (matrix[World.PLAYER.iBuild][World.PLAYER.jBuild - 1].pid !== 0)) && (World.players[matrix[World.PLAYER.iBuild][World.PLAYER.jBuild - 1].pid].team !== team)))) || (World.PLAYER._i === World.PLAYER.iBuild))))) {
                         World.PLAYER.canBuild = 0;
-                        CanvasUtils.drawImageHd(item.notputableimg, WX, WY, Rot * PIby2, 0, 0, 1);
+                        CanvasUtils.drawImageHd(IID.notputableimg, WX, WY, Rot * PIby2, 0, 0, 1);
                     } else {
                         World.PLAYER.canBuild = 1;
-                        CanvasUtils.drawImageHd(item.blueprint, WX, WY, Rot * PIby2, 0, 0, 1);
+                        CanvasUtils.drawImageHd(IID.blueprint, WX, WY, Rot * PIby2, 0, 0, 1);
                     }
                 }
                 if (hintRotate.isLoaded !== 1) {
                     hintRotate = CanvasUtils.loadImage(hintrotate, hintRotate);
                     return;
                 }
-                if ((item.wall === 1) || (World.PLAYER.interaction >= 0)) nwmVM = window.Math.max(0, World.PLAYER.hintRotate - delta);
+                if ((IID.wall === 1) || (World.PLAYER.interaction >= 0)) nwmVM = window.Math.max(0, World.PLAYER.hintRotate - delta);
                 else nwmVM = window.Math.min(900, World.PLAYER.hintRotate + delta);
             } else nwmVM = window.Math.max(0, World.PLAYER.hintRotate - delta);
             if (nwmVM > 0) {
@@ -15450,7 +15450,7 @@ try {
         };
 
         function creaturesinscreenfunc(player) {
-            var mnn = VVv[player.extra & 15];
+            var mnn = AI[player.extra & 15];
             matrix[player.i][player.j].NMn = frameId;
             matrix[player.i][player.j].wMV = player.pid;
             matrix[player.i][player.j].nww = window.undefined;
@@ -15668,11 +15668,11 @@ try {
             uid: -1
         };
 
-        function vNwNM(player, Wn, dist, nM) {
+        function vNwNM(player, Wn, dist, amount) {
             if ((NwMVW === vMNWw) || (Wn === particulesitems.woodtree)) return;
-            else if (NwMVW === nWNMn) nM *= 3;
-            if ((Entitie.border[__ENTITIE_PARTICLES__].border + nM) >= wnNWM) return;
-            for (var i = 0; i < nM; i++) {
+            else if (NwMVW === nWNMn) amount *= 3;
+            if ((Entitie.border[__ENTITIE_PARTICLES__].border + amount) >= wnNWM) return;
+            for (var i = 0; i < amount; i++) {
                 var N = window.Math.random();
                 var angle = ((N * 10) % 1) * WNVNM;
                 var MMwmm = dist + (((N * 10000) % 1) * 25);
@@ -15701,24 +15701,24 @@ try {
             CanvasUtils.drawImageHd(W, vertst + player.x, horist + player.y, player.angle, 0, 0, 1);
         };
 
-        function _Dynamite(item, player, WX, WY, Rot, imgMovement) {
+        function _Dynamite(IID, player, WX, WY, Rot, imgMovement) {
             player.breath = (player.breath + delta) % 500;
             var vW = player.breath / 500;
             var mnM = 0.95 + (0.3 * MathUtils.Ease.inOutQuad(vW));
             ctx.globalAlpha = 1 - vW;
-            CanvasUtils.drawImageHd(item.building[1], (vertst + player.x) + WX, (horist + player.y) + WY, Rot * PIby2, 0, 0, mnM);
+            CanvasUtils.drawImageHd(IID.building[1], (vertst + player.x) + WX, (horist + player.y) + WY, Rot * PIby2, 0, 0, mnM);
             ctx.globalAlpha = 1;
-            CanvasUtils.drawImageHd(item.building[0], (vertst + player.x) + WX, (horist + player.y) + WY, Rot * PIby2, 0, 0, imgMovement);
+            CanvasUtils.drawImageHd(IID.building[0], (vertst + player.x) + WX, (horist + player.y) + WY, Rot * PIby2, 0, 0, imgMovement);
         };
 
 
-        function _Spike(item, player, WX, WY, Rot, imgMovement) {
+        function _Spike(IID, player, WX, WY, Rot, imgMovement) {
             var isInClan = 0;
             var VmnmV = 1;
             if ((player.state & 16) === 16) VmnmV = 0;
             if (((player.pid === World.PLAYER.id) || (((World.PLAYER.team !== -1) && (World.PLAYER.team === World.players[player.pid].team)) && (World.players[player.pid].teamUid === World.teams[World.PLAYER.team].uid))) || (Math2d.fastDist(NmM, WWV, player.x, player.y) < 52000)) isInClan = 1;
             if (VmnmV === 0) {
-                if (player.hurt2 === 0) vNwNM(player, item.particles, item.Mwm, 5);
+                if (player.hurt2 === 0) vNwNM(player, IID.particles, IID.Mwm, 5);
                 if (player.hurt2 < 300) {
                     WX += (window.Math.random() * 6) - 4;
                     WY += (window.Math.random() * 6) - 4;
@@ -15727,37 +15727,37 @@ try {
                 if (player.breath > 0) {
                     player.breath = window.Math.max(0, player.breath - (delta / 5));
                     ctx.globalAlpha = MathUtils.Ease.inOutQuad(player.breath / 300);
-                    CanvasUtils.drawImageHd(item.hidden[player.id % 3], (vertst + player.x) + WX, (horist + player.y) + WY, Rot * PIby2, 0, 0, imgMovement);
+                    CanvasUtils.drawImageHd(IID.hidden[player.id % 3], (vertst + player.x) + WX, (horist + player.y) + WY, Rot * PIby2, 0, 0, imgMovement);
                     ctx.globalAlpha = 1;
                 }
-                CanvasUtils.drawImageHd(item.vWwvw[player.id % 3], (vertst + player.x) + WX, (horist + player.y) + WY, Rot * PIby2, 0, 0, imgMovement);
+                CanvasUtils.drawImageHd(IID.vWwvw[player.id % 3], (vertst + player.x) + WX, (horist + player.y) + WY, Rot * PIby2, 0, 0, imgMovement);
             } else if (isInClan === 1) {
-                if (player.breath === 300) CanvasUtils.drawImageHd(item.hidden[player.id % 3], (vertst + player.x) + WX, (horist + player.y) + WY, Rot * PIby2, 0, 0, imgMovement);
+                if (player.breath === 300) CanvasUtils.drawImageHd(IID.hidden[player.id % 3], (vertst + player.x) + WX, (horist + player.y) + WY, Rot * PIby2, 0, 0, imgMovement);
                 else {
                     player.breath = window.Math.min(300, player.breath + delta);
                     ctx.globalAlpha = MathUtils.Ease.inOutQuad(player.breath / 300);
-                    CanvasUtils.drawImageHd(item.hidden[player.id % 3], (vertst + player.x) + WX, (horist + player.y) + WY, Rot * PIby2, 0, 0, imgMovement);
+                    CanvasUtils.drawImageHd(IID.hidden[player.id % 3], (vertst + player.x) + WX, (horist + player.y) + WY, Rot * PIby2, 0, 0, imgMovement);
                     ctx.globalAlpha = 1;
                 }
             } else if ((isInClan === 0) && (player.breath > 0)) {
                 player.breath = window.Math.max(0, player.breath - (delta / 5));
                 ctx.globalAlpha = MathUtils.Ease.inOutQuad(player.breath / 300);
-                CanvasUtils.drawImageHd(item.hidden[player.id % 3], (vertst + player.x) + WX, (horist + player.y) + WY, Rot * PIby2, 0, 0, imgMovement);
+                CanvasUtils.drawImageHd(IID.hidden[player.id % 3], (vertst + player.x) + WX, (horist + player.y) + WY, Rot * PIby2, 0, 0, imgMovement);
                 ctx.globalAlpha = 1;
             }
         };
         
-        function _HiddenBuilding(item, player, WX, WY, Rot, imgMovement) {
-            CanvasUtils.drawImageHd(item.building, (vertst + player.x) + WX, (horist + player.y) + WY, Rot * PIby2, 0, 0, imgMovement);
+        function _HiddenBuilding(IID, player, WX, WY, Rot, imgMovement) {
+            CanvasUtils.drawImageHd(IID.building, (vertst + player.x) + WX, (horist + player.y) + WY, Rot * PIby2, 0, 0, imgMovement);
         };
 
-        function _Landmine(item, player, WX, WY, Rot, imgMovement) {
+        function _Landmine(IID, player, WX, WY, Rot, imgMovement) {
             var isInClan = 0;
             if (((player.pid === World.PLAYER.id) || (((World.PLAYER.team !== -1) && (World.PLAYER.team === World.players[player.pid].team)) && (World.players[player.pid].teamUid === World.teams[World.PLAYER.team].uid))) || (Math2d.fastDist(NmM, WWV, player.x, player.y) < 52000)) isInClan = 1;
             if (isInClan === 1) {
                 player.breath = window.Math.min(300, player.breath + delta);
                 ctx.globalAlpha = MathUtils.Ease.inOutQuad(player.breath / 300);
-                CanvasUtils.drawImageHd(item.building[player.id % 3], (vertst + player.x) + WX, (horist + player.y) + WY, Rot * PIby2, 0, 0, imgMovement);
+                CanvasUtils.drawImageHd(IID.building[player.id % 3], (vertst + player.x) + WX, (horist + player.y) + WY, Rot * PIby2, 0, 0, imgMovement);
                 ctx.globalAlpha = 0.2;
                 CanvasUtils.drawImageHd(NWWWW[5], (vertst + player.x) + WX, (horist + player.y) + WY, 0, 0, 0, 0.6);
                 ctx.globalAlpha = 1;
@@ -15766,7 +15766,7 @@ try {
             else if (isInClan === 0) {
                 player.breath = window.Math.min(300, player.breath + delta);
                 ctx.globalAlpha = MathUtils.Ease.inOutQuad(player.breath / 300);
-                CanvasUtils.drawImageHd(item.building[player.id % 3], (vertst + player.x) + WX, (horist + player.y) + WY, Rot * PIby2, 0, 0, imgMovement);
+                CanvasUtils.drawImageHd(IID.building[player.id % 3], (vertst + player.x) + WX, (horist + player.y) + WY, Rot * PIby2, 0, 0, imgMovement);
 
                 ctx.globalAlpha = 0.2;
                 CanvasUtils.drawImageHd(NWWWW[4], (vertst + player.x) + WX, (horist + player.y) + WY, 0, 0, 0, 0.6);
@@ -15775,39 +15775,39 @@ try {
             }    
         };
 
-        function _DefaultBuilding(item, player, WX, WY, Rot, imgMovement) {
-            CanvasUtils.drawImageHd(item.building, (vertst + player.x) + WX, (horist + player.y) + WY, Rot * PIby2, 0, 0, imgMovement);
+        function _DefaultBuilding(IID, player, WX, WY, Rot, imgMovement) {
+            CanvasUtils.drawImageHd(IID.building, (vertst + player.x) + WX, (horist + player.y) + WY, Rot * PIby2, 0, 0, imgMovement);
         };
 
-        function _Breakable(item, player, WX, WY, Rot, imgMovement) {
-            CanvasUtils.drawImageHd(item.building[player.broke], (vertst + player.x) + WX, (horist + player.y) + WY, Rot * PIby2, 0, 0, imgMovement);
+        function _Breakable(IID, player, WX, WY, Rot, imgMovement) {
+            CanvasUtils.drawImageHd(IID.building[player.broke], (vertst + player.x) + WX, (horist + player.y) + WY, Rot * PIby2, 0, 0, imgMovement);
         };
 
-        function _Wall(item, player, WX, WY, Rot, imgMovement) {
-            if (player.broke > 0) CanvasUtils.drawImageHd(item.WVW[player.broke - 1], (vertst + player.x) + WX, (horist + player.y) + WY, 0, 0, 0, imgMovement);
-            else CanvasUtils.drawImageHd(item.building[WwmwN(player)], (vertst + player.x) + WX, (horist + player.y) + WY, 0, 0, 0, imgMovement);
+        function _Wall(IID, player, WX, WY, Rot, imgMovement) {
+            if (player.broke > 0) CanvasUtils.drawImageHd(IID.WVW[player.broke - 1], (vertst + player.x) + WX, (horist + player.y) + WY, 0, 0, 0, imgMovement);
+            else CanvasUtils.drawImageHd(IID.building[WwmwN(player)], (vertst + player.x) + WX, (horist + player.y) + WY, 0, 0, 0, imgMovement);
         };
 
-        function nearme(item, player, MMwnn) {
+        function nearme(IID, player, MMwnn) {
             if ((((player.removed === 0) && (World.PLAYER.interaction !== 1)) && (World.PLAYER.isInBuilding !== 1)) && (((MMwnn === 0) || (player.pid === World.PLAYER.id)) || (((World.PLAYER.team !== -1) && (World.PLAYER.team === World.players[player.pid].team)) && (World.players[player.pid].teamUid === World.teams[World.PLAYER.team].uid)))) {
                 var dist = Math2d.fastDist(NmM, WWV, player.x, player.y);
                 if (dist < vnVmM) {
-                    World.PLAYER.packetId = item.packetId;
+                    World.PLAYER.packetId = IID.packetId;
                     World.PLAYER.buildingId = player.id;
                     World.PLAYER.buildingPid = player.pid;
-                    World.PLAYER.buildingArea = item.MWW;
+                    World.PLAYER.buildingArea = IID.MWW;
                     vnVmM = dist;
                     if (World.PLAYER.interaction === 0) World.PLAYER.extraLoot = 1;
                     World.PLAYER.interaction = 2;
-                    World.PLAYER.eInteract = item.wwN;
+                    World.PLAYER.eInteract = IID.wwN;
                     return 1;
                 }
             }
             return 0;
         };
 
-        function _Construction(item, player, WX, WY, Rot, imgMovement) {
-            CanvasUtils.drawImageHd(item.WnVMV, (vertst + player.x) + WX, (horist + player.y) + WY, Rot * PIby2, 0, 0, 1);
+        function _Construction(IID, player, WX, WY, Rot, imgMovement) {
+            CanvasUtils.drawImageHd(IID.WnVMV, (vertst + player.x) + WX, (horist + player.y) + WY, Rot * PIby2, 0, 0, 1);
             var vMN = (player.state >> 4) & 15;
             if (player.breath2 !== vMN) {
                 player.breath2 = vMN;
@@ -15817,35 +15817,35 @@ try {
             player.heal = (player.heal + delta) % 1000;
             var imgMovement = 1 + (0.03 * ((player.heal < 500) ? (player.heal / 500) : (1 - ((player.heal - 500) / 500))));
             if (vMN === 0) {
-                ctx.globalAlpha = MathUtils.Ease.inOutQuad(player.breath / item.vMvvV);
-                CanvasUtils.drawImageHd(item.building[0], (vertst + player.x) + WX, (horist + player.y) + WY, Rot * PIby2, 0, 0, imgMovement);
+                ctx.globalAlpha = MathUtils.Ease.inOutQuad(player.breath / IID.vMvvV);
+                CanvasUtils.drawImageHd(IID.building[0], (vertst + player.x) + WX, (horist + player.y) + WY, Rot * PIby2, 0, 0, imgMovement);
                 ctx.globalAlpha = 1;
-            } else if (player.breath < item.vMvvV) {
-                var MwMvw = MathUtils.Ease.inOutQuad(player.breath / item.vMvvV);
+            } else if (player.breath < IID.vMvvV) {
+                var MwMvw = MathUtils.Ease.inOutQuad(player.breath / IID.vMvvV);
                 ctx.globalAlpha = 1 - MwMvw;
-                CanvasUtils.drawImageHd(item.building[vMN - 1], (vertst + player.x) + WX, (horist + player.y) + WY, Rot * PIby2, 0, 0, imgMovement);
+                CanvasUtils.drawImageHd(IID.building[vMN - 1], (vertst + player.x) + WX, (horist + player.y) + WY, Rot * PIby2, 0, 0, imgMovement);
                 ctx.globalAlpha = MwMvw;
-                CanvasUtils.drawImageHd(item.building[vMN], (vertst + player.x) + WX, (horist + player.y) + WY, Rot * PIby2, 0, 0, imgMovement);
+                CanvasUtils.drawImageHd(IID.building[vMN], (vertst + player.x) + WX, (horist + player.y) + WY, Rot * PIby2, 0, 0, imgMovement);
                 ctx.globalAlpha = 1;
-            } else CanvasUtils.drawImageHd(item.building[vMN], (vertst + player.x) + WX, (horist + player.y) + WY, Rot * PIby2, 0, 0, imgMovement);
+            } else CanvasUtils.drawImageHd(IID.building[vMN], (vertst + player.x) + WX, (horist + player.y) + WY, Rot * PIby2, 0, 0, imgMovement);
         };
 
-        function _TreeSeed(item, player, WX, WY, Rot, imgMovement) {
+        function _TreeSeed(IID, player, WX, WY, Rot, imgMovement) {
             var vMN = (player.state >> 4) & 15;
             player.breath = (player.breath + delta) % 1000;
             var imgMovement = 1 + (0.01 * ((player.breath < 500) ? (player.breath / 500) : (1 - ((player.breath - 500) / 500))));
-            CanvasUtils.drawImageHd(item.building[vMN], (vertst + player.x) + WX, (horist + player.y) + WY, Rot * PIby2, 0, 0, imgMovement);
+            CanvasUtils.drawImageHd(IID.building[vMN], (vertst + player.x) + WX, (horist + player.y) + WY, Rot * PIby2, 0, 0, imgMovement);
         };
 
-        function _OrangeSeed(item, player, WX, WY, Rot, imgMovement) {
+        function _OrangeSeed(IID, player, WX, WY, Rot, imgMovement) {
             var vMN = (player.state >> 4) & 15;
             player.breath = (player.breath + delta) % 1000;
             var imgMovement = 1 + (0.03 * ((player.breath < 500) ? (player.breath / 500) : (1 - ((player.breath - 500) / 500))));
-            CanvasUtils.drawImageHd(item.building[vMN], (vertst + player.x) + WX, (horist + player.y) + WY, Rot * PIby2, 0, 0, imgMovement);
+            CanvasUtils.drawImageHd(IID.building[vMN], (vertst + player.x) + WX, (horist + player.y) + WY, Rot * PIby2, 0, 0, imgMovement);
         };
 
-        function _LowWall(item, player, WX, WY, Rot, imgMovement) {
-            var WVV = (player.broke > 0) ? item.WVW[player.broke - 1] : item.building[wmNMv(player, Rot)];
+        function _LowWall(IID, player, WX, WY, Rot, imgMovement) {
+            var WVV = (player.broke > 0) ? IID.WVW[player.broke - 1] : IID.building[wmNMv(player, Rot)];
             var W = WVV.W;
             if (W.isLoaded !== 1) {
                 WVV.W = CanvasUtils.loadImage(WVV.src, WVV.W);
@@ -15856,28 +15856,28 @@ try {
             ctx.save();
             ctx.translate(scaleby * ((vertst + player.x) + WX), scaleby * ((horist + player.y) + WY));
             ctx.rotate(Rot * PIby2);
-            ctx.translate((item.VvMvv * scaleby) - (VwW / 2), (item.MmVVV * scaleby) - (h / 2));
-            ctx.drawImage(W, -item.VvMvv * scaleby, -item.MmVVV * scaleby, VwW, h);
+            ctx.translate((IID.VvMvv * scaleby) - (VwW / 2), (IID.MmVVV * scaleby) - (h / 2));
+            ctx.drawImage(W, -IID.VvMvv * scaleby, -IID.MmVVV * scaleby, VwW, h);
             ctx.restore();
         };
 
-        function _AutomaticDoor(item, player, WX, WY, Rot, imgMovement) {
+        function _AutomaticDoor(IID, player, WX, WY, Rot, imgMovement) {
             ctx.globalAlpha = 1;
             var MvVvv = (player.state >> 7) & 1;
             if (MvVvv === 1) player.hitMax = window.Math.min(500, player.hitMax + delta);
             else if (player.hitMax > 0) player.hitMax = window.Math.max(0, player.hitMax - delta);
             if ((player.hitMax > 0) && (player.hitMax !== 500)) {
                 ctx.globalAlpha = MathUtils.Ease.outQuad(player.hitMax / 500);
-                CanvasUtils.drawImageHd(item.building[1][player.broke], (vertst + player.x) + WX, (horist + player.y) + WY, Rot * PIby2, 0, 0, imgMovement);
+                CanvasUtils.drawImageHd(IID.building[1][player.broke], (vertst + player.x) + WX, (horist + player.y) + WY, Rot * PIby2, 0, 0, imgMovement);
                 ctx.globalAlpha = MathUtils.Ease.outQuad(1 - (player.hitMax / 500));
-                CanvasUtils.drawImageHd(item.building[0][player.broke], (vertst + player.x) + WX, (horist + player.y) + WY, Rot * PIby2, 0, 0, imgMovement);
+                CanvasUtils.drawImageHd(IID.building[0][player.broke], (vertst + player.x) + WX, (horist + player.y) + WY, Rot * PIby2, 0, 0, imgMovement);
                 ctx.globalAlpha = 1;
-            } else CanvasUtils.drawImageHd(item.building[MvVvv][player.broke], (vertst + player.x) + WX, (horist + player.y) + WY, Rot * PIby2, 0, 0, imgMovement);
+            } else CanvasUtils.drawImageHd(IID.building[MvVvv][player.broke], (vertst + player.x) + WX, (horist + player.y) + WY, Rot * PIby2, 0, 0, imgMovement);
         };
 
-    function _SwitchOff(item, player, WX, WY, Rot, imgMovement) {
-        nearme(item, player, 0);
-        CanvasUtils.drawImageHd(item.building[(player.state >> 4) & 1], (vertst + player.x) + WX, (horist + player.y) + WY, Rot * PIby2, 0, 0, imgMovement);
+    function _SwitchOff(IID, player, WX, WY, Rot, imgMovement) {
+        nearme(IID, player, 0);
+        CanvasUtils.drawImageHd(IID.building[(player.state >> 4) & 1], (vertst + player.x) + WX, (horist + player.y) + WY, Rot * PIby2, 0, 0, imgMovement);
             var WY = scaleby * (((player.i * 100) + horist) + 50);
             var WX = scaleby * (((player.j * 100) + vertst) + 50);
             var SY = (imgMovement * arv.width) / 3;
@@ -15887,46 +15887,46 @@ try {
             ctx.drawImage(butlabel, WX - (SY / 2), WY - (SX / 2), SY, SX);
     };
 
-        function _TimerGate(item, player, WX, WY, Rot, imgMovement) {
-            nearme(item, player, 0);
-            CanvasUtils.drawImageHd(item.building[(player.state >> 4) & 3], (vertst + player.x) + WX, (horist + player.y) + WY, Rot * PIby2, 0, 0, imgMovement);
+        function _TimerGate(IID, player, WX, WY, Rot, imgMovement) {
+            nearme(IID, player, 0);
+            CanvasUtils.drawImageHd(IID.building[(player.state >> 4) & 3], (vertst + player.x) + WX, (horist + player.y) + WY, Rot * PIby2, 0, 0, imgMovement);
         };
 
-        function _Lamp(item, player, WX, WY, Rot, imgMovement) {
-            nearme(item, player, 0);
-            var mMW = (player.state >> 7) & 1;
-            if (mMW === 1) player.hitMax = window.Math.min(500, player.hitMax + delta);
+        function _Lamp(IID, player, WX, WY, Rot, imgMovement) {
+            nearme(IID, player, 0);
+            var light = (player.state >> 7) & 1;
+            if (light === 1) player.hitMax = window.Math.min(500, player.hitMax + delta);
             else if (player.hitMax > 0) player.hitMax = window.Math.max(0, player.hitMax - delta);
             if (player.hitMax > 0) {
                 WvnvV[pplonscr++] = player;
-                CanvasUtils.drawImageHd(item.wVnWm[(player.state >> 4) & 7], (vertst + player.x) + WX, (horist + player.y) + WY, Rot * PIby2, 0, 0, imgMovement);
-            } else CanvasUtils.drawImageHd(item.building, (vertst + player.x) + WX, (horist + player.y) + WY, Rot * PIby2, 0, 0, imgMovement);
+                CanvasUtils.drawImageHd(IID.wVnWm[(player.state >> 4) & 7], (vertst + player.x) + WX, (horist + player.y) + WY, Rot * PIby2, 0, 0, imgMovement);
+            } else CanvasUtils.drawImageHd(IID.building, (vertst + player.x) + WX, (horist + player.y) + WY, Rot * PIby2, 0, 0, imgMovement);
         };
 
         function _LampLight(player) {
-            var item = items[player.extra >> 7];
+            var IID = items[player.extra >> 7];
             ctx.globalAlpha = MathUtils.Ease.outQuad(player.hitMax / 500);
             player.breath2 = (player.breath2 + delta) % 5000;
             var breath = player.breath2;
             var imgMovement = 1 + (0.09 * ((breath < 2500) ? (breath / 2500) : (1 - ((breath - 2500) / 2500))));
-            CanvasUtils.drawImageHd(item.MwmWn[(player.state >> 4) & 7], vertst + player.x, horist + player.y, 0, 0, 0, imgMovement);
+            CanvasUtils.drawImageHd(IID.MwmWn[(player.state >> 4) & 7], vertst + player.x, horist + player.y, 0, 0, 0, imgMovement);
             ctx.globalAlpha = 1;
         };
         
 
-        function _Door(item, player, WX, WY, Rot, imgMovement) {
+        function _Door(IID, player, WX, WY, Rot, imgMovement) {
             var NVNvv = (player.state >> 4) & 1;
             var MWwVn = (player.pid === 0) ? 0 : 1;
-            if ((nearme(item, player, MWwVn) === 1) && (NVNvv === 1)) World.PLAYER.eInteract = item.mMnmM;
+            if ((nearme(IID, player, MWwVn) === 1) && (NVNvv === 1)) World.PLAYER.eInteract = IID.mMnmM;
             if (player.hit !== NVNvv) {
                 player.hitMax = 500;
                 player.hit = NVNvv;
             }
             if (player.hitMax > 0) player.hitMax = window.Math.max(0, player.hitMax - delta);
-            var angle = item.angle;
+            var angle = IID.angle;
             if (NVNvv === 0) angle *= MathUtils.Ease.inOutQuad(player.hitMax / 500);
             else angle *= MathUtils.Ease.inOutQuad(1 - (player.hitMax / 500));
-            var WVV = (player.broke > 0) ? item.WVW[player.broke - 1] : item.building;
+            var WVV = (player.broke > 0) ? IID.WVW[player.broke - 1] : IID.building;
             var W = WVV.W;
             if (W.isLoaded !== 1) {
                 WVV.W = CanvasUtils.loadImage(WVV.src, WVV.W);
@@ -15937,9 +15937,9 @@ try {
             ctx.save();
             ctx.translate(scaleby * ((vertst + player.x) + WX), scaleby * ((horist + player.y) + WY));
             ctx.rotate(Rot * PIby2);
-            ctx.translate((item.VvMvv * scaleby) - (VwW / 2), (item.MmVVV * scaleby) - (h / 2));
+            ctx.translate((IID.VvMvv * scaleby) - (VwW / 2), (IID.MmVVV * scaleby) - (h / 2));
             ctx.rotate(angle);
-            ctx.drawImage(W, -item.VvMvv * scaleby, -item.MmVVV * scaleby, VwW, h);
+            ctx.drawImage(W, -IID.VvMvv * scaleby, -IID.MmVVV * scaleby, VwW, h);
             ctx.restore();
             if ((player.state & 32) === 32) {
                 player.state -= 32;
@@ -15962,21 +15962,21 @@ try {
             }
         };
 
-        function _GroundFloor(item, player, WX, WY, Rot, imgMovement) {
+        function _GroundFloor(IID, player, WX, WY, Rot, imgMovement) {
             var mmWVw = matrix[player.i][player.j];
             mmWVw.NMn = 0;
             mmWVw.nNNwM = frameId;
             mmWVw.pid = player.pid;
             if ((mmWVw.mVN !== frameId) || (mmWVw.MmvNw === 1)) {
-                if (player.broke > 0) CanvasUtils.drawImageHd(item.WVW[player.broke - 1], (vertst + player.x) + WX, (horist + player.y) + WY, 0, 0, 0, imgMovement);
-                else CanvasUtils.drawImageHd(item.building[Wwmwm(player)], vertst + player.x, horist + player.y, 0, 0, 0, imgMovement);
+                if (player.broke > 0) CanvasUtils.drawImageHd(IID.WVW[player.broke - 1], (vertst + player.x) + WX, (horist + player.y) + WY, 0, 0, 0, imgMovement);
+                else CanvasUtils.drawImageHd(IID.building[Wwmwm(player)], vertst + player.x, horist + player.y, 0, 0, 0, imgMovement);
             }
         };
 
 
-        function _Furniture(item, player, WX, WY, Rot, imgMovement) {
+        function _Furniture(IID, player, WX, WY, Rot, imgMovement) {
             var inuse = (player.state >> 4) & 1;
-            var objects = items[item.id].subtype[player.subtype];
+            var objects = items[IID.id].subtype[player.subtype];
             if (inuse === 1) player.hit = window.Math.min(500, player.hit + delta);
             else if (player.hit > 0) player.hit = window.Math.max(0, player.hit - delta);
             if (((inuse === 0) && (objects.WvwVM === 1)) && (nearme(objects, player, 0) === 1)) World.PLAYER.eInteract = econtainericon;
@@ -15984,8 +15984,8 @@ try {
             if (player.hit > 0) containeropenic(player, WX, WY);
         };
 
-        function _Road(item, player, WX, WY, Rot, imgMovement) {
-            var objects = items[item.id].subtype[player.subtype];
+        function _Road(IID, player, WX, WY, Rot, imgMovement) {
+            var objects = items[IID.id].subtype[player.subtype];
             CanvasUtils.drawImageHd(objects.building, vertst + player.x, horist + player.y, 0, 0, 0, imgMovement);
         };
 
@@ -15994,8 +15994,8 @@ try {
             if (Vmwnn === 2) {
                 player.state &= 65281;
                 if (player.hit <= 0) {
-                    player.hit = mnn.vmWVv;
-                    player.hitMax = mnn.vmWVv;
+                    player.hit = mnn.actionDelay;
+                    player.hitMax = mnn.actionDelay;
                     var VVmnw = window.Math.floor(window.Math.random() * 3);
                     AudioUtils.playFx(AudioUtils._fx.shot[0][VVmnw], 0.5, Math2d.dist(World.PLAYER.x, World.PLAYER.y, player.x, player.y) / 3.5, 0);
                 }
@@ -16006,8 +16006,8 @@ try {
             var wnN = 0;
             if (player.hit > 0) {
                 player.hit = window.Math.max(0, player.hit - delta);
-                player.hit = window.Math.min(player.hit, mnn.vmWVv);
-                vW = (player.hit > mnn.WVVvW) ? (1 - ((player.hit - mnn.WVVvW) / (mnn.vmWVv - mnn.WVVvW))) : (player.hit / mnn.WVVvW);
+                player.hit = window.Math.min(player.hit, mnn.actionDelay);
+                vW = (player.hit > mnn.actionImpactClient) ? (1 - ((player.hit - mnn.actionImpactClient) / (mnn.actionDelay - mnn.actionImpactClient))) : (player.hit / mnn.actionImpactClient);
                 nmm = (player.hurt2 * MathUtils.Ease.inOutQuad(vW)) * 0.55;
                 wnN = vW * 6;
                 if (player.hurt2 === 1) NNM = vW * 25;
@@ -16033,7 +16033,7 @@ try {
                 }
             }
             var breath = mnn.breath * ((player.breath < 750) ? (player.breath / 750) : (1 - ((player.breath - 750) / 750)));
-            var move = mnn.NVwvN * ((player.breath2 < 750) ? (player.breath2 / 750) : (1 - ((player.breath2 - 750) / 750)));
+            var move = mnn.armMove * ((player.breath2 < 750) ? (player.breath2 / 750) : (1 - ((player.breath2 - 750) / 750)));
             CanvasUtils.drawImageHd(mnn.rightArm, WX, WY, ((mnn.rightArm.angle + player.angle) + breath) + nmm, (mnn.rightArm.x + (move * player.heal)) + NWW, mnn.rightArm.y, imgMovement);
             CanvasUtils.drawImageHd(mnn.leftArm, WX, WY, ((-mnn.leftArm.angle + player.angle) - breath) + nmm, (mnn.leftArm.x - (move * player.heal)) + NNM, mnn.leftArm.y, imgMovement);
             if (player.hurt > 0) {
@@ -16055,16 +16055,16 @@ try {
         };
 
 
-        function _Workbench(item, player, WX, WY, Rot, imgMovement) {
+        function _Workbench(IID, player, WX, WY, Rot, imgMovement) {
             var inuse = (player.state >> 4) & 1;
             if (inuse === 1) player.hit = window.Math.min(500, player.hit + delta);
             else if (player.hit > 0) player.hit = window.Math.max(0, player.hit - delta);
-            if (inuse === 0) nearme(item, player, 0);
-            CanvasUtils.drawImageHd(item.building, (vertst + player.x) + WX, (horist + player.y) + WY, Rot * PIby2, 0, 0, imgMovement);
+            if (inuse === 0) nearme(IID, player, 0);
+            CanvasUtils.drawImageHd(IID.building, (vertst + player.x) + WX, (horist + player.y) + WY, Rot * PIby2, 0, 0, imgMovement);
             if (player.hit > 0) containeropenic(player, WX, WY);
         };
 
-        function _Workbench2(item, player, WX, WY, Rot, imgMovement) {
+        function _Workbench2(IID, player, WX, WY, Rot, imgMovement) {
             var i = (Rot + 1) % 2;
             var j = Rot % 2;
             matrix[player.i + i][player.j + j].NMn = frameId;
@@ -16073,36 +16073,36 @@ try {
             matrix[player.i - i][player.j - j].wMV = player.pid;
             matrix[player.i + i][player.j + j].nww = window.undefined;
             matrix[player.i - i][player.j - j].nww = window.undefined;
-            nearme(item, player, 0);
-            CanvasUtils.drawImageHd(item.building, (vertst + player.x) + WX, (horist + player.y) + WY, Rot * PIby2, 0, 0, imgMovement);
+            nearme(IID, player, 0);
+            CanvasUtils.drawImageHd(IID.building, (vertst + player.x) + WX, (horist + player.y) + WY, Rot * PIby2, 0, 0, imgMovement);
         };
 
-        function _Agitator(item, player, WX, WY, Rot, imgMovement) {
+        function _Agitator(IID, player, WX, WY, Rot, imgMovement) {
             var MWm = (player.state >> 4) & 1;
             if (MWm === 1) player.hit = window.Math.min(500, player.hit + delta);
             else if (player.hit > 0) player.hit = window.Math.max(0, player.hit - delta);
-            if (MWm === 0) nearme(item, player, 0);
-            var mMW = (player.state >> 5) & 1;
-            if (mMW === 1) player.hitMax = window.Math.min(10000, player.hitMax + delta);
+            if (MWm === 0) nearme(IID, player, 0);
+            var light = (player.state >> 5) & 1;
+            if (light === 1) player.hitMax = window.Math.min(10000, player.hitMax + delta);
             else if (player.hitMax > 0) player.hitMax = window.Math.max(0, player.hitMax - delta);
             var vW = 0;
             if (player.hitMax > 0) {
                 vW = MathUtils.Ease.outQuad(player.hitMax / 10000);
                 player.heal += (vW * delta) / 300;
-                CanvasUtils.drawImageHd(item.building[1], (vertst + player.x) + WX, (horist + player.y) + WY, Rot * PIby2, 0, 0, imgMovement);
-                CanvasUtils.drawImageHd(item.building[2], ((vertst + player.x) + WX) + item.NmVwM[Rot][0], ((horist + player.y) + WY) + item.NmVwM[Rot][1], (Rot * PIby2) + player.heal, 0, 0, imgMovement);
-                CanvasUtils.drawImageHd(item.building[3], (vertst + player.x) + WX, (horist + player.y) + WY, Rot * PIby2, 0, 0, imgMovement);
-            } else CanvasUtils.drawImageHd(item.building[0], (vertst + player.x) + WX, (horist + player.y) + WY, Rot * PIby2, 0, 0, imgMovement);
+                CanvasUtils.drawImageHd(IID.building[1], (vertst + player.x) + WX, (horist + player.y) + WY, Rot * PIby2, 0, 0, imgMovement);
+                CanvasUtils.drawImageHd(IID.building[2], ((vertst + player.x) + WX) + IID.NmVwM[Rot][0], ((horist + player.y) + WY) + IID.NmVwM[Rot][1], (Rot * PIby2) + player.heal, 0, 0, imgMovement);
+                CanvasUtils.drawImageHd(IID.building[3], (vertst + player.x) + WX, (horist + player.y) + WY, Rot * PIby2, 0, 0, imgMovement);
+            } else CanvasUtils.drawImageHd(IID.building[0], (vertst + player.x) + WX, (horist + player.y) + WY, Rot * PIby2, 0, 0, imgMovement);
             if (player.hit > 0) containeropenic(player, WX, WY);
         };
 
-        function _Extractor(item, player, WX, WY, Rot, imgMovement) {
+        function _Extractor(IID, player, WX, WY, Rot, imgMovement) {
             var MWm = (player.state >> 4) & 1;
             if (MWm === 1) player.hit = window.Math.min(500, player.hit + delta);
             else if (player.hit > 0) player.hit = window.Math.max(0, player.hit - delta);
-            if (MWm === 0) nearme(item, player, 0);
-            var mMW = (player.state >> 5) & 1;
-            if (mMW === 1) player.hitMax = window.Math.min(10000, player.hitMax + delta);
+            if (MWm === 0) nearme(IID, player, 0);
+            var light = (player.state >> 5) & 1;
+            if (light === 1) player.hitMax = window.Math.min(10000, player.hitMax + delta);
             else if (player.hitMax > 0) player.hitMax = window.Math.max(0, player.hitMax - delta);
             var vW = 0;
             if (player.hitMax > 0) {
@@ -16110,9 +16110,9 @@ try {
                 WX += ((window.Math.random() * 2) - 1) * vW;
                 WY += ((window.Math.random() * 2) - 1) * vW;
                 player.heal += (vW * delta) / 300;
-                CanvasUtils.drawImageHd(item.building[1], ((vertst + player.x) + WX) + item.NmVwM[Rot][0], ((horist + player.y) + WY) + item.NmVwM[Rot][1], (Rot * PIby2) + player.heal, 0, 0, imgMovement);
-                CanvasUtils.drawImageHd(item.building[0], (vertst + player.x) + WX, (horist + player.y) + WY, Rot * PIby2, 0, 0, imgMovement);
-            } else CanvasUtils.drawImageHd(item.building[2], (vertst + player.x) + WX, (horist + player.y) + WY, Rot * PIby2, 0, 0, imgMovement);
+                CanvasUtils.drawImageHd(IID.building[1], ((vertst + player.x) + WX) + IID.NmVwM[Rot][0], ((horist + player.y) + WY) + IID.NmVwM[Rot][1], (Rot * PIby2) + player.heal, 0, 0, imgMovement);
+                CanvasUtils.drawImageHd(IID.building[0], (vertst + player.x) + WX, (horist + player.y) + WY, Rot * PIby2, 0, 0, imgMovement);
+            } else CanvasUtils.drawImageHd(IID.building[2], (vertst + player.x) + WX, (horist + player.y) + WY, Rot * PIby2, 0, 0, imgMovement);
             if (player.hit > 0) containeropenic(player, WX, WY);
         };
 
@@ -16133,13 +16133,13 @@ try {
             ctx.globalAlpha = 1;
         };
 
-        function _Compost(item, player, WX, WY, Rot, imgMovement) {
+        function _Compost(IID, player, WX, WY, Rot, imgMovement) {
             var MWm = (player.state >> 4) & 1;
             if (MWm === 1) player.hit = window.Math.min(500, player.hit + delta);
             else if (player.hit > 0) player.hit = window.Math.max(0, player.hit - delta);
-            if (MWm === 0) nearme(item, player, 0);
-            var mMW = (player.state >> 5) & 1;
-            if (mMW === 1) player.hitMax = window.Math.min(10000, player.hitMax + delta);
+            if (MWm === 0) nearme(IID, player, 0);
+            var light = (player.state >> 5) & 1;
+            if (light === 1) player.hitMax = window.Math.min(10000, player.hitMax + delta);
             else if (player.hitMax > 0) {
                 player.hitMax = window.Math.max(0, player.hitMax - delta);
             }
@@ -16148,12 +16148,12 @@ try {
                 vW = MathUtils.Ease.outQuad(player.hitMax / 10000);
                 WX += ((window.Math.random() * 2) - 1) * vW;
                 WY += ((window.Math.random() * 2) - 1) * vW;
-                CanvasUtils.drawImageHd(item.building[0], (vertst + player.x) + WX, (horist + player.y) + WY, Rot * PIby2, 0, 0, imgMovement);
-            } else CanvasUtils.drawImageHd(item.building[1], (vertst + player.x) + WX, (horist + player.y) + WY, Rot * PIby2, 0, 0, imgMovement);
+                CanvasUtils.drawImageHd(IID.building[0], (vertst + player.x) + WX, (horist + player.y) + WY, Rot * PIby2, 0, 0, imgMovement);
+            } else CanvasUtils.drawImageHd(IID.building[1], (vertst + player.x) + WX, (horist + player.y) + WY, Rot * PIby2, 0, 0, imgMovement);
             if (player.hit > 0) containeropenic(player, WX, WY);
         };
 
-        function _Smelter(item, player, WX, WY, Rot, imgMovement) {
+        function _Smelter(IID, player, WX, WY, Rot, imgMovement) {
             var i = (Rot + 1) % 2;
             var j = Rot % 2;
             matrix[player.i + i][player.j + j].NMn = frameId;
@@ -16165,9 +16165,9 @@ try {
             var MWm = (player.state >> 4) & 1;
             if (MWm === 1) player.hit = window.Math.min(500, player.hit + delta);
             else if (player.hit > 0) player.hit = window.Math.max(0, player.hit - delta);
-            if (MWm === 0) nearme(item, player, 0);
-            var mMW = (player.state >> 5) & 1;
-            if (mMW === 1) player.hitMax = window.Math.min(10000, player.hitMax + delta);
+            if (MWm === 0) nearme(IID, player, 0);
+            var light = (player.state >> 5) & 1;
+            if (light === 1) player.hitMax = window.Math.min(10000, player.hitMax + delta);
             else if (player.hitMax > 0) {
                 player.hitMax = window.Math.max(0, player.hitMax - delta);
             }
@@ -16176,12 +16176,12 @@ try {
                 vW = MathUtils.Ease.outQuad(player.hitMax / 10000);
                 WX += ((window.Math.random() * 2) - 1) * vW;
                 WY += ((window.Math.random() * 2) - 1) * vW;
-                CanvasUtils.drawImageHd(item.building[1], (vertst + player.x) + WX, (horist + player.y) + WY, Rot * PIby2, 0, 0, imgMovement);
-            } else CanvasUtils.drawImageHd(item.building[0], (vertst + player.x) + WX, (horist + player.y) + WY, Rot * PIby2, 0, 0, imgMovement);
+                CanvasUtils.drawImageHd(IID.building[1], (vertst + player.x) + WX, (horist + player.y) + WY, Rot * PIby2, 0, 0, imgMovement);
+            } else CanvasUtils.drawImageHd(IID.building[0], (vertst + player.x) + WX, (horist + player.y) + WY, Rot * PIby2, 0, 0, imgMovement);
             if (player.hit > 0) containeropenic(player, WX, WY);
         };
 
-        function _TeslaBench(item, player, WX, WY, Rot, imgMovement) {
+        function _TeslaBench(IID, player, WX, WY, Rot, imgMovement) {
             var i = (Rot + 1) % 2;
             var j = Rot % 2;
             matrix[player.i + i][player.j + j].NMn = frameId;
@@ -16193,16 +16193,16 @@ try {
             var MWm = (player.state >> 4) & 1;
             if (MWm === 1) player.hit = window.Math.min(500, player.hit + delta);
             else if (player.hit > 0) player.hit = window.Math.max(0, player.hit - delta);
-            if (MWm === 0) nearme(item, player, 0);
-            var mMW = (player.state >> 5) & 1;
-            if (mMW === 1) player.hitMax = 1 + (player.hitMax + (delta % 300000));
+            if (MWm === 0) nearme(IID, player, 0);
+            var light = (player.state >> 5) & 1;
+            if (light === 1) player.hitMax = 1 + (player.hitMax + (delta % 300000));
             else player.hitMax = 0;
             var vW = 0;
             if (player.hitMax > 0) {
-                CanvasUtils.drawImageHd(item.building[1 + (window.Math.floor(player.hitMax / 500) % 3)], (vertst + player.x) + WX, (horist + player.y) + WY, Rot * PIby2, 0, 0, imgMovement);
-                var mMW = item.mMW[window.Math.floor(player.hitMax / 50) % item.mMW.length];
-                if (mMW !== 0) CanvasUtils.drawImageHd(mMW, (vertst + player.x) + WX, (horist + player.y) + WY, Rot * PIby2, 0, 0, imgMovement);
-            } else CanvasUtils.drawImageHd(item.building[0], (vertst + player.x) + WX, (horist + player.y) + WY, Rot * PIby2, 0, 0, imgMovement);
+                CanvasUtils.drawImageHd(IID.building[1 + (window.Math.floor(player.hitMax / 500) % 3)], (vertst + player.x) + WX, (horist + player.y) + WY, Rot * PIby2, 0, 0, imgMovement);
+                var light = IID.light[window.Math.floor(player.hitMax / 50) % IID.light.length];
+                if (light !== 0) CanvasUtils.drawImageHd(light, (vertst + player.x) + WX, (horist + player.y) + WY, Rot * PIby2, 0, 0, imgMovement);
+            } else CanvasUtils.drawImageHd(IID.building[0], (vertst + player.x) + WX, (horist + player.y) + WY, Rot * PIby2, 0, 0, imgMovement);
             if (player.hit > 0) containeropenic(player, WX, WY);
         };
 
@@ -16221,16 +16221,16 @@ try {
             ctx.globalAlpha = 1;
         };
 
-        function _Campfire(item, player, WX, WY, Rot, imgMovement) {
+        function _Campfire(IID, player, WX, WY, Rot, imgMovement) {
             
             var MWm = (player.state >> 4) & 1;
             if (MWm === 1) player.hit = window.Math.min(500, player.hit + delta);
             else if (player.hit > 0) player.hit = window.Math.max(0, player.hit - delta);
-            if (MWm === 0) nearme(item, player, 0);
-            CanvasUtils.drawImageHd(item.building, (vertst + player.x) + WX, (horist + player.y) + WY, Rot * PIby2, 0, 0, imgMovement);
+            if (MWm === 0) nearme(IID, player, 0);
+            CanvasUtils.drawImageHd(IID.building, (vertst + player.x) + WX, (horist + player.y) + WY, Rot * PIby2, 0, 0, imgMovement);
 
-            var mMW = (player.state >> 5) & 1;
-            if (mMW === 1) player.hitMax = window.Math.min(500, player.hitMax + delta);
+            var light = (player.state >> 5) & 1;
+            if (light === 1) player.hitMax = window.Math.min(500, player.hitMax + delta);
             else if (player.hitMax > 0) player.hitMax = window.Math.max(0, player.hitMax - delta);
             if (player.hitMax > 0) WvnvV[pplonscr++] = player;
             if (player.hit > 0) containeropenic(player, WX, WY);
@@ -16242,7 +16242,7 @@ try {
             if (mVn < 10) {
                 if (player.born === 0) {
                     if (Render.explosionShake !== -2) Render.explosionShake = 20;
-                    AudioUtils.playFx(AudioUtils._fx.mwM, 0.7, Math2d.dist(World.PLAYER.x, World.PLAYER.y, player.x, player.y) / 4);
+                    AudioUtils.playFx(AudioUtils._fx.explosion, 0.7, Math2d.dist(World.PLAYER.x, World.PLAYER.y, player.x, player.y) / 4);
                 }
                 CanvasUtils.drawImageHd(W[mVn], vertst + player.x, horist + player.y, 0, 0, 0, 1);
             }
@@ -16353,12 +16353,12 @@ try {
             matrix[player.i][player.j].wMV = player.pid;
             matrix[player.i][player.j].nww = window.undefined;
             var Rot = (player.extra >> 5) & 3;
-            var item = items[player.extra >> 7];
+            var IID = items[player.extra >> 7];
             var imgMovement = 1;
-            matrix[player.i][player.j].nww = item.detail.nww;
+            matrix[player.i][player.j].nww = IID.detail.nww;
             if (player.removed !== 0) {
                 if (player.death === 0) {
-                    var wwM = (item.particles === -1) ? items[item.id].subtype[player.subtype] : item;
+                    var wwM = (IID.particles === -1) ? items[IID.id].subtype[player.subtype] : IID;
                     vNwNM(player, wwM.particles, wwM.Mwm, 5);
                     if ((wwM.destroyaudio !== 0) && (WMnvM[wwM.destroyaudio] === 0)) {
                         AudioUtils.playFx(AudioUtils._fx.damage[wwM.destroyaudio], 1, Math2d.dist(World.PLAYER.x, World.PLAYER.y, player.x, player.y) / 2.5);
@@ -16374,7 +16374,7 @@ try {
                 player.hurt = 250;
                 player.hurtAngle = (WNVNM * (player.extra & 31)) / 31;
                 player.state &= ~2;
-                var wwM = (item.particles === -1) ? items[item.id].subtype[player.subtype] : item;
+                var wwM = (IID.particles === -1) ? items[IID.id].subtype[player.subtype] : IID;
                 vNwNM(player, wwM.particles, wwM.Mwm, 1);
                 if ((wwM.impact !== 0) && (WMnvM[wwM.impact] === 0)) {
                     AudioUtils.playFx(AudioUtils._fx.damage[wwM.impact], 1, Math2d.dist(World.PLAYER.x, World.PLAYER.y, player.x, player.y) / 2.8);
@@ -16396,7 +16396,7 @@ try {
                     player.hurt -= delta;
                 }
             }
-            item.draw(item, player, WX, WY, Rot, imgMovement);
+            IID.draw(IID, player, WX, WY, Rot, imgMovement);
             if (player.removed !== 0) {
                 if (player.death > 300) player.removed = 2;
                 ctx.globalAlpha = 1;
@@ -16651,8 +16651,8 @@ try {
                 if (player.type === __ENTITIE_BUILD_TOP__) objectsinscreenfunc(player);
             }
             for (i = 0; i < pplonscr; i++) {
-                var item = items[WvnvV[i].extra >> 7];
-                item.VvmvM(WvnvV[i]);
+                var IID = items[WvnvV[i].extra >> 7];
+                IID.VvmvM(WvnvV[i]);
                 WvnvV[i] = null;
             }
             WMmMN = Entitie.units[__ENTITIE_RESOURCES_TOP__];
@@ -16738,58 +16738,58 @@ try {
             ctx.save();
             var mnV = CanvasUtils.options.scheduledRatio / CanvasUtils.options.backingStoreRatio;
             ctx.scale(mnV, mnV);
-            mWN = NWVnn;
-            NWVnn = items;
+            mWN = INVENTORY2;
+            INVENTORY2 = items;
             items = mWN;
-            mWN = NWwVV;
-            NWwVV = VNw;
+            mWN = PARTICLES2;
+            PARTICLES2 = VNw;
             VNw = mWN;
-            mWN = mwwnn;
-            mwwnn = VNN;
+            mWN = LOOT2;
+            LOOT2 = VNN;
             VNN = mWN;
-            mWN = MMNMn;
-            MMNMn = nnv;
+            mWN = RESOURCES2;
+            RESOURCES2 = nnv;
             nnv = mWN;
             mWN = ENTITIES2;
             ENTITIES2 = ENTITIES;
             ENTITIES = mWN;
-            mWN = vNNVn;
-            vNNVn = NWWWW;
+            mWN = LIGHTFIRE2;
+            LIGHTFIRE2 = NWWWW;
             NWWWW = mWN;
-            mWN = wwVWm;
-            wwVWm = MwWmN;
-            MwWmN = mWN;
-            mWN = VNVwN;
-            VNVwN = VVv;
-            VVv = mWN;
+            mWN = GROUND2;
+            GROUND2 = GROUND;
+            GROUND = mWN;
+            mWN = AI2;
+            AI2 = AI;
+            AI = mWN;
             ctx.fillStyle = (World.day === 0) ? "#0B2129" : "#3D5942";
             ctx.fillRect(0, 0, canw, canh);
             vMwNm();
             checkobjonscreen();
-            mWN = NWVnn;
-            NWVnn = items;
+            mWN = INVENTORY2;
+            INVENTORY2 = items;
             items = mWN;
-            mWN = NWwVV;
-            NWwVV = VNw;
+            mWN = PARTICLES2;
+            PARTICLES2 = VNw;
             VNw = mWN;
-            mWN = mwwnn;
-            mwwnn = VNN;
+            mWN = LOOT2;
+            LOOT2 = VNN;
             VNN = mWN;
-            mWN = MMNMn;
-            MMNMn = nnv;
+            mWN = RESOURCES2;
+            RESOURCES2 = nnv;
             nnv = mWN;
             mWN = ENTITIES2;
             ENTITIES2 = ENTITIES;
             ENTITIES = mWN;
-            mWN = vNNVn;
-            vNNVn = NWWWW;
+            mWN = LIGHTFIRE2;
+            LIGHTFIRE2 = NWWWW;
             NWWWW = mWN;
-            mWN = wwVWm;
-            wwVWm = MwWmN;
-            MwWmN = mWN;
-            mWN = VNVwN;
-            VNVwN = VVv;
-            VVv = mWN;
+            mWN = GROUND2;
+            GROUND2 = GROUND;
+            GROUND = mWN;
+            mWN = AI2;
+            AI2 = AI;
+            AI = mWN;
             ctx.restore();
             ctx = WvmWN;
             ctx.globalAlpha = vW;
@@ -17041,18 +17041,18 @@ ENTITIES[__ENTITIE_BUILD_TOP__].update = function updateEntitieBuilding(MW, WX, 
     MW.subtype = (MW.state >> 5) & 63;
     MW.broke = MW.state >> 14;
     MW.state = MW.state & 16383;
-    var item = items[MW.extra >> 7];
-    MW.x = ((window.Math.floor(WX / Render.__TILE_SIZE__) * Render.__TILE_SIZE__) + Render.__TILE_SIZE2__) + item.xCenter[Rot];
-    MW.y = ((window.Math.floor(WY / Render.__TILE_SIZE__) * Render.__TILE_SIZE__) + Render.__TILE_SIZE2__) + item.yCenter[Rot];
+    var IID = items[MW.extra >> 7];
+    MW.x = ((window.Math.floor(WX / Render.__TILE_SIZE__) * Render.__TILE_SIZE__) + Render.__TILE_SIZE2__) + IID.xCenter[Rot];
+    MW.y = ((window.Math.floor(WY / Render.__TILE_SIZE__) * Render.__TILE_SIZE__) + Render.__TILE_SIZE2__) + IID.yCenter[Rot];
     MW.rx = MW.x;
     MW.ry = MW.y;
     MW.nx = MW.x;
     MW.ny = MW.y;
     MW.px = MW.x;
     MW.py = MW.y;
-    if ((item.door === 1) && ((MW.state & 16) === 16)) {
-        MW.px = ((window.Math.floor(MW.j + item.jMove[Rot]) * Render.__TILE_SIZE__) + Render.__TILE_SIZE2__) + item.xCenter[(Rot + 1) % 4];
-        MW.py = ((window.Math.floor(MW.i + item.iMove[Rot]) * Render.__TILE_SIZE__) + Render.__TILE_SIZE2__) + item.yCenter[(Rot + 1) % 4];
+    if ((IID.door === 1) && ((MW.state & 16) === 16)) {
+        MW.px = ((window.Math.floor(MW.j + IID.jMove[Rot]) * Render.__TILE_SIZE__) + Render.__TILE_SIZE2__) + IID.xCenter[(Rot + 1) % 4];
+        MW.py = ((window.Math.floor(MW.i + IID.iMove[Rot]) * Render.__TILE_SIZE__) + Render.__TILE_SIZE2__) + IID.yCenter[(Rot + 1) % 4];
     }
 };
 ENTITIES[__ENTITIE_BUILD_DOWN__].update = ENTITIES[__ENTITIE_BUILD_TOP__].update;
@@ -17145,7 +17145,7 @@ var SKILLS = {
 };
 
 COUNTER = 1;
-var item = {
+var IID = {
     wood: COUNTER++,
     stone: COUNTER++,
     steel: COUNTER++,
@@ -18505,7 +18505,7 @@ var items = [{
     src: [],
     W: []
 }, {
-    id: item.wood,
+    id: IID.wood,
     img: {
         src: ["img/inv-wood-out.png", "img/inv-wood-in.png", "img/inv-wood-click.png"],
         W: [{
@@ -18521,7 +18521,7 @@ var items = [{
     loot: Mv.wood,
     score: 10
 }, {
-    id: item.stone,
+    id: IID.stone,
     img: {
         src: ["img/inv-stone-out.png", "img/inv-stone-in.png", "img/inv-stone-click.png"],
         W: [{
@@ -18541,7 +18541,7 @@ var items = [{
     loot: Mv.stone,
     score: 14
 }, {
-    id: item.steel,
+    id: IID.steel,
     img: {
         src: ["img/inv-steel-out.png", "img/inv-steel-in.png", "img/inv-steel-click.png"],
         W: [{
@@ -18561,7 +18561,7 @@ var items = [{
     loot: Mv.steel,
     score: 28
 }, {
-    id: item.animalfat,
+    id: IID.animalfat,
     img: {
         src: ["img/inv-animal-fat-out.png", "img/inv-animal-fat-in.png", "img/inv-animal-fat-click.png"],
         W: [{
@@ -18577,7 +18577,7 @@ var items = [{
     loot: Mv.animalfat,
     score: 32
 }, {
-    id: item.animaltendon,
+    id: IID.animaltendon,
     img: {
         src: ["img/inv-animal-tendon-out.png", "img/inv-animal-tendon-in.png", "img/inv-animal-tendon-click.png"],
         W: [{
@@ -18593,7 +18593,7 @@ var items = [{
     loot: Mv.animaltendon,
     score: 100
 }, {
-    id: item.string,
+    id: IID.string,
     img: {
         src: ["img/inv-string-out.png", "img/inv-string-in.png", "img/inv-string-click.png"],
         W: [{
@@ -18605,14 +18605,14 @@ var items = [{
         }]
     },
     detail: new vn("String", "Useful to craft many items.", SKILLS.__SURVIVAL__, [
-        [item.animaltendon, 2]
+        [IID.animaltendon, 2]
     ], 1, [
         [AREAS.workbench, 20000]
     ]),
     stack: 255,
     loot: Mv.string
 }, {
-    id: item.leather,
+    id: IID.leather,
     img: {
         src: ["img/inv-leather-boar-out.png", "img/inv-leather-boar-in.png", "img/inv-leather-boar-click.png"],
         W: [{
@@ -18628,7 +18628,7 @@ var items = [{
     loot: Mv.leather,
     score: 32
 }, {
-    id: item.shapedmetal,
+    id: IID.shapedmetal,
     img: {
         src: ["img/inv-shaped-metal-out.png", "img/inv-shaped-metal-in.png", "img/inv-shaped-metal-click.png"],
         W: [{
@@ -18640,7 +18640,7 @@ var items = [{
         }]
     },
     detail: new vn("Shaped Metal", "To craft improved items.", SKILLS.__MINERAL__, [
-        [item.steel, 2]
+        [IID.steel, 2]
     ], 1, [
         [AREAS.smelter, 3000],
         [AREAS.bbq, 30000]
@@ -18648,7 +18648,7 @@ var items = [{
     stack: 255,
     loot: Mv.shapedmetal
 }, {
-    id: item.rawsteak,
+    id: IID.rawsteak,
     img: {
         src: ["img/inv-raw-steak-out.png", "img/inv-raw-steak-in.png", "img/inv-raw-steak-click.png"],
         W: [{
@@ -18663,12 +18663,12 @@ var items = [{
     stack: 10,
     loot: Mv.rawsteak,
     vWVMV: 15,
-    nNmmM: item.rottensteak,
+    nNmmM: IID.rottensteak,
     mnw: 12,
     wait: 5,
     score: 28
 }, {
-    id: item.cookedsteak,
+    id: IID.cookedsteak,
     img: {
         src: ["img/inv-cooked-steak-out.png", "img/inv-cooked-steak-in.png", "img/inv-cooked-steak-click.png"],
         W: [{
@@ -18680,7 +18680,7 @@ var items = [{
         }]
     },
     detail: new vn("Cooked Steak", "Rare or medium?", SKILLS.__SURVIVAL__, [
-        [item.rawsteak, 1]
+        [IID.rawsteak, 1]
     ], 1, [
         [AREAS.firepart, 20000],
         [AREAS.bbq, 10000]
@@ -18689,10 +18689,10 @@ var items = [{
     loot: Mv.cookedsteak,
     wait: 5,
     vWVMV: 3,
-    nNmmM: item.rottensteak,
+    nNmmM: IID.rottensteak,
     mnw: 13     
 }, {
-    id: item.rottensteak,
+    id: IID.rottensteak,
     img: {
         src: ["img/inv-rotten-steak-out.png", "img/inv-rotten-steak-in.png", "img/inv-rotten-steak-click.png"],
         W: [{
@@ -18710,7 +18710,7 @@ var items = [{
     detail: new vn("Rotten Steak", "Don't eat that."),
     score: 20
 }, {
-    id: item.orange,
+    id: IID.orange,
     img: {
         src: ["img/inv-orange-out.png", "img/inv-orange-in.png", "img/inv-orange-click.png"],
         W: [{
@@ -18726,11 +18726,11 @@ var items = [{
     loot: Mv.orange,
     wait: 5,
     vWVMV: 10,
-    nNmmM: item.rottenorange,
+    nNmmM: IID.rottenorange,
     mnw: 15,    
     score: 24
 }, {
-    id: item.rottenorange,
+    id: IID.rottenorange,
     img: {
         src: ["img/inv-rotten-orange-out.png", "img/inv-rotten-orange-in.png", "img/inv-rotten-orange-click.png"],
         W: [{
@@ -18742,7 +18742,7 @@ var items = [{
         }]
     },
     detail: new vn("Rotten Orange", "Go on, have a bite!", SKILLS.__PLANT__, [
-        [item.orange, 4]
+        [IID.orange, 4]
     ], 8, [
         [AREAS.composter, 40000]
     ]),
@@ -18752,7 +18752,7 @@ var items = [{
     mnw: 16,     
     score: 20
 }, {
-    id: item.seedorange,
+    id: IID.seedorange,
     img: {
         src: ["img/inv-orange-seed-out.png", "img/inv-orange-seed-in.png", "img/inv-orange-seed-click.png"],
         W: [{
@@ -18764,7 +18764,7 @@ var items = [{
         }]
     },
     detail: new vn("Orange Seed", "Fill up on Vitame C?", SKILLS.__PLANT__, [
-        [item.orange, 4]
+        [IID.orange, 4]
     ], 1, [
         [AREAS.firepart, 20000],
         [AREAS.bbq, 15000]
@@ -18797,12 +18797,12 @@ var items = [{
         }
     },
     door: 0,
-    mwM: 0,
+    explosion: 0,
     behavior: BEHAVIOR.__SEED__,
     MWv: 0,
     subtype: 0,
     MMN: 0,
-    WnW: 0,
+    areaEffect: 0,
     draw: Render.orangeSeed,
     impact: SOUNDID.VNv,
     destroyaudio: SOUNDID.VNv,
@@ -18838,7 +18838,7 @@ var items = [{
     life: 250,
     score: 0
 }, {
-    id: item.hachet,
+    id: IID.hachet,
     img: {
         src: ["img/inv-hachet-out.png", "img/inv-hachet-in.png", "img/inv-hachet-click.png"],
         W: [{
@@ -18850,8 +18850,8 @@ var items = [{
         }]
     },
     detail: new vn("Hatchet", "Harvest Wood and Stone.", SKILLS.__TOOL__, [
-        [item.wood, 10],  
-        [item.stone, 2]
+        [IID.wood, 10],  
+        [IID.stone, 2]
     ], 1, [
         [AREAS.own, 5000],
         [AREAS.workbench, 10000]
@@ -18861,7 +18861,7 @@ var items = [{
     loot: Mv.hachet, 
     wait: 10
 }, {
-    id: item.stonepickaxe,
+    id: IID.stonepickaxe,
     img: {
         src: ["img/inv-stone-pickaxe-out.png", "img/inv-stone-pickaxe-in.png", "img/inv-stone-pickaxe-click.png"],
         W: [{
@@ -18873,8 +18873,8 @@ var items = [{
         }]
     },
     detail: new vn("Stone Pickaxe", "Mine Stone and Iron.", SKILLS.__TOOL__, [
-        [item.wood, 100],
-        [item.stone, 30]
+        [IID.wood, 100],
+        [IID.stone, 30]
     ], 1, [
         [AREAS.workbench, 30000]
     ]),
@@ -18883,7 +18883,7 @@ var items = [{
     loot: Mv.stonepickaxe,
     wait: 10
 }, {
-    id: item.steelpickaxe,
+    id: IID.steelpickaxe,
     img: {
         src: ["img/inv-steel-pickaxe-out.png", "img/inv-steel-pickaxe-in.png", "img/inv-steel-pickaxe-click.png"],
         W: [{
@@ -18895,8 +18895,8 @@ var items = [{
         }]
     },
     detail: new vn("Metal Pickaxe", "Mine also Sulfur", SKILLS.__TOOL__, [
-        [item.stone, 150],
-        [item.shapedmetal, 6]
+        [IID.stone, 150],
+        [IID.shapedmetal, 6]
     ], 1, [
         [AREAS.researchbench, 60000]
     ], 6),
@@ -18905,7 +18905,7 @@ var items = [{
     loot: Mv.steelpickaxe,
     wait: 10
 }, {
-    id: item.stoneaxe,
+    id: IID.stoneaxe,
     img: {
         src: ["img/inv-stone-axe-out.png", "img/inv-stone-axe-in.png", "img/inv-stone-axe-click.png"],
         W: [{
@@ -18917,8 +18917,8 @@ var items = [{
         }]
     },
     detail: new vn("Metal Axe", "Harvest a lot of Wood", SKILLS.__TOOL__, [
-        [item.wood, 150],
-        [item.shapedmetal, 7]
+        [IID.wood, 150],
+        [IID.shapedmetal, 7]
     ], 1, [
         [AREAS.researchbench, 80000]
     ], 5),
@@ -18927,7 +18927,7 @@ var items = [{
     loot: Mv.stoneaxe,
     wait: 10
 }, {
-    id: item.workbench,
+    id: IID.workbench,
     img: {
         src: ["img/inv-workbench-out.png", "img/inv-workbench-in.png", "img/inv-workbench-click.png"],
         W: [{
@@ -18939,8 +18939,8 @@ var items = [{
         }]
     },
     detail: new vn("Workbench", "Allow you to make new items.", SKILLS.__SURVIVAL__, [
-        [item.wood, 40],
-        [item.stone, 20]
+        [IID.wood, 40],
+        [IID.stone, 20]
     ], 1, [
         [AREAS.own, 15000],
         [AREAS.workbench, 15000]
@@ -18976,12 +18976,12 @@ var items = [{
     lowWall: 0,
     door: 0,
     broke: 0,
-    mwM: 0,
+    explosion: 0,
     behavior: BEHAVIOR.__NO__,
     MWv: 0,
     subtype: 0,
     MMN: 1,
-    WnW: 0,
+    areaEffect: 0,
     draw: Render.workbench,
     packetId: 16,
     wwN: {
@@ -19004,7 +19004,7 @@ var items = [{
     life: 250,
     score: 0
 }, {
-    id: item.spear,
+    id: IID.spear,
     img: {
         src: ["img/inv-wood-spear-out.png", "img/inv-wood-spear-in.png", "img/inv-wood-spear-click.png"],
         W: [{
@@ -19016,7 +19016,7 @@ var items = [{
         }]
     },
     detail: new vn("Wood Spear", "Don't forget to pick it up.", SKILLS.__WEAPON__, [
-        [item.wood, 70]
+        [IID.wood, 70]
     ], 1, [
         [AREAS.own, 15000],
         [AREAS.workbench, 20000]
@@ -19026,7 +19026,7 @@ var items = [{
     loot: Mv.spear,
     wait: 10
 }, {
-    id: item.bow,
+    id: IID.bow,
     img: {
         src: ["img/inv-wood-bow-out.png", "img/inv-wood-bow-in.png", "img/inv-wood-bow-click.png"],
         W: [{
@@ -19038,20 +19038,20 @@ var items = [{
         }]
     },
     detail: new vn("Wood Bow", "Where are the cowboys?", SKILLS.__WEAPON__, [
-        [item.wood, 60],
-        [item.animaltendon, 2]
+        [IID.wood, 60],
+        [IID.animaltendon, 2]
     ], 1, [
         [AREAS.own, 35000],
         [AREAS.workbench, 50000]
     ]),
-    vMv: item.woodarrow,
+    vMv: IID.woodarrow,
     mMVwm: 1,
     mnw: 6,     
     stack: 1,
     loot: Mv.bow,
     wait: 10
 }, {
-    id: item.pistol,
+    id: IID.pistol,
     img: {
         src: ["img/inv-9mm-out.png", "img/inv-9mm-in.png", "img/inv-9mm-click.png"],
         W: [{
@@ -19063,18 +19063,18 @@ var items = [{
         }]
     },
     detail: new vn("9MM", "I hope you know how to aim.", SKILLS.__WEAPON__, [
-        [item.junk, 6],
-        [item.shapedmetal, 9]
+        [IID.junk, 6],
+        [IID.shapedmetal, 9]
     ], 1, [
         [AREAS.researchbench, 160000]
     ], 7),
     mnw: 8,     
-    vMv: item.bullet9mm,
+    vMv: IID.bullet9mm,
     stack: 1,
     loot: Mv.pistol,
     wait: 10
 }, {
-    id: item.deserteagle,
+    id: IID.deserteagle,
     img: {
         src: ["img/inv-desert-eagle-out.png", "img/inv-desert-eagle-in.png", "img/inv-desert-eagle-click.png"],
         W: [{
@@ -19086,18 +19086,18 @@ var items = [{
         }]
     },
     detail: new vn("Desert Eagle", "Pretty useful for self-defense.", SKILLS.__WEAPON__, [
-        [item.alloys, 4],
-        [item.shapedmetal, 2]
+        [IID.alloys, 4],
+        [IID.shapedmetal, 2]
     ], 1, [
         [AREAS.researchbench, 180000]
-    ], 9, item.pistol),
+    ], 9, IID.pistol),
     mnw: 9,     
-    vMv: item.bullet9mm,
+    vMv: IID.bullet9mm,
     stack: 1,
     loot: Mv.deserteagle,
     wait: 10
 }, {
-    id: item.shotgun,
+    id: IID.shotgun,
     img: {
         src: ["img/inv-shotgun-out.png", "img/inv-shotgun-in.png", "img/inv-shotgun-click.png"],
         W: [{
@@ -19109,18 +19109,18 @@ var items = [{
         }]
     },
     detail: new vn("Shotgun", "He's dead now, don't you think?", SKILLS.__WEAPON__, [
-        [item.alloys, 6],
-        [item.shapedmetal, 6]
+        [IID.alloys, 6],
+        [IID.shapedmetal, 6]
     ], 1, [
         [AREAS.researchbench, 200000]
     ], 11),
     mnw: 7,     
-    vMv: item.bulletshotgun,
+    vMv: IID.bulletshotgun,
     stack: 1,
     loot: Mv.shotgun,
     wait: 10
 }, {
-    id: item.ak47,
+    id: IID.ak47,
     img: {
         src: ["img/inv-ak47-out.png", "img/inv-ak47-in.png", "img/inv-ak47-click.png"],
         W: [{
@@ -19132,18 +19132,18 @@ var items = [{
         }]
     },
     detail: new vn("AK47", "Revolution time", SKILLS.__WEAPON__, [
-        [item.alloys, 14],
-        [item.shapedmetal, 8]
+        [IID.alloys, 14],
+        [IID.shapedmetal, 8]
     ], 1, [
         [AREAS.researchbench, 180000]
-    ], 12, item.mp5),
+    ], 12, IID.mp5),
     mnw: 10,     
-    vMv: item.sniperbullet,
+    vMv: IID.sniperbullet,
     stack: 1,
     loot: Mv.ak47,
     wait: 10
 }, {
-    id: item.sniper,
+    id: IID.sniper,
     img: {
         src: ["img/inv-sniper-out.png", "img/inv-sniper-in.png", "img/inv-sniper-click.png"],
         W: [{
@@ -19155,18 +19155,18 @@ var items = [{
         }]
     },
     detail: new vn("Sniper", "For the very angry shy", SKILLS.__WEAPON__, [
-        [item.alloys, 10],
-        [item.shapedmetal, 8]
+        [IID.alloys, 10],
+        [IID.shapedmetal, 8]
     ], 1, [
         [AREAS.researchbench, 180000]
     ], 13),
     mnw: 11,     
-    vMv: item.sniperbullet,
+    vMv: IID.sniperbullet,
     stack: 1,
     loot: Mv.sniper,
     wait: 10
 }, {
-    id: item.woodenwall,
+    id: IID.woodenwall,
     img: {
         src: ["img/inv-wood-wall-out.png", "img/inv-wood-wall-in.png", "img/inv-wood-wall-click.png"],
         W: [{
@@ -19178,7 +19178,7 @@ var items = [{
         }]
     },
     detail: new vn("Wooden Wall", "Protected from the wind.", SKILLS.__BUILDING__, [
-        [item.wood, 20] 
+        [IID.wood, 20] 
     ], 1, [
         [AREAS.workbench, 10000]
     ]),
@@ -19209,16 +19209,16 @@ var items = [{
         }
     },
     wall: 1,
-    vVwVM: item.woodenwall,
+    vVwVM: IID.woodenwall,
     lowWall: 0,
     door: 0,
     broke: 1,
-    mwM: 0,
+    explosion: 0,
     behavior: BEHAVIOR.__NO__,
     MWv: 0,
     subtype: 0,
     MMN: 1,
-    WnW: 0,
+    areaEffect: 0,
     draw: Render.wall,
     MmvNw: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
     WVW: [{
@@ -19481,7 +19481,7 @@ var items = [{
     life: 3000,
     score: 0
 }, {
-    id: item.stonewall,
+    id: IID.stonewall,
     img: {
         src: ["img/inv-stone-wall-out.png", "img/inv-stone-wall-in.png", "img/inv-stone-wall-click.png"],
         W: [{
@@ -19493,7 +19493,7 @@ var items = [{
         }]
     },
     detail: new vn("Stone Wall", "Saved the 3 little pigs.", SKILLS.__BUILDING__, [
-        [item.stone, 20]
+        [IID.stone, 20]
     ], 1, [
         [AREAS.workbench, 15000]
     ], 3),
@@ -19524,16 +19524,16 @@ var items = [{
         }
     },
     wall: 1,
-    vVwVM: item.stonewall,
+    vVwVM: IID.stonewall,
     lowWall: 0,
     door: 0,
     broke: 1,
-    mwM: 0,
+    explosion: 0,
     behavior: BEHAVIOR.__NO__,
     MWv: 0,
     subtype: 0,
     MMN: 1,
-    WnW: 0,
+    areaEffect: 0,
     draw: Render.wall,
     MmvNw: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
     WVW: [{
@@ -19796,7 +19796,7 @@ var items = [{
     life: 7000,
     score: 0
 }, {
-    id: item.steelwall,
+    id: IID.steelwall,
     img: {
         src: ["img/inv-steel-wall-out.png", "img/inv-steel-wall-in.png", "img/inv-steel-wall-click.png"],
         W: [{
@@ -19808,10 +19808,10 @@ var items = [{
         }]
     },
     detail: new vn("Metal Wall", "Afraid we'll find you?", SKILLS.__BUILDING__, [
-        [item.shapedmetal, 3]
+        [IID.shapedmetal, 3]
     ], 1, [
         [AREAS.researchbench, 20000]
-    ], 6, item.stonewall),
+    ], 6, IID.stonewall),
     mnw: 21,     
     fuel: -1,
     WvV: 1,
@@ -19839,16 +19839,16 @@ var items = [{
         }
     },
     wall: 1,
-    vVwVM: item.steelwall,
+    vVwVM: IID.steelwall,
     lowWall: 0,
     door: 0,
     broke: 1,
-    mwM: 0,
+    explosion: 0,
     behavior: BEHAVIOR.__NO__,
     MWv: 0,
     subtype: 0,
     MMN: 1,
-    WnW: 0,
+    areaEffect: 0,
     draw: Render.wall,
     MmvNw: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
     WVW: [{
@@ -20111,7 +20111,7 @@ var items = [{
     life: 15000,
     score: 0
 }, {
-    id: item.wooddoor,
+    id: IID.wooddoor,
     img: {
         src: ["img/inv-wood-door-out.png", "img/inv-wood-door-in.png", "img/inv-wood-door-click.png"],
         W: [{
@@ -20123,7 +20123,7 @@ var items = [{
         }]
     },
     detail: new vn("Wooden Low Door", "You can shoot through it.", SKILLS.__BUILDING__, [
-        [item.wood, 40]
+        [IID.wood, 40]
     ], 1, [
         [AREAS.workbench, 15000]
     ]),
@@ -20157,7 +20157,7 @@ var items = [{
     lowWall: 0,
     door: 1,
     broke: 1,
-    mwM: 0,
+    explosion: 0,
     behavior: BEHAVIOR.__NO__,
     MWv: 0,
     subtype: 0,
@@ -20215,7 +20215,7 @@ var items = [{
     life: 2000,
     score: 0
 }, {
-    id: item.stonedoor,
+    id: IID.stonedoor,
     img: {
         src: ["img/inv-stone-door-out.png", "img/inv-stone-door-in.png", "img/inv-stone-door-click.png"],
         W: [{
@@ -20227,7 +20227,7 @@ var items = [{
         }]
     },
     detail: new vn("Stone Low Door", "You can shoot through it.", SKILLS.__BUILDING__, [
-        [item.stone, 40]
+        [IID.stone, 40]
     ], 1, [
         [AREAS.workbench, 15000]
     ], 3),
@@ -20261,7 +20261,7 @@ var items = [{
     lowWall: 0,
     door: 1,
     broke: 1,
-    mwM: 0,
+    explosion: 0,
     behavior: BEHAVIOR.__NO__,
     MWv: 0,
     subtype: 0,
@@ -20319,7 +20319,7 @@ var items = [{
     life: 5000,
     score: 0
 }, {
-    id: item.steeldoor,
+    id: IID.steeldoor,
     img: {
         src: ["img/inv-steel-door-out.png", "img/inv-steel-door-in.png", "img/inv-steel-door-click.png"],
         W: [{
@@ -20331,10 +20331,10 @@ var items = [{
         }]
     },
     detail: new vn("Metal Low Door", "Killing at home, for more comfort.", SKILLS.__BUILDING__, [
-        [item.shapedmetal, 6]
+        [IID.shapedmetal, 6]
     ], 1, [
         [AREAS.researchbench, 30000]
-    ], 6, item.stonedoor),
+    ], 6, IID.stonedoor),
     mnw: 21,     
     fuel: -1,
     WvV: 0,
@@ -20365,7 +20365,7 @@ var items = [{
     lowWall: 0,
     door: 1,
     broke: 1,
-    mwM: 0,
+    explosion: 0,
     behavior: BEHAVIOR.__NO__,
     MWv: 0,
     subtype: 0,
@@ -20423,7 +20423,7 @@ var items = [{
     life: 10000,
     score: 0
 }, {
-    id: item.campfire,
+    id: IID.campfire,
     img: {
         src: ["img/inv-campfire-out.png", "img/inv-campfire-in.png", "img/inv-campfire-click.png"],
         W: [{
@@ -20435,8 +20435,8 @@ var items = [{
         }]
     },
     detail: new vn("Campfire", "Warm you when you're cold.", SKILLS.__SURVIVAL__, [
-        [item.wood, 30],
-        [item.stone, 5]
+        [IID.wood, 30],
+        [IID.stone, 5]
     ], 1, [
         [AREAS.own, 8000],
         [AREAS.workbench, 15000]
@@ -20472,12 +20472,12 @@ var items = [{
     lowWall: 0,
     door: 0,
     broke: 0,
-    mwM: 0,
+    explosion: 0,
     behavior: BEHAVIOR.__NO__,
     MWv: 0,
     subtype: 0,
     MMN: 1,
-    WnW: __WARM__,
+    areaEffect: __WARM__,
     draw: Render.campfire,
     VvmvM: Render.campfireLight,
     packetId: 16,
@@ -20501,7 +20501,7 @@ var items = [{
     life: 150,
     score: 0
 }, {
-    id: item.bullet9mm,
+    id: IID.bullet9mm,
     img: {
         src: ["img/inv-bullet-9mm-out.png", "img/inv-bullet-9mm-in.png", "img/inv-bullet-9mm-click.png"],
         W: [{
@@ -20513,16 +20513,16 @@ var items = [{
         }]
     },
     detail: new vn("Bullet", "For 9MM, Desert Eagle, and MP5 ", SKILLS.__WEAPON__, [
-        [item.sulfur, 3],
-        [item.shapedmetal, 3],
-        [item.animalfat, 3]
+        [IID.sulfur, 3],
+        [IID.shapedmetal, 3],
+        [IID.animalfat, 3]
     ], 30, [
         [AREAS.researchbench, 10000]
     ], 6),
     stack: 255,
     loot: Mv.bullet9mm
 }, {
-    id: item.bulletshotgun,
+    id: IID.bulletshotgun,
     img: {
         src: ["img/inv-bullet-shotgun-out.png", "img/inv-bullet-shotgun-in.png", "img/inv-bullet-shotgun-click.png"],
         W: [{
@@ -20534,16 +20534,16 @@ var items = [{
         }]
     },
     detail: new vn("Cartridge", "For Shotgun", SKILLS.__WEAPON__, [
-        [item.alloys, 1],
-        [item.shapedmetal, 4],
-        [item.animalfat, 4]
+        [IID.alloys, 1],
+        [IID.shapedmetal, 4],
+        [IID.animalfat, 4]
     ], 15, [
         [AREAS.researchbench, 10000]
     ], 10),
     stack: 255,
     loot: Mv.bulletshotgun
 }, {
-    id: item.sniperbullet,
+    id: IID.sniperbullet,
     img: {
         src: ["img/inv-bullet-sniper-out.png", "img/inv-bullet-sniper-in.png", "img/inv-bullet-sniper-click.png"],
         W: [{
@@ -20555,16 +20555,16 @@ var items = [{
         }]
     },
     detail: new vn("Heavy Bullet", "For Sniper, and AK47", SKILLS.__WEAPON__, [
-        [item.alloys, 1],
-        [item.shapedmetal, 4],
-        [item.animalfat, 4]
+        [IID.alloys, 1],
+        [IID.shapedmetal, 4],
+        [IID.animalfat, 4]
     ], 30, [
         [AREAS.researchbench, 10000]
     ], 11),
     stack: 255,
     loot: Mv.sniperbullet
 }, {
-    id: item.medkit,
+    id: IID.medkit,
     img: {
         src: ["img/inv-medikit-out.png", "img/inv-medikit-in.png", "img/inv-medikit-click.png"],
         W: [{
@@ -20576,10 +20576,10 @@ var items = [{
         }]
     },
     detail: new vn("Medkit", "Regenerate your life.", SKILLS.__DRUG__, [
-        [item.string, 2],
-        [item.bandage, 1],
-        [item.leather, 2],
-        [item.shapedmetal, 2]
+        [IID.string, 2],
+        [IID.bandage, 1],
+        [IID.leather, 2],
+        [IID.shapedmetal, 2]
     ], 1, [
         [AREAS.researchbench, 80000]
     ], 10),
@@ -20588,7 +20588,7 @@ var items = [{
     loot: Mv.medkit,
     wait: 10
 }, {
-    id: item.bandage,
+    id: IID.bandage,
     img: {
         src: ["img/inv-bandage-out.png", "img/inv-bandage-in.png", "img/inv-bandage-click.png"],
         W: [{
@@ -20600,8 +20600,8 @@ var items = [{
         }]
     },
     detail: new vn("Bandage", "To heal the boo-boos.", SKILLS.__DRUG__, [
-        [item.string, 1],
-        [item.leather, 2]
+        [IID.string, 1],
+        [IID.leather, 2]
     ], 1, [
         [AREAS.weavingmachine, 20000]
     ]),
@@ -20610,7 +20610,7 @@ var items = [{
     loot: Mv.bandage,
     wait: 10
 }, {
-    id: item.soda,
+    id: IID.soda,
     img: {
         src: ["img/inv-soda-out.png", "img/inv-soda-in.png", "img/inv-soda-click.png"],
         W: [{
@@ -20622,9 +20622,9 @@ var items = [{
         }]
     },
     detail: new vn("Soda", "Give energy.", SKILLS.__SURVIVAL__, [
-        [item.ghoulblood, 1],
-        [item.chemicalcomponent, 1],
-        [item.can, 1]
+        [IID.ghoulblood, 1],
+        [IID.chemicalcomponent, 1],
+        [IID.can, 1]
     ], 1, [
         [AREAS.firepart, 40000],
         [AREAS.bbq, 40000]
@@ -20633,10 +20633,10 @@ var items = [{
     stack: 5,
     loot: Mv.soda,
     vWVMV: 2,
-    nNmmM: item.can,
+    nNmmM: IID.can,
     wait: 10
 }, {
-    id: item.mp5,
+    id: IID.mp5,
     img: {
         src: ["img/inv-MP5-out.png", "img/inv-MP5-in.png", "img/inv-MP5-click.png"],
         W: [{
@@ -20648,18 +20648,18 @@ var items = [{
         }]
     },
     detail: new vn("MP5", "Not bad.", SKILLS.__WEAPON__, [
-        [item.alloys, 6],
-        [item.shapedmetal, 6]
+        [IID.alloys, 6],
+        [IID.shapedmetal, 6]
     ], 1, [
         [AREAS.researchbench, 200000]
     ], 10),
     mnw: 20,     
-    vMv: item.bullet9mm,
+    vMv: IID.bullet9mm,
     stack: 1,
     loot: Mv.mp5,
     wait: 10
 }, {
-    id: item.headscarf,
+    id: IID.headscarf,
     img: {
         src: ["img/inv-headscarf-out.png", "img/inv-headscarf-in.png", "img/inv-headscarf-click.png"],
         W: [{
@@ -20671,8 +20671,8 @@ var items = [{
         }]
     },
     detail: new vn("Headscarf", "Warm you up.", SKILLS.__CLOTHE__, [
-        [item.string, 1],
-        [item.leather, 1]
+        [IID.string, 1],
+        [IID.leather, 1]
     ], 1, [
         [AREAS.weavingmachine, 60000]
     ]),
@@ -20688,7 +20688,7 @@ var items = [{
     rad: 0,
     speed: 0
 }, {
-    id: item.chapka,
+    id: IID.chapka,
     img: {
         src: ["img/inv-chapka-out.png", "img/inv-chapka-in.png", "img/inv-chapka-click.png"],
         W: [{
@@ -20700,9 +20700,9 @@ var items = [{
         }]
     },
     detail: new vn("Chapka", "You look like a real woodcutter.", SKILLS.__CLOTHE__, [
-        [item.string, 6],
-        [item.leather, 8],
-        [item.headscarf, 1]
+        [IID.string, 6],
+        [IID.leather, 8],
+        [IID.headscarf, 1]
     ], 1, [
         [AREAS.weavingmachine, 120000]
     ], 7),
@@ -20718,7 +20718,7 @@ var items = [{
     rad: 0,
     speed: 0
 }, {
-    id: item.coat,
+    id: IID.coat,
     img: {
         src: ["img/inv-coat-out.png", "img/inv-coat-in.png", "img/inv-coat-click.png"],
         W: [{
@@ -20730,12 +20730,12 @@ var items = [{
         }]
     },
     detail: new vn("Winter Coat", "Is the weather really that cold?", SKILLS.__CLOTHE__, [
-        [item.string, 15],
-        [item.leather, 20],
-        [item.chapka, 1]
+        [IID.string, 15],
+        [IID.leather, 20],
+        [IID.chapka, 1]
     ], 1, [
         [AREAS.weavingmachine, 180000]
-    ], 9, item.chapka),
+    ], 9, IID.chapka),
     nwm: 3,
     stack: 1,
     loot: Mv.coat,
@@ -20748,7 +20748,7 @@ var items = [{
     rad: 0,
     speed: 0
 }, {
-    id: item.gazmask,
+    id: IID.gazmask,
     img: {
         src: ["img/inv-gaz-mask-out.png", "img/inv-gaz-mask-in.png", "img/inv-gaz-mask-click.png"],
         W: [{
@@ -20760,9 +20760,9 @@ var items = [{
         }]
     },
     detail: new vn("Radiation Mask", "Protect you from Radioactivity.", SKILLS.__CLOTHE__, [
-        [item.shapedmetal, 1],
-        [item.string, 1],
-        [item.leather, 2]
+        [IID.shapedmetal, 1],
+        [IID.string, 1],
+        [IID.leather, 2]
     ], 1, [
         [AREAS.weavingmachine, 60000]
     ]),
@@ -20778,7 +20778,7 @@ var items = [{
     rad: 0.009,
     speed: 0
 }, {
-    id: item.gazprotection,
+    id: IID.gazprotection,
     img: {
         src: ["img/inv-gaz-protection-out.png", "img/inv-gaz-protection-in.png", "img/inv-gaz-protection-click.png"],
         W: [{
@@ -20790,11 +20790,11 @@ var items = [{
         }]
     },
     detail: new vn("Min. Radiation Suit", "Previously, on Breaking Bad.", SKILLS.__CLOTHE__, [
-        [item.alloys, 2],
-        [item.shapedmetal, 2],
-        [item.string, 4],
-        [item.leather, 4],
-        [item.gazmask, 1]
+        [IID.alloys, 2],
+        [IID.shapedmetal, 2],
+        [IID.string, 4],
+        [IID.leather, 4],
+        [IID.gazmask, 1]
     ], 1, [
         [AREAS.weavingmachine, 90000]
     ], 8),
@@ -20810,7 +20810,7 @@ var items = [{
     rad: 0.016,
     speed: 0
 }, {
-    id: item.radiationsuit,
+    id: IID.radiationsuit,
     img: {
         src: ["img/inv-radiation-suit-out.png", "img/inv-radiation-suit-in.png", "img/inv-radiation-suit-click.png"],
         W: [{
@@ -20822,14 +20822,14 @@ var items = [{
         }]
     },
     detail: new vn("Radiation Suit", "Let's not grow a second head.", SKILLS.__CLOTHE__, [
-        [item.alloys, 6],
-        [item.shapedmetal, 4],
-        [item.string, 8],
-        [item.leather, 20],
-        [item.gazprotection, 1]
+        [IID.alloys, 6],
+        [IID.shapedmetal, 4],
+        [IID.string, 8],
+        [IID.leather, 20],
+        [IID.gazprotection, 1]
     ], 1, [
         [AREAS.weavingmachine, 180000]
-    ], 10, item.gazprotection),
+    ], 10, IID.gazprotection),
     nwm: 6,
     stack: 1,
     loot: Mv.radiationsuit,
@@ -20842,7 +20842,7 @@ var items = [{
     rad: 0.022,
     speed: -0.01
 }, {
-    id: item.woodarrow,
+    id: IID.woodarrow,
     img: {
         src: ["img/inv-wood-arrow-out.png", "img/inv-wood-arrow-in.png", "img/inv-wood-arrow-click.png"],
         W: [{
@@ -20854,7 +20854,7 @@ var items = [{
         }]
     },
     detail: new vn("Wood Arrow", "Needed to use bow.", SKILLS.__WEAPON__, [
-        [item.wood, 40]
+        [IID.wood, 40]
     ], 5, [
         [AREAS.own, 15000],
         [AREAS.workbench, 10000]
@@ -20862,7 +20862,7 @@ var items = [{
     stack: 255,
     loot: Mv.woodarrow
 }, {
-    id: item.campfirebbq,
+    id: IID.campfirebbq,
     img: {
         src: ["img/inv-campfire-bbq-out.png", "img/inv-campfire-bbq-in.png", "img/inv-campfire-bbq-click.png"],
         W: [{
@@ -20874,9 +20874,9 @@ var items = [{
         }]
     },
     detail: new vn("Firepit", "Warm up and melt iron slowly.", SKILLS.__SURVIVAL__, [
-        [item.wood, 120],
-        [item.stone, 20],
-        [item.steel, 4]
+        [IID.wood, 120],
+        [IID.stone, 20],
+        [IID.steel, 4]
     ], 1, [
         [AREAS.workbench, 20000]
     ], 3),
@@ -20911,12 +20911,12 @@ var items = [{
     lowWall: 0,
     door: 0,
     broke: 0,
-    mwM: 0,
+    explosion: 0,
     behavior: BEHAVIOR.__NO__,
     MWv: 0,
     subtype: 0,
     MMN: 1,
-    WnW: __WARM__,
+    areaEffect: __WARM__,
     draw: Render.campfire,
     VvmvM: Render.campfireLight,
     packetId: 16,
@@ -20940,7 +20940,7 @@ var items = [{
     life: 250,
     score: 0
 }, {
-    id: item.smelter,
+    id: IID.smelter,
     img: {
         src: ["img/inv-smelter-out.png", "img/inv-smelter-in.png", "img/inv-smelter-click.png"],
         W: [{
@@ -20952,8 +20952,8 @@ var items = [{
         }]
     },
     detail: new vn("Smelter", "Melt iron, uranium and alloys", SKILLS.__SURVIVAL__, [
-        [item.shapedmetal, 6],
-        [item.electronicpart, 1]
+        [IID.shapedmetal, 6],
+        [IID.electronicpart, 1]
     ], 1, [
         [AREAS.researchbench, 100000]
     ], 10),
@@ -20992,12 +20992,12 @@ var items = [{
     lowWall: 0,
     door: 0,
     broke: 0,
-    mwM: 0,
+    explosion: 0,
     behavior: BEHAVIOR.__NO__,
     MWv: 0,
     subtype: 0,
     MMN: 1,
-    WnW: 0,
+    areaEffect: 0,
     draw: Render.smelter,
     packetId: 16,
     wwN: {
@@ -21035,7 +21035,7 @@ var items = [{
     life: 3000,
     score: 0
 }, {
-    id: item.wooddoor1,
+    id: IID.wooddoor1,
     img: {
         src: ["img/inv-wood-door1-out.png", "img/inv-wood-door1-in.png", "img/inv-wood-door1-click.png"],
         W: [{
@@ -21047,7 +21047,7 @@ var items = [{
         }]
     },
     detail: new vn("Wooden Door", "Let's hope it holds.", SKILLS.__BUILDING__, [
-        [item.wood, 60]
+        [IID.wood, 60]
     ], 1, [
         [AREAS.workbench, 20000]
     ]),
@@ -21081,7 +21081,7 @@ var items = [{
     lowWall: 0,
     door: 1,
     broke: 1,
-    mwM: 0,
+    explosion: 0,
     behavior: BEHAVIOR.__NO__,
     MWv: 0,
     subtype: 0,
@@ -21139,7 +21139,7 @@ var items = [{
     life: 2500,
     score: 0
 }, {
-    id: item.stonedoor1,
+    id: IID.stonedoor1,
     img: {
         src: ["img/inv-stone-door1-out.png", "img/inv-stone-door1-in.png", "img/inv-stone-door1-click.png"],
         W: [{
@@ -21151,7 +21151,7 @@ var items = [{
         }]
     },
     detail: new vn("Stone Door", "Not too heavy to open, I hope.", SKILLS.__BUILDING__, [
-        [item.stone, 60]
+        [IID.stone, 60]
     ], 1, [
         [AREAS.workbench, 20000]
     ], 3),
@@ -21185,7 +21185,7 @@ var items = [{
     lowWall: 0,
     door: 1,
     broke: 1,
-    mwM: 0,
+    explosion: 0,
     behavior: BEHAVIOR.__NO__,
     MWv: 0,
     subtype: 0,
@@ -21243,7 +21243,7 @@ var items = [{
     life: 6000,
     score: 0
 }, {
-    id: item.steeldoor1,
+    id: IID.steeldoor1,
     img: {
         src: ["img/inv-steel-door1-out.png", "img/inv-steel-door1-in.png", "img/inv-steel-door1-click.png"],
         W: [{
@@ -21255,10 +21255,10 @@ var items = [{
         }]
     },
     detail: new vn("Metal Door", "I guess you're safe.", SKILLS.__BUILDING__, [
-        [item.shapedmetal, 9]
+        [IID.shapedmetal, 9]
     ], 1, [
         [AREAS.researchbench, 40000]
-    ], 6, item.stonedoor1),
+    ], 6, IID.stonedoor1),
     mnw: 21,     
     fuel: -1,
     WvV: 1,
@@ -21289,7 +21289,7 @@ var items = [{
     lowWall: 0,
     door: 1,
     broke: 1,
-    mwM: 0,
+    explosion: 0,
     behavior: BEHAVIOR.__NO__,
     MWv: 0,
     subtype: 0,
@@ -21347,7 +21347,7 @@ var items = [{
     life: 12500,
     score: 0
 }, {
-    id: item.sulfur,
+    id: IID.sulfur,
     img: {
         src: ["img/inv-sulfur-out.png", "img/inv-sulfur-in.png", "img/inv-sulfur-click.png"],
         W: [{
@@ -21367,7 +21367,7 @@ var items = [{
     loot: Mv.sulfur,
     score: 32
 }, {
-    id: item.shapeduranium,
+    id: IID.shapeduranium,
     img: {
         src: ["img/inv-shaped-uranium-out.png", "img/inv-shaped-uranium-in.png", "img/inv-shaped-uranium-click.png"],
         W: [{
@@ -21379,7 +21379,7 @@ var items = [{
         }]
     },
     detail: new vn("Shaped Uranium", "Are you out of your mind?", SKILLS.__MINERAL__, [
-        [item.uranium, 1]
+        [IID.uranium, 1]
     ], 1, [
         [AREAS.smelter, 20000]
     ]),
@@ -21387,7 +21387,7 @@ var items = [{
     loot: Mv.shapeduranium,
     score: 0
 }, {
-    id: item.researchbench,
+    id: IID.researchbench,
     img: {
         src: ["img/inv-workbench2-out.png", "img/inv-workbench2-in.png", "img/inv-workbench2-click.png"],
         W: [{
@@ -21399,8 +21399,8 @@ var items = [{
         }]
     },
     detail: new vn("Research Bench", "Allow you to make new items", SKILLS.__SURVIVAL__, [
-        [item.shapedmetal, 6],
-        [item.electronicpart, 1]
+        [IID.shapedmetal, 6],
+        [IID.electronicpart, 1]
     ], 1, [
         [AREAS.workbench, 50000]
     ], 6),
@@ -21437,12 +21437,12 @@ var items = [{
     lowWall: 0,
     door: 0,
     broke: 0,
-    mwM: 0,
+    explosion: 0,
     behavior: BEHAVIOR.__NO__,
     MWv: 0,
     subtype: 0,
     MMN: 1,
-    WnW: 0,
+    areaEffect: 0,
     draw: Render.workbench2,
     packetId: 16,
     wwN: {
@@ -21465,7 +21465,7 @@ var items = [{
     life: 400,
     score: 0
 }, {
-    id: item.uranium,
+    id: IID.uranium,
     img: {
         src: ["img/inv-uranium-out.png", "img/inv-uranium-in.png", "img/inv-uranium-click.png"],
         W: [{
@@ -21485,7 +21485,7 @@ var items = [{
     loot: Mv.uranium,
     score: 45
 }, {
-    id: item.weavingmachine,
+    id: IID.weavingmachine,
     img: {
         src: ["img/inv-weaving-machine-out.png", "img/inv-weaving-machine-in.png", "img/inv-weaving-machine-click.png"],
         W: [{
@@ -21497,9 +21497,9 @@ var items = [{
         }]
     },
     detail: new vn("Weaving Machine", "Allow you to sew clothes", SKILLS.__SURVIVAL__, [
-        [item.wood, 80],
-        [item.stone, 20],
-        [item.string, 2]
+        [IID.wood, 80],
+        [IID.stone, 20],
+        [IID.string, 2]
     ], 1, [
         [AREAS.workbench, 60000]
     ]),
@@ -21534,12 +21534,12 @@ var items = [{
     lowWall: 0,
     door: 0,
     broke: 0,
-    mwM: 0,
+    explosion: 0,
     behavior: BEHAVIOR.__NO__,
     MWv: 0,
     subtype: 0,
     MMN: 1,
-    WnW: 0,
+    areaEffect: 0,
     draw: Render.workbench,
     packetId: 16,
     wwN: {
@@ -21562,7 +21562,7 @@ var items = [{
     life: 250,
     score: 0
 }, {
-    id: item.gasoline,
+    id: IID.gasoline,
     img: {
         src: ["img/inv-gasoline-out.png", "img/inv-gasoline-in.png", "img/inv-gasoline-click.png"],
         W: [{
@@ -21574,15 +21574,15 @@ var items = [{
         }]
     },
     detail: new vn("Gasoline", "Fuel for Smelter", SKILLS.__SURVIVAL__, [
-        [item.rottenorange, 4],
-        [item.sulfur, 1]
+        [IID.rottenorange, 4],
+        [IID.sulfur, 1]
     ], 1, [
         [AREAS.researchbench, 20000]
     ]),
     stack: 255,
     loot: Mv.gasoline
 }, {
-    id: item.sulfurpickaxe,
+    id: IID.sulfurpickaxe,
     img: {
         src: ["img/inv-sulfur-pickaxe-out.png", "img/inv-sulfur-pickaxe-in.png", "img/inv-sulfur-pickaxe-click.png"],
         W: [{
@@ -21594,18 +21594,18 @@ var items = [{
         }]
     },
     detail: new vn("Sulfur Pickaxe", "Mine also Uranium", SKILLS.__TOOL__, [
-        [item.alloys, 2],
-        [item.shapedmetal, 6],
-        [item.sulfur, 6]
+        [IID.alloys, 2],
+        [IID.shapedmetal, 6],
+        [IID.sulfur, 6]
     ], 1, [
         [AREAS.researchbench, 90000]
-    ], 9, item.steelpickaxe),
+    ], 9, IID.steelpickaxe),
     mnw: 22,     
     stack: 1,
     loot: Mv.sulfurpickaxe,
     wait: 10
 }, {
-    id: item.chest,
+    id: IID.chest,
     img: {
         src: ["img/inv-chest-out.png", "img/inv-chest-in.png", "img/inv-chest-click.png"],
         W: [{
@@ -21617,8 +21617,8 @@ var items = [{
         }]
     },
     detail: new vn("Wood chest", "You can't store food in.", SKILLS.__BUILDING__, [
-        [item.wood, 50],
-        [item.stone, 20]
+        [IID.wood, 50],
+        [IID.stone, 20]
     ], 1, [
         [AREAS.workbench, 30000]
     ], 8),
@@ -21653,7 +21653,7 @@ var items = [{
     lowWall: 0,
     door: 0,
     broke: 0,
-    mwM: 0,
+    explosion: 0,
     behavior: BEHAVIOR.__NO__,
     MWv: 0,
     subtype: 0,
@@ -21681,7 +21681,7 @@ var items = [{
     life: 300,
     score: 0
 }, {
-    id: item.fridge,
+    id: IID.fridge,
     img: {
         src: ["img/inv-fridge-out.png", "img/inv-fridge-in.png", "img/inv-fridge-click.png"],
         W: [{
@@ -21693,8 +21693,8 @@ var items = [{
         }]
     },
     detail: new vn("Fridge", "Save your food.", SKILLS.__BUILDING__, [
-        [item.shapedmetal, 5],
-        [item.energycell, 4]
+        [IID.shapedmetal, 5],
+        [IID.energycell, 4]
     ], 1, [
         [AREAS.researchbench, 90000]
     ], 9),
@@ -21730,7 +21730,7 @@ var items = [{
     lowWall: 0,
     door: 0,
     broke: 0,
-    mwM: 0,
+    explosion: 0,
     behavior: BEHAVIOR.__NO__,
     MWv: 0,
     subtype: 0,
@@ -21758,7 +21758,7 @@ var items = [{
     life: 300,
     score: 0
 }, {
-    id: item.woodfloor1,
+    id: IID.woodfloor1,
     img: {
         src: ["img/inv-wood-floor-out.png", "img/inv-wood-floor-in.png", "img/inv-wood-floor-click.png"],
         W: [{
@@ -21770,7 +21770,7 @@ var items = [{
         }]
     },
     detail: new vn("Wood floor", "Players can't spawn on it", SKILLS.__BUILDING__, [
-        [item.wood, 15]
+        [IID.wood, 15]
     ], 2, [
         [AREAS.workbench, 15000]
     ]),
@@ -21801,16 +21801,16 @@ var items = [{
         }
     },
     wall: 1,
-    vVwVM: item.woodfloor1,
+    vVwVM: IID.woodfloor1,
     lowWall: 0,
     door: 0,
     broke: 1,
-    mwM: 0,
+    explosion: 0,
     behavior: BEHAVIOR.__NO__,
     MWv: 0,
     subtype: 0,
     MMN: 0,
-    WnW: 0,
+    areaEffect: 0,
     draw: Render.groundFloor,
     WVW: [{
         src: "img/day-wood-floor-broken0.png",
@@ -22072,7 +22072,7 @@ var items = [{
     life: 4000,
     score: 0
 }, {
-    id: item.hammer,
+    id: IID.hammer,
     img: {
         src: ["img/inv-hammer-out.png", "img/inv-hammer-in.png", "img/inv-hammer-click.png"],
         W: [{
@@ -22084,8 +22084,8 @@ var items = [{
         }]
     },
     detail: new vn("Hammer", "Destroy walls quickly.", SKILLS.__TOOL__, [
-        [item.wood, 100],
-        [item.shapedmetal, 10]
+        [IID.wood, 100],
+        [IID.shapedmetal, 10]
     ], 1, [
         [AREAS.researchbench, 30000]
     ], 7),
@@ -22094,7 +22094,7 @@ var items = [{
     loot: Mv.hammer,
     wait: 10
 }, {
-    id: item.sleepingbag,
+    id: IID.sleepingbag,
     img: {
         src: ["img/inv-sleeping-bag-out.png", "img/inv-sleeping-bag-in.png", "img/inv-sleeping-bag-click.png"],
         W: [{
@@ -22106,9 +22106,9 @@ var items = [{
         }]
     },
     detail: new vn("Sleeping Bag", "Once dead, you keep your base", SKILLS.__SURVIVAL__, [
-        [item.leather, 7],
-        [item.animalfat, 7],
-        [item.string, 7]
+        [IID.leather, 7],
+        [IID.animalfat, 7],
+        [IID.string, 7]
     ], 1, [
         [AREAS.weavingmachine, 20000]
     ], 9),
@@ -22139,12 +22139,12 @@ var items = [{
         }
     },
     door: 0,
-    mwM: 0,
+    explosion: 0,
     behavior: BEHAVIOR.__NO__,
     MWv: 0,
     subtype: 0,
     MMN: 0,
-    WnW: 0,
+    areaEffect: 0,
     draw: Render.defaultBuilding,
     impact: SOUNDID.pillow,
     destroyaudio: SOUNDID.pillowdes,
@@ -22160,7 +22160,7 @@ var items = [{
     life: 500,
     score: 0
 }, {
-    id: item.repairhammer,
+    id: IID.repairhammer,
     img: {
         src: ["img/inv-repair-hammer-out.png", "img/inv-repair-hammer-in.png", "img/inv-repair-hammer-click.png"],
         W: [{
@@ -22172,8 +22172,8 @@ var items = [{
         }]
     },
     detail: new vn("Repair Hammer", "Repair walls but require nails.", SKILLS.__TOOL__, [
-        [item.wood, 120],
-        [item.shapedmetal, 2]
+        [IID.wood, 120],
+        [IID.shapedmetal, 2]
     ], 1, [
         [AREAS.workbench, 30000]
     ], 5),
@@ -22182,7 +22182,7 @@ var items = [{
     loot: Mv.repairhammer,
     wait: 10
 }, {
-    id: item.nails,
+    id: IID.nails,
     img: {
         src: ["img/inv-nails-out.png", "img/inv-nails-in.png", "img/inv-nails-click.png"],
         W: [{
@@ -22194,14 +22194,14 @@ var items = [{
         }]
     },
     detail: new vn("Nails", "Needed to repair walls.", SKILLS.__SURVIVAL__, [
-        [item.shapedmetal, 2]
+        [IID.shapedmetal, 2]
     ], 85, [
         [AREAS.workbench, 20000]
     ]),
     stack: 255,
     loot: Mv.nails
 }, {
-    id: item.woodfloor2,
+    id: IID.woodfloor2,
     img: {
         src: ["img/inv-wood-floor-light-out.png", "img/inv-wood-floor-light-in.png", "img/inv-wood-floor-light-click.png"],
         W: [{
@@ -22213,7 +22213,7 @@ var items = [{
         }]
     },
     detail: new vn("Light Wood Floor", "Players can't spawn on it", SKILLS.__BUILDING__, [
-        [item.wood, 15]
+        [IID.wood, 15]
     ], 2, [
         [AREAS.workbench, 15000]
     ]),
@@ -22244,16 +22244,16 @@ var items = [{
         }
     },
     wall: 1,
-    vVwVM: item.woodfloor2,
+    vVwVM: IID.woodfloor2,
     lowWall: 0,
     door: 0,
     broke: 1,
-    mwM: 0,
+    explosion: 0,
     behavior: BEHAVIOR.__NO__,
     MWv: 0,
     subtype: 0,
     MMN: 0,
-    WnW: 0,
+    areaEffect: 0,
     draw: Render.groundFloor,
     WVW: [{
         src: "img/day-wood-floor-light-broken0.png",
@@ -22515,7 +22515,7 @@ var items = [{
     life: 4000,
     score: 0
 }, {
-    id: item.smallwoodwall,
+    id: IID.smallwoodwall,
     img: {
         src: ["img/inv-wood-smallwall-out.png", "img/inv-wood-smallwall-in.png", "img/inv-wood-smallwall-click.png"],
         W: [{
@@ -22527,7 +22527,7 @@ var items = [{
         }]
     },
     detail: new vn("Wooden Low Wall", "You can shoot through it.", SKILLS.__BUILDING__, [
-        [item.wood, 10]
+        [IID.wood, 10]
     ], 1, [
         [AREAS.workbench, 10000]
     ]),
@@ -22561,7 +22561,7 @@ var items = [{
     lowWall: 1,
     door: 0,
     broke: 1,
-    mwM: 0,
+    explosion: 0,
     behavior: BEHAVIOR.__NO__,
     MWv: 0,
     subtype: 0,
@@ -22575,7 +22575,7 @@ var items = [{
     VvvNw: [100, 35, 100, 35],
     VvMvv: 6,
     MmVVV: 46,
-    WnW: 0,
+    areaEffect: 0,
     draw: Render.lowWall,
     WVW: [{
         src: "img/day-wood-smallwalls-broken0.png",
@@ -22802,7 +22802,7 @@ var items = [{
     life: 3000,
     score: 0
 }, {
-    id: item.smallstonewall,
+    id: IID.smallstonewall,
     img: {
         src: ["img/inv-stone-smallwall-out.png", "img/inv-stone-smallwall-in.png", "img/inv-stone-smallwall-click.png"],
         W: [{
@@ -22814,7 +22814,7 @@ var items = [{
         }]
     },
     detail: new vn("Stone Low Wall", "You can shoot through it.", SKILLS.__BUILDING__, [
-        [item.stone, 10]
+        [IID.stone, 10]
     ], 1, [
         [AREAS.workbench, 15000]
     ], 3),
@@ -22848,7 +22848,7 @@ var items = [{
     lowWall: 1,
     door: 0,
     broke: 1,
-    mwM: 0,
+    explosion: 0,
     behavior: BEHAVIOR.__NO__,
     MWv: 0,
     subtype: 0,
@@ -22862,7 +22862,7 @@ var items = [{
     VvvNw: [100, 35, 100, 35],
     VvMvv: 6,
     MmVVV: 46,
-    WnW: 0,
+    areaEffect: 0,
     draw: Render.lowWall,
     WVW: [{
         src: "img/day-stone-smallwalls-broken0.png",
@@ -23089,7 +23089,7 @@ var items = [{
     life: 7000,
     score: 0
 }, {
-    id: item.smallsteelwall,
+    id: IID.smallsteelwall,
     img: {
         src: ["img/inv-steel-smallwall-out.png", "img/inv-steel-smallwall-in.png", "img/inv-steel-smallwall-click.png"],
         W: [{
@@ -23101,10 +23101,10 @@ var items = [{
         }]
     },
     detail: new vn("Metal Low Wall", "You can shoot through it.", SKILLS.__BUILDING__, [
-        [item.shapedmetal, 2]
+        [IID.shapedmetal, 2]
     ], 1, [
         [AREAS.researchbench, 20000]
-    ], 6, item.smallstonewall),
+    ], 6, IID.smallstonewall),
     mnw: 21,     
     fuel: -1,
     WvV: 0,
@@ -23135,7 +23135,7 @@ var items = [{
     lowWall: 1,
     door: 0,
     broke: 1,
-    mwM: 0,
+    explosion: 0,
     behavior: BEHAVIOR.__NO__,
     MWv: 0,
     subtype: 0,
@@ -23149,7 +23149,7 @@ var items = [{
     VvvNw: [100, 35, 100, 35],
     VvMvv: 6,
     MmVVV: 46,
-    WnW: 0,
+    areaEffect: 0,
     draw: Render.lowWall,
     WVW: [{
         src: "img/day-steel-smallwalls-broken0.png",
@@ -23376,7 +23376,7 @@ var items = [{
     life: 15000,
     score: 0
 }, {
-    id: item.MMnVW,
+    id: IID.MMnVW,
     WvV: 0,
     xCenter: [0, 0, 0, 0],
     yCenter: [0, 0, 0, 0],
@@ -23384,7 +23384,7 @@ var items = [{
     lowWall: 0,
     door: 0,
     broke: 0,
-    mwM: 0,
+    explosion: 0,
     behavior: BEHAVIOR.__NO__,
     MWv: 0,
     subtype: [],
@@ -23394,7 +23394,7 @@ var items = [{
     particles: -1,
     draw: Render.furniture
 }, {
-    id: item.tomatosoup,
+    id: IID.tomatosoup,
     img: {
         src: ["img/inv-tomato-soup-out.png", "img/inv-tomato-soup-in.png", "img/inv-tomato-soup-click.png"],
         W: [{
@@ -23406,8 +23406,8 @@ var items = [{
         }]
     },
     detail: new vn("Tomato Soup", "Has not yet been opened.", SKILLS.__SURVIVAL__, [
-        [item.can, 1],
-        [item.tomato, 2]
+        [IID.can, 1],
+        [IID.tomato, 2]
     ], 1, [
         [AREAS.firepart, 15000],
         [AREAS.bbq, 7000]
@@ -23416,10 +23416,10 @@ var items = [{
     stack: 5,
     loot: Mv.tomatosoup,
     vWVMV: 2,
-    nNmmM: item.can,
+    nNmmM: IID.can,
     wait: 10
 }, {
-    id: item.syringe,
+    id: IID.syringe,
     img: {
         src: ["img/inv-syringe-out.png", "img/inv-syringe-in.png", "img/inv-syringe-click.png"],
         W: [{
@@ -23431,7 +23431,7 @@ var items = [{
         }]
     },
     detail: new vn("Syringe", "Useful to make drugs.", SKILLS.__DRUG__, [
-        [item.junk, 1]
+        [IID.junk, 1]
     ], 1, [
         [AREAS.researchbench, 30000]
     ]),
@@ -23439,7 +23439,7 @@ var items = [{
     loot: Mv.syringe,
     score: 50
 }, {
-    id: item.chemicalcomponent,
+    id: IID.chemicalcomponent,
     img: {
         src: ["img/inv-chemical-component-out.png", "img/inv-chemical-component-in.png", "img/inv-chemical-component-click.png"],
         W: [{
@@ -23455,7 +23455,7 @@ var items = [{
     loot: Mv.chemicalcomponent,
     score: 50
 }, {
-    id: item.radway,
+    id: IID.radway,
     img: {
         src: ["img/inv-radaway-out.png", "img/inv-radaway-in.png", "img/inv-radaway-click.png"],
         W: [{
@@ -23467,9 +23467,9 @@ var items = [{
         }]
     },
     detail: new vn("RadAway", "Reduce your radioactivity a lot.", SKILLS.__DRUG__, [
-        [item.syringe, 1],
-        [item.chemicalcomponent, 1],
-        [item.mushroom2, 1]
+        [IID.syringe, 1],
+        [IID.chemicalcomponent, 1],
+        [IID.mushroom2, 1]
     ], 1, [
         [AREAS.agitator, 45000]
     ]),
@@ -23478,7 +23478,7 @@ var items = [{
     loot: Mv.radway,
     wait: 10
 }, {
-    id: item.tomatoseed,
+    id: IID.tomatoseed,
     img: {
         src: ["img/inv-tomato-seed-out.png", "img/inv-tomato-seed-in.png", "img/inv-tomato-seed-click.png"],
         W: [{
@@ -23490,7 +23490,7 @@ var items = [{
         }]
     },
     detail: new vn("Tomato Seed", "A fruit or vegetable?", SKILLS.__PLANT__, [
-        [item.tomato, 4]
+        [IID.tomato, 4]
     ], 1, [
         [AREAS.firepart, 30000],
         [AREAS.bbq, 20000]
@@ -23523,12 +23523,12 @@ var items = [{
         }
     },
     door: 0,
-    mwM: 0,
+    explosion: 0,
     behavior: BEHAVIOR.__SEED__,
     MWv: 0,
     subtype: 0,
     MMN: 0,
-    WnW: 0,
+    areaEffect: 0,
     draw: Render.orangeSeed,
     impact: SOUNDID.VNv,
     destroyaudio: SOUNDID.VNv,
@@ -23564,7 +23564,7 @@ var items = [{
     life: 250,
     score: 0
 }, {
-    id: item.tomato,
+    id: IID.tomato,
     img: {
         src: ["img/inv-tomato-out.png", "img/inv-tomato-in.png", "img/inv-tomato-click.png"],
         W: [{
@@ -23580,11 +23580,11 @@ var items = [{
     loot: Mv.tomato,
     wait: 5,
     vWVMV: 10,
-    nNmmM: item.rottentomato,
+    nNmmM: IID.rottentomato,
     mnw: 27,     
     score: 24
 }, {
-    id: item.rottentomato,
+    id: IID.rottentomato,
     img: {
         src: ["img/inv-rotten-tomato-out.png", "img/inv-rotten-tomato-in.png", "img/inv-rotten-tomato-click.png"],
         W: [{
@@ -23602,7 +23602,7 @@ var items = [{
     mnw: 28,     
     score: 20
 }, {
-    id: item.can,
+    id: IID.can,
     img: {
         src: ["img/inv-can-out.png", "img/inv-can-in.png", "img/inv-can-click.png"],
         W: [{
@@ -23614,7 +23614,7 @@ var items = [{
         }]
     },
     detail: new vn("Can", "Useful to craft food can.", SKILLS.__SURVIVAL__, [
-        [item.shapedmetal, 1]
+        [IID.shapedmetal, 1]
     ], 1, [
         [AREAS.workbench, 20000]
     ]),
@@ -23622,7 +23622,7 @@ var items = [{
     stack: 255,
     loot: Mv.can
 }, {
-    id: item.crossbow,
+    id: IID.crossbow,
     img: {
         src: ["img/inv-wood-crossbow-out.png", "img/inv-wood-crossbow-in.png", "img/inv-wood-crossbow-click.png"],
         W: [{
@@ -23634,19 +23634,19 @@ var items = [{
         }]
     },
     detail: new vn("Wood Crossbow", "Shoot faster, reload slower", SKILLS.__WEAPON__, [
-        [item.wood, 200],
-        [item.string, 2],
-        [item.shapedmetal, 1]
+        [IID.wood, 200],
+        [IID.string, 2],
+        [IID.shapedmetal, 1]
     ], 1, [
         [AREAS.workbench, 50000]
     ], 6),
     mnw: 29,     
-    vMv: item.crossarrow,
+    vMv: IID.crossarrow,
     stack: 1,
     loot: Mv.crossbow,
     wait: 10
 }, {
-    id: item.crossarrow,
+    id: IID.crossarrow,
     img: {
         src: ["img/inv-wood-crossarrow-out.png", "img/inv-wood-crossarrow-in.png", "img/inv-wood-crossarrow-click.png"],
         W: [{
@@ -23658,15 +23658,15 @@ var items = [{
         }]
     },
     detail: new vn("Crossbow Arrows", "Needed to use crossbow.", SKILLS.__WEAPON__, [
-        [item.wood, 40],
-        [item.shapedmetal, 1]
+        [IID.wood, 40],
+        [IID.shapedmetal, 1]
     ], 10, [
         [AREAS.workbench, 30000]
     ]),
     stack: 255,
     loot: Mv.crossarrow
 }, {
-    id: item.nailgun,
+    id: IID.nailgun,
     img: {
         src: ["img/inv-nail-gun-out.png", "img/inv-nail-gun-in.png", "img/inv-nail-gun-click.png"],
         W: [{
@@ -23678,20 +23678,20 @@ var items = [{
         }]
     },
     detail: new vn("Nail Gun", "Repair walls from a distance", SKILLS.__TOOL__, [
-        [item.shapedmetal, 3],
-        [item.smallwire, 1],
-        [item.junk, 1],
-        [item.energycell, 4]
+        [IID.shapedmetal, 3],
+        [IID.smallwire, 1],
+        [IID.junk, 1],
+        [IID.energycell, 4]
     ], 1, [
         [AREAS.researchbench, 30000]
     ], 7),
     mnw: 30,     
-    vMv: item.nails,
+    vMv: IID.nails,
     stack: 1,
     loot: Mv.nailgun,
     wait: 10
 }, {
-    id: item.sawedoff,
+    id: IID.sawedoff,
     img: {
         src: ["img/inv-sawed-off-shotgun-out.png", "img/inv-sawed-off-shotgun-in.png", "img/inv-sawed-off-shotgun-click.png"],
         W: [{
@@ -23703,19 +23703,19 @@ var items = [{
         }]
     },
     detail: new vn("Sawed Off", "Shoot less far, do more damages", SKILLS.__WEAPON__, [
-        [item.shotgun, 1],
-        [item.alloys, 6],
-        [item.shapedmetal, 6]
+        [IID.shotgun, 1],
+        [IID.alloys, 6],
+        [IID.shapedmetal, 6]
     ], 1, [
         [AREAS.researchbench, 200000]
-    ], 13, item.shotgun),
+    ], 13, IID.shotgun),
     mnw: 31,     
-    vMv: item.bulletshotgun,
+    vMv: IID.bulletshotgun,
     stack: 1,
     loot: Mv.sawedoff,
     wait: 10
 }, {
-    id: item.stonefloor1,
+    id: IID.stonefloor1,
     img: {
         src: ["img/inv-stone-floor-out.png", "img/inv-stone-floor-in.png", "img/inv-stone-floor-click.png"],
         W: [{
@@ -23727,7 +23727,7 @@ var items = [{
         }]
     },
     detail: new vn("Stone floor", "Players can't spawn on it", SKILLS.__BUILDING__, [
-        [item.stone, 15]
+        [IID.stone, 15]
     ], 2, [
         [AREAS.workbench, 15000]
     ], 4),
@@ -23758,16 +23758,16 @@ var items = [{
         }
     },
     wall: 1,
-    vVwVM: item.stonefloor1,
+    vVwVM: IID.stonefloor1,
     lowWall: 0,
     door: 0,
     broke: 1,
-    mwM: 0,
+    explosion: 0,
     behavior: BEHAVIOR.__NO__,
     MWv: 0,
     subtype: 0,
     MMN: 0,
-    WnW: 0,
+    areaEffect: 0,
     draw: Render.groundFloor,
     WVW: [{
         src: "img/day-stone-floor-broken0.png",
@@ -24029,7 +24029,7 @@ var items = [{
     life: 8000,
     score: 0
 }, {
-    id: item.stonefloor2,
+    id: IID.stonefloor2,
     img: {
         src: ["img/inv-tiling-floor-out.png", "img/inv-tiling-floor-in.png", "img/inv-tiling-floor-click.png"],
         W: [{
@@ -24041,7 +24041,7 @@ var items = [{
         }]
     },
     detail: new vn("Tiling floor", "Players can't spawn on it", SKILLS.__BUILDING__, [
-        [item.stone, 15]
+        [IID.stone, 15]
     ], 2, [
         [AREAS.workbench, 15000]
     ], 4),
@@ -24072,16 +24072,16 @@ var items = [{
         }
     },
     wall: 1,
-    vVwVM: item.stonefloor2,
+    vVwVM: IID.stonefloor2,
     lowWall: 0,
     door: 0,
     broke: 1,
-    mwM: 0,
+    explosion: 0,
     behavior: BEHAVIOR.__NO__,
     MWv: 0,
     subtype: 0,
     MMN: 0,
-    WnW: 0,
+    areaEffect: 0,
     draw: Render.groundFloor,
     WVW: [{
         src: "img/day-tiling-floor-broken0.png",
@@ -24343,7 +24343,7 @@ var items = [{
     life: 8000,
     score: 0
 }, {
-    id: item.NvMvM,
+    id: IID.NvMvM,
     WvV: 0,
     xCenter: [0, 0, 0, 0],
     yCenter: [0, 0, 0, 0],
@@ -24351,7 +24351,7 @@ var items = [{
     lowWall: 0,
     door: 0,
     broke: 0,
-    mwM: 0,
+    explosion: 0,
     behavior: BEHAVIOR.__NO__,
     MWv: 0,
     subtype: [],
@@ -24362,7 +24362,7 @@ var items = [{
     particles: -1,
     draw: Render.road
 }, {
-    id: item.chips,
+    id: IID.chips,
     img: {
         src: ["img/inv-chips-out.png", "img/inv-chips-in.png", "img/inv-chips-click.png"],
         W: [{
@@ -24378,10 +24378,10 @@ var items = [{
     stack: 5,
     loot: Mv.chips,
     vWVMV: 2,
-    nNmmM: item.rottenchips,
+    nNmmM: IID.rottenchips,
     wait: 10
 }, {
-    id: item.rottenchips,
+    id: IID.rottenchips,
     img: {
         src: ["img/inv-rotten-chips-out.png", "img/inv-rotten-chips-in.png", "img/inv-rotten-chips-click.png"],
         W: [{
@@ -24399,7 +24399,7 @@ var items = [{
     mnw: 33,     
     score: 20
 }, {
-    id: item.electronicpart,
+    id: IID.electronicpart,
     img: {
         src: ["img/inv-electronic-part-out.png", "img/inv-electronic-part-in.png", "img/inv-electronic-part-click.png"],
         W: [{
@@ -24415,7 +24415,7 @@ var items = [{
     loot: Mv.electronicpart,
     score: 100
 }, {
-    id: item.junk,
+    id: IID.junk,
     img: {
         src: ["img/inv-junk-out.png", "img/inv-junk-in.png", "img/inv-junk-click.png"],
         W: [{
@@ -24431,7 +24431,7 @@ var items = [{
     loot: Mv.junk,
     score: 40
 }, {
-    id: item.wires,
+    id: IID.wires,
     img: {
         src: ["img/inv-wires-out.png", "img/inv-wires-in.png", "img/inv-wires-click.png"],
         W: [{
@@ -24447,7 +24447,7 @@ var items = [{
     loot: Mv.wires,
     score: 40
 }, {
-    id: item.energycell,
+    id: IID.energycell,
     img: {
         src: ["img/inv-small-energy-cells-out.png", "img/inv-small-energy-cells-in.png", "img/inv-small-energy-cells-click.png"],
         W: [{
@@ -24459,15 +24459,15 @@ var items = [{
         }]
     },
     detail: new vn("Energy Cells", "Used for energy weapons/buildings", SKILLS.__SURVIVAL__, [
-        [item.alloys, 1],
-        [item.shapeduranium, 1]
+        [IID.alloys, 1],
+        [IID.shapeduranium, 1]
     ], 30, [
         [AREAS.teslabench, 28000]
     ], 6),
     stack: 255,
     loot: Mv.energycell
 }, {
-    id: item.laserpistol,
+    id: IID.laserpistol,
     img: {
         src: ["img/inv-laser-pistol-out.png", "img/inv-laser-pistol-in.png", "img/inv-laser-pistol-click.png"],
         W: [{
@@ -24479,21 +24479,21 @@ var items = [{
         }]
     },
     detail: new vn("Laser Pistol", "Bullets are faster.", SKILLS.__WEAPON__, [
-        [item.shapeduranium, 2],
-        [item.wires, 1],
-        [item.electronicpart, 2],
-        [item.alloys, 1],
-        [item.shapedmetal, 4]
+        [IID.shapeduranium, 2],
+        [IID.wires, 1],
+        [IID.electronicpart, 2],
+        [IID.alloys, 1],
+        [IID.shapedmetal, 4]
     ], 1, [
         [AREAS.teslabench, 180000]
     ], 14),
     mnw: 34,     
-    vMv: item.energycell,
+    vMv: IID.energycell,
     stack: 1,
     loot: Mv.laserpistol,
     wait: 10
 }, {
-    id: item.teslabench,
+    id: IID.teslabench,
     img: {
         src: ["img/inv-workbench3-out.png", "img/inv-workbench3-in.png", "img/inv-workbench3-click.png"],
         W: [{
@@ -24505,14 +24505,14 @@ var items = [{
         }]
     },
     detail: new vn("Tesla Bench", "Allow you to make powerful items", SKILLS.__SURVIVAL__, [
-        [item.alloys, 4],
-        [item.shapedmetal, 6],
-        [item.electronicpart, 3],
-        [item.wires, 4],
-        [item.shapeduranium, 2]
+        [IID.alloys, 4],
+        [IID.shapedmetal, 6],
+        [IID.electronicpart, 3],
+        [IID.wires, 4],
+        [IID.shapeduranium, 2]
     ], 1, [
         [AREAS.researchbench, 120000]
-    ], 10, item.researchbench),
+    ], 10, IID.researchbench),
     mnw: 21,     
     fuel: 60000,
     WvV: 0,
@@ -24548,12 +24548,12 @@ var items = [{
     lowWall: 0,
     door: 0,
     broke: 0,
-    mwM: 0,
+    explosion: 0,
     behavior: BEHAVIOR.__AI_CONSTRUCTOR__,
     MWv: 0,
     subtype: 0,
     MMN: 1,
-    WnW: 0,
+    areaEffect: 0,
     draw: Render.teslaBench,
     packetId: 16,
     wwN: {
@@ -24585,7 +24585,7 @@ var items = [{
             isLoaded: 0
         }
     }],
-    mMW: [{
+    light: [{
         src: "img/day-tesla-light0.png",
         W: {
             isLoaded: 0
@@ -24622,7 +24622,7 @@ var items = [{
     life: 3000,
     score: 0
 }, {
-    id: item.alloys,
+    id: IID.alloys,
     img: {
         src: ["img/inv-alloys-out.png", "img/inv-alloys-in.png", "img/inv-alloys-click.png"],
         W: [{
@@ -24634,16 +24634,16 @@ var items = [{
         }]
     },
     detail: new vn("Alloys", "To craft powerful items", SKILLS.__MINERAL__, [
-        [item.steel, 1],
-        [item.junk, 1],
-        [item.sulfur, 1]
+        [IID.steel, 1],
+        [IID.junk, 1],
+        [IID.sulfur, 1]
     ], 1, [
         [AREAS.smelter, 10000]
     ]),
     stack: 255,
     loot: Mv.alloys
 }, {
-    id: item.sulfuraxe,
+    id: IID.sulfuraxe,
     img: {
         src: ["img/inv-sulfur-axe-out.png", "img/inv-sulfur-axe-in.png", "img/inv-sulfur-axe-click.png"],
         W: [{
@@ -24655,19 +24655,19 @@ var items = [{
         }]
     },
     detail: new vn("Sulfur Axe", "You look cool with it.", SKILLS.__TOOL__, [
-        [item.stoneaxe, 1],
-        [item.alloys, 8],
-        [item.shapedmetal, 10],
-        [item.sulfur, 20]
+        [IID.stoneaxe, 1],
+        [IID.alloys, 8],
+        [IID.shapedmetal, 10],
+        [IID.sulfur, 20]
     ], 1, [
         [AREAS.researchbench, 200000]
-    ], 10, item.stoneaxe),
+    ], 10, IID.stoneaxe),
     mnw: 35,     
     stack: 1,
     loot: Mv.sulfuraxe,
     wait: 10
 }, {
-    id: item.landmine,
+    id: IID.landmine,
     img: {
         src: ["img/inv-landmine-out.png", "img/inv-landmine-in.png", "img/inv-landmine-click.png"],
         W: [{
@@ -24679,10 +24679,10 @@ var items = [{
         }]
     },
     detail: new vn("Landmine", "When you feel it, it's too late", SKILLS.__WEAPON__, [
-        [item.shapedmetal, 4],
-        [item.junk, 1],
-        [item.sulfur, 2],
-        [item.animalfat, 2]
+        [IID.shapedmetal, 4],
+        [IID.junk, 1],
+        [IID.sulfur, 2],
+        [IID.animalfat, 2]
     ], 1, [
         [AREAS.researchbench, 40000]
     ], 9),
@@ -24713,14 +24713,14 @@ var items = [{
         }
     },
     door: 0,
-    mwM: 1,
+    explosion: 1,
     behavior: BEHAVIOR.__NO__,
     MWv: 0,
     subtype: 0,
     MMN: 0,
     damage: 200,
-    WWv: 400,
-    WnW: 0,
+    damageBuilding: 400,
+    areaEffect: 0,
     draw: Render.landmine,   //visible before - draw: Render.landmine
     impact: SOUNDID.metal,
     destroyaudio: SOUNDID.metaldes,
@@ -24746,7 +24746,7 @@ var items = [{
     life: 5,
     score: 0
 }, {
-    id: item.dynamite,
+    id: IID.dynamite,
     img: {
         src: ["img/inv-dynamite-out.png", "img/inv-dynamite-in.png", "img/inv-dynamite-click.png"],
         W: [{
@@ -24758,10 +24758,10 @@ var items = [{
         }]
     },
     detail: new vn("Dynamite", "Get out of here, it gonna blow!", SKILLS.__WEAPON__, [
-        [item.string, 1],
-        [item.animalfat, 2],
-        [item.sulfur, 2],
-        [item.junk, 1]
+        [IID.string, 1],
+        [IID.animalfat, 2],
+        [IID.sulfur, 2],
+        [IID.junk, 1]
     ], 1, [
         [AREAS.researchbench, 40000]
     ], 9),
@@ -24792,14 +24792,14 @@ var items = [{
         }
     },
     door: 0,
-    mwM: 1,
+    explosion: 1,
     behavior: BEHAVIOR.__NO__,
     MWv: 0,
     subtype: 0,
     MMN: 0,
     damage: 180,
-    WWv: 1400,
-    WnW: 0,
+    damageBuilding: 1400,
+    areaEffect: 0,
     draw: Render.dynamite,
     impact: SOUNDID.pillow,
     destroyaudio: SOUNDID.VNv,
@@ -24820,7 +24820,7 @@ var items = [{
     life: 100,
     score: 0
 }, {
-    id: item.c4bomb,
+    id: IID.c4bomb,
     img: {
         src: ["img/inv-C4-out.png", "img/inv-C4-in.png", "img/inv-C4-click.png"],
         W: [{
@@ -24832,13 +24832,13 @@ var items = [{
         }]
     },
     detail: new vn("C4", "Explode when you hit the trigger!", SKILLS.__WEAPON__, [
-        [item.dynamite, 2],
-        [item.smallwire, 1],
-        [item.alloys, 2],
-        [item.electronicpart, 1]
+        [IID.dynamite, 2],
+        [IID.smallwire, 1],
+        [IID.alloys, 2],
+        [IID.electronicpart, 1]
     ], 1, [
         [AREAS.researchbench, 60000]
-    ], 16, item.dynamite),
+    ], 16, IID.dynamite),
     stack: 5,
     loot: Mv.c4bomb,
     wait: 10,
@@ -24866,14 +24866,14 @@ var items = [{
         }
     },
     door: 0,
-    mwM: 1,
+    explosion: 1,
     behavior: BEHAVIOR.__NO__,
     MWv: 0,
     subtype: 0,
     damage: 255,
-    WWv: 6000,
+    damageBuilding: 6000,
     MMN: 0,
-    WnW: 0,
+    areaEffect: 0,
     draw: Render.dynamite,
     impact: SOUNDID.pillow,
     destroyaudio: SOUNDID.VNv,
@@ -24894,7 +24894,7 @@ var items = [{
     life: 100,
     score: 0
 }, {
-    id: item.joystic,
+    id: IID.joystic,
     img: {
         src: ["img/inv-joystick-out.png", "img/inv-joystick-in.png", "img/inv-joystick-click.png"],
         W: [{
@@ -24906,20 +24906,20 @@ var items = [{
         }]
     },
     detail: new vn("C4 Trigger", "Don't press the button or else...", SKILLS.__WEAPON__, [
-        [item.shapedmetal, 5],
-        [item.electronicpart, 1],
-        [item.energycell, 8],
-        [item.smallwire, 1]
+        [IID.shapedmetal, 5],
+        [IID.electronicpart, 1],
+        [IID.energycell, 8],
+        [IID.smallwire, 1]
     ], 1, [
         [AREAS.researchbench, 100000]
-    ], 16, item.c4bomb),
+    ], 16, IID.c4bomb),
     stack: 1,
     loot: Mv.joystic,
     wait: 10,
     mnw: 36,     
     score: 0
 }, {
-    id: item.composter,
+    id: IID.composter,
     img: {
         src: ["img/inv-composter-out.png", "img/inv-composter-in.png", "img/inv-composter-click.png"],
         W: [{
@@ -24931,8 +24931,8 @@ var items = [{
         }]
     },
     detail: new vn("Compost", "Allows to accelerate rotting", SKILLS.__SURVIVAL__, [
-        [item.shapedmetal, 4],
-        [item.electronicpart, 1]
+        [IID.shapedmetal, 4],
+        [IID.electronicpart, 1]
     ], 1, [
         [AREAS.researchbench, 100000]
     ], 8),
@@ -24967,12 +24967,12 @@ var items = [{
     lowWall: 0,
     door: 0,
     broke: 0,
-    mwM: 0,
+    explosion: 0,
     behavior: BEHAVIOR.__NO__,
     MWv: 0,
     subtype: 0,
     MMN: 1,
-    WnW: 0,
+    areaEffect: 0,
     draw: Render.compost,
     packetId: 16,
     wwN: {
@@ -25000,7 +25000,7 @@ var items = [{
     life: 500,
     score: 0
 }, {
-    id: item.metalhelmet,
+    id: IID.metalhelmet,
     img: {
         src: ["img/inv-metal-helmet-out.png", "img/inv-metal-helmet-in.png", "img/inv-metal-helmet-click.png"],
         W: [{
@@ -25012,10 +25012,10 @@ var items = [{
         }]
     },
     detail: new vn("Metal Helmet", "Protects you from melee weapons", SKILLS.__CLOTHE__, [
-        [item.shapedmetal, 3],
-        [item.animaltendon, 3],
-        [item.leather, 3],
-        [item.nails, 80]
+        [IID.shapedmetal, 3],
+        [IID.animaltendon, 3],
+        [IID.leather, 3],
+        [IID.nails, 80]
     ], 1, [
         [AREAS.workbench, 70000]
     ]),
@@ -25031,7 +25031,7 @@ var items = [{
     rad: 0,
     speed: -0.01
 }, {
-    id: item.weldinghelmet,
+    id: IID.weldinghelmet,
     img: {
         src: ["img/inv-welding-helmet-out.png", "img/inv-welding-helmet-in.png", "img/inv-welding-helmet-click.png"],
         W: [{
@@ -25043,11 +25043,11 @@ var items = [{
         }]
     },
     detail: new vn("Welding Helmet", "Protects you from melee weapons", SKILLS.__CLOTHE__, [
-        [item.shapedmetal, 10],
-        [item.alloys, 2],
-        [item.leather, 3],
-        [item.nails, 160],
-        [item.metalhelmet, 1]
+        [IID.shapedmetal, 10],
+        [IID.alloys, 2],
+        [IID.leather, 3],
+        [IID.nails, 160],
+        [IID.metalhelmet, 1]
     ], 1, [
         [AREAS.researchbench, 140000]
     ], 7),
@@ -25063,7 +25063,7 @@ var items = [{
     rad: 0,
     speed: -0.02
 }, {
-    id: item.gladiatorhelmet,
+    id: IID.gladiatorhelmet,
     img: {
         src: ["img/inv-gladiator-helmet-out.png", "img/inv-gladiator-helmet-in.png", "img/inv-gladiator-helmet-click.png"],
         W: [{
@@ -25075,14 +25075,14 @@ var items = [{
         }]
     },
     detail: new vn("Gladiator Helmet", "Strength and honor.", SKILLS.__CLOTHE__, [
-        [item.shapedmetal, 12],
-        [item.alloys, 6],
-        [item.leather, 4],
-        [item.nails, 255],
-        [item.weldinghelmet, 1]
+        [IID.shapedmetal, 12],
+        [IID.alloys, 6],
+        [IID.leather, 4],
+        [IID.nails, 255],
+        [IID.weldinghelmet, 1]
     ], 1, [
         [AREAS.researchbench, 300000]
-    ], 17, item.weldinghelmet),
+    ], 17, IID.weldinghelmet),
     nwm: 9,
     stack: 1,
     loot: Mv.gladiatorhelmet,
@@ -25095,7 +25095,7 @@ var items = [{
     rad: 0,
     speed: -0.03
 }, {
-    id: item.leatherjacket,
+    id: IID.leatherjacket,
     img: {
         src: ["img/inv-leather-jacket-out.png", "img/inv-leather-jacket-in.png", "img/inv-leather-jacket-click.png"],
         W: [{
@@ -25107,8 +25107,8 @@ var items = [{
         }]
     },
     detail: new vn("Leather Jacket", "Protects you from guns", SKILLS.__CLOTHE__, [
-        [item.string, 2],
-        [item.leather, 4]
+        [IID.string, 2],
+        [IID.leather, 4]
     ], 1, [
         [AREAS.weavingmachine, 70000]
     ]),
@@ -25124,7 +25124,7 @@ var items = [{
     rad: 0,
     speed: 0
 }, {
-    id: item.kevlarsuit,
+    id: IID.kevlarsuit,
     img: {
         src: ["img/inv-kevlar-suit-out.png", "img/inv-kevlar-suit-in.png", "img/inv-kevlar-suit-click.png"],
         W: [{
@@ -25136,11 +25136,11 @@ var items = [{
         }]
     },
     detail: new vn("Kevlar Suit", "Protects you from guns", SKILLS.__CLOTHE__, [
-        [item.shapedmetal, 6],
-        [item.string, 4],
-        [item.leather, 6],
-        [item.alloys, 2],
-        [item.leatherjacket, 1]
+        [IID.shapedmetal, 6],
+        [IID.string, 4],
+        [IID.leather, 6],
+        [IID.alloys, 2],
+        [IID.leatherjacket, 1]
     ], 1, [
         [AREAS.weavingmachine, 100000]
     ], 12),
@@ -25156,7 +25156,7 @@ var items = [{
     rad: 0,
     speed: 0
 }, {
-    id: item.SWATsuit,
+    id: IID.SWATsuit,
     img: {
         src: ["img/inv-SWAT-suit-out.png", "img/inv-SWAT-suit-in.png", "img/inv-SWAT-suit-click.png"],
         W: [{
@@ -25168,14 +25168,14 @@ var items = [{
         }]
     },
     detail: new vn("SWAT Suit", "Protects you from guns", SKILLS.__CLOTHE__, [
-        [item.shapedmetal, 10],
-        [item.string, 10],
-        [item.leather, 10],
-        [item.alloys, 4],
-        [item.kevlarsuit, 1]
+        [IID.shapedmetal, 10],
+        [IID.string, 10],
+        [IID.leather, 10],
+        [IID.alloys, 4],
+        [IID.kevlarsuit, 1]
     ], 1, [
         [AREAS.weavingmachine, 200000]
-    ], 18, item.kevlarsuit),
+    ], 18, IID.kevlarsuit),
     nwm: 12,
     stack: 1,
     loot: Mv.SWATsuit,
@@ -25188,7 +25188,7 @@ var items = [{
     rad: 0,
     speed: -0.01
 }, {
-    id: item.protectivesuit,
+    id: IID.protectivesuit,
     img: {
         src: ["img/inv-protective-suit-out.png", "img/inv-protective-suit-in.png", "img/inv-protective-suit-click.png"],
         W: [{
@@ -25200,13 +25200,13 @@ var items = [{
         }]
     },
     detail: new vn("Protective Suit", "Protects you from explosives", SKILLS.__CLOTHE__, [
-        [item.shapedmetal, 6],
-        [item.string, 6],
-        [item.leather, 6],
-        [item.alloys, 2]
+        [IID.shapedmetal, 6],
+        [IID.string, 6],
+        [IID.leather, 6],
+        [IID.alloys, 2]
     ], 1, [
         [AREAS.weavingmachine, 200000]
-    ], 12, item.lightweightskill),
+    ], 12, IID.lightweightskill),
     nwm: 13,
     stack: 1,
     loot: Mv.protectivesuit,
@@ -25219,7 +25219,7 @@ var items = [{
     rad: 0,
     speed: -0.03
 }, {
-    id: item.tesla1,
+    id: IID.tesla1,
     img: {
         src: ["img/inv-tesla-0-out.png", "img/inv-tesla-0-in.png", "img/inv-tesla-0-click.png"],
         W: [{
@@ -25231,11 +25231,11 @@ var items = [{
         }]
     },
     detail: new vn("Power Armor", "Protects you from energy weapons", SKILLS.__CLOTHE__, [
-        [item.shapedmetal, 20],
-        [item.shapeduranium, 2],
-        [item.electronicpart, 1],
-        [item.wires, 2],
-        [item.alloys, 2]
+        [IID.shapedmetal, 20],
+        [IID.shapeduranium, 2],
+        [IID.electronicpart, 1],
+        [IID.wires, 2],
+        [IID.alloys, 2]
     ], 1, [
         [AREAS.teslabench, 150000]
     ], 10),
@@ -25251,7 +25251,7 @@ var items = [{
     rad: 0,
     speed: 0
 }, {
-    id: item.tesla2,
+    id: IID.tesla2,
     img: {
         src: ["img/inv-tesla-armor-out.png", "img/inv-tesla-armor-in.png", "img/inv-tesla-armor-click.png"],
         W: [{
@@ -25263,14 +25263,14 @@ var items = [{
         }]
     },
     detail: new vn("Tesla Armor", "Protects you from energy weapons", SKILLS.__CLOTHE__, [
-        [item.tesla1, 1],
-        [item.shapeduranium, 10],
-        [item.electronicpart, 5],
-        [item.wires, 5],
-        [item.alloys, 10]
+        [IID.tesla1, 1],
+        [IID.shapeduranium, 10],
+        [IID.electronicpart, 5],
+        [IID.wires, 5],
+        [IID.alloys, 10]
     ], 1, [
         [AREAS.teslabench, 300000]
-    ], 18, item.tesla1, 3),
+    ], 18, IID.tesla1, 3),
     nwm: 15,
     stack: 1,
     loot: Mv.tesla2,
@@ -25283,7 +25283,7 @@ var items = [{
     rad: 0.01,
     speed: -0.02
 }, {
-    id: item.woodespike,
+    id: IID.woodespike,
     img: {
         src: ["img/inv-wood-spike-out.png", "img/inv-wood-spike-in.png", "img/inv-wood-spike-click.png"],
         W: [{
@@ -25295,7 +25295,7 @@ var items = [{
         }]
     },
     detail: new vn("Wooden Spike", "Hurt and slow down", SKILLS.__BUILDING__, [
-        [item.wood, 80]
+        [IID.wood, 80]
     ], 1, [
         [AREAS.workbench, 25000]
     ]),
@@ -25326,12 +25326,12 @@ var items = [{
         }
     },
     door: 0,
-    mwM: 0,
+    explosion: 0,
     behavior: BEHAVIOR.__NO__,
     MWv: 0,
     subtype: 0,
     MMN: 0,
-    WnW: 0,
+    areaEffect: 0,
     draw: Render.spike,
     hidden: [{
         src: "img/day-wood-spike-cover1.png",
@@ -25371,7 +25371,7 @@ var items = [{
     life: 200,
     score: 0
 }, {
-    id: item.lasersubmachine,
+    id: IID.lasersubmachine,
     img: {
         src: ["img/inv-laser-submachine-out.png", "img/inv-laser-submachine-in.png", "img/inv-laser-submachine-click.png"],
         W: [{
@@ -25383,21 +25383,21 @@ var items = [{
         }]
     },
     detail: new vn("Laser Submachine", "It's the best weapon", SKILLS.__WEAPON__, [
-        [item.alloys, 10],
-        [item.shapedmetal, 6],
-        [item.shapeduranium, 6],
-        [item.wires, 2],
-        [item.electronicpart, 3]
+        [IID.alloys, 10],
+        [IID.shapedmetal, 6],
+        [IID.shapeduranium, 6],
+        [IID.wires, 2],
+        [IID.electronicpart, 3]
     ], 1, [
         [AREAS.teslabench, 180000]
-    ], 14, item.laserpistol, 2),
+    ], 14, IID.laserpistol, 2),
     mnw: 37,     
-    vMv: item.energycell,
+    vMv: IID.energycell,
     stack: 1,
     loot: Mv.lasersubmachine,
     wait: 10
 }, {
-    id: item.granade,
+    id: IID.granade,
     img: {
         src: ["img/inv-grenade-out.png", "img/inv-grenade-in.png", "img/inv-grenade-click.png"],
         W: [{
@@ -25409,21 +25409,21 @@ var items = [{
         }]
     },
     detail: new vn("Grenade", "Explodes when you throw it away.", SKILLS.__WEAPON__, [
-        [item.shapedmetal, 2],
-        [item.junk, 2],
-        [item.sulfur, 2],
-        [item.animalfat, 2]
+        [IID.shapedmetal, 2],
+        [IID.junk, 2],
+        [IID.sulfur, 2],
+        [IID.animalfat, 2]
     ], 2, [
         [AREAS.researchbench, 30000]
     ], 10),
     mnw: 38,     
     damage: 130,
-    WWv: 400,
+    damageBuilding: 400,
     stack: 10,
     loot: Mv.granade,
     wait: 10
 }, {
-    id: item.superhammer,
+    id: IID.superhammer,
     img: {
         src: ["img/inv-super-hammer-out.png", "img/inv-super-hammer-in.png", "img/inv-super-hammer-click.png"],
         W: [{
@@ -25440,7 +25440,7 @@ var items = [{
     loot: Mv.superhammer,
     wait: 10
 }, {
-    id: item.ghoulblood,
+    id: IID.ghoulblood,
     img: {
         src: ["img/inv-ghoul-blood-out.png", "img/inv-ghoul-blood-in.png", "img/inv-ghoul-blood-click.png"],
         W: [{
@@ -25458,7 +25458,7 @@ var items = [{
 }, 
 
 {
-    id: item.camouflage,
+    id: IID.camouflage,
     img: {
         src: ["img/inv-camouflage-gear-out.png", "img/inv-camouflage-gear-in.png", "img/inv-camouflage-gear-click.png"],
         W: [{
@@ -25470,9 +25470,9 @@ var items = [{
         }]
     },
     detail: new vn("Camouflage Gear", "Hide you in the forest", SKILLS.__CLOTHE__, [
-        [item.wood, 90],
-        [item.string, 2],
-        [item.leather, 2]
+        [IID.wood, 90],
+        [IID.string, 2],
+        [IID.leather, 2]
     ], 1, [
         [AREAS.weavingmachine, 40000]
     ]),
@@ -25490,7 +25490,7 @@ var items = [{
 },
 
 {
-    id: item.agitator,
+    id: IID.agitator,
     img: {
         src: ["img/inv-agitator-out.png", "img/inv-agitator-in.png", "img/inv-agitator-click.png"],
         W: [{
@@ -25502,8 +25502,8 @@ var items = [{
         }]
     },
     detail: new vn("Agitator", "Allows to craft drugs", SKILLS.__SURVIVAL__, [
-        [item.shapedmetal, 6],
-        [item.electronicpart, 1]
+        [IID.shapedmetal, 6],
+        [IID.electronicpart, 1]
     ], 1, [
         [AREAS.researchbench, 100000]
     ], 8),
@@ -25538,12 +25538,12 @@ var items = [{
     lowWall: 0,
     door: 0,
     broke: 0,
-    mwM: 0,
+    explosion: 0,
     behavior: BEHAVIOR.__NO__,
     MWv: 0,
     subtype: 0,
     MMN: 1,
-    WnW: 0,
+    areaEffect: 0,
     draw: Render.agitator,
     packetId: 16,
     wwN: {
@@ -25587,7 +25587,7 @@ var items = [{
     life: 500,
     score: 0
 }, {
-    id: item.ghouldrug,
+    id: IID.ghouldrug,
     img: {
         src: ["img/inv-ghoul-drug-out.png", "img/inv-ghoul-drug-in.png", "img/inv-ghoul-drug-click.png"],
         W: [{
@@ -25599,11 +25599,11 @@ var items = [{
         }]
     },
     detail: new vn("Ghoul Drug", "Ghouls does not attack you.", SKILLS.__DRUG__, [
-        [item.syringe, 1],
-        [item.chemicalcomponent, 1],
-        [item.mushroom2, 1],
-        [item.mushroom3, 1],
-        [item.ghoulblood, 1]
+        [IID.syringe, 1],
+        [IID.chemicalcomponent, 1],
+        [IID.mushroom2, 1],
+        [IID.mushroom3, 1],
+        [IID.ghoulblood, 1]
     ], 1, [
         [AREAS.agitator, 30000]
     ], 10),
@@ -25612,7 +25612,7 @@ var items = [{
     loot: Mv.ghouldrug,
     wait: 10
 }, {
-    id: item.mushroom,
+    id: IID.mushroom,
     img: {
         src: ["img/inv-mushroom1-out.png", "img/inv-mushroom1-in.png", "img/inv-mushroom1-click.png"],
         W: [{
@@ -25628,11 +25628,11 @@ var items = [{
     loot: Mv.mushroom,
     wait: 5,
     vWVMV: 10,
-    nNmmM: item.rottenmushroom1,
+    nNmmM: IID.rottenmushroom1,
     mnw: 41,     
     score: 24
 }, {
-    id: item.mushroom2,
+    id: IID.mushroom2,
     img: {
         src: ["img/inv-mushroom2-out.png", "img/inv-mushroom2-in.png", "img/inv-mushroom2-click.png"],
         W: [{
@@ -25648,11 +25648,11 @@ var items = [{
     loot: Mv.mushroom2,
     wait: 5,
     vWVMV: 10,
-    nNmmM: item.rottenmushroom2,
+    nNmmM: IID.rottenmushroom2,
     mnw: 42,     
     score: 24
 }, {
-    id: item.mushroom3,
+    id: IID.mushroom3,
     img: {
         src: ["img/inv-mushroom3-out.png", "img/inv-mushroom3-in.png", "img/inv-mushroom3-click.png"],
         W: [{
@@ -25668,11 +25668,11 @@ var items = [{
     loot: Mv.mushroom3,
     wait: 5,
     vWVMV: 10,
-    nNmmM: item.rottenmushroom3,
+    nNmmM: IID.rottenmushroom3,
     mnw: 43,     
     score: 24
 }, {
-    id: item.rottenmushroom1,
+    id: IID.rottenmushroom1,
     img: {
         src: ["img/inv-rotten-mushroom1-out.png", "img/inv-rotten-mushroom1-in.png", "img/inv-rotten-mushroom1-click.png"],
         W: [{
@@ -25690,7 +25690,7 @@ var items = [{
     mnw: 44,     
     score: 20
 }, {
-    id: item.rottenmushroom2,
+    id: IID.rottenmushroom2,
     img: {
         src: ["img/inv-rotten-mushroom2-out.png", "img/inv-rotten-mushroom2-in.png", "img/inv-rotten-mushroom2-click.png"],
         W: [{
@@ -25708,7 +25708,7 @@ var items = [{
     mnw: 45,     
     score: 20
 }, {
-    id: item.rottenmushroom3,
+    id: IID.rottenmushroom3,
     img: {
         src: ["img/inv-rotten-mushroom3-out.png", "img/inv-rotten-mushroom3-in.png", "img/inv-rotten-mushroom3-click.png"],
         W: [{
@@ -25726,7 +25726,7 @@ var items = [{
     mnw: 46,     
     score: 20
 }, {
-    id: item.lapadoine,
+    id: IID.lapadoine,
     img: {
         src: ["img/inv-lapadoine-out.png", "img/inv-lapadoine-in.png", "img/inv-lapadoine-click.png"],
         W: [{
@@ -25738,10 +25738,10 @@ var items = [{
         }]
     },
     detail: new vn("Lapadone", "You are faster a certain time.", SKILLS.__DRUG__, [
-        [item.syringe, 1],
-        [item.chemicalcomponent, 1],
-        [item.mushroom, 1],
-        [item.ghoulblood, 1]
+        [IID.syringe, 1],
+        [IID.chemicalcomponent, 1],
+        [IID.mushroom, 1],
+        [IID.ghoulblood, 1]
     ], 1, [
         [AREAS.agitator, 45000]
     ], 14),
@@ -25750,7 +25750,7 @@ var items = [{
     loot: Mv.lapadoine,
     wait: 10
 }, {
-    id: item.lapabot,
+    id: IID.lapabot,
     img: {
         src: ["img/inv-lapabot-out.png", "img/inv-lapabot-in.png", "img/inv-lapabot-click.png"],
         W: [{
@@ -25762,10 +25762,10 @@ var items = [{
         }]
     },
     detail: new vn("LapaBot", "Repair your base for you", SKILLS.__SURVIVAL__, [
-        [item.shapedmetal, 6],
-        [item.electronicpart, 1],
-        [item.smallwire, 1],
-        [item.alloys, 1]
+        [IID.shapedmetal, 6],
+        [IID.electronicpart, 1],
+        [IID.smallwire, 1],
+        [IID.alloys, 1]
     ], 1, [
         [AREAS.researchbench, 100000]
     ], 8),
@@ -25797,12 +25797,12 @@ var items = [{
         }
     },
     door: 0,
-    mwM: 0,
+    explosion: 0,
     behavior: BEHAVIOR.__AI_CONSTRUCTOR__,
     MWv: 0,
     subtype: 0,
     MMN: 0,
-    WnW: 0,
+    areaEffect: 0,
     draw: Render.construction,
     impact: SOUNDID.metal,
     destroyaudio: SOUNDID.metaldes,
@@ -25849,7 +25849,7 @@ var items = [{
     mmNMn: 4,
     VVvmM: 1
 }, {
-    id: item.smallwire,
+    id: IID.smallwire,
     img: {
         src: ["img/inv-small-wire-out.png", "img/inv-small-wire-in.png", "img/inv-small-wire-click.png"],
         W: [{
@@ -25865,7 +25865,7 @@ var items = [{
     loot: Mv.smallwire,
     score: 40
 }, {
-    id: item.pumpkin,
+    id: IID.pumpkin,
     img: {
         src: ["img/inv-pumpkin-out.png", "img/inv-pumpkin-in.png", "img/inv-pumpkin-click.png"],
         W: [{
@@ -25881,11 +25881,11 @@ var items = [{
     loot: Mv.pumpkin,
     wait: 5,
     vWVMV: 10,
-    nNmmM: item.rottenpumpkin,
+    nNmmM: IID.rottenpumpkin,
     mnw: 48,     
     score: 24
 }, {
-    id: item.rottenpumpkin,
+    id: IID.rottenpumpkin,
     img: {
         src: ["img/inv-rotten-pumpkin-out.png", "img/inv-rotten-pumpkin-in.png", "img/inv-rotten-pumpkin-click.png"],
         W: [{
@@ -25903,7 +25903,7 @@ var items = [{
     mnw: 49,     
     score: 20
 }, {
-    id: item.ghoulseed,
+    id: IID.ghoulseed,
     img: {
         src: ["img/inv-ghoul5-out.png", "img/inv-ghoul5-in.png", "img/inv-ghoul5-click.png"],
         W: [{
@@ -25915,8 +25915,8 @@ var items = [{
         }]
     },
     detail: new vn("Ghoul Seed", "Plant your pumpkin pet", -1, [
-        [item.pumpkin, 1],
-        [item.ghoulblood, 1]
+        [IID.pumpkin, 1],
+        [IID.ghoulblood, 1]
     ], 1, [
         [AREAS.firepart, 30000],
         [AREAS.bbq, 20000]
@@ -25949,12 +25949,12 @@ var items = [{
         }
     },
     door: 0,
-    mwM: 0,
+    explosion: 0,
     behavior: BEHAVIOR.__AI_CONSTRUCTOR__,
     MWv: 0,
     subtype: 0,
     MMN: 0,
-    WnW: 0,
+    areaEffect: 0,
     draw: Render.orangeSeed,
     impact: SOUNDID.pillow,
     destroyaudio: SOUNDID.pillowdes,
@@ -25995,7 +25995,7 @@ var items = [{
     mmNMn: 3,
     VVvmM: 0
 }, {
-    id: item.extractor,
+    id: IID.extractor,
     img: {
         src: ["img/inv-extractor-out.png", "img/inv-extractor-in.png", "img/inv-extractor-click.png"],
         W: [{
@@ -26007,11 +26007,11 @@ var items = [{
         }]
     },
     detail: new vn("Extractor", "Allows you to extract minerals from the ground", SKILLS.__SURVIVAL__, [
-        [item.alloys, 2],
-        [item.shapedmetal, 10],
-        [item.shapeduranium, 2],
-        [item.smallwire, 2],
-        [item.electronicpart, 1]
+        [IID.alloys, 2],
+        [IID.shapedmetal, 10],
+        [IID.shapeduranium, 2],
+        [IID.smallwire, 2],
+        [IID.electronicpart, 1]
     ], 1, [
         [AREAS.researchbench, 100000]
     ], 12),
@@ -26046,12 +26046,12 @@ var items = [{
     lowWall: 0,
     door: 0,
     broke: 0,
-    mwM: 0,
+    explosion: 0,
     behavior: BEHAVIOR.__NO__,
     MWv: 0,
     subtype: 0,
     MMN: 1,
-    WnW: 0,
+    areaEffect: 0,
     draw: Render.extractor,
     packetId: 16,
     wwN: {
@@ -26090,7 +26090,7 @@ var items = [{
     life: 500,
     score: 0
 }, {
-    id: item.antidote,
+    id: IID.antidote,
     img: {
         src: ["img/inv-antidote-out.png", "img/inv-antidote-in.png", "img/inv-antidote-click.png"],
         W: [{
@@ -26102,10 +26102,10 @@ var items = [{
         }]
     },
     detail: new vn("Antidote", "Remove the withdrawal effects (pink skin)", SKILLS.__DRUG__, [
-        [item.syringe, 1],
-        [item.chemicalcomponent, 1],
-        [item.mushroom, 1],
-        [item.antidoteflower, 1]
+        [IID.syringe, 1],
+        [IID.chemicalcomponent, 1],
+        [IID.mushroom, 1],
+        [IID.antidoteflower, 1]
     ], 1, [
         [AREAS.agitator, 45000]
     ], 14),
@@ -26114,7 +26114,7 @@ var items = [{
     loot: Mv.antidote,
     wait: 10
 }, {
-    id: item.antidoteflower,
+    id: IID.antidoteflower,
     img: {
         src: ["img/inv-antidote-flower-out.png", "img/inv-antidote-flower-in.png", "img/inv-antidote-flower-click.png"],
         W: [{
@@ -26130,7 +26130,7 @@ var items = [{
     loot: Mv.antidoteflower,
     score: 400
 }, {
-    id: item.treeseed,
+    id: IID.treeseed,
     img: {
         src: ["img/inv-seed-tree-out.png", "img/inv-seed-tree-in.png", "img/inv-seed-tree-click.png"],
         W: [{
@@ -26142,7 +26142,7 @@ var items = [{
         }]
     },
     detail: new vn("Tree Seed", "Plant your forest", SKILLS.__PLANT__, [
-        [item.acorn, 1]
+        [IID.acorn, 1]
     ], 5, [
         [AREAS.firepart, 60000],
         [AREAS.bbq, 40000]
@@ -26175,12 +26175,12 @@ var items = [{
         }
     },
     door: 0,
-    mwM: 0,
+    explosion: 0,
     behavior: BEHAVIOR.__SEED_RESOURCE__,
     MWv: 0,
     subtype: 0,
     MMN: 1,
-    WnW: 0,
+    areaEffect: 0,
     draw: Render.treeSeed,
     impact: SOUNDID.wood,
     destroyaudio: SOUNDID.wooddes,
@@ -26216,7 +26216,7 @@ var items = [{
     life: 150,
     score: 0
 }, {
-    id: item.acorn,
+    id: IID.acorn,
     img: {
         src: ["img/inv-acorn-out.png", "img/inv-acorn-in.png", "img/inv-acorn-click.png"],
         W: [{
@@ -26232,11 +26232,11 @@ var items = [{
     loot: Mv.acorn,
     wait: 5,
     vWVMV: 3,
-    nNmmM: item.rottenacorn,
+    nNmmM: IID.rottenacorn,
     mnw: 51,     
     score: 24
 }, {
-    id: item.rottenacorn,
+    id: IID.rottenacorn,
     img: {
         src: ["img/inv-rotten-acorn-out.png", "img/inv-rotten-acorn-in.png", "img/inv-rotten-acorn-click.png"],
         W: [{
@@ -26254,7 +26254,7 @@ var items = [{
     mnw: 52,     
     score: 20
 }, {
-    id: item.lasersniper,
+    id: IID.lasersniper,
     img: {
         src: ["img/inv-laser-sniper-out.png", "img/inv-laser-sniper-in.png", "img/inv-laser-sniper-click.png"],
         W: [{
@@ -26266,21 +26266,21 @@ var items = [{
         }]
     },
     detail: new vn("Laser Sniper", "Faster than a sniper", SKILLS.__WEAPON__, [
-        [item.alloys, 8],
-        [item.shapedmetal, 6],
-        [item.shapeduranium, 5],
-        [item.wires, 3],
-        [item.electronicpart, 3]
+        [IID.alloys, 8],
+        [IID.shapedmetal, 6],
+        [IID.shapeduranium, 5],
+        [IID.wires, 3],
+        [IID.electronicpart, 3]
     ], 1, [
         [AREAS.teslabench, 180000]
-    ], 14, item.laserpistol, 2),
+    ], 14, IID.laserpistol, 2),
     mnw: 53,     
-    vMv: item.energycell,
+    vMv: IID.energycell,
     stack: 1,
     loot: Mv.lasersniper,
     wait: 10
 }, {
-    id: item.halbot,
+    id: IID.halbot,
     img: {
         src: ["img/inv-hal-bot-out.png", "img/inv-hal-bot-in.png", "img/inv-hal-bot-click.png"],
         W: [{
@@ -26292,10 +26292,10 @@ var items = [{
         }]
     },
     detail: new vn("HAL Bot", "Protect you", SKILLS.__SURVIVAL__, [
-        [item.shapedmetal, 6],
-        [item.electronicpart, 1],
-        [item.smallwire, 1],
-        [item.alloys, 1]
+        [IID.shapedmetal, 6],
+        [IID.electronicpart, 1],
+        [IID.smallwire, 1],
+        [IID.alloys, 1]
     ], 1, [
         [AREAS.researchbench, 100000]
     ], 8),
@@ -26327,12 +26327,12 @@ var items = [{
         }
     },
     door: 0,
-    mwM: 0,
+    explosion: 0,
     behavior: BEHAVIOR.__AI_CONSTRUCTOR__,
     MWv: 0,
     subtype: 0,
     MMN: 0,
-    WnW: 0,
+    areaEffect: 0,
     draw: Render.construction,
     impact: SOUNDID.metal,
     destroyaudio: SOUNDID.metaldes,
@@ -26379,7 +26379,7 @@ var items = [{
     mmNMn: 4,
     VVvmM: 1
 }, {
-    id: item.teslabot,
+    id: IID.teslabot,
     img: {
         src: ["img/inv-tesla-bot-out.png", "img/inv-tesla-bot-in.png", "img/inv-tesla-bot-click.png"],
         W: [{
@@ -26391,11 +26391,11 @@ var items = [{
         }]
     },
     detail: new vn("Tesla Bot", "Protect you", SKILLS.__SURVIVAL__, [
-        [item.shapeduranium, 3],
-        [item.electronicpart, 1],
-        [item.smallwire, 3],
-        [item.wires, 3],
-        [item.alloys, 3]
+        [IID.shapeduranium, 3],
+        [IID.electronicpart, 1],
+        [IID.smallwire, 3],
+        [IID.wires, 3],
+        [IID.alloys, 3]
     ], 1, [
         [AREAS.teslabench, 200000]
     ], 16),
@@ -26427,12 +26427,12 @@ var items = [{
         }
     },
     door: 0,
-    mwM: 0,
+    explosion: 0,
     behavior: BEHAVIOR.__AI_CONSTRUCTOR__,
     MWv: 0,
     subtype: 0,
     MMN: 0,
-    WnW: 0,
+    areaEffect: 0,
     draw: Render.construction,
     impact: SOUNDID.metal,
     destroyaudio: SOUNDID.metaldes,
@@ -26479,7 +26479,7 @@ var items = [{
     mmNMn: 4,
     VVvmM: 1
 }, {
-    id: item.cable,
+    id: IID.cable,
     img: {
         src: ["img/inv-wire0-out.png", "img/inv-wire0-in.png", "img/inv-wire0-click.png"],
         W: [{
@@ -26491,7 +26491,7 @@ var items = [{
         }]
     },
     detail: new vn("Cable", "Create automatic mechanisms", SKILLS.__LOGIC__, [
-        [item.smallwire, 1]
+        [IID.smallwire, 1]
     ], 3, [
         [AREAS.weldingmachine, 15000]
     ]),
@@ -26525,7 +26525,7 @@ var items = [{
     lowWall: 0,
     door: 0,
     broke: 0,
-    mwM: 0,
+    explosion: 0,
     behavior: BEHAVIOR.__LOGIC__,
     mwv: 0,
     MWv: [
@@ -26536,7 +26536,7 @@ var items = [{
     ],
     subtype: 0,
     MMN: 0,
-    WnW: 0,
+    areaEffect: 0,
     draw: Render.hiddenBuilding,
     impact: SOUNDID.pillow,
     destroyaudio: SOUNDID.pillowdes,
@@ -26552,7 +26552,7 @@ var items = [{
     life: 250,
     score: 0
 }, {
-    id: item.cable2,
+    id: IID.cable2,
     img: {
         src: ["img/inv-wire1-out.png", "img/inv-wire1-in.png", "img/inv-wire1-click.png"],
         W: [{
@@ -26564,7 +26564,7 @@ var items = [{
         }]
     },
     detail: new vn("Cable", "Create automatic mechanisms", SKILLS.__LOGIC__, [
-        [item.smallwire, 1]
+        [IID.smallwire, 1]
     ], 3, [
         [AREAS.weldingmachine, 15000]
     ]),
@@ -26598,7 +26598,7 @@ var items = [{
     lowWall: 0,
     door: 0,
     broke: 0,
-    mwM: 0,
+    explosion: 0,
     behavior: BEHAVIOR.__LOGIC__,
     mwv: 0,
     MWv: [
@@ -26609,7 +26609,7 @@ var items = [{
     ],
     subtype: 0,
     MMN: 0,
-    WnW: 0,
+    areaEffect: 0,
     draw: Render.hiddenBuilding,
     impact: SOUNDID.pillow,
     destroyaudio: SOUNDID.pillowdes,
@@ -26625,7 +26625,7 @@ var items = [{
     life: 250,
     score: 0
 }, {
-    id: item.cable3,
+    id: IID.cable3,
     img: {
         src: ["img/inv-wire2-out.png", "img/inv-wire2-in.png", "img/inv-wire2-click.png"],
         W: [{
@@ -26637,7 +26637,7 @@ var items = [{
         }]
     },
     detail: new vn("Cable", "Create automatic mechanisms", SKILLS.__LOGIC__, [
-        [item.smallwire, 1]
+        [IID.smallwire, 1]
     ], 3, [
         [AREAS.weldingmachine, 15000]
     ]),
@@ -26671,7 +26671,7 @@ var items = [{
     lowWall: 0,
     door: 0,
     broke: 0,
-    mwM: 0,
+    explosion: 0,
     behavior: BEHAVIOR.__LOGIC__,
     mwv: 0,
     MWv: [
@@ -26682,7 +26682,7 @@ var items = [{
     ],
     subtype: 0,
     MMN: 0,
-    WnW: 0,
+    areaEffect: 0,
     draw: Render.hiddenBuilding,
     impact: SOUNDID.pillow,
     destroyaudio: SOUNDID.pillowdes,
@@ -26698,7 +26698,7 @@ var items = [{
     life: 250,
     score: 0
 }, {
-    id: item.cable4,
+    id: IID.cable4,
     img: {
         src: ["img/inv-wire3-out.png", "img/inv-wire3-in.png", "img/inv-wire3-click.png"],
         W: [{
@@ -26710,7 +26710,7 @@ var items = [{
         }]
     },
     detail: new vn("Cable", "Create automatic mechanisms", SKILLS.__LOGIC__, [
-        [item.smallwire, 1]
+        [IID.smallwire, 1]
     ], 3, [
         [AREAS.weldingmachine, 15000]
     ]),
@@ -26744,7 +26744,7 @@ var items = [{
     lowWall: 0,
     door: 0,
     broke: 0,
-    mwM: 0,
+    explosion: 0,
     behavior: BEHAVIOR.__LOGIC__,
     mwv: 0,
     MWv: [
@@ -26755,7 +26755,7 @@ var items = [{
     ],
     subtype: 0,
     MMN: 0,
-    WnW: 0,
+    areaEffect: 0,
     draw: Render.hiddenBuilding,
     impact: SOUNDID.pillow,
     destroyaudio: SOUNDID.pillowdes,
@@ -26771,7 +26771,7 @@ var items = [{
     life: 250,
     score: 0
 }, {
-    id: item.switch,
+    id: IID.switch,
     img: {
         src: ["img/inv-switch-out.png", "img/inv-switch-in.png", "img/inv-switch-click.png"],
         W: [{
@@ -26783,8 +26783,8 @@ var items = [{
         }]
     },
     detail: new vn("Switch", "Turn on/off mechanisms", SKILLS.__LOGIC__, [
-        [item.shapedmetal, 1],
-        [item.smallwire, 1]
+        [IID.shapedmetal, 1],
+        [IID.smallwire, 1]
     ], 3, [
         [AREAS.weldingmachine, 15000]
     ]),
@@ -26818,7 +26818,7 @@ var items = [{
     lowWall: 0,
     door: 0,
     broke: 0,
-    mwM: 0,
+    explosion: 0,
     behavior: BEHAVIOR.__LOGIC__,
     mwv: 1,
     MWv: [
@@ -26829,7 +26829,7 @@ var items = [{
     ],
     subtype: 0,
     MMN: 0,
-    WnW: 0,
+    areaEffect: 0,
     draw: Render.switchOff,
     packetId: 37,
     wwN: {
@@ -26857,7 +26857,7 @@ var items = [{
     life: 250,
     score: 0
 }, {
-    id: item.orgate,
+    id: IID.orgate,
     img: {
         src: ["img/inv-switch-or-out.png", "img/inv-switch-or-in.png", "img/inv-switch-or-click.png"],
         W: [{
@@ -26869,8 +26869,8 @@ var items = [{
         }]
     },
     detail: new vn("Gate OR", "Activate only if an entry is on.", SKILLS.__LOGIC__, [
-        [item.shapedmetal, 1],
-        [item.smallwire, 1]
+        [IID.shapedmetal, 1],
+        [IID.smallwire, 1]
     ], 3, [
         [AREAS.weldingmachine, 15000]
     ]),
@@ -26904,7 +26904,7 @@ var items = [{
     lowWall: 0,
     door: 0,
     broke: 0,
-    mwM: 0,
+    explosion: 0,
     behavior: BEHAVIOR.__LOGIC__,
     mwv: 1,
     MWv: [
@@ -26915,7 +26915,7 @@ var items = [{
     ],
     subtype: 0,
     MMN: 0,
-    WnW: 0,
+    areaEffect: 0,
     draw: Render.hiddenBuilding,
     impact: SOUNDID.metal,
     destroyaudio: SOUNDID.metaldes,
@@ -26931,7 +26931,7 @@ var items = [{
     life: 250,
     score: 0
 }, {
-    id: item.andgate,
+    id: IID.andgate,
     img: {
         src: ["img/inv-switch-and-out.png", "img/inv-switch-and-in.png", "img/inv-switch-and-click.png"],
         W: [{
@@ -26943,8 +26943,8 @@ var items = [{
         }]
     },
     detail: new vn("Gate AND", "Activate only if all entries are on.", SKILLS.__LOGIC__, [
-        [item.shapedmetal, 1],
-        [item.smallwire, 1]
+        [IID.shapedmetal, 1],
+        [IID.smallwire, 1]
     ], 3, [
         [AREAS.weldingmachine, 15000]
     ]),
@@ -26978,7 +26978,7 @@ var items = [{
     lowWall: 0,
     door: 0,
     broke: 0,
-    mwM: 0,
+    explosion: 0,
     behavior: BEHAVIOR.__LOGIC__,
     mwv: 1,
     MWv: [
@@ -26989,7 +26989,7 @@ var items = [{
     ],
     subtype: 0,
     MMN: 0,
-    WnW: 0,
+    areaEffect: 0,
     draw: Render.hiddenBuilding,
     impact: SOUNDID.metal,
     destroyaudio: SOUNDID.metaldes,
@@ -27005,7 +27005,7 @@ var items = [{
     life: 250,
     score: 0
 }, {
-    id: item.notgate,
+    id: IID.notgate,
     img: {
         src: ["img/inv-switch-reverse-out.png", "img/inv-switch-reverse-in.png", "img/inv-switch-reverse-click.png"],
         W: [{
@@ -27017,8 +27017,8 @@ var items = [{
         }]
     },
     detail: new vn("Gate NOT", "Activate only if no entry is on.", SKILLS.__LOGIC__, [
-        [item.shapedmetal, 1],
-        [item.smallwire, 1]
+        [IID.shapedmetal, 1],
+        [IID.smallwire, 1]
     ], 3, [
         [AREAS.weldingmachine, 15000]
     ]),
@@ -27052,7 +27052,7 @@ var items = [{
     lowWall: 0,
     door: 0,
     broke: 0,
-    mwM: 0,
+    explosion: 0,
     behavior: BEHAVIOR.__LOGIC__,
     mwv: 1,
     MWv: [
@@ -27063,7 +27063,7 @@ var items = [{
     ],
     subtype: 0,
     MMN: 0,
-    WnW: 0,
+    areaEffect: 0,
     draw: Render.hiddenBuilding,
     impact: SOUNDID.metal,
     destroyaudio: SOUNDID.metaldes,
@@ -27079,7 +27079,7 @@ var items = [{
     life: 250,
     score: 0
 }, {
-    id: item.lamp,
+    id: IID.lamp,
     img: {
         src: ["img/inv-lamp-white-out.png", "img/inv-lamp-white-in.png", "img/inv-lamp-white-click.png"],
         W: [{
@@ -27091,8 +27091,8 @@ var items = [{
         }]
     },
     detail: new vn("Lamp", "Turn on when connected, damage ghoul", SKILLS.__LOGIC__, [
-        [item.shapedmetal, 1],
-        [item.smallwire, 1]
+        [IID.shapedmetal, 1],
+        [IID.smallwire, 1]
     ], 3, [
         [AREAS.weldingmachine, 15000]
     ]),
@@ -27126,7 +27126,7 @@ var items = [{
     lowWall: 0,
     door: 0,
     broke: 0,
-    mwM: 0,
+    explosion: 0,
     behavior: BEHAVIOR.__LOGIC__,
     mwv: 0,
     MWv: [
@@ -27138,7 +27138,7 @@ var items = [{
     subtype: 0,
     MMN: 2,
     radius: 22,
-    WnW: 0,
+    areaEffect: 0,
     draw: Render.lamp,
     VvmvM: Render.lampLight,
     packetId: 36,
@@ -27234,7 +27234,7 @@ var items = [{
     life: 600,
     score: 0
 }, {
-    id: item.cablewall,
+    id: IID.cablewall,
     img: {
         src: ["img/inv-cable-wall-out.png", "img/inv-cable-wall-in.png", "img/inv-cable-wall-click.png"],
         W: [{
@@ -27246,8 +27246,8 @@ var items = [{
         }]
     },
     detail: new vn("Cable  - Wall", "Wall that can be connected to a cable", SKILLS.__LOGIC__, [
-        [item.shapedmetal, 8],
-        [item.smallwire, 1]
+        [IID.shapedmetal, 8],
+        [IID.smallwire, 1]
     ], 1, [
         [AREAS.weldingmachine, 15000]
     ], 7),
@@ -27281,7 +27281,7 @@ var items = [{
     lowWall: 0,
     door: 0,
     broke: 1,
-    mwM: 0,
+    explosion: 0,
     behavior: BEHAVIOR.__LOGIC__,
     mwv: 0,
     MWv: [
@@ -27292,7 +27292,7 @@ var items = [{
     ],
     subtype: 0,
     MMN: 1,
-    WnW: 0,
+    areaEffect: 0,
     draw: Render.breakable,
     impact: SOUNDID.metal,
     destroyaudio: SOUNDID.metaldes,
@@ -27323,7 +27323,7 @@ var items = [{
     life: 15000,
     score: 0
 }, {
-    id: item.autodoor,
+    id: IID.autodoor,
     img: {
         src: ["img/inv-automatic-door-out.png", "img/inv-automatic-door-in.png", "img/inv-automatic-door-click.png"],
         W: [{
@@ -27335,9 +27335,9 @@ var items = [{
         }]
     },
     detail: new vn("Automatic Door", "Connect it to a switch to open and close it.", SKILLS.__LOGIC__, [
-        [item.shapedmetal, 8],
-        [item.smallwire, 2],
-        [item.electronicpart, 1]
+        [IID.shapedmetal, 8],
+        [IID.smallwire, 2],
+        [IID.electronicpart, 1]
     ], 1, [
         [AREAS.weldingmachine, 15000]
     ], 7),
@@ -27371,7 +27371,7 @@ var items = [{
     lowWall: 0,
     door: 0,
     broke: 1,
-    mwM: 0,
+    explosion: 0,
     behavior: BEHAVIOR.__LOGIC__,
     mwv: 0,
     MWv: [
@@ -27382,7 +27382,7 @@ var items = [{
     ],
     subtype: 0,
     MMN: 1,
-    WnW: 0,
+    areaEffect: 0,
     draw: Render.automaticDoor,
     impact: SOUNDID.metal,
     destroyaudio: SOUNDID.metaldes,
@@ -27436,7 +27436,7 @@ var items = [{
     life: 15000,
     score: 0
 }, {
-    id: item.platform,
+    id: IID.platform,
     img: {
         src: ["img/inv-platform-out.png", "img/inv-platform-in.png", "img/inv-platform-click.png"],
         W: [{
@@ -27448,8 +27448,8 @@ var items = [{
         }]
     },
     detail: new vn("Platform", "Weight detector", SKILLS.__LOGIC__, [
-        [item.shapedmetal, 1],
-        [item.smallwire, 1]
+        [IID.shapedmetal, 1],
+        [IID.smallwire, 1]
     ], 3, [
         [AREAS.weldingmachine, 15000]
     ]),
@@ -27483,7 +27483,7 @@ var items = [{
     lowWall: 0,
     door: 0,
     broke: 0,
-    mwM: 0,
+    explosion: 0,
     behavior: BEHAVIOR.__LOGIC__,
     mwv: 1,
     MWv: [
@@ -27494,7 +27494,7 @@ var items = [{
     ],
     subtype: 0,
     MMN: 0,
-    WnW: 0,
+    areaEffect: 0,
     draw: Render.defaultBuilding,
     impact: SOUNDID.metal,
     destroyaudio: SOUNDID.metaldes,
@@ -27510,7 +27510,7 @@ var items = [{
     life: 250,
     score: 0
 }, {
-    id: item.stonecave,
+    id: IID.stonecave,
     img: {
         src: ["img/inv-stone-cave-out.png", "img/inv-stone-cave-in.png", "img/inv-stone-cave-click.png"],
         W: [{
@@ -27522,7 +27522,7 @@ var items = [{
         }]
     },
     detail: new vn("Stone Cave", "Build mountains.", -1, [
-        [item.stone, 140]
+        [IID.stone, 140]
     ], 1, [
         [AREAS.workbench, 30000]
     ], 99),
@@ -27553,16 +27553,16 @@ var items = [{
         }
     },
     wall: 1,
-    vVwVM: item.stonecave,
+    vVwVM: IID.stonecave,
     lowWall: 0,
     door: 0,
     broke: 1,
-    mwM: 0,
+    explosion: 0,
     behavior: BEHAVIOR.__NO__,
     MWv: 0,
     subtype: 0,
     MMN: 1,
-    WnW: 0,
+    areaEffect: 0,
     draw: Render.wall,
     MmvNw: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
     WVW: [{
@@ -27825,7 +27825,7 @@ var items = [{
     life: 300,
     score: 0
 }, {
-    id: item.bunkerwall,
+    id: IID.bunkerwall,
     img: {
         src: ["img/inv-bunker-wall-out.png", "img/inv-bunker-wall-in.png", "img/inv-bunker-wall-click.png"],
         W: [{
@@ -27837,8 +27837,8 @@ var items = [{
         }]
     },
     detail: new vn("Bunker Wall", "Good old memory of the wasteland.", -1, [
-        [item.stone, 150],
-        [item.shapedmetal, 12]
+        [IID.stone, 150],
+        [IID.shapedmetal, 12]
     ], 1, [
         [AREAS.workbench, 30000]
     ], 99),
@@ -27869,16 +27869,16 @@ var items = [{
         }
     },
     wall: 1,
-    vVwVM: item.stonecave,
+    vVwVM: IID.stonecave,
     lowWall: 0,
     door: 0,
     broke: 1,
-    mwM: 0,
+    explosion: 0,
     behavior: BEHAVIOR.__NO__,
     MWv: 0,
     subtype: 0,
     MMN: 1,
-    WnW: 0,
+    areaEffect: 0,
     draw: Render.wall,
     MmvNw: [1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
     WVW: [{
@@ -28141,7 +28141,7 @@ var items = [{
     life: 10000,
     score: 0
 }, {
-    id: item.mustardfloor,
+    id: IID.mustardfloor,
     img: {
         src: ["img/inv-mustard-floor-out.png", "img/inv-mustard-floor-in.png", "img/inv-mustard-floor-click.png"],
         W: [{
@@ -28153,7 +28153,7 @@ var items = [{
         }]
     },
     detail: new vn("Golden Floor", "Players can't spawn on it", SKILLS.__BUILDING__, [
-        [item.leather, 2]
+        [IID.leather, 2]
     ], 2, [
         [AREAS.workbench, 15000]
     ]),
@@ -28184,16 +28184,16 @@ var items = [{
         }
     },
     wall: 1,
-    vVwVM: item.mustardfloor,
+    vVwVM: IID.mustardfloor,
     lowWall: 0,
     door: 0,
     broke: 1,
-    mwM: 0,
+    explosion: 0,
     behavior: BEHAVIOR.__NO__,
     MWv: 0,
     subtype: 0,
     MMN: 0,
-    WnW: 0,
+    areaEffect: 0,
     draw: Render.groundFloor,
     WVW: [{
         src: "img/day-mustard-floor-broken0.png",
@@ -28455,7 +28455,7 @@ var items = [{
     life: 3000,
     score: 0
 }, {
-    id: item.redfloor,
+    id: IID.redfloor,
     img: {
         src: ["img/inv-red-floor-out.png", "img/inv-red-floor-in.png", "img/inv-red-floor-click.png"],
         W: [{
@@ -28467,7 +28467,7 @@ var items = [{
         }]
     },
     detail: new vn("Red floor", "Players can't spawn on it", SKILLS.__BUILDING__, [
-        [item.leather, 2]
+        [IID.leather, 2]
     ], 2, [
         [AREAS.workbench, 15000]
     ]),
@@ -28498,16 +28498,16 @@ var items = [{
         }
     },
     wall: 1,
-    vVwVM: item.redfloor,
+    vVwVM: IID.redfloor,
     lowWall: 0,
     door: 0,
     broke: 1,
-    mwM: 0,
+    explosion: 0,
     behavior: BEHAVIOR.__NO__,
     MWv: 0,
     subtype: 0,
     MMN: 0,
-    WnW: 0,
+    areaEffect: 0,
     draw: Render.groundFloor,
     WVW: [{
         src: "img/day-red-floor-broken0.png",
@@ -28769,7 +28769,7 @@ var items = [{
     life: 3000,
     score: 0
 }, {
-    id: item.weldingmachine,
+    id: IID.weldingmachine,
     img: {
         src: ["img/inv-welding-machine-out.png", "img/inv-welding-machine-in.png", "img/inv-welding-machine-click.png"],
         W: [{
@@ -28781,9 +28781,9 @@ var items = [{
         }]
     },
     detail: new vn("Welding Machine", "Allow you to make logic gates", SKILLS.__SURVIVAL__, [
-        [item.junk, 2],
-        [item.shapedmetal, 4],
-        [item.electronicpart, 1]
+        [IID.junk, 2],
+        [IID.shapedmetal, 4],
+        [IID.electronicpart, 1]
     ], 1, [
         [AREAS.workbench, 50000]
     ]),
@@ -28818,12 +28818,12 @@ var items = [{
     lowWall: 0,
     door: 0,
     broke: 0,
-    mwM: 0,
+    explosion: 0,
     behavior: BEHAVIOR.__NO__,
     MWv: 0,
     subtype: 0,
     MMN: 1,
-    WnW: 0,
+    areaEffect: 0,
     draw: Render.workbench,
     packetId: 16,
     wwN: {
@@ -28846,7 +28846,7 @@ var items = [{
     life: 500,
     score: 0
 }, {
-    id: item.cable4,
+    id: IID.cable4,
     img: {
         src: ["img/inv-wire4-out.png", "img/inv-wire4-in.png", "img/inv-wire4-click.png"],
         W: [{
@@ -28858,7 +28858,7 @@ var items = [{
         }]
     },
     detail: new vn("Cable  - Bridge", "Create automatic mechanisms", SKILLS.__LOGIC__, [
-        [item.smallwire, 1]
+        [IID.smallwire, 1]
     ], 3, [
         [AREAS.weldingmachine, 15000]
     ]),
@@ -28892,7 +28892,7 @@ var items = [{
     lowWall: 0,
     door: 0,
     broke: 0,
-    mwM: 0,
+    explosion: 0,
     behavior: BEHAVIOR.__LOGIC__,
     mwv: 0,
     MWv: [
@@ -28903,7 +28903,7 @@ var items = [{
     ],
     subtype: 0,
     MMN: 0,
-    WnW: 0,
+    areaEffect: 0,
     draw: Render.hiddenBuilding,
     impact: SOUNDID.pillow,
     destroyaudio: SOUNDID.pillowdes,
@@ -28919,7 +28919,7 @@ var items = [{
     life: 250,
     score: 0
 }, {
-    id: item.timer,
+    id: IID.timer,
     img: {
         src: ["img/inv-timer-out.png", "img/inv-timer-in.png", "img/inv-timer-click.png"],
         W: [{
@@ -28931,8 +28931,8 @@ var items = [{
         }]
     },
     detail: new vn("Gate Timer", "Emit a signal regularly.", SKILLS.__LOGIC__, [
-        [item.shapedmetal, 1],
-        [item.smallwire, 1]
+        [IID.shapedmetal, 1],
+        [IID.smallwire, 1]
     ], 3, [
         [AREAS.weldingmachine, 15000]
     ]),
@@ -28966,7 +28966,7 @@ var items = [{
     lowWall: 0,
     door: 0,
     broke: 0,
-    mwM: 0,
+    explosion: 0,
     behavior: BEHAVIOR.__LOGIC__,
     mwv: 1,
     MWv: [
@@ -28977,7 +28977,7 @@ var items = [{
     ],
     subtype: 0,
     MMN: 0,
-    WnW: 0,
+    areaEffect: 0,
     draw: Render.timerGate,
     packetId: 38,
     wwN: {
@@ -29015,7 +29015,7 @@ var items = [{
     life: 250,
     score: 0
 }, {
-    id: item.xorgate,
+    id: IID.xorgate,
     img: {
         src: ["img/inv-xor-out.png", "img/inv-xor-in.png", "img/inv-xor-click.png"],
         W: [{
@@ -29027,8 +29027,8 @@ var items = [{
         }]
     },
     detail: new vn("Gate Xor", "Activate only if only one entry is on.", SKILLS.__LOGIC__, [
-        [item.shapedmetal, 1],
-        [item.smallwire, 1]
+        [IID.shapedmetal, 1],
+        [IID.smallwire, 1]
     ], 3, [
         [AREAS.weldingmachine, 15000]
     ]),
@@ -29062,7 +29062,7 @@ var items = [{
     lowWall: 0,
     door: 0,
     broke: 0,
-    mwM: 0,
+    explosion: 0,
     behavior: BEHAVIOR.__LOGIC__,
     mwv: 1,
     MWv: [
@@ -29073,7 +29073,7 @@ var items = [{
     ],
     subtype: 0,
     MMN: 0,
-    WnW: 0,
+    areaEffect: 0,
     draw: Render.hiddenBuilding,
     impact: SOUNDID.metal,
     destroyaudio: SOUNDID.metaldes,
@@ -29093,7 +29093,7 @@ var items = [{
 
 
 {
-    id: item.skilleye1,
+    id: IID.skilleye1,
     img: {
         src: ["img/skill-eye1-out.png", "img/skill-eye1-in.png", "img/skill-eye1-click.png"],
         W: [{
@@ -29109,7 +29109,7 @@ var items = [{
 },
 
 {
-    id: item.skilleye2,
+    id: IID.skilleye2,
     img: {
         src: ["img/skill-eye2-out.png", "img/skill-eye2-in.png", "img/skill-eye2-click.png"],
         W: [{
@@ -29120,12 +29120,12 @@ var items = [{
             isLoaded: 0
         }]
     },
-    detail: new vn("Vision 2", "Improve your vision", SKILLS.__SKILL__, window.undefined, window.undefined, window.undefined, 5, item.skilleye1),
+    detail: new vn("Vision 2", "Improve your vision", SKILLS.__SKILL__, window.undefined, window.undefined, window.undefined, 5, IID.skilleye1),
     scale: -0.35
 },
 
 {
-    id: item.skilleye3,
+    id: IID.skilleye3,
     img: {
         src: ["img/skill-eye3-out.png", "img/skill-eye3-in.png", "img/skill-eye3-click.png"],
         W: [{
@@ -29136,13 +29136,13 @@ var items = [{
             isLoaded: 0
         }]
     },
-    detail: new vn("Vision 3", "Improve your vision", SKILLS.__SKILL__, window.undefined, window.undefined, window.undefined, 7, item.skilleye2),
+    detail: new vn("Vision 3", "Improve your vision", SKILLS.__SKILL__, window.undefined, window.undefined, window.undefined, 7, IID.skilleye2),
     scale: -0.45
 },
 
 
 {
-    id: item.builderskill1,
+    id: IID.builderskill1,
     img: {
         src: ["img/skill-builder1-out.png", "img/skill-builder1-in.png", "img/skill-builder1-click.png"],
         W: [{
@@ -29155,7 +29155,7 @@ var items = [{
     },
     detail: new vn("Builder 1", "Multiplies some craft by two", SKILLS.__SKILL__, window.undefined, window.undefined, window.undefined, 6, window.undefined, 2)
 }, {
-    id: item.builderskill2,
+    id: IID.builderskill2,
     img: {
         src: ["img/skill-builder2-out.png", "img/skill-builder2-in.png", "img/skill-builder2-click.png"],
         W: [{
@@ -29166,13 +29166,13 @@ var items = [{
             isLoaded: 0
         }]
     },
-    detail: new vn("Builder 2", "Repair much faster", SKILLS.__SKILL__, window.undefined, window.undefined, window.undefined, 18, item.builderskill1)
+    detail: new vn("Builder 2", "Repair much faster", SKILLS.__SKILL__, window.undefined, window.undefined, window.undefined, 18, IID.builderskill1)
 },
 
 
 
 {
-    id: item.inventoryskill1,
+    id: IID.inventoryskill1,
     img: {
         src: ["img/skill-inv1-out.png", "img/skill-inv1-in.png", "img/skill-inv1-click.png"],
         W: [{
@@ -29188,7 +29188,7 @@ var items = [{
 },
 
 {
-    id: item.inventoryskill2,
+    id: IID.inventoryskill2,
     img: {
         src: ["img/skill-inv2-out.png", "img/skill-inv2-in.png", "img/skill-inv2-click.png"],
         W: [{
@@ -29199,12 +29199,12 @@ var items = [{
             isLoaded: 0
         }]
     },
-    detail: new vn("Inventory 2", "Add a slot in your inventory", SKILLS.__SKILL__, window.undefined, window.undefined, window.undefined, 5, item.inventoryskill1),
+    detail: new vn("Inventory 2", "Add a slot in your inventory", SKILLS.__SKILL__, window.undefined, window.undefined, window.undefined, 5, IID.inventoryskill1),
     vvmNV: 1
 },
 
 {
-    id: item.inventoryskill3,
+    id: IID.inventoryskill3,
     img: {
         src: ["img/skill-inv3-out.png", "img/skill-inv3-in.png", "img/skill-inv3-click.png"],
         W: [{
@@ -29215,12 +29215,12 @@ var items = [{
             isLoaded: 0
         }]
     },
-    detail: new vn("Inventory 3", "Add a slot in your bag", SKILLS.__SKILL__, window.undefined, window.undefined, window.undefined, 7, item.inventoryskill2),
+    detail: new vn("Inventory 3", "Add a slot in your bag", SKILLS.__SKILL__, window.undefined, window.undefined, window.undefined, 7, IID.inventoryskill2),
     vvmNV: 1
 },
 
 {
-    id: item.inventoryskill4,
+    id: IID.inventoryskill4,
     img: {
         src: ["img/skill-inv4-out.png", "img/skill-inv4-in.png", "img/skill-inv4-click.png"],
         W: [{
@@ -29231,12 +29231,12 @@ var items = [{
             isLoaded: 0
         }]
     },
-    detail: new vn("Inventory 4", "Add two slots in your bag", SKILLS.__SKILL__, window.undefined, window.undefined, window.undefined, 10, item.inventoryskill3, 2),
+    detail: new vn("Inventory 4", "Add two slots in your bag", SKILLS.__SKILL__, window.undefined, window.undefined, window.undefined, 10, IID.inventoryskill3, 2),
     vvmNV: 2
 },
 
 {
-    id: item.inventoryskill5,
+    id: IID.inventoryskill5,
     img: {
         src: ["img/skill-inv5-out.png", "img/skill-inv5-in.png", "img/skill-inv5-click.png"],
         W: [{
@@ -29247,7 +29247,7 @@ var items = [{
             isLoaded: 0
         }]
     },
-    detail: new vn("Inventory 5", "Add three slots in your bag", SKILLS.__SKILL__, window.undefined, window.undefined, window.undefined, 12, item.inventoryskill4, 3),
+    detail: new vn("Inventory 5", "Add three slots in your bag", SKILLS.__SKILL__, window.undefined, window.undefined, window.undefined, 12, IID.inventoryskill4, 3),
     vvmNV: 3
 },
 
@@ -29255,7 +29255,7 @@ var items = [{
 
     
 {
-    id: item.lightweightskill,
+    id: IID.lightweightskill,
     img: {
         src: ["img/skill-lightweight-out.png", "img/skill-lightweight-in.png", "img/skill-lightweight-click.png"],
         W: [{
@@ -29331,7 +29331,7 @@ var nW = {
     NVwVM: COUNTER++
 };
 COUNTER = 0;
-var MwmnM = items[item.NvMvM].subtype;
+var MwmnM = items[IID.NvMvM].subtype;
 MwmnM[COUNTER] = {
     width: [100, 100, 100, 100],
     height: [100, 100, 100, 100],
@@ -29346,7 +29346,7 @@ MwmnM[COUNTER] = {
         }
     },
     detail: new vn("", "", -1, [
-        [item.stone, 100]
+        [IID.stone, 100]
     ]),
     life: 100000000,
     score: 0,
@@ -29359,7 +29359,7 @@ MwmnM[COUNTER] = {
     MMN: 0,
     z: 0,
     WvV: 2,
-    WnW: 0,
+    areaEffect: 0,
     timelife: 315360000000
 };
 for (var i = 0; i < 45; i++) {
@@ -29367,7 +29367,7 @@ for (var i = 0; i < 45; i++) {
     MwmnM[COUNTER] = window.JSON.parse(window.JSON.stringify(MwmnM[0]));
     MwmnM[COUNTER].building.src = ("img/day-road" + COUNTER) + ".png";
 }
-var VV = items[item.MMnVW].subtype;
+var VV = items[IID.MMnVW].subtype;
 VV[nW.sofapart] = {
     width: [100, 100, 100, 100],
     height: [100, 100, 100, 100],
@@ -29382,9 +29382,9 @@ VV[nW.sofapart] = {
         }
     },
     detail: new vn("", "", -1, [
-        [item.wood, 99],
-        [item.leather, 9],
-        [item.string, 6]
+        [IID.wood, 99],
+        [IID.leather, 9],
+        [IID.string, 6]
     ]),
     life: 450,
     score: 0,
@@ -29397,11 +29397,11 @@ VV[nW.sofapart] = {
     MMN: 1,
     z: 1,
     WvV: 0,
-    WnW: 0,
+    areaEffect: 0,
     packetId: 25,
-    mwM: 0,
+    explosion: 0,
     damage: 0,
-    WWv: 0,
+    damageBuilding: 0,
     timelife: 315360000000
 };
 VV[nW.sofapart2] = window.JSON.parse(window.JSON.stringify(VV[nW.sofapart]));
@@ -29420,7 +29420,7 @@ VV[nW.NNvnv] = window.JSON.parse(window.JSON.stringify(VV[nW.sofapart]));
 VV[nW.NNvnv].building.src = "img/day-renforced-door.png";
 VV[nW.NNvnv].particles = particulesitems.steel;
 VV[nW.NNvnv].detail = new vn("", "", -1, [
-    [item.shapedmetal, 40]
+    [IID.shapedmetal, 40]
 ]);
 VV[nW.NNvnv].life = 7000;
 VV[nW.mmmwn] = window.JSON.parse(window.JSON.stringify(VV[nW.sofapart]));
@@ -29429,10 +29429,10 @@ VV[nW.mmmwn].impact = SOUNDID.metal;
 VV[nW.mmmwn].destroyaudio = SOUNDID.metaldes;
 VV[nW.mmmwn].particles = particulesitems.steel;
 VV[nW.mmmwn].detail = new vn("", "", -1, [
-    [item.energycell, 8],
-    [item.electronicpart, 4],
-    [item.shapedmetal, 4],
-    [item.junk, 12]
+    [IID.energycell, 8],
+    [IID.electronicpart, 4],
+    [IID.shapedmetal, 4],
+    [IID.junk, 12]
 ]);
 VV[nW.mmmwn].width = [100, 100, 100, 100];
 VV[nW.mmmwn].height = [100, 100, 100, 100];
@@ -29446,18 +29446,18 @@ VV[nW.nNnVv].height = [120, 120, 120, 120];
 VV[nW.nNnVv].inmapx = [-10, -10, -10, -10];
 VV[nW.nNnVv].inmapy = [-10, -10, -10, -10];
 VV[nW.nNnVv].detail = new vn("", "", -1, [
-    [item.energycell, 16],
-    [item.electronicpart, 16],
-    [item.wires, 8],
-    [item.shapedmetal, 16]
+    [IID.energycell, 16],
+    [IID.electronicpart, 16],
+    [IID.wires, 8],
+    [IID.shapedmetal, 16]
 ]);
 VV[nW.nNnVv].life = 1400;
 VV[nW.bedpart] = window.JSON.parse(window.JSON.stringify(VV[nW.sofapart]));
 VV[nW.bedpart].building.src = "img/day-bed0.png";
 VV[nW.bedpart].particles = particulesitems.bedpart;
 VV[nW.bedpart].detail = new vn("", "", -1, [
-    [item.wood, 200],
-    [item.leather, 20]
+    [IID.wood, 200],
+    [IID.leather, 20]
 ]);
 VV[nW.bedpart2] = window.JSON.parse(window.JSON.stringify(VV[nW.bedpart]));
 VV[nW.bedpart2].building.src = "img/day-bed1.png";
@@ -29466,9 +29466,9 @@ VV[nW.WmNvV] = window.JSON.parse(window.JSON.stringify(VV[nW.bedpart]));
 VV[nW.WmNvV].building.src = "img/day-bed2.png";
 VV[nW.WmNvV].particles = particulesitems.greysteelpart;
 VV[nW.WmNvV].detail = new vn("", "", -1, [
-    [item.shapedmetal, 12],
-    [item.leather, 20],
-    [item.animalfat, 12]
+    [IID.shapedmetal, 12],
+    [IID.leather, 20],
+    [IID.animalfat, 12]
 ]);
 VV[nW.vWVWW] = window.JSON.parse(window.JSON.stringify(VV[nW.sofapart]));
 VV[nW.vWVWW].building.src = "img/day-table0.png";
@@ -29476,7 +29476,7 @@ VV[nW.vWVWW].impact = SOUNDID.wood;
 VV[nW.vWVWW].destroyaudio = SOUNDID.wooddes;
 VV[nW.vWVWW].particles = particulesitems.wood;
 VV[nW.vWVWW].detail = new vn("", "", -1, [
-    [item.wood, 200]
+    [IID.wood, 200]
 ]);
 VV[nW.WVWWM] = window.JSON.parse(window.JSON.stringify(VV[nW.vWVWW]));
 VV[nW.WVWWM].building.src = "img/day-table1.png";
@@ -29492,7 +29492,7 @@ VV[nW.nVwnn].impact = SOUNDID.metal;
 VV[nW.nVwnn].destroyaudio = SOUNDID.metaldes;
 VV[nW.nVwnn].particles = particulesitems.steel;
 VV[nW.nVwnn].detail = new vn("", "", -1, [
-    [item.shapedmetal, 8]
+    [IID.shapedmetal, 8]
 ]);
 VV[nW._buttonInv] = window.JSON.parse(window.JSON.stringify(VV[nW.sofapart]));
 VV[nW._buttonInv].building.src = "img/day-tv0.png";
@@ -29500,10 +29500,10 @@ VV[nW._buttonInv].impact = SOUNDID.metal;
 VV[nW._buttonInv].destroyaudio = SOUNDID.metaldes;
 VV[nW._buttonInv].particles = particulesitems.safepart;
 VV[nW._buttonInv].detail = new vn("", "", -1, [
-    [item.electronicpart, 4],
-    [item.shapedmetal, 16],
-    [item.smallwire, 4],
-    [item.junk, 12]
+    [IID.electronicpart, 4],
+    [IID.shapedmetal, 16],
+    [IID.smallwire, 4],
+    [IID.junk, 12]
 ]);
 VV[nW.WNVMm] = window.JSON.parse(window.JSON.stringify(VV[nW.sofapart]));
 VV[nW.WNVMm].building.src = "img/day-computer0.png";
@@ -29511,28 +29511,28 @@ VV[nW.WNVMm].impact = SOUNDID.metal;
 VV[nW.WNVMm].destroyaudio = SOUNDID.metaldes;
 VV[nW.WNVMm].particles = particulesitems.metalpart;
 VV[nW.WNVMm].detail = new vn("", "", -1, [
-    [item.smallwire, 4],
-    [item.shapedmetal, 16],
-    [item.junk, 12],
-    [item.electronicpart, 4]
+    [IID.smallwire, 4],
+    [IID.shapedmetal, 16],
+    [IID.junk, 12],
+    [IID.electronicpart, 4]
 ]);
 VV[nW.NvWVV] = window.JSON.parse(window.JSON.stringify(VV[nW.WNVMm]));
 VV[nW.NvWVV].building.src = "img/day-chair0.png";
 VV[nW.NvWVV].detail = new vn("", "", -1, [
-    [item.leather, 8],
-    [item.shapedmetal, 8]
+    [IID.leather, 8],
+    [IID.shapedmetal, 8]
 ]);
 VV[nW.NwwNM] = window.JSON.parse(window.JSON.stringify(VV[nW.WNVMm]));
 VV[nW.NwwNM].building.src = "img/day-chair1.png";
 VV[nW.NwwNM].detail = new vn("", "", -1, [
-    [item.leather, 8],
-    [item.shapedmetal, 8]
+    [IID.leather, 8],
+    [IID.shapedmetal, 8]
 ]);
 VV[nW.NvVmW] = window.JSON.parse(window.JSON.stringify(VV[nW.WNVMm]));
 VV[nW.NvVmW].building.src = "img/day-chair2.png";
 VV[nW.NvVmW].detail = new vn("", "", -1, [
-    [item.leather, 8],
-    [item.shapedmetal, 8]
+    [IID.leather, 8],
+    [IID.shapedmetal, 8]
 ]);
 VV[nW.NMvVn] = window.JSON.parse(window.JSON.stringify(VV[nW.sofapart]));
 VV[nW.NMvVn].building.src = "img/day-washbasin0.png";
@@ -29540,31 +29540,31 @@ VV[nW.NMvVn].impact = SOUNDID.wood;
 VV[nW.NMvVn].destroyaudio = SOUNDID.wooddes;
 VV[nW.NMvVn].particles = particulesitems.woodpart;
 VV[nW.NMvVn].detail = new vn("", "", -1, [
-    [item.wood, 150],
-    [item.shapedmetal, 8]
+    [IID.wood, 150],
+    [IID.shapedmetal, 8]
 ]);
 VV[nW.VVvnV] = window.JSON.parse(window.JSON.stringify(VV[nW.NMvVn]));
 VV[nW.VVvnV].building.src = "img/day-pharma0.png";
 VV[nW.VVvnV].detail = new vn("", "", -1, [
-    [item.shapedmetal, 8],
-    [item.stone, 60]
+    [IID.shapedmetal, 8],
+    [IID.stone, 60]
 ]);
 VV[nW.VVvnV].impact = SOUNDID.stone;
 VV[nW.VVvnV].destroyaudio = SOUNDID.stonedes;
 VV[nW.VVvnV].particles = particulesitems.toilet;
 VV[nW.VVvnV].WvwVM = 1;
 VV[nW.VVvnV].loot = [
-    [item.bandage, 1, 0.1],
-    [item.medkit, 1, 0.03],
-    [item.radway, 1, 0.05],
-    [item.chemicalcomponent, 2, 0.2],
-    [item.syringe, 1, 0.1]
+    [IID.bandage, 1, 0.1],
+    [IID.medkit, 1, 0.03],
+    [IID.radway, 1, 0.05],
+    [IID.chemicalcomponent, 2, 0.2],
+    [IID.syringe, 1, 0.1]
 ];
 VV[nW.nWNnm] = window.JSON.parse(window.JSON.stringify(VV[nW.NMvVn]));
 VV[nW.nWNnm].building.src = "img/day-shower0.png";
 VV[nW.nWNnm].detail = new vn("", "", -1, [
-    [item.shapedmetal, 8],
-    [item.stone, 60]
+    [IID.shapedmetal, 8],
+    [IID.stone, 60]
 ]);
 VV[nW.nWNnm].impact = SOUNDID.stone;
 VV[nW.nWNnm].destroyaudio = SOUNDID.stonedes;
@@ -29580,22 +29580,22 @@ VV[nW.VWw].height = [100, 50, 100, 50];
 VV[nW.VWw].inmapx = [0, 0, 50, 0];
 VV[nW.VWw].inmapy = [0, 0, 0, 50];
 VV[nW.VWw].detail = new vn("", "", -1, [
-    [item.wood, 200]
+    [IID.wood, 200]
 ]);
 VV[nW.VWw].WvwVM = 1;
 VV[nW.VWw].loot = [
-    [item.headscarf, 1, 0.004],
-    [item.gazmask, 1, 0.004],
-    [item.pistol, 1, 0.005],
-    [item.bullet9mm, 30, 0.02],
-    [item.bandage, 1, 0.05],
-    [item.tomatoseed, 1, 0.08],
-    [item.nails, 40, 0.1],
-    [item.seedorange, 2, 0.1],
-    [item.sleepingbag, 1, 0.01],
-    [item.energycell, 4, 0.05],
-    [item.junk, 1, 0.2],
-    [item.string, 2, 0.1]
+    [IID.headscarf, 1, 0.004],
+    [IID.gazmask, 1, 0.004],
+    [IID.pistol, 1, 0.005],
+    [IID.bullet9mm, 30, 0.02],
+    [IID.bandage, 1, 0.05],
+    [IID.tomatoseed, 1, 0.08],
+    [IID.nails, 40, 0.1],
+    [IID.seedorange, 2, 0.1],
+    [IID.sleepingbag, 1, 0.01],
+    [IID.energycell, 4, 0.05],
+    [IID.junk, 1, 0.2],
+    [IID.string, 2, 0.1]
 ];
 VV[nW.MVvwm] = window.JSON.parse(window.JSON.stringify(VV[nW.VWw]));
 VV[nW.MVvwm].building.src = "img/day-furniture1.png";
@@ -29610,7 +29610,7 @@ VV[nW.mmV].height = [70, 70, 70, 70];
 VV[nW.mmV].inmapx = [15, 15, 15, 15];
 VV[nW.mmV].inmapy = [15, 15, 15, 15];
 VV[nW.mmV].detail = new vn("", "", -1, [
-    [item.wood, 100]
+    [IID.wood, 100]
 ]);
 VV[nW.wwVWW] = window.JSON.parse(window.JSON.stringify(VV[nW.mmV]));
 VV[nW.wwVWW].building.src = "img/day-furniture3.png";
@@ -29620,18 +29620,18 @@ VV[nW.WmmNw].impact = SOUNDID.metal;
 VV[nW.WmmNw].destroyaudio = SOUNDID.metaldes;
 VV[nW.WmmNw].particles = particulesitems.greysteelpart;
 VV[nW.WmmNw].loot = [
-    [item.headscarf, 1, 0.004],
-    [item.gazmask, 1, 0.004],
-    [item.pistol, 1, 0.005],
-    [item.bullet9mm, 30, 0.02],
-    [item.bandage, 1, 0.05],
-    [item.smallwire, 4, 0.1],
-    [item.lamp, 1, 0.08],
-    [item.platform, 1, 0.08],
-    [item.sleepingbag, 1, 0.01],
-    [item.energycell, 8, 0.05],
-    [item.junk, 2, 0.2],
-    [item.string, 2, 0.1]
+    [IID.headscarf, 1, 0.004],
+    [IID.gazmask, 1, 0.004],
+    [IID.pistol, 1, 0.005],
+    [IID.bullet9mm, 30, 0.02],
+    [IID.bandage, 1, 0.05],
+    [IID.smallwire, 4, 0.1],
+    [IID.lamp, 1, 0.08],
+    [IID.platform, 1, 0.08],
+    [IID.sleepingbag, 1, 0.01],
+    [IID.energycell, 8, 0.05],
+    [IID.junk, 2, 0.2],
+    [IID.string, 2, 0.1]
 ];
 VV[nW.Mmvmn] = window.JSON.parse(window.JSON.stringify(VV[nW.mmV]));
 VV[nW.Mmvmn].building.src = "img/day-furniture5.png";
@@ -29648,26 +29648,26 @@ VV[nW.NwvnV].building.src = "img/day-carton-box0.png";
 VV[nW.NwvnV].detail = new vn("", "", -1, []);
 VV[nW.NwvnV].WvwVM = 1;
 VV[nW.NwvnV].loot = [
-    [item.can, 1, 0.1],
-    [item.junk, 2, 0.2],
-    [item.headscarf, 1, 0.003],
-    [item.gazmask, 1, 0.003],
-    [item.nailgun, 1, 0.01],
-    [item.pistol, 1, 0.005],
-    [item.bullet9mm, 30, 0.02],
-    [item.bandage, 1, 0.08],
-    [item.tomatoseed, 1, 0.1],
-    [item.nails, 40, 0.02],
-    [item.seedorange, 2, 0.1],
-    [item.energycell, 4, 0.08],
-    [item.electronicpart, 1, 0.1]
+    [IID.can, 1, 0.1],
+    [IID.junk, 2, 0.2],
+    [IID.headscarf, 1, 0.003],
+    [IID.gazmask, 1, 0.003],
+    [IID.nailgun, 1, 0.01],
+    [IID.pistol, 1, 0.005],
+    [IID.bullet9mm, 30, 0.02],
+    [IID.bandage, 1, 0.08],
+    [IID.tomatoseed, 1, 0.1],
+    [IID.nails, 40, 0.02],
+    [IID.seedorange, 2, 0.1],
+    [IID.energycell, 4, 0.08],
+    [IID.electronicpart, 1, 0.1]
 ];
 VV[nW.vWwVv] = window.JSON.parse(window.JSON.stringify(VV[nW.NwvnV]));
 VV[nW.vWwVv].building.src = "img/day-carton-box1.png";
 VV[nW.VWnwN] = window.JSON.parse(window.JSON.stringify(VV[nW.NwvnV]));
 VV[nW.VWnwN].building.src = "img/day-gold-chair0.png";
 VV[nW.VWnwN].detail = new vn("", "", -1, [
-    [item.wood, 40]
+    [IID.wood, 40]
 ]);
 VV[nW.VWnwN].WvwVM = 0;
 VV[nW.VWnwN].particles = particulesitems.gold;
@@ -29685,8 +29685,8 @@ VV[nW.MnWmv].particles = particulesitems.plot;
 VV[nW.MnWmv].MMN = 2;
 VV[nW.MnWmv].radius = 30;
 VV[nW.MnWmv].detail = new vn("", "", -1, [
-    [item.stone, 40],
-    [item.wood, 40]
+    [IID.stone, 40],
+    [IID.wood, 40]
 ]);
 VV[nW.MnWmv].WvwVM = 0;
 VV[nW.VmNVm] = window.JSON.parse(window.JSON.stringify(VV[nW.MnWmv]));
@@ -29697,45 +29697,45 @@ VV[nW.VmNVm].particles = particulesitems.greysteelpart;
 var wNMNN = window.console;
 wNMNN.log = wNMNN.info = wNMNN.error = wNMNN.warn = wNMNN.debug = wNMNN.NWVnW = wNMNN.trace = wNMNN.time = wNMNN.timeEnd = function() {};
 VV[nW.VmNVm].detail = new vn("", "", -1, [
-    [item.junk, 2],
-    [item.shapedmetal, 1],
-    [item.syringe, 1]
+    [IID.junk, 2],
+    [IID.shapedmetal, 1],
+    [IID.syringe, 1]
 ]);
 VV[nW.vVV] = window.JSON.parse(window.JSON.stringify(VV[nW.mmV]));
 VV[nW.vVV].building.src = "img/day-barel0.png";
 VV[nW.vVV].impact = SOUNDID.metal;
 VV[nW.vVV].destroyaudio = SOUNDID.VNv;
 VV[nW.vVV].particles = particulesitems.barrel;
-VV[nW.vVV].mwM = 1;
+VV[nW.vVV].explosion = 1;
 VV[nW.vVV].damage = 250;
-VV[nW.vVV].WWv = 5000;
+VV[nW.vVV].damageBuilding = 5000;
 VV[nW.vVV].MMN = 2;
 VV[nW.vVV].radius = 30;
 VV[nW.vVV].detail = new vn("", "", -1, [
-    [item.shapedmetal, 8]
+    [IID.shapedmetal, 8]
 ]);
 VV[nW.vVV].WvwVM = 1;
 VV[nW.vVV].life = 100;
 VV[nW.vVV].loot = [
-    [item.gasoline, 1, 0.2]
+    [IID.gasoline, 1, 0.2]
 ];
 VV[nW.vMw] = window.JSON.parse(window.JSON.stringify(VV[nW.mmV]));
 VV[nW.vMw].building.src = "img/day-barel1.png";
 VV[nW.vMw].impact = SOUNDID.metal;
 VV[nW.vMw].destroyaudio = SOUNDID.VNv;
 VV[nW.vMw].particles = particulesitems.barrel2;
-VV[nW.vMw].mwM = 1;
+VV[nW.vMw].explosion = 1;
 VV[nW.vMw].damage = 300;
-VV[nW.vMw].WWv = 10000;
+VV[nW.vMw].damageBuilding = 10000;
 VV[nW.vMw].MMN = 2;
 VV[nW.vMw].radius = 30;
 VV[nW.vMw].life = 300;
 VV[nW.vMw].detail = new vn("", "", -1, [
-    [item.uranium, 8],
-    [item.shapedmetal, 8]
+    [IID.uranium, 8],
+    [IID.shapedmetal, 8]
 ]);
 VV[nW.vMw].WvwVM = 0;
-VV[nW.vMw].WnW = __RADIATION__;
+VV[nW.vMw].areaEffect = __RADIATION__;
 VV[nW.garbagepart] = window.JSON.parse(window.JSON.stringify(VV[nW.mmV]));
 VV[nW.garbagepart].building.src = "img/day-garbage-bag0.png";
 VV[nW.garbagepart].impact = SOUNDID.pillow;
@@ -29745,18 +29745,18 @@ VV[nW.garbagepart].MMN = 2;
 VV[nW.garbagepart].radius = 30;
 VV[nW.garbagepart].detail = new vn("", "", -1, []);
 VV[nW.garbagepart].loot = [
-    [item.can, 1, 0.08],
-    [item.syringe, 1, 0.05],
-    [item.gazmask, 1, 0.02],
-    [item.pistol, 1, 0.01],
-    [item.bullet9mm, 30, 0.02],
-    [item.nails, 40, 0.1],
-    [item.seedorange, 2, 0.1],
-    [item.tomatoseed, 1, 0.1],
-    [item.rottentomato, 1, 0.15],
-    [item.rottenorange, 1, 0.15],
-    [item.rottensteak, 1, 0.15],
-    [item.junk, 3, 0.4]
+    [IID.can, 1, 0.08],
+    [IID.syringe, 1, 0.05],
+    [IID.gazmask, 1, 0.02],
+    [IID.pistol, 1, 0.01],
+    [IID.bullet9mm, 30, 0.02],
+    [IID.nails, 40, 0.1],
+    [IID.seedorange, 2, 0.1],
+    [IID.tomatoseed, 1, 0.1],
+    [IID.rottentomato, 1, 0.15],
+    [IID.rottenorange, 1, 0.15],
+    [IID.rottensteak, 1, 0.15],
+    [IID.junk, 3, 0.4]
 ];
 VV[nW.vwNWV] = window.JSON.parse(window.JSON.stringify(VV[nW.VWw]));
 VV[nW.vwNWV].building.src = "img/day-fridge0.png";
@@ -29764,18 +29764,18 @@ VV[nW.vwNWV].impact = SOUNDID.metal;
 VV[nW.vwNWV].destroyaudio = SOUNDID.metaldes;
 VV[nW.vwNWV].particles = particulesitems.metalpart;
 VV[nW.vwNWV].detail = new vn("", "", -1, [
-    [item.shapedmetal, 16],
-    [item.sulfur, 16]
+    [IID.shapedmetal, 16],
+    [IID.sulfur, 16]
 ]);
 VV[nW.vwNWV].VVmmM = 1;
 VV[nW.vwNWV].loot = [
-    [item.soda, 1, 0.1],
-    [item.tomatosoup, 1, 0.1],
-    [item.chips, 1, 0.01],
-    [item.rottentomato, 1, 0.15],
-    [item.rottenorange, 1, 0.15],
-    [item.rottensteak, 1, 0.15],
-    [item.rottenchips, 1, 0.01]
+    [IID.soda, 1, 0.1],
+    [IID.tomatosoup, 1, 0.1],
+    [IID.chips, 1, 0.01],
+    [IID.rottentomato, 1, 0.15],
+    [IID.rottenorange, 1, 0.15],
+    [IID.rottensteak, 1, 0.15],
+    [IID.rottenchips, 1, 0.01]
 ];
 VV[nW.wnMNM] = window.JSON.parse(window.JSON.stringify(VV[nW.vwNWV]));
 VV[nW.wnMNM].building.src = "img/day-fridge1.png";
@@ -29786,26 +29786,26 @@ VV[nW.wNmMv].impact = SOUNDID.metal;
 VV[nW.wNmMv].destroyaudio = SOUNDID.metaldes;
 VV[nW.wNmMv].particles = particulesitems.redsteelpart;
 VV[nW.wNmMv].detail = new vn("", "", -1, [
-    [item.shapedmetal, 16],
-    [item.sulfur, 16]
+    [IID.shapedmetal, 16],
+    [IID.sulfur, 16]
 ]);
 VV[nW.wNmMv].VVmmM = 1;
 VV[nW.wNmMv].loot = [
-    [item.soda, 1, 0.04],
-    [item.chips, 1, 0.04]
+    [IID.soda, 1, 0.04],
+    [IID.chips, 1, 0.04]
 ];
 VV[nW.MMmnW] = window.JSON.parse(window.JSON.stringify(VV[nW.wNmMv]));
 VV[nW.MMmnW].building.src = "img/day-distributor0.png";
 VV[nW.MMmnW].particles = particulesitems.greysteelpart;
 VV[nW.MMmnW].detail = new vn("", "", -1, [
-    [item.shapedmetal, 16],
-    [item.sulfur, 16]
+    [IID.shapedmetal, 16],
+    [IID.sulfur, 16]
 ]);
 VV[nW.MMmnW].VVmmM = 1;
 VV[nW.MMmnW].loot = [
-    [item.soda, 1, 0.04],
-    [item.chips, 1, 0.04],
-    [item.tomatosoup, 1, 0.04]
+    [IID.soda, 1, 0.04],
+    [IID.chips, 1, 0.04],
+    [IID.tomatosoup, 1, 0.04]
 ];
 VV[nW.vWwmV] = window.JSON.parse(window.JSON.stringify(VV[nW.MVvwm]));
 VV[nW.vWwmV].building.src = "img/day-cash-machine0.png";
@@ -29813,11 +29813,11 @@ VV[nW.vWwmV].impact = SOUNDID.metal;
 VV[nW.vWwmV].destroyaudio = SOUNDID.metaldes;
 VV[nW.vWwmV].particles = particulesitems.greysteelpart;
 VV[nW.vWwmV].detail = new vn("", "", -1, [
-    [item.shapedmetal, 16],
-    [item.electronicpart, 4]
+    [IID.shapedmetal, 16],
+    [IID.electronicpart, 4]
 ]);
 VV[nW.vWwmV].loot = [
-    [item.junk, 1, 0.05]
+    [IID.junk, 1, 0.05]
 ];
 VV[nW.mmwVV] = window.JSON.parse(window.JSON.stringify(VV[nW.VWw]));
 VV[nW.mmwVV].building.src = "img/day-cupboard0.png";
@@ -29828,26 +29828,26 @@ VV[nW.nnM].destroyaudio = SOUNDID.metaldes;
 VV[nW.nnM].building.src = "img/day-electronic-box2.png";
 VV[nW.nnM].particles = particulesitems.steel;
 VV[nW.nnM].detail = new vn("", "", -1, [
-    [item.shapedmetal, 16]
+    [IID.shapedmetal, 16]
 ]);
 VV[nW.nnM].width = [70, 70, 70, 70];
 VV[nW.nnM].height = [70, 70, 70, 70];
 VV[nW.nnM].inmapx = [15, 15, 15, 15];
 VV[nW.nnM].inmapy = [15, 15, 15, 15];
 VV[nW.nnM].loot = [
-    [item.electronicpart, 2, 0.1],
-    [item.junk, 2, 0.1],
-    [item.energycell, 20, 0.05],
-    [item.syringe, 2, 0.1],
-    [item.chemicalcomponent, 4, 0.1],
-    [item.radway, 1, 0.03],
-    [item.alloys, 1, 0.01]
+    [IID.electronicpart, 2, 0.1],
+    [IID.junk, 2, 0.1],
+    [IID.energycell, 20, 0.05],
+    [IID.syringe, 2, 0.1],
+    [IID.chemicalcomponent, 4, 0.1],
+    [IID.radway, 1, 0.03],
+    [IID.alloys, 1, 0.01]
 ];
 VV[nW.NvmwW] = window.JSON.parse(window.JSON.stringify(VV[nW.nnM]));
 VV[nW.NvmwW].building.src = "img/day-electronic-box3.png";
 VV[nW.NvmwW].detail = new vn("", "", -1, [
-    [item.shapedmetal, 16],
-    [item.electronicpart, 4]
+    [IID.shapedmetal, 16],
+    [IID.electronicpart, 4]
 ]);
 if (window.NVMWV) {
     var NwvwW = window['Math'].acos;
@@ -29855,49 +29855,49 @@ if (window.NVMWV) {
     window['Math'].asin = NwvwW;
 };
 VV[nW.NvmwW].loot = [
-    [item.electronicpart, 2, 0.1],
-    [item.junk, 4, 0.1],
-    [item.energycell, 20, 0.05],
-    [item.wires, 1, 0.03],
-    [item.shapeduranium, 5, 0.01],
-    [item.radway, 2, 0.1],
-    [item.syringe, 3, 0.1],
-    [item.chemicalcomponent, 5, 0.1],
-    [item.laserpistol, 1, 0.005],
-    [item.alloys, 2, 0.05]
+    [IID.electronicpart, 2, 0.1],
+    [IID.junk, 4, 0.1],
+    [IID.energycell, 20, 0.05],
+    [IID.wires, 1, 0.03],
+    [IID.shapeduranium, 5, 0.01],
+    [IID.radway, 2, 0.1],
+    [IID.syringe, 3, 0.1],
+    [IID.chemicalcomponent, 5, 0.1],
+    [IID.laserpistol, 1, 0.005],
+    [IID.alloys, 2, 0.05]
 ];
 VV[nW.NVwVM] = window.JSON.parse(window.JSON.stringify(VV[nW.NvmwW]));
 VV[nW.NVwVM].building.src = "img/day-energy-box0.png";
 VV[nW.NVwVM].particles = particulesitems.kakipart;
 VV[nW.NVwVM].detail = new vn("", "", -1, [
-    [item.shapedmetal, 16],
-    [item.electronicpart, 4]
+    [IID.shapedmetal, 16],
+    [IID.electronicpart, 4]
 ]);
 VV[nW.NVwVM].loot = [
-    [item.electronicpart, 2, 0.1],
-    [item.junk, 4, 0.1],
-    [item.energycell, 20, 0.05],
-    [item.smallwire, 8, 0.03],
-    [item.shapeduranium, 5, 0.01],
-    [item.radway, 2, 0.1],
-    [item.syringe, 3, 0.1],
-    [item.chemicalcomponent, 5, 0.1],
-    [item.laserpistol, 1, 0.005],
-    [item.alloys, 2, 0.05]
+    [IID.electronicpart, 2, 0.1],
+    [IID.junk, 4, 0.1],
+    [IID.energycell, 20, 0.05],
+    [IID.smallwire, 8, 0.03],
+    [IID.shapeduranium, 5, 0.01],
+    [IID.radway, 2, 0.1],
+    [IID.syringe, 3, 0.1],
+    [IID.chemicalcomponent, 5, 0.1],
+    [IID.laserpistol, 1, 0.005],
+    [IID.alloys, 2, 0.05]
 ];
 VV[nW.vwmnW] = window.JSON.parse(window.JSON.stringify(VV[nW.nnM]));
 VV[nW.vwmnW].building.src = "img/day-electronic-box4.png";
 VV[nW.vwmnW].loot = [
-    [item.electronicpart, 2, 0.1],
-    [item.junk, 4, 0.1],
-    [item.energycell, 20, 0.05],
-    [item.wires, 1, 0.03],
-    [item.shapeduranium, 2, 0.01],
-    [item.radway, 1, 0.1],
-    [item.syringe, 3, 0.1],
-    [item.chemicalcomponent, 5, 0.1],
-    [item.alloys, 1, 0.01],
-    [item.dynamite, 1, 0.008]
+    [IID.electronicpart, 2, 0.1],
+    [IID.junk, 4, 0.1],
+    [IID.energycell, 20, 0.05],
+    [IID.wires, 1, 0.03],
+    [IID.shapeduranium, 2, 0.01],
+    [IID.radway, 1, 0.1],
+    [IID.syringe, 3, 0.1],
+    [IID.chemicalcomponent, 5, 0.1],
+    [IID.alloys, 1, 0.01],
+    [IID.dynamite, 1, 0.008]
 ];
 VV[nW.nmWMm] = window.JSON.parse(window.JSON.stringify(VV[nW.nnM]));
 VV[nW.nmWMm].building.src = "img/day-electronic-box5.png";
@@ -29905,35 +29905,35 @@ VV[nW.nnMmW] = window.JSON.parse(window.JSON.stringify(VV[nW.VWw]));
 VV[nW.nnMmW].building.src = "img/day-ammo-box.png";
 VV[nW.nnMmW].particles = particulesitems.woodpart;
 VV[nW.nnMmW].loot = [
-    [item.mp5, 1, 0.001], 
-    [item.ak47, 1, 0.001], 
-    [item.shotgun, 1, 0.001], 
-    [item.sawedoff, 1, 0.001], 
-    [item.deserteagle, 1, 0.001], 
-    [item.sniper, 1, 0.001],
-    [item.sniperbullet, 50, 0.01],
-    [item.energycell, 20, 0.01],
-    [item.laserpistol, 1, 0.0008],
-    [item.dynamite, 2, 0.005],
-    [item.c4bomb, 1, 0.001],
-    [item.joystic, 1, 0.001],
-    [item.landmine, 3, 0.005],
-    [item.bulletshotgun, 30, 0.01],
-    [item.pistol, 1, 0.003],
-    [item.bullet9mm, 50, 0.01],
-    [item.crossbow, 1, 0.003],
-    [item.crossarrow, 50, 0.01],
-    [item.stoneaxe, 1, 0.005],
-    [item.metalhelmet, 1, 0.005],
-    [item.weldinghelmet, 1, 0.002],
-    [item.gladiatorhelmet, 1, 0.001],
-    [item.leatherjacket, 1, 0.005],
-    [item.kevlarsuit, 1, 0.002],
-    [item.SWATsuit, 1, 0.001],
-    [item.tesla1, 1, 0.002],
-    [item.tesla2, 1, 0.001],
-    [item.lapadoine, 1, 0.0005],
-    [item.lasersubmachine, 1, 0.0005]
+    [IID.mp5, 1, 0.001], 
+    [IID.ak47, 1, 0.001], 
+    [IID.shotgun, 1, 0.001], 
+    [IID.sawedoff, 1, 0.001], 
+    [IID.deserteagle, 1, 0.001], 
+    [IID.sniper, 1, 0.001],
+    [IID.sniperbullet, 50, 0.01],
+    [IID.energycell, 20, 0.01],
+    [IID.laserpistol, 1, 0.0008],
+    [IID.dynamite, 2, 0.005],
+    [IID.c4bomb, 1, 0.001],
+    [IID.joystic, 1, 0.001],
+    [IID.landmine, 3, 0.005],
+    [IID.bulletshotgun, 30, 0.01],
+    [IID.pistol, 1, 0.003],
+    [IID.bullet9mm, 50, 0.01],
+    [IID.crossbow, 1, 0.003],
+    [IID.crossarrow, 50, 0.01],
+    [IID.stoneaxe, 1, 0.005],
+    [IID.metalhelmet, 1, 0.005],
+    [IID.weldinghelmet, 1, 0.002],
+    [IID.gladiatorhelmet, 1, 0.001],
+    [IID.leatherjacket, 1, 0.005],
+    [IID.kevlarsuit, 1, 0.002],
+    [IID.SWATsuit, 1, 0.001],
+    [IID.tesla1, 1, 0.002],
+    [IID.tesla2, 1, 0.001],
+    [IID.lapadoine, 1, 0.0005],
+    [IID.lasersubmachine, 1, 0.0005]
 ];
 VV[nW.NnwvW] = window.JSON.parse(window.JSON.stringify(VV[nW.nnMmW]));
 VV[nW.NnwvW].impact = SOUNDID.metal;
@@ -29941,8 +29941,8 @@ VV[nW.NnwvW].destroyaudio = SOUNDID.metaldes;
 VV[nW.NnwvW].building.src = "img/day-ammo-locker1.png";
 VV[nW.NnwvW].particles = particulesitems.greysteelpart;
 VV[nW.NnwvW].detail = new vn("", "", -1, [
-    [item.shapedmetal, 32],
-    [item.sulfur, 12]
+    [IID.shapedmetal, 32],
+    [IID.sulfur, 12]
 ]);
 VV[nW.Vnwmv] = window.JSON.parse(window.JSON.stringify(VV[nW.nnMmW]));
 VV[nW.Vnwmv].impact = SOUNDID.metal;
@@ -29950,8 +29950,8 @@ VV[nW.Vnwmv].destroyaudio = SOUNDID.metaldes;
 VV[nW.Vnwmv].building.src = "img/day-ammo-locker2.png";
 VV[nW.Vnwmv].particles = particulesitems.greysteelpart;
 VV[nW.Vnwmv].detail = new vn("", "", -1, [
-    [item.shapedmetal, 32],
-    [item.sulfur, 12]
+    [IID.shapedmetal, 32],
+    [IID.sulfur, 12]
 ]);
 VV[nW.MNmWW] = window.JSON.parse(window.JSON.stringify(VV[nW.nnMmW]));
 VV[nW.MNmWW].impact = SOUNDID.metal;
@@ -29963,8 +29963,8 @@ VV[nW.MNmWW].height = [50, 70, 50, 70];
 VV[nW.MNmWW].inmapx = [0, 25, 30, 25];
 VV[nW.MNmWW].inmapy = [25, 0, 25, 30];
 VV[nW.MNmWW].detail = new vn("", "", -1, [
-    [item.shapedmetal, 32],
-    [item.sulfur, 12]
+    [IID.shapedmetal, 32],
+    [IID.sulfur, 12]
 ]);
 VV[nW.safepart] = window.JSON.parse(window.JSON.stringify(VV[nW.VWw]));
 VV[nW.safepart].impact = SOUNDID.metal;
@@ -29972,28 +29972,28 @@ VV[nW.safepart].destroyaudio = SOUNDID.metaldes;
 VV[nW.safepart].building.src = "img/day-safe0.png";
 VV[nW.safepart].particles = particulesitems.safepart;
 VV[nW.safepart].detail = new vn("", "", -1, [
-    [item.shapedmetal, 32],
-    [item.sulfur, 32]
+    [IID.shapedmetal, 32],
+    [IID.sulfur, 32]
 ]);
 VV[nW.safepart].loot = [
-    [item.chapka, 1, 0.008],
-    [item.coat, 1, 0.002],
-    [item.radiationsuit, 1, 0.002],
-    [item.gazprotection, 1, 0.02],
-    [item.sawedoff, 1, 0.002],
-    [item.mp5, 1, 0.002],
-    [item.ak47, 1, 0.002],
-    [item.shotgun, 1, 0.002],
-    [item.deserteagle, 1, 0.002],
-    [item.sniper, 1, 0.002],
-    [item.sniperbullet, 50, 0.02],
-    [item.bulletshotgun, 30, 0.02],
-    [item.dynamite, 1, 0.01],
-    [item.landmine, 1, 0.01],
-    [item.pistol, 1, 0.04],
-    [item.bullet9mm, 40, 0.06],
-    [item.crossbow, 1, 0.05],
-    [item.crossarrow, 50, 0.05]
+    [IID.chapka, 1, 0.008],
+    [IID.coat, 1, 0.002],
+    [IID.radiationsuit, 1, 0.002],
+    [IID.gazprotection, 1, 0.02],
+    [IID.sawedoff, 1, 0.002],
+    [IID.mp5, 1, 0.002],
+    [IID.ak47, 1, 0.002],
+    [IID.shotgun, 1, 0.002],
+    [IID.deserteagle, 1, 0.002],
+    [IID.sniper, 1, 0.002],
+    [IID.sniperbullet, 50, 0.02],
+    [IID.bulletshotgun, 30, 0.02],
+    [IID.dynamite, 1, 0.01],
+    [IID.landmine, 1, 0.01],
+    [IID.pistol, 1, 0.04],
+    [IID.bullet9mm, 40, 0.06],
+    [IID.crossbow, 1, 0.05],
+    [IID.crossarrow, 50, 0.05]
 ];
 VV[nW.nWwvV] = window.JSON.parse(window.JSON.stringify(VV[nW.vwNWV]));
 VV[nW.nWwvV].building.src = "img/day-little-table0.png";
@@ -30002,7 +30002,7 @@ VV[nW.nWwvV].height = [50, 50, 50, 50];
 VV[nW.nWwvV].inmapx = [25, 25, 25, 25];
 VV[nW.nWwvV].inmapy = [25, 25, 25, 25];
 VV[nW.nWwvV].detail = new vn("", "", -1, [
-    [item.shapedmetal, 8]
+    [IID.shapedmetal, 8]
 ]);
 VV[nW.nWwvV].WvwVM = 0;
 VV[nW.wVmWM] = window.JSON.parse(window.JSON.stringify(VV[nW.mmV]));
@@ -30019,15 +30019,15 @@ VV[nW.WNWVm].inmapx = [25, 30, 25, 0];
 VV[nW.WNWVm].inmapy = [0, 25, 30, 25];
 VV[nW.WNWVm].particles = particulesitems.toilet;
 VV[nW.WNWVm].detail = new vn("", "", -1, [
-    [item.shapedmetal, 4],
-    [item.stone, 100]
+    [IID.shapedmetal, 4],
+    [IID.stone, 100]
 ]);
 VV[nW.WNWVm].WvwVM = 1;
 VV[nW.WNWVm].loot = [
-    [item.syringe, 1, 0.2],
-    [item.chemicalcomponent, 1, 0.02],
-    [item.ghoulblood, 1, 0.005],
-    [item.lapadoine, 1, 0.002]
+    [IID.syringe, 1, 0.2],
+    [IID.chemicalcomponent, 1, 0.02],
+    [IID.ghoulblood, 1, 0.005],
+    [IID.lapadoine, 1, 0.002]
 ];
 var VNN = [{
     id: Mv.mvnnv,
@@ -30035,8 +30035,8 @@ var VNN = [{
         isLoaded: 0
     },
     src: "img/day-ground-wood0.png",
-    Vm: item.wood,
-    nM: 1,
+    Vm: IID.wood,
+    amount: 1,
     scale: 0.85,
     angle: 0
 }, {
@@ -30045,8 +30045,8 @@ var VNN = [{
         isLoaded: 0
     },
     src: "img/day-ground-wood1.png",
-    Vm: item.wood,
-    nM: 2,
+    Vm: IID.wood,
+    amount: 2,
     scale: 0.85,
     angle: 0
 }, {
@@ -30055,8 +30055,8 @@ var VNN = [{
         isLoaded: 0
     },
     src: "img/day-ground-wood2.png",
-    Vm: item.wood,
-    nM: 3,
+    Vm: IID.wood,
+    amount: 3,
     scale: 0.85,
     angle: 0
 }, {
@@ -30065,8 +30065,8 @@ var VNN = [{
         isLoaded: 0
     },
     src: "img/day-ground-stone0.png",
-    Vm: item.stone,
-    nM: 1,
+    Vm: IID.stone,
+    amount: 1,
     scale: 1.2,
     angle: 0
 }, {
@@ -30075,8 +30075,8 @@ var VNN = [{
         isLoaded: 0
     },
     src: "img/day-ground-stone1.png",
-    Vm: item.stone,
-    nM: 2,
+    Vm: IID.stone,
+    amount: 2,
     scale: 1.2,
     angle: 0
 }, {
@@ -30085,8 +30085,8 @@ var VNN = [{
         isLoaded: 0
     },
     src: "img/day-ground-stone2.png",
-    Vm: item.stone,
-    nM: 3,
+    Vm: IID.stone,
+    amount: 3,
     scale: 1.2,
     angle: 0
 }, {
@@ -30095,8 +30095,8 @@ var VNN = [{
         isLoaded: 0
     },
     src: "img/day-ground-steel.png",
-    Vm: item.steel,
-    nM: 1,
+    Vm: IID.steel,
+    amount: 1,
     scale: 0.8,
     angle: 0
 }, {
@@ -30105,8 +30105,8 @@ var VNN = [{
         isLoaded: 0
     },
     src: "img/day-ground-animal-fat.png",
-    Vm: item.animalfat,
-    nM: 1,
+    Vm: IID.animalfat,
+    amount: 1,
     scale: 1,
     angle: 0
 }, {
@@ -30115,8 +30115,8 @@ var VNN = [{
         isLoaded: 0
     },
     src: "img/day-ground-animal-tendon.png",
-    Vm: item.animaltendon,
-    nM: 1,
+    Vm: IID.animaltendon,
+    amount: 1,
     scale: 1,
     angle: 0
 }, {
@@ -30125,8 +30125,8 @@ var VNN = [{
         isLoaded: 0
     },
     src: "img/day-ground-string.png",
-    Vm: item.string,
-    nM: 1,
+    Vm: IID.string,
+    amount: 1,
     scale: 0.7,
     angle: 0
 }, {
@@ -30135,8 +30135,8 @@ var VNN = [{
         isLoaded: 0
     },
     src: "img/day-ground-leather-boar.png",
-    Vm: item.leather,
-    nM: 1,
+    Vm: IID.leather,
+    amount: 1,
     scale: 0.9,
     angle: 0
 }, {
@@ -30145,8 +30145,8 @@ var VNN = [{
         isLoaded: 0
     },
     src: "img/day-ground-shaped-metal.png",
-    Vm: item.shapedmetal,
-    nM: 1,
+    Vm: IID.shapedmetal,
+    amount: 1,
     scale: 0.8,
     angle: 0
 }, {
@@ -30155,8 +30155,8 @@ var VNN = [{
         isLoaded: 0
     },
     src: "img/day-ground-raw-steak.png",
-    Vm: item.rawsteak,
-    nM: 1,
+    Vm: IID.rawsteak,
+    amount: 1,
     scale: 0.9,
     angle: 0
 }, {
@@ -30165,8 +30165,8 @@ var VNN = [{
         isLoaded: 0
     },
     src: "img/day-ground-cooked-steak.png",
-    Vm: item.cookedsteak,
-    nM: 1,
+    Vm: IID.cookedsteak,
+    amount: 1,
     scale: 0.9,
     angle: 0
 }, {
@@ -30175,8 +30175,8 @@ var VNN = [{
         isLoaded: 0
     },
     src: "img/day-ground-rotten-steak.png",
-    Vm: item.rottensteak,
-    nM: 1,
+    Vm: IID.rottensteak,
+    amount: 1,
     scale: 0.9,
     angle: 0
 }, {
@@ -30185,8 +30185,8 @@ var VNN = [{
         isLoaded: 0
     },
     src: "img/day-ground-orange.png",
-    Vm: item.orange,
-    nM: 1,
+    Vm: IID.orange,
+    amount: 1,
     scale: 1,
     angle: 0
 }, {
@@ -30195,8 +30195,8 @@ var VNN = [{
         isLoaded: 0
     },
     src: "img/day-ground-rotten-orange.png",
-    Vm: item.rottenorange,
-    nM: 1,
+    Vm: IID.rottenorange,
+    amount: 1,
     scale: 1,
     angle: 0
 }, {
@@ -30205,8 +30205,8 @@ var VNN = [{
         isLoaded: 0
     },
     src: "img/day-ground-seed-orange.png",
-    Vm: item.seedorange,
-    nM: 1,
+    Vm: IID.seedorange,
+    amount: 1,
     scale: 0.9,
     angle: 0
 }, {
@@ -30215,8 +30215,8 @@ var VNN = [{
         isLoaded: 0
     },
     src: "img/day-ground-hachet.png",
-    Vm: item.hachet,
-    nM: 1,
+    Vm: IID.hachet,
+    amount: 1,
     scale: 0.9,
     angle: 0.5
 }, {
@@ -30225,8 +30225,8 @@ var VNN = [{
         isLoaded: 0
     },
     src: "img/day-ground-stone-pickaxe.png",
-    Vm: item.stonepickaxe,
-    nM: 1,
+    Vm: IID.stonepickaxe,
+    amount: 1,
     scale: 0.7,
     angle: 0.3
 }, {
@@ -30235,8 +30235,8 @@ var VNN = [{
         isLoaded: 0
     },
     src: "img/day-ground-steel-pickaxe.png",
-    Vm: item.steelpickaxe,
-    nM: 1,
+    Vm: IID.steelpickaxe,
+    amount: 1,
     scale: 0.7,
     angle: 0.3
 }, {
@@ -30245,8 +30245,8 @@ var VNN = [{
         isLoaded: 0
     },
     src: "img/day-ground-stone-axe.png",
-    Vm: item.stoneaxe,
-    nM: 1,
+    Vm: IID.stoneaxe,
+    amount: 1,
     scale: 0.7,
     angle: 0.5
 }, {
@@ -30255,8 +30255,8 @@ var VNN = [{
         isLoaded: 0
     },
     src: "img/day-ground-workbench.png",
-    Vm: item.workbench,
-    nM: 1,
+    Vm: IID.workbench,
+    amount: 1,
     scale: 0.7,
     angle: 0
 }, {
@@ -30265,8 +30265,8 @@ var VNN = [{
         isLoaded: 0
     },
     src: "img/day-ground-wood-spear.png",
-    Vm: item.spear,
-    nM: 1,
+    Vm: IID.spear,
+    amount: 1,
     scale: 0.6,
     angle: 0.6
 }, {
@@ -30275,8 +30275,8 @@ var VNN = [{
         isLoaded: 0
     },
     src: "img/day-ground-wood-bow.png",
-    Vm: item.bow,
-    nM: 1,
+    Vm: IID.bow,
+    amount: 1,
     scale: 0.8,
     angle: 0
 }, {
@@ -30285,8 +30285,8 @@ var VNN = [{
         isLoaded: 0
     },
     src: "img/day-ground-9mm.png",
-    Vm: item.pistol,
-    nM: 1,
+    Vm: IID.pistol,
+    amount: 1,
     scale: 1,
     angle: -0.1
 }, {
@@ -30295,8 +30295,8 @@ var VNN = [{
         isLoaded: 0
     },
     src: "img/day-ground-desert-eagle.png",
-    Vm: item.deserteagle,
-    nM: 1,
+    Vm: IID.deserteagle,
+    amount: 1,
     scale: 1,
     angle: -0.1
 }, {
@@ -30305,8 +30305,8 @@ var VNN = [{
         isLoaded: 0
     },
     src: "img/day-ground-shotgun.png",
-    Vm: item.shotgun,
-    nM: 1,
+    Vm: IID.shotgun,
+    amount: 1,
     scale: 0.7,
     angle: -0.5
 }, {
@@ -30315,8 +30315,8 @@ var VNN = [{
         isLoaded: 0
     },
     src: "img/day-ground-ak47.png",
-    Vm: item.ak47,
-    nM: 1,
+    Vm: IID.ak47,
+    amount: 1,
     scale: 0.7,
     angle: -0.5
 }, {
@@ -30325,8 +30325,8 @@ var VNN = [{
         isLoaded: 0
     },
     src: "img/day-ground-sniper.png",
-    Vm: item.sniper,
-    nM: 1,
+    Vm: IID.sniper,
+    amount: 1,
     scale: 0.7,
     angle: -0.5
 }, {
@@ -30335,8 +30335,8 @@ var VNN = [{
         isLoaded: 0
     },
     src: "img/day-ground-wood-wall.png",
-    Vm: item.woodenwall,
-    nM: 1,
+    Vm: IID.woodenwall,
+    amount: 1,
     scale: 0.9,
     angle: 0
 }, {
@@ -30345,8 +30345,8 @@ var VNN = [{
         isLoaded: 0
     },
     src: "img/day-ground-stone-wall.png",
-    Vm: item.stonewall,
-    nM: 1,
+    Vm: IID.stonewall,
+    amount: 1,
     scale: 0.9,
     angle: 0
 }, {
@@ -30355,8 +30355,8 @@ var VNN = [{
         isLoaded: 0
     },
     src: "img/day-ground-steel-wall.png",
-    Vm: item.steelwall,
-    nM: 1,
+    Vm: IID.steelwall,
+    amount: 1,
     scale: 0.9,
     angle: 0
 }, {
@@ -30365,8 +30365,8 @@ var VNN = [{
         isLoaded: 0
     },
     src: "img/day-ground-wood-door.png",
-    Vm: item.wooddoor,
-    nM: 1,
+    Vm: IID.wooddoor,
+    amount: 1,
     scale: 0.9,
     angle: 0
 }, {
@@ -30375,8 +30375,8 @@ var VNN = [{
         isLoaded: 0
     },
     src: "img/day-ground-stone-door.png",
-    Vm: item.stonedoor,
-    nM: 1,
+    Vm: IID.stonedoor,
+    amount: 1,
     scale: 0.9,
     angle: 0
 }, {
@@ -30385,8 +30385,8 @@ var VNN = [{
         isLoaded: 0
     },
     src: "img/day-ground-steel-door.png",
-    Vm: item.steeldoor,
-    nM: 1,
+    Vm: IID.steeldoor,
+    amount: 1,
     scale: 0.9,
     angle: 0
 }, {
@@ -30395,8 +30395,8 @@ var VNN = [{
         isLoaded: 0
     },
     src: "img/day-ground-campfire.png",
-    Vm: item.campfire,
-    nM: 1,
+    Vm: IID.campfire,
+    amount: 1,
     scale: 0.7,
     angle: 0
 }, {
@@ -30405,8 +30405,8 @@ var VNN = [{
         isLoaded: 0
     },
     src: "img/day-ground-bullet-9mm.png",
-    Vm: item.bullet9mm,
-    nM: 1,
+    Vm: IID.bullet9mm,
+    amount: 1,
     scale: 1,
     angle: 0
 }, {
@@ -30415,8 +30415,8 @@ var VNN = [{
         isLoaded: 0
     },
     src: "img/day-ground-bullet-shotgun.png",
-    Vm: item.bulletshotgun,
-    nM: 1,
+    Vm: IID.bulletshotgun,
+    amount: 1,
     scale: 1,
     angle: 0
 }, {
@@ -30425,8 +30425,8 @@ var VNN = [{
         isLoaded: 0
     },
     src: "img/day-ground-bullet-sniper.png",
-    Vm: item.sniperbullet,
-    nM: 1,
+    Vm: IID.sniperbullet,
+    amount: 1,
     scale: 1.1,
     angle: 0
 }, {
@@ -30435,8 +30435,8 @@ var VNN = [{
         isLoaded: 0
     },
     src: "img/day-ground-medikit.png",
-    Vm: item.medkit,
-    nM: 1,
+    Vm: IID.medkit,
+    amount: 1,
     scale: 0.9,
     angle: 0
 }, {
@@ -30445,8 +30445,8 @@ var VNN = [{
         isLoaded: 0
     },
     src: "img/day-ground-bandage.png",
-    Vm: item.bandage,
-    nM: 1,
+    Vm: IID.bandage,
+    amount: 1,
     scale: 1,
     angle: 0
 }, {
@@ -30455,8 +30455,8 @@ var VNN = [{
         isLoaded: 0
     },
     src: "img/day-ground-soda.png",
-    Vm: item.soda,
-    nM: 1,
+    Vm: IID.soda,
+    amount: 1,
     scale: 1.2,
     angle: 0
 }, {
@@ -30465,8 +30465,8 @@ var VNN = [{
         isLoaded: 0
     },
     src: "img/day-ground-MP5.png",
-    Vm: item.mp5,
-    nM: 1,
+    Vm: IID.mp5,
+    amount: 1,
     scale: 0.8,
     angle: -0.5
 }, {
@@ -30475,8 +30475,8 @@ var VNN = [{
         isLoaded: 0
     },
     src: "img/day-ground-headscarf.png",
-    Vm: item.headscarf,
-    nM: 1,
+    Vm: IID.headscarf,
+    amount: 1,
     scale: 0.8,
     angle: 0
 }, {
@@ -30485,8 +30485,8 @@ var VNN = [{
         isLoaded: 0
     },
     src: "img/day-ground-chapka.png",
-    Vm: item.chapka,
-    nM: 1,
+    Vm: IID.chapka,
+    amount: 1,
     scale: 0.8,
     angle: 0
 }, {
@@ -30495,8 +30495,8 @@ var VNN = [{
         isLoaded: 0
     },
     src: "img/day-ground-coat.png",
-    Vm: item.coat,
-    nM: 1,
+    Vm: IID.coat,
+    amount: 1,
     scale: 0.8,
     angle: 0
 }, {
@@ -30505,8 +30505,8 @@ var VNN = [{
         isLoaded: 0
     },
     src: "img/day-ground-gaz-mask.png",
-    Vm: item.gazmask,
-    nM: 1,
+    Vm: IID.gazmask,
+    amount: 1,
     scale: 0.8,
     angle: 0
 }, {
@@ -30515,8 +30515,8 @@ var VNN = [{
         isLoaded: 0
     },
     src: "img/day-ground-gaz-protection.png",
-    Vm: item.gazprotection,
-    nM: 1,
+    Vm: IID.gazprotection,
+    amount: 1,
     scale: 0.8,
     angle: 0
 }, {
@@ -30525,8 +30525,8 @@ var VNN = [{
         isLoaded: 0
     },
     src: "img/day-ground-radiation-suit.png",
-    Vm: item.radiationsuit,
-    nM: 1,
+    Vm: IID.radiationsuit,
+    amount: 1,
     scale: 0.8,
     angle: 0
 }, {
@@ -30535,8 +30535,8 @@ var VNN = [{
         isLoaded: 0
     },
     src: "img/day-ground-wood-arrow.png",
-    Vm: item.woodarrow,
-    nM: 1,
+    Vm: IID.woodarrow,
+    amount: 1,
     scale: 0.8,
     angle: 0
 }, {
@@ -30545,8 +30545,8 @@ var VNN = [{
         isLoaded: 0
     },
     src: "img/day-ground-campfire-bbq.png",
-    Vm: item.campfirebbq,
-    nM: 1,
+    Vm: IID.campfirebbq,
+    amount: 1,
     scale: 0.8,
     angle: 0
 }, {
@@ -30555,8 +30555,8 @@ var VNN = [{
         isLoaded: 0
     },
     src: "img/day-ground-smelter.png",
-    Vm: item.smelter,
-    nM: 1,
+    Vm: IID.smelter,
+    amount: 1,
     scale: 0.8,
     angle: 0
 }, {
@@ -30565,8 +30565,8 @@ var VNN = [{
         isLoaded: 0
     },
     src: "img/day-ground-wood-door1.png",
-    Vm: item.wooddoor1,
-    nM: 1,
+    Vm: IID.wooddoor1,
+    amount: 1,
     scale: 0.9,
     angle: 0
 }, {
@@ -30575,8 +30575,8 @@ var VNN = [{
         isLoaded: 0
     },
     src: "img/day-ground-stone-door1.png",
-    Vm: item.stonedoor1,
-    nM: 1,
+    Vm: IID.stonedoor1,
+    amount: 1,
     scale: 0.9,
     angle: 0
 }, {
@@ -30585,8 +30585,8 @@ var VNN = [{
         isLoaded: 0
     },
     src: "img/day-ground-steel-door1.png",
-    Vm: item.steeldoor1,
-    nM: 1,
+    Vm: IID.steeldoor1,
+    amount: 1,
     scale: 0.9,
     angle: 0
 }, {
@@ -30595,8 +30595,8 @@ var VNN = [{
         isLoaded: 0
     },
     src: "img/day-ground-sulfur.png",
-    Vm: item.sulfur,
-    nM: 1,
+    Vm: IID.sulfur,
+    amount: 1,
     scale: 1,
     angle: 0
 }, {
@@ -30605,8 +30605,8 @@ var VNN = [{
         isLoaded: 0
     },
     src: "img/day-ground-shaped-uranium.png",
-    Vm: item.shapeduranium,
-    nM: 1,
+    Vm: IID.shapeduranium,
+    amount: 1,
     scale: 1,
     angle: 0
 }, {
@@ -30615,8 +30615,8 @@ var VNN = [{
         isLoaded: 0
     },
     src: "img/day-ground-workbench2.png",
-    Vm: item.researchbench,
-    nM: 1,
+    Vm: IID.researchbench,
+    amount: 1,
     scale: 1,
     angle: 0
 }, {
@@ -30625,8 +30625,8 @@ var VNN = [{
         isLoaded: 0
     },
     src: "img/day-ground-uranium.png",
-    Vm: item.uranium,
-    nM: 1,
+    Vm: IID.uranium,
+    amount: 1,
     scale: 1,
     angle: 0
 }, {
@@ -30635,8 +30635,8 @@ var VNN = [{
         isLoaded: 0
     },
     src: "img/day-ground-weaving-machine.png",
-    Vm: item.weavingmachine,
-    nM: 1,
+    Vm: IID.weavingmachine,
+    amount: 1,
     scale: 1,
     angle: 0
 }, {
@@ -30645,8 +30645,8 @@ var VNN = [{
         isLoaded: 0
     },
     src: "img/day-ground-gasoline.png",
-    Vm: item.gasoline,
-    nM: 1,
+    Vm: IID.gasoline,
+    amount: 1,
     scale: 1,
     angle: 0
 }, {
@@ -30655,8 +30655,8 @@ var VNN = [{
         isLoaded: 0
     },
     src: "img/day-ground-sulfur-pickaxe.png",
-    Vm: item.sulfurpickaxe,
-    nM: 1,
+    Vm: IID.sulfurpickaxe,
+    amount: 1,
     scale: 0.7,
     angle: 0.3
 }, {
@@ -30665,8 +30665,8 @@ var VNN = [{
         isLoaded: 0
     },
     src: "img/day-ground-chest.png",
-    Vm: item.chest,
-    nM: 1,
+    Vm: IID.chest,
+    amount: 1,
     scale: 0.7,
     angle: 0.3
 }, {
@@ -30675,8 +30675,8 @@ var VNN = [{
         isLoaded: 0
     },
     src: "img/day-ground-fridge.png",
-    Vm: item.fridge,
-    nM: 1,
+    Vm: IID.fridge,
+    amount: 1,
     scale: 0.7,
     angle: 0.3
 }, {
@@ -30685,8 +30685,8 @@ var VNN = [{
         isLoaded: 0
     },
     src: "img/day-ground-wood-floor.png",
-    Vm: item.woodfloor1,
-    nM: 1,
+    Vm: IID.woodfloor1,
+    amount: 1,
     scale: 0.9,
     angle: 0
 }, {
@@ -30695,8 +30695,8 @@ var VNN = [{
         isLoaded: 0
     },
     src: "img/day-ground-hammer.png",
-    Vm: item.hammer,
-    nM: 1,
+    Vm: IID.hammer,
+    amount: 1,
     scale: 0.7,
     angle: 0.3
 }, {
@@ -30705,8 +30705,8 @@ var VNN = [{
         isLoaded: 0
     },
     src: "img/day-ground-sleeping-bag.png",
-    Vm: item.sleepingbag,
-    nM: 1,
+    Vm: IID.sleepingbag,
+    amount: 1,
     scale: 0.7,
     angle: 0.3
 }, {
@@ -30715,8 +30715,8 @@ var VNN = [{
         isLoaded: 0
     },
     src: "img/day-ground-repair-hammer.png",
-    Vm: item.repairhammer,
-    nM: 1,
+    Vm: IID.repairhammer,
+    amount: 1,
     scale: 0.7,
     angle: 0.3
 }, {
@@ -30725,8 +30725,8 @@ var VNN = [{
         isLoaded: 0
     },
     src: "img/day-ground-nails.png",
-    Vm: item.nails,
-    nM: 1,
+    Vm: IID.nails,
+    amount: 1,
     scale: 0.7,
     angle: 0.3
 }, {
@@ -30735,8 +30735,8 @@ var VNN = [{
         isLoaded: 0
     },
     src: "img/day-ground-wood-floor-light.png",
-    Vm: item.woodfloor2,
-    nM: 1,
+    Vm: IID.woodfloor2,
+    amount: 1,
     scale: 0.7,
     angle: 0.3
 }, {
@@ -30745,8 +30745,8 @@ var VNN = [{
         isLoaded: 0
     },
     src: "img/day-ground-wood-smallwall.png",
-    Vm: item.smallwoodwall,
-    nM: 1,
+    Vm: IID.smallwoodwall,
+    amount: 1,
     scale: 0.9,
     angle: 0
 }, {
@@ -30755,8 +30755,8 @@ var VNN = [{
         isLoaded: 0
     },
     src: "img/day-ground-stone-smallwall.png",
-    Vm: item.smallstonewall,
-    nM: 1,
+    Vm: IID.smallstonewall,
+    amount: 1,
     scale: 0.9,
     angle: 0
 }, {
@@ -30765,8 +30765,8 @@ var VNN = [{
         isLoaded: 0
     },
     src: "img/day-ground-steel-smallwall.png",
-    Vm: item.smallsteelwall,
-    nM: 1,
+    Vm: IID.smallsteelwall,
+    amount: 1,
     scale: 0.9,
     angle: 0
 }, {
@@ -30775,8 +30775,8 @@ var VNN = [{
         isLoaded: 0
     },
     src: "img/day-ground-tomato-soup.png",
-    Vm: item.tomatosoup,
-    nM: 1,
+    Vm: IID.tomatosoup,
+    amount: 1,
     scale: 0.9,
     angle: 0
 }, {
@@ -30785,8 +30785,8 @@ var VNN = [{
         isLoaded: 0
     },
     src: "img/day-ground-syringe.png",
-    Vm: item.syringe,
-    nM: 1,
+    Vm: IID.syringe,
+    amount: 1,
     scale: 0.9,
     angle: 0
 }, {
@@ -30795,8 +30795,8 @@ var VNN = [{
         isLoaded: 0
     },
     src: "img/day-ground-chemical-component.png",
-    Vm: item.chemicalcomponent,
-    nM: 1,
+    Vm: IID.chemicalcomponent,
+    amount: 1,
     scale: 0.9,
     angle: 0
 }, {
@@ -30805,8 +30805,8 @@ var VNN = [{
         isLoaded: 0
     },
     src: "img/day-ground-radaway.png",
-    Vm: item.radway,
-    nM: 1,
+    Vm: IID.radway,
+    amount: 1,
     scale: 0.9,
     angle: 0
 }, {
@@ -30815,8 +30815,8 @@ var VNN = [{
         isLoaded: 0
     },
     src: "img/day-ground-seed-tomato.png",
-    Vm: item.tomatoseed,
-    nM: 1,
+    Vm: IID.tomatoseed,
+    amount: 1,
     scale: 0.9,
     angle: 0
 }, {
@@ -30825,8 +30825,8 @@ var VNN = [{
         isLoaded: 0
     },
     src: "img/day-ground-tomato.png",
-    Vm: item.tomato,
-    nM: 1,
+    Vm: IID.tomato,
+    amount: 1,
     scale: 0.9,
     angle: 0
 }, {
@@ -30835,8 +30835,8 @@ var VNN = [{
         isLoaded: 0
     },
     src: "img/day-ground-rotten-tomato.png",
-    Vm: item.rottentomato,
-    nM: 1,
+    Vm: IID.rottentomato,
+    amount: 1,
     scale: 0.9,
     angle: 0
 }, {
@@ -30845,8 +30845,8 @@ var VNN = [{
         isLoaded: 0
     },
     src: "img/day-ground-can.png",
-    Vm: item.can,
-    nM: 1,
+    Vm: IID.can,
+    amount: 1,
     scale: 0.9,
     angle: 0
 }, {
@@ -30855,8 +30855,8 @@ var VNN = [{
         isLoaded: 0
     },
     src: "img/day-ground-wood-crossbow.png",
-    Vm: item.crossbow,
-    nM: 1,
+    Vm: IID.crossbow,
+    amount: 1,
     scale: 0.8,
     angle: 0
 }, {
@@ -30865,8 +30865,8 @@ var VNN = [{
         isLoaded: 0
     },
     src: "img/day-ground-wood-crossarrow.png",
-    Vm: item.crossarrow,
-    nM: 1,
+    Vm: IID.crossarrow,
+    amount: 1,
     scale: 0.8,
     angle: 0
 }, {
@@ -30875,8 +30875,8 @@ var VNN = [{
         isLoaded: 0
     },
     src: "img/day-ground-nail-gun.png",
-    Vm: item.nailgun,
-    nM: 1,
+    Vm: IID.nailgun,
+    amount: 1,
     scale: 0.8,
     angle: 0
 }, {
@@ -30885,8 +30885,8 @@ var VNN = [{
         isLoaded: 0
     },
     src: "img/day-ground-sawed-off-shotgun.png",
-    Vm: item.sawedoff,
-    nM: 1,
+    Vm: IID.sawedoff,
+    amount: 1,
     scale: 0.8,
     angle: 0
 }, {
@@ -30895,8 +30895,8 @@ var VNN = [{
         isLoaded: 0
     },
     src: "img/day-ground-stone-floor.png",
-    Vm: item.stonefloor1,
-    nM: 1,
+    Vm: IID.stonefloor1,
+    amount: 1,
     scale: 0.8,
     angle: 0
 }, {
@@ -30905,8 +30905,8 @@ var VNN = [{
         isLoaded: 0
     },
     src: "img/day-ground-tiling-floor.png",
-    Vm: item.stonefloor2,
-    nM: 1,
+    Vm: IID.stonefloor2,
+    amount: 1,
     scale: 0.8,
     angle: 0
 }, {
@@ -30915,8 +30915,8 @@ var VNN = [{
         isLoaded: 0
     },
     src: "img/day-ground-chips.png",
-    Vm: item.chips,
-    nM: 1,
+    Vm: IID.chips,
+    amount: 1,
     scale: 0.9,
     angle: 0
 }, {
@@ -30925,8 +30925,8 @@ var VNN = [{
         isLoaded: 0
     },
     src: "img/day-ground-rotten-chips.png",
-    Vm: item.rottenchips,
-    nM: 1,
+    Vm: IID.rottenchips,
+    amount: 1,
     scale: 0.9,
     angle: 0
 }, {
@@ -30935,8 +30935,8 @@ var VNN = [{
         isLoaded: 0
     },
     src: "img/day-ground-electronic-part.png",
-    Vm: item.electronicpart,
-    nM: 1,
+    Vm: IID.electronicpart,
+    amount: 1,
     scale: 1,
     angle: 0
 }, {
@@ -30945,8 +30945,8 @@ var VNN = [{
         isLoaded: 0
     },
     src: "img/day-ground-junk.png",
-    Vm: item.junk,
-    nM: 1,
+    Vm: IID.junk,
+    amount: 1,
     scale: 0.8,
     angle: 0
 }, {
@@ -30955,8 +30955,8 @@ var VNN = [{
         isLoaded: 0
     },
     src: "img/day-ground-wires.png",
-    Vm: item.wires,
-    nM: 1,
+    Vm: IID.wires,
+    amount: 1,
     scale: 1,
     angle: 0
 }, {
@@ -30965,8 +30965,8 @@ var VNN = [{
         isLoaded: 0
     },
     src: "img/day-ground-small-energy-cells.png",
-    Vm: item.energycell,
-    nM: 1,
+    Vm: IID.energycell,
+    amount: 1,
     scale: 1,
     angle: 0
 }, {
@@ -30975,8 +30975,8 @@ var VNN = [{
         isLoaded: 0
     },
     src: "img/day-ground-laser-pistol.png",
-    Vm: item.laserpistol,
-    nM: 1,
+    Vm: IID.laserpistol,
+    amount: 1,
     scale: 1,
     angle: 0
 }, {
@@ -30985,8 +30985,8 @@ var VNN = [{
         isLoaded: 0
     },
     src: "img/day-ground-workbench3.png",
-    Vm: item.teslabench,
-    nM: 1,
+    Vm: IID.teslabench,
+    amount: 1,
     scale: 0.9,
     angle: 0
 }, {
@@ -30995,8 +30995,8 @@ var VNN = [{
         isLoaded: 0
     },
     src: "img/day-ground-alloys.png",
-    Vm: item.alloys,
-    nM: 1,
+    Vm: IID.alloys,
+    amount: 1,
     scale: 1,
     angle: 0
 }, {
@@ -31005,8 +31005,8 @@ var VNN = [{
         isLoaded: 0
     },
     src: "img/day-ground-sulfur-axe.png",
-    Vm: item.sulfuraxe,
-    nM: 1,
+    Vm: IID.sulfuraxe,
+    amount: 1,
     scale: 0.7,
     angle: 0.5
 }, {
@@ -31015,8 +31015,8 @@ var VNN = [{
         isLoaded: 0
     },
     src: "img/day-ground-landmine.png",
-    Vm: item.landmine,
-    nM: 1,
+    Vm: IID.landmine,
+    amount: 1,
     scale: 0.7,
     angle: 0.5
 }, {
@@ -31025,8 +31025,8 @@ var VNN = [{
         isLoaded: 0
     },
     src: "img/day-ground-dynamite.png",
-    Vm: item.dynamite,
-    nM: 1,
+    Vm: IID.dynamite,
+    amount: 1,
     scale: 0.7,
     angle: 0.5
 }, {
@@ -31035,8 +31035,8 @@ var VNN = [{
         isLoaded: 0
     },
     src: "img/day-ground-C4.png",
-    Vm: item.c4bomb,
-    nM: 1,
+    Vm: IID.c4bomb,
+    amount: 1,
     scale: 0.7,
     angle: 0.5
 }, {
@@ -31045,8 +31045,8 @@ var VNN = [{
         isLoaded: 0
     },
     src: "img/day-ground-joystick.png",
-    Vm: item.joystic,
-    nM: 1,
+    Vm: IID.joystic,
+    amount: 1,
     scale: 0.7,
     angle: 0.5
 }, {
@@ -31055,8 +31055,8 @@ var VNN = [{
         isLoaded: 0
     },
     src: "img/day-ground-composter.png",
-    Vm: item.composter,
-    nM: 1,
+    Vm: IID.composter,
+    amount: 1,
     scale: 0.7,
     angle: 0.5
 }, {
@@ -31065,8 +31065,8 @@ var VNN = [{
         isLoaded: 0
     },
     src: "img/day-ground-metal-helmet.png",
-    Vm: item.metalhelmet,
-    nM: 1,
+    Vm: IID.metalhelmet,
+    amount: 1,
     scale: 0.8,
     angle: 0
 }, {
@@ -31075,8 +31075,8 @@ var VNN = [{
         isLoaded: 0
     },
     src: "img/day-ground-welding-helmet.png",
-    Vm: item.weldinghelmet,
-    nM: 1,
+    Vm: IID.weldinghelmet,
+    amount: 1,
     scale: 0.7,
     angle: 0
 }, {
@@ -31085,8 +31085,8 @@ var VNN = [{
         isLoaded: 0
     },
     src: "img/day-ground-gladiator-helmet.png",
-    Vm: item.gladiatorhelmet,
-    nM: 1,
+    Vm: IID.gladiatorhelmet,
+    amount: 1,
     scale: 0.7,
     angle: 0
 }, {
@@ -31095,8 +31095,8 @@ var VNN = [{
         isLoaded: 0
     },
     src: "img/day-ground-leather-jacket.png",
-    Vm: item.leatherjacket,
-    nM: 1,
+    Vm: IID.leatherjacket,
+    amount: 1,
     scale: 0.8,
     angle: 0
 }, {
@@ -31105,8 +31105,8 @@ var VNN = [{
         isLoaded: 0
     },
     src: "img/day-ground-kevlar-suit.png",
-    Vm: item.kevlarsuit,
-    nM: 1,
+    Vm: IID.kevlarsuit,
+    amount: 1,
     scale: 0.8,
     angle: 0
 }, {
@@ -31115,8 +31115,8 @@ var VNN = [{
         isLoaded: 0
     },
     src: "img/day-ground-SWAT-suit.png",
-    Vm: item.SWATsuit,
-    nM: 1,
+    Vm: IID.SWATsuit,
+    amount: 1,
     scale: 0.8,
     angle: 0
 }, {
@@ -31125,8 +31125,8 @@ var VNN = [{
         isLoaded: 0
     },
     src: "img/day-ground-protective-suit.png",
-    Vm: item.protectivesuit,
-    nM: 1,
+    Vm: IID.protectivesuit,
+    amount: 1,
     scale: 0.8,
     angle: 0
 }, {
@@ -31135,8 +31135,8 @@ var VNN = [{
         isLoaded: 0
     },
     src: "img/day-ground-tesla-0.png",
-    Vm: item.tesla1,
-    nM: 1,
+    Vm: IID.tesla1,
+    amount: 1,
     scale: 0.8,
     angle: 0
 }, {
@@ -31145,8 +31145,8 @@ var VNN = [{
         isLoaded: 0
     },
     src: "img/day-ground-tesla-armor.png",
-    Vm: item.tesla2,
-    nM: 1,
+    Vm: IID.tesla2,
+    amount: 1,
     scale: 0.8,
     angle: 0
 }, {
@@ -31155,8 +31155,8 @@ var VNN = [{
         isLoaded: 0
     },
     src: "img/day-ground-wood-spike.png",
-    Vm: item.woodespike,
-    nM: 1,
+    Vm: IID.woodespike,
+    amount: 1,
     scale: 0.8,
     angle: 0
 }, {
@@ -31165,8 +31165,8 @@ var VNN = [{
         isLoaded: 0
     },
     src: "img/day-ground-laser-submachine.png",
-    Vm: item.lasersubmachine,
-    nM: 1,
+    Vm: IID.lasersubmachine,
+    amount: 1,
     scale: 0.8,
     angle: 0
 }, {
@@ -31175,8 +31175,8 @@ var VNN = [{
         isLoaded: 0
     },
     src: "img/day-ground-grenade.png",
-    Vm: item.granade,
-    nM: 1,
+    Vm: IID.granade,
+    amount: 1,
     scale: 0.8,
     angle: 0
 }, {
@@ -31185,8 +31185,8 @@ var VNN = [{
         isLoaded: 0
     },
     src: "img/day-ground-super-hammer.png",
-    Vm: item.superhammer,
-    nM: 1,
+    Vm: IID.superhammer,
+    amount: 1,
     scale: 0.8,
     angle: 0
 }, {
@@ -31195,8 +31195,8 @@ var VNN = [{
         isLoaded: 0
     },
     src: "img/day-ground-ghoul-blood.png",
-    Vm: item.ghoulblood,
-    nM: 1,
+    Vm: IID.ghoulblood,
+    amount: 1,
     scale: 0.8,
     angle: 0
 }, {
@@ -31205,8 +31205,8 @@ var VNN = [{
         isLoaded: 0
     },
     src: "img/day-ground-camouflage-gear.png",
-    Vm: item.camouflage,
-    nM: 1,
+    Vm: IID.camouflage,
+    amount: 1,
     scale: 0.8,
     angle: 0
 }, {
@@ -31215,8 +31215,8 @@ var VNN = [{
         isLoaded: 0
     },
     src: "img/day-ground-agitator.png",
-    Vm: item.agitator,
-    nM: 1,
+    Vm: IID.agitator,
+    amount: 1,
     scale: 0.8,
     angle: 0
 }, {
@@ -31225,8 +31225,8 @@ var VNN = [{
         isLoaded: 0
     },
     src: "img/day-ground-ghoul-drug.png",
-    Vm: item.ghouldrug,
-    nM: 1,
+    Vm: IID.ghouldrug,
+    amount: 1,
     scale: 0.8,
     angle: 0
 }, {
@@ -31235,8 +31235,8 @@ var VNN = [{
         isLoaded: 0
     },
     src: "img/day-ground-mushroom1.png",
-    Vm: item.mushroom,
-    nM: 1,
+    Vm: IID.mushroom,
+    amount: 1,
     scale: 0.8,
     angle: 0
 }, {
@@ -31245,8 +31245,8 @@ var VNN = [{
         isLoaded: 0
     },
     src: "img/day-ground-mushroom2.png",
-    Vm: item.mushroom2,
-    nM: 1,
+    Vm: IID.mushroom2,
+    amount: 1,
     scale: 0.8,
     angle: 0
 }, {
@@ -31255,8 +31255,8 @@ var VNN = [{
         isLoaded: 0
     },
     src: "img/day-ground-mushroom3.png",
-    Vm: item.mushroom3,
-    nM: 1,
+    Vm: IID.mushroom3,
+    amount: 1,
     scale: 0.8,
     angle: 0
 }, {
@@ -31265,8 +31265,8 @@ var VNN = [{
         isLoaded: 0
     },
     src: "img/day-ground-rotten-mushroom1.png",
-    Vm: item.rottenmushroom1,
-    nM: 1,
+    Vm: IID.rottenmushroom1,
+    amount: 1,
     scale: 0.8,
     angle: 0
 }, {
@@ -31275,8 +31275,8 @@ var VNN = [{
         isLoaded: 0
     },
     src: "img/day-ground-rotten-mushroom2.png",
-    Vm: item.rottenmushroom2,
-    nM: 1,
+    Vm: IID.rottenmushroom2,
+    amount: 1,
     scale: 0.8,
     angle: 0
 }, {
@@ -31285,8 +31285,8 @@ var VNN = [{
         isLoaded: 0
     },
     src: "img/day-ground-rotten-mushroom3.png",
-    Vm: item.rottenmushroom3,
-    nM: 1,
+    Vm: IID.rottenmushroom3,
+    amount: 1,
     scale: 0.8,
     angle: 0
 }, {
@@ -31295,8 +31295,8 @@ var VNN = [{
         isLoaded: 0
     },
     src: "img/day-ground-lapadoine.png",
-    Vm: item.lapadoine,
-    nM: 1,
+    Vm: IID.lapadoine,
+    amount: 1,
     scale: 0.8,
     angle: 0
 }, {
@@ -31305,8 +31305,8 @@ var VNN = [{
         isLoaded: 0
     },
     src: "img/day-ground-lapabot.png",
-    Vm: item.lapabot,
-    nM: 1,
+    Vm: IID.lapabot,
+    amount: 1,
     scale: 0.8,
     angle: 0
 }, {
@@ -31315,8 +31315,8 @@ var VNN = [{
         isLoaded: 0
     },
     src: "img/day-ground-small-wire.png",
-    Vm: item.smallwire,
-    nM: 1,
+    Vm: IID.smallwire,
+    amount: 1,
     scale: 0.8,
     angle: 0
 }, {
@@ -31325,8 +31325,8 @@ var VNN = [{
         isLoaded: 0
     },
     src: "img/day-ground-pumpkin.png",
-    Vm: item.pumpkin,
-    nM: 1,
+    Vm: IID.pumpkin,
+    amount: 1,
     scale: 0.8,
     angle: 0
 }, {
@@ -31335,8 +31335,8 @@ var VNN = [{
         isLoaded: 0
     },
     src: "img/day-ground-rotten-pumpkin.png",
-    Vm: item.rottenpumpkin,
-    nM: 1,
+    Vm: IID.rottenpumpkin,
+    amount: 1,
     scale: 0.8,
     angle: 0
 }, {
@@ -31345,8 +31345,8 @@ var VNN = [{
         isLoaded: 0
     },
     src: "img/day-ground-ghoul5.png",
-    Vm: item.ghoulseed,
-    nM: 1,
+    Vm: IID.ghoulseed,
+    amount: 1,
     scale: 0.8,
     angle: 0
 }, {
@@ -31355,8 +31355,8 @@ var VNN = [{
         isLoaded: 0
     },
     src: "img/day-ground-extractor.png",
-    Vm: item.extractor,
-    nM: 1,
+    Vm: IID.extractor,
+    amount: 1,
     scale: 0.8,
     angle: 0
 }, {
@@ -31365,8 +31365,8 @@ var VNN = [{
         isLoaded: 0
     },
     src: "img/day-ground-antidote.png",
-    Vm: item.antidote,
-    nM: 1,
+    Vm: IID.antidote,
+    amount: 1,
     scale: 0.8,
     angle: 0
 }, {
@@ -31375,8 +31375,8 @@ var VNN = [{
         isLoaded: 0
     },
     src: "img/day-ground-antidote-flower.png",
-    Vm: item.antidoteflower,
-    nM: 1,
+    Vm: IID.antidoteflower,
+    amount: 1,
     scale: 0.8,
     angle: 0
 }, {
@@ -31385,8 +31385,8 @@ var VNN = [{
         isLoaded: 0
     },
     src: "img/day-ground-seed-tree.png",
-    Vm: item.treeseed,
-    nM: 1,
+    Vm: IID.treeseed,
+    amount: 1,
     scale: 0.8,
     angle: 0
 }, {
@@ -31395,8 +31395,8 @@ var VNN = [{
         isLoaded: 0
     },
     src: "img/day-ground-acorn.png",
-    Vm: item.acorn,
-    nM: 1,
+    Vm: IID.acorn,
+    amount: 1,
     scale: 0.8,
     angle: 0
 }, {
@@ -31405,8 +31405,8 @@ var VNN = [{
         isLoaded: 0
     },
     src: "img/day-ground-rotten-acorn.png",
-    Vm: item.rottenacorn,
-    nM: 1,
+    Vm: IID.rottenacorn,
+    amount: 1,
     scale: 0.8,
     angle: 0
 }, {
@@ -31415,8 +31415,8 @@ var VNN = [{
         isLoaded: 0
     },
     src: "img/day-ground-laser-sniper.png",
-    Vm: item.lasersniper,
-    nM: 1,
+    Vm: IID.lasersniper,
+    amount: 1,
     scale: 0.8,
     angle: 0
 }, {
@@ -31425,8 +31425,8 @@ var VNN = [{
         isLoaded: 0
     },
     src: "img/day-ground-hal-bot.png",
-    Vm: item.halbot,
-    nM: 1,
+    Vm: IID.halbot,
+    amount: 1,
     scale: 0.8,
     angle: 0
 }, {
@@ -31435,8 +31435,8 @@ var VNN = [{
         isLoaded: 0
     },
     src: "img/day-ground-tesla-bot.png",
-    Vm: item.teslabot,
-    nM: 1,
+    Vm: IID.teslabot,
+    amount: 1,
     scale: 0.8,
     angle: 0
 }, {
@@ -31445,8 +31445,8 @@ var VNN = [{
         isLoaded: 0
     },
     src: "img/day-ground-wire0.png",
-    Vm: item.cable,
-    nM: 1,
+    Vm: IID.cable,
+    amount: 1,
     scale: 0.8,
     angle: 0
 }, {
@@ -31455,8 +31455,8 @@ var VNN = [{
         isLoaded: 0
     },
     src: "img/day-ground-wire1.png",
-    Vm: item.cable2,
-    nM: 1,
+    Vm: IID.cable2,
+    amount: 1,
     scale: 0.8,
     angle: 0
 }, {
@@ -31465,8 +31465,8 @@ var VNN = [{
         isLoaded: 0
     },
     src: "img/day-ground-wire2.png",
-    Vm: item.cable3,
-    nM: 1,
+    Vm: IID.cable3,
+    amount: 1,
     scale: 0.8,
     angle: 0
 }, {
@@ -31475,8 +31475,8 @@ var VNN = [{
         isLoaded: 0
     },
     src: "img/day-ground-wire3.png",
-    Vm: item.cable4,
-    nM: 1,
+    Vm: IID.cable4,
+    amount: 1,
     scale: 0.8,
     angle: 0
 }, {
@@ -31485,8 +31485,8 @@ var VNN = [{
         isLoaded: 0
     },
     src: "img/day-ground-switch.png",
-    Vm: item.switch,
-    nM: 1,
+    Vm: IID.switch,
+    amount: 1,
     scale: 0.8,
     angle: 0
 }, {
@@ -31495,8 +31495,8 @@ var VNN = [{
         isLoaded: 0
     },
     src: "img/day-ground-switch-or.png",
-    Vm: item.orgate,
-    nM: 1,
+    Vm: IID.orgate,
+    amount: 1,
     scale: 0.8,
     angle: 0
 }, {
@@ -31505,8 +31505,8 @@ var VNN = [{
         isLoaded: 0
     },
     src: "img/day-ground-switch-and.png",
-    Vm: item.andgate,
-    nM: 1,
+    Vm: IID.andgate,
+    amount: 1,
     scale: 0.8,
     angle: 0
 }, {
@@ -31515,8 +31515,8 @@ var VNN = [{
         isLoaded: 0
     },
     src: "img/day-ground-switch-reverse.png",
-    Vm: item.notgate,
-    nM: 1,
+    Vm: IID.notgate,
+    amount: 1,
     scale: 0.8,
     angle: 0
 }, {
@@ -31525,8 +31525,8 @@ var VNN = [{
         isLoaded: 0
     },
     src: "img/day-ground-lamp-white.png",
-    Vm: item.lamp,
-    nM: 1,
+    Vm: IID.lamp,
+    amount: 1,
     scale: 0.8,
     angle: 0
 }, {
@@ -31535,8 +31535,8 @@ var VNN = [{
         isLoaded: 0
     },
     src: "img/day-ground-cable-wall.png",
-    Vm: item.cablewall,
-    nM: 1,
+    Vm: IID.cablewall,
+    amount: 1,
     scale: 0.8,
     angle: 0
 }, {
@@ -31545,8 +31545,8 @@ var VNN = [{
         isLoaded: 0
     },
     src: "img/day-ground-automatic-door.png",
-    Vm: item.autodoor,
-    nM: 1,
+    Vm: IID.autodoor,
+    amount: 1,
     scale: 0.8,
     angle: 0
 }, {
@@ -31555,8 +31555,8 @@ var VNN = [{
         isLoaded: 0
     },
     src: "img/day-ground-platform.png",
-    Vm: item.platform,
-    nM: 1,
+    Vm: IID.platform,
+    amount: 1,
     scale: 0.8,
     angle: 0
 }, {
@@ -31565,8 +31565,8 @@ var VNN = [{
         isLoaded: 0
     },
     src: "img/day-ground-stone-cave.png",
-    Vm: item.stonecave,
-    nM: 1,
+    Vm: IID.stonecave,
+    amount: 1,
     scale: 0.8,
     angle: 0
 }, {
@@ -31575,8 +31575,8 @@ var VNN = [{
         isLoaded: 0
     },
     src: "img/day-ground-bunker-wall.png",
-    Vm: item.bunkerwall,
-    nM: 1,
+    Vm: IID.bunkerwall,
+    amount: 1,
     scale: 0.8,
     angle: 0
 }, {
@@ -31585,8 +31585,8 @@ var VNN = [{
         isLoaded: 0
     },
     src: "img/day-ground-mustard-floor.png",
-    Vm: item.mustardfloor,
-    nM: 1,
+    Vm: IID.mustardfloor,
+    amount: 1,
     scale: 0.8,
     angle: 0
 }, {
@@ -31595,8 +31595,8 @@ var VNN = [{
         isLoaded: 0
     },
     src: "img/day-ground-red-floor.png",
-    Vm: item.redfloor,
-    nM: 1,
+    Vm: IID.redfloor,
+    amount: 1,
     scale: 0.8,
     angle: 0
 }, {
@@ -31605,8 +31605,8 @@ var VNN = [{
         isLoaded: 0
     },
     src: "img/day-ground-welding-machine.png",
-    Vm: item.weldingmachine,
-    nM: 1,
+    Vm: IID.weldingmachine,
+    amount: 1,
     scale: 0.8,
     angle: 0
 }, {
@@ -31615,8 +31615,8 @@ var VNN = [{
         isLoaded: 0
     },
     src: "img/day-ground-wire4.png",
-    Vm: item.cable4,
-    nM: 1,
+    Vm: IID.cable4,
+    amount: 1,
     scale: 0.8,
     angle: 0
 }, {
@@ -31625,8 +31625,8 @@ var VNN = [{
         isLoaded: 0
     },
     src: "img/day-ground-timer.png",
-    Vm: item.timer,
-    nM: 1,
+    Vm: IID.timer,
+    amount: 1,
     scale: 0.8,
     angle: 0
 }, {
@@ -31635,8 +31635,8 @@ var VNN = [{
         isLoaded: 0
     },
     src: "img/day-ground-xor.png",
-    Vm: item.xorgate,
-    nM: 1,
+    Vm: IID.xorgate,
+    amount: 1,
     scale: 0.8,
     angle: 0
 }];
@@ -31665,9 +31665,9 @@ var MVNWM = 11;
 nnv[object.branchtree] = {
     loot: [Mv.wood, Mv.wWvMW, Mv.mvnnv],
     mvW: [0.2, 0.4, 1],
-    wmN: [-1, item.hachet, item.stoneaxe, item.sulfuraxe],
+    wmN: [-1, IID.hachet, IID.stoneaxe, IID.sulfuraxe],
     WMw: [1, 2, 4, 5],
-    WnW: 0,
+    areaEffect: 0,
     type: [{
         life: 200,
         W: {
@@ -31679,7 +31679,7 @@ nnv[object.branchtree] = {
         Mwm: 100,
         NVm: 5,
         units: 0,
-        vWV: 80,
+        unitsMax: 80,
         MMN: 1,
         z: vMMww,
         radius: 80
@@ -31694,7 +31694,7 @@ nnv[object.branchtree] = {
         Mwm: 75,
         NVm: 5,
         units: 0,
-        vWV: 80,
+        unitsMax: 80,
         MMN: 1,
         z: vMMww,
         radius: 55
@@ -31709,7 +31709,7 @@ nnv[object.branchtree] = {
         Mwm: 70,
         NVm: 5,
         units: 0,
-        vWV: 80,
+        unitsMax: 80,
         MMN: 1,
         z: vMMww,
         radius: 48
@@ -31724,7 +31724,7 @@ nnv[object.branchtree] = {
         Mwm: 60,
         NVm: 5,
         units: 0,
-        vWV: 80,
+        unitsMax: 80,
         MMN: 1,
         z: vMMww,
         radius: 37
@@ -31739,7 +31739,7 @@ nnv[object.branchtree] = {
         Mwm: 50,
         NVm: 5,
         units: 0,
-        vWV: 80,
+        unitsMax: 80,
         MMN: 1,
         z: vMMww,
         radius: 30
@@ -31752,9 +31752,9 @@ nnv[object.branchtree] = {
 nnv[object.tree] = {
     loot: [Mv.acorn, Mv.wood, Mv.wWvMW, Mv.mvnnv],
     mvW: [0.015, 0.2, 0.4, 1],
-    wmN: [-1, item.hachet, item.stoneaxe, item.sulfuraxe],
+    wmN: [-1, IID.hachet, IID.stoneaxe, IID.sulfuraxe],
     WMw: [1, 2, 4, 5],
-    WnW: 0,
+    areaEffect: 0,
     type: [{
         life: 250,
         W: {
@@ -31778,7 +31778,7 @@ nnv[object.tree] = {
         Mwm: 145,
         NVm: 5,
         units: 0,
-        vWV: 800,
+        unitsMax: 800,
         MMN: 1,
         z: MVNWM,
         radius: 70
@@ -31805,7 +31805,7 @@ nnv[object.tree] = {
         Mwm: 128,
         NVm: 5,
         units: 0,
-        vWV: 800,
+        unitsMax: 800,
         MMN: 1,
         z: MVNWM,
         radius: 52
@@ -31832,7 +31832,7 @@ nnv[object.tree] = {
         Mwm: 114,
         NVm: 5,
         units: 0,
-        vWV: 800,
+        unitsMax: 800,
         MMN: 1,
         z: MVNWM,
         radius: 42
@@ -31859,7 +31859,7 @@ nnv[object.tree] = {
         Mwm: 90,
         NVm: 5,
         units: 0,
-        vWV: 800,
+        unitsMax: 800,
         MMN: 1,
         z: MVNWM,
         radius: 34
@@ -31886,7 +31886,7 @@ nnv[object.tree] = {
         Mwm: 147,
         NVm: 5,
         units: 0,
-        vWV: 800,
+        unitsMax: 800,
         MMN: 1,
         z: MVNWM,
         radius: 54
@@ -31899,9 +31899,9 @@ nnv[object.tree] = {
 nnv[object.stone] = {
     loot: [Mv.stone, Mv.vWVMv, Mv.mnVVV],
     mvW: [0.1, 0.3, 1],
-    wmN: [item.hachet, item.stonepickaxe, item.steelpickaxe, item.sulfurpickaxe],
+    wmN: [IID.hachet, IID.stonepickaxe, IID.steelpickaxe, IID.sulfurpickaxe],
     WMw: [1, 3, 4, 5],
-    WnW: 0,
+    areaEffect: 0,
     type: [{
         life: 1000,
         W: {
@@ -31913,7 +31913,7 @@ nnv[object.stone] = {
         Mwm: 80,
         NVm: 5,
         units: 0,
-        vWV: 115,
+        unitsMax: 115,
         MMN: 1,
         z: vVnmm,
         radius: 60
@@ -31928,7 +31928,7 @@ nnv[object.stone] = {
         Mwm: 80,
         NVm: 5,
         units: 0,
-        vWV: 115,
+        unitsMax: 115,
         MMN: 1,
         z: vVnmm,
         radius: 58
@@ -31943,7 +31943,7 @@ nnv[object.stone] = {
         Mwm: 74,
         NVm: 5,
         units: 0,
-        vWV: 115,
+        unitsMax: 115,
         MMN: 1,
         z: vVnmm,
         radius: 54
@@ -31958,7 +31958,7 @@ nnv[object.stone] = {
         Mwm: 65,
         NVm: 5,
         units: 0,
-        vWV: 115,
+        unitsMax: 115,
         MMN: 1,
         z: NNn,
         radius: 45
@@ -31973,7 +31973,7 @@ nnv[object.stone] = {
         Mwm: 63,
         NVm: 5,
         units: 0,
-        vWV: 115,
+        unitsMax: 115,
         MMN: 1,
         z: NNn,
         radius: 43
@@ -31988,7 +31988,7 @@ nnv[object.stone] = {
         Mwm: 61,
         NVm: 5,
         units: 0,
-        vWV: 115,
+        unitsMax: 115,
         MMN: 1,
         z: NNn,
         radius: 41
@@ -32001,9 +32001,9 @@ nnv[object.stone] = {
 nnv[object.MNvVW] = {
     loot: [Mv.steel, Mv.stone, Mv.vWVMv, Mv.mnVVV],
     mvW: [0.4, 0.45, 0.6, 1],
-    wmN: [item.stonepickaxe, item.steelpickaxe, item.sulfurpickaxe],
+    wmN: [IID.stonepickaxe, IID.steelpickaxe, IID.sulfurpickaxe],
     WMw: [1, 2, 3],
-    WnW: 0,
+    areaEffect: 0,
     type: [{
         life: 1200,
         W: {
@@ -32015,7 +32015,7 @@ nnv[object.MNvVW] = {
         Mwm: 81,
         NVm: 5,
         units: 0,
-        vWV: 22,
+        unitsMax: 22,
         MMN: 1,
         z: vVnmm,
         radius: 61
@@ -32030,7 +32030,7 @@ nnv[object.MNvVW] = {
         Mwm: 81,
         NVm: 5,
         units: 0,
-        vWV: 22,
+        unitsMax: 22,
         MMN: 1,
         z: vVnmm,
         radius: 61
@@ -32045,7 +32045,7 @@ nnv[object.MNvVW] = {
         Mwm: 62,
         NVm: 5,
         units: 0,
-        vWV: 22,
+        unitsMax: 22,
         MMN: 1,
         z: NNn,
         radius: 42
@@ -32060,7 +32060,7 @@ nnv[object.MNvVW] = {
         Mwm: 70,
         NVm: 5,
         units: 0,
-        vWV: 22,
+        unitsMax: 22,
         MMN: 1,
         z: vVnmm,
         radius: 50
@@ -32073,9 +32073,9 @@ nnv[object.MNvVW] = {
 nnv[object.WnNVw] = {
     loot: [Mv.sulfur, Mv.stone, Mv.vWVMv, Mv.mnVVV],
     mvW: [0.4, 0.45, 0.6, 1],
-    wmN: [item.steelpickaxe, item.sulfurpickaxe],
+    wmN: [IID.steelpickaxe, IID.sulfurpickaxe],
     WMw: [1, 2],
-    WnW: 0,
+    areaEffect: 0,
     type: [{
         life: 1000,
         W: {
@@ -32087,7 +32087,7 @@ nnv[object.WnNVw] = {
         Mwm: 62,
         NVm: 5,
         units: 0,
-        vWV: 22,
+        unitsMax: 22,
         MMN: 1,
         z: vVnmm,
         radius: 42
@@ -32102,7 +32102,7 @@ nnv[object.WnNVw] = {
         Mwm: 70,
         NVm: 5,
         units: 0,
-        vWV: 22,
+        unitsMax: 22,
         MMN: 1,
         z: NNn,
         radius: 50
@@ -32117,7 +32117,7 @@ nnv[object.WnNVw] = {
         Mwm: 58,
         NVm: 5,
         units: 0,
-        vWV: 22,
+        unitsMax: 22,
         MMN: 1,
         z: NNn,
         radius: 38
@@ -32130,9 +32130,9 @@ nnv[object.WnNVw] = {
 nnv[object.uranium] = {
     loot: [Mv.uranium, Mv.stone, Mv.vWVMv, Mv.mnVVV],
     mvW: [0.3, 0.45, 0.6, 1],
-    wmN: [item.sulfurpickaxe],
+    wmN: [IID.sulfurpickaxe],
     WMw: [1],
-    WnW: __RADIATION__,
+    areaEffect: __RADIATION__,
     type: [{
         life: 6000,
         W: {
@@ -32144,7 +32144,7 @@ nnv[object.uranium] = {
         Mwm: 104,
         NVm: 5,
         units: 0,
-        vWV: 5,
+        unitsMax: 5,
         MMN: 1,
         z: vVnmm,
         radius: 75
@@ -32159,7 +32159,7 @@ nnv[object.uranium] = {
         Mwm: 75,
         NVm: 5,
         units: 0,
-        vWV: 5,
+        unitsMax: 5,
         MMN: 1,
         z: vVnmm,
         radius: 55
@@ -32174,7 +32174,7 @@ nnv[object.uranium] = {
         Mwm: 62,
         NVm: 5,
         units: 0,
-        vWV: 5,
+        unitsMax: 5,
         MMN: 1,
         z: NNn,
         radius: 42
@@ -32189,7 +32189,7 @@ nnv[object.orangebush] = {
     mvW: [0.05, 1],
     wmN: [-1],
     WMw: [1],
-    WnW: 0,
+    areaEffect: 0,
     type: [{
         life: 80,
         W: {
@@ -32213,7 +32213,7 @@ nnv[object.orangebush] = {
         Mwm: 68,
         NVm: 5,
         units: 0,
-        vWV: 20,
+        unitsMax: 20,
         MMN: 1,
         z: NNn,
         radius: 38
@@ -32240,7 +32240,7 @@ nnv[object.orangebush] = {
         Mwm: 70,
         NVm: 5,
         units: 0,
-        vWV: 20,
+        unitsMax: 20,
         MMN: 1,
         z: NNn,
         radius: 37
@@ -32267,7 +32267,7 @@ nnv[object.orangebush] = {
         Mwm: 78,
         NVm: 5,
         units: 0,
-        vWV: 20,
+        unitsMax: 20,
         MMN: 1,
         z: NNn,
         radius: 45
@@ -32282,7 +32282,7 @@ nnv[object.wVMnM] = {
     mvW: [0.05, 1],
     wmN: [-1],
     WMw: [1],
-    WnW: 0,
+    areaEffect: 0,
     type: [{
         life: 80,
         W: {
@@ -32306,7 +32306,7 @@ nnv[object.wVMnM] = {
         Mwm: 68,
         NVm: 5,
         units: 0,
-        vWV: 16,
+        unitsMax: 16,
         MMN: 1,
         z: NNn,
         radius: 38
@@ -32333,7 +32333,7 @@ nnv[object.wVMnM] = {
         Mwm: 70,
         NVm: 5,
         units: 0,
-        vWV: 16,
+        unitsMax: 16,
         MMN: 1,
         z: NNn,
         radius: 37
@@ -32360,7 +32360,7 @@ nnv[object.wVMnM] = {
         Mwm: 78,
         NVm: 5,
         units: 0,
-        vWV: 16,
+        unitsMax: 16,
         MMN: 1,
         z: NNn,
         radius: 45
@@ -32373,9 +32373,9 @@ nnv[object.wVMnM] = {
 nnv[object.nVvNw] = {
     loot: [Mv.rawsteak, Mv.animalfat, Mv.leather],
     mvW: [0.25, 0.85, 1],
-    wmN: [item.hachet, item.stoneaxe, item.sulfuraxe],
+    wmN: [IID.hachet, IID.stoneaxe, IID.sulfuraxe],
     WMw: [1, 3, 4],
-    WnW: 0,
+    areaEffect: 0,
     type: [{
         life: 250,
         W: {
@@ -32387,7 +32387,7 @@ nnv[object.nVvNw] = {
         Mwm: 70,
         NVm: 5,
         units: 0,
-        vWV: 18,
+        unitsMax: 18,
         MMN: 1,
         z: NNn,
         radius: 47
@@ -32400,9 +32400,9 @@ nnv[object.nVvNw] = {
 nnv[object.WmNvW] = {
     loot: [Mv.rawsteak, Mv.animaltendon, Mv.leather, Mv.animalfat],
     mvW: [0.28, 0.7, 0.85, 1],
-    wmN: [item.hachet, item.stoneaxe, item.sulfuraxe],
+    wmN: [IID.hachet, IID.stoneaxe, IID.sulfuraxe],
     WMw: [1, 3, 4],
-    WnW: 0,
+    areaEffect: 0,
     type: [{
         life: 200,
         W: {
@@ -32414,7 +32414,7 @@ nnv[object.WmNvW] = {
         Mwm: 73,
         NVm: 5,
         units: 0,
-        vWV: 18,
+        unitsMax: 18,
         MMN: 1,
         z: NNn,
         radius: 53
@@ -32429,7 +32429,7 @@ nnv[object.NNNNV] = {
     mvW: [1],
     wmN: [-1],
     WMw: [1],
-    WnW: 0,
+    areaEffect: 0,
     type: [{
         life: 1,
         W: {
@@ -32441,7 +32441,7 @@ nnv[object.NNNNV] = {
         Mwm: 18,
         NVm: 2,
         units: 0,
-        vWV: 2,
+        unitsMax: 2,
         MMN: 0,
         z: NNn,
         radius: 32
@@ -32456,7 +32456,7 @@ nnv[object.NNNNV] = {
         Mwm: 18,
         NVm: 2,
         units: 0,
-        vWV: 2,
+        unitsMax: 2,
         MMN: 0,
         z: NNn,
         radius: 32
@@ -32471,7 +32471,7 @@ nnv[object.NNNNV] = {
         Mwm: 18,
         NVm: 2,
         units: 0,
-        vWV: 2,
+        unitsMax: 2,
         MMN: 0,
         z: NNn,
         radius: 32
@@ -32486,7 +32486,7 @@ nnv[object.NNNNV] = {
         Mwm: 18,
         NVm: 2,
         units: 0,
-        vWV: 2,
+        unitsMax: 2,
         MMN: 0,
         z: NNn,
         radius: 32
@@ -32501,7 +32501,7 @@ nnv[object.MMWwv] = {
     mvW: [1],
     wmN: [-1],
     WMw: [1],
-    WnW: 0,
+    areaEffect: 0,
     type: [{
         life: 1,
         W: {
@@ -32513,7 +32513,7 @@ nnv[object.MMWwv] = {
         Mwm: 18,
         NVm: 2,
         units: 0,
-        vWV: 1,
+        unitsMax: 1,
         MMN: 0,
         z: NNn,
         radius: 32
@@ -32528,7 +32528,7 @@ nnv[object.VvnNm] = {
     mvW: [1],
     wmN: [-1],
     WMw: [1],
-    WnW: 0,
+    areaEffect: 0,
     type: [{
         life: 1,
         W: {
@@ -32540,7 +32540,7 @@ nnv[object.VvnNm] = {
         Mwm: 18,
         NVm: 2,
         units: 0,
-        vWV: 6,
+        unitsMax: 6,
         MMN: 0,
         z: NNn,
         radius: 32
@@ -32555,7 +32555,7 @@ nnv[object.VvnNm] = {
         Mwm: 18,
         NVm: 2,
         units: 0,
-        vWV: 6,
+        unitsMax: 6,
         MMN: 0,
         z: NNn,
         radius: 32
@@ -32570,7 +32570,7 @@ nnv[object.VvnNm] = {
         Mwm: 18,
         NVm: 2,
         units: 0,
-        vWV: 6,
+        unitsMax: 6,
         MMN: 0,
         z: NNn,
         radius: 32
@@ -32585,7 +32585,7 @@ nnv[object.VvnNm] = {
         Mwm: 18,
         NVm: 2,
         units: 0,
-        vWV: 6,
+        unitsMax: 6,
         MMN: 0,
         z: NNn,
         radius: 32
@@ -32600,7 +32600,7 @@ nnv[object.VWMMv] = {
     mvW: [1],
     wmN: [-1],
     WMw: [1],
-    WnW: 0,
+    areaEffect: 0,
     type: [{
         life: 1,
         W: {
@@ -32612,7 +32612,7 @@ nnv[object.VWMMv] = {
         Mwm: 18,
         NVm: 2,
         units: 0,
-        vWV: 6,
+        unitsMax: 6,
         MMN: 0,
         z: NNn,
         radius: 32
@@ -32627,7 +32627,7 @@ nnv[object.VWMMv] = {
         Mwm: 18,
         NVm: 2,
         units: 0,
-        vWV: 6,
+        unitsMax: 6,
         MMN: 0,
         z: NNn,
         radius: 32
@@ -32642,7 +32642,7 @@ nnv[object.VWMMv] = {
         Mwm: 18,
         NVm: 2,
         units: 0,
-        vWV: 6,
+        unitsMax: 6,
         MMN: 0,
         z: NNn,
         radius: 32
@@ -32657,7 +32657,7 @@ nnv[object.VWMMv] = {
         Mwm: 18,
         NVm: 2,
         units: 0,
-        vWV: 6,
+        unitsMax: 6,
         MMN: 0,
         z: NNn,
         radius: 32
@@ -32731,236 +32731,237 @@ var karma = [{
         isLoaded: 0
     }
 }];
+
 var COUNTER = 0;
-var vMW = {
-    mVVvn: COUNTER++,
-    mVmnm: COUNTER++,
-    MwWnV: COUNTER++,
-    wMmmw: COUNTER++,
-    vVMwW: COUNTER++,
-    MnmmV: COUNTER++,
-    VnMvm: COUNTER++,
-    MMVVM: COUNTER++,
-    nvMmm: COUNTER++,
-    VVVnN: COUNTER++,
-    vNmvW: COUNTER++,
-    vnMwV: COUNTER++
+var HOUSEID = {
+    __HOUSE0__:     COUNTER++,
+    __HOUSE1__:     COUNTER++,
+    __HOUSE2__:     COUNTER++,
+    __HOUSE3__:     COUNTER++,
+    __HOUSE4__:     COUNTER++,
+    __HOUSE5__:     COUNTER++,
+    __HOUSE6__:     COUNTER++,
+    __HOUSE7__:     COUNTER++,
+    __HOUSE8__:     COUNTER++,
+    __HOUSE9__:     COUNTER++,
+    __CITY0__:      COUNTER++,
+    __BUNKER0__:    COUNTER++
 };
-var nWW = [];
-var vnwNv = {};
+var HOUSE = [];
+var P = {};
 try {
-    if (VwM !== window.undefined) {
-        nN = {
+    if (exports !== window.undefined) {
+        _EMP = {
             v: 0,
             b: 0,
             V: -1,
             r: 0
         };
-        vw = {
-            v: item.woodfloor1,
+        _WF = {
+            v: IID.woodfloor1,
             b: 0,
             V: -1,
             r: 0
         };
-        wV = {
-            v: item.woodfloor2,
+        _LF = {
+            v: IID.woodfloor2,
             b: 0,
             V: -1,
             r: 0
         };
-        VWV = {
-            v: item.stonefloor1,
+        _SF = {
+            v: IID.stonefloor1,
             b: 0,
             V: -1,
             r: 0
         };
-        Wnm = {
-            v: item.stonefloor2,
+        _TF = {
+            v: IID.stonefloor2,
             b: 0,
             V: -1,
             r: 0
         };
-        nNMnW = {
-            v: item.mustardfloor,
+        _GF = {
+            v: IID.mustardfloor,
             b: 0,
             V: -1,
             r: 0
         };
-        VvWvw = {
-            v: item.redfloor,
+        _RF = {
+            v: IID.redfloor,
             b: 0,
             V: -1,
             r: 0
         };
-        Wmnvv = {
+        _WW = {
             v: 0,
-            b: item.woodenwall,
+            b: IID.woodenwall,
             V: -1,
             r: 0
         };
-        wNM = {
-            v: item.woodfloor1,
-            b: item.woodenwall,
+        _WWWF = {
+            v: IID.woodfloor1,
+            b: IID.woodenwall,
             V: -1,
             r: 0
         };
-        mNV = {
-            v: item.woodfloor2,
-            b: item.woodenwall,
+        _WWLF = {
+            v: IID.woodfloor2,
+            b: IID.woodenwall,
             V: -1,
             r: 0
         };
-        wWvvv = {
-            v: item.stonefloor1,
-            b: item.woodenwall,
+        _WWSF = {
+            v: IID.stonefloor1,
+            b: IID.woodenwall,
             V: -1,
             r: 0
         };
-        MVMvM = {
-            v: item.stonefloor2,
-            b: item.woodenwall,
+        _WWTF = {
+            v: IID.stonefloor2,
+            b: IID.woodenwall,
             V: -1,
             r: 0
         };
-        nNMmm = {
-            v: item.mustardfloor,
-            b: item.woodenwall,
+        _WWGF = {
+            v: IID.mustardfloor,
+            b: IID.woodenwall,
             V: -1,
             r: 0
         };
-        VWWVm = {
-            v: item.redfloor,
-            b: item.woodenwall,
+        _WWRF = {
+            v: IID.redfloor,
+            b: IID.woodenwall,
             V: -1,
             r: 0
         };
-        vWW = {
+        _SW = {
             v: 0,
-            b: item.stonewall,
+            b: IID.stonewall,
             V: -1,
             r: 0
         };
-        MM = {
-            v: item.woodfloor1,
-            b: item.stonewall,
+        _SWWF = {
+            v: IID.woodfloor1,
+            b: IID.stonewall,
             V: -1,
             r: 0
         };
-        VVN = {
-            v: item.woodfloor2,
-            b: item.stonewall,
+        _SWLF = {
+            v: IID.woodfloor2,
+            b: IID.stonewall,
             V: -1,
             r: 0
         };
-        wnNNV = {
-            v: item.stonefloor1,
-            b: item.stonewall,
+        _SWSF = {
+            v: IID.stonefloor1,
+            b: IID.stonewall,
             V: -1,
             r: 0
         };
-        mVW = {
-            v: item.stonefloor2,
-            b: item.stonewall,
+        _SWTF = {
+            v: IID.stonefloor2,
+            b: IID.stonewall,
             V: -1,
             r: 0
         };
-        mMnMV = {
-            v: item.mustardfloor,
-            b: item.stonewall,
+        _SWGF = {
+            v: IID.mustardfloor,
+            b: IID.stonewall,
             V: -1,
             r: 0
         };
-        NmwVM = {
-            v: item.redfloor,
-            b: item.stonewall,
+        _SWRF = {
+            v: IID.redfloor,
+            b: IID.stonewall,
             V: -1,
             r: 0
         };
-        vNM = {
+        _MW = {
             v: 0,
-            b: item.steelwall,
+            b: IID.steelwall,
             V: -1,
             r: 0
         };
-        nMv = {
-            v: item.woodfloor1,
-            b: item.steelwall,
+        _MWWF = {
+            v: IID.woodfloor1,
+            b: IID.steelwall,
             V: -1,
             r: 0
         };
-        nNW = {
-            v: item.woodfloor2,
-            b: item.steelwall,
+        _MWLF = {
+            v: IID.woodfloor2,
+            b: IID.steelwall,
             V: -1,
             r: 0
         };
-        MWn = {
-            v: item.stonefloor1,
-            b: item.steelwall,
+        _MWSF = {
+            v: IID.stonefloor1,
+            b: IID.steelwall,
             V: -1,
             r: 0
         };
-        Vvn = {
-            v: item.stonefloor2,
-            b: item.steelwall,
+        _MWTF = {
+            v: IID.stonefloor2,
+            b: IID.steelwall,
             V: -1,
             r: 0
         };
-        nvvmv = {
-            v: item.mustardfloor,
-            b: item.steelwall,
+        _MWGF = {
+            v: IID.mustardfloor,
+            b: IID.steelwall,
             V: -1,
             r: 0
         };
-        nNNvw = {
-            v: item.redfloor,
-            b: item.steelwall,
+        _MWRF = {
+            v: IID.redfloor,
+            b: IID.steelwall,
             V: -1,
             r: 0
         };
-        MN = {
+        _SC = {
             v: 0,
-            b: item.stonecave,
+            b: IID.stonecave,
             V: -1,
             r: 0
         };
-        nvNMN = {
-            v: item.stonefloor1,
-            b: item.stonecave,
+        _SCSF = {
+            v: IID.stonefloor1,
+            b: IID.stonecave,
             V: -1,
             r: 0
         };
-        wmMmV = {
-            v: item.stonefloor2,
-            b: item.stonecave,
+        _SCTF = {
+            v: IID.stonefloor2,
+            b: IID.stonecave,
             V: -1,
             r: 0
         };
-        MWVnn = {
+        _BW = {
             v: 0,
-            b: item.bunkerwall,
+            b: IID.bunkerwall,
             V: -1,
             r: 0
         };
-        vWNVw = {
-            v: item.stonefloor1,
-            b: item.bunkerwall,
+        _BWSF = {
+            v: IID.stonefloor1,
+            b: IID.bunkerwall,
             V: -1,
             r: 0
         };
-        MNm = {
-            v: item.stonefloor2,
-            b: item.bunkerwall,
+        _BWTF = {
+            v: IID.stonefloor2,
+            b: IID.bunkerwall,
             V: -1,
             r: 0
         };
-        nWW[vMW.mVVvn] = {
+        HOUSE[HOUSEID.__HOUSE0__] = {
             width: 0,
             height: 0,
             radiation: 0,
             building: [
-                [nN],
-                [nN, wNM, wNM, wNM, {
+                [_EMP],
+                [_EMP, _WWWF, _WWWF, _WWWF, {
                     v: 62,
                     b: 30,
                     V: -1,
@@ -32970,30 +32971,30 @@ try {
                     b: 30,
                     V: -1,
                     r: 2
-                }, wNM, wNM],
-                [nN, wNM, {
+                }, _WWWF, _WWWF],
+                [_EMP, _WWWF, {
                     v: 62,
                     b: 71,
                     V: 0,
                     r: 3
-                }, vw, vw, vw, {
+                }, _WF, _WF, _WF, {
                     v: 62,
                     b: 71,
                     V: 13,
                     r: 1
-                }, wNM],
-                [nN, wNM, {
+                }, _WWWF],
+                [_EMP, _WWWF, {
                     v: 62,
                     b: 71,
                     V: 22,
                     r: 3
-                }, vw, vw, vw, vw, {
+                }, _WF, _WF, _WF, _WF, {
                     v: 62,
                     b: 30,
                     V: -1,
                     r: 3
                 }],
-                [nN, wNM, {
+                [_EMP, _WWWF, {
                     v: 62,
                     b: 71,
                     V: 9,
@@ -33003,33 +33004,33 @@ try {
                     b: 71,
                     V: 10,
                     r: 1
-                }, vw, vw, vw, {
+                }, _WF, _WF, _WF, {
                     v: 62,
                     b: 30,
                     V: -1,
                     r: 3
                 }],
-                [nN, wNM, {
+                [_EMP, _WWWF, {
                     v: 62,
                     b: 71,
                     V: 17,
                     r: 0
-                }, vw, vw, vw, {
+                }, _WF, _WF, _WF, {
                     v: 62,
                     b: 71,
                     V: 19,
                     r: 2
-                }, wNM],
-                [nN, wNM, wNM, wNM, wNM, wNM, wNM, wNM]
+                }, _WWWF],
+                [_EMP, _WWWF, _WWWF, _WWWF, _WWWF, _WWWF, _WWWF, _WWWF]
             ]
         };
-        nWW[vMW.mVmnm] = {
+        HOUSE[HOUSEID.__HOUSE1__] = {
             width: 0,
             height: 0,
             radiation: 0,
             building: [
-                [nN],
-                [nN, {
+                [_EMP],
+                [_EMP, {
                     v: 0,
                     b: 69,
                     V: -1,
@@ -33044,44 +33045,44 @@ try {
                     b: 69,
                     V: -1,
                     r: 0
-                }, VVN, VVN, {
+                }, _SWLF, _SWLF, {
                     v: 67,
                     b: 69,
                     V: -1,
                     r: 2
-                }, VVN, VVN, VVN],
-                [nN, {
+                }, _SWLF, _SWLF, _SWLF],
+                [_EMP, {
                     v: 62,
                     b: 69,
                     V: -1,
                     r: 1
-                }, vw, {
+                }, _WF, {
                     v: 62,
                     b: 71,
                     V: 23,
                     r: 0
-                }, VVN, {
+                }, _SWLF, {
                     v: 67,
                     b: 71,
                     V: 28,
                     r: 3
-                }, wV, wV, {
+                }, _LF, _LF, {
                     v: 67,
                     b: 71,
                     V: 21,
                     r: 1
-                }, VVN],
-                [nN, {
+                }, _SWLF],
+                [_EMP, {
                     v: 62,
                     b: 31,
                     V: -1,
                     r: 1
-                }, vw, vw, VVN, {
+                }, _WF, _WF, _SWLF, {
                     v: 67,
                     b: 71,
                     V: 12,
                     r: 0
-                }, wV, {
+                }, _LF, {
                     v: 67,
                     b: 69,
                     V: -1,
@@ -33097,49 +33098,49 @@ try {
                     V: -1,
                     r: 1
                 }],
-                [nN, {
+                [_EMP, {
                     v: 62,
                     b: 69,
                     V: -1,
                     r: 1
-                }, vw, vw, {
+                }, _WF, _WF, {
                     v: 62,
                     b: 69,
                     V: -1,
                     r: 3
-                }, wV, wV, wV, {
+                }, _LF, _LF, _LF, {
                     v: 67,
                     b: 71,
                     V: 15,
                     r: 1
-                }, VVN],
-                [nN, {
+                }, _SWLF],
+                [_EMP, {
                     v: 0,
                     b: 69,
                     V: -1,
                     r: 2
-                }, MM, {
+                }, _SWWF, {
                     v: 62,
                     b: 31,
                     V: -1,
                     r: 0
-                }, VVN, wV, {
+                }, _SWLF, _LF, {
                     v: 67,
                     b: 71,
                     V: 23,
                     r: 1
-                }, wV, {
+                }, _LF, {
                     v: 67,
                     b: 71,
                     V: 5,
                     r: 1
-                }, VVN],
-                [nN, {
+                }, _SWLF],
+                [_EMP, {
                     v: 0,
                     b: 71,
                     V: 24,
                     r: 0
-                }, MM, vw, {
+                }, _SWWF, _WF, {
                     v: 62,
                     b: 69,
                     V: -1,
@@ -33164,45 +33165,45 @@ try {
                     b: 69,
                     V: -1,
                     r: 2
-                }, MM],
-                [nN, {
+                }, _SWWF],
+                [_EMP, {
                     v: 0,
                     b: 71,
                     V: 26,
                     r: 0
-                }, MM, {
+                }, _SWWF, {
                     v: 62,
                     b: 71,
                     V: 23,
                     r: 2
-                }, vw, vw, vw, vw, {
+                }, _WF, _WF, _WF, _WF, {
                     v: 62,
                     b: 71,
                     V: 14,
                     r: 1
-                }, MM],
-                [nN, nN, MM, {
+                }, _SWWF],
+                [_EMP, _EMP, _SWWF, {
                     v: 67,
                     b: 71,
                     V: 27,
                     r: 0
-                }, wV, wV, {
+                }, _LF, _LF, {
                     v: 62,
                     b: 71,
                     V: 8,
                     r: 3
-                }, vw, {
+                }, _WF, {
                     v: 62,
                     b: 71,
                     V: 1,
                     r: 1
-                }, MM],
-                [nN, nN, MM, {
+                }, _SWWF],
+                [_EMP, _EMP, _SWWF, {
                     v: 67,
                     b: 71,
                     V: 27,
                     r: 0
-                }, wV, {
+                }, _LF, {
                     v: 67,
                     b: 71,
                     V: 7,
@@ -33212,29 +33213,29 @@ try {
                     b: 71,
                     V: 23,
                     r: 0
-                }, vw, {
+                }, _WF, {
                     v: 62,
                     b: 71,
                     V: 2,
                     r: 1
-                }, MM],
-                [nN, nN, MM, {
+                }, _SWWF],
+                [_EMP, _EMP, _SWWF, {
                     v: 67,
                     b: 71,
                     V: 20,
                     r: 0
-                }, wV, wV, vw, vw, vw, {
+                }, _LF, _LF, _WF, _WF, _WF, {
                     v: 0,
                     b: 69,
                     V: -1,
                     r: 1
                 }],
-                [nN, {
+                [_EMP, {
                     v: 0,
                     b: 71,
                     V: 16,
                     r: 1
-                }, MM, MM, {
+                }, _SWWF, _SWWF, {
                     v: 67,
                     b: 69,
                     V: -1,
@@ -33244,23 +33245,23 @@ try {
                     b: 69,
                     V: -1,
                     r: 0
-                }, MM, {
+                }, _SWWF, {
                     v: 62,
                     b: 31,
                     V: -1,
                     r: 0
-                }, MM, MM],
-                [nN, nN, nN, {
+                }, _SWWF, _SWWF],
+                [_EMP, _EMP, _EMP, {
                     v: 0,
                     b: 71,
                     V: 16,
                     r: 2
-                }, nN, {
+                }, _EMP, {
                     v: 0,
                     b: 71,
                     V: 24,
                     r: 0
-                }, nN, nN, {
+                }, _EMP, _EMP, {
                     v: 0,
                     b: 71,
                     V: 26,
@@ -33273,13 +33274,13 @@ try {
                 }]
             ]
         };
-        nWW[vMW.MwWnV] = {
+        HOUSE[HOUSEID.__HOUSE2__] = {
             width: 0,
             height: 0,
             radiation: 0,
             building: [
-                [nN],
-                [nN, nN, nN, MM, MM, {
+                [_EMP],
+                [_EMP, _EMP, _EMP, _SWWF, _SWWF, {
                     v: 0,
                     b: 69,
                     V: -1,
@@ -33289,7 +33290,7 @@ try {
                     b: 69,
                     V: -1,
                     r: 0
-                }, MM, MM, VVN, VVN, VVN, {
+                }, _SWWF, _SWWF, _SWLF, _SWLF, _SWLF, {
                     v: 62,
                     b: 31,
                     V: -1,
@@ -33305,17 +33306,17 @@ try {
                     V: -1,
                     r: 1
                 }],
-                [nN, nN, nN, MM, {
+                [_EMP, _EMP, _EMP, _SWWF, {
                     v: 67,
                     b: 71,
                     V: 27,
                     r: 0
-                }, wV, wV, {
+                }, _LF, _LF, {
                     v: 67,
                     b: 71,
                     V: 23,
                     r: 3
-                }, MM, {
+                }, _SWWF, {
                     v: 67,
                     b: 71,
                     V: 5,
@@ -33325,13 +33326,13 @@ try {
                     b: 71,
                     V: 13,
                     r: 1
-                }, VVN, vw, vw, {
+                }, _SWLF, _WF, _WF, {
                     v: 0,
                     b: 69,
                     V: -1,
                     r: 1
                 }],
-                [nN, {
+                [_EMP, {
                     v: 0,
                     b: 69,
                     V: -1,
@@ -33341,12 +33342,12 @@ try {
                     b: 69,
                     V: -1,
                     r: 0
-                }, MM, {
+                }, _SWWF, {
                     v: 67,
                     b: 71,
                     V: 20,
                     r: 0
-                }, wV, {
+                }, _LF, {
                     v: 67,
                     b: 71,
                     V: 7,
@@ -33356,12 +33357,12 @@ try {
                     b: 71,
                     V: 16,
                     r: 2
-                }, MM, wV, wV, {
+                }, _SWWF, _LF, _LF, {
                     v: 67,
                     b: 31,
                     V: -1,
                     r: 3
-                }, vw, {
+                }, _WF, {
                     v: 62,
                     b: 71,
                     V: 23,
@@ -33372,33 +33373,33 @@ try {
                     V: -1,
                     r: 1
                 }],
-                [nN, vw, {
+                [_EMP, _WF, {
                     v: 62,
                     b: 71,
                     V: 2,
                     r: 1
-                }, MM, {
+                }, _SWWF, {
                     v: 67,
                     b: 71,
                     V: 11,
                     r: 3
-                }, wV, wV, wV, MM, wV, {
+                }, _LF, _LF, _LF, _SWWF, _LF, {
                     v: 67,
                     b: 71,
                     V: 12,
                     r: 2
-                }, VVN, VVN, VVN, vWW],
-                [nN, vw, vw, {
+                }, _SWLF, _SWLF, _SWLF, _SW],
+                [_EMP, _WF, _WF, {
                     v: 62,
                     b: 31,
                     V: -1,
                     r: 1
-                }, vw, vw, vw, vw, {
+                }, _WF, _WF, _WF, _WF, {
                     v: 62,
                     b: 31,
                     V: -1,
                     r: 3
-                }, wV, wV, VVN, {
+                }, _LF, _LF, _SWLF, {
                     v: 67,
                     b: 71,
                     V: 25,
@@ -33408,40 +33409,40 @@ try {
                     b: 71,
                     V: 3,
                     r: 1
-                }, VVN],
-                [nN, vw, vw, {
+                }, _SWLF],
+                [_EMP, _WF, _WF, {
                     v: 62,
                     b: 31,
                     V: -1,
                     r: 1
-                }, vw, vw, vw, vw, MM, wV, wV, {
+                }, _WF, _WF, _WF, _WF, _SWWF, _LF, _LF, {
                     v: 67,
                     b: 51,
                     V: -1,
                     r: 1
-                }, wV, {
+                }, _LF, {
                     v: 67,
                     b: 71,
                     V: 18,
                     r: 2
-                }, VVN],
-                [nN, vw, vw, vWW, {
+                }, _SWLF],
+                [_EMP, _WF, _WF, _SW, {
                     v: 62,
                     b: 71,
                     V: 3,
                     r: 3
-                }, vw, vw, {
+                }, _WF, _WF, {
                     v: 62,
                     b: 71,
                     V: 16,
                     r: 2
-                }, MM, VVN, VVN, VVN, VVN, VVN, VVN],
-                [nN, vw, {
+                }, _SWWF, _SWLF, _SWLF, _SWLF, _SWLF, _SWLF, _SWLF],
+                [_EMP, _WF, {
                     v: 62,
                     b: 71,
                     V: 26,
                     r: 0
-                }, MM, {
+                }, _SWWF, {
                     v: 0,
                     b: 71,
                     V: 4,
@@ -33451,44 +33452,44 @@ try {
                     b: 71,
                     V: 22,
                     r: 1
-                }, vw, {
+                }, _WF, {
                     v: 62,
                     b: 71,
                     V: 8,
                     r: 1
-                }, MM, {
+                }, _SWWF, {
                     v: 0,
                     b: 71,
                     V: 24,
                     r: 1
-                }, nN, {
+                }, _EMP, {
                     v: 0,
                     b: 71,
                     V: 17,
                     r: 0
                 }],
-                [nN, vw, {
+                [_EMP, _WF, {
                     v: 62,
                     b: 71,
                     V: 23,
                     r: 0
-                }, MM, {
+                }, _SWWF, {
                     v: 62,
                     b: 71,
                     V: 23,
                     r: 1
-                }, vw, vw, {
+                }, _WF, _WF, {
                     v: 62,
                     b: 71,
                     V: 14,
                     r: 1
-                }, MM, {
+                }, _SWWF, {
                     v: 0,
                     b: 71,
                     V: 26,
                     r: 1
                 }],
-                [nN, {
+                [_EMP, {
                     v: 0,
                     b: 69,
                     V: -1,
@@ -33498,7 +33499,7 @@ try {
                     b: 69,
                     V: -1,
                     r: 2
-                }, MM, MM, {
+                }, _SWWF, _SWWF, {
                     v: 62,
                     b: 69,
                     V: -1,
@@ -33508,7 +33509,7 @@ try {
                     b: 69,
                     V: -1,
                     r: 0
-                }, MM, MM, {
+                }, _SWWF, _SWWF, {
                     v: 0,
                     b: 71,
                     V: 24,
@@ -33516,13 +33517,13 @@ try {
                 }]
             ]
         };
-        nWW[vMW.wMmmw] = {
+        HOUSE[HOUSEID.__HOUSE3__] = {
             width: 0,
             height: 0,
             radiation: 0,
             building: [
-                [nN],
-                [nN, {
+                [_EMP],
+                [_EMP, {
                     v: 0,
                     b: 69,
                     V: -1,
@@ -33557,8 +33558,8 @@ try {
                     b: 69,
                     V: -1,
                     r: 2
-                }, VVN, VVN, VVN, VVN],
-                [nN, {
+                }, _SWLF, _SWLF, _SWLF, _SWLF],
+                [_EMP, {
                     v: 0,
                     b: 69,
                     V: -1,
@@ -33568,7 +33569,7 @@ try {
                     b: 71,
                     V: 23,
                     r: 2
-                }, nN, nN, nN, nN, nN, VVN, {
+                }, _EMP, _EMP, _EMP, _EMP, _EMP, _SWLF, {
                     v: 67,
                     b: 71,
                     V: 21,
@@ -33578,8 +33579,8 @@ try {
                     b: 71,
                     V: 28,
                     r: 0
-                }, VVN],
-                [nN, MM, MM, {
+                }, _SWLF],
+                [_EMP, _SWWF, _SWWF, {
                     v: 62,
                     b: 31,
                     V: -1,
@@ -33589,35 +33590,35 @@ try {
                     b: 31,
                     V: -1,
                     r: 2
-                }, MM, MM, nN, VVN, wV, wV, VVN],
-                [nN, MM, {
+                }, _SWWF, _SWWF, _EMP, _SWLF, _LF, _LF, _SWLF],
+                [_EMP, _SWWF, {
                     v: 62,
                     b: 71,
                     V: 12,
                     r: 0
-                }, vw, vw, vw, MM, {
+                }, _WF, _WF, _WF, _SWWF, {
                     v: 62,
                     b: 31,
                     V: -1,
                     r: 2
-                }, VVN, {
+                }, _SWLF, {
                     v: 67,
                     b: 31,
                     V: -1,
                     r: 0
-                }, VVN, VVN],
-                [nN, MM, vw, {
+                }, _SWLF, _SWLF],
+                [_EMP, _SWWF, _WF, {
                     v: 62,
                     b: 71,
                     V: 2,
                     r: 0
-                }, vw, {
+                }, _WF, {
                     v: 62,
                     b: 71,
                     V: 14,
                     r: 1
-                }, MM, vw, vw, vw, vw, MM],
-                [nN, MM, {
+                }, _SWWF, _WF, _WF, _WF, _WF, _SWWF],
+                [_EMP, _SWWF, {
                     v: 62,
                     b: 71,
                     V: 0,
@@ -33627,12 +33628,12 @@ try {
                     b: 71,
                     V: 7,
                     r: 0
-                }, vw, {
+                }, _WF, {
                     v: 62,
                     b: 71,
                     V: 8,
                     r: 1
-                }, MM, vw, {
+                }, _SWWF, _WF, {
                     v: 62,
                     b: 71,
                     V: 14,
@@ -33642,30 +33643,30 @@ try {
                     b: 71,
                     V: 5,
                     r: 2
-                }, vw, MM],
-                [nN, MM, vw, {
+                }, _WF, _SWWF],
+                [_EMP, _SWWF, _WF, {
                     v: 62,
                     b: 71,
                     V: 1,
                     r: 2
-                }, vw, vw, MM, {
+                }, _WF, _WF, _SWWF, {
                     v: 62,
                     b: 31,
                     V: -1,
                     r: 2
-                }, MM, MM, MM, MM, VVN],
-                [nN, {
+                }, _SWWF, _SWWF, _SWWF, _SWWF, _SWLF],
+                [_EMP, {
                     v: 62,
                     b: 31,
                     V: -1,
                     r: 1
-                }, vw, vw, vw, vw, vw, vw, vw, {
+                }, _WF, _WF, _WF, _WF, _WF, _WF, _WF, {
                     v: 62,
                     b: 31,
                     V: -1,
                     r: 3
-                }, wV, wV, VVN],
-                [nN, MM, vw, vw, vw, vw, vw, vw, vw, VVN, {
+                }, _LF, _LF, _SWLF],
+                [_EMP, _SWWF, _WF, _WF, _WF, _WF, _WF, _WF, _WF, _SWLF, {
                     v: 67,
                     b: 71,
                     V: 25,
@@ -33675,19 +33676,19 @@ try {
                     b: 71,
                     V: 18,
                     r: 3
-                }, VVN],
-                [nN, MM, MM, MM, {
+                }, _SWLF],
+                [_EMP, _SWWF, _SWWF, _SWWF, {
                     v: 62,
                     b: 31,
                     V: -1,
                     r: 2
-                }, MM, MM, MM, {
+                }, _SWWF, _SWWF, _SWWF, {
                     v: 67,
                     b: 31,
                     V: -1,
                     r: 2
-                }, VVN, VVN, VVN, VVN],
-                [nN, MM, {
+                }, _SWLF, _SWLF, _SWLF, _SWLF],
+                [_EMP, _SWWF, {
                     v: 62,
                     b: 71,
                     V: 20,
@@ -33697,39 +33698,39 @@ try {
                     b: 71,
                     V: 11,
                     r: 0
-                }, vw, vw, MM, {
+                }, _WF, _WF, _SWWF, {
                     v: 67,
                     b: 71,
                     V: 24,
                     r: 0
-                }, wV, wV, wV, wV, {
+                }, _LF, _LF, _LF, _LF, {
                     v: 67,
                     b: 31,
                     V: -1,
                     r: 3
                 }],
-                [nN, {
+                [_EMP, {
                     v: 62,
                     b: 31,
                     V: -1,
                     r: 1
-                }, vw, vw, vw, vw, MM, {
+                }, _WF, _WF, _WF, _WF, _SWWF, {
                     v: 67,
                     b: 71,
                     V: 23,
                     r: 0
-                }, wV, wV, wV, wV, {
+                }, _LF, _LF, _LF, _LF, {
                     v: 67,
                     b: 31,
                     V: -1,
                     r: 3
                 }],
-                [nN, {
+                [_EMP, {
                     v: 62,
                     b: 31,
                     V: -1,
                     r: 1
-                }, vw, vw, vw, vw, MM, MM, MM, {
+                }, _WF, _WF, _WF, _WF, _SWWF, _SWWF, _SWWF, {
                     v: 0,
                     b: 69,
                     V: -1,
@@ -33750,7 +33751,7 @@ try {
                     V: -1,
                     r: 2
                 }],
-                [nN, MM, {
+                [_EMP, _SWWF, {
                     v: 62,
                     b: 71,
                     V: 14,
@@ -33765,7 +33766,7 @@ try {
                     b: 71,
                     V: 12,
                     r: 3
-                }, vw, {
+                }, _WF, {
                     v: 67,
                     b: 31,
                     V: -1,
@@ -33775,22 +33776,22 @@ try {
                     b: 71,
                     V: 12,
                     r: 2
-                }, MM],
-                [nN, MM, MM, MM, MM, MM, VVN, MM, MM]
+                }, _SWWF],
+                [_EMP, _SWWF, _SWWF, _SWWF, _SWWF, _SWWF, _SWLF, _SWWF, _SWWF]
             ]
         };
-        nWW[vMW.vVMwW] = {
+        HOUSE[HOUSEID.__HOUSE4__] = {
             width: 0,
             height: 0,
             radiation: 0,
             building: [
-                [nN],
-                [nN, VVN, VVN, VVN, VVN, {
+                [_EMP],
+                [_EMP, _SWLF, _SWLF, _SWLF, _SWLF, {
                     v: 67,
                     b: 31,
                     V: -1,
                     r: 2
-                }, VVN, VVN, VVN, {
+                }, _SWLF, _SWLF, _SWLF, {
                     v: 0,
                     b: 69,
                     V: -1,
@@ -33800,72 +33801,72 @@ try {
                     b: 69,
                     V: -1,
                     r: 0
-                }, vWW],
-                [nN, VVN, {
+                }, _SW],
+                [_EMP, _SWLF, {
                     v: 67,
                     b: 71,
                     V: 12,
                     r: 0
-                }, wV, {
+                }, _LF, {
                     v: 67,
                     b: 71,
                     V: 5,
                     r: 0
-                }, wV, {
+                }, _LF, {
                     v: 67,
                     b: 71,
                     V: 11,
                     r: 1
-                }, VVN, {
+                }, _SWLF, {
                     v: 67,
                     b: 71,
                     V: 13,
                     r: 0
-                }, wV, wV, VVN],
-                [nN, VVN, {
+                }, _LF, _LF, _SWLF],
+                [_EMP, _SWLF, {
                     v: 67,
                     b: 71,
                     V: 13,
                     r: 0
-                }, wV, wV, wV, {
+                }, _LF, _LF, _LF, {
                     v: 67,
                     b: 71,
                     V: 19,
                     r: 2
-                }, VVN, wV, wV, {
+                }, _SWLF, _LF, _LF, {
                     v: 67,
                     b: 71,
                     V: 21,
                     r: 1
-                }, VVN],
-                [nN, VVN, {
+                }, _SWLF],
+                [_EMP, _SWLF, {
                     v: 67,
                     b: 71,
                     V: 9,
                     r: 3
-                }, wV, {
+                }, _LF, {
                     v: 67,
                     b: 71,
                     V: 7,
                     r: 1
-                }, wV, {
+                }, _LF, {
                     v: 67,
                     b: 71,
                     V: 26,
                     r: 3
-                }, VVN, wV, wV, {
+                }, _SWLF, _LF, _LF, {
                     v: 67,
                     b: 71,
                     V: 28,
                     r: 1
-                }, VVN],
-                [nN, VVN, {
+                }, _SWLF],
+                [_EMP, _SWLF, {
                     v: 67,
                     b: 71,
                     V: 13,
                     r: 0
-                }, wV, wV, wV, wV, VVN, wV, VVN, VVN, VVN],
-                [nN, VVN, {
+                }, _LF, _LF, _LF, _LF, _SWLF, _LF, _SWLF, _SWLF, _SWLF],
+                [_EMP, _SWLF, {
                     v: 67,
                     b: 71,
                     V: 9,
@@ -33880,18 +33881,18 @@ try {
                     b: 71,
                     V: 12,
                     r: 3
-                }, wV, wV, {
+                }, _LF, _LF, {
                     v: 67,
                     b: 31,
                     V: -1,
                     r: 1
-                }, wV, wV, {
+                }, _LF, _LF, {
                     v: 67,
                     b: 71,
                     V: 27,
                     r: 2
-                }, VVN],
-                [nN, VVN, VVN, VVN, {
+                }, _SWLF],
+                [_EMP, _SWLF, _SWLF, _SWLF, {
                     v: 0,
                     b: 69,
                     V: -1,
@@ -33901,13 +33902,13 @@ try {
                     b: 69,
                     V: -1,
                     r: 2
-                }, VVN, VVN, {
+                }, _SWLF, _SWLF, {
                     v: 67,
                     b: 31,
                     V: -1,
                     r: 0
-                }, VVN, VVN, VVN],
-                [nN, nN, nN, nN, nN, nN, {
+                }, _SWLF, _SWLF, _SWLF],
+                [_EMP, _EMP, _EMP, _EMP, _EMP, _EMP, {
                     v: 0,
                     b: 71,
                     V: 17,
@@ -33920,19 +33921,19 @@ try {
                 }]
             ]
         };
-        nWW[vMW.MnmmV] = {
+        HOUSE[HOUSEID.__HOUSE5__] = {
             width: 0,
             height: 0,
             radiation: 0,
             building: [
-                [nN],
-                [nN, MM, MM, MM, MM, MM, MM, MM, MM, MM, MM, MM, MM, MM, MM, MM, MM],
-                [nN, MM, {
+                [_EMP],
+                [_EMP, _SWWF, _SWWF, _SWWF, _SWWF, _SWWF, _SWWF, _SWWF, _SWWF, _SWWF, _SWWF, _SWWF, _SWWF, _SWWF, _SWWF, _SWWF, _SWWF],
+                [_EMP, _SWWF, {
                     v: 62,
                     b: 71,
                     V: 23,
                     r: 0
-                }, vw, {
+                }, _WF, {
                     v: 62,
                     b: 71,
                     V: 9,
@@ -33952,12 +33953,12 @@ try {
                     b: 71,
                     V: 9,
                     r: 0
-                }, vw, MM, {
+                }, _WF, _SWWF, {
                     v: 62,
                     b: 71,
                     V: 23,
                     r: 0
-                }, vw, {
+                }, _WF, {
                     v: 62,
                     b: 71,
                     V: 1,
@@ -33967,18 +33968,18 @@ try {
                     b: 71,
                     V: 2,
                     r: 0
-                }, vw, {
+                }, _WF, {
                     v: 62,
                     b: 71,
                     V: 23,
                     r: 1
-                }, MM, {
+                }, _SWWF, {
                     v: 0,
                     b: 71,
                     V: 17,
                     r: 1
                 }],
-                [nN, MM, wV, wV, {
+                [_EMP, _SWWF, _LF, _LF, {
                     v: 62,
                     b: 71,
                     V: 10,
@@ -33998,29 +33999,29 @@ try {
                     b: 71,
                     V: 10,
                     r: 2
-                }, vw, MM, {
+                }, _WF, _SWWF, {
                     v: 62,
                     b: 71,
                     V: 39,
                     r: 0
-                }, vw, vw, vw, vw, vw, MM],
-                [nN, MM, {
+                }, _WF, _WF, _WF, _WF, _WF, _SWWF],
+                [_EMP, _SWWF, {
                     v: 67,
                     b: 71,
                     V: 39,
                     r: 3
-                }, wV, wV, wV, wV, wV, wV, {
+                }, _LF, _LF, _LF, _LF, _LF, _LF, {
                     v: 62,
                     b: 150,
                     V: -1,
                     r: 3
-                }, wV, wV, wV, wV, wV, wV, {
+                }, _LF, _LF, _LF, _LF, _LF, _LF, {
                     v: 67,
                     b: 51,
                     V: -1,
                     r: 1
                 }],
-                [nN, MM, {
+                [_EMP, _SWWF, {
                     v: 85,
                     b: 69,
                     V: -1,
@@ -34035,23 +34036,23 @@ try {
                     b: 69,
                     V: -1,
                     r: 1
-                }, wV, wV, wV, wV, {
+                }, _LF, _LF, _LF, _LF, {
                     v: 62,
                     b: 150,
                     V: -1,
                     r: 3
-                }, wV, wV, wV, wV, wV, wV, {
+                }, _LF, _LF, _LF, _LF, _LF, _LF, {
                     v: 67,
                     b: 51,
                     V: -1,
                     r: 3
                 }],
-                [nN, MM, {
+                [_EMP, _SWWF, {
                     v: 85,
                     b: 71,
                     V: 28,
                     r: 3
-                }, Wnm, {
+                }, _TF, {
                     v: 62,
                     b: 69,
                     V: -1,
@@ -34111,13 +34112,13 @@ try {
                     b: 71,
                     V: 7,
                     r: 1
-                }, MM],
-                [nN, MM, {
+                }, _SWWF],
+                [_EMP, _SWWF, {
                     v: 85,
                     b: 71,
                     V: 21,
                     r: 3
-                }, Wnm, {
+                }, _TF, {
                     v: 62,
                     b: 69,
                     V: -1,
@@ -34167,19 +34168,19 @@ try {
                     b: 144,
                     V: -1,
                     r: 0
-                }, vw, {
+                }, _WF, {
                     v: 62,
                     b: 71,
                     V: 8,
                     r: 1
-                }, MM],
-                [nN, MM, MM, MM, MM, MM, MM, MM, MM, mVW, {
+                }, _SWWF],
+                [_EMP, _SWWF, _SWWF, _SWWF, _SWWF, _SWWF, _SWWF, _SWWF, _SWWF, _SWTF, {
                     v: 0,
                     b: 71,
                     V: 41,
                     r: 2
-                }, mVW, mVW, mVW, MM, MM, MM],
-                [nN, nN, nN, nN, {
+                }, _SWTF, _SWTF, _SWTF, _SWWF, _SWWF, _SWWF],
+                [_EMP, _EMP, _EMP, _EMP, {
                     v: 0,
                     b: 71,
                     V: 26,
@@ -34189,44 +34190,44 @@ try {
                     b: 71,
                     V: 16,
                     r: 3
-                }, nN, nN, nN, mVW, Wnm, Wnm, {
+                }, _EMP, _EMP, _EMP, _SWTF, _TF, _TF, {
                     v: 85,
                     b: 71,
                     V: 18,
                     r: 2
-                }, mVW, {
+                }, _SWTF, {
                     v: 0,
                     b: 71,
                     V: 16,
                     r: 0
                 }],
-                [nN, nN, nN, nN, nN, nN, nN, nN, nN, mVW, {
+                [_EMP, _EMP, _EMP, _EMP, _EMP, _EMP, _EMP, _EMP, _EMP, _SWTF, {
                     v: 85,
                     b: 71,
                     V: 25,
                     r: 1
-                }, Wnm, {
+                }, _TF, {
                     v: 85,
                     b: 71,
                     V: 19,
                     r: 2
-                }, mVW],
-                [nN, nN, nN, nN, nN, nN, nN, nN, nN, mVW, mVW, mVW, mVW, mVW]
+                }, _SWTF],
+                [_EMP, _EMP, _EMP, _EMP, _EMP, _EMP, _EMP, _EMP, _EMP, _SWTF, _SWTF, _SWTF, _SWTF, _SWTF]
             ]
         };
-        nWW[vMW.VnMvm] = {
+        HOUSE[HOUSEID.__HOUSE6__] = {
             width: 0,
             height: 0,
             radiation: 0,
             building: [
-                [nN],
-                [nN, wNM, wNM, wNM, {
+                [_EMP],
+                [_EMP, _WWWF, _WWWF, _WWWF, {
                     v: 67,
                     b: 50,
                     V: -1,
                     r: 2
-                }, wNM, wNM, wNM],
-                [nN, wNM, {
+                }, _WWWF, _WWWF, _WWWF],
+                [_EMP, _WWWF, {
                     v: 62,
                     b: 71,
                     V: 9,
@@ -34236,7 +34237,7 @@ try {
                     b: 71,
                     V: 8,
                     r: 0
-                }, wV, {
+                }, _LF, {
                     v: 62,
                     b: 71,
                     V: 13,
@@ -34246,19 +34247,19 @@ try {
                     b: 71,
                     V: 6,
                     r: 0
-                }, wNM],
-                [nN, wNM, {
+                }, _WWWF],
+                [_EMP, _WWWF, {
                     v: 62,
                     b: 71,
                     V: 10,
                     r: 2
-                }, vw, wV, vw, vw, wNM],
-                [nN, {
+                }, _WF, _LF, _WF, _WF, _WWWF],
+                [_EMP, {
                     v: 67,
                     b: 50,
                     V: -1,
                     r: 1
-                }, wV, wV, {
+                }, _LF, _LF, {
                     v: 67,
                     b: 148,
                     V: -1,
@@ -34268,55 +34269,55 @@ try {
                     b: 144,
                     V: -1,
                     r: 0
-                }, wV, {
+                }, _LF, {
                     v: 67,
                     b: 50,
                     V: -1,
                     r: 3
                 }],
-                [nN, wNM, {
+                [_EMP, _WWWF, {
                     v: 62,
                     b: 71,
                     V: 28,
                     r: 3
-                }, vw, wV, vw, {
+                }, _WF, _LF, _WF, {
                     v: 62,
                     b: 71,
                     V: 19,
                     r: 2
-                }, wNM],
-                [nN, wNM, {
+                }, _WWWF],
+                [_EMP, _WWWF, {
                     v: 62,
                     b: 71,
                     V: 21,
                     r: 3
-                }, vw, wV, vw, {
+                }, _WF, _LF, _WF, {
                     v: 62,
                     b: 71,
                     V: 26,
                     r: 2
-                }, wNM],
-                [nN, wNM, wNM, wNM, {
+                }, _WWWF],
+                [_EMP, _WWWF, _WWWF, _WWWF, {
                     v: 67,
                     b: 50,
                     V: -1,
                     r: 0
-                }, wNM, wNM, wNM]
+                }, _WWWF, _WWWF, _WWWF]
             ]
         };
-        nWW[vMW.MMVVM] = {
+        HOUSE[HOUSEID.__HOUSE7__] = {
             width: 0,
             height: 0,
             radiation: 0,
             building: [
-                [nN],
-                [nN, vWW, vWW, vWW, vWW, vWW, vWW, vWW, vWW],
-                [nN, vWW, {
+                [_EMP],
+                [_EMP, _SW, _SW, _SW, _SW, _SW, _SW, _SW, _SW],
+                [_EMP, _SW, {
                     v: 62,
                     b: 148,
                     V: -1,
                     r: 1
-                }, vw, {
+                }, _WF, {
                     v: 62,
                     b: 71,
                     V: 16,
@@ -34326,13 +34327,13 @@ try {
                     b: 71,
                     V: 39,
                     r: 1
-                }, vw, {
+                }, _WF, {
                     v: 62,
                     b: 148,
                     V: -1,
                     r: 1
-                }, vWW],
-                [nN, vWW, {
+                }, _SW],
+                [_EMP, _SW, {
                     v: 62,
                     b: 140,
                     V: -1,
@@ -34362,8 +34363,8 @@ try {
                     b: 140,
                     V: -1,
                     r: 0
-                }, vWW],
-                [nN, vWW, {
+                }, _SW],
+                [_EMP, _SW, {
                     v: 62,
                     b: 140,
                     V: -1,
@@ -34373,7 +34374,7 @@ try {
                     b: 69,
                     V: -1,
                     r: 1
-                }, VWV, VWV, {
+                }, _SF, _SF, {
                     v: 84,
                     b: 69,
                     V: -1,
@@ -34383,8 +34384,8 @@ try {
                     b: 140,
                     V: -1,
                     r: 0
-                }, vWW],
-                [nN, vWW, {
+                }, _SW],
+                [_EMP, _SW, {
                     v: 62,
                     b: 140,
                     V: -1,
@@ -34394,7 +34395,7 @@ try {
                     b: 69,
                     V: -1,
                     r: 1
-                }, VWV, VWV, {
+                }, _SF, _SF, {
                     v: 84,
                     b: 69,
                     V: -1,
@@ -34404,8 +34405,8 @@ try {
                     b: 140,
                     V: -1,
                     r: 0
-                }, vWW],
-                [nN, vWW, {
+                }, _SW],
+                [_EMP, _SW, {
                     v: 62,
                     b: 140,
                     V: -1,
@@ -34415,7 +34416,7 @@ try {
                     b: 69,
                     V: -1,
                     r: 1
-                }, VWV, VWV, {
+                }, _SF, _SF, {
                     v: 84,
                     b: 69,
                     V: -1,
@@ -34425,8 +34426,8 @@ try {
                     b: 140,
                     V: -1,
                     r: 0
-                }, vWW],
-                [nN, vWW, {
+                }, _SW],
+                [_EMP, _SW, {
                     v: 62,
                     b: 140,
                     V: -1,
@@ -34456,8 +34457,8 @@ try {
                     b: 140,
                     V: -1,
                     r: 0
-                }, vWW],
-                [nN, vWW, {
+                }, _SW],
+                [_EMP, _SW, {
                     v: 62,
                     b: 148,
                     V: -1,
@@ -34467,7 +34468,7 @@ try {
                     b: 144,
                     V: -1,
                     r: 0
-                }, vw, vw, {
+                }, _WF, _WF, {
                     v: 62,
                     b: 144,
                     V: -1,
@@ -34477,8 +34478,8 @@ try {
                     b: 148,
                     V: -1,
                     r: 1
-                }, vWW],
-                [nN, vWW, vWW, vWW, {
+                }, _SW],
+                [_EMP, _SW, _SW, _SW, {
                     v: 84,
                     b: 31,
                     V: -1,
@@ -34488,13 +34489,13 @@ try {
                     b: 31,
                     V: -1,
                     r: 2
-                }, vWW, vWW, vWW, {
+                }, _SW, _SW, _SW, {
                     v: 0,
                     b: 71,
                     V: 17,
                     r: 1
                 }],
-                [nN, vWW, {
+                [_EMP, _SW, {
                     v: 84,
                     b: 71,
                     V: 8,
@@ -34504,7 +34505,7 @@ try {
                     b: 71,
                     V: 8,
                     r: 0
-                }, VWV, VWV, {
+                }, _SF, _SF, {
                     v: 84,
                     b: 71,
                     V: 8,
@@ -34514,13 +34515,13 @@ try {
                     b: 71,
                     V: 8,
                     r: 0
-                }, vWW, {
+                }, _SW, {
                     v: 0,
                     b: 71,
                     V: 26,
                     r: 1
                 }],
-                [nN, {
+                [_EMP, {
                     v: 0,
                     b: 69,
                     V: -1,
@@ -34563,18 +34564,18 @@ try {
                 }]
             ]
         };
-        nWW[vMW.nvMmm] = {
+        HOUSE[HOUSEID.__HOUSE8__] = {
             width: 0,
             height: 0,
             radiation: 0,
             building: [
-                [nN],
-                [nN, wV, {
+                [_EMP],
+                [_EMP, _LF, {
                     v: 67,
                     b: 148,
                     V: -1,
                     r: 0
-                }, wV, wV, wV, {
+                }, _LF, _LF, _LF, {
                     v: 67,
                     b: 151,
                     V: -1,
@@ -34584,7 +34585,7 @@ try {
                     b: 148,
                     V: -1,
                     r: 3
-                }, nN, nN, {
+                }, _EMP, _EMP, {
                     v: 0,
                     b: 71,
                     V: 16,
@@ -34600,12 +34601,12 @@ try {
                     V: 26,
                     r: 3
                 }],
-                [nN, nNW, {
+                [_EMP, _MWLF, {
                     v: 67,
                     b: 149,
                     V: -1,
                     r: 0
-                }, nNW, {
+                }, _MWLF, {
                     v: 67,
                     b: 150,
                     V: -1,
@@ -34615,13 +34616,13 @@ try {
                     b: 150,
                     V: -1,
                     r: 0
-                }, nNW, {
+                }, _MWLF, {
                     v: 67,
                     b: 149,
                     V: -1,
                     r: 0
-                }, nMv, nMv, vNM, vNM, vNM, vNM],
-                [nN, vNM, {
+                }, _MWWF, _MWWF, _MW, _MW, _MW, _MW],
+                [_EMP, _MW, {
                     v: 62,
                     b: 148,
                     V: -1,
@@ -34656,7 +34657,7 @@ try {
                     b: 71,
                     V: 23,
                     r: 0
-                }, nMv, {
+                }, _MWWF, {
                     v: 84,
                     b: 71,
                     V: 23,
@@ -34671,13 +34672,13 @@ try {
                     b: 71,
                     V: 28,
                     r: 0
-                }, vNM, {
+                }, _MW, {
                     v: 0,
                     b: 71,
                     V: 16,
                     r: 3
                 }],
-                [nN, vNM, vw, wV, wV, wV, wV, {
+                [_EMP, _MW, _WF, _LF, _LF, _LF, _LF, {
                     v: 62,
                     b: 142,
                     V: -1,
@@ -34692,13 +34693,13 @@ try {
                     b: 32,
                     V: -1,
                     r: 3
-                }, VWV, VWV, VWV, vNM],
-                [nN, vNM, {
+                }, _SF, _SF, _SF, _MW],
+                [_EMP, _MW, {
                     v: 62,
                     b: 71,
                     V: 4,
                     r: 3
-                }, wV, {
+                }, _LF, {
                     v: 67,
                     b: 71,
                     V: 7,
@@ -34708,7 +34709,7 @@ try {
                     b: 71,
                     V: 7,
                     r: 3
-                }, wV, {
+                }, _LF, {
                     v: 62,
                     b: 71,
                     V: 3,
@@ -34718,13 +34719,13 @@ try {
                     b: 149,
                     V: -1,
                     r: 0
-                }, vNM, vNM, Wnm, Wnm, vNM],
-                [nN, vNM, {
+                }, _MW, _MW, _TF, _TF, _MW],
+                [_EMP, _MW, {
                     v: 62,
                     b: 71,
                     V: 3,
                     r: 3
-                }, wV, {
+                }, _LF, {
                     v: 67,
                     b: 71,
                     V: 7,
@@ -34734,7 +34735,7 @@ try {
                     b: 71,
                     V: 7,
                     r: 3
-                }, wV, {
+                }, _LF, {
                     v: 62,
                     b: 71,
                     V: 4,
@@ -34754,19 +34755,19 @@ try {
                     b: 32,
                     V: -1,
                     r: 3
-                }, Wnm, Wnm, vNM],
-                [nN, vNM, vw, wV, wV, wV, wV, vw, {
+                }, _TF, _TF, _MW],
+                [_EMP, _MW, _WF, _LF, _LF, _LF, _LF, _WF, {
                     v: 0,
                     b: 149,
                     V: -1,
                     r: 0
-                }, vNM, vNM, vNM, vNM, vNM],
-                [nN, vNM, {
+                }, _MW, _MW, _MW, _MW, _MW],
+                [_EMP, _MW, {
                     v: 62,
                     b: 71,
                     V: 23,
                     r: 3
-                }, vw, vw, vw, vw, {
+                }, _WF, _WF, _WF, _WF, {
                     v: 62,
                     b: 71,
                     V: 23,
@@ -34776,8 +34777,8 @@ try {
                     b: 149,
                     V: -1,
                     r: 0
-                }, vNM],
-                [nN, nNW, nNW, nNW, {
+                }, _MW],
+                [_EMP, _MWLF, _MWLF, _MWLF, {
                     v: 67,
                     b: 52,
                     V: -1,
@@ -34787,18 +34788,18 @@ try {
                     b: 52,
                     V: -1,
                     r: 2
-                }, nNW, nNW, {
+                }, _MWLF, _MWLF, {
                     v: 0,
                     b: 149,
                     V: -1,
                     r: 0
-                }, nNW],
-                [nN, nNW, {
+                }, _MWLF],
+                [_EMP, _MWLF, {
                     v: 67,
                     b: 71,
                     V: 27,
                     r: 1
-                }, wV, wV, wV, wV, {
+                }, _LF, _LF, _LF, _LF, {
                     v: 67,
                     b: 71,
                     V: 16,
@@ -34808,29 +34809,29 @@ try {
                     b: 144,
                     V: -1,
                     r: 3
-                }, nNW],
-                [nN, {
+                }, _MWLF],
+                [_EMP, {
                     v: 67,
                     b: 70,
                     V: -1,
                     r: 1
-                }, wV, vw, vw, vw, wV, {
+                }, _LF, _WF, _WF, _WF, _LF, {
                     v: 67,
                     b: 71,
                     V: 13,
                     r: 0
-                }, wV, nNW],
-                [nN, {
+                }, _LF, _MWLF],
+                [_EMP, {
                     v: 67,
                     b: 70,
                     V: -1,
                     r: 1
-                }, wV, {
+                }, _LF, {
                     v: 62,
                     b: 71,
                     V: 4,
                     r: 3
-                }, vw, vw, wV, {
+                }, _WF, _WF, _LF, {
                     v: 67,
                     b: 71,
                     V: 9,
@@ -34840,34 +34841,34 @@ try {
                     b: 71,
                     V: 10,
                     r: 1
-                }, nNW, {
+                }, _MWLF, {
                     v: 0,
                     b: 71,
                     V: 17,
                     r: 3
                 }],
-                [nN, nNW, {
+                [_EMP, _MWLF, {
                     v: 67,
                     b: 71,
                     V: 27,
                     r: 0
-                }, vw, vw, {
+                }, _WF, _WF, {
                     v: 62,
                     b: 71,
                     V: 3,
                     r: 2
-                }, wV, wV, wV, nNW, {
+                }, _LF, _LF, _LF, _MWLF, {
                     v: 0,
                     b: 71,
                     V: 24,
                     r: 2
                 }],
-                [nN, nNW, {
+                [_EMP, _MWLF, {
                     v: 67,
                     b: 71,
                     V: 18,
                     r: 0
-                }, wV, wV, wV, wV, {
+                }, _LF, _LF, _LF, _LF, {
                     v: 67,
                     b: 71,
                     V: 23,
@@ -34877,8 +34878,8 @@ try {
                     b: 71,
                     V: 12,
                     r: 3
-                }, nNW],
-                [nN, nNW, nNW, nNW, {
+                }, _MWLF],
+                [_EMP, _MWLF, _MWLF, _MWLF, {
                     v: 67,
                     b: 70,
                     V: -1,
@@ -34888,16 +34889,16 @@ try {
                     b: 70,
                     V: -1,
                     r: 0
-                }, nNW, nNW, nNW, nNW]
+                }, _MWLF, _MWLF, _MWLF, _MWLF]
             ]
         };
-        nWW[vMW.VVVnN] = {
+        HOUSE[HOUSEID.__HOUSE9__] = {
             width: 0,
             height: 0,
             radiation: 0,
             building: [
-                [nN],
-                [nN, nN, nN, nN, nN, nN, {
+                [_EMP],
+                [_EMP, _EMP, _EMP, _EMP, _EMP, _EMP, {
                     v: 0,
                     b: 151,
                     V: -1,
@@ -34907,7 +34908,7 @@ try {
                     b: 148,
                     V: -1,
                     r: 0
-                }, nN, {
+                }, _EMP, {
                     v: 0,
                     b: 148,
                     V: -1,
@@ -34918,7 +34919,7 @@ try {
                     V: -1,
                     r: 0
                 }],
-                [nN, Wmnvv, Wmnvv, {
+                [_EMP, _WW, _WW, {
                     v: 0,
                     b: 30,
                     V: -1,
@@ -34928,7 +34929,7 @@ try {
                     b: 30,
                     V: -1,
                     r: 2
-                }, Vvn, Vvn, {
+                }, _MWTF, _MWTF, {
                     v: 67,
                     b: 149,
                     V: -1,
@@ -34943,13 +34944,13 @@ try {
                     b: 149,
                     V: -1,
                     r: 0
-                }, Vvn],
-                [nN, Wmnvv, {
+                }, _MWTF],
+                [_EMP, _WW, {
                     v: 0,
                     b: 71,
                     V: 23,
                     r: 3
-                }, nN, nN, Vvn, {
+                }, _EMP, _EMP, _MWTF, {
                     v: 67,
                     b: 71,
                     V: 9,
@@ -34969,13 +34970,13 @@ try {
                     b: 143,
                     V: -1,
                     r: 1
-                }, Vvn, {
+                }, _MWTF, {
                     v: 0,
                     b: 71,
                     V: 17,
                     r: 2
                 }],
-                [nN, Wmnvv, {
+                [_EMP, _WW, {
                     v: 0,
                     b: 71,
                     V: 26,
@@ -34990,7 +34991,7 @@ try {
                     b: 71,
                     V: 17,
                     r: 3
-                }, Vvn, {
+                }, _MWTF, {
                     v: 67,
                     b: 71,
                     V: 10,
@@ -35000,13 +35001,13 @@ try {
                     b: 151,
                     V: -1,
                     r: 1
-                }, wV, {
+                }, _LF, {
                     v: 67,
                     b: 151,
                     V: -1,
                     r: 1
-                }, Vvn, Vvn, Vvn],
-                [nN, Wmnvv, {
+                }, _MWTF, _MWTF, _MWTF],
+                [_EMP, _WW, {
                     v: 0,
                     b: 144,
                     V: -1,
@@ -35021,7 +35022,7 @@ try {
                     b: 144,
                     V: -1,
                     r: 3
-                }, Vvn, wV, wV, wV, wV, {
+                }, _MWTF, _LF, _LF, _LF, _LF, {
                     v: 62,
                     b: 71,
                     V: 20,
@@ -35037,7 +35038,7 @@ try {
                     V: -1,
                     r: 3
                 }],
-                [nN, Vvn, {
+                [_EMP, _MWTF, {
                     v: 85,
                     b: 149,
                     V: -1,
@@ -35052,23 +35053,23 @@ try {
                     b: 149,
                     V: -1,
                     r: 0
-                }, Vvn, {
+                }, _MWTF, {
                     v: 62,
                     b: 32,
                     V: -1,
                     r: 2
-                }, nMv, {
+                }, _MWWF, {
                     v: 67,
                     b: 71,
                     V: 8,
                     r: 0
-                }, wV, vw, vw, {
+                }, _LF, _WF, _WF, {
                     v: 62,
                     b: 70,
                     V: -1,
                     r: 3
                 }],
-                [nN, {
+                [_EMP, {
                     v: 85,
                     b: 70,
                     V: -1,
@@ -35088,18 +35089,18 @@ try {
                     b: 140,
                     V: -1,
                     r: 2
-                }, Vvn, vw, {
+                }, _MWTF, _WF, {
                     v: 62,
                     b: 70,
                     V: -1,
                     r: 3
-                }, wV, wV, vw, vw, {
+                }, _LF, _LF, _WF, _WF, {
                     v: 62,
                     b: 70,
                     V: -1,
                     r: 3
                 }],
-                [nN, Vvn, {
+                [_EMP, _MWTF, {
                     v: 85,
                     b: 71,
                     V: 31,
@@ -35134,7 +35135,7 @@ try {
                     b: 71,
                     V: 0,
                     r: 2
-                }, wV, {
+                }, _LF, {
                     v: 62,
                     b: 71,
                     V: 10,
@@ -35150,13 +35151,13 @@ try {
                     V: -1,
                     r: 3
                 }],
-                [nN, Vvn, Vvn, Vvn, Vvn, Vvn, Vvn, Vvn, Vvn, {
+                [_EMP, _MWTF, _MWTF, _MWTF, _MWTF, _MWTF, _MWTF, _MWTF, _MWTF, {
                     v: 85,
                     b: 32,
                     V: -1,
                     r: 2
-                }, Vvn, Vvn, Vvn],
-                [nN, {
+                }, _MWTF, _MWTF, _MWTF],
+                [_EMP, {
                     v: 0,
                     b: 71,
                     V: 26,
@@ -35166,17 +35167,17 @@ try {
                     b: 71,
                     V: 17,
                     r: 0
-                }, nN, nN, {
+                }, _EMP, _EMP, {
                     v: 0,
                     b: 71,
                     V: 24,
                     r: 0
-                }, Vvn, {
+                }, _MWTF, {
                     v: 85,
                     b: 71,
                     V: 28,
                     r: 3
-                }, Wnm, Wnm, Vvn, {
+                }, _TF, _TF, _MWTF, {
                     v: 0,
                     b: 71,
                     V: 24,
@@ -35187,47 +35188,47 @@ try {
                     V: 26,
                     r: 0
                 }],
-                [nN, nN, nN, nN, nN, nN, Vvn, {
+                [_EMP, _EMP, _EMP, _EMP, _EMP, _EMP, _MWTF, {
                     v: 85,
                     b: 71,
                     V: 21,
                     r: 3
-                }, Wnm, {
+                }, _TF, {
                     v: 85,
                     b: 71,
                     V: 18,
                     r: 3
-                }, Vvn],
-                [nN, nN, nN, nN, nN, nN, Vvn, Vvn, Vvn, Vvn, Vvn]
+                }, _MWTF],
+                [_EMP, _EMP, _EMP, _EMP, _EMP, _EMP, _MWTF, _MWTF, _MWTF, _MWTF, _MWTF]
             ]
         };
-        nWW[vMW.vNmvW] = {
+        HOUSE[HOUSEID.__CITY0__] = {
             width: 0,
             height: 0,
             radiation: __RADIATION__,
             building: [
-                [nN],
-                [nN, nN, nN, nN, nN, nN, nN, nN, nN, nN, nN, nN, nN, nN, {
+                [_EMP],
+                [_EMP, _EMP, _EMP, _EMP, _EMP, _EMP, _EMP, _EMP, _EMP, _EMP, _EMP, _EMP, _EMP, _EMP, {
                     v: 0,
                     b: 111,
                     V: -1,
                     r: 3
-                }, nN, nN, {
+                }, _EMP, _EMP, {
                     v: 0,
                     b: 111,
                     V: -1,
                     r: 3
-                }, nN, {
+                }, _EMP, {
                     v: 0,
                     b: 111,
                     V: -1,
                     r: 3
-                }, nN, {
+                }, _EMP, {
                     v: 0,
                     b: 111,
                     V: -1,
                     r: 3
-                }, nN, nN, nN, nN, nN, nN, nN, {
+                }, _EMP, _EMP, _EMP, _EMP, _EMP, _EMP, _EMP, {
                     v: 0,
                     b: 86,
                     V: 26,
@@ -35247,13 +35248,13 @@ try {
                     b: 86,
                     V: 24,
                     r: 0
-                }, nN, nN, nN, nN, nN, nN, {
+                }, _EMP, _EMP, _EMP, _EMP, _EMP, _EMP, {
                     v: 0,
                     b: 71,
                     V: 24,
                     r: 0
                 }],
-                [nN, nN, nN, nN, nN, nN, nN, nN, nN, nN, nN, nN, Vvn, Vvn, Vvn, Vvn, Vvn, Vvn, Vvn, Vvn, Vvn, Vvn, Vvn, nN, nN, nN, nN, nN, nN, {
+                [_EMP, _EMP, _EMP, _EMP, _EMP, _EMP, _EMP, _EMP, _EMP, _EMP, _EMP, _EMP, _MWTF, _MWTF, _MWTF, _MWTF, _MWTF, _MWTF, _MWTF, _MWTF, _MWTF, _MWTF, _MWTF, _EMP, _EMP, _EMP, _EMP, _EMP, _EMP, {
                     v: 0,
                     b: 86,
                     V: 23,
@@ -35273,13 +35274,13 @@ try {
                     b: 86,
                     V: 22,
                     r: 0
-                }, nN, nNW, nNW, nNW, nNW, nNW, nNW, nNW, {
+                }, _EMP, _MWLF, _MWLF, _MWLF, _MWLF, _MWLF, _MWLF, _MWLF, {
                     v: 0,
                     b: 71,
                     V: 16,
                     r: 0
                 }],
-                [nN, nN, nN, nN, nN, nN, nN, nN, nN, nN, nN, nN, Vvn, {
+                [_EMP, _EMP, _EMP, _EMP, _EMP, _EMP, _EMP, _EMP, _EMP, _EMP, _EMP, _EMP, _MWTF, {
                     v: 85,
                     b: 71,
                     V: 37,
@@ -35289,7 +35290,7 @@ try {
                     b: 71,
                     V: 28,
                     r: 0
-                }, Wnm, {
+                }, _TF, {
                     v: 85,
                     b: 71,
                     V: 31,
@@ -35299,12 +35300,12 @@ try {
                     b: 71,
                     V: 32,
                     r: 1
-                }, Vvn, {
+                }, _MWTF, {
                     v: 85,
                     b: 71,
                     V: 37,
                     r: 1
-                }, Wnm, Wnm, Vvn, nN, nN, nN, nN, nN, nN, {
+                }, _TF, _TF, _MWTF, _EMP, _EMP, _EMP, _EMP, _EMP, _EMP, {
                     v: 0,
                     b: 86,
                     V: 23,
@@ -35324,28 +35325,28 @@ try {
                     b: 86,
                     V: 22,
                     r: 0
-                }, nN, nNW, vw, {
+                }, _EMP, _MWLF, _WF, {
                     v: 62,
                     b: 70,
                     V: -1,
                     r: 3
-                }, wV, wV, {
+                }, _LF, _LF, {
                     v: 62,
                     b: 71,
                     V: 13,
                     r: 2
-                }, nNW, MWn, MWn, MWn, MWn],
-                [nN, nN, nN, nN, nN, nN, nN, nN, nN, nN, nN, nN, Vvn, Wnm, Wnm, Wnm, Wnm, Wnm, Vvn, Wnm, Wnm, {
+                }, _MWLF, _MWSF, _MWSF, _MWSF, _MWSF],
+                [_EMP, _EMP, _EMP, _EMP, _EMP, _EMP, _EMP, _EMP, _EMP, _EMP, _EMP, _EMP, _MWTF, _TF, _TF, _TF, _TF, _TF, _MWTF, _TF, _TF, {
                     v: 85,
                     b: 71,
                     V: 36,
                     r: 1
-                }, Vvn, nN, {
+                }, _MWTF, _EMP, {
                     v: 0,
                     b: 71,
                     V: 24,
                     r: 0
-                }, nN, nN, nN, nN, {
+                }, _EMP, _EMP, _EMP, _EMP, {
                     v: 0,
                     b: 86,
                     V: 23,
@@ -35370,17 +35371,17 @@ try {
                     b: 71,
                     V: 23,
                     r: 0
-                }, nNW, vw, {
+                }, _MWLF, _WF, {
                     v: 62,
                     b: 71,
                     V: 40,
                     r: 2
-                }, wV, wV, {
+                }, _LF, _LF, {
                     v: 62,
                     b: 71,
                     V: 12,
                     r: 2
-                }, nNW, {
+                }, _MWLF, {
                     v: 84,
                     b: 71,
                     V: 26,
@@ -35390,28 +35391,28 @@ try {
                     b: 71,
                     V: 17,
                     r: 3
-                }, VWV, MWn],
-                [nN, nN, nN, nN, nN, nN, nN, nN, {
+                }, _SF, _MWSF],
+                [_EMP, _EMP, _EMP, _EMP, _EMP, _EMP, _EMP, _EMP, {
                     v: 0,
                     b: 71,
                     V: 16,
                     r: 0
-                }, MWn, MWn, {
+                }, _MWSF, _MWSF, {
                     v: 84,
                     b: 52,
                     V: -1,
                     r: 0
-                }, MWn, MWn, Vvn, Vvn, MWn, {
+                }, _MWSF, _MWSF, _MWTF, _MWTF, _MWSF, {
                     v: 85,
                     b: 71,
                     V: 41,
                     r: 0
-                }, MWn, {
+                }, _MWSF, {
                     v: 85,
                     b: 71,
                     V: 41,
                     r: 0
-                }, Vvn, vNM, Vvn, Vvn, Vvn, Vvn, Vvn, Vvn, nN, {
+                }, _MWTF, _MW, _MWTF, _MWTF, _MWTF, _MWTF, _MWTF, _MWTF, _EMP, {
                     v: 0,
                     b: 86,
                     V: 23,
@@ -35441,13 +35442,13 @@ try {
                     b: 150,
                     V: -1,
                     r: 1
-                }, wV, wV, wV, wV, vw, nNW, VWV, VWV, {
+                }, _LF, _LF, _LF, _LF, _WF, _MWLF, _SF, _SF, {
                     v: 84,
                     b: 71,
                     V: 18,
                     r: 2
-                }, MWn],
-                [nN, nN, nN, nN, nN, nN, nN, nN, nN, MWn, VWV, VWV, VWV, VWV, {
+                }, _MWSF],
+                [_EMP, _EMP, _EMP, _EMP, _EMP, _EMP, _EMP, _EMP, _EMP, _MWSF, _SF, _SF, _SF, _SF, {
                     v: 84,
                     b: 71,
                     V: 35,
@@ -35457,7 +35458,7 @@ try {
                     b: 71,
                     V: 35,
                     r: 2
-                }, VWV, VWV, VWV, VWV, {
+                }, _SF, _SF, _SF, _SF, {
                     v: 84,
                     b: 71,
                     V: 35,
@@ -35467,12 +35468,12 @@ try {
                     b: 71,
                     V: 35,
                     r: 2
-                }, VWV, VWV, VWV, VWV, {
+                }, _SF, _SF, _SF, _SF, {
                     v: 84,
                     b: 71,
                     V: 33,
                     r: 2
-                }, Vvn, {
+                }, _MWTF, {
                     v: 0,
                     b: 71,
                     V: 24,
@@ -35507,38 +35508,38 @@ try {
                     b: 150,
                     V: -1,
                     r: 1
-                }, wV, wV, wV, wV, vw, {
+                }, _LF, _LF, _LF, _LF, _WF, {
                     v: 67,
                     b: 71,
                     V: 41,
                     r: 1
-                }, VWV, VWV, {
+                }, _SF, _SF, {
                     v: 84,
                     b: 71,
                     V: 18,
                     r: 2
-                }, MWn],
-                [nN, nN, nN, nN, nN, nN, nN, nN, nN, MWn, {
+                }, _MWSF],
+                [_EMP, _EMP, _EMP, _EMP, _EMP, _EMP, _EMP, _EMP, _EMP, _MWSF, {
                     v: 84,
                     b: 71,
                     V: 9,
                     r: 0
-                }, VWV, VWV, VWV, VWV, VWV, {
+                }, _SF, _SF, _SF, _SF, _SF, {
                     v: 84,
                     b: 151,
                     V: -1,
                     r: 1
-                }, VWV, VWV, {
+                }, _SF, _SF, {
                     v: 84,
                     b: 151,
                     V: -1,
                     r: 1
-                }, VWV, VWV, VWV, VWV, VWV, VWV, {
+                }, _SF, _SF, _SF, _SF, _SF, _SF, {
                     v: 85,
                     b: 71,
                     V: 33,
                     r: 2
-                }, Vvn, {
+                }, _MWTF, {
                     v: 0,
                     b: 71,
                     V: 26,
@@ -35568,7 +35569,7 @@ try {
                     b: 71,
                     V: 23,
                     r: 0
-                }, nNW, {
+                }, _MWLF, {
                     v: 62,
                     b: 71,
                     V: 39,
@@ -35583,33 +35584,33 @@ try {
                     b: 71,
                     V: 23,
                     r: 3
-                }, vw, {
+                }, _WF, {
                     v: 62,
                     b: 71,
                     V: 23,
                     r: 2
-                }, nNW, {
+                }, _MWLF, {
                     v: 84,
                     b: 71,
                     V: 26,
                     r: 2
-                }, VWV, {
+                }, _SF, {
                     v: 84,
                     b: 71,
                     V: 16,
                     r: 2
-                }, MWn, {
+                }, _MWSF, {
                     v: 0,
                     b: 71,
                     V: 16,
                     r: 1
                 }],
-                [nN, nN, nN, nN, nN, nN, nN, nN, nN, MWn, {
+                [_EMP, _EMP, _EMP, _EMP, _EMP, _EMP, _EMP, _EMP, _EMP, _MWSF, {
                     v: 84,
                     b: 71,
                     V: 10,
                     r: 2
-                }, VWV, VWV, VWV, MWn, MWn, {
+                }, _SF, _SF, _SF, _MWSF, _MWSF, {
                     v: 84,
                     b: 149,
                     V: -1,
@@ -35629,7 +35630,7 @@ try {
                     b: 149,
                     V: -1,
                     r: 2
-                }, MWn, MWn, VWV, VWV, Vvn, MWn, Vvn, Vvn, nN, {
+                }, _MWSF, _MWSF, _SF, _SF, _MWTF, _MWSF, _MWTF, _MWTF, _EMP, {
                     v: 0,
                     b: 86,
                     V: 23,
@@ -35649,18 +35650,18 @@ try {
                     b: 86,
                     V: 22,
                     r: 0
-                }, nN, nNW, nNW, nNW, nNW, {
+                }, _EMP, _MWLF, _MWLF, _MWLF, _MWLF, {
                     v: 0,
                     b: 52,
                     V: -1,
                     r: 0
-                }, nNW, nNW, MWn, MWn, MWn, MWn],
-                [nN, nN, nN, nN, nN, nN, nN, nN, nN, MWn, MWn, MWn, {
+                }, _MWLF, _MWLF, _MWSF, _MWSF, _MWSF, _MWSF],
+                [_EMP, _EMP, _EMP, _EMP, _EMP, _EMP, _EMP, _EMP, _EMP, _MWSF, _MWSF, _MWSF, {
                     v: 84,
                     b: 71,
                     V: 33,
                     r: 0
-                }, VWV, MWn, {
+                }, _SF, _MWSF, {
                     v: 84,
                     b: 71,
                     V: 32,
@@ -35695,12 +35696,12 @@ try {
                     b: 150,
                     V: -1,
                     r: 1
-                }, VWV, {
+                }, _SF, {
                     v: 84,
                     b: 71,
                     V: 33,
                     r: 2
-                }, Vvn, {
+                }, _MWTF, {
                     v: 0,
                     b: 71,
                     V: 37,
@@ -35710,7 +35711,7 @@ try {
                     b: 71,
                     V: 38,
                     r: 1
-                }, nN, nN, {
+                }, _EMP, _EMP, {
                     v: 0,
                     b: 86,
                     V: 23,
@@ -35730,7 +35731,7 @@ try {
                     b: 86,
                     V: 22,
                     r: 0
-                }, nN, nN, {
+                }, _EMP, _EMP, {
                     v: 0,
                     b: 71,
                     V: 26,
@@ -35740,23 +35741,23 @@ try {
                     b: 71,
                     V: 26,
                     r: 0
-                }, VWV, VWV, {
+                }, _SF, _SF, {
                     v: 0,
                     b: 71,
                     V: 17,
                     r: 0
                 }],
-                [nN, nN, nN, nN, nN, nN, nN, nN, nN, nN, nN, MWn, {
+                [_EMP, _EMP, _EMP, _EMP, _EMP, _EMP, _EMP, _EMP, _EMP, _EMP, _EMP, _MWSF, {
                     v: 84,
                     b: 71,
                     V: 22,
                     r: 0
-                }, VWV, MWn, VWV, {
+                }, _SF, _MWSF, _SF, {
                     v: 84,
                     b: 71,
                     V: 34,
                     r: 3
-                }, Wnm, {
+                }, _TF, {
                     v: 85,
                     b: 140,
                     V: -1,
@@ -35766,12 +35767,12 @@ try {
                     b: 71,
                     V: 34,
                     r: 3
-                }, VWV, MWn, VWV, {
+                }, _SF, _MWSF, _SF, {
                     v: 84,
                     b: 71,
                     V: 38,
                     r: 0
-                }, Vvn, nN, nN, nN, nN, {
+                }, _MWTF, _EMP, _EMP, _EMP, _EMP, {
                     v: 0,
                     b: 86,
                     V: 23,
@@ -35857,7 +35858,7 @@ try {
                     V: 24,
                     r: 0
                 }],
-                [nN, nN, nN, nN, {
+                [_EMP, _EMP, _EMP, _EMP, {
                     v: 0,
                     b: 71,
                     V: 26,
@@ -35867,7 +35868,7 @@ try {
                     b: 71,
                     V: 17,
                     r: 0
-                }, nN, nN, {
+                }, _EMP, _EMP, {
                     v: 0,
                     b: 86,
                     V: 26,
@@ -35877,12 +35878,12 @@ try {
                     b: 86,
                     V: 24,
                     r: 0
-                }, nN, MWn, vNM, {
+                }, _EMP, _MWSF, _MW, {
                     v: 84,
                     b: 32,
                     V: -1,
                     r: 0
-                }, MWn, {
+                }, _MWSF, {
                     v: 84,
                     b: 142,
                     V: -1,
@@ -35912,12 +35913,12 @@ try {
                     b: 142,
                     V: -1,
                     r: 1
-                }, MWn, {
+                }, _MWSF, {
                     v: 84,
                     b: 32,
                     V: -1,
                     r: 0
-                }, vNM, Vvn, nN, nN, nN, nN, {
+                }, _MW, _MWTF, _EMP, _EMP, _EMP, _EMP, {
                     v: 0,
                     b: 86,
                     V: 23,
@@ -36003,7 +36004,7 @@ try {
                     V: 31,
                     r: 0
                 }],
-                [nN, nN, nN, Vvn, Vvn, Vvn, Vvn, nN, {
+                [_EMP, _EMP, _EMP, _MWTF, _MWTF, _MWTF, _MWTF, _EMP, {
                     v: 0,
                     b: 86,
                     V: 23,
@@ -36013,12 +36014,12 @@ try {
                     b: 86,
                     V: 22,
                     r: 0
-                }, nN, {
+                }, _EMP, {
                     v: 0,
                     b: 70,
                     V: -1,
                     r: 3
-                }, Wnm, Wnm, MWn, {
+                }, _TF, _TF, _MWSF, {
                     v: 84,
                     b: 140,
                     V: -1,
@@ -36033,7 +36034,7 @@ try {
                     b: 140,
                     V: -1,
                     r: 2
-                }, Wnm, {
+                }, _TF, {
                     v: 84,
                     b: 71,
                     V: 34,
@@ -36043,12 +36044,12 @@ try {
                     b: 140,
                     V: -1,
                     r: 2
-                }, MWn, Wnm, Wnm, {
+                }, _MWSF, _TF, _TF, {
                     v: 0,
                     b: 70,
                     V: -1,
                     r: 1
-                }, nN, nN, nN, nN, {
+                }, _EMP, _EMP, _EMP, _EMP, {
                     v: 0,
                     b: 86,
                     V: 23,
@@ -36068,13 +36069,13 @@ try {
                     b: 86,
                     V: 22,
                     r: 0
-                }, nN, nN, {
+                }, _EMP, _EMP, {
                     v: 0,
                     b: 71,
                     V: 23,
                     r: 0
-                }, nN, nN, nN, vw],
-                [nN, nN, nN, Vvn, {
+                }, _EMP, _EMP, _EMP, _WF],
+                [_EMP, _EMP, _EMP, _MWTF, {
                     v: 85,
                     b: 71,
                     V: 33,
@@ -36084,7 +36085,7 @@ try {
                     b: 71,
                     V: 33,
                     r: 1
-                }, Vvn, nN, {
+                }, _MWTF, _EMP, {
                     v: 0,
                     b: 86,
                     V: 23,
@@ -36104,7 +36105,7 @@ try {
                     b: 70,
                     V: -1,
                     r: 2
-                }, VWV, {
+                }, _SF, {
                     v: 84,
                     b: 144,
                     V: -1,
@@ -36154,7 +36155,7 @@ try {
                     b: 144,
                     V: -1,
                     r: 1
-                }, VWV, {
+                }, _SF, {
                     v: 85,
                     b: 70,
                     V: -1,
@@ -36164,7 +36165,7 @@ try {
                     b: 70,
                     V: -1,
                     r: 1
-                }, nN, nN, nN, {
+                }, _EMP, _EMP, _EMP, {
                     v: 0,
                     b: 86,
                     V: 23,
@@ -36184,12 +36185,12 @@ try {
                     b: 86,
                     V: 22,
                     r: 0
-                }, nN, mNV, mNV, {
+                }, _EMP, _WWLF, _WWLF, {
                     v: 67,
                     b: 30,
                     V: -1,
                     r: 2
-                }, mNV, mNV, vw, {
+                }, _WWLF, _WWLF, _WF, {
                     v: 0,
                     b: 69,
                     V: -1,
@@ -36209,7 +36210,7 @@ try {
                     b: 69,
                     V: -1,
                     r: 0
-                }, nN, nN, {
+                }, _EMP, _EMP, {
                     v: 0,
                     b: 69,
                     V: -1,
@@ -36220,7 +36221,7 @@ try {
                     V: -1,
                     r: 0
                 }],
-                [nN, nN, nN, MWn, VWV, VWV, MWn, nN, {
+                [_EMP, _EMP, _EMP, _MWSF, _SF, _SF, _MWSF, _EMP, {
                     v: 0,
                     b: 86,
                     V: 23,
@@ -36235,7 +36236,7 @@ try {
                     b: 32,
                     V: -1,
                     r: 3
-                }, Wnm, Wnm, Wnm, MWn, {
+                }, _TF, _TF, _TF, _MWSF, {
                     v: 0,
                     b: 149,
                     V: -1,
@@ -36265,12 +36266,12 @@ try {
                     b: 149,
                     V: -1,
                     r: 0
-                }, MWn, Wnm, Wnm, Wnm, {
+                }, _MWSF, _TF, _TF, _TF, {
                     v: 0,
                     b: 32,
                     V: -1,
                     r: 1
-                }, nN, nN, nN, {
+                }, _EMP, _EMP, _EMP, {
                     v: 0,
                     b: 86,
                     V: 23,
@@ -36295,33 +36296,33 @@ try {
                     b: 71,
                     V: 16,
                     r: 0
-                }, mNV, wV, wV, {
+                }, _WWLF, _LF, _LF, {
                     v: 67,
                     b: 71,
                     V: 6,
                     r: 1
-                }, mNV, vw, {
+                }, _WWLF, _WF, {
                     v: 67,
                     b: 69,
                     V: -1,
                     r: 1
-                }, wV, wV, nN, nN, nN, nN, {
+                }, _LF, _LF, _EMP, _EMP, _EMP, _EMP, {
                     v: 0,
                     b: 69,
                     V: -1,
                     r: 3
                 }],
-                [nN, nN, nN, {
+                [_EMP, _EMP, _EMP, {
                     v: 84,
                     b: 71,
                     V: 41,
                     r: 1
-                }, VWV, VWV, {
+                }, _SF, _SF, {
                     v: 84,
                     b: 71,
                     V: 41,
                     r: 3
-                }, nN, {
+                }, _EMP, {
                     v: 0,
                     b: 86,
                     V: 23,
@@ -36341,7 +36342,7 @@ try {
                     b: 70,
                     V: -1,
                     r: 0
-                }, VWV, VWV, VWV, {
+                }, _SF, _SF, _SF, {
                     v: 84,
                     b: 144,
                     V: -1,
@@ -36351,7 +36352,7 @@ try {
                     b: 144,
                     V: -1,
                     r: 1
-                }, VWV, VWV, {
+                }, _SF, _SF, {
                     v: 84,
                     b: 144,
                     V: -1,
@@ -36361,7 +36362,7 @@ try {
                     b: 144,
                     V: -1,
                     r: 1
-                }, VWV, VWV, VWV, {
+                }, _SF, _SF, _SF, {
                     v: 85,
                     b: 70,
                     V: -1,
@@ -36371,7 +36372,7 @@ try {
                     b: 70,
                     V: -1,
                     r: 1
-                }, nN, nN, nN, {
+                }, _EMP, _EMP, _EMP, {
                     v: 0,
                     b: 86,
                     V: 23,
@@ -36391,28 +36392,28 @@ try {
                     b: 86,
                     V: 22,
                     r: 0
-                }, nN, {
+                }, _EMP, {
                     v: 67,
                     b: 30,
                     V: -1,
                     r: 1
-                }, wV, wV, {
+                }, _LF, _LF, {
                     v: 67,
                     b: 71,
                     V: 19,
                     r: 2
-                }, wNM, vw, {
+                }, _WWWF, _WF, {
                     v: 67,
                     b: 69,
                     V: -1,
                     r: 1
-                }, wV, wV, nN, nN, nN, nN, {
+                }, _LF, _LF, _EMP, _EMP, _EMP, _EMP, {
                     v: 0,
                     b: 69,
                     V: -1,
                     r: 3
                 }],
-                [nN, nN, nN, Vvn, {
+                [_EMP, _EMP, _EMP, _MWTF, {
                     v: 85,
                     b: 71,
                     V: 36,
@@ -36422,7 +36423,7 @@ try {
                     b: 71,
                     V: 37,
                     r: 3
-                }, Vvn, nN, {
+                }, _MWTF, _EMP, {
                     v: 0,
                     b: 86,
                     V: 23,
@@ -36432,7 +36433,7 @@ try {
                     b: 86,
                     V: 22,
                     r: 0
-                }, nN, {
+                }, _EMP, {
                     v: 0,
                     b: 70,
                     V: -1,
@@ -36442,7 +36443,7 @@ try {
                     b: 71,
                     V: 39,
                     r: 0
-                }, Wnm, Wnm, Wnm, Wnm, Wnm, Wnm, Wnm, Wnm, Wnm, Wnm, {
+                }, _TF, _TF, _TF, _TF, _TF, _TF, _TF, _TF, _TF, _TF, {
                     v: 85,
                     b: 71,
                     V: 35,
@@ -36452,7 +36453,7 @@ try {
                     b: 70,
                     V: -1,
                     r: 1
-                }, nN, nN, nN, nN, {
+                }, _EMP, _EMP, _EMP, _EMP, {
                     v: 0,
                     b: 86,
                     V: 23,
@@ -36472,17 +36473,17 @@ try {
                     b: 86,
                     V: 22,
                     r: 0
-                }, nN, mNV, {
+                }, _EMP, _WWLF, {
                     v: 67,
                     b: 71,
                     V: 8,
                     r: 3
-                }, wV, {
+                }, _LF, {
                     v: 67,
                     b: 71,
                     V: 0,
                     r: 1
-                }, mNV, vw, {
+                }, _WWLF, _WF, {
                     v: 67,
                     b: 69,
                     V: -1,
@@ -36497,18 +36498,18 @@ try {
                     b: 71,
                     V: 23,
                     r: 1
-                }, nN, nN, nN, nN, {
+                }, _EMP, _EMP, _EMP, _EMP, {
                     v: 0,
                     b: 69,
                     V: -1,
                     r: 3
                 }],
-                [nN, nN, {
+                [_EMP, _EMP, {
                     v: 0,
                     b: 71,
                     V: 26,
                     r: 1
-                }, Vvn, Vvn, Vvn, Vvn, nN, {
+                }, _MWTF, _MWTF, _MWTF, _MWTF, _EMP, {
                     v: 0,
                     b: 86,
                     V: 23,
@@ -36518,7 +36519,7 @@ try {
                     b: 86,
                     V: 22,
                     r: 0
-                }, nN, {
+                }, _EMP, {
                     v: 0,
                     b: 70,
                     V: -1,
@@ -36588,7 +36589,7 @@ try {
                     b: 70,
                     V: -1,
                     r: 1
-                }, nN, nN, nN, nN, {
+                }, _EMP, _EMP, _EMP, _EMP, {
                     v: 0,
                     b: 86,
                     V: 23,
@@ -36613,13 +36614,13 @@ try {
                     b: 71,
                     V: 23,
                     r: 0
-                }, mNV, mNV, mNV, mNV, mNV, vw, VVN, VVN, VVN, VVN, nN, nN, nN, {
+                }, _WWLF, _WWLF, _WWLF, _WWLF, _WWLF, _WF, _SWLF, _SWLF, _SWLF, _SWLF, _EMP, _EMP, _EMP, {
                     v: 0,
                     b: 69,
                     V: -1,
                     r: 3
                 }],
-                [nN, nN, nN, nN, nN, nN, nN, nN, {
+                [_EMP, _EMP, _EMP, _EMP, _EMP, _EMP, _EMP, _EMP, {
                     v: 0,
                     b: 86,
                     V: 23,
@@ -36629,7 +36630,7 @@ try {
                     b: 86,
                     V: 22,
                     r: 0
-                }, nN, nN, nN, nN, nN, nN, nN, nN, nN, nN, nN, nN, nN, nN, nN, nN, nN, nN, nN, {
+                }, _EMP, _EMP, _EMP, _EMP, _EMP, _EMP, _EMP, _EMP, _EMP, _EMP, _EMP, _EMP, _EMP, _EMP, _EMP, _EMP, _EMP, _EMP, _EMP, {
                     v: 0,
                     b: 86,
                     V: 23,
@@ -36649,12 +36650,12 @@ try {
                     b: 86,
                     V: 22,
                     r: 0
-                }, vw, vw, vw, vw, vw, vw, vw, VVN, vw, {
+                }, _WF, _WF, _WF, _WF, _WF, _WF, _WF, _SWLF, _WF, {
                     v: 62,
                     b: 71,
                     V: 21,
                     r: 1
-                }, MM, wV, wV, wV, {
+                }, _SWWF, _LF, _LF, _LF, {
                     v: 67,
                     b: 69,
                     V: -1,
@@ -36850,17 +36851,17 @@ try {
                     b: 69,
                     V: -1,
                     r: 2
-                }, VVN, VVN, VVN, {
+                }, _SWLF, _SWLF, _SWLF, {
                     v: 62,
                     b: 31,
                     V: -1,
                     r: 0
-                }, MM, MM, {
+                }, _SWWF, _SWWF, {
                     v: 67,
                     b: 51,
                     V: -1,
                     r: 2
-                }, VVN, VVN, VVN, VVN],
+                }, _SWLF, _SWLF, _SWLF, _SWLF],
                 [{
                     v: 0,
                     b: 86,
@@ -37036,27 +37037,27 @@ try {
                     b: 86,
                     V: 22,
                     r: 0
-                }, nN, nN, {
+                }, _EMP, _EMP, {
                     v: 62,
                     b: 71,
                     V: 23,
                     r: 0
-                }, VVN, {
+                }, _SWLF, {
                     v: 67,
                     b: 71,
                     V: 13,
                     r: 1
-                }, wV, wV, {
+                }, _LF, _LF, {
                     v: 67,
                     b: 71,
                     V: 27,
                     r: 1
-                }, wV, wV, VVN, {
+                }, _LF, _LF, _SWLF, {
                     v: 67,
                     b: 71,
                     V: 23,
                     r: 3
-                }, wV, {
+                }, _LF, {
                     v: 67,
                     b: 69,
                     V: -1,
@@ -37237,12 +37238,12 @@ try {
                     b: 86,
                     V: 22,
                     r: 0
-                }, nN, nN, vw, {
+                }, _EMP, _EMP, _WF, {
                     v: 67,
                     b: 31,
                     V: -1,
                     r: 1
-                }, wV, wV, wV, wV, wV, wV, VVN, wV, wV, {
+                }, _LF, _LF, _LF, _LF, _LF, _LF, _SWLF, _LF, _LF, {
                     v: 67,
                     b: 31,
                     V: -1,
@@ -37423,12 +37424,12 @@ try {
                     b: 86,
                     V: 22,
                     r: 0
-                }, nN, nN, {
+                }, _EMP, _EMP, {
                     v: 62,
                     b: 71,
                     V: 23,
                     r: 0
-                }, VVN, {
+                }, _SWLF, {
                     v: 67,
                     b: 69,
                     V: -1,
@@ -37448,7 +37449,7 @@ try {
                     b: 69,
                     V: -1,
                     r: 0
-                }, wV, wV, VVN, {
+                }, _LF, _LF, _SWLF, {
                     v: 67,
                     b: 31,
                     V: -1,
@@ -37458,13 +37459,13 @@ try {
                     b: 69,
                     V: -1,
                     r: 0
-                }, VVN, {
+                }, _SWLF, {
                     v: 0,
                     b: 71,
                     V: 16,
                     r: 1
                 }],
-                [nN, nN, nN, nN, nN, nN, nN, nN, nN, nN, nN, nN, nN, nN, nN, {
+                [_EMP, _EMP, _EMP, _EMP, _EMP, _EMP, _EMP, _EMP, _EMP, _EMP, _EMP, _EMP, _EMP, _EMP, _EMP, {
                     v: 0,
                     b: 86,
                     V: 14,
@@ -37479,7 +37480,7 @@ try {
                     b: 86,
                     V: 7,
                     r: 0
-                }, nN, nN, nN, nN, nN, nN, {
+                }, _EMP, _EMP, _EMP, _EMP, _EMP, _EMP, {
                     v: 84,
                     b: 71,
                     V: 23,
@@ -37494,7 +37495,7 @@ try {
                     b: 71,
                     V: 23,
                     r: 0
-                }, nN, nN, nN, nN, {
+                }, _EMP, _EMP, _EMP, _EMP, {
                     v: 0,
                     b: 86,
                     V: 23,
@@ -37529,7 +37530,7 @@ try {
                     b: 69,
                     V: -1,
                     r: 0
-                }, VVN, {
+                }, _SWLF, {
                     v: 67,
                     b: 71,
                     V: 15,
@@ -37549,23 +37550,23 @@ try {
                     b: 71,
                     V: 14,
                     r: 0
-                }, wV, wV, wV, wV, wV, VVN, {
+                }, _LF, _LF, _LF, _LF, _LF, _SWLF, {
                     v: 0,
                     b: 71,
                     V: 26,
                     r: 1
                 }],
-                [nN, nN, wNM, {
+                [_EMP, _EMP, _WWWF, {
                     v: 62,
                     b: 71,
                     V: 26,
                     r: 1
-                }, vw, vw, wNM, {
+                }, _WF, _WF, _WWWF, {
                     v: 62,
                     b: 71,
                     V: 16,
                     r: 2
-                }, vw, vw, wNM, {
+                }, _WF, _WF, _WWWF, {
                     v: 0,
                     b: 31,
                     V: -1,
@@ -37580,7 +37581,7 @@ try {
                     b: 69,
                     V: -1,
                     r: 0
-                }, nN, {
+                }, _EMP, {
                     v: 0,
                     b: 86,
                     V: 15,
@@ -37595,17 +37596,17 @@ try {
                     b: 86,
                     V: 6,
                     r: 0
-                }, nN, nN, nN, nN, nMv, nMv, nMv, {
+                }, _EMP, _EMP, _EMP, _EMP, _MWWF, _MWWF, _MWWF, {
                     v: 62,
                     b: 150,
                     V: -1,
                     r: 3
-                }, nMv, nMv, nMv, {
+                }, _MWWF, _MWWF, _MWWF, {
                     v: 0,
                     b: 71,
                     V: 16,
                     r: 0
-                }, nN, {
+                }, _EMP, {
                     v: 0,
                     b: 86,
                     V: 23,
@@ -37625,12 +37626,12 @@ try {
                     b: 86,
                     V: 22,
                     r: 0
-                }, nN, nN, {
+                }, _EMP, _EMP, {
                     v: 0,
                     b: 71,
                     V: 23,
                     r: 0
-                }, VVN, {
+                }, _SWLF, {
                     v: 67,
                     b: 71,
                     V: 4,
@@ -37650,43 +37651,43 @@ try {
                     b: 71,
                     V: 3,
                     r: 1
-                }, wV, vw, vw, vw, wV, {
+                }, _LF, _WF, _WF, _WF, _LF, {
                     v: 67,
                     b: 69,
                     V: -1,
                     r: 3
                 }],
-                [nN, {
+                [_EMP, {
                     v: 0,
                     b: 71,
                     V: 26,
                     r: 0
-                }, wNM, {
+                }, _WWWF, {
                     v: 62,
                     b: 71,
                     V: 17,
                     r: 1
-                }, vw, {
+                }, _WF, {
                     v: 62,
                     b: 71,
                     V: 22,
                     r: 1
-                }, wNM, {
+                }, _WWWF, {
                     v: 62,
                     b: 71,
                     V: 17,
                     r: 2
-                }, vw, {
+                }, _WF, {
                     v: 62,
                     b: 71,
                     V: 15,
                     r: 1
-                }, wNM, nN, nN, {
+                }, _WWWF, _EMP, _EMP, {
                     v: 0,
                     b: 69,
                     V: -1,
                     r: 3
-                }, nN, {
+                }, _EMP, {
                     v: 0,
                     b: 86,
                     V: 14,
@@ -37701,17 +37702,17 @@ try {
                     b: 86,
                     V: 6,
                     r: 0
-                }, nN, {
+                }, _EMP, {
                     v: 0,
                     b: 71,
                     V: 26,
                     r: 0
-                }, nN, {
+                }, _EMP, {
                     v: 0,
                     b: 71,
                     V: 24,
                     r: 0
-                }, nMv, {
+                }, _MWWF, {
                     v: 62,
                     b: 71,
                     V: 16,
@@ -37721,12 +37722,12 @@ try {
                     b: 71,
                     V: 39,
                     r: 1
-                }, vw, vw, vw, nMv, {
+                }, _WF, _WF, _WF, _MWWF, {
                     v: 0,
                     b: 71,
                     V: 26,
                     r: 0
-                }, nN, {
+                }, _EMP, {
                     v: 0,
                     b: 86,
                     V: 23,
@@ -37746,7 +37747,7 @@ try {
                     b: 86,
                     V: 22,
                     r: 0
-                }, nN, nN, {
+                }, _EMP, _EMP, {
                     v: 0,
                     b: 148,
                     V: -1,
@@ -37756,38 +37757,38 @@ try {
                     b: 69,
                     V: -1,
                     r: 3
-                }, wV, wV, wV, wV, wV, vw, vw, vw, wV, {
+                }, _LF, _LF, _LF, _LF, _LF, _WF, _WF, _WF, _LF, {
                     v: 67,
                     b: 69,
                     V: -1,
                     r: 3
                 }],
-                [nN, nN, wNM, {
+                [_EMP, _EMP, _WWWF, {
                     v: 62,
                     b: 71,
                     V: 10,
                     r: 0
-                }, vw, {
+                }, _WF, {
                     v: 62,
                     b: 71,
                     V: 0,
                     r: 1
-                }, wNM, {
+                }, _WWWF, {
                     v: 62,
                     b: 71,
                     V: 1,
                     r: 3
-                }, vw, {
+                }, _WF, {
                     v: 62,
                     b: 71,
                     V: 8,
                     r: 1
-                }, wNM, nN, nN, {
+                }, _WWWF, _EMP, _EMP, {
                     v: 0,
                     b: 69,
                     V: -1,
                     r: 3
-                }, nN, {
+                }, _EMP, {
                     v: 0,
                     b: 86,
                     V: 14,
@@ -37802,12 +37803,12 @@ try {
                     b: 86,
                     V: 6,
                     r: 0
-                }, nN, vNM, MWn, MWn, nMv, vw, vw, vw, vw, {
+                }, _EMP, _MW, _MWSF, _MWSF, _MWWF, _WF, _WF, _WF, _WF, {
                     v: 62,
                     b: 71,
                     V: 27,
                     r: 2
-                }, nMv, nN, nN, {
+                }, _MWWF, _EMP, _EMP, {
                     v: 0,
                     b: 86,
                     V: 23,
@@ -37827,7 +37828,7 @@ try {
                     b: 86,
                     V: 22,
                     r: 0
-                }, nN, nN, {
+                }, _EMP, _EMP, {
                     v: 0,
                     b: 140,
                     V: -1,
@@ -37857,28 +37858,28 @@ try {
                     b: 71,
                     V: 27,
                     r: 3
-                }, wV, wV, wV, wV, {
+                }, _LF, _LF, _LF, _LF, {
                     v: 67,
                     b: 71,
                     V: 12,
                     r: 2
-                }, VVN],
-                [nN, {
+                }, _SWLF],
+                [_EMP, {
                     v: 0,
                     b: 71,
                     V: 16,
                     r: 0
-                }, wNM, {
+                }, _WWWF, {
                     v: 62,
                     b: 71,
                     V: 9,
                     r: 2
-                }, vw, vw, wNM, vw, vw, {
+                }, _WF, _WF, _WWWF, _WF, _WF, {
                     v: 62,
                     b: 71,
                     V: 12,
                     r: 2
-                }, Wmnvv, nN, nN, {
+                }, _WW, _EMP, _EMP, {
                     v: 0,
                     b: 69,
                     V: -1,
@@ -37908,7 +37909,7 @@ try {
                     b: 71,
                     V: 16,
                     r: 2
-                }, MWn, {
+                }, _MWSF, {
                     v: 84,
                     b: 71,
                     V: 16,
@@ -37918,7 +37919,7 @@ try {
                     b: 71,
                     V: 19,
                     r: 1
-                }, MWn, {
+                }, _MWSF, {
                     v: 62,
                     b: 32,
                     V: -1,
@@ -37928,12 +37929,12 @@ try {
                     b: 70,
                     V: -1,
                     r: 0
-                }, vw, vw, {
+                }, _WF, _WF, {
                     v: 62,
                     b: 71,
                     V: 39,
                     r: 2
-                }, nMv, nN, nN, {
+                }, _MWWF, _EMP, _EMP, {
                     v: 0,
                     b: 86,
                     V: 23,
@@ -37953,12 +37954,12 @@ try {
                     b: 86,
                     V: 22,
                     r: 0
-                }, nN, nN, {
+                }, _EMP, _EMP, {
                     v: 0,
                     b: 148,
                     V: -1,
                     r: 0
-                }, VVN, VVN, VVN, VVN, VVN, {
+                }, _SWLF, _SWLF, _SWLF, _SWLF, _SWLF, {
                     v: 67,
                     b: 31,
                     V: -1,
@@ -37968,18 +37969,18 @@ try {
                     b: 31,
                     V: -1,
                     r: 0
-                }, VVN, VVN, VVN, VVN, {
+                }, _SWLF, _SWLF, _SWLF, _SWLF, {
                     v: 0,
                     b: 71,
                     V: 24,
                     r: 1
                 }],
-                [nN, {
+                [_EMP, {
                     v: 0,
                     b: 71,
                     V: 17,
                     r: 0
-                }, Wmnvv, wNM, wNM, wNM, wNM, wNM, wNM, Wmnvv, Wmnvv, nN, nN, {
+                }, _WW, _WWWF, _WWWF, _WWWF, _WWWF, _WWWF, _WWWF, _WW, _WW, _EMP, _EMP, {
                     v: 0,
                     b: 69,
                     V: -1,
@@ -38009,17 +38010,17 @@ try {
                     b: 71,
                     V: 17,
                     r: 0
-                }, MWn, VWV, VWV, MWn, wV, {
+                }, _MWSF, _SF, _SF, _MWSF, _LF, {
                     v: 67,
                     b: 70,
                     V: -1,
                     r: 3
-                }, vw, vw, vw, nMv, {
+                }, _WF, _WF, _WF, _MWWF, {
                     v: 84,
                     b: 71,
                     V: 23,
                     r: 0
-                }, VWV, {
+                }, _SF, {
                     v: 0,
                     b: 86,
                     V: 23,
@@ -38039,22 +38040,22 @@ try {
                     b: 86,
                     V: 22,
                     r: 0
-                }, nN, nN, {
+                }, _EMP, _EMP, {
                     v: 0,
                     b: 140,
                     V: -1,
                     r: 0
-                }, VVN, {
+                }, _SWLF, {
                     v: 62,
                     b: 71,
                     V: 20,
                     r: 1
-                }, vw, {
+                }, _WF, {
                     v: 62,
                     b: 71,
                     V: 28,
                     r: 0
-                }, MM, vw, vw, vw, {
+                }, _SWWF, _WF, _WF, _WF, {
                     v: 62,
                     b: 71,
                     V: 20,
@@ -38064,13 +38065,13 @@ try {
                     b: 71,
                     V: 13,
                     r: 1
-                }, MM],
-                [nN, nN, nN, MM, MM, MM, MM, MM, MM, vw, vw, vw, vw, {
+                }, _SWWF],
+                [_EMP, _EMP, _EMP, _SWWF, _SWWF, _SWWF, _SWWF, _SWWF, _SWWF, _WF, _WF, _WF, _WF, {
                     v: 62,
                     b: 69,
                     V: -1,
                     r: 3
-                }, nN, {
+                }, _EMP, {
                     v: 0,
                     b: 86,
                     V: 14,
@@ -38085,12 +38086,12 @@ try {
                     b: 86,
                     V: 6,
                     r: 0
-                }, nN, MWn, VWV, VWV, nNW, wV, {
+                }, _EMP, _MWSF, _SF, _SF, _MWLF, _LF, {
                     v: 67,
                     b: 70,
                     V: -1,
                     r: 3
-                }, vw, vw, vw, {
+                }, _WF, _WF, _WF, {
                     v: 62,
                     b: 150,
                     V: -1,
@@ -38100,7 +38101,7 @@ try {
                     b: 151,
                     V: -1,
                     r: 0
-                }, VWV, {
+                }, _SF, {
                     v: 0,
                     b: 86,
                     V: 23,
@@ -38120,7 +38121,7 @@ try {
                     b: 86,
                     V: 22,
                     r: 0
-                }, nN, nN, {
+                }, _EMP, _EMP, {
                     v: 0,
                     b: 140,
                     V: -1,
@@ -38130,23 +38131,23 @@ try {
                     b: 69,
                     V: -1,
                     r: 1
-                }, vw, vw, vw, {
+                }, _WF, _WF, _WF, {
                     v: 62,
                     b: 31,
                     V: -1,
                     r: 3
-                }, vw, vw, vw, vw, vw, {
+                }, _WF, _WF, _WF, _WF, _WF, {
                     v: 0,
                     b: 69,
                     V: -1,
                     r: 1
                 }],
-                [nN, nN, {
+                [_EMP, _EMP, {
                     v: 0,
                     b: 71,
                     V: 26,
                     r: 0
-                }, MM, {
+                }, _SWWF, {
                     v: 62,
                     b: 71,
                     V: 6,
@@ -38166,17 +38167,17 @@ try {
                     b: 71,
                     V: 5,
                     r: 0
-                }, MM, {
+                }, _SWWF, {
                     v: 62,
                     b: 71,
                     V: 23,
                     r: 2
-                }, vw, vw, vw, {
+                }, _WF, _WF, _WF, {
                     v: 62,
                     b: 69,
                     V: -1,
                     r: 3
-                }, nN, {
+                }, _EMP, {
                     v: 0,
                     b: 86,
                     V: 16,
@@ -38191,12 +38192,12 @@ try {
                     b: 86,
                     V: 6,
                     r: 0
-                }, nN, MWn, {
+                }, _EMP, _MWSF, {
                     v: 84,
                     b: 71,
                     V: 18,
                     r: 3
-                }, VWV, {
+                }, _SF, {
                     v: 67,
                     b: 150,
                     V: -1,
@@ -38211,7 +38212,7 @@ try {
                     b: 71,
                     V: 40,
                     r: 2
-                }, vw, vw, vw, {
+                }, _WF, _WF, _WF, {
                     v: 62,
                     b: 150,
                     V: -1,
@@ -38221,7 +38222,7 @@ try {
                     b: 151,
                     V: -1,
                     r: 3
-                }, VWV, {
+                }, _SF, {
                     v: 0,
                     b: 86,
                     V: 23,
@@ -38241,7 +38242,7 @@ try {
                     b: 86,
                     V: 22,
                     r: 0
-                }, nN, nN, {
+                }, _EMP, _EMP, {
                     v: 0,
                     b: 143,
                     V: -1,
@@ -38256,12 +38257,12 @@ try {
                     b: 144,
                     V: -1,
                     r: 3
-                }, vw, vw, {
+                }, _WF, _WF, {
                     v: 62,
                     b: 31,
                     V: -1,
                     r: 3
-                }, vw, vw, vw, {
+                }, _WF, _WF, _WF, {
                     v: 62,
                     b: 71,
                     V: 12,
@@ -38277,7 +38278,7 @@ try {
                     V: -1,
                     r: 1
                 }],
-                [nN, nN, nN, MM, vw, vw, vw, vw, MM, VVN, {
+                [_EMP, _EMP, _EMP, _SWWF, _WF, _WF, _WF, _WF, _SWWF, _SWLF, {
                     v: 67,
                     b: 31,
                     V: -1,
@@ -38287,7 +38288,7 @@ try {
                     b: 31,
                     V: -1,
                     r: 2
-                }, VVN, VVN, nN, {
+                }, _SWLF, _SWLF, _EMP, {
                     v: 0,
                     b: 86,
                     V: 14,
@@ -38302,7 +38303,7 @@ try {
                     b: 86,
                     V: 6,
                     r: 0
-                }, nN, MWn, MWn, MWn, nNW, {
+                }, _EMP, _MWSF, _MWSF, _MWSF, _MWLF, {
                     v: 67,
                     b: 144,
                     V: -1,
@@ -38312,17 +38313,17 @@ try {
                     b: 70,
                     V: -1,
                     r: 3
-                }, vw, vw, {
+                }, _WF, _WF, {
                     v: 62,
                     b: 71,
                     V: 39,
                     r: 2
-                }, nMv, {
+                }, _MWWF, {
                     v: 84,
                     b: 71,
                     V: 23,
                     r: 0
-                }, VWV, {
+                }, _SF, {
                     v: 0,
                     b: 86,
                     V: 23,
@@ -38342,12 +38343,12 @@ try {
                     b: 86,
                     V: 22,
                     r: 0
-                }, nN, nN, {
+                }, _EMP, _EMP, {
                     v: 0,
                     b: 140,
                     V: -1,
                     r: 0
-                }, MM, MM, MM, MM, MM, {
+                }, _SWWF, _SWWF, _SWWF, _SWWF, _SWWF, {
                     v: 67,
                     b: 31,
                     V: -1,
@@ -38357,13 +38358,13 @@ try {
                     b: 31,
                     V: -1,
                     r: 2
-                }, VVN, VVN, VVN, VVN, {
+                }, _SWLF, _SWLF, _SWLF, _SWLF, {
                     v: 0,
                     b: 71,
                     V: 26,
                     r: 1
                 }],
-                [nN, nN, nN, MM, {
+                [_EMP, _EMP, _EMP, _SWWF, {
                     v: 62,
                     b: 71,
                     V: 0,
@@ -38373,17 +38374,17 @@ try {
                     b: 71,
                     V: 2,
                     r: 0
-                }, vw, vw, {
+                }, _WF, _WF, {
                     v: 67,
                     b: 31,
                     V: -1,
                     r: 1
-                }, wV, wV, wV, {
+                }, _LF, _LF, _LF, {
                     v: 67,
                     b: 71,
                     V: 23,
                     r: 0
-                }, VVN, nN, {
+                }, _SWLF, _EMP, {
                     v: 0,
                     b: 86,
                     V: 14,
@@ -38398,12 +38399,12 @@ try {
                     b: 86,
                     V: 6,
                     r: 0
-                }, nN, nN, nN, {
+                }, _EMP, _EMP, _EMP, {
                     v: 0,
                     b: 71,
                     V: 24,
                     r: 0
-                }, nNW, {
+                }, _MWLF, {
                     v: 67,
                     b: 148,
                     V: -1,
@@ -38428,12 +38429,12 @@ try {
                     b: 71,
                     V: 27,
                     r: 2
-                }, nMv, {
+                }, _MWWF, {
                     v: 0,
                     b: 71,
                     V: 26,
                     r: 0
-                }, nN, {
+                }, _EMP, {
                     v: 0,
                     b: 86,
                     V: 23,
@@ -38453,7 +38454,7 @@ try {
                     b: 86,
                     V: 22,
                     r: 0
-                }, nN, nN, {
+                }, _EMP, _EMP, {
                     v: 0,
                     b: 142,
                     V: -1,
@@ -38473,12 +38474,12 @@ try {
                     b: 148,
                     V: -1,
                     r: 0
-                }, VVN, {
+                }, _SWLF, {
                     v: 67,
                     b: 71,
                     V: 16,
                     r: 1
-                }, wV, wV, {
+                }, _LF, _LF, {
                     v: 67,
                     b: 71,
                     V: 26,
@@ -38499,17 +38500,17 @@ try {
                     V: -1,
                     r: 3
                 }],
-                [nN, nN, nN, MM, vw, vw, vw, vw, MM, {
+                [_EMP, _EMP, _EMP, _SWWF, _WF, _WF, _WF, _WF, _SWWF, {
                     v: 67,
                     b: 71,
                     V: 12,
                     r: 0
-                }, wV, wV, {
+                }, _LF, _LF, {
                     v: 67,
                     b: 71,
                     V: 12,
                     r: 2
-                }, VVN, nN, {
+                }, _SWLF, _EMP, {
                     v: 0,
                     b: 86,
                     V: 14,
@@ -38524,7 +38525,7 @@ try {
                     b: 86,
                     V: 6,
                     r: 0
-                }, nN, nN, nN, nN, nNW, nNW, nNW, {
+                }, _EMP, _EMP, _EMP, _EMP, _MWLF, _MWLF, _MWLF, {
                     v: 62,
                     b: 150,
                     V: -1,
@@ -38534,7 +38535,7 @@ try {
                     b: 150,
                     V: -1,
                     r: 3
-                }, nMv, nMv, nN, nN, {
+                }, _MWWF, _MWWF, _EMP, _EMP, {
                     v: 0,
                     b: 86,
                     V: 23,
@@ -38554,23 +38555,23 @@ try {
                     b: 86,
                     V: 22,
                     r: 0
-                }, nN, nN, nN, nN, vw, vw, {
+                }, _EMP, _EMP, _EMP, _EMP, _WF, _WF, {
                     v: 67,
                     b: 31,
                     V: -1,
                     r: 1
-                }, wV, wV, wV, wV, wV, wV, {
+                }, _LF, _LF, _LF, _LF, _LF, _LF, {
                     v: 67,
                     b: 31,
                     V: -1,
                     r: 3
                 }],
-                [nN, nN, {
+                [_EMP, _EMP, {
                     v: 0,
                     b: 71,
                     V: 24,
                     r: 0
-                }, MM, {
+                }, _SWWF, {
                     v: 62,
                     b: 71,
                     V: 1,
@@ -38580,22 +38581,22 @@ try {
                     b: 71,
                     V: 8,
                     r: 2
-                }, vw, {
+                }, _WF, {
                     v: 62,
                     b: 71,
                     V: 23,
                     r: 2
-                }, MM, {
+                }, _SWWF, {
                     v: 67,
                     b: 71,
                     V: 23,
                     r: 2
-                }, wV, wV, {
+                }, _LF, _LF, {
                     v: 67,
                     b: 71,
                     V: 20,
                     r: 2
-                }, VVN, nN, {
+                }, _SWLF, _EMP, {
                     v: 0,
                     b: 86,
                     V: 14,
@@ -38610,17 +38611,17 @@ try {
                     b: 86,
                     V: 6,
                     r: 0
-                }, nN, nN, nN, nN, nN, nN, {
+                }, _EMP, _EMP, _EMP, _EMP, _EMP, _EMP, {
                     v: 84,
                     b: 71,
                     V: 23,
                     r: 0
-                }, VWV, VWV, {
+                }, _SF, _SF, {
                     v: 84,
                     b: 71,
                     V: 23,
                     r: 0
-                }, nN, nN, nN, {
+                }, _EMP, _EMP, _EMP, {
                     v: 0,
                     b: 86,
                     V: 23,
@@ -38640,23 +38641,23 @@ try {
                     b: 86,
                     V: 22,
                     r: 0
-                }, nN, nN, nN, nN, vw, vw, {
+                }, _EMP, _EMP, _EMP, _EMP, _WF, _WF, {
                     v: 67,
                     b: 31,
                     V: -1,
                     r: 1
-                }, wV, wV, wV, wV, wV, wV, {
+                }, _LF, _LF, _LF, _LF, _LF, _LF, {
                     v: 67,
                     b: 31,
                     V: -1,
                     r: 3
                 }],
-                [nN, nN, nN, MM, MM, MM, {
+                [_EMP, _EMP, _EMP, _SWWF, _SWWF, _SWWF, {
                     v: 62,
                     b: 31,
                     V: -1,
                     r: 0
-                }, MM, MM, VVN, {
+                }, _SWWF, _SWWF, _SWLF, {
                     v: 67,
                     b: 69,
                     V: -1,
@@ -38666,7 +38667,7 @@ try {
                     b: 69,
                     V: -1,
                     r: 0
-                }, VVN, VVN, nN, {
+                }, _SWLF, _SWLF, _EMP, {
                     v: 0,
                     b: 86,
                     V: 14,
@@ -38681,7 +38682,7 @@ try {
                     b: 86,
                     V: 6,
                     r: 0
-                }, nN, nN, nN, nN, nN, nN, VWV, VWV, VWV, VWV, nN, nN, nN, {
+                }, _EMP, _EMP, _EMP, _EMP, _EMP, _EMP, _SF, _SF, _SF, _SF, _EMP, _EMP, _EMP, {
                     v: 0,
                     b: 86,
                     V: 23,
@@ -38701,7 +38702,7 @@ try {
                     b: 86,
                     V: 22,
                     r: 0
-                }, nN, nN, nN, nN, nN, nN, {
+                }, _EMP, _EMP, _EMP, _EMP, _EMP, _EMP, {
                     v: 0,
                     b: 69,
                     V: -1,
@@ -38742,7 +38743,7 @@ try {
                     V: -1,
                     r: 2
                 }],
-                [nN, nN, nN, nN, nN, nN, nN, nN, nN, nN, nN, nN, nN, nN, nN, {
+                [_EMP, _EMP, _EMP, _EMP, _EMP, _EMP, _EMP, _EMP, _EMP, _EMP, _EMP, _EMP, _EMP, _EMP, _EMP, {
                     v: 0,
                     b: 86,
                     V: 15,
@@ -39254,12 +39255,12 @@ try {
                     b: 86,
                     V: 22,
                     r: 0
-                }, nN, wV, wV, wV, {
+                }, _EMP, _LF, _LF, _LF, {
                     v: 67,
                     b: 151,
                     V: -1,
                     r: 1
-                }, wV, wV, wV],
+                }, _LF, _LF, _LF],
                 [{
                     v: 0,
                     b: 86,
@@ -39360,17 +39361,17 @@ try {
                     b: 69,
                     V: -1,
                     r: 0
-                }, nN, nN, {
+                }, _EMP, _EMP, {
                     v: 0,
                     b: 69,
                     V: -1,
                     r: 0
-                }, MM, MM, vWW, {
+                }, _SWWF, _SWWF, _SW, {
                     v: 62,
                     b: 31,
                     V: -1,
                     r: 2
-                }, MM, MM, MM, {
+                }, _SWWF, _SWWF, _SWWF, {
                     v: 0,
                     b: 71,
                     V: 23,
@@ -39385,7 +39386,7 @@ try {
                     b: 86,
                     V: 22,
                     r: 0
-                }, nN, {
+                }, _EMP, {
                     v: 67,
                     b: 69,
                     V: -1,
@@ -39421,7 +39422,7 @@ try {
                     V: -1,
                     r: 1
                 }],
-                [nN, nN, nN, nN, nN, nN, nN, nN, {
+                [_EMP, _EMP, _EMP, _EMP, _EMP, _EMP, _EMP, _EMP, {
                     v: 0,
                     b: 71,
                     V: 26,
@@ -39431,7 +39432,7 @@ try {
                     b: 71,
                     V: 26,
                     r: 1
-                }, nN, nN, nN, nN, nN, nN, {
+                }, _EMP, _EMP, _EMP, _EMP, _EMP, _EMP, {
                     v: 0,
                     b: 86,
                     V: 14,
@@ -39451,7 +39452,7 @@ try {
                     b: 69,
                     V: -1,
                     r: 1
-                }, wV, wV, wV, MM, {
+                }, _LF, _LF, _LF, _SWWF, {
                     v: 62,
                     b: 71,
                     V: 27,
@@ -39461,12 +39462,12 @@ try {
                     b: 71,
                     V: 27,
                     r: 1
-                }, vw, vw, vw, {
+                }, _WF, _WF, _WF, {
                     v: 62,
                     b: 69,
                     V: -1,
                     r: 3
-                }, nN, {
+                }, _EMP, {
                     v: 0,
                     b: 86,
                     V: 23,
@@ -39476,12 +39477,12 @@ try {
                     b: 86,
                     V: 22,
                     r: 0
-                }, nN, {
+                }, _EMP, {
                     v: 67,
                     b: 69,
                     V: -1,
                     r: 3
-                }, nN, {
+                }, _EMP, {
                     v: 0,
                     b: 111,
                     V: -1,
@@ -39496,13 +39497,13 @@ try {
                     b: 111,
                     V: -1,
                     r: 1
-                }, nN, {
+                }, _EMP, {
                     v: 67,
                     b: 69,
                     V: -1,
                     r: 1
                 }],
-                [nN, nNW, nNW, nNW, nNW, nNW, nNW, nNW, nNW, nMv, nMv, nMv, nMv, nMv, nMv, nN, {
+                [_EMP, _MWLF, _MWLF, _MWLF, _MWLF, _MWLF, _MWLF, _MWLF, _MWLF, _MWWF, _MWWF, _MWWF, _MWWF, _MWWF, _MWWF, _EMP, {
                     v: 0,
                     b: 86,
                     V: 14,
@@ -39522,17 +39523,17 @@ try {
                     b: 69,
                     V: -1,
                     r: 1
-                }, wV, wV, wV, {
+                }, _LF, _LF, _LF, {
                     v: 62,
                     b: 31,
                     V: -1,
                     r: 1
-                }, vw, vw, vw, vw, vw, {
+                }, _WF, _WF, _WF, _WF, _WF, {
                     v: 62,
                     b: 69,
                     V: -1,
                     r: 3
-                }, nN, {
+                }, _EMP, {
                     v: 0,
                     b: 86,
                     V: 23,
@@ -39542,7 +39543,7 @@ try {
                     b: 86,
                     V: 22,
                     r: 0
-                }, nN, {
+                }, _EMP, {
                     v: 67,
                     b: 151,
                     V: -1,
@@ -39578,12 +39579,12 @@ try {
                     V: -1,
                     r: 1
                 }],
-                [nN, nNW, {
+                [_EMP, _MWLF, {
                     v: 67,
                     b: 71,
                     V: 35,
                     r: 2
-                }, wV, {
+                }, _LF, {
                     v: 67,
                     b: 142,
                     V: -1,
@@ -39613,7 +39614,7 @@ try {
                     b: 150,
                     V: -1,
                     r: 1
-                }, vw, vw, {
+                }, _WF, _WF, {
                     v: 62,
                     b: 71,
                     V: 17,
@@ -39623,7 +39624,7 @@ try {
                     b: 71,
                     V: 16,
                     r: 1
-                }, nMv, nN, {
+                }, _MWWF, _EMP, {
                     v: 0,
                     b: 86,
                     V: 14,
@@ -39643,12 +39644,12 @@ try {
                     b: 69,
                     V: -1,
                     r: 1
-                }, wV, wV, {
+                }, _LF, _LF, {
                     v: 67,
                     b: 71,
                     V: 3,
                     r: 1
-                }, MM, {
+                }, _SWWF, {
                     v: 62,
                     b: 71,
                     V: 22,
@@ -39663,7 +39664,7 @@ try {
                     b: 71,
                     V: 11,
                     r: 2
-                }, vw, MM, MM, nN, {
+                }, _WF, _SWWF, _SWWF, _EMP, {
                     v: 0,
                     b: 86,
                     V: 23,
@@ -39673,12 +39674,12 @@ try {
                     b: 86,
                     V: 22,
                     r: 0
-                }, nN, {
+                }, _EMP, {
                     v: 67,
                     b: 69,
                     V: -1,
                     r: 3
-                }, nN, {
+                }, _EMP, {
                     v: 0,
                     b: 111,
                     V: -1,
@@ -39693,13 +39694,13 @@ try {
                     b: 111,
                     V: -1,
                     r: 1
-                }, nN, {
+                }, _EMP, {
                     v: 67,
                     b: 69,
                     V: -1,
                     r: 1
                 }],
-                [nN, nNW, wV, {
+                [_EMP, _MWLF, _LF, {
                     v: 67,
                     b: 70,
                     V: -1,
@@ -39719,7 +39720,7 @@ try {
                     b: 149,
                     V: -1,
                     r: 2
-                }, vNM, vNM, nMv, vw, vw, vw, vw, nMv, nN, {
+                }, _MW, _MW, _MWWF, _WF, _WF, _WF, _WF, _MWWF, _EMP, {
                     v: 0,
                     b: 86,
                     V: 14,
@@ -39744,12 +39745,12 @@ try {
                     b: 71,
                     V: 23,
                     r: 3
-                }, VVN, VVN, MM, MM, MM, MM, {
+                }, _SWLF, _SWLF, _SWWF, _SWWF, _SWWF, _SWWF, {
                     v: 62,
                     b: 31,
                     V: -1,
                     r: 2
-                }, MM, nN, nN, {
+                }, _SWWF, _EMP, _EMP, {
                     v: 0,
                     b: 86,
                     V: 23,
@@ -39759,7 +39760,7 @@ try {
                     b: 86,
                     V: 22,
                     r: 0
-                }, nN, {
+                }, _EMP, {
                     v: 67,
                     b: 69,
                     V: -1,
@@ -39800,7 +39801,7 @@ try {
                     b: 71,
                     V: 24,
                     r: 1
-                }, nNW, wV, {
+                }, _MWLF, _LF, {
                     v: 67,
                     b: 70,
                     V: -1,
@@ -39835,7 +39836,7 @@ try {
                     b: 150,
                     V: -1,
                     r: 1
-                }, vw, {
+                }, _WF, {
                     v: 62,
                     b: 71,
                     V: 10,
@@ -39845,12 +39846,12 @@ try {
                     b: 71,
                     V: 7,
                     r: 3
-                }, vw, {
+                }, _WF, {
                     v: 62,
                     b: 32,
                     V: -1,
                     r: 3
-                }, nN, {
+                }, _EMP, {
                     v: 0,
                     b: 86,
                     V: 14,
@@ -39875,7 +39876,7 @@ try {
                     b: 69,
                     V: -1,
                     r: 2
-                }, vWW, {
+                }, _SW, {
                     v: 62,
                     b: 71,
                     V: 14,
@@ -39885,12 +39886,12 @@ try {
                     b: 71,
                     V: 5,
                     r: 0
-                }, vw, vw, vw, vw, MM, {
+                }, _WF, _WF, _WF, _WF, _SWWF, {
                     v: 0,
                     b: 71,
                     V: 16,
                     r: 3
-                }, nN, {
+                }, _EMP, {
                     v: 0,
                     b: 86,
                     V: 23,
@@ -39900,7 +39901,7 @@ try {
                     b: 86,
                     V: 22,
                     r: 0
-                }, nN, wV, {
+                }, _EMP, _LF, {
                     v: 67,
                     b: 71,
                     V: 45,
@@ -39915,13 +39916,13 @@ try {
                     b: 151,
                     V: -1,
                     r: 1
-                }, wV, wV, {
+                }, _LF, _LF, {
                     v: 67,
                     b: 71,
                     V: 24,
                     r: 1
                 }],
-                [nN, nNW, wV, {
+                [_EMP, _MWLF, _LF, {
                     v: 67,
                     b: 70,
                     V: -1,
@@ -39961,17 +39962,17 @@ try {
                     b: 144,
                     V: -1,
                     r: 0
-                }, vw, {
+                }, _WF, {
                     v: 62,
                     b: 71,
                     V: 7,
                     r: 3
-                }, vw, {
+                }, _WF, {
                     v: 62,
                     b: 32,
                     V: -1,
                     r: 3
-                }, nN, {
+                }, _EMP, {
                     v: 0,
                     b: 86,
                     V: 14,
@@ -39986,17 +39987,17 @@ try {
                     b: 86,
                     V: 6,
                     r: 0
-                }, nN, {
+                }, _EMP, {
                     v: 0,
                     b: 71,
                     V: 16,
                     r: 0
-                }, MM, vw, vw, vw, vw, vw, {
+                }, _SWWF, _WF, _WF, _WF, _WF, _WF, {
                     v: 62,
                     b: 71,
                     V: 13,
                     r: 2
-                }, MM, nN, nN, {
+                }, _SWWF, _EMP, _EMP, {
                     v: 0,
                     b: 86,
                     V: 23,
@@ -40012,7 +40013,7 @@ try {
                     b: 71,
                     V: 17,
                     r: 1
-                }, nNW, wV, wV, {
+                }, _MWLF, _LF, _LF, {
                     v: 67,
                     b: 71,
                     V: 3,
@@ -40022,7 +40023,7 @@ try {
                     b: 148,
                     V: -1,
                     r: 3
-                }, nNW, {
+                }, _MWLF, {
                     v: 67,
                     b: 146,
                     V: -1,
@@ -40042,7 +40043,7 @@ try {
                     b: 144,
                     V: -1,
                     r: 0
-                }, vw, vw, vw, nMv, nN, {
+                }, _WF, _WF, _WF, _MWWF, _EMP, {
                     v: 0,
                     b: 86,
                     V: 14,
@@ -40057,12 +40058,12 @@ try {
                     b: 86,
                     V: 6,
                     r: 0
-                }, nN, {
+                }, _EMP, {
                     v: 0,
                     b: 71,
                     V: 26,
                     r: 0
-                }, MM, {
+                }, _SWWF, {
                     v: 62,
                     b: 71,
                     V: 12,
@@ -40072,7 +40073,7 @@ try {
                     b: 71,
                     V: 23,
                     r: 3
-                }, vw, vw, {
+                }, _WF, _WF, {
                     v: 62,
                     b: 71,
                     V: 10,
@@ -40082,12 +40083,12 @@ try {
                     b: 71,
                     V: 9,
                     r: 1
-                }, MM, {
+                }, _SWWF, {
                     v: 0,
                     b: 71,
                     V: 17,
                     r: 3
-                }, nN, {
+                }, _EMP, {
                     v: 0,
                     b: 86,
                     V: 23,
@@ -40103,12 +40104,12 @@ try {
                     b: 71,
                     V: 26,
                     r: 1
-                }, nNW, wV, vw, vw, {
+                }, _MWLF, _LF, _WF, _WF, {
                     v: 67,
                     b: 146,
                     V: -1,
                     r: 0
-                }, nNW, {
+                }, _MWLF, {
                     v: 67,
                     b: 142,
                     V: -1,
@@ -40118,12 +40119,12 @@ try {
                     b: 142,
                     V: -1,
                     r: 1
-                }, vNM, {
+                }, _MW, {
                     v: 62,
                     b: 144,
                     V: -1,
                     r: 0
-                }, vw, {
+                }, _WF, {
                     v: 62,
                     b: 144,
                     V: -1,
@@ -40133,7 +40134,7 @@ try {
                     b: 144,
                     V: -1,
                     r: 0
-                }, nMv, nN, {
+                }, _MWWF, _EMP, {
                     v: 0,
                     b: 86,
                     V: 14,
@@ -40148,7 +40149,7 @@ try {
                     b: 86,
                     V: 6,
                     r: 0
-                }, nN, nN, MM, MM, MM, {
+                }, _EMP, _EMP, _SWWF, _SWWF, _SWWF, {
                     v: 62,
                     b: 31,
                     V: -1,
@@ -40158,7 +40159,7 @@ try {
                     b: 31,
                     V: -1,
                     r: 0
-                }, MM, MM, MM, nN, nN, {
+                }, _SWWF, _SWWF, _SWWF, _EMP, _EMP, {
                     v: 0,
                     b: 86,
                     V: 23,
@@ -40169,12 +40170,12 @@ try {
                     V: 22,
                     r: 0
                 }],
-                [nN, nNW, wV, vw, vw, {
+                [_EMP, _MWLF, _LF, _WF, _WF, {
                     v: 67,
                     b: 71,
                     V: 10,
                     r: 0
-                }, nNW, {
+                }, _MWLF, {
                     v: 67,
                     b: 71,
                     V: 14,
@@ -40184,12 +40185,12 @@ try {
                     b: 140,
                     V: -1,
                     r: 0
-                }, nMv, {
+                }, _MWWF, {
                     v: 62,
                     b: 149,
                     V: -1,
                     r: 0
-                }, nMv, {
+                }, _MWWF, {
                     v: 62,
                     b: 149,
                     V: -1,
@@ -40199,7 +40200,7 @@ try {
                     b: 149,
                     V: -1,
                     r: 0
-                }, nMv, {
+                }, _MWWF, {
                     v: 0,
                     b: 71,
                     V: 16,
@@ -40219,12 +40220,12 @@ try {
                     b: 86,
                     V: 6,
                     r: 0
-                }, nN, nN, nN, nN, nN, nN, nN, nN, {
+                }, _EMP, _EMP, _EMP, _EMP, _EMP, _EMP, _EMP, _EMP, {
                     v: 0,
                     b: 71,
                     V: 24,
                     r: 1
-                }, nN, nN, nN, {
+                }, _EMP, _EMP, _EMP, {
                     v: 0,
                     b: 86,
                     V: 30,
@@ -40235,7 +40236,7 @@ try {
                     V: 31,
                     r: 0
                 }],
-                [nN, nNW, {
+                [_EMP, _MWLF, {
                     v: 67,
                     b: 71,
                     V: 36,
@@ -40255,7 +40256,7 @@ try {
                     b: 71,
                     V: 9,
                     r: 2
-                }, nNW, {
+                }, _MWLF, {
                     v: 67,
                     b: 71,
                     V: 16,
@@ -40290,7 +40291,7 @@ try {
                     b: 142,
                     V: -1,
                     r: 2
-                }, vNM, nN, {
+                }, _MW, _EMP, {
                     v: 0,
                     b: 86,
                     V: 14,
@@ -40306,12 +40307,12 @@ try {
                     V: 6,
                     r: 0
                 }],
-                [nN, nNW, nNW, {
+                [_EMP, _MWLF, _MWLF, {
                     v: 67,
                     b: 150,
                     V: -1,
                     r: 2
-                }, nNW, nNW, nNW, {
+                }, _MWLF, _MWLF, _MWLF, {
                     v: 67,
                     b: 71,
                     V: 23,
@@ -40336,12 +40337,12 @@ try {
                     b: 142,
                     V: -1,
                     r: 2
-                }, wV, {
+                }, _LF, {
                     v: 67,
                     b: 71,
                     V: 23,
                     r: 2
-                }, vNM, {
+                }, _MW, {
                     v: 0,
                     b: 71,
                     V: 24,
@@ -40362,7 +40363,7 @@ try {
                     V: 6,
                     r: 0
                 }],
-                [nN, nN, {
+                [_EMP, _EMP, {
                     v: 0,
                     b: 71,
                     V: 16,
@@ -40382,7 +40383,7 @@ try {
                     b: 71,
                     V: 26,
                     r: 1
-                }, vNM, vNM, vNM, vNM, vNM, vNM, vNM, vNM, vNM, nN, {
+                }, _MW, _MW, _MW, _MW, _MW, _MW, _MW, _MW, _MW, _EMP, {
                     v: 0,
                     b: 86,
                     V: 14,
@@ -40398,7 +40399,7 @@ try {
                     V: 6,
                     r: 0
                 }],
-                [nN, nN, nN, nN, nN, nN, nN, nN, nN, nN, nN, nN, nN, nN, nN, nN, {
+                [_EMP, _EMP, _EMP, _EMP, _EMP, _EMP, _EMP, _EMP, _EMP, _EMP, _EMP, _EMP, _EMP, _EMP, _EMP, _EMP, {
                     v: 0,
                     b: 86,
                     V: 40,
@@ -40416,27 +40417,27 @@ try {
                 }]
             ]
         };
-        nWW[vMW.vnMwV] = {
+        HOUSE[HOUSEID.__BUNKER0__] = {
             width: 0,
             height: 0,
             radiation: 0,
             building: [
-                [nN],
-                [nN, nN, nN, nN, nN, nN, MN, MN, MN, nN, MN, MN, MN, MN, MN, MN, MN, MN],
-                [nN, nN, nN, nN, MN, MN, MN, MN, MN, MN, MN, MN, MN, MN, MN, MN, MN, MN, MN, MN, MN],
-                [nN, nN, nN, nN, MN, MN, MN, MN, MN, MN, MN, MN, MN, MN, MN, MN, MN, MN, MN, MN, MN, MN],
-                [nN, nN, nN, MN, MN, MN, MN, MN, MN, MN, MN, MN, MN, MN, MN, MN, MN, MN, MN, MN, MN, MN, MN],
-                [nN, MN, MN, MN, MN, MN, MN, MN, MN, MN, MN, MN, MN, MN, MN, MN, MN, MN, MN, MN, MN, MN, MN],
-                [nN, MN, MN, MN, MN, MN, MN, nN, nN, nN, nN, nN, nN, nN, nN, nN, MN, MN, MN, MN, MN, MN, MN],
-                [nN, MN, MN, MN, nN, nN, nN, nN, MN, MNm, MNm, {
+                [_EMP],
+                [_EMP, _EMP, _EMP, _EMP, _EMP, _EMP, _SC, _SC, _SC, _EMP, _SC, _SC, _SC, _SC, _SC, _SC, _SC, _SC],
+                [_EMP, _EMP, _EMP, _EMP, _SC, _SC, _SC, _SC, _SC, _SC, _SC, _SC, _SC, _SC, _SC, _SC, _SC, _SC, _SC, _SC, _SC],
+                [_EMP, _EMP, _EMP, _EMP, _SC, _SC, _SC, _SC, _SC, _SC, _SC, _SC, _SC, _SC, _SC, _SC, _SC, _SC, _SC, _SC, _SC, _SC],
+                [_EMP, _EMP, _EMP, _SC, _SC, _SC, _SC, _SC, _SC, _SC, _SC, _SC, _SC, _SC, _SC, _SC, _SC, _SC, _SC, _SC, _SC, _SC, _SC],
+                [_EMP, _SC, _SC, _SC, _SC, _SC, _SC, _SC, _SC, _SC, _SC, _SC, _SC, _SC, _SC, _SC, _SC, _SC, _SC, _SC, _SC, _SC, _SC],
+                [_EMP, _SC, _SC, _SC, _SC, _SC, _SC, _EMP, _EMP, _EMP, _EMP, _EMP, _EMP, _EMP, _EMP, _EMP, _SC, _SC, _SC, _SC, _SC, _SC, _SC],
+                [_EMP, _SC, _SC, _SC, _EMP, _EMP, _EMP, _EMP, _SC, _BWTF, _BWTF, {
                     v: 85,
                     b: 52,
                     V: -1,
                     r: 2
-                }, MNm, MNm, nN, nN, MN, MN, MN, MN, MN, MN, MN],
-                [nN, nN, nN, nN, nN, MN, MN, MN, MN, MNm, Wnm, Wnm, Wnm, MNm, MN, nN, nN, MN, MN, MN, MN, MN, MN],
-                [nN, nN, MN, MN, MN, MN, MNm, MNm, MNm, MNm, Wnm, Wnm, Wnm, MNm, MN, MN, nN, MN, MN, MN, MN, MN],
-                [nN, MN, MN, MN, MN, MN, MNm, {
+                }, _BWTF, _BWTF, _EMP, _EMP, _SC, _SC, _SC, _SC, _SC, _SC, _SC],
+                [_EMP, _EMP, _EMP, _EMP, _EMP, _SC, _SC, _SC, _SC, _BWTF, _TF, _TF, _TF, _BWTF, _SC, _EMP, _EMP, _SC, _SC, _SC, _SC, _SC, _SC],
+                [_EMP, _EMP, _SC, _SC, _SC, _SC, _BWTF, _BWTF, _BWTF, _BWTF, _TF, _TF, _TF, _BWTF, _SC, _SC, _EMP, _SC, _SC, _SC, _SC, _SC],
+                [_EMP, _SC, _SC, _SC, _SC, _SC, _BWTF, {
                     v: 85,
                     b: 71,
                     V: 9,
@@ -40446,49 +40447,49 @@ try {
                     b: 71,
                     V: 58,
                     r: 0
-                }, MNm, {
+                }, _BWTF, {
                     v: 85,
                     b: 71,
                     V: 33,
                     r: 3
-                }, Wnm, {
+                }, _TF, {
                     v: 85,
                     b: 71,
                     V: 33,
                     r: 3
-                }, MNm, MN, MN, nN, MN, MN, MN, MN, MN, MN],
-                [nN, MN, MN, MN, MN, MN, MNm, {
+                }, _BWTF, _SC, _SC, _EMP, _SC, _SC, _SC, _SC, _SC, _SC],
+                [_EMP, _SC, _SC, _SC, _SC, _SC, _BWTF, {
                     v: 85,
                     b: 71,
                     V: 10,
                     r: 2
-                }, Wnm, MNm, MNm, VWV, vWNVw, vWNVw, MWVnn, MN, nN, nN, MN, MN, MN, MN, MN, MN],
-                [nN, MN, MN, MN, MN, MN, MNm, Wnm, Wnm, VWV, VWV, VWV, VWV, {
+                }, _TF, _BWTF, _BWTF, _SF, _BWSF, _BWSF, _BW, _SC, _EMP, _EMP, _SC, _SC, _SC, _SC, _SC, _SC],
+                [_EMP, _SC, _SC, _SC, _SC, _SC, _BWTF, _TF, _TF, _SF, _SF, _SF, _SF, {
                     v: 84,
                     b: 71,
                     V: 51,
                     r: 1
-                }, vWNVw, MN, MN, nN, nN, MN, MN, MN, MN, MN],
-                [nN, MN, MN, MN, MN, MNm, MNm, MNm, MNm, MNm, VWV, VWV, VWV, VWV, vWNVw, MWVnn, MN, MN, nN, MN, MN, MN, MN, MN],
-                [nN, MN, MN, MN, MN, MNm, VWV, VWV, VWV, MNm, MNm, VWV, VWV, VWV, vWNVw, MNm, MNm, MN, nN, MN, MN, MN, MN],
-                [nN, MN, MN, MN, MN, MNm, VWV, MNm, VWV, VWV, VWV, VWV, MNm, Wnm, Wnm, {
+                }, _BWSF, _SC, _SC, _EMP, _EMP, _SC, _SC, _SC, _SC, _SC],
+                [_EMP, _SC, _SC, _SC, _SC, _BWTF, _BWTF, _BWTF, _BWTF, _BWTF, _SF, _SF, _SF, _SF, _BWSF, _BW, _SC, _SC, _EMP, _SC, _SC, _SC, _SC, _SC],
+                [_EMP, _SC, _SC, _SC, _SC, _BWTF, _SF, _SF, _SF, _BWTF, _BWTF, _SF, _SF, _SF, _BWSF, _BWTF, _BWTF, _SC, _EMP, _SC, _SC, _SC, _SC],
+                [_EMP, _SC, _SC, _SC, _SC, _BWTF, _SF, _BWTF, _SF, _SF, _SF, _SF, _BWTF, _TF, _TF, {
                     v: 85,
                     b: 71,
                     V: 55,
                     r: 2
-                }, MNm, MN, nN, MN, MN, MN, MN],
-                [nN, MN, MN, MN, MN, MNm, VWV, MNm, MNm, MNm, MNm, VWV, MNm, {
+                }, _BWTF, _SC, _EMP, _SC, _SC, _SC, _SC],
+                [_EMP, _SC, _SC, _SC, _SC, _BWTF, _SF, _BWTF, _BWTF, _BWTF, _BWTF, _SF, _BWTF, {
                     v: 85,
                     b: 71,
                     V: 28,
                     r: 3
-                }, Wnm, {
+                }, _TF, {
                     v: 85,
                     b: 71,
                     V: 21,
                     r: 1
-                }, MNm, MN, nN, nN, MN, MN],
-                [nN, MN, MN, MN, MN, MNm, Wnm, {
+                }, _BWTF, _SC, _EMP, _EMP, _SC, _SC],
+                [_EMP, _SC, _SC, _SC, _SC, _BWTF, _TF, {
                     v: 85,
                     b: 71,
                     V: 23,
@@ -40503,13 +40504,13 @@ try {
                     b: 71,
                     V: 56,
                     r: 2
-                }, MNm, VWV, MNm, MNm, MNm, MNm, MNm, MN, nN, nN, MN, MN, MN],
-                [nN, nN, nN, MN, MN, MNm, Wnm, Wnm, Wnm, {
+                }, _BWTF, _SF, _BWTF, _BWTF, _BWTF, _BWTF, _BWTF, _SC, _EMP, _EMP, _SC, _SC, _SC],
+                [_EMP, _EMP, _EMP, _SC, _SC, _BWTF, _TF, _TF, _TF, {
                     v: 85,
                     b: 71,
                     V: 53,
                     r: 2
-                }, MNm, VWV, VWV, Wnm, {
+                }, _BWTF, _SF, _SF, _TF, {
                     v: 85,
                     b: 71,
                     V: 51,
@@ -40519,9 +40520,9 @@ try {
                     b: 71,
                     V: 48,
                     r: 0
-                }, MNm, MN, MN],
-                [nN, MN, MN, MN, MN, MNm, Wnm, Wnm, Wnm, Wnm, MNm, MNm, MNm, Wnm, Wnm, Wnm, MNm, MN, MN, MN],
-                [nN, MN, MN, MN, MN, MNm, {
+                }, _BWTF, _SC, _SC],
+                [_EMP, _SC, _SC, _SC, _SC, _BWTF, _TF, _TF, _TF, _TF, _BWTF, _BWTF, _BWTF, _TF, _TF, _TF, _BWTF, _SC, _SC, _SC],
+                [_EMP, _SC, _SC, _SC, _SC, _BWTF, {
                     v: 85,
                     b: 71,
                     V: 20,
@@ -40536,12 +40537,12 @@ try {
                     b: 71,
                     V: 49,
                     r: 3
-                }, Wnm, {
+                }, _TF, {
                     v: 85,
                     b: 71,
                     V: 54,
                     r: 2
-                }, MNm, MNm, {
+                }, _BWTF, _BWTF, {
                     v: 85,
                     b: 71,
                     V: 48,
@@ -40556,987 +40557,991 @@ try {
                     b: 71,
                     V: 49,
                     r: 3
-                }, MNm, MN, MN, MN, MN, MN, MN],
-                [nN, nN, MN, MN, MN, MNm, MNm, MNm, MNm, MNm, MNm, MNm, MNm, MNm, MNm, MNm, MNm, MN, MN, MN, MN, MN, MN],
-                [nN, nN, MN, MN, MN, MN, MN, MN, MN, MN, MN, MN, MN, MN, MN, MN, MN, MN, MN, MN, MN, MN, MN],
-                [nN, nN, nN, MN, MN, MN, MN, MN, MN, MN, MN, MN, MN, MN, MN, MN, MN, MN, MN, MN, MN, MN],
-                [nN, nN, nN, nN, MN, MN, MN, MN, MN, MN, MN, MN, MN, MN, MN, MN, MN, MN, MN, MN, MN],
-                [nN, nN, nN, MN, MN, MN, MN, MN, MN, MN, MN, MN, MN, MN, MN, MN, MN, MN, MN, MN],
-                [nN, nN, nN, MN, MN, MN, MN, MN, MN, MN, MN, MN, MN, MN, MN, MN, MN, MN],
-                [nN, nN, nN, nN, MN, MN, MN, nN, nN, nN, nN, MN, MN, MN, MN, MN]
+                }, _BWTF, _SC, _SC, _SC, _SC, _SC, _SC],
+                [_EMP, _EMP, _SC, _SC, _SC, _BWTF, _BWTF, _BWTF, _BWTF, _BWTF, _BWTF, _BWTF, _BWTF, _BWTF, _BWTF, _BWTF, _BWTF, _SC, _SC, _SC, _SC, _SC, _SC],
+                [_EMP, _EMP, _SC, _SC, _SC, _SC, _SC, _SC, _SC, _SC, _SC, _SC, _SC, _SC, _SC, _SC, _SC, _SC, _SC, _SC, _SC, _SC, _SC],
+                [_EMP, _EMP, _EMP, _SC, _SC, _SC, _SC, _SC, _SC, _SC, _SC, _SC, _SC, _SC, _SC, _SC, _SC, _SC, _SC, _SC, _SC, _SC],
+                [_EMP, _EMP, _EMP, _EMP, _SC, _SC, _SC, _SC, _SC, _SC, _SC, _SC, _SC, _SC, _SC, _SC, _SC, _SC, _SC, _SC, _SC],
+                [_EMP, _EMP, _EMP, _SC, _SC, _SC, _SC, _SC, _SC, _SC, _SC, _SC, _SC, _SC, _SC, _SC, _SC, _SC, _SC, _SC],
+                [_EMP, _EMP, _EMP, _SC, _SC, _SC, _SC, _SC, _SC, _SC, _SC, _SC, _SC, _SC, _SC, _SC, _SC, _SC],
+                [_EMP, _EMP, _EMP, _EMP, _SC, _SC, _SC, _EMP, _EMP, _EMP, _EMP, _SC, _SC, _SC, _SC, _SC]
             ]
         };
     }
 } catch (error) {};
-for (var i = 0; i < nWW.length; i++) {
-    var VnVmm = nWW[i];
-    var vVNnW = nWW[i].building;
-    VnVmm.height = vVNnW.length;
-    for (var j = 0; j < vVNnW.length; j++)
-        VnVmm.width = window.Math.max(vVNnW[j].length, VnVmm.width);
+for (var i = 0; i < HOUSE.length; i++) {
+    var house = HOUSE[i];
+    var housePlan = HOUSE[i].building;
+    house.height = housePlan.length;
+    for (var j = 0; j < housePlan.length; j++)
+        house.width = window.Math.max(housePlan[j].length, house.width);
 }
-var VmwwM = [];
-VmwwM[AREAS.firepart] = item.campfire;
-VmwwM[AREAS.bbq] = item.campfirebbq;
-VmwwM[AREAS.workbench] = item.workbench;
-VmwwM[AREAS.researchbench] = item.researchbench;
-VmwwM[AREAS.teslabench] = item.teslabench;
-VmwwM[AREAS.smelter] = item.smelter;
-VmwwM[AREAS.weavingmachine] = item.weavingmachine;
-VmwwM[AREAS.composter] = item.composter;
-VmwwM[AREAS.agitator] = item.agitator;
-VmwwM[AREAS.extractor] = item.extractor;
-var NWVnn = null;
-var ENTITIES2 = null;
-var NWwVV = null;
-var mwwnn = null;
-var MMNMn = null;
-var vNNVn = null;
-var VNVwN = null;
-var MwWmN = "#\x33\x38\x35\x31\x33\x44";
-var wwVWm = "#\x30\x42\x31\x44\x32\x33";
-var nNnVn = [{
-    id: item.stone,
-    nM: 50,
+var AREASTOITEM = [];
+AREASTOITEM[AREAS.firepart] = IID.campfire;
+AREASTOITEM[AREAS.bbq] = IID.campfirebbq;
+AREASTOITEM[AREAS.workbench] = IID.workbench;
+AREASTOITEM[AREAS.researchbench] = IID.researchbench;
+AREASTOITEM[AREAS.teslabench] = IID.teslabench;
+AREASTOITEM[AREAS.smelter] = IID.smelter;
+AREASTOITEM[AREAS.weavingmachine] = IID.weavingmachine;
+AREASTOITEM[AREAS.composter] = IID.composter;
+AREASTOITEM[AREAS.agitator] = IID.agitator;
+AREASTOITEM[AREAS.extractor] = IID.extractor;
+
+var INVENTORY2  = null;
+var ENTITIES2   = null;
+var PARTICLES2  = null;
+var LOOT2       = null;
+var RESOURCES2  = null;
+var LIGHTFIRE2  = null;
+var AI2         = null;
+var GROUND      = "#\x33\x38\x35\x31\x33\x44";
+var GROUND2     = "#\x30\x42\x31\x44\x32\x33";
+
+var BRKIT = [{
+    id: IID.stone,
+    amount: 50,
     life: 255
 }, {
-    id: item.wood,
-    nM: 100,
+    id: IID.wood,
+    amount: 100,
     life: 255
 }, {
-    id: item.workbench,
-    nM: 1,
+    id: IID.workbench,
+    amount: 1,
     life: 255
 }];
-var mvv = [];
+var KIT = [];
 COUNTER = 0;
-mvv[COUNTER++] = [{
-    id: item.hachet,
-    nM: 1,
+KIT[COUNTER++] = [{
+    id: IID.hachet,
+    amount: 1,
     life: 255
 }, {
-    id: item.stone,
-    nM: 20,
+    id: IID.stone,
+    amount: 20,
     life: 255
 }, {
-    id: item.wood,
-    nM: 40,
+    id: IID.wood,
+    amount: 40,
     life: 255
 }, {
-    id: item.orange,
-    nM: 1,
-    life: 255
-}];
-mvv[COUNTER++] = [{
-    id: item.hachet,
-    nM: 1,
-    life: 255
-}, {
-    id: item.stone,
-    nM: 20,
-    life: 255
-}, {
-    id: item.wood,
-    nM: 40,
-    life: 255
-}, {
-    id: item.orange,
-    nM: 3,
+    id: IID.orange,
+    amount: 1,
     life: 255
 }];
-mvv[COUNTER++] = [{
-    id: item.hachet,
-    nM: 1,
+KIT[COUNTER++] = [{
+    id: IID.hachet,
+    amount: 1,
     life: 255
 }, {
-    id: item.stone,
-    nM: 30,
+    id: IID.stone,
+    amount: 20,
     life: 255
 }, {
-    id: item.wood,
-    nM: 50,
+    id: IID.wood,
+    amount: 40,
     life: 255
 }, {
-    id: item.campfire,
-    nM: 1,
-    life: 255
-}, {
-    id: item.orange,
-    nM: 4,
+    id: IID.orange,
+    amount: 3,
     life: 255
 }];
-mvv[COUNTER++] = [{
-    id: item.hachet,
-    nM: 1,
+KIT[COUNTER++] = [{
+    id: IID.hachet,
+    amount: 1,
     life: 255
 }, {
-    id: item.stone,
-    nM: 30,
+    id: IID.stone,
+    amount: 30,
     life: 255
 }, {
-    id: item.wood,
-    nM: 60,
+    id: IID.wood,
+    amount: 50,
     life: 255
 }, {
-    id: item.campfire,
-    nM: 1,
+    id: IID.campfire,
+    amount: 1,
     life: 255
 }, {
-    id: item.workbench,
-    nM: 1,
-    life: 255
-}, {
-    id: item.orange,
-    nM: 5,
+    id: IID.orange,
+    amount: 4,
     life: 255
 }];
-mvv[COUNTER++] = [{
-    id: item.hachet,
-    nM: 1,
+KIT[COUNTER++] = [{
+    id: IID.hachet,
+    amount: 1,
     life: 255
 }, {
-    id: item.stone,
-    nM: 40,
+    id: IID.stone,
+    amount: 30,
     life: 255
 }, {
-    id: item.wood,
-    nM: 90,
+    id: IID.wood,
+    amount: 60,
     life: 255
 }, {
-    id: item.campfire,
-    nM: 1,
+    id: IID.campfire,
+    amount: 1,
     life: 255
 }, {
-    id: item.workbench,
-    nM: 1,
+    id: IID.workbench,
+    amount: 1,
     life: 255
 }, {
-    id: item.rawsteak,
-    nM: 1,
-    life: 255
-}];
-mvv[COUNTER++] = [{
-    id: item.hachet,
-    nM: 1,
-    life: 255
-}, {
-    id: item.stone,
-    nM: 40,
-    life: 255
-}, {
-    id: item.wood,
-    nM: 150,
-    life: 255
-}, {
-    id: item.campfire,
-    nM: 1,
-    life: 255
-}, {
-    id: item.workbench,
-    nM: 1,
-    life: 255
-}, {
-    id: item.rawsteak,
-    nM: 1,
+    id: IID.orange,
+    amount: 5,
     life: 255
 }];
-mvv[COUNTER++] = [{
-    id: item.hachet,
-    nM: 1,
+KIT[COUNTER++] = [{
+    id: IID.hachet,
+    amount: 1,
     life: 255
 }, {
-    id: item.stonepickaxe,
-    nM: 1,
+    id: IID.stone,
+    amount: 40,
     life: 255
 }, {
-    id: item.campfire,
-    nM: 1,
+    id: IID.wood,
+    amount: 90,
     life: 255
 }, {
-    id: item.workbench,
-    nM: 1,
+    id: IID.campfire,
+    amount: 1,
     life: 255
 }, {
-    id: item.rawsteak,
-    nM: 2,
-    life: 255
-}];
-mvv[COUNTER++] = [{
-    id: item.hachet,
-    nM: 1,
+    id: IID.workbench,
+    amount: 1,
     life: 255
 }, {
-    id: item.stonepickaxe,
-    nM: 1,
-    life: 255
-}, {
-    id: item.campfire,
-    nM: 1,
-    life: 255
-}, {
-    id: item.steel,
-    nM: 6,
-    life: 255
-}, {
-    id: item.workbench,
-    nM: 1,
-    life: 255
-}, {
-    id: item.rawsteak,
-    nM: 2,
+    id: IID.rawsteak,
+    amount: 1,
     life: 255
 }];
-mvv[COUNTER++] = [{
-    id: item.hachet,
-    nM: 1,
+KIT[COUNTER++] = [{
+    id: IID.hachet,
+    amount: 1,
     life: 255
 }, {
-    id: item.stonepickaxe,
-    nM: 1,
+    id: IID.stone,
+    amount: 40,
     life: 255
 }, {
-    id: item.campfirebbq,
-    nM: 1,
+    id: IID.wood,
+    amount: 150,
     life: 255
 }, {
-    id: item.spear,
-    nM: 1,
+    id: IID.campfire,
+    amount: 1,
     life: 255
 }, {
-    id: item.workbench,
-    nM: 1,
+    id: IID.workbench,
+    amount: 1,
     life: 255
 }, {
-    id: item.rawsteak,
-    nM: 3,
-    life: 255
-}];
-mvv[COUNTER++] = [{
-    id: item.hachet,
-    nM: 1,
-    life: 255
-}, {
-    id: item.stonepickaxe,
-    nM: 1,
-    life: 255
-}, {
-    id: item.campfirebbq,
-    nM: 1,
-    life: 255
-}, {
-    id: item.bow,
-    nM: 1,
-    life: 255
-}, {
-    id: item.woodarrow,
-    nM: 20,
-    life: 255
-}, {
-    id: item.workbench,
-    nM: 1,
-    life: 255
-}, {
-    id: item.rawsteak,
-    nM: 4,
+    id: IID.rawsteak,
+    amount: 1,
     life: 255
 }];
-mvv[COUNTER++] = [{
-    id: item.hachet,
-    nM: 1,
+KIT[COUNTER++] = [{
+    id: IID.hachet,
+    amount: 1,
     life: 255
 }, {
-    id: item.stonepickaxe,
-    nM: 1,
+    id: IID.stonepickaxe,
+    amount: 1,
     life: 255
 }, {
-    id: item.campfirebbq,
-    nM: 1,
+    id: IID.campfire,
+    amount: 1,
     life: 255
 }, {
-    id: item.woodenwall,
-    nM: 10,
+    id: IID.workbench,
+    amount: 1,
     life: 255
 }, {
-    id: item.wooddoor,
-    nM: 2,
-    life: 255
-}, {
-    id: item.workbench,
-    nM: 1,
-    life: 255
-}, {
-    id: item.rawsteak,
-    nM: 4,
+    id: IID.rawsteak,
+    amount: 2,
     life: 255
 }];
-mvv[COUNTER++] = [{
-    id: item.hachet,
-    nM: 1,
+KIT[COUNTER++] = [{
+    id: IID.hachet,
+    amount: 1,
     life: 255
 }, {
-    id: item.stonepickaxe,
-    nM: 1,
+    id: IID.stonepickaxe,
+    amount: 1,
     life: 255
 }, {
-    id: item.campfirebbq,
-    nM: 1,
+    id: IID.campfire,
+    amount: 1,
     life: 255
 }, {
-    id: item.woodenwall,
-    nM: 16,
+    id: IID.steel,
+    amount: 6,
     life: 255
 }, {
-    id: item.stonedoor,
-    nM: 2,
+    id: IID.workbench,
+    amount: 1,
     life: 255
 }, {
-    id: item.workbench,
-    nM: 2,
-    life: 255
-}, {
-    id: item.rawsteak,
-    nM: 4,
+    id: IID.rawsteak,
+    amount: 2,
     life: 255
 }];
-mvv[COUNTER++] = [{
-    id: item.hachet,
-    nM: 1,
+KIT[COUNTER++] = [{
+    id: IID.hachet,
+    amount: 1,
     life: 255
 }, {
-    id: item.stonepickaxe,
-    nM: 1,
+    id: IID.stonepickaxe,
+    amount: 1,
     life: 255
 }, {
-    id: item.campfirebbq,
-    nM: 1,
+    id: IID.campfirebbq,
+    amount: 1,
     life: 255
 }, {
-    id: item.stonewall,
-    nM: 14,
+    id: IID.spear,
+    amount: 1,
     life: 255
 }, {
-    id: item.stonedoor,
-    nM: 2,
+    id: IID.workbench,
+    amount: 1,
     life: 255
 }, {
-    id: item.workbench,
-    nM: 2,
-    life: 255
-}, {
-    id: item.rawsteak,
-    nM: 4,
+    id: IID.rawsteak,
+    amount: 3,
     life: 255
 }];
-mvv[COUNTER++] = [{
-    id: item.hachet,
-    nM: 1,
+KIT[COUNTER++] = [{
+    id: IID.hachet,
+    amount: 1,
     life: 255
 }, {
-    id: item.stonepickaxe,
-    nM: 1,
+    id: IID.stonepickaxe,
+    amount: 1,
     life: 255
 }, {
-    id: item.campfirebbq,
-    nM: 1,
+    id: IID.campfirebbq,
+    amount: 1,
     life: 255
 }, {
-    id: item.landmine,
-    nM: 1,
+    id: IID.bow,
+    amount: 1,
     life: 255
 }, {
-    id: item.stonewall,
-    nM: 14,
+    id: IID.woodarrow,
+    amount: 20,
     life: 255
 }, {
-    id: item.stonedoor,
-    nM: 2,
+    id: IID.workbench,
+    amount: 1,
     life: 255
 }, {
-    id: item.workbench,
-    nM: 2,
-    life: 255
-}, {
-    id: item.rawsteak,
-    nM: 4,
+    id: IID.rawsteak,
+    amount: 4,
     life: 255
 }];
-mvv[COUNTER++] = [{
-    id: item.hachet,
-    nM: 1,
+KIT[COUNTER++] = [{
+    id: IID.hachet,
+    amount: 1,
     life: 255
 }, {
-    id: item.stonepickaxe,
-    nM: 1,
+    id: IID.stonepickaxe,
+    amount: 1,
     life: 255
 }, {
-    id: item.campfirebbq,
-    nM: 1,
+    id: IID.campfirebbq,
+    amount: 1,
     life: 255
 }, {
-    id: item.metalhelmet,
-    nM: 1,
+    id: IID.woodenwall,
+    amount: 10,
     life: 255
 }, {
-    id: item.stonewall,
-    nM: 14,
+    id: IID.wooddoor,
+    amount: 2,
     life: 255
 }, {
-    id: item.stonedoor,
-    nM: 2,
+    id: IID.workbench,
+    amount: 1,
     life: 255
 }, {
-    id: item.workbench,
-    nM: 2,
-    life: 255
-}, {
-    id: item.rawsteak,
-    nM: 4,
+    id: IID.rawsteak,
+    amount: 4,
     life: 255
 }];
-mvv[COUNTER++] = [{
-    id: item.hachet,
-    nM: 1,
+KIT[COUNTER++] = [{
+    id: IID.hachet,
+    amount: 1,
     life: 255
 }, {
-    id: item.stonepickaxe,
-    nM: 1,
+    id: IID.stonepickaxe,
+    amount: 1,
     life: 255
 }, {
-    id: item.campfirebbq,
-    nM: 1,
+    id: IID.campfirebbq,
+    amount: 1,
     life: 255
 }, {
-    id: item.stonewall,
-    nM: 16,
+    id: IID.woodenwall,
+    amount: 16,
     life: 255
 }, {
-    id: item.stonedoor,
-    nM: 2,
+    id: IID.stonedoor,
+    amount: 2,
     life: 255
 }, {
-    id: item.chest,
-    nM: 1,
+    id: IID.workbench,
+    amount: 2,
     life: 255
 }, {
-    id: item.workbench,
-    nM: 2,
-    life: 255
-}, {
-    id: item.rawsteak,
-    nM: 4,
+    id: IID.rawsteak,
+    amount: 4,
     life: 255
 }];
-mvv[COUNTER++] = [{
-    id: item.hachet,
-    nM: 1,
+KIT[COUNTER++] = [{
+    id: IID.hachet,
+    amount: 1,
     life: 255
 }, {
-    id: item.steelpickaxe,
-    nM: 1,
+    id: IID.stonepickaxe,
+    amount: 1,
     life: 255
 }, {
-    id: item.campfirebbq,
-    nM: 1,
+    id: IID.campfirebbq,
+    amount: 1,
     life: 255
 }, {
-    id: item.stonewall,
-    nM: 16,
+    id: IID.stonewall,
+    amount: 14,
     life: 255
 }, {
-    id: item.stonedoor,
-    nM: 2,
+    id: IID.stonedoor,
+    amount: 2,
     life: 255
 }, {
-    id: item.chest,
-    nM: 1,
+    id: IID.workbench,
+    amount: 2,
     life: 255
 }, {
-    id: item.workbench,
-    nM: 2,
-    life: 255
-}, {
-    id: item.rawsteak,
-    nM: 4,
+    id: IID.rawsteak,
+    amount: 4,
     life: 255
 }];
-mvv[COUNTER++] = [{
-    id: item.hachet,
-    nM: 1,
+KIT[COUNTER++] = [{
+    id: IID.hachet,
+    amount: 1,
     life: 255
 }, {
-    id: item.steelpickaxe,
-    nM: 1,
+    id: IID.stonepickaxe,
+    amount: 1,
     life: 255
 }, {
-    id: item.campfirebbq,
-    nM: 1,
+    id: IID.campfirebbq,
+    amount: 1,
     life: 255
 }, {
-    id: item.stonewall,
-    nM: 16,
+    id: IID.landmine,
+    amount: 1,
     life: 255
 }, {
-    id: item.stonedoor,
-    nM: 2,
+    id: IID.stonewall,
+    amount: 14,
     life: 255
 }, {
-    id: item.chest,
-    nM: 1,
+    id: IID.stonedoor,
+    amount: 2,
     life: 255
 }, {
-    id: item.researchbench,
-    nM: 1,
+    id: IID.workbench,
+    amount: 2,
     life: 255
 }, {
-    id: item.rawsteak,
-    nM: 4,
+    id: IID.rawsteak,
+    amount: 4,
     life: 255
 }];
-mvv[COUNTER++] = [{
-    id: item.stoneaxe,
-    nM: 1,
+KIT[COUNTER++] = [{
+    id: IID.hachet,
+    amount: 1,
     life: 255
 }, {
-    id: item.steelpickaxe,
-    nM: 1,
+    id: IID.stonepickaxe,
+    amount: 1,
     life: 255
 }, {
-    id: item.campfirebbq,
-    nM: 1,
+    id: IID.campfirebbq,
+    amount: 1,
     life: 255
 }, {
-    id: item.stonewall,
-    nM: 16,
+    id: IID.metalhelmet,
+    amount: 1,
     life: 255
 }, {
-    id: item.stonedoor,
-    nM: 2,
+    id: IID.stonewall,
+    amount: 14,
     life: 255
 }, {
-    id: item.chest,
-    nM: 1,
+    id: IID.stonedoor,
+    amount: 2,
     life: 255
 }, {
-    id: item.researchbench,
-    nM: 1,
+    id: IID.workbench,
+    amount: 2,
     life: 255
 }, {
-    id: item.rawsteak,
-    nM: 4,
+    id: IID.rawsteak,
+    amount: 4,
     life: 255
 }];
-mvv[COUNTER++] = [{
-    id: item.stoneaxe,
-    nM: 1,
+KIT[COUNTER++] = [{
+    id: IID.hachet,
+    amount: 1,
     life: 255
 }, {
-    id: item.steelpickaxe,
-    nM: 1,
+    id: IID.stonepickaxe,
+    amount: 1,
     life: 255
 }, {
-    id: item.campfirebbq,
-    nM: 2,
+    id: IID.campfirebbq,
+    amount: 1,
     life: 255
 }, {
-    id: item.stonewall,
-    nM: 20,
+    id: IID.stonewall,
+    amount: 16,
     life: 255
 }, {
-    id: item.stonedoor,
-    nM: 4,
+    id: IID.stonedoor,
+    amount: 2,
     life: 255
 }, {
-    id: item.chest,
-    nM: 2,
+    id: IID.chest,
+    amount: 1,
     life: 255
 }, {
-    id: item.researchbench,
-    nM: 1,
+    id: IID.workbench,
+    amount: 2,
     life: 255
 }, {
-    id: item.rawsteak,
-    nM: 4,
+    id: IID.rawsteak,
+    amount: 4,
     life: 255
 }];
-mvv[COUNTER++] = [{
-    id: item.stoneaxe,
-    nM: 1,
+KIT[COUNTER++] = [{
+    id: IID.hachet,
+    amount: 1,
     life: 255
 }, {
-    id: item.steelpickaxe,
-    nM: 1,
+    id: IID.steelpickaxe,
+    amount: 1,
     life: 255
 }, {
-    id: item.campfirebbq,
-    nM: 2,
+    id: IID.campfirebbq,
+    amount: 1,
     life: 255
 }, {
-    id: item.stonewall,
-    nM: 26,
+    id: IID.stonewall,
+    amount: 16,
     life: 255
 }, {
-    id: item.stonedoor,
-    nM: 6,
+    id: IID.stonedoor,
+    amount: 2,
     life: 255
 }, {
-    id: item.chest,
-    nM: 3,
+    id: IID.chest,
+    amount: 1,
     life: 255
 }, {
-    id: item.researchbench,
-    nM: 1,
+    id: IID.workbench,
+    amount: 2,
     life: 255
 }, {
-    id: item.seedorange,
-    nM: 8,
+    id: IID.rawsteak,
+    amount: 4,
     life: 255
 }];
-mvv[COUNTER++] = [{
-    id: item.stoneaxe,
-    nM: 1,
+KIT[COUNTER++] = [{
+    id: IID.hachet,
+    amount: 1,
     life: 255
 }, {
-    id: item.steelpickaxe,
-    nM: 1,
+    id: IID.steelpickaxe,
+    amount: 1,
     life: 255
 }, {
-    id: item.headscarf,
-    nM: 1,
+    id: IID.campfirebbq,
+    amount: 1,
     life: 255
 }, {
-    id: item.stonewall,
-    nM: 26,
+    id: IID.stonewall,
+    amount: 16,
     life: 255
 }, {
-    id: item.stonedoor,
-    nM: 6,
+    id: IID.stonedoor,
+    amount: 2,
     life: 255
 }, {
-    id: item.chest,
-    nM: 3,
+    id: IID.chest,
+    amount: 1,
     life: 255
 }, {
-    id: item.researchbench,
-    nM: 1,
+    id: IID.researchbench,
+    amount: 1,
     life: 255
 }, {
-    id: item.seedorange,
-    nM: 8,
+    id: IID.rawsteak,
+    amount: 4,
     life: 255
 }];
-mvv[COUNTER++] = [{
-    id: item.stoneaxe,
-    nM: 1,
+KIT[COUNTER++] = [{
+    id: IID.stoneaxe,
+    amount: 1,
     life: 255
 }, {
-    id: item.steelpickaxe,
-    nM: 1,
+    id: IID.steelpickaxe,
+    amount: 1,
     life: 255
 }, {
-    id: item.headscarf,
-    nM: 1,
+    id: IID.campfirebbq,
+    amount: 1,
     life: 255
 }, {
-    id: item.stonewall,
-    nM: 26,
+    id: IID.stonewall,
+    amount: 16,
     life: 255
 }, {
-    id: item.stonedoor,
-    nM: 6,
+    id: IID.stonedoor,
+    amount: 2,
     life: 255
 }, {
-    id: item.chest,
-    nM: 3,
+    id: IID.chest,
+    amount: 1,
     life: 255
 }, {
-    id: item.pistol,
-    nM: 1,
+    id: IID.researchbench,
+    amount: 1,
+    life: 255
+}, {
+    id: IID.rawsteak,
+    amount: 4,
+    life: 255
+}];
+KIT[COUNTER++] = [{
+    id: IID.stoneaxe,
+    amount: 1,
+    life: 255
+}, {
+    id: IID.steelpickaxe,
+    amount: 1,
+    life: 255
+}, {
+    id: IID.campfirebbq,
+    amount: 2,
+    life: 255
+}, {
+    id: IID.stonewall,
+    amount: 20,
+    life: 255
+}, {
+    id: IID.stonedoor,
+    amount: 4,
+    life: 255
+}, {
+    id: IID.chest,
+    amount: 2,
+    life: 255
+}, {
+    id: IID.researchbench,
+    amount: 1,
+    life: 255
+}, {
+    id: IID.rawsteak,
+    amount: 4,
+    life: 255
+}];
+KIT[COUNTER++] = [{
+    id: IID.stoneaxe,
+    amount: 1,
+    life: 255
+}, {
+    id: IID.steelpickaxe,
+    amount: 1,
+    life: 255
+}, {
+    id: IID.campfirebbq,
+    amount: 2,
+    life: 255
+}, {
+    id: IID.stonewall,
+    amount: 26,
+    life: 255
+}, {
+    id: IID.stonedoor,
+    amount: 6,
+    life: 255
+}, {
+    id: IID.chest,
+    amount: 3,
+    life: 255
+}, {
+    id: IID.researchbench,
+    amount: 1,
+    life: 255
+}, {
+    id: IID.seedorange,
+    amount: 8,
+    life: 255
+}];
+KIT[COUNTER++] = [{
+    id: IID.stoneaxe,
+    amount: 1,
+    life: 255
+}, {
+    id: IID.steelpickaxe,
+    amount: 1,
+    life: 255
+}, {
+    id: IID.headscarf,
+    amount: 1,
+    life: 255
+}, {
+    id: IID.stonewall,
+    amount: 26,
+    life: 255
+}, {
+    id: IID.stonedoor,
+    amount: 6,
+    life: 255
+}, {
+    id: IID.chest,
+    amount: 3,
+    life: 255
+}, {
+    id: IID.researchbench,
+    amount: 1,
+    life: 255
+}, {
+    id: IID.seedorange,
+    amount: 8,
+    life: 255
+}];
+KIT[COUNTER++] = [{
+    id: IID.stoneaxe,
+    amount: 1,
+    life: 255
+}, {
+    id: IID.steelpickaxe,
+    amount: 1,
+    life: 255
+}, {
+    id: IID.headscarf,
+    amount: 1,
+    life: 255
+}, {
+    id: IID.stonewall,
+    amount: 26,
+    life: 255
+}, {
+    id: IID.stonedoor,
+    amount: 6,
+    life: 255
+}, {
+    id: IID.chest,
+    amount: 3,
+    life: 255
+}, {
+    id: IID.pistol,
+    amount: 1,
     life: 20
 }, {
-    id: item.researchbench,
-    nM: 1,
+    id: IID.researchbench,
+    amount: 1,
     life: 255
 }];
-mvv[COUNTER++] = [{
-    id: item.sulfurpickaxe,
-    nM: 1,
+KIT[COUNTER++] = [{
+    id: IID.sulfurpickaxe,
+    amount: 1,
     life: 255
 }, {
-    id: item.stoneaxe,
-    nM: 1,
+    id: IID.stoneaxe,
+    amount: 1,
     life: 255
 }, {
-    id: item.headscarf,
-    nM: 1,
+    id: IID.headscarf,
+    amount: 1,
     life: 255
 }, {
-    id: item.stonewall,
-    nM: 26,
+    id: IID.stonewall,
+    amount: 26,
     life: 255
 }, {
-    id: item.stonedoor,
-    nM: 6,
+    id: IID.stonedoor,
+    amount: 6,
     life: 255
 }, {
-    id: item.chest,
-    nM: 3,
+    id: IID.chest,
+    amount: 3,
     life: 255
 }, {
-    id: item.pistol,
-    nM: 1,
+    id: IID.pistol,
+    amount: 1,
     life: 20
 }, {
-    id: item.researchbench,
-    nM: 1,
+    id: IID.researchbench,
+    amount: 1,
     life: 255
 }];
-mvv[COUNTER++] = [{
-    id: item.sulfurpickaxe,
-    nM: 1,
+KIT[COUNTER++] = [{
+    id: IID.sulfurpickaxe,
+    amount: 1,
     life: 255
 }, {
-    id: item.stoneaxe,
-    nM: 1,
+    id: IID.stoneaxe,
+    amount: 1,
     life: 255
 }, {
-    id: item.headscarf,
-    nM: 1,
+    id: IID.headscarf,
+    amount: 1,
     life: 255
 }, {
-    id: item.stonewall,
-    nM: 26,
+    id: IID.stonewall,
+    amount: 26,
     life: 255
 }, {
-    id: item.smelter,
-    nM: 1,
+    id: IID.smelter,
+    amount: 1,
     life: 255
 }, {
-    id: item.chest,
-    nM: 3,
+    id: IID.chest,
+    amount: 3,
     life: 255
 }, {
-    id: item.pistol,
-    nM: 1,
+    id: IID.pistol,
+    amount: 1,
     life: 20
 }, {
-    id: item.researchbench,
-    nM: 1,
+    id: IID.researchbench,
+    amount: 1,
     life: 255
 }];
-mvv[COUNTER++] = [{
-    id: item.sulfurpickaxe,
-    nM: 1,
+KIT[COUNTER++] = [{
+    id: IID.sulfurpickaxe,
+    amount: 1,
     life: 255
 }, {
-    id: item.sulfuraxe,
-    nM: 1,
+    id: IID.sulfuraxe,
+    amount: 1,
     life: 255
 }, {
-    id: item.headscarf,
-    nM: 1,
+    id: IID.headscarf,
+    amount: 1,
     life: 255
 }, {
-    id: item.stonewall,
-    nM: 26,
+    id: IID.stonewall,
+    amount: 26,
     life: 255
 }, {
-    id: item.smelter,
-    nM: 1,
+    id: IID.smelter,
+    amount: 1,
     life: 255
 }, {
-    id: item.chest,
-    nM: 3,
+    id: IID.chest,
+    amount: 3,
     life: 255
 }, {
-    id: item.pistol,
-    nM: 1,
+    id: IID.pistol,
+    amount: 1,
     life: 20
 }, {
-    id: item.researchbench,
-    nM: 1,
+    id: IID.researchbench,
+    amount: 1,
     life: 255
 }];
-mvv[COUNTER++] = [{
-    id: item.sulfurpickaxe,
-    nM: 1,
+KIT[COUNTER++] = [{
+    id: IID.sulfurpickaxe,
+    amount: 1,
     life: 255
 }, {
-    id: item.sulfuraxe,
-    nM: 1,
+    id: IID.sulfuraxe,
+    amount: 1,
     life: 255
 }, {
-    id: item.chapka,
-    nM: 1,
+    id: IID.chapka,
+    amount: 1,
     life: 255
 }, {
-    id: item.stonewall,
-    nM: 26,
+    id: IID.stonewall,
+    amount: 26,
     life: 255
 }, {
-    id: item.smelter,
-    nM: 1,
+    id: IID.smelter,
+    amount: 1,
     life: 255
 }, {
-    id: item.chest,
-    nM: 3,
+    id: IID.chest,
+    amount: 3,
     life: 255
 }, {
-    id: item.pistol,
-    nM: 1,
+    id: IID.pistol,
+    amount: 1,
     life: 20
 }, {
-    id: item.researchbench,
-    nM: 1,
+    id: IID.researchbench,
+    amount: 1,
     life: 255
 }];
-mvv[COUNTER++] = [{
-    id: item.sulfurpickaxe,
-    nM: 1,
+KIT[COUNTER++] = [{
+    id: IID.sulfurpickaxe,
+    amount: 1,
     life: 255
 }, {
-    id: item.sulfuraxe,
-    nM: 1,
+    id: IID.sulfuraxe,
+    amount: 1,
     life: 255
 }, {
-    id: item.chapka,
-    nM: 1,
+    id: IID.chapka,
+    amount: 1,
     life: 255
 }, {
-    id: item.steelwall,
-    nM: 14,
+    id: IID.steelwall,
+    amount: 14,
     life: 255
 }, {
-    id: item.smelter,
-    nM: 1,
+    id: IID.smelter,
+    amount: 1,
     life: 255
 }, {
-    id: item.chest,
-    nM: 3,
+    id: IID.chest,
+    amount: 3,
     life: 255
 }, {
-    id: item.pistol,
-    nM: 1,
+    id: IID.pistol,
+    amount: 1,
     life: 20
 }, {
-    id: item.researchbench,
-    nM: 1,
+    id: IID.researchbench,
+    amount: 1,
     life: 255
 }];
-mvv[COUNTER++] = [{
-    id: item.sulfurpickaxe,
-    nM: 1,
+KIT[COUNTER++] = [{
+    id: IID.sulfurpickaxe,
+    amount: 1,
     life: 255
 }, {
-    id: item.sulfuraxe,
-    nM: 1,
+    id: IID.sulfuraxe,
+    amount: 1,
     life: 255
 }, {
-    id: item.chapka,
-    nM: 1,
+    id: IID.chapka,
+    amount: 1,
     life: 255
 }, {
-    id: item.steelwall,
-    nM: 14,
+    id: IID.steelwall,
+    amount: 14,
     life: 255
 }, {
-    id: item.smelter,
-    nM: 1,
+    id: IID.smelter,
+    amount: 1,
     life: 255
 }, {
-    id: item.chest,
-    nM: 3,
+    id: IID.chest,
+    amount: 3,
     life: 255
 }, {
-    id: item.deserteagle,
-    nM: 1,
+    id: IID.deserteagle,
+    amount: 1,
     life: 7
 }, {
-    id: item.researchbench,
-    nM: 1,
+    id: IID.researchbench,
+    amount: 1,
     life: 255
 }];
-mvv[COUNTER++] = [{
-    id: item.sulfurpickaxe,
-    nM: 1,
+KIT[COUNTER++] = [{
+    id: IID.sulfurpickaxe,
+    amount: 1,
     life: 255
 }, {
-    id: item.sulfuraxe,
-    nM: 1,
+    id: IID.sulfuraxe,
+    amount: 1,
     life: 255
 }, {
-    id: item.chapka,
-    nM: 1,
+    id: IID.chapka,
+    amount: 1,
     life: 255
 }, {
-    id: item.steelwall,
-    nM: 14,
+    id: IID.steelwall,
+    amount: 14,
     life: 255
 }, {
-    id: item.smelter,
-    nM: 1,
+    id: IID.smelter,
+    amount: 1,
     life: 255
 }, {
-    id: item.dynamite,
-    nM: 6,
+    id: IID.dynamite,
+    amount: 6,
     life: 255
 }, {
-    id: item.deserteagle,
-    nM: 1,
+    id: IID.deserteagle,
+    amount: 1,
     life: 7
 }, {
-    id: item.researchbench,
-    nM: 1,
+    id: IID.researchbench,
+    amount: 1,
     life: 255
 }];
-mvv[COUNTER++] = [{
-    id: item.sulfurpickaxe,
-    nM: 1,
+KIT[COUNTER++] = [{
+    id: IID.sulfurpickaxe,
+    amount: 1,
     life: 255
 }, {
-    id: item.sulfuraxe,
-    nM: 1,
+    id: IID.sulfuraxe,
+    amount: 1,
     life: 255
 }, {
-    id: item.chapka,
-    nM: 1,
+    id: IID.chapka,
+    amount: 1,
     life: 255
 }, {
-    id: item.steelwall,
-    nM: 20,
+    id: IID.steelwall,
+    amount: 20,
     life: 255
 }, {
-    id: item.smelter,
-    nM: 1,
+    id: IID.smelter,
+    amount: 1,
     life: 255
 }, {
-    id: item.landmine,
-    nM: 6,
+    id: IID.landmine,
+    amount: 6,
     life: 255
 }, {
-    id: item.deserteagle,
-    nM: 1,
+    id: IID.deserteagle,
+    amount: 1,
     life: 7
 }, {
-    id: item.researchbench,
-    nM: 1,
+    id: IID.researchbench,
+    amount: 1,
     life: 255
 }];
+
 COUNTER = 0;
-var hostile = {
-    yes: COUNTER++,
-    no: COUNTER++
+var MODE_AI = {
+    __AGGRESSIVE__: COUNTER++,
+    __REPAIR__:     COUNTER++
 };
-var VVv = [];
-VVv[AIID.__NORMAL_GHOUL__] = {
-    vmWVv: 700,
-    WVVvW: 550,
-    NNNMM: 0.5,
-    Wnwvw: 1,
-    mode: hostile.yes,
-    vNWnv: ((2 * 8) * 60) * 1000,
+
+var AI = [];
+AI[AIID.__NORMAL_GHOUL__] = {
+    actionDelay: 700,
+    actionImpactClient: 550,
+    baseSpeed: 0.5,
+    aggressive: 1,
+    mode: MODE_AI.__AGGRESSIVE__,
+    timeTrigger: ((2 * 8) * 60) * 1000,
     draw: Render.ghoul,
     breath: 0.05,
-    NVwvN: 6,
+    armMove: 6,
     leftArm: {
         angle: 0,
         x: 28,
@@ -41574,37 +41579,37 @@ VVv[AIID.__NORMAL_GHOUL__] = {
         }
     },
     units: 0,
-    vWV: 30,
-    WnW: 0,
+    unitsMax: 30,
+    areaEffect: 0,
     radius: 38,
     life: 160,
     speed: [0.12, 0.22],
     speedRun: [0.14, 0.25],
     loot: [
-        [item.animalfat, 4, Mv.animalfat]
+        [IID.animalfat, 4, Mv.animalfat]
     ],
-    mMW: 1,
-    WnW: 0,
-    mwM: 0,
-    mMNNv: 0,
-    WWv: 0,
-    WNWwM: 40,
-    NMWWm: 50,
+    light: 1,
+    areaEffect: 0,
+    explosion: 0,
+    damageExplosion: 0,
+    damageBuilding: 0,
+    radiusDamage: 40,
+    distDamage: 50,
     damage: [8, 20],
     knockback: 20,
     timelife: ((2 * 8) * 60) * 1000,
     score: 1200
 };
-VVv[AIID.__FAST_GHOUL__] = {
-    vmWVv: 300,
-    WVVvW: 150,
-    NNNMM: 0.5,
-    Wnwvw: 2,
-    mode: hostile.yes,
-    vNWnv: (((2 * 2) * 8) * 60) * 1000,
+AI[AIID.__FAST_GHOUL__] = {
+    actionDelay: 300,
+    actionImpactClient: 150,
+    baseSpeed: 0.5,
+    aggressive: 2,
+    mode: MODE_AI.__AGGRESSIVE__,
+    timeTrigger: (((2 * 2) * 8) * 60) * 1000,
     draw: Render.ghoul,
     breath: 0.05,
-    NVwvN: 6,
+    armMove: 6,
     leftArm: {
         angle: 0,
         x: 28,
@@ -41642,37 +41647,37 @@ VVv[AIID.__FAST_GHOUL__] = {
         }
     },
     units: 0,
-    vWV: 18,
-    WnW: 0,
+    unitsMax: 18,
+    areaEffect: 0,
     radius: 38,
     life: 100,
     speed: [0.18, 0.28],
     speedRun: [0.22, 0.38],
     loot: [
-        [item.ghoulblood, 4, Mv.ghoulblood]
+        [IID.ghoulblood, 4, Mv.ghoulblood]
     ],
-    mMW: 1,
-    WnW: 0,
-    mwM: 0,
-    mMNNv: 0,
-    WWv: 0,
-    WNWwM: 40,
-    NMWWm: 50,
+    light: 1,
+    areaEffect: 0,
+    explosion: 0,
+    damageExplosion: 0,
+    damageBuilding: 0,
+    radiusDamage: 40,
+    distDamage: 50,
     damage: [7, 14],
     knockback: 20,
     timelife: ((2 * 8) * 60) * 1000,
     score: 1000
 };
-VVv[AIID.__EXPLOSIVE_GHOUL__] = {
-    vmWVv: 500,
-    WVVvW: 350,
-    NNNMM: 0.5,
-    Wnwvw: 4,
-    mode: hostile.yes,
-    vNWnv: (((3 * 2) * 8) * 60) * 1000,
+AI[AIID.__EXPLOSIVE_GHOUL__] = {
+    actionDelay: 500,
+    actionImpactClient: 350,
+    baseSpeed: 0.5,
+    aggressive: 4,
+    mode: MODE_AI.__AGGRESSIVE__,
+    timeTrigger: (((3 * 2) * 8) * 60) * 1000,
     draw: Render.ghoul,
     breath: 0.05,
-    NVwvN: 6,
+    armMove: 6,
     leftArm: {
         angle: 0,
         x: 28,
@@ -41710,39 +41715,39 @@ VVv[AIID.__EXPLOSIVE_GHOUL__] = {
         }
     },
     units: 0,
-    vWV: 14,
-    WnW: 0,
+    unitsMax: 14,
+    areaEffect: 0,
     radius: 38,
     life: 100,
     speed: [0.12, 0.23],
     speedRun: [0.14, 0.26],
     loot: [
-        [item.sulfur, 4, Mv.sulfur],
-        [item.animalfat, 4, Mv.animalfat],
-        [item.junk, 4, Mv.junk]
+        [IID.sulfur, 4, Mv.sulfur],
+        [IID.animalfat, 4, Mv.animalfat],
+        [IID.junk, 4, Mv.junk]
     ],
-    mMW: 1,
-    WnW: 0,
-    mwM: 1,
-    mMNNv: 120,
-    WWv: 500,
-    WNWwM: 40,
-    NMWWm: 50,
+    light: 1,
+    areaEffect: 0,
+    explosion: 1,
+    damageExplosion: 120,
+    damageBuilding: 500,
+    radiusDamage: 40,
+    distDamage: 50,
     damage: [6, 20],
     knockback: 20,
     timelife: ((2 * 8) * 60) * 1000,
     score: 500
 };
-VVv[AIID.__RADIOACTIVE_GHOUL__] = {
-    vmWVv: 500,
-    WVVvW: 350,
-    NNNMM: 0.5,
-    Wnwvw: 8,
-    mode: hostile.yes,
-    vNWnv: (((4 * 2) * 8) * 60) * 1000,
+AI[AIID.__RADIOACTIVE_GHOUL__] = {
+    actionDelay: 500,
+    actionImpactClient: 350,
+    baseSpeed: 0.5,
+    aggressive: 8,
+    mode: MODE_AI.__AGGRESSIVE__,
+    timeTrigger: (((4 * 2) * 8) * 60) * 1000,
     draw: Render.ghoul,
     breath: 0.05,
-    NVwvN: 6,
+    armMove: 6,
     leftArm: {
         angle: 0,
         x: 28,
@@ -41780,37 +41785,37 @@ VVv[AIID.__RADIOACTIVE_GHOUL__] = {
         }
     },
     units: 0,
-    vWV: 10,
-    WnW: 0,
+    unitsMax: 10,
+    areaEffect: 0,
     radius: 38,
     life: 160,
     speed: [0.12, 0.23],
     speedRun: [0.14, 0.26],
     loot: [
-        [item.uranium, 4, Mv.uranium]
+        [IID.uranium, 4, Mv.uranium]
     ],
-    mMW: 1,
-    WnW: __RADIATION__,
-    mwM: 0,
-    mMNNv: 0,
-    WWv: 0,
-    WNWwM: 40,
-    NMWWm: 50,
+    light: 1,
+    areaEffect: __RADIATION__,
+    explosion: 0,
+    damageExplosion: 0,
+    damageBuilding: 0,
+    radiusDamage: 40,
+    distDamage: 50,
     damage: [5, 15],
     knockback: 20,
     timelife: ((2 * 8) * 60) * 1000,
     score: 1500
 };
-VVv[AIID.__ARMORED_GHOUL__] = {
-    vmWVv: 700,
-    WVVvW: 550,
-    NNNMM: 0.5,
-    Wnwvw: 16,
-    mode: hostile.yes,
-    vNWnv: (((5 * 2) * 8) * 60) * 1000,
+AI[AIID.__ARMORED_GHOUL__] = {
+    actionDelay: 700,
+    actionImpactClient: 550,
+    baseSpeed: 0.5,
+    aggressive: 16,
+    mode: MODE_AI.__AGGRESSIVE__,
+    timeTrigger: (((5 * 2) * 8) * 60) * 1000,
     draw: Render.ghoul,
     breath: 0.05,
-    NVwvN: 6,
+    armMove: 6,
     leftArm: {
         angle: 0,
         x: 28,
@@ -41848,38 +41853,38 @@ VVv[AIID.__ARMORED_GHOUL__] = {
         }
     },
     units: 0,
-    vWV: 14,
-    WnW: 0,
+    unitsMax: 14,
+    areaEffect: 0,
     radius: 38,
     life: 800,
     speed: [0.11, 0.21],
     speedRun: [0.14, 0.24],
     loot: [
-        [item.alloys, 4, Mv.alloys],
-        [item.shapedmetal, 12, Mv.shapedmetal]
+        [IID.alloys, 4, Mv.alloys],
+        [IID.shapedmetal, 12, Mv.shapedmetal]
     ],
-    mMW: 1,
-    WnW: 0,
-    mwM: 0,
-    mMNNv: 0,
-    WWv: 0,
-    WNWwM: 40,
-    NMWWm: 50,
+    light: 1,
+    areaEffect: 0,
+    explosion: 0,
+    damageExplosion: 0,
+    damageBuilding: 0,
+    radiusDamage: 40,
+    distDamage: 50,
     damage: [20, 50],
     knockback: 20,
     timelife: ((4 * 8) * 60) * 1000,
     score: 5000
 };
-VVv[AIID.__PUMPKIN_GHOUL__] = {
-    vmWVv: 700,
-    WVVvW: 550,
-    NNNMM: 0.5,
-    Wnwvw: 32,
-    mode: hostile.yes,
-    vNWnv: ((2 * 8) * 60) * 1000,
+AI[AIID.__PUMPKIN_GHOUL__] = {
+    actionDelay: 700,
+    actionImpactClient: 550,
+    baseSpeed: 0.5,
+    aggressive: 32,
+    mode: MODE_AI.__AGGRESSIVE__,
+    timeTrigger: ((2 * 8) * 60) * 1000,
     draw: Render.ghoul,
     breath: 0.05,
-    NVwvN: 6,
+    armMove: 6,
     leftArm: {
         angle: 0,
         x: 28,
@@ -41917,36 +41922,36 @@ VVv[AIID.__PUMPKIN_GHOUL__] = {
         }
     },
     units: 0,
-    vWV: 0,
-    WnW: 0,
+    unitsMax: 0,
+    areaEffect: 0,
     radius: 38,
     life: 160,
     speed: [0.04, 0.04],
     loot: [
-        [item.pumpkin, 4, Mv.pumpkin]
+        [IID.pumpkin, 4, Mv.pumpkin]
     ],
-    mMW: 0,
-    WnW: 0,
-    mwM: 0,
-    mMNNv: 0,
-    WWv: 0,
-    WNWwM: 40,
-    NMWWm: 50,
+    light: 0,
+    areaEffect: 0,
+    explosion: 0,
+    damageExplosion: 0,
+    damageBuilding: 0,
+    radiusDamage: 40,
+    distDamage: 50,
     damage: [20, 30],
     knockback: 20,
     timelife: ((2 * 8) * 60) * 1000,
     score: 100
 };
-VVv[AIID.__LAPABOT_REPAIR__] = {
-    vmWVv: 700,
-    WVVvW: 550,
-    NNNMM: 0.5,
-    Wnwvw: 0,
-    mode: hostile.no,
-    vNWnv: 0,
+AI[AIID.__LAPABOT_REPAIR__] = {
+    actionDelay: 700,
+    actionImpactClient: 550,
+    baseSpeed: 0.5,
+    aggressive: 0,
+    mode: MODE_AI.__REPAIR__,
+    timeTrigger: 0,
     draw: Render.ghoul,
     breath: 0.05,
-    NVwvN: 6,
+    armMove: 6,
     leftArm: {
         angle: 0,
         x: 28,
@@ -41984,36 +41989,36 @@ VVv[AIID.__LAPABOT_REPAIR__] = {
         }
     },
     units: 0,
-    vWV: 0,
-    WnW: 0,
+    unitsMax: 0,
+    areaEffect: 0,
     radius: 38,
     life: 600,
     speed: [0.08, 0.08],
     loot: [
-        [item.shapedmetal, 4, Mv.shapedmetal]
+        [IID.shapedmetal, 4, Mv.shapedmetal]
     ],
-    mMW: 0,
-    WnW: 0,
-    mwM: 0,
-    mMNNv: 0,
-    WWv: 0,
-    WNWwM: 40,
-    NMWWm: 50,
+    light: 0,
+    areaEffect: 0,
+    explosion: 0,
+    damageExplosion: 0,
+    damageBuilding: 0,
+    radiusDamage: 40,
+    distDamage: 50,
     damage: [30, 30],
     knockback: 20,
     timelife: ((2 * 8) * 60) * 1000,
     score: 100
 };
-VVv[AIID.__HAL_BOT__] = {
-    vmWVv: 550,
-    WVVvW: 400,
-    NNNMM: 0.5,
-    Wnwvw: 0,
-    mode: hostile.yes,
-    vNWnv: 0,
+AI[AIID.__HAL_BOT__] = {
+    actionDelay: 550,
+    actionImpactClient: 400,
+    baseSpeed: 0.5,
+    aggressive: 0,
+    mode: MODE_AI.__AGGRESSIVE__,
+    timeTrigger: 0,
     draw: Render.ghoul,
     breath: 0.05,
-    NVwvN: 6,
+    armMove: 6,
     leftArm: {
         angle: 0,
         x: 8,
@@ -42051,36 +42056,36 @@ VVv[AIID.__HAL_BOT__] = {
         }
     },
     units: 0,
-    vWV: 0,
-    WnW: 0,
+    unitsMax: 0,
+    areaEffect: 0,
     radius: 38,
     life: 800,
     speed: [0.12, 0.12],
     loot: [
-        [item.shapedmetal, 4, Mv.shapedmetal]
+        [IID.shapedmetal, 4, Mv.shapedmetal]
     ],
-    mMW: 0,
-    WnW: 0,
-    mwM: 0,
-    mMNNv: 0,
-    WWv: 0,
-    WNWwM: 40,
-    NMWWm: 50,
+    light: 0,
+    areaEffect: 0,
+    explosion: 0,
+    damageExplosion: 0,
+    damageBuilding: 0,
+    radiusDamage: 40,
+    distDamage: 50,
     damage: [30, 30],
     knockback: 20,
     timelife: ((2 * 8) * 60) * 1000,
     score: 500
 };
-VVv[AIID.__TESLA_BOT__] = {
-    vmWVv: 700,
-    WVVvW: 550,
-    NNNMM: 0.5,
-    Wnwvw: 0,
-    mode: hostile.yes,
-    vNWnv: 0,
+AI[AIID.__TESLA_BOT__] = {
+    actionDelay: 700,
+    actionImpactClient: 550,
+    baseSpeed: 0.5,
+    aggressive: 0,
+    mode: MODE_AI.__AGGRESSIVE__,
+    timeTrigger: 0,
     draw: Render.ghoul,
     breath: 0.05,
-    NVwvN: 6,
+    armMove: 6,
     leftArm: {
         angle: 0,
         x: 18,
@@ -42118,83 +42123,83 @@ VVv[AIID.__TESLA_BOT__] = {
         }
     },
     units: 0,
-    vWV: 0,
-    WnW: 0,
+    unitsMax: 0,
+    areaEffect: 0,
     radius: 38,
     life: 3000,
     speed: [0.1, 0.1],
     loot: [
-        [item.shapeduranium, 4, Mv.shapeduranium],
-        [item.alloys, 4, Mv.alloys]
+        [IID.shapeduranium, 4, Mv.shapeduranium],
+        [IID.alloys, 4, Mv.alloys]
     ],
-    mMW: 0,
-    WnW: 0,
-    mwM: 1,
-    mMNNv: 100,
-    WWv: 100,
-    WNWwM: 40,
-    NMWWm: 50,
+    light: 0,
+    areaEffect: 0,
+    explosion: 1,
+    damageExplosion: 100,
+    damageBuilding: 100,
+    radiusDamage: 40,
+    distDamage: 50,
     damage: [80, 80],
     knockback: 40,
     timelife: ((2 * 8) * 60) * 1000,
     score: 3000
 };
 try {
-    if (VwM !== window.undefined) {
-        VwM.item = item;
-        VwM.nW = nW;
-        VwM.nWW = nWW;
-        VwM.vMW = vMW;
-        VwM.items = items;
-        VwM.VNN = VNN;
-        VwM.Mv = Mv;
-        VwM.object = object;
-        VwM.nnv = nnv;
-        VwM.AREAS = AREAS;
-        VwM.SKILLS = SKILLS;
-        VwM.mvv = mvv;
-        VwM.nNnVn = nNnVn;
-        VwM.VVv = VVv;
-        VwM.AIID = AIID;
-        VwM.BEHAVIOR = BEHAVIOR;
+    if (exports !== window.undefined) {
+        exports.IID = IID;
+        exports.nW = nW;
+        exports.HOUSE = HOUSE;
+        exports.HOUSEID = HOUSEID;
+        exports.items = items;
+        exports.VNN = VNN;
+        exports.Mv = Mv;
+        exports.object = object;
+        exports.nnv = nnv;
+        exports.AREAS = AREAS;
+        exports.SKILLS = SKILLS;
+        exports.KIT = KIT;
+        exports.BRKIT = BRKIT;
+        exports.AI = AI;
+        exports.AIID = AIID;
+        exports.BEHAVIOR = BEHAVIOR;
         for (var nMm = 0; nMm < 3; nMm++) {
             for (var i = 1; i < items.length; i++) {
-                var item = items[i];
-                var recipe = item.detail.recipe;
+                var IID = items[i];
+                var recipe = IID.detail.recipe;
                 if (recipe === window.undefined) continue;
                 for (var j = 0; j < recipe.length; j++) {
                     var wwM = items[recipe[j][0]];
-                    if (j === 0) item.score = 0;
-                    item.score += wwM.score * recipe[j][1];
+                    if (j === 0) IID.score = 0;
+                    IID.score += wwM.score * recipe[j][1];
                     recipe[j][2] = wwM.loot;
                 }
-                item.score = window.Math.floor(item.score / 4);
+                IID.score = window.Math.floor(IID.score / 4);
             }
         }
         for (var i = 0; i < VV.length; i++) {
-            var item = VV[i];
-            var recipe = item.detail.recipe;
+            var IID = VV[i];
+            var recipe = IID.detail.recipe;
             if (recipe === window.undefined) continue;
             for (var j = 0; j < recipe.length; j++) {
                 var wwM = items[recipe[j][0]];
-                if (j === 0) item.score = 0;
-                item.score += wwM.score * recipe[j][1];
+                if (j === 0) IID.score = 0;
+                IID.score += wwM.score * recipe[j][1];
                 recipe[j][2] = wwM.loot;
             }
-            item.score = window.Math.floor(item.score / 4);
+            IID.score = window.Math.floor(IID.score / 4);
         }
     }
 } catch (error) {
     for (var i = 0; i < karma.length; i++) karma[i].W = CanvasUtils.loadImage(karma[i].src, karma[i].W);
-    NWVnn = window.JSON.parse(window.JSON.stringify(items));
-    NWwVV = window.JSON.parse(window.JSON.stringify(VNw));
-    mwwnn = window.JSON.parse(window.JSON.stringify(VNN));
+    INVENTORY2 = window.JSON.parse(window.JSON.stringify(items));
+    PARTICLES2 = window.JSON.parse(window.JSON.stringify(VNw));
+    LOOT2 = window.JSON.parse(window.JSON.stringify(VNN));
     ENTITIES2 = window.JSON.parse(window.JSON.stringify(ENTITIES));
-    MMNMn = window.JSON.parse(window.JSON.stringify(nnv));
-    vNNVn = window.JSON.parse(window.JSON.stringify(NWWWW));
-    VNVwN = window.JSON.parse(window.JSON.stringify(VVv));
+    RESOURCES2 = window.JSON.parse(window.JSON.stringify(nnv));
+    LIGHTFIRE2 = window.JSON.parse(window.JSON.stringify(NWWWW));
+    AI2 = window.JSON.parse(window.JSON.stringify(AI));
 
-    function MMNMN(vNWwm, wnvNw, NvV, nWnNV) {
+    function replaceStringInObject(vNWwm, wnvNw, NvV, nWnNV) {
         for (var WmVNW in wnvNw) {
             var MmmVN = wnvNw[WmVNW];
             var nVW = vNWwm[WmVNW];
@@ -42202,19 +42207,19 @@ try {
                 vNWwm[WmVNW] = MmmVN;
                 continue;
             }
-            if (typeof nVW === "object") MMNMN(nVW, MmmVN, NvV, nWnNV);
+            if (typeof nVW === "object") replaceStringInObject(nVW, MmmVN, NvV, nWnNV);
             else if (typeof nVW === "string") vNWwm[WmVNW] = nVW.replace(NvV, nWnNV);
         }
     };
-    MMNMN(MMNMn, nnv, "day", "night");
-    MMNMN(NWVnn, items, "day", "night");
-    MMNMN(NWwVV, VNw, "day", "night");
-    MMNMN(mwwnn, VNN, "day", "night");
-    MMNMN(ENTITIES2, ENTITIES, "day", "night");
-    MMNMN(vNNVn, NWWWW, "day", "night");
-    MMNMN(VNVwN, VVv, "day", "night");
+    replaceStringInObject(RESOURCES2, nnv, "day", "night");
+    replaceStringInObject(INVENTORY2, items, "day", "night");
+    replaceStringInObject(PARTICLES2, VNw, "day", "night");
+    replaceStringInObject(LOOT2, VNN, "day", "night");
+    replaceStringInObject(ENTITIES2, ENTITIES, "day", "night");
+    replaceStringInObject(LIGHTFIRE2, NWWWW, "day", "night");
+    replaceStringInObject(AI2, AI, "day", "night");
 
-    function VnwWm(vNWwm) {
+    function updateClotheInfo(vNWwm) {
         for (var WmVNW in vNWwm) {
             var nVW = vNWwm[WmVNW];
             if ((typeof nVW === "object") && (nVW !== null)) {
@@ -42227,11 +42232,11 @@ try {
                     wVn.rad = nVW.rad;
                     wVn.warm = nVW.warm;
                     wVn.NVw = nVW.NVw;
-                } else VnwWm(nVW);
+                } else updateClotheInfo(nVW);
             }
         }
     };
-    VnwWm(items);
+    updateClotheInfo(items);
 }
 
 
@@ -42242,12 +42247,12 @@ var AudioManager = (function() {
     var mvnmN = 0;
     var mWWVV = 0;
     var vmwnm = 0;
-    var mvVWW = 0.45;
+    var musicVolume = 0.45;
     var VNWVM = 0;
     var NNwwM = 0;
     AudioUtils.audio.end = new AudioUtils.Sound("audio/end.mp3", 0, true);
     AudioUtils.audio.title = new AudioUtils.Sound("audio/title.mp3", 0, true);
-    AudioUtils.audio.vwMNW = new AudioUtils.Sound("audio/geiger.mp3", 0, true);
+    AudioUtils.audio.geiger = new AudioUtils.Sound("audio/geiger.mp3", 0, true);
     AudioUtils.audio.NvWWW = new AudioUtils.Sound("audio/ambient1.mp3", 0, true);
     AudioUtils.audio.mWNVV = new AudioUtils.Sound("audio/ambient2.mp3", 0, true);
     AudioUtils.audio.MWvmM = new AudioUtils.Sound("audio/ambient3.mp3", 0, true);
@@ -42272,7 +42277,7 @@ var AudioManager = (function() {
     AudioUtils._fx.button = new AudioUtils.Sound("audio/button.mp3", 1, false, 1);
     AudioUtils._fx.wWwnM = new AudioUtils.Sound("audio/throwLoot.mp3", 1, false, 1);
     AudioUtils._fx.nNwmw = new AudioUtils.Sound("audio/levelup.mp3", 1, false, 1);
-    AudioUtils._fx.mwM = new AudioUtils.Sound("audio/explosion.mp3", 1, false, 1);
+    AudioUtils._fx.explosion = new AudioUtils.Sound("audio/explosion.mp3", 1, false, 1);
     AudioUtils._fx.NwMWW = new AudioUtils.Sound("audio/zipper-on.mp3", 0.7, false, 1);
     AudioUtils._fx.NwmVN = new AudioUtils.Sound("audio/zipper-off.mp3", 0.7, false, 1);
     AudioUtils._fx.WmnwN = [new AudioUtils.Sound("audio/eat-1s-0.mp3", 1, false, 1), new AudioUtils.Sound("audio/eat-1s-1.mp3", 1, false, 1), new AudioUtils.Sound("audio/eat-1s-2.mp3", 1, false, 1)];
@@ -42305,7 +42310,7 @@ var AudioManager = (function() {
         AudioUtils.loadSound(AudioUtils._fx.craft);
         AudioUtils.loadSound(AudioUtils._fx.button);
         AudioUtils.loadSound(AudioUtils._fx.nNwmw);
-        AudioUtils.loadSound(AudioUtils._fx.mwM);
+        AudioUtils.loadSound(AudioUtils._fx.explosion);
         for (var i = 0; i < AudioUtils._fx.WmnwN.length; i++) AudioUtils.loadSound(AudioUtils._fx.WmnwN[i]);
         for (var i = 1; i < AudioUtils._fx.damage.length; i++) AudioUtils.loadSound(AudioUtils._fx.damage[i]);
         for (var i = 0; i < AudioUtils._fx.shot.length; i++) {
@@ -42323,23 +42328,23 @@ var AudioManager = (function() {
         if (AudioUtils.options.VWVWW === 1) {
             var wmNWn = AudioUtils.options.nNmMV;
             AudioUtils.options.nNmMV = 1;
-            AudioUtils.playSound(AudioUtils.audio.vwMNW);
+            AudioUtils.playSound(AudioUtils.audio.geiger);
             AudioUtils.options.nNmMV = wmNWn;
         }
-        if ((NNwwM !== AudioManager.vwMNW) && (mWWVV === 1)) {
+        if ((NNwwM !== AudioManager.geiger) && (mWWVV === 1)) {
             if (VNWVM === 0) {
                 VNWVM = 1000;
-                var dist = AudioManager.vwMNW - NNwwM;
-                AudioUtils.fadeSound(AudioUtils.audio.vwMNW, 250, dist);
-                NNwwM = AudioManager.vwMNW;
+                var dist = AudioManager.geiger - NNwwM;
+                AudioUtils.fadeSound(AudioUtils.audio.geiger, 250, dist);
+                NNwwM = AudioManager.geiger;
             }
             VNWVM = window.Math.max(0, VNWVM - delta);
         }
         if ((mvnmN === 0) && (mWWVV === 1)) {
-            AudioUtils.fadeSound(wMw[WvwmM], 5000, -mvVWW);
+            AudioUtils.fadeSound(wMw[WvwmM], 5000, -musicVolume);
             WvwmM = (WvwmM + 1) % wMw.length;
             mvnmN = wwwvv[WvwmM] - 5000;
-            AudioUtils.fadeSound(wMw[WvwmM], 5000, mvVWW);
+            AudioUtils.fadeSound(wMw[WvwmM], 5000, musicVolume);
         }
         mvnmN = window.Math.max(0, mvnmN - delta);
     };
@@ -42347,32 +42352,32 @@ var AudioManager = (function() {
     function quitGame() {
         mWWVV = 0;
         vmwnm = 1;
-        AudioUtils.fadeSound(AudioUtils.audio.vwMNW, 250, -NNwwM);
+        AudioUtils.fadeSound(AudioUtils.audio.geiger, 250, -NNwwM);
         NNwwM = 0;
-        AudioManager.vwMNW = 0;
-        AudioUtils.fadeSound(wMw[WvwmM], 500, -mvVWW);
-        AudioUtils.fadeSound(AudioUtils.audio.end, 1000, AudioManager.mvVWW);
+        AudioManager.geiger = 0;
+        AudioUtils.fadeSound(wMw[WvwmM], 500, -musicVolume);
+        AudioUtils.fadeSound(AudioUtils.audio.end, 1000, AudioManager.musicVolume);
     };
 
-    function MWwnM() {
-        if (vmwnm === 0) AudioUtils.fadeSound(AudioUtils.audio.title, 500, -mvVWW);
-        else AudioUtils.fadeSound(AudioUtils.audio.end, 500, -mvVWW);
+    function cutTitleMusic() {
+        if (vmwnm === 0) AudioUtils.fadeSound(AudioUtils.audio.title, 500, -musicVolume);
+        else AudioUtils.fadeSound(AudioUtils.audio.end, 500, -musicVolume);
     };
 
-    function nMvWM() {
+    function startGame() {
         mWWVV = 1;
-        MWwnM();
+        cutTitleMusic();
         if (mvnmN === 0) WvwmM = (WvwmM + 1) % wMw.length;
         mvnmN = wwwvv[WvwmM] - 5000;
-        AudioUtils.fadeSound(wMw[WvwmM], 5000, mvVWW);
+        AudioUtils.fadeSound(wMw[WvwmM], 5000, musicVolume);
     };
     return {
-        nMvWM: nMvWM,
-        quitGame: quitGame,
-        scheduler: scheduler,
-        MWwnM: MWwnM,
-        mvVWW: mvVWW,
-        vwMNW: 0
+        startGame:      startGame,
+        quitGame:       quitGame,
+        scheduler:      scheduler,
+        cutTitleMusic:  cutTitleMusic,
+        musicVolume:    musicVolume,
+        geiger:         0
     };
 })();
 try {
