@@ -1408,14 +1408,14 @@ function onBoughtSkill(IID) {
 
 function onStartCraft(Wn) {
     if ((Game.MvN() === 1) && (World.PLAYER.craftArea === 0))
-        World.buildCraftList(AREAS.own);
+        World.buildCraftList(AREAS.__PLAYER__);
     var delay = items[Wn].detail.timer[0] * World.PLAYER.craftFactor;
     World.PLAYER.crafting = window.Date.now() + delay;
     World.PLAYER.craftingMax = delay;
 };
 
 function onLostBuilding() {
-    if (((((Game.MvN() === 1) && (World.PLAYER.vwMWn !== -1)) && (World.PLAYER.craftCategory === -1)) && (World.PLAYER.craftArea !== AREAS.own)) || (World.PLAYER.isInChest === 1))
+    if (((((Game.MvN() === 1) && (World.PLAYER.vwMWn !== -1)) && (World.PLAYER.craftCategory === -1)) && (World.PLAYER.craftArea !== AREAS.__PLAYER__)) || (World.PLAYER.isInChest === 1))
         Game.closebutt();
 };
 
@@ -1442,7 +1442,7 @@ function onOpenBuilding(unit8) {
         }
     }
     craft.pos = unit8[3];
-    if (((((((area === AREAS.smelter) || (area === AREAS.firepart)) || (area === AREAS.composter)) || (area === AREAS.bbq)) || (area === AREAS.teslabench)) || (area === AREAS.agitator)) || (area === AREAS.extractor))
+    if (((((((area === AREAS.__SMELTER__) || (area === AREAS.__FIRE__)) || (area === AREAS.__COMPOST__)) || (area === AREAS.__BBQ__)) || (area === AREAS.__TESLA__)) || (area === AREAS.__AGITATOR__)) || (area === AREAS.__EXTRACTOR__))
         craft.fuel = unit8[9];
     else
         craft.fuel = -1;
@@ -2851,7 +2851,7 @@ var World = (function() {
     };
 
     function buildCraftList(area) {
-        if (area === AREAS.own) {
+        if (area === AREAS.__PLAYER__) {
             World.releaseBuilding();
             PLAYER.building.fuel = -1;
         }
@@ -8015,8 +8015,8 @@ var Home = (function() {
         nnn(__ENTITIE_RESOURCES_DOWN__, 200, 0, 127, object.STONE, 3);
         nnn(__ENTITIE_RESOURCES_TOP__, 400, 100, 127, object.ORANGETREE, 2);
         nnn(__ENTITIE_RESOURCES_STOP__, 100, 100, 127, object.LEAFTREE, 0);
-        Vnvmv(__ENTITIE_BUILD_GROUND__, 900, 500, 0, 33, IID.smelter);
-        Vnvmv(__ENTITIE_BUILD_DOWN__, 800, 400, 1, 1, IID.workbench);
+        Vnvmv(__ENTITIE_BUILD_GROUND__, 900, 500, 0, 33, IID.__SMELTER__);
+        Vnvmv(__ENTITIE_BUILD_DOWN__, 800, 400, 1, 1, IID.__WORKBENCH__);
         nnn(__ENTITIE_RESOURCES_STOP__, 1100, 300, 10, object.LEAFTREE, 1);
         nnn(__ENTITIE_RESOURCES_STOP__, 800, 200, 127, object.LEAFTREE, 2);
         nnn(__ENTITIE_RESOURCES_STOP__, 700, 100, 127, object.LEAFTREE, 3);
@@ -9130,18 +9130,18 @@ var Game = (function() {
         wnV[SKILLS.__TOOL__] = GUI.createButton(42, 42, ["img/tool-button-out.png", "img/tool-button-in.png", "img/tool-button-click.png"]);
         wnV[SKILLS.__WEAPON__] = GUI.createButton(42, 42, ["img/weapon-button-out.png", "img/weapon-button-in.png", "img/weapon-button-click.png"]);
         wnV[SKILLS.__LOGIC__] = GUI.createButton(42, 42, ["img/cable-button-out.png", "img/cable-button-in.png", "img/cable-button-click.png"]);
-        craftList[AREAS.own] = GUI.createButton(42, 42, ["img/own-button-out.png", "img/own-button-in.png", "img/own-button-click.png"]);
-        craftList[AREAS.firepart] = GUI.createButton(42, 42, ["img/fire-button-out.png", "img/fire-button-in.png", "img/fire-button-click.png"]);
-        craftList[AREAS.workbench] = GUI.createButton(42, 42, ["img/workbench1-button-out.png", "img/workbench1-button-in.png", "img/workbench1-button-click.png"]);
-        craftList[AREAS.bbq] = GUI.createButton(42, 42, ["img/bbq-button-out.png", "img/bbq-button-in.png", "img/bbq-button-click.png"]);
-        craftList[AREAS.composter] = GUI.createButton(42, 42, ["img/composter-button-out.png", "img/composter-button-in.png", "img/composter-button-click.png"]);
-        craftList[AREAS.weavingmachine] = GUI.createButton(42, 42, ["img/weaving-machine-button-out.png", "img/weaving-machine-button-in.png", "img/weaving-machine-button-click.png"]);
-        craftList[AREAS.weldingmachine] = GUI.createButton(42, 42, ["img/welding-machine-button-out.png", "img/welding-machine-button-in.png", "img/welding-machine-button-click.png"]);
-        craftList[AREAS.researchbench] = GUI.createButton(42, 42, ["img/workbench2-button-out.png", "img/workbench2-button-in.png", "img/workbench2-button-click.png"]);
-        craftList[AREAS.smelter] = GUI.createButton(42, 42, ["img/smelter-button-out.png", "img/smelter-button-in.png", "img/smelter-button-click.png"]);
-        craftList[AREAS.teslabench] = GUI.createButton(42, 42, ["img/workbench3-button-out.png", "img/workbench3-button-in.png", "img/workbench3-button-click.png"]);
-        craftList[AREAS.agitator] = GUI.createButton(42, 42, ["img/agitator-button-out.png", "img/agitator-button-in.png", "img/agitator-button-click.png"]);
-        craftList[AREAS.extractor] = GUI.createButton(42, 42, ["img/extractor-button-out.png", "img/extractor-button-in.png", "img/extractor-button-click.png"]);
+        craftList[AREAS.__PLAYER__] = GUI.createButton(42, 42, ["img/own-button-out.png", "img/own-button-in.png", "img/own-button-click.png"]);
+        craftList[AREAS.__FIRE__] = GUI.createButton(42, 42, ["img/fire-button-out.png", "img/fire-button-in.png", "img/fire-button-click.png"]);
+        craftList[AREAS.__WORKBENCH__] = GUI.createButton(42, 42, ["img/workbench1-button-out.png", "img/workbench1-button-in.png", "img/workbench1-button-click.png"]);
+        craftList[AREAS.__BBQ__] = GUI.createButton(42, 42, ["img/bbq-button-out.png", "img/bbq-button-in.png", "img/bbq-button-click.png"]);
+        craftList[AREAS.__COMPOST__] = GUI.createButton(42, 42, ["img/composter-button-out.png", "img/composter-button-in.png", "img/composter-button-click.png"]);
+        craftList[AREAS.__WEAVING__] = GUI.createButton(42, 42, ["img/weaving-machine-button-out.png", "img/weaving-machine-button-in.png", "img/weaving-machine-button-click.png"]);
+        craftList[AREAS.__WELDING_MACHINE__] = GUI.createButton(42, 42, ["img/welding-machine-button-out.png", "img/welding-machine-button-in.png", "img/welding-machine-button-click.png"]);
+        craftList[AREAS.__WORKBENCH2__] = GUI.createButton(42, 42, ["img/workbench2-button-out.png", "img/workbench2-button-in.png", "img/workbench2-button-click.png"]);
+        craftList[AREAS.__SMELTER__] = GUI.createButton(42, 42, ["img/smelter-button-out.png", "img/smelter-button-in.png", "img/smelter-button-click.png"]);
+        craftList[AREAS.__TESLA__] = GUI.createButton(42, 42, ["img/workbench3-button-out.png", "img/workbench3-button-in.png", "img/workbench3-button-click.png"]);
+        craftList[AREAS.__AGITATOR__] = GUI.createButton(42, 42, ["img/agitator-button-out.png", "img/agitator-button-in.png", "img/agitator-button-click.png"]);
+        craftList[AREAS.__EXTRACTOR__] = GUI.createButton(42, 42, ["img/extractor-button-out.png", "img/extractor-button-in.png", "img/extractor-button-click.png"]);
         gauges = GUI.createBackground(255, 174, "img/profile-player2.png");
         settingbox = GUI.createBackground(269, 267, "img/settings-box.png");
         chestbox = GUI.createBackground(162, 165, "img/chest-box4.png");
@@ -9422,8 +9422,8 @@ var Game = (function() {
                 if (World.PLAYER.craftCategory === -1) {
                     if ((World.PLAYER.crafting === 0) || (World.PLAYER.isInBuilding === 1)) craftbutt.trigger();
                     else cancelbutt.trigger();
-                    if ((((World.PLAYER.craftArea === AREAS.firepart) || (World.PLAYER.craftArea === AREAS.bbq)) || (World.PLAYER.craftArea === AREAS.composter)) && (World.PLAYER.building.fuel !== 255)) VWNWV.trigger();
-                    else if ((((World.PLAYER.craftArea === AREAS.smelter) || (World.PLAYER.craftArea === AREAS.extractor)) || (World.PLAYER.craftArea === AREAS.agitator)) && (World.PLAYER.building.fuel !== 255)) WmWwW.trigger();
+                    if ((((World.PLAYER.craftArea === AREAS.__FIRE__) || (World.PLAYER.craftArea === AREAS.__BBQ__)) || (World.PLAYER.craftArea === AREAS.__COMPOST__)) && (World.PLAYER.building.fuel !== 255)) VWNWV.trigger();
+                    else if ((((World.PLAYER.craftArea === AREAS.__SMELTER__) || (World.PLAYER.craftArea === AREAS.__EXTRACTOR__)) || (World.PLAYER.craftArea === AREAS.__AGITATOR__)) && (World.PLAYER.building.fuel !== 255)) WmWwW.trigger();
                 } else unlockbuttout.trigger();
                 for (var i = 0; i < wnV.length; i++) wnV[i].trigger();
                 for (i = 0; i < craftList.length; i++) {
@@ -9524,7 +9524,7 @@ var Game = (function() {
                     nVN();
                     NmW = 1;
                     isCraftOpen = 1;
-                    World.buildCraftList(AREAS.own);
+                    World.buildCraftList(AREAS.__PLAYER__);
                     AudioUtils.playFx(AudioUtils._fx.open, 1, 0);
                     return;
                 } else {
@@ -9746,28 +9746,28 @@ var Game = (function() {
                 } else if (wnV[SKILLS.__WEAPON__].trigger() === 1) {
                     World.buildSkillList(SKILLS.__WEAPON__);
                     AudioUtils.playFx(AudioUtils._fx.button, 1, 0);
-                } else if (craftList[AREAS.own].trigger() === 1) {
-                    World.buildCraftList(AREAS.own);
+                } else if (craftList[AREAS.__PLAYER__].trigger() === 1) {
+                    World.buildCraftList(AREAS.__PLAYER__);
                     AudioUtils.playFx(AudioUtils._fx.button, 1, 0);
-                } else if (((craftList[AREAS.firepart].trigger() === 1) || (craftList[AREAS.bbq].trigger() === 1)) || (craftList[AREAS.composter].trigger() === 1)) {
+                } else if (((craftList[AREAS.__FIRE__].trigger() === 1) || (craftList[AREAS.__BBQ__].trigger() === 1)) || (craftList[AREAS.__COMPOST__].trigger() === 1)) {
                     Client.sendPacket(window.JSON.stringify([World.PLAYER.packetId, World.PLAYER.buildingId, World.PLAYER.buildingPid]));
                     AudioUtils.playFx(AudioUtils._fx.button, 1, 0);
-                } else if (craftList[AREAS.workbench].trigger() === 1) {
+                } else if (craftList[AREAS.__WORKBENCH__].trigger() === 1) {
                     Client.sendPacket(window.JSON.stringify([World.PLAYER.packetId, World.PLAYER.buildingId, World.PLAYER.buildingPid]));
                     AudioUtils.playFx(AudioUtils._fx.button, 1, 0);
-                } else if (craftList[AREAS.weldingmachine].trigger() === 1) {
+                } else if (craftList[AREAS.__WELDING_MACHINE__].trigger() === 1) {
                     Client.sendPacket(window.JSON.stringify([World.PLAYER.packetId, World.PLAYER.buildingId, World.PLAYER.buildingPid]));
                     AudioUtils.playFx(AudioUtils._fx.button, 1, 0);
-                } else if (craftList[AREAS.weavingmachine].trigger() === 1) {
+                } else if (craftList[AREAS.__WEAVING__].trigger() === 1) {
                     Client.sendPacket(window.JSON.stringify([World.PLAYER.packetId, World.PLAYER.buildingId, World.PLAYER.buildingPid]));
                     AudioUtils.playFx(AudioUtils._fx.button, 1, 0);
-                } else if (craftList[AREAS.researchbench].trigger() === 1) {
+                } else if (craftList[AREAS.__WORKBENCH2__].trigger() === 1) {
                     Client.sendPacket(window.JSON.stringify([World.PLAYER.packetId, World.PLAYER.buildingId, World.PLAYER.buildingPid]));
                     AudioUtils.playFx(AudioUtils._fx.button, 1, 0);
-                } else if (craftList[AREAS.teslabench].trigger() === 1) {
+                } else if (craftList[AREAS.__TESLA__].trigger() === 1) {
                     Client.sendPacket(window.JSON.stringify([World.PLAYER.packetId, World.PLAYER.buildingId, World.PLAYER.buildingPid]));
                     AudioUtils.playFx(AudioUtils._fx.button, 1, 0);
-                } else if (((craftList[AREAS.smelter].trigger() === 1) || (craftList[AREAS.extractor].trigger() === 1)) || (craftList[AREAS.agitator].trigger() === 1)) {
+                } else if (((craftList[AREAS.__SMELTER__].trigger() === 1) || (craftList[AREAS.__EXTRACTOR__].trigger() === 1)) || (craftList[AREAS.__AGITATOR__].trigger() === 1)) {
                     Client.sendPacket(window.JSON.stringify([World.PLAYER.packetId, World.PLAYER.buildingId, World.PLAYER.buildingPid]));
                     AudioUtils.playFx(AudioUtils._fx.button, 1, 0);
                 } else {
@@ -9792,19 +9792,19 @@ var Game = (function() {
                                 return;
                             }
                         }
-                        if (((World.PLAYER.craftArea === AREAS.firepart) || (World.PLAYER.craftArea === AREAS.bbq)) || (World.PLAYER.craftArea === AREAS.composter)) {
+                        if (((World.PLAYER.craftArea === AREAS.__FIRE__) || (World.PLAYER.craftArea === AREAS.__BBQ__)) || (World.PLAYER.craftArea === AREAS.__COMPOST__)) {
                             if ((World.PLAYER.building.fuel !== 255) && (VWNWV.trigger() === 1)) {
                                 Client.sendPacket(window.JSON.stringify([24]));
                                 AudioUtils.playFx(AudioUtils._fx.button, 1, 0);
                                 return;
                             }
-                        } else if (((World.PLAYER.craftArea === AREAS.smelter) || (World.PLAYER.craftArea === AREAS.extractor)) || (World.PLAYER.craftArea === AREAS.agitator)) {
+                        } else if (((World.PLAYER.craftArea === AREAS.__SMELTER__) || (World.PLAYER.craftArea === AREAS.__EXTRACTOR__)) || (World.PLAYER.craftArea === AREAS.__AGITATOR__)) {
                             if ((World.PLAYER.building.fuel !== 255) && (WmWwW.trigger() === 1)) {
                                 Client.sendPacket(window.JSON.stringify([24]));
                                 AudioUtils.playFx(AudioUtils._fx.button, 1, 0);
                                 return;
                             }
-                        } else if (World.PLAYER.craftArea === AREAS.teslabench) {
+                        } else if (World.PLAYER.craftArea === AREAS.__TESLA__) {
                             if ((World.PLAYER.building.fuel !== 255) && (WwMvM.trigger() === 1)) {
                                 Client.sendPacket(window.JSON.stringify([24]));
                                 AudioUtils.playFx(AudioUtils._fx.button, 1, 0);
@@ -10027,8 +10027,8 @@ var Game = (function() {
                 }
                 if (World.PLAYER.isInBuilding === 1) {
                     for (i = 0; i < World.PLAYER.building.len; i++) queue[i].trigger();
-                    if ((((World.PLAYER.craftArea === AREAS.firepart) || (World.PLAYER.craftArea === AREAS.bbq)) || (World.PLAYER.craftArea === AREAS.composter)) && (World.PLAYER.building.fuel !== 255)) VWNWV.trigger();
-                    else if ((((World.PLAYER.craftArea === AREAS.smelter) || (World.PLAYER.craftArea === AREAS.extractor)) || (World.PLAYER.craftArea === AREAS.agitator)) && (World.PLAYER.building.fuel !== 255)) WmWwW.trigger();
+                    if ((((World.PLAYER.craftArea === AREAS.__FIRE__) || (World.PLAYER.craftArea === AREAS.__BBQ__)) || (World.PLAYER.craftArea === AREAS.__COMPOST__)) && (World.PLAYER.building.fuel !== 255)) VWNWV.trigger();
+                    else if ((((World.PLAYER.craftArea === AREAS.__SMELTER__) || (World.PLAYER.craftArea === AREAS.__EXTRACTOR__)) || (World.PLAYER.craftArea === AREAS.__AGITATOR__)) && (World.PLAYER.building.fuel !== 255)) WmWwW.trigger();
                 }
                 len = World.PLAYER.toolsLen;
                 for (i = 0; i < len; i++) tools[i].trigger();
@@ -10180,7 +10180,7 @@ var Game = (function() {
                     nVN();
                     NmW = 1;
                     isCraftOpen = 1;
-                    World.buildCraftList(AREAS.own);
+                    World.buildCraftList(AREAS.__PLAYER__);
                     AudioUtils.playFx(AudioUtils._fx.open, 1, 0);
                 } else {
                     AudioUtils.playFx(AudioUtils._fx.open, 1, 0);
@@ -11482,7 +11482,7 @@ var Editor = (function() {
                     }]
                 };
             }
-            var vnvwV = items[IID.MMnVW].subtype;
+            var vnvwV = items[IID.__FURNITURE__].subtype;
             for (var i = 0; i < vnvwV.length; i++) {
                 var IID = vnvwV[i];
                 IID.img = {
@@ -11786,7 +11786,7 @@ var Editor = (function() {
             NWw = 0;
             for (var i = 1; i < items.length; i++) {
                 var IID = items[i];
-                if ((((IID.id === IID.landmine) || (IID.id === IID.c4bomb)) || (IID.id === IID.woodespike)) || (IID.id === IID.dynamite)) {
+                if ((((IID.id === IID.__LANDMINE__) || (IID.id === IID.__C4__)) || (IID.id === IID.__WOOD__espike)) || (IID.id === IID.__DYNAMITE__)) {
                     Wnw[NWw].setImages(IID.img.src, IID.img.W);
                     Wnw[NWw].vmM = IID.id;
                     NWw++;
@@ -11810,11 +11810,11 @@ var Editor = (function() {
         if (mapfurniturebutton.trigger() === 1) {
             vnm = 1;
             NWw = 0;
-            var vnvwV = items[IID.MMnVW].subtype;
+            var vnvwV = items[IID.__FURNITURE__].subtype;
             for (var i = 0; i < vnvwV.length; i++) {
                 var IID = vnvwV[i];
                 Wnw[NWw].setImages(IID.img.src, IID.img.W);
-                Wnw[NWw].vmM = IID.MMnVW;
+                Wnw[NWw].vmM = IID.__FURNITURE__;
                 Wnw[NWw].nVWnM = i;
                 NWw++;
             }
@@ -11825,7 +11825,7 @@ var Editor = (function() {
             NWw = 0;
             for (var i = 1; i < items.length; i++) {
                 var IID = items[i];
-                if (((((IID.wall === 1) || (IID.lowWall === 1)) || (IID.door === 1)) || (IID.chest === 1)) || (IID.fridge === 1)) {
+                if (((((IID.wall === 1) || (IID.lowWall === 1)) || (IID.door === 1)) || (IID.__CHEST__ === 1)) || (IID.__FRIDGE__ === 1)) {
                     Wnw[NWw].setImages(IID.img.src, IID.img.W);
                     Wnw[NWw].vmM = IID.id;
                     NWw++;
@@ -14253,8 +14253,8 @@ try {
                 var amount = World.PLAYER.building.fuel;
                 if (amount >= 0) {
                     var wm;
-                    if (((area === AREAS.smelter) || (area === AREAS.extractor)) || (area === AREAS.agitator)) wm = WmWwW;
-                    else if (area === AREAS.teslabench) wm = WwMvM;
+                    if (((area === AREAS.__SMELTER__) || (area === AREAS.__EXTRACTOR__)) || (area === AREAS.__AGITATOR__)) wm = WmWwW;
+                    else if (area === AREAS.__TESLA__) wm = WwMvM;
                     else wm = VWNWV;
                     wm.pos.x = WX + (532 * scaleby);
                     wm.pos.y = WY + (153 * scaleby);
@@ -17069,42 +17069,44 @@ var __RADIATION__ = 2;
 
 var COUNTER = 0;
 var AREAS = {
-    own: COUNTER++,
-    firepart: COUNTER++,
-    workbench: COUNTER++,
-    bbq: COUNTER++,
-    weavingmachine: COUNTER++,
-    researchbench: COUNTER++,
-    smelter: COUNTER++,
-    teslabench: COUNTER++,
-    composter: COUNTER++,
-    agitator: COUNTER++,
-    extractor: COUNTER++,
-    weldingmachine: COUNTER++
+    __PLAYER__:             COUNTER++,
+    __FIRE__:               COUNTER++,
+    __WORKBENCH__:          COUNTER++,
+    __BBQ__:                COUNTER++,
+    __WEAVING__:            COUNTER++,
+    __WORKBENCH2__:         COUNTER++,
+    __SMELTER__:            COUNTER++,
+    __TESLA__:              COUNTER++,
+    __COMPOSTER__:          COUNTER++,
+    __AGITATOR__:           COUNTER++,
+    __EXTRACTOR__:          COUNTER++,
+    __WELDING_MACHINE__:    COUNTER++
 };
+
 COUNTER = 0;
 var SOUNDID = {
-    __NO_SOUND__: COUNTER++,
-    wood: COUNTER++,
-    stone: COUNTER++,
-    stone2: COUNTER++,
-    metal: COUNTER++,
-    wooddes: COUNTER++,
-    stonedes: COUNTER++,
-    metaldes: COUNTER++,
-    pillow: COUNTER++,
-    pillowdes: COUNTER++
+    __NO_SOUND__:           COUNTER++,
+    __WOOD_IMPACT__:        COUNTER++,
+    __STONE_IMPACT__:       COUNTER++,
+    __STONE_IMPACT_2__:     COUNTER++,
+    __STEEL_IMPACT__:       COUNTER++,
+    __WOOD_DESTROY__:       COUNTER++,
+    __STONE_DESTROY__:      COUNTER++,
+    __STEEL_DESTROY__:      COUNTER++,
+    __PILLOW_IMPACT__:      COUNTER++,
+    __PILLOW_DESTROY__:     COUNTER++
 };
+
 var SOUND = [];
-SOUND[SOUNDID.wood] = "audio/wood-impact.mp3";
-SOUND[SOUNDID.stone] = "audio/stone-impact2.mp3";
-SOUND[SOUNDID.stone2] = "audio/stone-impact.mp3";
-SOUND[SOUNDID.metal] = "audio/metal-impact2.mp3";
-SOUND[SOUNDID.pillow] = "audio/pillow-impact.mp3";
-SOUND[SOUNDID.wooddes] = "audio/wood-destroy3.mp3";
-SOUND[SOUNDID.stonedes] = "audio/stone-destroy.mp3";
-SOUND[SOUNDID.metaldes] = "audio/metal-destroy2.mp3";
-SOUND[SOUNDID.pillowdes] = "audio/pillow-destroy.mp3";
+SOUND[SOUNDID.__WOOD_IMPACT__]      = "audio/wood-impact.mp3";
+SOUND[SOUNDID.__STONE_IMPACT__]     = "audio/stone-impact2.mp3";
+SOUND[SOUNDID.__STONE_IMPACT_2__]   = "audio/stone-impact.mp3";
+SOUND[SOUNDID.__STEEL_IMPACT__]     = "audio/metal-impact2.mp3";
+SOUND[SOUNDID.__PILLOW_IMPACT__]    = "audio/pillow-impact-impact.mp3";
+SOUND[SOUNDID.__WOOD_DESTROY__]     = "audio/wood-destroy3.mp3";
+SOUND[SOUNDID.__STONE_DESTROY__]    = "audio/stone-destroy.mp3";
+SOUND[SOUNDID.__STEEL_DESTROY__]    = "audio/metal-destroy2.mp3";
+SOUND[SOUNDID.__PILLOW_DESTROY__]   = "audio/pillow-impact-destroy.mp3";
 
 var SOUND_LENGTH = SOUND.length;
 
@@ -17146,176 +17148,176 @@ var SKILLS = {
 
 COUNTER = 1;
 var IID = {
-    wood: COUNTER++,
-    stone: COUNTER++,
-    steel: COUNTER++,
-    animalfat: COUNTER++,
-    animaltendon: COUNTER++,
-    string: COUNTER++,
-    leather: COUNTER++,
-    shapedmetal: COUNTER++,
-    rawsteak: COUNTER++,
-    cookedsteak: COUNTER++,
-    rottensteak: COUNTER++,
-    orange: COUNTER++,
-    rottenorange: COUNTER++,
-    seedorange: COUNTER++,
-    hachet: COUNTER++,
-    stonepickaxe: COUNTER++,
-    steelpickaxe: COUNTER++,
-    stoneaxe: COUNTER++,
-    workbench: COUNTER++,
-    spear: COUNTER++,
-    bow: COUNTER++,
-    pistol: COUNTER++,
-    deserteagle: COUNTER++,
-    shotgun: COUNTER++,
-    ak47: COUNTER++,
-    sniper: COUNTER++,
-    woodenwall: COUNTER++,
-    stonewall: COUNTER++,
-    steelwall: COUNTER++,
-    wooddoor: COUNTER++,
-    stonedoor: COUNTER++,
-    steeldoor: COUNTER++,
-    campfire: COUNTER++,
-    bullet9mm: COUNTER++,
-    bulletshotgun: COUNTER++,
-    sniperbullet: COUNTER++,
-    medkit: COUNTER++,
-    bandage: COUNTER++,
-    soda: COUNTER++,
-    mp5: COUNTER++,
-    headscarf: COUNTER++,
-    chapka: COUNTER++,
-    coat: COUNTER++,
-    gazmask: COUNTER++,
-    gazprotection: COUNTER++,
-    radiationsuit: COUNTER++,
-    woodarrow: COUNTER++,
-    campfirebbq: COUNTER++,
-    smelter: COUNTER++,
-    wooddoor1: COUNTER++,
-    stonedoor1: COUNTER++,
-    steeldoor1: COUNTER++,
-    sulfur: COUNTER++,
-    shapeduranium: COUNTER++,
-    researchbench: COUNTER++,
-    uranium: COUNTER++,
-    weavingmachine: COUNTER++,
-    gasoline: COUNTER++,
-    sulfurpickaxe: COUNTER++,
-    chest: COUNTER++,
-    fridge: COUNTER++,
-    woodfloor1: COUNTER++,
-    hammer: COUNTER++,
-    sleepingbag: COUNTER++,
-    repairhammer: COUNTER++,
-    nails: COUNTER++,
-    woodfloor2: COUNTER++,
-    smallwoodwall: COUNTER++,
-    smallstonewall: COUNTER++,
-    smallsteelwall: COUNTER++,
-    MMnVW: COUNTER++,
-    tomatosoup: COUNTER++,
-    syringe: COUNTER++,
-    chemicalcomponent: COUNTER++,
-    radway: COUNTER++,
-    tomatoseed: COUNTER++,
-    tomato: COUNTER++,
-    rottentomato: COUNTER++,
-    can: COUNTER++,
-    crossbow: COUNTER++,
-    crossarrow: COUNTER++,
-    nailgun: COUNTER++,
-    sawedoff: COUNTER++,
-    stonefloor1: COUNTER++,
-    stonefloor2: COUNTER++,
-    __ROAD__: COUNTER++,
-    chips: COUNTER++,
-    rottenchips: COUNTER++,
-    electronicpart: COUNTER++,
-    junk: COUNTER++,
-    wires: COUNTER++,
-    energycell: COUNTER++,
-    laserpistol: COUNTER++,
-    teslabench: COUNTER++,
-    alloys: COUNTER++,
-    sulfuraxe: COUNTER++,
-    landmine: COUNTER++,
-    dynamite: COUNTER++,
-    c4bomb: COUNTER++,
-    joystic: COUNTER++,
-    composter: COUNTER++,
-    metalhelmet: COUNTER++,
-    weldinghelmet: COUNTER++,
-    gladiatorhelmet: COUNTER++,
-    leatherjacket: COUNTER++,
-    kevlarsuit: COUNTER++,
-    SWATsuit: COUNTER++,
-    protectivesuit: COUNTER++,
-    tesla1: COUNTER++,
-    tesla2: COUNTER++,
-    woodespike: COUNTER++,
-    lasersubmachine: COUNTER++,
-    granade: COUNTER++,
-    superhammer: COUNTER++,
-    ghoulblood: COUNTER++,
-    camouflage: COUNTER++,
-    agitator: COUNTER++,
-    ghouldrug: COUNTER++,
-    mushroom: COUNTER++,
-    mushroom2: COUNTER++,
-    mushroom3: COUNTER++,
-    rottenmushroom1: COUNTER++,
-    rottenmushroom2: COUNTER++,
-    rottenmushroom3: COUNTER++,
-    lapadoine: COUNTER++,
-    lapabot: COUNTER++,
-    smallwire: COUNTER++,
-    pumpkin: COUNTER++,
-    rottenpumpkin: COUNTER++,
-    ghoulseed: COUNTER++,
-    extractor: COUNTER++,
-    antidote: COUNTER++,
-    antidoteflower: COUNTER++,
-    treeseed: COUNTER++,
-    acorn: COUNTER++,
-    rottenacorn: COUNTER++,
-    lasersniper: COUNTER++,
-    halbot: COUNTER++,
-    teslabot: COUNTER++,
-    cable: COUNTER++,
-    cable2: COUNTER++,
-    cable3: COUNTER++,
-    cable4: COUNTER++,
-    switch: COUNTER++,
-    orgate: COUNTER++,
-    andgate: COUNTER++,
-    notgate: COUNTER++,
-    lamp: COUNTER++,
-    cablewall: COUNTER++,
-    autodoor: COUNTER++,
-    platform: COUNTER++,
-    stonecave: COUNTER++,
-    bunkerwall: COUNTER++,
-    mustardfloor: COUNTER++,
-    redfloor: COUNTER++,
-    weldingmachine: COUNTER++,
-    cable4: COUNTER++,
-    __GATE_TIMER__: COUNTER++,
-    xorgate: COUNTER++,
-    skilleye1: COUNTER++,
-    skilleye2: COUNTER++,
-    skilleye3: COUNTER++,
-    builderskill1: COUNTER++,
-    builderskill2: COUNTER++,
-    inventoryskill1: COUNTER++,
-    inventoryskill2: COUNTER++,
-    inventoryskill3: COUNTER++,
-    inventoryskill4: COUNTER++,
-    inventoryskill5: COUNTER++,
-    lightweightskill: COUNTER++
+    __WOOD__: COUNTER++,
+    __STONE__: COUNTER++,
+    __STEEL__: COUNTER++,
+    __ANIMAL_FAT__: COUNTER++,
+    __ANIMAL_TENDON__: COUNTER++,
+    __STRING__: COUNTER++,
+    __LEATHER_BOAR__: COUNTER++,
+    __SHAPED_METAL__: COUNTER++,
+    __RAW_STEAK__: COUNTER++,
+    __COOKED_STEAK__: COUNTER++,
+    __ROTTEN_STEAK__: COUNTER++,
+    __ORANGE__: COUNTER++,
+    __ROTTEN_ORANGE__: COUNTER++,
+    __SEED_ORANGE__: COUNTER++,
+    __HACHET__: COUNTER++,
+    __STONE_PICKAXE__: COUNTER++,
+    __STEEL_PICKAXE__: COUNTER++,
+    __STONE_AXE__: COUNTER++,
+    __WORKBENCH__: COUNTER++,
+    __WOOD_SPEAR__: COUNTER++,
+    __WOOD_BOW__: COUNTER++,
+    __9MM__: COUNTER++,
+    __DESERT_EAGLE__: COUNTER++,
+    __SHOTGUN__: COUNTER++,
+    __AK47__: COUNTER++,
+    __SNIPER__: COUNTER++,
+    __WOOD_WALL__: COUNTER++,
+    __STONE_WALL__: COUNTER++,
+    __STEEL_WALL__: COUNTER++,
+    __WOOD_DOOR__: COUNTER++,
+    __STONE_DOOR__: COUNTER++,
+    __STEEL_DOOR__: COUNTER++,
+    __CAMPFIRE__: COUNTER++,
+    __BULLET_9MM__: COUNTER++,
+    __BULLET_SHOTGUN__: COUNTER++,
+    __BULLET_SNIPER__: COUNTER++,
+    __MEDIKIT__: COUNTER++,
+    __BANDAGE__: COUNTER++,
+    __SODA__: COUNTER++,
+    __MP5__: COUNTER++,
+    __HEADSCARF__: COUNTER++,
+    __CHAPKA__: COUNTER++,
+    __WINTER_COAT__: COUNTER++,
+    __GAZ_MASK__: COUNTER++,
+    __GAZ_PROTECTION__: COUNTER++,
+    __RADIATION_SUIT__: COUNTER++,
+    __WOOD_ARROW__: COUNTER++,
+    __CAMPFIRE_BBQ__:           COUNTER++,
+    __SMELTER__:                COUNTER++,
+    __WOOD_BIGDOOR__:           COUNTER++,
+    __STONE_BIGDOOR__:          COUNTER++,
+    __STEEL_BIGDOOR__:          COUNTER++,
+    __SULFUR__:                 COUNTER++,
+    __SHAPED_URANIUM__:         COUNTER++,
+    __WORKBENCH2__:             COUNTER++,
+    __URANIUM__:                COUNTER++,
+    __WEAVING__:                COUNTER++,
+    __GASOLINE__:               COUNTER++,
+    __SULFUR_PICKAXE__:         COUNTER++,
+    __CHEST__:                  COUNTER++,
+    __FRIDGE__:                 COUNTER++,
+    __WOOD_FLOOR__:             COUNTER++,
+    __HAMMER__:                 COUNTER++,
+    __SLEEPING_BAG__:           COUNTER++,
+    __REPAIR_HAMMER__:          COUNTER++,
+    __NAILS__:                  COUNTER++,
+    __WOODLIGHT_FLOOR__:        COUNTER++,
+    __WOOD_SMALLWALL__:         COUNTER++,
+    __STONE_SMALLWALL__:        COUNTER++,
+    __STEEL_SMALLWALL__:        COUNTER++,
+    __FURNITURE__:              COUNTER++,
+    __TOMATO_SOUP__:            COUNTER++,
+    __SYRINGE__:                COUNTER++,
+    __CHEMICAL_COMPONENT__:     COUNTER++,
+    __RADAWAY__:                COUNTER++,
+    __SEED_TOMATO__:            COUNTER++,
+    __TOMATO__:                 COUNTER++,
+    __ROTTEN_TOMATO__:          COUNTER++,
+    __CAN__:                    COUNTER++,
+    __WOOD_CROSSBOW__:          COUNTER++,
+    __WOOD_CROSSARROW__:        COUNTER++,
+    __NAIL_GUN__:               COUNTER++,
+    __SAWED_OFF_SHOTGUN__:      COUNTER++,
+    __STONE_FLOOR__:            COUNTER++,
+    __TILING_FLOOR__:           COUNTER++,
+    __ROAD__:                   COUNTER++,
+    __CRISPS__:                 COUNTER++,
+    __ROTTEN_CRISPS__:          COUNTER++,
+    __ELECTRONICS__:            COUNTER++,
+    __JUNK__:                   COUNTER++,
+    __WIRE__:                   COUNTER++,
+    __ENERGY_CELLS__:           COUNTER++,
+    __LASER_PISTOL__:           COUNTER++,
+    __TESLA__:                  COUNTER++,
+    __ALLOYS__:                 COUNTER++,
+    __SULFUR_AXE__:             COUNTER++,
+    __LANDMINE__:               COUNTER++,
+    __DYNAMITE__:               COUNTER++,
+    __C4__:                     COUNTER++,
+    __C4_TRIGGER__:             COUNTER++,
+    __COMPOST__:                COUNTER++,
+    __ARMOR_PHYSIC_1__:         COUNTER++,
+    __ARMOR_PHYSIC_2__:         COUNTER++,
+    __ARMOR_PHYSIC_3__:         COUNTER++,
+    __ARMOR_FIRE_1__:           COUNTER++,
+    __ARMOR_FIRE_2__:           COUNTER++,
+    __ARMOR_FIRE_3__:           COUNTER++,
+    __ARMOR_DEMINER__:          COUNTER++,
+    __ARMOR_TESLA_1__:          COUNTER++,
+    __ARMOR_TESLA_2__:          COUNTER++,
+    __WOOD_SPIKE__:             COUNTER++,
+    __LASER_SUBMACHINE__:       COUNTER++,
+    __GRENADE__:                COUNTER++,
+    __SUPER_HAMMER__:           COUNTER++,
+    __GHOUL_BLOOD__:            COUNTER++,
+    __CAMOUFLAGE_GEAR__:        COUNTER++,
+    __AGITATOR__:               COUNTER++,
+    __GHOUL_DRUG__:             COUNTER++,
+    __MUSHROOM1__:              COUNTER++,
+    __MUSHROOM2__:              COUNTER++,
+    __MUSHROOM3__:              COUNTER++,
+    __ROTTEN_MUSHROOM1__:       COUNTER++,
+    __ROTTEN_MUSHROOM2__:       COUNTER++,
+    __ROTTEN_MUSHROOM3__:       COUNTER++,
+    __LAPADONE__:               COUNTER++,
+    __LAPABOT_REPAIR__:         COUNTER++,
+    __SMALL_WIRE__:             COUNTER++,
+    __PUMPKIN__:                COUNTER++,
+    __ROTTEN_PUMPKIN__:         COUNTER++,
+    __SEED_GHOUL__:             COUNTER++,
+    __EXTRACTOR__:              COUNTER++,
+    __ANTIDOTE__:               COUNTER++,
+    __ANTIDOTE_FLOWER__:        COUNTER++,
+    __SEED_TREE__:              COUNTER++,
+    __ACORN__:                  COUNTER++,
+    __ROTTEN_ACORN__:           COUNTER++,
+    __LASER_SNIPER__:           COUNTER++,
+    __HAL_BOT__:                COUNTER++,
+    __TESLA_BOT__:              COUNTER++,
+    __CABLE0__:                 COUNTER++,
+    __CABLE1__:                 COUNTER++,
+    __CABLE2__:                 COUNTER++,
+    __CABLE3__:                 COUNTER++,
+    __SWITCH__:                 COUNTER++,
+    __GATE_OR__:                COUNTER++,
+    __GATE_AND__:               COUNTER++,
+    __GATE_NOT__:               COUNTER++,
+    __LAMP__:                   COUNTER++,
+    __CABLE_WALL__:             COUNTER++,
+    __AUTOMATIC_DOOR__:         COUNTER++,
+    __PLATFORM__:               COUNTER++,
+    __STONE_CAVE__:             COUNTER++,
+    __BUNKER_WALL__:            COUNTER++,
+    __GOLD_FLOOR__:             COUNTER++,
+    __RED_FLOOR__:              COUNTER++,
+    __WELDING_MACHINE__:        COUNTER++,
+    __CABLE4__:                 COUNTER++,
+    __GATE_TIMER__:             COUNTER++,
+    __GATE_XOR__:               COUNTER++,
+    __VISION_1__:               COUNTER++,
+    __VISION_2__:               COUNTER++,
+    __VISION_3__:               COUNTER++,
+    __BUILDER_1__:              COUNTER++,
+    __BUILDER_2__:              COUNTER++,
+    __INV_1__:                  COUNTER++,
+    __INV_2__:                  COUNTER++,
+    __INV_3__:                  COUNTER++,
+    __INV_4__:                  COUNTER++,
+    __INV_5__:                  COUNTER++,
+    __FEATHERWEIGHT__:          COUNTER++
 };
 COUNTER = 0;
 var LOOTID = {
@@ -18512,7 +18514,7 @@ var items = [{
     src: [],
     W: []
 }, {
-    id: IID.wood,
+    id: IID.__WOOD__,
     img: {
         src: ["img/inv-wood-out.png", "img/inv-wood-in.png", "img/inv-wood-click.png"],
         W: [{
@@ -18528,7 +18530,7 @@ var items = [{
     loot: LOOTID.__BIG_WOOD__,
     score: 10
 }, {
-    id: IID.stone,
+    id: IID.__STONE__,
     img: {
         src: ["img/inv-stone-out.png", "img/inv-stone-in.png", "img/inv-stone-click.png"],
         W: [{
@@ -18540,7 +18542,7 @@ var items = [{
         }]
     },
     detail: new Detail("Stone", "Find it on the ground or on the rock.", SKILLS.__MINERAL__, [], 0, [
-        [AREAS.extractor, 80000]
+        [AREAS.__EXTRACTOR__, 80000]
     ]),
     craftStart: 50,
     craftRng: 200,
@@ -18548,7 +18550,7 @@ var items = [{
     loot: LOOTID.__BIG_STONE__,
     score: 14
 }, {
-    id: IID.steel,
+    id: IID.__STEEL__,
     img: {
         src: ["img/inv-steel-out.png", "img/inv-steel-in.png", "img/inv-steel-click.png"],
         W: [{
@@ -18560,7 +18562,7 @@ var items = [{
         }]
     },
     detail: new Detail("Iron", "Melt it on a Firepit or a Smelter", SKILLS.__MINERAL__, [], 0, [
-        [AREAS.extractor, 120000]
+        [AREAS.__EXTRACTOR__, 120000]
     ]),
     craftStart: 4,
     craftRng: 8,
@@ -18568,7 +18570,7 @@ var items = [{
     loot: LOOTID.__STEEL__,
     score: 28
 }, {
-    id: IID.animalfat,
+    id: IID.__ANIMAL_FAT__,
     img: {
         src: ["img/inv-animal-fat-out.png", "img/inv-animal-fat-in.png", "img/inv-animal-fat-click.png"],
         W: [{
@@ -18584,7 +18586,7 @@ var items = [{
     loot: LOOTID.__ANIMAL_FAT__,
     score: 32
 }, {
-    id: IID.animaltendon,
+    id: IID.__ANIMAL_TENDON__,
     img: {
         src: ["img/inv-animal-tendon-out.png", "img/inv-animal-tendon-in.png", "img/inv-animal-tendon-click.png"],
         W: [{
@@ -18600,7 +18602,7 @@ var items = [{
     loot: LOOTID.__ANIMAL_TENDON__,
     score: 100
 }, {
-    id: IID.string,
+    id: IID.__STRING__,
     img: {
         src: ["img/inv-string-out.png", "img/inv-string-in.png", "img/inv-string-click.png"],
         W: [{
@@ -18612,14 +18614,14 @@ var items = [{
         }]
     },
     detail: new Detail("String", "Useful to craft many items.", SKILLS.__SURVIVAL__, [
-        [IID.animaltendon, 2]
+        [IID.__ANIMAL_TENDON__, 2]
     ], 1, [
-        [AREAS.workbench, 20000]
+        [AREAS.__WORKBENCH__, 20000]
     ]),
     stack: 255,
     loot: LOOTID.__STRING__
 }, {
-    id: IID.leather,
+    id: IID.__LEATHER_BOAR__,
     img: {
         src: ["img/inv-leather-boar-out.png", "img/inv-leather-boar-in.png", "img/inv-leather-boar-click.png"],
         W: [{
@@ -18635,7 +18637,7 @@ var items = [{
     loot: LOOTID.__LEATHER_BOAR__,
     score: 32
 }, {
-    id: IID.shapedmetal,
+    id: IID.__SHAPED_METAL__,
     img: {
         src: ["img/inv-shaped-metal-out.png", "img/inv-shaped-metal-in.png", "img/inv-shaped-metal-click.png"],
         W: [{
@@ -18647,15 +18649,15 @@ var items = [{
         }]
     },
     detail: new Detail("Shaped Metal", "To craft improved items.", SKILLS.__MINERAL__, [
-        [IID.steel, 2]
+        [IID.__STEEL__, 2]
     ], 1, [
-        [AREAS.smelter, 3000],
-        [AREAS.bbq, 30000]
+        [AREAS.__SMELTER__, 3000],
+        [AREAS.__BBQ__, 30000]
     ]),
     stack: 255,
     loot: LOOTID.__SHAPED_METAL__
 }, {
-    id: IID.rawsteak,
+    id: IID.__RAW_STEAK__,
     img: {
         src: ["img/inv-raw-steak-out.png", "img/inv-raw-steak-in.png", "img/inv-raw-steak-click.png"],
         W: [{
@@ -18670,12 +18672,12 @@ var items = [{
     stack: 10,
     loot: LOOTID.__RAW_STEAK__,
     perish: 15,
-    perishId: IID.rottensteak,
+    perishId: IID.__ROTTEN_STEAK__,
     idWeapon: 12,
     wait: 5,
     score: 28
 }, {
-    id: IID.cookedsteak,
+    id: IID.__COOKED_STEAK__,
     img: {
         src: ["img/inv-cooked-steak-out.png", "img/inv-cooked-steak-in.png", "img/inv-cooked-steak-click.png"],
         W: [{
@@ -18687,19 +18689,19 @@ var items = [{
         }]
     },
     detail: new Detail("Cooked Steak", "Rare or medium?", SKILLS.__SURVIVAL__, [
-        [IID.rawsteak, 1]
+        [IID.__RAW_STEAK__, 1]
     ], 1, [
-        [AREAS.firepart, 20000],
-        [AREAS.bbq, 10000]
+        [AREAS.__FIRE__, 20000],
+        [AREAS.__BBQ__, 10000]
     ]),
     stack: 10,
     loot: LOOTID.__COOKED_STEAK__,
     wait: 5,
     perish: 3,
-    perishId: IID.rottensteak,
+    perishId: IID.__ROTTEN_STEAK__,
     idWeapon: 13     
 }, {
-    id: IID.rottensteak,
+    id: IID.__ROTTEN_STEAK__,
     img: {
         src: ["img/inv-rotten-steak-out.png", "img/inv-rotten-steak-in.png", "img/inv-rotten-steak-click.png"],
         W: [{
@@ -18717,7 +18719,7 @@ var items = [{
     detail: new Detail("Rotten Steak", "Don't eat that."),
     score: 20
 }, {
-    id: IID.orange,
+    id: IID.__ORANGE__,
     img: {
         src: ["img/inv-orange-out.png", "img/inv-orange-in.png", "img/inv-orange-click.png"],
         W: [{
@@ -18733,11 +18735,11 @@ var items = [{
     loot: LOOTID.__ORANGE__,
     wait: 5,
     perish: 10,
-    perishId: IID.rottenorange,
+    perishId: IID.__ROTTEN_ORANGE__,
     idWeapon: 15,    
     score: 24
 }, {
-    id: IID.rottenorange,
+    id: IID.__ROTTEN_ORANGE__,
     img: {
         src: ["img/inv-rotten-orange-out.png", "img/inv-rotten-orange-in.png", "img/inv-rotten-orange-click.png"],
         W: [{
@@ -18749,9 +18751,9 @@ var items = [{
         }]
     },
     detail: new Detail("Rotten Orange", "Go on, have a bite!", SKILLS.__PLANT__, [
-        [IID.orange, 4]
+        [IID.__ORANGE__, 4]
     ], 8, [
-        [AREAS.composter, 40000]
+        [AREAS.__COMPOST__, 40000]
     ]),
     stack: 20,
     loot: LOOTID.__ROTTEN_ORANGE__,
@@ -18759,7 +18761,7 @@ var items = [{
     idWeapon: 16,     
     score: 20
 }, {
-    id: IID.seedorange,
+    id: IID.__SEED_ORANGE__,
     img: {
         src: ["img/inv-orange-seed-out.png", "img/inv-orange-seed-in.png", "img/inv-orange-seed-click.png"],
         W: [{
@@ -18771,10 +18773,10 @@ var items = [{
         }]
     },
     detail: new Detail("Orange Seed", "Fill up on Vitame C?", SKILLS.__PLANT__, [
-        [IID.orange, 4]
+        [IID.__ORANGE__, 4]
     ], 1, [
-        [AREAS.firepart, 20000],
-        [AREAS.bbq, 15000]
+        [AREAS.__FIRE__, 20000],
+        [AREAS.__BBQ__, 15000]
     ]),
     stack: 40,
     loot: LOOTID.__SEED_ORANGE__,
@@ -18845,7 +18847,7 @@ var items = [{
     life: 250,
     score: 0
 }, {
-    id: IID.hachet,
+    id: IID.__HACHET__,
     img: {
         src: ["img/inv-hachet-out.png", "img/inv-hachet-in.png", "img/inv-hachet-click.png"],
         W: [{
@@ -18857,18 +18859,18 @@ var items = [{
         }]
     },
     detail: new Detail("Hatchet", "Harvest Wood and Stone.", SKILLS.__TOOL__, [
-        [IID.wood, 10],  
-        [IID.stone, 2]
+        [IID.__WOOD__, 10],  
+        [IID.__STONE__, 2]
     ], 1, [
-        [AREAS.own, 5000],
-        [AREAS.workbench, 10000]
+        [AREAS.__PLAYER__, 5000],
+        [AREAS.__WORKBENCH__, 10000]
     ]),
     idWeapon: 3,     
     stack: 1,
     loot: LOOTID.__HACHET__, 
     wait: 10
 }, {
-    id: IID.stonepickaxe,
+    id: IID.__STONE__pickaxe,
     img: {
         src: ["img/inv-stone-pickaxe-out.png", "img/inv-stone-pickaxe-in.png", "img/inv-stone-pickaxe-click.png"],
         W: [{
@@ -18880,17 +18882,17 @@ var items = [{
         }]
     },
     detail: new Detail("Stone Pickaxe", "Mine Stone and Iron.", SKILLS.__TOOL__, [
-        [IID.wood, 100],
-        [IID.stone, 30]
+        [IID.__WOOD__, 100],
+        [IID.__STONE__, 30]
     ], 1, [
-        [AREAS.workbench, 30000]
+        [AREAS.__WORKBENCH__, 30000]
     ]),
     idWeapon: 1,     
     stack: 1,
     loot: LOOTID.__STONE_PICKAXE__,
     wait: 10
 }, {
-    id: IID.steelpickaxe,
+    id: IID.__STEEL__pickaxe,
     img: {
         src: ["img/inv-steel-pickaxe-out.png", "img/inv-steel-pickaxe-in.png", "img/inv-steel-pickaxe-click.png"],
         W: [{
@@ -18902,17 +18904,17 @@ var items = [{
         }]
     },
     detail: new Detail("Metal Pickaxe", "Mine also Sulfur", SKILLS.__TOOL__, [
-        [IID.stone, 150],
-        [IID.shapedmetal, 6]
+        [IID.__STONE__, 150],
+        [IID.__SHAPED_METAL__, 6]
     ], 1, [
-        [AREAS.researchbench, 60000]
+        [AREAS.__WORKBENCH2__, 60000]
     ], 6),
     idWeapon: 2,     
     stack: 1,
     loot: LOOTID.__STEEL_PICKAXE__,
     wait: 10
 }, {
-    id: IID.stoneaxe,
+    id: IID.__STONE__axe,
     img: {
         src: ["img/inv-stone-axe-out.png", "img/inv-stone-axe-in.png", "img/inv-stone-axe-click.png"],
         W: [{
@@ -18924,17 +18926,17 @@ var items = [{
         }]
     },
     detail: new Detail("Metal Axe", "Harvest a lot of Wood", SKILLS.__TOOL__, [
-        [IID.wood, 150],
-        [IID.shapedmetal, 7]
+        [IID.__WOOD__, 150],
+        [IID.__SHAPED_METAL__, 7]
     ], 1, [
-        [AREAS.researchbench, 80000]
+        [AREAS.__WORKBENCH2__, 80000]
     ], 5),
     idWeapon: 4,     
     stack: 1,
     loot: LOOTID.__STONE_AXE__,
     wait: 10
 }, {
-    id: IID.workbench,
+    id: IID.__WORKBENCH__,
     img: {
         src: ["img/inv-workbench-out.png", "img/inv-workbench-in.png", "img/inv-workbench-click.png"],
         W: [{
@@ -18946,17 +18948,17 @@ var items = [{
         }]
     },
     detail: new Detail("Workbench", "Allow you to make new items.", SKILLS.__SURVIVAL__, [
-        [IID.wood, 40],
-        [IID.stone, 20]
+        [IID.__WOOD__, 40],
+        [IID.__STONE__, 20]
     ], 1, [
-        [AREAS.own, 15000],
-        [AREAS.workbench, 15000]
+        [AREAS.__PLAYER__, 15000],
+        [AREAS.__WORKBENCH__, 15000]
     ]),
     idWeapon: 21,     
     fuel: -1,
     zid: 0,
     z: 1,
-    area: AREAS.workbench,
+    area: AREAS.__WORKBENCH__,
     stack: 255,
     loot: LOOTID.__WORKBENCH__,
     wait: 10,
@@ -18997,8 +18999,8 @@ var items = [{
             isLoaded: 0
         }
     },
-    impact: SOUNDID.wood,
-    destroy: SOUNDID.wooddes,
+    impact: SOUNDID.__WOOD_IMPACT__,
+    destroy: SOUNDID.__WOOD_DESTROY__,
     building: {
         src: "img/day-workbench.png",
         W: {
@@ -19011,7 +19013,7 @@ var items = [{
     life: 250,
     score: 0
 }, {
-    id: IID.spear,
+    id: IID.__WOOD_SPEAR__,
     img: {
         src: ["img/inv-wood-spear-out.png", "img/inv-wood-spear-in.png", "img/inv-wood-spear-click.png"],
         W: [{
@@ -19023,17 +19025,17 @@ var items = [{
         }]
     },
     detail: new Detail("Wood Spear", "Don't forget to pick it up.", SKILLS.__WEAPON__, [
-        [IID.wood, 70]
+        [IID.__WOOD__, 70]
     ], 1, [
-        [AREAS.own, 15000],
-        [AREAS.workbench, 20000]
+        [AREAS.__PLAYER__, 15000],
+        [AREAS.__WORKBENCH__, 20000]
     ]),
     idWeapon: 5,     
     stack: 1,
     loot: LOOTID.__WOOD_SPEAR__,
     wait: 10
 }, {
-    id: IID.bow,
+    id: IID.__WOOD_BOW__,
     img: {
         src: ["img/inv-wood-bow-out.png", "img/inv-wood-bow-in.png", "img/inv-wood-bow-click.png"],
         W: [{
@@ -19045,20 +19047,20 @@ var items = [{
         }]
     },
     detail: new Detail("Wood Bow", "Where are the cowboys?", SKILLS.__WEAPON__, [
-        [IID.wood, 60],
-        [IID.animaltendon, 2]
+        [IID.__WOOD__, 60],
+        [IID.__ANIMAL_TENDON__, 2]
     ], 1, [
-        [AREAS.own, 35000],
-        [AREAS.workbench, 50000]
+        [AREAS.__PLAYER__, 35000],
+        [AREAS.__WORKBENCH__, 50000]
     ]),
-    bullet: IID.woodarrow,
+    bullet: IID.__WOOD__arrow,
     mMVwm: 1,
     idWeapon: 6,     
     stack: 1,
     loot: LOOTID.__WOOD_BOW__,
     wait: 10
 }, {
-    id: IID.pistol,
+    id: IID.__9MM__,
     img: {
         src: ["img/inv-9mm-out.png", "img/inv-9mm-in.png", "img/inv-9mm-click.png"],
         W: [{
@@ -19070,18 +19072,18 @@ var items = [{
         }]
     },
     detail: new Detail("9MM", "I hope you know how to aim.", SKILLS.__WEAPON__, [
-        [IID.junk, 6],
-        [IID.shapedmetal, 9]
+        [IID.__JUNK__, 6],
+        [IID.__SHAPED_METAL__, 9]
     ], 1, [
-        [AREAS.researchbench, 160000]
+        [AREAS.__WORKBENCH2__, 160000]
     ], 7),
     idWeapon: 8,     
-    bullet: IID.bullet9mm,
+    bullet: IID.__BULLET_9MM__,
     stack: 1,
     loot: LOOTID.__9MM__,
     wait: 10
 }, {
-    id: IID.deserteagle,
+    id: IID.__DESERT_EAGLE__,
     img: {
         src: ["img/inv-desert-eagle-out.png", "img/inv-desert-eagle-in.png", "img/inv-desert-eagle-click.png"],
         W: [{
@@ -19093,18 +19095,18 @@ var items = [{
         }]
     },
     detail: new Detail("Desert Eagle", "Pretty useful for self-defense.", SKILLS.__WEAPON__, [
-        [IID.alloys, 4],
-        [IID.shapedmetal, 2]
+        [IID.__ALLOYS__, 4],
+        [IID.__SHAPED_METAL__, 2]
     ], 1, [
-        [AREAS.researchbench, 180000]
-    ], 9, IID.pistol),
+        [AREAS.__WORKBENCH2__, 180000]
+    ], 9, IID.__9MM__),
     idWeapon: 9,     
-    bullet: IID.bullet9mm,
+    bullet: IID.__BULLET_9MM__,
     stack: 1,
     loot: LOOTID.__DESERT_EAGLE__,
     wait: 10
 }, {
-    id: IID.shotgun,
+    id: IID.__SHOTGUN__,
     img: {
         src: ["img/inv-shotgun-out.png", "img/inv-shotgun-in.png", "img/inv-shotgun-click.png"],
         W: [{
@@ -19116,18 +19118,18 @@ var items = [{
         }]
     },
     detail: new Detail("Shotgun", "He's dead now, don't you think?", SKILLS.__WEAPON__, [
-        [IID.alloys, 6],
-        [IID.shapedmetal, 6]
+        [IID.__ALLOYS__, 6],
+        [IID.__SHAPED_METAL__, 6]
     ], 1, [
-        [AREAS.researchbench, 200000]
+        [AREAS.__WORKBENCH2__, 200000]
     ], 11),
     idWeapon: 7,     
-    bullet: IID.bulletshotgun,
+    bullet: IID.__BULLET_SHOTGUN__,
     stack: 1,
     loot: LOOTID.__SHOTGUN__,
     wait: 10
 }, {
-    id: IID.ak47,
+    id: IID.__AK47__,
     img: {
         src: ["img/inv-ak47-out.png", "img/inv-ak47-in.png", "img/inv-ak47-click.png"],
         W: [{
@@ -19139,18 +19141,18 @@ var items = [{
         }]
     },
     detail: new Detail("AK47", "Revolution time", SKILLS.__WEAPON__, [
-        [IID.alloys, 14],
-        [IID.shapedmetal, 8]
+        [IID.__ALLOYS__, 14],
+        [IID.__SHAPED_METAL__, 8]
     ], 1, [
-        [AREAS.researchbench, 180000]
-    ], 12, IID.mp5),
+        [AREAS.__WORKBENCH2__, 180000]
+    ], 12, IID.__MP5__),
     idWeapon: 10,     
-    bullet: IID.sniperbullet,
+    bullet: IID.__SNIPER__bullet,
     stack: 1,
     loot: LOOTID.__AK47__,
     wait: 10
 }, {
-    id: IID.sniper,
+    id: IID.__SNIPER__,
     img: {
         src: ["img/inv-sniper-out.png", "img/inv-sniper-in.png", "img/inv-sniper-click.png"],
         W: [{
@@ -19162,18 +19164,18 @@ var items = [{
         }]
     },
     detail: new Detail("Sniper", "For the very angry shy", SKILLS.__WEAPON__, [
-        [IID.alloys, 10],
-        [IID.shapedmetal, 8]
+        [IID.__ALLOYS__, 10],
+        [IID.__SHAPED_METAL__, 8]
     ], 1, [
-        [AREAS.researchbench, 180000]
+        [AREAS.__WORKBENCH2__, 180000]
     ], 13),
     idWeapon: 11,     
-    bullet: IID.sniperbullet,
+    bullet: IID.__SNIPER__bullet,
     stack: 1,
     loot: LOOTID.__SNIPER__,
     wait: 10
 }, {
-    id: IID.woodenwall,
+    id: IID.__WOOD__enwall,
     img: {
         src: ["img/inv-wood-wall-out.png", "img/inv-wood-wall-in.png", "img/inv-wood-wall-click.png"],
         W: [{
@@ -19185,9 +19187,9 @@ var items = [{
         }]
     },
     detail: new Detail("Wooden Wall", "Protected from the wind.", SKILLS.__BUILDING__, [
-        [IID.wood, 20] 
+        [IID.__WOOD__, 20] 
     ], 1, [
-        [AREAS.workbench, 10000]
+        [AREAS.__WORKBENCH__, 10000]
     ]),
     idWeapon: 21,     
     fuel: -1,
@@ -19216,7 +19218,7 @@ var items = [{
         }
     },
     wall: 1,
-    idWall: IID.woodenwall,
+    idWall: IID.__WOOD__enwall,
     lowWall: 0,
     door: 0,
     broke: 1,
@@ -19244,8 +19246,8 @@ var items = [{
             isLoaded: 0
         }
     }],
-    impact: SOUNDID.wood,
-    destroy: SOUNDID.wooddes,
+    impact: SOUNDID.__WOOD_IMPACT__,
+    destroy: SOUNDID.__WOOD_DESTROY__,
     building: [{
         src: "img/day-wood-wall0.png",
         W: {
@@ -19488,7 +19490,7 @@ var items = [{
     life: 3000,
     score: 0
 }, {
-    id: IID.stonewall,
+    id: IID.__STONE__wall,
     img: {
         src: ["img/inv-stone-wall-out.png", "img/inv-stone-wall-in.png", "img/inv-stone-wall-click.png"],
         W: [{
@@ -19500,9 +19502,9 @@ var items = [{
         }]
     },
     detail: new Detail("Stone Wall", "Saved the 3 little pigs.", SKILLS.__BUILDING__, [
-        [IID.stone, 20]
+        [IID.__STONE__, 20]
     ], 1, [
-        [AREAS.workbench, 15000]
+        [AREAS.__WORKBENCH__, 15000]
     ], 3),
     idWeapon: 21,     
     fuel: -1,
@@ -19531,7 +19533,7 @@ var items = [{
         }
     },
     wall: 1,
-    idWall: IID.stonewall,
+    idWall: IID.__STONE__wall,
     lowWall: 0,
     door: 0,
     broke: 1,
@@ -19559,8 +19561,8 @@ var items = [{
             isLoaded: 0
         }
     }],
-    impact: SOUNDID.stone,
-    destroy: SOUNDID.stonedes,
+    impact: SOUNDID.__STONE_IMPACT__,
+    destroy: SOUNDID.__STONE_DESTROY__,
     building: [{
         src: "img/day-stone-wall0.png",
         W: {
@@ -19803,7 +19805,7 @@ var items = [{
     life: 7000,
     score: 0
 }, {
-    id: IID.steelwall,
+    id: IID.__STEEL__wall,
     img: {
         src: ["img/inv-steel-wall-out.png", "img/inv-steel-wall-in.png", "img/inv-steel-wall-click.png"],
         W: [{
@@ -19815,10 +19817,10 @@ var items = [{
         }]
     },
     detail: new Detail("Metal Wall", "Afraid we'll find you?", SKILLS.__BUILDING__, [
-        [IID.shapedmetal, 3]
+        [IID.__SHAPED_METAL__, 3]
     ], 1, [
-        [AREAS.researchbench, 20000]
-    ], 6, IID.stonewall),
+        [AREAS.__WORKBENCH2__, 20000]
+    ], 6, IID.__STONE__wall),
     idWeapon: 21,     
     fuel: -1,
     zid: 1,
@@ -19846,7 +19848,7 @@ var items = [{
         }
     },
     wall: 1,
-    idWall: IID.steelwall,
+    idWall: IID.__STEEL__wall,
     lowWall: 0,
     door: 0,
     broke: 1,
@@ -19874,8 +19876,8 @@ var items = [{
             isLoaded: 0
         }
     }],
-    impact: SOUNDID.metal,
-    destroy: SOUNDID.metaldes,
+    impact: SOUNDID.__STEEL_IMPACT__,
+    destroy: SOUNDID.__STEEL_DESTROY__,
     building: [{
         src: "img/day-steel-wall0.png",
         W: {
@@ -20118,7 +20120,7 @@ var items = [{
     life: 15000,
     score: 0
 }, {
-    id: IID.wooddoor,
+    id: IID.__WOOD__door,
     img: {
         src: ["img/inv-wood-door-out.png", "img/inv-wood-door-in.png", "img/inv-wood-door-click.png"],
         W: [{
@@ -20130,9 +20132,9 @@ var items = [{
         }]
     },
     detail: new Detail("Wooden Low Door", "You can shoot through it.", SKILLS.__BUILDING__, [
-        [IID.wood, 40]
+        [IID.__WOOD__, 40]
     ], 1, [
-        [AREAS.workbench, 15000]
+        [AREAS.__WORKBENCH__, 15000]
     ]),
     idWeapon: 21,     
     fuel: -1,
@@ -20208,8 +20210,8 @@ var items = [{
             isLoaded: 0
         }
     }],
-    impact: SOUNDID.wood,
-    destroy: SOUNDID.wooddes,
+    impact: SOUNDID.__WOOD_IMPACT__,
+    destroy: SOUNDID.__WOOD_DESTROY__,
     building: {
         src: "img/day-wood-door.png",
         W: {
@@ -20222,7 +20224,7 @@ var items = [{
     life: 2000,
     score: 0
 }, {
-    id: IID.stonedoor,
+    id: IID.__STONE__door,
     img: {
         src: ["img/inv-stone-door-out.png", "img/inv-stone-door-in.png", "img/inv-stone-door-click.png"],
         W: [{
@@ -20234,9 +20236,9 @@ var items = [{
         }]
     },
     detail: new Detail("Stone Low Door", "You can shoot through it.", SKILLS.__BUILDING__, [
-        [IID.stone, 40]
+        [IID.__STONE__, 40]
     ], 1, [
-        [AREAS.workbench, 15000]
+        [AREAS.__WORKBENCH__, 15000]
     ], 3),
     idWeapon: 21,     
     fuel: -1,
@@ -20312,8 +20314,8 @@ var items = [{
             isLoaded: 0
         }
     }],
-    impact: SOUNDID.stone,
-    destroy: SOUNDID.stonedes,
+    impact: SOUNDID.__STONE_IMPACT__,
+    destroy: SOUNDID.__STONE_DESTROY__,
     building: {
         src: "img/day-stone-door.png",
         W: {
@@ -20326,7 +20328,7 @@ var items = [{
     life: 5000,
     score: 0
 }, {
-    id: IID.steeldoor,
+    id: IID.__STEEL__door,
     img: {
         src: ["img/inv-steel-door-out.png", "img/inv-steel-door-in.png", "img/inv-steel-door-click.png"],
         W: [{
@@ -20338,10 +20340,10 @@ var items = [{
         }]
     },
     detail: new Detail("Metal Low Door", "Killing at home, for more comfort.", SKILLS.__BUILDING__, [
-        [IID.shapedmetal, 6]
+        [IID.__SHAPED_METAL__, 6]
     ], 1, [
-        [AREAS.researchbench, 30000]
-    ], 6, IID.stonedoor),
+        [AREAS.__WORKBENCH2__, 30000]
+    ], 6, IID.__STONE__door),
     idWeapon: 21,     
     fuel: -1,
     zid: 0,
@@ -20416,8 +20418,8 @@ var items = [{
             isLoaded: 0
         }
     }],
-    impact: SOUNDID.metal,
-    destroy: SOUNDID.metaldes,
+    impact: SOUNDID.__STEEL_IMPACT__,
+    destroy: SOUNDID.__STEEL_DESTROY__,
     building: {
         src: "img/day-steel-door.png",
         W: {
@@ -20430,7 +20432,7 @@ var items = [{
     life: 10000,
     score: 0
 }, {
-    id: IID.campfire,
+    id: IID.__CAMPFIRE__,
     img: {
         src: ["img/inv-campfire-out.png", "img/inv-campfire-in.png", "img/inv-campfire-click.png"],
         W: [{
@@ -20442,17 +20444,17 @@ var items = [{
         }]
     },
     detail: new Detail("Campfire", "Warm you when you're cold.", SKILLS.__SURVIVAL__, [
-        [IID.wood, 30],
-        [IID.stone, 5]
+        [IID.__WOOD__, 30],
+        [IID.__STONE__, 5]
     ], 1, [
-        [AREAS.own, 8000],
-        [AREAS.workbench, 15000]
+        [AREAS.__PLAYER__, 8000],
+        [AREAS.__WORKBENCH__, 15000]
     ]),
     idWeapon: 21,     
     fuel: 15000,
     zid: -1,
     z: 0,
-    area: AREAS.firepart,
+    area: AREAS.__FIRE__,
     stack: 255,
     loot: LOOTID.__CAMPFIRE__,
     wait: 10,
@@ -20494,8 +20496,8 @@ var items = [{
             isLoaded: 0
         }
     },
-    impact: SOUNDID.wood,
-    destroy: SOUNDID.wooddes,
+    impact: SOUNDID.__WOOD_IMPACT__,
+    destroy: SOUNDID.__WOOD_DESTROY__,
     building: {
         src: "img/day-campfire.png",
         W: {
@@ -20508,7 +20510,7 @@ var items = [{
     life: 150,
     score: 0
 }, {
-    id: IID.bullet9mm,
+    id: IID.__BULLET_9MM__,
     img: {
         src: ["img/inv-bullet-9mm-out.png", "img/inv-bullet-9mm-in.png", "img/inv-bullet-9mm-click.png"],
         W: [{
@@ -20520,16 +20522,16 @@ var items = [{
         }]
     },
     detail: new Detail("Bullet", "For 9MM, Desert Eagle, and MP5 ", SKILLS.__WEAPON__, [
-        [IID.sulfur, 3],
-        [IID.shapedmetal, 3],
-        [IID.animalfat, 3]
+        [IID.__SULFUR__, 3],
+        [IID.__SHAPED_METAL__, 3],
+        [IID.__ANIMAL_FAT__, 3]
     ], 30, [
-        [AREAS.researchbench, 10000]
+        [AREAS.__WORKBENCH2__, 10000]
     ], 6),
     stack: 255,
     loot: LOOTID.__BULLET_9MM__
 }, {
-    id: IID.bulletshotgun,
+    id: IID.__BULLET_SHOTGUN__,
     img: {
         src: ["img/inv-bullet-shotgun-out.png", "img/inv-bullet-shotgun-in.png", "img/inv-bullet-shotgun-click.png"],
         W: [{
@@ -20541,16 +20543,16 @@ var items = [{
         }]
     },
     detail: new Detail("Cartridge", "For Shotgun", SKILLS.__WEAPON__, [
-        [IID.alloys, 1],
-        [IID.shapedmetal, 4],
-        [IID.animalfat, 4]
+        [IID.__ALLOYS__, 1],
+        [IID.__SHAPED_METAL__, 4],
+        [IID.__ANIMAL_FAT__, 4]
     ], 15, [
-        [AREAS.researchbench, 10000]
+        [AREAS.__WORKBENCH2__, 10000]
     ], 10),
     stack: 255,
     loot: LOOTID.__BULLET_SHOTGUN__
 }, {
-    id: IID.sniperbullet,
+    id: IID.__SNIPER__bullet,
     img: {
         src: ["img/inv-bullet-sniper-out.png", "img/inv-bullet-sniper-in.png", "img/inv-bullet-sniper-click.png"],
         W: [{
@@ -20562,16 +20564,16 @@ var items = [{
         }]
     },
     detail: new Detail("Heavy Bullet", "For Sniper, and AK47", SKILLS.__WEAPON__, [
-        [IID.alloys, 1],
-        [IID.shapedmetal, 4],
-        [IID.animalfat, 4]
+        [IID.__ALLOYS__, 1],
+        [IID.__SHAPED_METAL__, 4],
+        [IID.__ANIMAL_FAT__, 4]
     ], 30, [
-        [AREAS.researchbench, 10000]
+        [AREAS.__WORKBENCH2__, 10000]
     ], 11),
     stack: 255,
     loot: LOOTID.__BULLET_SNIPER__
 }, {
-    id: IID.medkit,
+    id: IID.__MEDIKIT__,
     img: {
         src: ["img/inv-medikit-out.png", "img/inv-medikit-in.png", "img/inv-medikit-click.png"],
         W: [{
@@ -20583,19 +20585,19 @@ var items = [{
         }]
     },
     detail: new Detail("Medkit", "Regenerate your life.", SKILLS.__DRUG__, [
-        [IID.string, 2],
-        [IID.bandage, 1],
-        [IID.leather, 2],
-        [IID.shapedmetal, 2]
+        [IID.__STRING__, 2],
+        [IID.__BANDAGE__, 1],
+        [IID.__LEATHER_BOAR__, 2],
+        [IID.__SHAPED_METAL__, 2]
     ], 1, [
-        [AREAS.researchbench, 80000]
+        [AREAS.__WORKBENCH2__, 80000]
     ], 10),
     idWeapon: 17,     
     stack: 2,
     loot: LOOTID.__MEDIKIT__,
     wait: 10
 }, {
-    id: IID.bandage,
+    id: IID.__BANDAGE__,
     img: {
         src: ["img/inv-bandage-out.png", "img/inv-bandage-in.png", "img/inv-bandage-click.png"],
         W: [{
@@ -20607,17 +20609,17 @@ var items = [{
         }]
     },
     detail: new Detail("Bandage", "To heal the boo-boos.", SKILLS.__DRUG__, [
-        [IID.string, 1],
-        [IID.leather, 2]
+        [IID.__STRING__, 1],
+        [IID.__LEATHER_BOAR__, 2]
     ], 1, [
-        [AREAS.weavingmachine, 20000]
+        [AREAS.__WEAVING__, 20000]
     ]),
     idWeapon: 18,     
     stack: 5,
     loot: LOOTID.__BANDAGE__,
     wait: 10
 }, {
-    id: IID.soda,
+    id: IID.__SODA__,
     img: {
         src: ["img/inv-soda-out.png", "img/inv-soda-in.png", "img/inv-soda-click.png"],
         W: [{
@@ -20629,21 +20631,21 @@ var items = [{
         }]
     },
     detail: new Detail("Soda", "Give energy.", SKILLS.__SURVIVAL__, [
-        [IID.ghoulblood, 1],
-        [IID.chemicalcomponent, 1],
-        [IID.can, 1]
+        [IID.__GHOUL_BLOOD__, 1],
+        [IID.__CHEMICAL_COMPONENT__, 1],
+        [IID.__CAN__, 1]
     ], 1, [
-        [AREAS.firepart, 40000],
-        [AREAS.bbq, 40000]
+        [AREAS.__FIRE__, 40000],
+        [AREAS.__BBQ__, 40000]
     ], 5),
     idWeapon: 19,     
     stack: 5,
     loot: LOOTID.__SODA__,
     perish: 2,
-    perishId: IID.can,
+    perishId: IID.__CAN__,
     wait: 10
 }, {
-    id: IID.mp5,
+    id: IID.__MP5__,
     img: {
         src: ["img/inv-MP5-out.png", "img/inv-MP5-in.png", "img/inv-MP5-click.png"],
         W: [{
@@ -20655,18 +20657,18 @@ var items = [{
         }]
     },
     detail: new Detail("MP5", "Not bad.", SKILLS.__WEAPON__, [
-        [IID.alloys, 6],
-        [IID.shapedmetal, 6]
+        [IID.__ALLOYS__, 6],
+        [IID.__SHAPED_METAL__, 6]
     ], 1, [
-        [AREAS.researchbench, 200000]
+        [AREAS.__WORKBENCH2__, 200000]
     ], 10),
     idWeapon: 20,     
-    bullet: IID.bullet9mm,
+    bullet: IID.__BULLET_9MM__,
     stack: 1,
     loot: LOOTID.__MP5__,
     wait: 10
 }, {
-    id: IID.headscarf,
+    id: IID.__HEADSCARF__,
     img: {
         src: ["img/inv-headscarf-out.png", "img/inv-headscarf-in.png", "img/inv-headscarf-click.png"],
         W: [{
@@ -20678,10 +20680,10 @@ var items = [{
         }]
     },
     detail: new Detail("Headscarf", "Warm you up.", SKILLS.__CLOTHE__, [
-        [IID.string, 1],
-        [IID.leather, 1]
+        [IID.__STRING__, 1],
+        [IID.__LEATHER_BOAR__, 1]
     ], 1, [
-        [AREAS.weavingmachine, 60000]
+        [AREAS.__WEAVING__, 60000]
     ]),
     idClothe: 1,
     stack: 1,
@@ -20695,7 +20697,7 @@ var items = [{
     rad: 0,
     speed: 0
 }, {
-    id: IID.chapka,
+    id: IID.__CHAPKA__,
     img: {
         src: ["img/inv-chapka-out.png", "img/inv-chapka-in.png", "img/inv-chapka-click.png"],
         W: [{
@@ -20707,11 +20709,11 @@ var items = [{
         }]
     },
     detail: new Detail("Chapka", "You look like a real woodcutter.", SKILLS.__CLOTHE__, [
-        [IID.string, 6],
-        [IID.leather, 8],
-        [IID.headscarf, 1]
+        [IID.__STRING__, 6],
+        [IID.__LEATHER_BOAR__, 8],
+        [IID.__HEADSCARF__, 1]
     ], 1, [
-        [AREAS.weavingmachine, 120000]
+        [AREAS.__WEAVING__, 120000]
     ], 7),
     idClothe: 2,
     stack: 1,
@@ -20725,7 +20727,7 @@ var items = [{
     rad: 0,
     speed: 0
 }, {
-    id: IID.coat,
+    id: IID.__WINTER_COAT__,
     img: {
         src: ["img/inv-coat-out.png", "img/inv-coat-in.png", "img/inv-coat-click.png"],
         W: [{
@@ -20737,12 +20739,12 @@ var items = [{
         }]
     },
     detail: new Detail("Winter Coat", "Is the weather really that cold?", SKILLS.__CLOTHE__, [
-        [IID.string, 15],
-        [IID.leather, 20],
-        [IID.chapka, 1]
+        [IID.__STRING__, 15],
+        [IID.__LEATHER_BOAR__, 20],
+        [IID.__CHAPKA__, 1]
     ], 1, [
-        [AREAS.weavingmachine, 180000]
-    ], 9, IID.chapka),
+        [AREAS.__WEAVING__, 180000]
+    ], 9, IID.__CHAPKA__),
     idClothe: 3,
     stack: 1,
     loot: LOOTID.__WINTER_COAT__,
@@ -20755,7 +20757,7 @@ var items = [{
     rad: 0,
     speed: 0
 }, {
-    id: IID.gazmask,
+    id: IID.__GAZ_MASK__,
     img: {
         src: ["img/inv-gaz-mask-out.png", "img/inv-gaz-mask-in.png", "img/inv-gaz-mask-click.png"],
         W: [{
@@ -20767,11 +20769,11 @@ var items = [{
         }]
     },
     detail: new Detail("Radiation Mask", "Protect you from Radioactivity.", SKILLS.__CLOTHE__, [
-        [IID.shapedmetal, 1],
-        [IID.string, 1],
-        [IID.leather, 2]
+        [IID.__SHAPED_METAL__, 1],
+        [IID.__STRING__, 1],
+        [IID.__LEATHER_BOAR__, 2]
     ], 1, [
-        [AREAS.weavingmachine, 60000]
+        [AREAS.__WEAVING__, 60000]
     ]),
     idClothe: 4,
     stack: 1,
@@ -20785,7 +20787,7 @@ var items = [{
     rad: 0.009,
     speed: 0
 }, {
-    id: IID.gazprotection,
+    id: IID.__GAZ_PROTECTION__,
     img: {
         src: ["img/inv-gaz-protection-out.png", "img/inv-gaz-protection-in.png", "img/inv-gaz-protection-click.png"],
         W: [{
@@ -20797,13 +20799,13 @@ var items = [{
         }]
     },
     detail: new Detail("Min. Radiation Suit", "Previously, on Breaking Bad.", SKILLS.__CLOTHE__, [
-        [IID.alloys, 2],
-        [IID.shapedmetal, 2],
-        [IID.string, 4],
-        [IID.leather, 4],
-        [IID.gazmask, 1]
+        [IID.__ALLOYS__, 2],
+        [IID.__SHAPED_METAL__, 2],
+        [IID.__STRING__, 4],
+        [IID.__LEATHER_BOAR__, 4],
+        [IID.__GAZ_MASK__, 1]
     ], 1, [
-        [AREAS.weavingmachine, 90000]
+        [AREAS.__WEAVING__, 90000]
     ], 8),
     idClothe: 5,
     stack: 1,
@@ -20817,7 +20819,7 @@ var items = [{
     rad: 0.016,
     speed: 0
 }, {
-    id: IID.radiationsuit,
+    id: IID.__RADIATION_SUIT__,
     img: {
         src: ["img/inv-radiation-suit-out.png", "img/inv-radiation-suit-in.png", "img/inv-radiation-suit-click.png"],
         W: [{
@@ -20829,14 +20831,14 @@ var items = [{
         }]
     },
     detail: new Detail("Radiation Suit", "Let's not grow a second head.", SKILLS.__CLOTHE__, [
-        [IID.alloys, 6],
-        [IID.shapedmetal, 4],
-        [IID.string, 8],
-        [IID.leather, 20],
-        [IID.gazprotection, 1]
+        [IID.__ALLOYS__, 6],
+        [IID.__SHAPED_METAL__, 4],
+        [IID.__STRING__, 8],
+        [IID.__LEATHER_BOAR__, 20],
+        [IID.__GAZ_PROTECTION__, 1]
     ], 1, [
-        [AREAS.weavingmachine, 180000]
-    ], 10, IID.gazprotection),
+        [AREAS.__WEAVING__, 180000]
+    ], 10, IID.__GAZ_PROTECTION__),
     idClothe: 6,
     stack: 1,
     loot: LOOTID.__RADIATION_SUIT__,
@@ -20849,7 +20851,7 @@ var items = [{
     rad: 0.022,
     speed: -0.01
 }, {
-    id: IID.woodarrow,
+    id: IID.__WOOD__arrow,
     img: {
         src: ["img/inv-wood-arrow-out.png", "img/inv-wood-arrow-in.png", "img/inv-wood-arrow-click.png"],
         W: [{
@@ -20861,15 +20863,15 @@ var items = [{
         }]
     },
     detail: new Detail("Wood Arrow", "Needed to use bow.", SKILLS.__WEAPON__, [
-        [IID.wood, 40]
+        [IID.__WOOD__, 40]
     ], 5, [
-        [AREAS.own, 15000],
-        [AREAS.workbench, 10000]
+        [AREAS.__PLAYER__, 15000],
+        [AREAS.__WORKBENCH__, 10000]
     ]),
     stack: 255,
     loot: LOOTID.__WOOD_ARROW__
 }, {
-    id: IID.campfirebbq,
+    id: IID.__CAMPFIRE__bbq,
     img: {
         src: ["img/inv-campfire-bbq-out.png", "img/inv-campfire-bbq-in.png", "img/inv-campfire-bbq-click.png"],
         W: [{
@@ -20881,17 +20883,17 @@ var items = [{
         }]
     },
     detail: new Detail("Firepit", "Warm up and melt iron slowly.", SKILLS.__SURVIVAL__, [
-        [IID.wood, 120],
-        [IID.stone, 20],
-        [IID.steel, 4]
+        [IID.__WOOD__, 120],
+        [IID.__STONE__, 20],
+        [IID.__STEEL__, 4]
     ], 1, [
-        [AREAS.workbench, 20000]
+        [AREAS.__WORKBENCH__, 20000]
     ], 3),
     idWeapon: 21,     
     fuel: 20000,
     zid: -1,
     z: 0,
-    area: AREAS.bbq,
+    area: AREAS.__BBQ__,
     stack: 255,
     loot: LOOTID.__CAMPFIRE_BBQ__,
     wait: 10,
@@ -20933,8 +20935,8 @@ var items = [{
             isLoaded: 0
         }
     },
-    impact: SOUNDID.wood,
-    destroy: SOUNDID.wooddes,
+    impact: SOUNDID.__WOOD_IMPACT__,
+    destroy: SOUNDID.__WOOD_DESTROY__,
     building: {
         src: "img/day-campfire-bbq.png",
         W: {
@@ -20947,7 +20949,7 @@ var items = [{
     life: 250,
     score: 0
 }, {
-    id: IID.smelter,
+    id: IID.__SMELTER__,
     img: {
         src: ["img/inv-smelter-out.png", "img/inv-smelter-in.png", "img/inv-smelter-click.png"],
         W: [{
@@ -20959,16 +20961,16 @@ var items = [{
         }]
     },
     detail: new Detail("Smelter", "Melt iron, uranium and alloys", SKILLS.__SURVIVAL__, [
-        [IID.shapedmetal, 6],
-        [IID.electronicpart, 1]
+        [IID.__SHAPED_METAL__, 6],
+        [IID.__ELECTRONICS__, 1]
     ], 1, [
-        [AREAS.researchbench, 100000]
+        [AREAS.__WORKBENCH2__, 100000]
     ], 10),
     idWeapon: 21,     
     fuel: 42000,
     zid: 1,
     z: 1,
-    area: AREAS.smelter,
+    area: AREAS.__SMELTER__,
     stack: 255,
     loot: LOOTID.__SMELTER__,
     wait: 10,
@@ -21013,8 +21015,8 @@ var items = [{
             isLoaded: 0
         }
     },
-    impact: SOUNDID.metal,
-    destroy: SOUNDID.metaldes,
+    impact: SOUNDID.__STEEL_IMPACT__,
+    destroy: SOUNDID.__STEEL_DESTROY__,
     building: [{
         src: "img/day-smelter-off.png",
         W: {
@@ -21042,7 +21044,7 @@ var items = [{
     life: 3000,
     score: 0
 }, {
-    id: IID.wooddoor1,
+    id: IID.__WOOD__door1,
     img: {
         src: ["img/inv-wood-door1-out.png", "img/inv-wood-door1-in.png", "img/inv-wood-door1-click.png"],
         W: [{
@@ -21054,9 +21056,9 @@ var items = [{
         }]
     },
     detail: new Detail("Wooden Door", "Let's hope it holds.", SKILLS.__BUILDING__, [
-        [IID.wood, 60]
+        [IID.__WOOD__, 60]
     ], 1, [
-        [AREAS.workbench, 20000]
+        [AREAS.__WORKBENCH__, 20000]
     ]),
     idWeapon: 21,     
     fuel: -1,
@@ -21132,8 +21134,8 @@ var items = [{
             isLoaded: 0
         }
     }],
-    impact: SOUNDID.wood,
-    destroy: SOUNDID.wooddes,
+    impact: SOUNDID.__WOOD_IMPACT__,
+    destroy: SOUNDID.__WOOD_DESTROY__,
     building: {
         src: "img/day-wood-door1.png",
         W: {
@@ -21146,7 +21148,7 @@ var items = [{
     life: 2500,
     score: 0
 }, {
-    id: IID.stonedoor1,
+    id: IID.__STONE__door1,
     img: {
         src: ["img/inv-stone-door1-out.png", "img/inv-stone-door1-in.png", "img/inv-stone-door1-click.png"],
         W: [{
@@ -21158,9 +21160,9 @@ var items = [{
         }]
     },
     detail: new Detail("Stone Door", "Not too heavy to open, I hope.", SKILLS.__BUILDING__, [
-        [IID.stone, 60]
+        [IID.__STONE__, 60]
     ], 1, [
-        [AREAS.workbench, 20000]
+        [AREAS.__WORKBENCH__, 20000]
     ], 3),
     idWeapon: 21,     
     fuel: -1,
@@ -21236,8 +21238,8 @@ var items = [{
             isLoaded: 0
         }
     }],
-    impact: SOUNDID.stone,
-    destroy: SOUNDID.stonedes,
+    impact: SOUNDID.__STONE_IMPACT__,
+    destroy: SOUNDID.__STONE_DESTROY__,
     building: {
         src: "img/day-stone-door1.png",
         W: {
@@ -21250,7 +21252,7 @@ var items = [{
     life: 6000,
     score: 0
 }, {
-    id: IID.steeldoor1,
+    id: IID.__STEEL__door1,
     img: {
         src: ["img/inv-steel-door1-out.png", "img/inv-steel-door1-in.png", "img/inv-steel-door1-click.png"],
         W: [{
@@ -21262,10 +21264,10 @@ var items = [{
         }]
     },
     detail: new Detail("Metal Door", "I guess you're safe.", SKILLS.__BUILDING__, [
-        [IID.shapedmetal, 9]
+        [IID.__SHAPED_METAL__, 9]
     ], 1, [
-        [AREAS.researchbench, 40000]
-    ], 6, IID.stonedoor1),
+        [AREAS.__WORKBENCH2__, 40000]
+    ], 6, IID.__STONE__door1),
     idWeapon: 21,     
     fuel: -1,
     zid: 1,
@@ -21340,8 +21342,8 @@ var items = [{
             isLoaded: 0
         }
     }],
-    impact: SOUNDID.metal,
-    destroy: SOUNDID.metaldes,
+    impact: SOUNDID.__STEEL_IMPACT__,
+    destroy: SOUNDID.__STEEL_DESTROY__,
     building: {
         src: "img/day-steel-door1.png",
         W: {
@@ -21354,7 +21356,7 @@ var items = [{
     life: 12500,
     score: 0
 }, {
-    id: IID.sulfur,
+    id: IID.__SULFUR__,
     img: {
         src: ["img/inv-sulfur-out.png", "img/inv-sulfur-in.png", "img/inv-sulfur-click.png"],
         W: [{
@@ -21366,7 +21368,7 @@ var items = [{
         }]
     },
     detail: new Detail("Sulfur", "Sulfur in such a cold landscape?", SKILLS.__MINERAL__, [], 0, [
-        [AREAS.extractor, 240000]
+        [AREAS.__EXTRACTOR__, 240000]
     ]),
     craftStart: 4,
     craftRng: 8,
@@ -21374,7 +21376,7 @@ var items = [{
     loot: LOOTID.__SULFUR__,
     score: 32
 }, {
-    id: IID.shapeduranium,
+    id: IID.__SHAPED_URANIUM__,
     img: {
         src: ["img/inv-shaped-uranium-out.png", "img/inv-shaped-uranium-in.png", "img/inv-shaped-uranium-click.png"],
         W: [{
@@ -21386,15 +21388,15 @@ var items = [{
         }]
     },
     detail: new Detail("Shaped Uranium", "Are you out of your mind?", SKILLS.__MINERAL__, [
-        [IID.uranium, 1]
+        [IID.__URANIUM__, 1]
     ], 1, [
-        [AREAS.smelter, 20000]
+        [AREAS.__SMELTER__, 20000]
     ]),
     stack: 255,
     loot: LOOTID.__SHAPED_URANIUM__,
     score: 0
 }, {
-    id: IID.researchbench,
+    id: IID.__WORKBENCH2__,
     img: {
         src: ["img/inv-workbench2-out.png", "img/inv-workbench2-in.png", "img/inv-workbench2-click.png"],
         W: [{
@@ -21406,16 +21408,16 @@ var items = [{
         }]
     },
     detail: new Detail("Research Bench", "Allow you to make new items", SKILLS.__SURVIVAL__, [
-        [IID.shapedmetal, 6],
-        [IID.electronicpart, 1]
+        [IID.__SHAPED_METAL__, 6],
+        [IID.__ELECTRONICS__, 1]
     ], 1, [
-        [AREAS.workbench, 50000]
+        [AREAS.__WORKBENCH__, 50000]
     ], 6),
     idWeapon: 21,     
     fuel: -1,
     zid: 0,
     z: 1,
-    area: AREAS.researchbench,
+    area: AREAS.__WORKBENCH2__,
     stack: 255,
     loot: LOOTID.__WORKBENCH2__,
     wait: 10,
@@ -21458,8 +21460,8 @@ var items = [{
             isLoaded: 0
         }
     },
-    impact: SOUNDID.metal,
-    destroy: SOUNDID.metaldes,
+    impact: SOUNDID.__STEEL_IMPACT__,
+    destroy: SOUNDID.__STEEL_DESTROY__,
     building: {
         src: "img/day-workbench2.png",
         W: {
@@ -21472,7 +21474,7 @@ var items = [{
     life: 400,
     score: 0
 }, {
-    id: IID.uranium,
+    id: IID.__URANIUM__,
     img: {
         src: ["img/inv-uranium-out.png", "img/inv-uranium-in.png", "img/inv-uranium-click.png"],
         W: [{
@@ -21484,7 +21486,7 @@ var items = [{
         }]
     },
     detail: new Detail("Uranium", "Do you want to end up as Marie Curie?", SKILLS.__MINERAL__, [], 0, [
-        [AREAS.extractor, 240000]
+        [AREAS.__EXTRACTOR__, 240000]
     ]),
     craftStart: 2,
     craftRng: 4,
@@ -21492,7 +21494,7 @@ var items = [{
     loot: LOOTID.__URANIUM__,
     score: 45
 }, {
-    id: IID.weavingmachine,
+    id: IID.__WEAVING__,
     img: {
         src: ["img/inv-weaving-machine-out.png", "img/inv-weaving-machine-in.png", "img/inv-weaving-machine-click.png"],
         W: [{
@@ -21504,17 +21506,17 @@ var items = [{
         }]
     },
     detail: new Detail("Weaving Machine", "Allow you to sew clothes", SKILLS.__SURVIVAL__, [
-        [IID.wood, 80],
-        [IID.stone, 20],
-        [IID.string, 2]
+        [IID.__WOOD__, 80],
+        [IID.__STONE__, 20],
+        [IID.__STRING__, 2]
     ], 1, [
-        [AREAS.workbench, 60000]
+        [AREAS.__WORKBENCH__, 60000]
     ]),
     idWeapon: 21,     
     fuel: -1,
     zid: 0,
     z: 1,
-    area: AREAS.weavingmachine,
+    area: AREAS.__WEAVING__,
     stack: 255,
     loot: LOOTID.__WEAVING__,
     wait: 10,
@@ -21555,8 +21557,8 @@ var items = [{
             isLoaded: 0
         }
     },
-    impact: SOUNDID.wood,
-    destroy: SOUNDID.wooddes,
+    impact: SOUNDID.__WOOD_IMPACT__,
+    destroy: SOUNDID.__WOOD_DESTROY__,
     building: {
         src: "img/day-weaving-machine.png",
         W: {
@@ -21569,7 +21571,7 @@ var items = [{
     life: 250,
     score: 0
 }, {
-    id: IID.gasoline,
+    id: IID.__GASOLINE__,
     img: {
         src: ["img/inv-gasoline-out.png", "img/inv-gasoline-in.png", "img/inv-gasoline-click.png"],
         W: [{
@@ -21581,15 +21583,15 @@ var items = [{
         }]
     },
     detail: new Detail("Gasoline", "Fuel for Smelter", SKILLS.__SURVIVAL__, [
-        [IID.rottenorange, 4],
-        [IID.sulfur, 1]
+        [IID.__ROTTEN_ORANGE__, 4],
+        [IID.__SULFUR__, 1]
     ], 1, [
-        [AREAS.researchbench, 20000]
+        [AREAS.__WORKBENCH2__, 20000]
     ]),
     stack: 255,
     loot: LOOTID.__GASOLINE__
 }, {
-    id: IID.sulfurpickaxe,
+    id: IID.__SULFUR__pickaxe,
     img: {
         src: ["img/inv-sulfur-pickaxe-out.png", "img/inv-sulfur-pickaxe-in.png", "img/inv-sulfur-pickaxe-click.png"],
         W: [{
@@ -21601,18 +21603,18 @@ var items = [{
         }]
     },
     detail: new Detail("Sulfur Pickaxe", "Mine also Uranium", SKILLS.__TOOL__, [
-        [IID.alloys, 2],
-        [IID.shapedmetal, 6],
-        [IID.sulfur, 6]
+        [IID.__ALLOYS__, 2],
+        [IID.__SHAPED_METAL__, 6],
+        [IID.__SULFUR__, 6]
     ], 1, [
-        [AREAS.researchbench, 90000]
-    ], 9, IID.steelpickaxe),
+        [AREAS.__WORKBENCH2__, 90000]
+    ], 9, IID.__STEEL__pickaxe),
     idWeapon: 22,     
     stack: 1,
     loot: LOOTID.__SULFUR_PICKAXE__,
     wait: 10
 }, {
-    id: IID.chest,
+    id: IID.__CHEST__,
     img: {
         src: ["img/inv-chest-out.png", "img/inv-chest-in.png", "img/inv-chest-click.png"],
         W: [{
@@ -21624,10 +21626,10 @@ var items = [{
         }]
     },
     detail: new Detail("Wood chest", "You can't store food in.", SKILLS.__BUILDING__, [
-        [IID.wood, 50],
-        [IID.stone, 20]
+        [IID.__WOOD__, 50],
+        [IID.__STONE__, 20]
     ], 1, [
-        [AREAS.workbench, 30000]
+        [AREAS.__WORKBENCH__, 30000]
     ], 8),
     idWeapon: 21,     
     fuel: -1,
@@ -21674,8 +21676,8 @@ var items = [{
             isLoaded: 0
         }
     },
-    impact: SOUNDID.wood,
-    destroy: SOUNDID.wooddes,
+    impact: SOUNDID.__WOOD_IMPACT__,
+    destroy: SOUNDID.__WOOD_DESTROY__,
     building: {
         src: "img/day-chest.png",
         W: {
@@ -21688,7 +21690,7 @@ var items = [{
     life: 300,
     score: 0
 }, {
-    id: IID.fridge,
+    id: IID.__FRIDGE__,
     img: {
         src: ["img/inv-fridge-out.png", "img/inv-fridge-in.png", "img/inv-fridge-click.png"],
         W: [{
@@ -21700,10 +21702,10 @@ var items = [{
         }]
     },
     detail: new Detail("Fridge", "Save your food.", SKILLS.__BUILDING__, [
-        [IID.shapedmetal, 5],
-        [IID.energycell, 4]
+        [IID.__SHAPED_METAL__, 5],
+        [IID.__ENERGY_CELLS__, 4]
     ], 1, [
-        [AREAS.researchbench, 90000]
+        [AREAS.__WORKBENCH2__, 90000]
     ], 9),
     idWeapon: 21,     
     fuel: -1,
@@ -21751,8 +21753,8 @@ var items = [{
             isLoaded: 0
         }
     },
-    impact: SOUNDID.metal,
-    destroy: SOUNDID.metaldes,
+    impact: SOUNDID.__STEEL_IMPACT__,
+    destroy: SOUNDID.__STEEL_DESTROY__,
     building: {
         src: "img/day-fridge.png",
         W: {
@@ -21765,7 +21767,7 @@ var items = [{
     life: 300,
     score: 0
 }, {
-    id: IID.woodfloor1,
+    id: IID.__WOOD__floor1,
     img: {
         src: ["img/inv-wood-floor-out.png", "img/inv-wood-floor-in.png", "img/inv-wood-floor-click.png"],
         W: [{
@@ -21777,9 +21779,9 @@ var items = [{
         }]
     },
     detail: new Detail("Wood floor", "Players can't spawn on it", SKILLS.__BUILDING__, [
-        [IID.wood, 15]
+        [IID.__WOOD__, 15]
     ], 2, [
-        [AREAS.workbench, 15000]
+        [AREAS.__WORKBENCH__, 15000]
     ]),
     stack: 255,
     loot: LOOTID.__WOOD_FLOOR__,
@@ -21808,7 +21810,7 @@ var items = [{
         }
     },
     wall: 1,
-    idWall: IID.woodfloor1,
+    idWall: IID.__WOOD__floor1,
     lowWall: 0,
     door: 0,
     broke: 1,
@@ -21836,7 +21838,7 @@ var items = [{
         }
     }],
     impact: SOUNDID.__NO_SOUND__,
-    destroy: SOUNDID.wooddes,
+    destroy: SOUNDID.__WOOD_DESTROY__,
     building: [{
         src: "img/day-wood-floor-0.png",
         W: {
@@ -22079,7 +22081,7 @@ var items = [{
     life: 4000,
     score: 0
 }, {
-    id: IID.hammer,
+    id: IID.__HAMMER__,
     img: {
         src: ["img/inv-hammer-out.png", "img/inv-hammer-in.png", "img/inv-hammer-click.png"],
         W: [{
@@ -22091,17 +22093,17 @@ var items = [{
         }]
     },
     detail: new Detail("Hammer", "Destroy walls quickly.", SKILLS.__TOOL__, [
-        [IID.wood, 100],
-        [IID.shapedmetal, 10]
+        [IID.__WOOD__, 100],
+        [IID.__SHAPED_METAL__, 10]
     ], 1, [
-        [AREAS.researchbench, 30000]
+        [AREAS.__WORKBENCH2__, 30000]
     ], 7),
     idWeapon: 23,     
     stack: 1,
     loot: LOOTID.__HAMMER__,
     wait: 10
 }, {
-    id: IID.sleepingbag,
+    id: IID.__SLEEPING_BAG__,
     img: {
         src: ["img/inv-sleeping-bag-out.png", "img/inv-sleeping-bag-in.png", "img/inv-sleeping-bag-click.png"],
         W: [{
@@ -22113,11 +22115,11 @@ var items = [{
         }]
     },
     detail: new Detail("Sleeping Bag", "Once dead, you keep your base", SKILLS.__SURVIVAL__, [
-        [IID.leather, 7],
-        [IID.animalfat, 7],
-        [IID.string, 7]
+        [IID.__LEATHER_BOAR__, 7],
+        [IID.__ANIMAL_FAT__, 7],
+        [IID.__STRING__, 7]
     ], 1, [
-        [AREAS.weavingmachine, 20000]
+        [AREAS.__WEAVING__, 20000]
     ], 9),
     stack: 255,
     loot: LOOTID.__SLEEPING_BAG__,
@@ -22153,8 +22155,8 @@ var items = [{
     collision: 0,
     areaEffect: 0,
     draw: Render.defaultBuilding,
-    impact: SOUNDID.pillow,
-    destroy: SOUNDID.pillowdes,
+    impact: SOUNDID.__PILLOW_IMPACT__,
+    destroy: SOUNDID.__PILLOW_DESTROY__,
     building: {
         src: "img/day-sleeping-bag.png",
         W: {
@@ -22167,7 +22169,7 @@ var items = [{
     life: 500,
     score: 0
 }, {
-    id: IID.repairhammer,
+    id: IID.__REPAIR_HAMMER__,
     img: {
         src: ["img/inv-repair-hammer-out.png", "img/inv-repair-hammer-in.png", "img/inv-repair-hammer-click.png"],
         W: [{
@@ -22179,17 +22181,17 @@ var items = [{
         }]
     },
     detail: new Detail("Repair Hammer", "Repair walls but require nails.", SKILLS.__TOOL__, [
-        [IID.wood, 120],
-        [IID.shapedmetal, 2]
+        [IID.__WOOD__, 120],
+        [IID.__SHAPED_METAL__, 2]
     ], 1, [
-        [AREAS.workbench, 30000]
+        [AREAS.__WORKBENCH__, 30000]
     ], 5),
     idWeapon: 24,     
     stack: 1,
     loot: LOOTID.__REPAIR_HAMMER__,
     wait: 10
 }, {
-    id: IID.nails,
+    id: IID.__NAILS__,
     img: {
         src: ["img/inv-nails-out.png", "img/inv-nails-in.png", "img/inv-nails-click.png"],
         W: [{
@@ -22201,14 +22203,14 @@ var items = [{
         }]
     },
     detail: new Detail("Nails", "Needed to repair walls.", SKILLS.__SURVIVAL__, [
-        [IID.shapedmetal, 2]
+        [IID.__SHAPED_METAL__, 2]
     ], 85, [
-        [AREAS.workbench, 20000]
+        [AREAS.__WORKBENCH__, 20000]
     ]),
     stack: 255,
     loot: LOOTID.__NAILS__
 }, {
-    id: IID.woodfloor2,
+    id: IID.__WOOD__floor2,
     img: {
         src: ["img/inv-wood-floor-light-out.png", "img/inv-wood-floor-light-in.png", "img/inv-wood-floor-light-click.png"],
         W: [{
@@ -22220,9 +22222,9 @@ var items = [{
         }]
     },
     detail: new Detail("Light Wood Floor", "Players can't spawn on it", SKILLS.__BUILDING__, [
-        [IID.wood, 15]
+        [IID.__WOOD__, 15]
     ], 2, [
-        [AREAS.workbench, 15000]
+        [AREAS.__WORKBENCH__, 15000]
     ]),
     stack: 255,
     loot: LOOTID.__WOODLIGHT_FLOOR__,
@@ -22251,7 +22253,7 @@ var items = [{
         }
     },
     wall: 1,
-    idWall: IID.woodfloor2,
+    idWall: IID.__WOOD__floor2,
     lowWall: 0,
     door: 0,
     broke: 1,
@@ -22279,7 +22281,7 @@ var items = [{
         }
     }],
     impact: SOUNDID.__NO_SOUND__,
-    destroy: SOUNDID.wooddes,
+    destroy: SOUNDID.__WOOD_DESTROY__,
     building: [{
         src: "img/day-wood-floor-light-0.png",
         W: {
@@ -22522,7 +22524,7 @@ var items = [{
     life: 4000,
     score: 0
 }, {
-    id: IID.smallwoodwall,
+    id: IID.__WOOD_SMALLWALL__,
     img: {
         src: ["img/inv-wood-smallwall-out.png", "img/inv-wood-smallwall-in.png", "img/inv-wood-smallwall-click.png"],
         W: [{
@@ -22534,9 +22536,9 @@ var items = [{
         }]
     },
     detail: new Detail("Wooden Low Wall", "You can shoot through it.", SKILLS.__BUILDING__, [
-        [IID.wood, 10]
+        [IID.__WOOD__, 10]
     ], 1, [
-        [AREAS.workbench, 10000]
+        [AREAS.__WORKBENCH__, 10000]
     ]),
     idWeapon: 21,     
     fuel: -1,
@@ -22600,8 +22602,8 @@ var items = [{
             isLoaded: 0
         }
     }],
-    impact: SOUNDID.wood,
-    destroy: SOUNDID.wooddes,
+    impact: SOUNDID.__WOOD_IMPACT__,
+    destroy: SOUNDID.__WOOD_DESTROY__,
     building: [{
         src: "img/day-wood-smallwalls-0.png",
         W: {
@@ -22809,7 +22811,7 @@ var items = [{
     life: 3000,
     score: 0
 }, {
-    id: IID.smallstonewall,
+    id: IID.__STONE_SMALLWALL__,
     img: {
         src: ["img/inv-stone-smallwall-out.png", "img/inv-stone-smallwall-in.png", "img/inv-stone-smallwall-click.png"],
         W: [{
@@ -22821,9 +22823,9 @@ var items = [{
         }]
     },
     detail: new Detail("Stone Low Wall", "You can shoot through it.", SKILLS.__BUILDING__, [
-        [IID.stone, 10]
+        [IID.__STONE__, 10]
     ], 1, [
-        [AREAS.workbench, 15000]
+        [AREAS.__WORKBENCH__, 15000]
     ], 3),
     idWeapon: 21,     
     fuel: -1,
@@ -22887,8 +22889,8 @@ var items = [{
             isLoaded: 0
         }
     }],
-    impact: SOUNDID.stone,
-    destroy: SOUNDID.stonedes,
+    impact: SOUNDID.__STONE_IMPACT__,
+    destroy: SOUNDID.__STONE_DESTROY__,
     building: [{
         src: "img/day-stone-smallwalls-0.png",
         W: {
@@ -23096,7 +23098,7 @@ var items = [{
     life: 7000,
     score: 0
 }, {
-    id: IID.smallsteelwall,
+    id: IID.__STEEL_SMALLWALL__,
     img: {
         src: ["img/inv-steel-smallwall-out.png", "img/inv-steel-smallwall-in.png", "img/inv-steel-smallwall-click.png"],
         W: [{
@@ -23108,10 +23110,10 @@ var items = [{
         }]
     },
     detail: new Detail("Metal Low Wall", "You can shoot through it.", SKILLS.__BUILDING__, [
-        [IID.shapedmetal, 2]
+        [IID.__SHAPED_METAL__, 2]
     ], 1, [
-        [AREAS.researchbench, 20000]
-    ], 6, IID.smallstonewall),
+        [AREAS.__WORKBENCH2__, 20000]
+    ], 6, IID.__STONE_SMALLWALL__),
     idWeapon: 21,     
     fuel: -1,
     zid: 0,
@@ -23174,8 +23176,8 @@ var items = [{
             isLoaded: 0
         }
     }],
-    impact: SOUNDID.metal,
-    destroy: SOUNDID.metaldes,
+    impact: SOUNDID.__STEEL_IMPACT__,
+    destroy: SOUNDID.__STEEL_DESTROY__,
     building: [{
         src: "img/day-steel-smallwalls-0.png",
         W: {
@@ -23383,7 +23385,7 @@ var items = [{
     life: 15000,
     score: 0
 }, {
-    id: IID.MMnVW,
+    id: IID.__FURNITURE__,
     zid: 0,
     xCenter: [0, 0, 0, 0],
     yCenter: [0, 0, 0, 0],
@@ -23401,7 +23403,7 @@ var items = [{
     particles: -1,
     draw: Render.furniture
 }, {
-    id: IID.tomatosoup,
+    id: IID.__TOMATO_SOUP__,
     img: {
         src: ["img/inv-tomato-soup-out.png", "img/inv-tomato-soup-in.png", "img/inv-tomato-soup-click.png"],
         W: [{
@@ -23413,20 +23415,20 @@ var items = [{
         }]
     },
     detail: new Detail("Tomato Soup", "Has not yet been opened.", SKILLS.__SURVIVAL__, [
-        [IID.can, 1],
-        [IID.tomato, 2]
+        [IID.__CAN__, 1],
+        [IID.__TOMATO__, 2]
     ], 1, [
-        [AREAS.firepart, 15000],
-        [AREAS.bbq, 7000]
+        [AREAS.__FIRE__, 15000],
+        [AREAS.__BBQ__, 7000]
     ]),
     idWeapon: 25,     
     stack: 5,
     loot: LOOTID.__TOMATO_SOUP__,
     perish: 2,
-    perishId: IID.can,
+    perishId: IID.__CAN__,
     wait: 10
 }, {
-    id: IID.syringe,
+    id: IID.__SYRINGE__,
     img: {
         src: ["img/inv-syringe-out.png", "img/inv-syringe-in.png", "img/inv-syringe-click.png"],
         W: [{
@@ -23438,15 +23440,15 @@ var items = [{
         }]
     },
     detail: new Detail("Syringe", "Useful to make drugs.", SKILLS.__DRUG__, [
-        [IID.junk, 1]
+        [IID.__JUNK__, 1]
     ], 1, [
-        [AREAS.researchbench, 30000]
+        [AREAS.__WORKBENCH2__, 30000]
     ]),
     stack: 20,
     loot: LOOTID.__SYRINGE__,
     score: 50
 }, {
-    id: IID.chemicalcomponent,
+    id: IID.__CHEMICAL_COMPONENT__,
     img: {
         src: ["img/inv-chemical-component-out.png", "img/inv-chemical-component-in.png", "img/inv-chemical-component-click.png"],
         W: [{
@@ -23462,7 +23464,7 @@ var items = [{
     loot: LOOTID.__CHEMICAL_COMPONENT__,
     score: 50
 }, {
-    id: IID.radway,
+    id: IID.__RADAWAY__,
     img: {
         src: ["img/inv-radaway-out.png", "img/inv-radaway-in.png", "img/inv-radaway-click.png"],
         W: [{
@@ -23474,18 +23476,18 @@ var items = [{
         }]
     },
     detail: new Detail("RadAway", "Reduce your radioactivity a lot.", SKILLS.__DRUG__, [
-        [IID.syringe, 1],
-        [IID.chemicalcomponent, 1],
-        [IID.mushroom2, 1]
+        [IID.__SYRINGE__, 1],
+        [IID.__CHEMICAL_COMPONENT__, 1],
+        [IID.__MUSHROOM1__2, 1]
     ], 1, [
-        [AREAS.agitator, 45000]
+        [AREAS.__AGITATOR__, 45000]
     ]),
     idWeapon: 26,     
     stack: 5,
     loot: LOOTID.__RADAWAY__,
     wait: 10
 }, {
-    id: IID.tomatoseed,
+    id: IID.__SEED_TOMATO__,
     img: {
         src: ["img/inv-tomato-seed-out.png", "img/inv-tomato-seed-in.png", "img/inv-tomato-seed-click.png"],
         W: [{
@@ -23497,10 +23499,10 @@ var items = [{
         }]
     },
     detail: new Detail("Tomato Seed", "A fruit or vegetable?", SKILLS.__PLANT__, [
-        [IID.tomato, 4]
+        [IID.__TOMATO__, 4]
     ], 1, [
-        [AREAS.firepart, 30000],
-        [AREAS.bbq, 20000]
+        [AREAS.__FIRE__, 30000],
+        [AREAS.__BBQ__, 20000]
     ]),
     stack: 40,
     loot: LOOTID.__SEED_TOMATO__,
@@ -23571,7 +23573,7 @@ var items = [{
     life: 250,
     score: 0
 }, {
-    id: IID.tomato,
+    id: IID.__TOMATO__,
     img: {
         src: ["img/inv-tomato-out.png", "img/inv-tomato-in.png", "img/inv-tomato-click.png"],
         W: [{
@@ -23587,11 +23589,11 @@ var items = [{
     loot: LOOTID.tomato,
     wait: 5,
     perish: 10,
-    perishId: IID.rottentomato,
+    perishId: IID.__ROTTEN_TOMATO__,
     idWeapon: 27,     
     score: 24
 }, {
-    id: IID.rottentomato,
+    id: IID.__ROTTEN_TOMATO__,
     img: {
         src: ["img/inv-rotten-tomato-out.png", "img/inv-rotten-tomato-in.png", "img/inv-rotten-tomato-click.png"],
         W: [{
@@ -23609,7 +23611,7 @@ var items = [{
     idWeapon: 28,     
     score: 20
 }, {
-    id: IID.can,
+    id: IID.__CAN__,
     img: {
         src: ["img/inv-can-out.png", "img/inv-can-in.png", "img/inv-can-click.png"],
         W: [{
@@ -23621,15 +23623,15 @@ var items = [{
         }]
     },
     detail: new Detail("Can", "Useful to craft food can.", SKILLS.__SURVIVAL__, [
-        [IID.shapedmetal, 1]
+        [IID.__SHAPED_METAL__, 1]
     ], 1, [
-        [AREAS.workbench, 20000]
+        [AREAS.__WORKBENCH__, 20000]
     ]),
     idWeapon: 0,     
     stack: 255,
     loot: LOOTID.__CAN__
 }, {
-    id: IID.crossbow,
+    id: IID.__WOOD_CROSSBOW__,
     img: {
         src: ["img/inv-wood-crossbow-out.png", "img/inv-wood-crossbow-in.png", "img/inv-wood-crossbow-click.png"],
         W: [{
@@ -23641,19 +23643,19 @@ var items = [{
         }]
     },
     detail: new Detail("Wood Crossbow", "Shoot faster, reload slower", SKILLS.__WEAPON__, [
-        [IID.wood, 200],
-        [IID.string, 2],
-        [IID.shapedmetal, 1]
+        [IID.__WOOD__, 200],
+        [IID.__STRING__, 2],
+        [IID.__SHAPED_METAL__, 1]
     ], 1, [
-        [AREAS.workbench, 50000]
+        [AREAS.__WORKBENCH__, 50000]
     ], 6),
     idWeapon: 29,     
-    bullet: IID.crossarrow,
+    bullet: IID.__WOOD_CROSSARROW__,
     stack: 1,
     loot: LOOTID.__WOOD_CROSSBOW__,
     wait: 10
 }, {
-    id: IID.crossarrow,
+    id: IID.__WOOD_CROSSARROW__,
     img: {
         src: ["img/inv-wood-crossarrow-out.png", "img/inv-wood-crossarrow-in.png", "img/inv-wood-crossarrow-click.png"],
         W: [{
@@ -23665,15 +23667,15 @@ var items = [{
         }]
     },
     detail: new Detail("Crossbow Arrows", "Needed to use crossbow.", SKILLS.__WEAPON__, [
-        [IID.wood, 40],
-        [IID.shapedmetal, 1]
+        [IID.__WOOD__, 40],
+        [IID.__SHAPED_METAL__, 1]
     ], 10, [
-        [AREAS.workbench, 30000]
+        [AREAS.__WORKBENCH__, 30000]
     ]),
     stack: 255,
     loot: LOOTID.__WOOD_CROSSARROW__
 }, {
-    id: IID.nailgun,
+    id: IID.__NAIL_GUN__,
     img: {
         src: ["img/inv-nail-gun-out.png", "img/inv-nail-gun-in.png", "img/inv-nail-gun-click.png"],
         W: [{
@@ -23685,20 +23687,20 @@ var items = [{
         }]
     },
     detail: new Detail("Nail Gun", "Repair walls from a distance", SKILLS.__TOOL__, [
-        [IID.shapedmetal, 3],
-        [IID.smallwire, 1],
-        [IID.junk, 1],
-        [IID.energycell, 4]
+        [IID.__SHAPED_METAL__, 3],
+        [IID.__SMALL_WIRE__, 1],
+        [IID.__JUNK__, 1],
+        [IID.__ENERGY_CELLS__, 4]
     ], 1, [
-        [AREAS.researchbench, 30000]
+        [AREAS.__WORKBENCH2__, 30000]
     ], 7),
     idWeapon: 30,     
-    bullet: IID.nails,
+    bullet: IID.__NAILS__,
     stack: 1,
     loot: LOOTID.__NAIL_GUN__,
     wait: 10
 }, {
-    id: IID.sawedoff,
+    id: IID.__SAWED_OFF_SHOTGUN__,
     img: {
         src: ["img/inv-sawed-off-shotgun-out.png", "img/inv-sawed-off-shotgun-in.png", "img/inv-sawed-off-shotgun-click.png"],
         W: [{
@@ -23710,19 +23712,19 @@ var items = [{
         }]
     },
     detail: new Detail("Sawed Off", "Shoot less far, do more damages", SKILLS.__WEAPON__, [
-        [IID.shotgun, 1],
-        [IID.alloys, 6],
-        [IID.shapedmetal, 6]
+        [IID.__SHOTGUN__, 1],
+        [IID.__ALLOYS__, 6],
+        [IID.__SHAPED_METAL__, 6]
     ], 1, [
-        [AREAS.researchbench, 200000]
-    ], 13, IID.shotgun),
+        [AREAS.__WORKBENCH2__, 200000]
+    ], 13, IID.__SHOTGUN__),
     idWeapon: 31,     
-    bullet: IID.bulletshotgun,
+    bullet: IID.__BULLET_SHOTGUN__,
     stack: 1,
     loot: LOOTID.__SAWED_OFF_SHOTGUN__,
     wait: 10
 }, {
-    id: IID.stonefloor1,
+    id: IID.__STONE__floor1,
     img: {
         src: ["img/inv-stone-floor-out.png", "img/inv-stone-floor-in.png", "img/inv-stone-floor-click.png"],
         W: [{
@@ -23734,9 +23736,9 @@ var items = [{
         }]
     },
     detail: new Detail("Stone floor", "Players can't spawn on it", SKILLS.__BUILDING__, [
-        [IID.stone, 15]
+        [IID.__STONE__, 15]
     ], 2, [
-        [AREAS.workbench, 15000]
+        [AREAS.__WORKBENCH__, 15000]
     ], 4),
     stack: 255,
     loot: LOOTID.__STONE_FLOOR__,
@@ -23765,7 +23767,7 @@ var items = [{
         }
     },
     wall: 1,
-    idWall: IID.stonefloor1,
+    idWall: IID.__STONE__floor1,
     lowWall: 0,
     door: 0,
     broke: 1,
@@ -23793,7 +23795,7 @@ var items = [{
         }
     }],
     impact: SOUNDID.__NO_SOUND__,
-    destroy: SOUNDID.stonedes,
+    destroy: SOUNDID.__STONE_DESTROY__,
     building: [{
         src: "img/day-stone-floor-0.png",
         W: {
@@ -24036,7 +24038,7 @@ var items = [{
     life: 8000,
     score: 0
 }, {
-    id: IID.stonefloor2,
+    id: IID.__STONE__floor2,
     img: {
         src: ["img/inv-tiling-floor-out.png", "img/inv-tiling-floor-in.png", "img/inv-tiling-floor-click.png"],
         W: [{
@@ -24048,9 +24050,9 @@ var items = [{
         }]
     },
     detail: new Detail("Tiling floor", "Players can't spawn on it", SKILLS.__BUILDING__, [
-        [IID.stone, 15]
+        [IID.__STONE__, 15]
     ], 2, [
-        [AREAS.workbench, 15000]
+        [AREAS.__WORKBENCH__, 15000]
     ], 4),
     stack: 255,
     loot: LOOTID.__TILING_FLOOR__,
@@ -24079,7 +24081,7 @@ var items = [{
         }
     },
     wall: 1,
-    idWall: IID.stonefloor2,
+    idWall: IID.__STONE__floor2,
     lowWall: 0,
     door: 0,
     broke: 1,
@@ -24107,7 +24109,7 @@ var items = [{
         }
     }],
     impact: SOUNDID.__NO_SOUND__,
-    destroy: SOUNDID.stonedes,
+    destroy: SOUNDID.__STONE_DESTROY__,
     building: [{
         src: "img/day-tiling-floor-0.png",
         W: {
@@ -24369,7 +24371,7 @@ var items = [{
     particles: -1,
     draw: Render.road
 }, {
-    id: IID.chips,
+    id: IID.__CRISPS__,
     img: {
         src: ["img/inv-chips-out.png", "img/inv-chips-in.png", "img/inv-chips-click.png"],
         W: [{
@@ -24385,10 +24387,10 @@ var items = [{
     stack: 5,
     loot: LOOTID.__CRISPS__,
     perish: 2,
-    perishId: IID.rottenchips,
+    perishId: IID.__ROTTEN_CRISPS__,
     wait: 10
 }, {
-    id: IID.rottenchips,
+    id: IID.__ROTTEN_CRISPS__,
     img: {
         src: ["img/inv-rotten-chips-out.png", "img/inv-rotten-chips-in.png", "img/inv-rotten-chips-click.png"],
         W: [{
@@ -24406,7 +24408,7 @@ var items = [{
     idWeapon: 33,     
     score: 20
 }, {
-    id: IID.electronicpart,
+    id: IID.__ELECTRONICS__,
     img: {
         src: ["img/inv-electronic-part-out.png", "img/inv-electronic-part-in.png", "img/inv-electronic-part-click.png"],
         W: [{
@@ -24422,7 +24424,7 @@ var items = [{
     loot: LOOTID.__ELECTRONICS__,
     score: 100
 }, {
-    id: IID.junk,
+    id: IID.__JUNK__,
     img: {
         src: ["img/inv-junk-out.png", "img/inv-junk-in.png", "img/inv-junk-click.png"],
         W: [{
@@ -24438,7 +24440,7 @@ var items = [{
     loot: LOOTID.__JUNK__,
     score: 40
 }, {
-    id: IID.wires,
+    id: IID.__WIRE__,
     img: {
         src: ["img/inv-wires-out.png", "img/inv-wires-in.png", "img/inv-wires-click.png"],
         W: [{
@@ -24454,7 +24456,7 @@ var items = [{
     loot: LOOTID.__WIRE__,
     score: 40
 }, {
-    id: IID.energycell,
+    id: IID.__ENERGY_CELLS__,
     img: {
         src: ["img/inv-small-energy-cells-out.png", "img/inv-small-energy-cells-in.png", "img/inv-small-energy-cells-click.png"],
         W: [{
@@ -24466,15 +24468,15 @@ var items = [{
         }]
     },
     detail: new Detail("Energy Cells", "Used for energy weapons/buildings", SKILLS.__SURVIVAL__, [
-        [IID.alloys, 1],
-        [IID.shapeduranium, 1]
+        [IID.__ALLOYS__, 1],
+        [IID.__SHAPED_URANIUM__, 1]
     ], 30, [
-        [AREAS.teslabench, 28000]
+        [AREAS.__TESLA__, 28000]
     ], 6),
     stack: 255,
     loot: LOOTID.__ENERGY_CELLS__
 }, {
-    id: IID.laserpistol,
+    id: IID.__LASER_PISTOL__,
     img: {
         src: ["img/inv-laser-pistol-out.png", "img/inv-laser-pistol-in.png", "img/inv-laser-pistol-click.png"],
         W: [{
@@ -24486,21 +24488,21 @@ var items = [{
         }]
     },
     detail: new Detail("Laser Pistol", "Bullets are faster.", SKILLS.__WEAPON__, [
-        [IID.shapeduranium, 2],
-        [IID.wires, 1],
-        [IID.electronicpart, 2],
-        [IID.alloys, 1],
-        [IID.shapedmetal, 4]
+        [IID.__SHAPED_URANIUM__, 2],
+        [IID.__WIRE__, 1],
+        [IID.__ELECTRONICS__, 2],
+        [IID.__ALLOYS__, 1],
+        [IID.__SHAPED_METAL__, 4]
     ], 1, [
-        [AREAS.teslabench, 180000]
+        [AREAS.__TESLA__, 180000]
     ], 14),
     idWeapon: 34,     
-    bullet: IID.energycell,
+    bullet: IID.__ENERGY_CELLS__,
     stack: 1,
     loot: LOOTID.__LASER_PISTOL__,
     wait: 10
 }, {
-    id: IID.teslabench,
+    id: IID.__TESLA__,
     img: {
         src: ["img/inv-workbench3-out.png", "img/inv-workbench3-in.png", "img/inv-workbench3-click.png"],
         W: [{
@@ -24512,19 +24514,19 @@ var items = [{
         }]
     },
     detail: new Detail("Tesla Bench", "Allow you to make powerful items", SKILLS.__SURVIVAL__, [
-        [IID.alloys, 4],
-        [IID.shapedmetal, 6],
-        [IID.electronicpart, 3],
-        [IID.wires, 4],
-        [IID.shapeduranium, 2]
+        [IID.__ALLOYS__, 4],
+        [IID.__SHAPED_METAL__, 6],
+        [IID.__ELECTRONICS__, 3],
+        [IID.__WIRE__, 4],
+        [IID.__SHAPED_URANIUM__, 2]
     ], 1, [
-        [AREAS.researchbench, 120000]
-    ], 10, IID.researchbench),
+        [AREAS.__WORKBENCH2__, 120000]
+    ], 10, IID.__WORKBENCH2__),
     idWeapon: 21,     
     fuel: 60000,
     zid: 0,
     z: 1,
-    area: AREAS.teslabench,
+    area: AREAS.__TESLA__,
     stack: 255,
     loot: LOOTID.__TESLA__,
     wait: 10,
@@ -24569,8 +24571,8 @@ var items = [{
             isLoaded: 0
         }
     },
-    impact: SOUNDID.metal,
-    destroy: SOUNDID.metaldes,
+    impact: SOUNDID.__STEEL_IMPACT__,
+    destroy: SOUNDID.__STEEL_DESTROY__,
     building: [{
         src: "img/day-workbench3.png",
         W: {
@@ -24629,7 +24631,7 @@ var items = [{
     life: 3000,
     score: 0
 }, {
-    id: IID.alloys,
+    id: IID.__ALLOYS__,
     img: {
         src: ["img/inv-alloys-out.png", "img/inv-alloys-in.png", "img/inv-alloys-click.png"],
         W: [{
@@ -24641,16 +24643,16 @@ var items = [{
         }]
     },
     detail: new Detail("Alloys", "To craft powerful items", SKILLS.__MINERAL__, [
-        [IID.steel, 1],
-        [IID.junk, 1],
-        [IID.sulfur, 1]
+        [IID.__STEEL__, 1],
+        [IID.__JUNK__, 1],
+        [IID.__SULFUR__, 1]
     ], 1, [
-        [AREAS.smelter, 10000]
+        [AREAS.__SMELTER__, 10000]
     ]),
     stack: 255,
     loot: LOOTID.__ALLOYS__
 }, {
-    id: IID.sulfuraxe,
+    id: IID.__SULFUR__axe,
     img: {
         src: ["img/inv-sulfur-axe-out.png", "img/inv-sulfur-axe-in.png", "img/inv-sulfur-axe-click.png"],
         W: [{
@@ -24662,19 +24664,19 @@ var items = [{
         }]
     },
     detail: new Detail("Sulfur Axe", "You look cool with it.", SKILLS.__TOOL__, [
-        [IID.stoneaxe, 1],
-        [IID.alloys, 8],
-        [IID.shapedmetal, 10],
-        [IID.sulfur, 20]
+        [IID.__STONE__axe, 1],
+        [IID.__ALLOYS__, 8],
+        [IID.__SHAPED_METAL__, 10],
+        [IID.__SULFUR__, 20]
     ], 1, [
-        [AREAS.researchbench, 200000]
-    ], 10, IID.stoneaxe),
+        [AREAS.__WORKBENCH2__, 200000]
+    ], 10, IID.__STONE__axe),
     idWeapon: 35,     
     stack: 1,
     loot: LOOTID.__SULFUR_AXE__,
     wait: 10
 }, {
-    id: IID.landmine,
+    id: IID.__LANDMINE__,
     img: {
         src: ["img/inv-landmine-out.png", "img/inv-landmine-in.png", "img/inv-landmine-click.png"],
         W: [{
@@ -24686,12 +24688,12 @@ var items = [{
         }]
     },
     detail: new Detail("Landmine", "When you feel it, it's too late", SKILLS.__WEAPON__, [
-        [IID.shapedmetal, 4],
-        [IID.junk, 1],
-        [IID.sulfur, 2],
-        [IID.animalfat, 2]
+        [IID.__SHAPED_METAL__, 4],
+        [IID.__JUNK__, 1],
+        [IID.__SULFUR__, 2],
+        [IID.__ANIMAL_FAT__, 2]
     ], 1, [
-        [AREAS.researchbench, 40000]
+        [AREAS.__WORKBENCH2__, 40000]
     ], 9),
     stack: 20,
     loot: LOOTID.__LANDMINE__,
@@ -24729,8 +24731,8 @@ var items = [{
     damageBuilding: 400,
     areaEffect: 0,
     draw: Render.landmine,
-    impact: SOUNDID.metal,
-    destroy: SOUNDID.metaldes,
+    impact: SOUNDID.__STEEL_IMPACT__,
+    destroy: SOUNDID.__STEEL_DESTROY__,
     building: [{
         src: "img/day-landmine-0.png",
         W: {
@@ -24753,7 +24755,7 @@ var items = [{
     life: 5,
     score: 0
 }, {
-    id: IID.dynamite,
+    id: IID.__DYNAMITE__,
     img: {
         src: ["img/inv-dynamite-out.png", "img/inv-dynamite-in.png", "img/inv-dynamite-click.png"],
         W: [{
@@ -24765,12 +24767,12 @@ var items = [{
         }]
     },
     detail: new Detail("Dynamite", "Get out of here, it gonna blow!", SKILLS.__WEAPON__, [
-        [IID.string, 1],
-        [IID.animalfat, 2],
-        [IID.sulfur, 2],
-        [IID.junk, 1]
+        [IID.__STRING__, 1],
+        [IID.__ANIMAL_FAT__, 2],
+        [IID.__SULFUR__, 2],
+        [IID.__JUNK__, 1]
     ], 1, [
-        [AREAS.researchbench, 40000]
+        [AREAS.__WORKBENCH2__, 40000]
     ], 9),
     stack: 10,
     loot: LOOTID.__DYNAMITE__,
@@ -24808,7 +24810,7 @@ var items = [{
     damageBuilding: 1400,
     areaEffect: 0,
     draw: Render.dynamite,
-    impact: SOUNDID.pillow,
+    impact: SOUNDID.__PILLOW_IMPACT__,
     destroy: SOUNDID.__NO_SOUND__,
     building: [{
         src: "img/day-dynamite.png",
@@ -24827,7 +24829,7 @@ var items = [{
     life: 100,
     score: 0
 }, {
-    id: IID.c4bomb,
+    id: IID.__C4__,
     img: {
         src: ["img/inv-C4-out.png", "img/inv-C4-in.png", "img/inv-C4-click.png"],
         W: [{
@@ -24839,13 +24841,13 @@ var items = [{
         }]
     },
     detail: new Detail("C4", "Explode when you hit the trigger!", SKILLS.__WEAPON__, [
-        [IID.dynamite, 2],
-        [IID.smallwire, 1],
-        [IID.alloys, 2],
-        [IID.electronicpart, 1]
+        [IID.__DYNAMITE__, 2],
+        [IID.__SMALL_WIRE__, 1],
+        [IID.__ALLOYS__, 2],
+        [IID.__ELECTRONICS__, 1]
     ], 1, [
-        [AREAS.researchbench, 60000]
-    ], 16, IID.dynamite),
+        [AREAS.__WORKBENCH2__, 60000]
+    ], 16, IID.__DYNAMITE__),
     stack: 5,
     loot: LOOTID.__C4__,
     wait: 10,
@@ -24882,7 +24884,7 @@ var items = [{
     collision: 0,
     areaEffect: 0,
     draw: Render.dynamite,
-    impact: SOUNDID.pillow,
+    impact: SOUNDID.__PILLOW_IMPACT__,
     destroy: SOUNDID.__NO_SOUND__,
     building: [{
         src: "img/day-C4.png",
@@ -24901,7 +24903,7 @@ var items = [{
     life: 100,
     score: 0
 }, {
-    id: IID.joystic,
+    id: IID.__C4_TRIGGER__,
     img: {
         src: ["img/inv-joystick-out.png", "img/inv-joystick-in.png", "img/inv-joystick-click.png"],
         W: [{
@@ -24913,20 +24915,20 @@ var items = [{
         }]
     },
     detail: new Detail("C4 Trigger", "Don't press the button or else...", SKILLS.__WEAPON__, [
-        [IID.shapedmetal, 5],
-        [IID.electronicpart, 1],
-        [IID.energycell, 8],
-        [IID.smallwire, 1]
+        [IID.__SHAPED_METAL__, 5],
+        [IID.__ELECTRONICS__, 1],
+        [IID.__ENERGY_CELLS__, 8],
+        [IID.__SMALL_WIRE__, 1]
     ], 1, [
-        [AREAS.researchbench, 100000]
-    ], 16, IID.c4bomb),
+        [AREAS.__WORKBENCH2__, 100000]
+    ], 16, IID.__C4__),
     stack: 1,
     loot: LOOTID.__C4_TRIGGER__,
     wait: 10,
     idWeapon: 36,     
     score: 0
 }, {
-    id: IID.composter,
+    id: IID.__COMPOST__,
     img: {
         src: ["img/inv-composter-out.png", "img/inv-composter-in.png", "img/inv-composter-click.png"],
         W: [{
@@ -24938,16 +24940,16 @@ var items = [{
         }]
     },
     detail: new Detail("Compost", "Allows to accelerate rotting", SKILLS.__SURVIVAL__, [
-        [IID.shapedmetal, 4],
-        [IID.electronicpart, 1]
+        [IID.__SHAPED_METAL__, 4],
+        [IID.__ELECTRONICS__, 1]
     ], 1, [
-        [AREAS.researchbench, 100000]
+        [AREAS.__WORKBENCH2__, 100000]
     ], 8),
     idWeapon: 21,     
     fuel: 10000,
     zid: 0,
     z: 1,
-    area: AREAS.composter,
+    area: AREAS.__COMPOST__,
     stack: 255,
     loot: LOOTID.__COMPOST__,
     wait: 10,
@@ -24988,8 +24990,8 @@ var items = [{
             isLoaded: 0
         }
     },
-    impact: SOUNDID.metal,
-    destroy: SOUNDID.metaldes,
+    impact: SOUNDID.__STEEL_IMPACT__,
+    destroy: SOUNDID.__STEEL_DESTROY__,
     building: [{
         src: "img/day-composter-off.png",
         W: {
@@ -25007,7 +25009,7 @@ var items = [{
     life: 500,
     score: 0
 }, {
-    id: IID.metalhelmet,
+    id: IID.__ARMOR_PHYSIC_1__,
     img: {
         src: ["img/inv-metal-helmet-out.png", "img/inv-metal-helmet-in.png", "img/inv-metal-helmet-click.png"],
         W: [{
@@ -25019,12 +25021,12 @@ var items = [{
         }]
     },
     detail: new Detail("Metal Helmet", "Protects you from melee weapons", SKILLS.__CLOTHE__, [
-        [IID.shapedmetal, 3],
-        [IID.animaltendon, 3],
-        [IID.leather, 3],
-        [IID.nails, 80]
+        [IID.__SHAPED_METAL__, 3],
+        [IID.__ANIMAL_TENDON__, 3],
+        [IID.__LEATHER_BOAR__, 3],
+        [IID.__NAILS__, 80]
     ], 1, [
-        [AREAS.workbench, 70000]
+        [AREAS.__WORKBENCH__, 70000]
     ]),
     idClothe: 7,
     stack: 1,
@@ -25038,7 +25040,7 @@ var items = [{
     rad: 0,
     speed: -0.01
 }, {
-    id: IID.weldinghelmet,
+    id: IID.__ARMOR_PHYSIC_2__,
     img: {
         src: ["img/inv-welding-helmet-out.png", "img/inv-welding-helmet-in.png", "img/inv-welding-helmet-click.png"],
         W: [{
@@ -25050,13 +25052,13 @@ var items = [{
         }]
     },
     detail: new Detail("Welding Helmet", "Protects you from melee weapons", SKILLS.__CLOTHE__, [
-        [IID.shapedmetal, 10],
-        [IID.alloys, 2],
-        [IID.leather, 3],
-        [IID.nails, 160],
-        [IID.metalhelmet, 1]
+        [IID.__SHAPED_METAL__, 10],
+        [IID.__ALLOYS__, 2],
+        [IID.__LEATHER_BOAR__, 3],
+        [IID.__NAILS__, 160],
+        [IID.__ARMOR_PHYSIC_1__, 1]
     ], 1, [
-        [AREAS.researchbench, 140000]
+        [AREAS.__WORKBENCH2__, 140000]
     ], 7),
     idClothe: 8,
     stack: 1,
@@ -25070,7 +25072,7 @@ var items = [{
     rad: 0,
     speed: -0.02
 }, {
-    id: IID.gladiatorhelmet,
+    id: IID.__ARMOR_PHYSIC_3__,
     img: {
         src: ["img/inv-gladiator-helmet-out.png", "img/inv-gladiator-helmet-in.png", "img/inv-gladiator-helmet-click.png"],
         W: [{
@@ -25082,14 +25084,14 @@ var items = [{
         }]
     },
     detail: new Detail("Gladiator Helmet", "Strength and honor.", SKILLS.__CLOTHE__, [
-        [IID.shapedmetal, 12],
-        [IID.alloys, 6],
-        [IID.leather, 4],
-        [IID.nails, 255],
-        [IID.weldinghelmet, 1]
+        [IID.__SHAPED_METAL__, 12],
+        [IID.__ALLOYS__, 6],
+        [IID.__LEATHER_BOAR__, 4],
+        [IID.__NAILS__, 255],
+        [IID.__ARMOR_PHYSIC_2__, 1]
     ], 1, [
-        [AREAS.researchbench, 300000]
-    ], 17, IID.weldinghelmet),
+        [AREAS.__WORKBENCH2__, 300000]
+    ], 17, IID.__ARMOR_PHYSIC_2__),
     idClothe: 9,
     stack: 1,
     loot: LOOTID.__ARMOR_PHYSIC_3__,
@@ -25102,7 +25104,7 @@ var items = [{
     rad: 0,
     speed: -0.03
 }, {
-    id: IID.leatherjacket,
+    id: IID.__LEATHER_BOAR__jacket,
     img: {
         src: ["img/inv-leather-jacket-out.png", "img/inv-leather-jacket-in.png", "img/inv-leather-jacket-click.png"],
         W: [{
@@ -25114,10 +25116,10 @@ var items = [{
         }]
     },
     detail: new Detail("Leather Jacket", "Protects you from guns", SKILLS.__CLOTHE__, [
-        [IID.string, 2],
-        [IID.leather, 4]
+        [IID.__STRING__, 2],
+        [IID.__LEATHER_BOAR__, 4]
     ], 1, [
-        [AREAS.weavingmachine, 70000]
+        [AREAS.__WEAVING__, 70000]
     ]),
     idClothe: 10,
     stack: 1,
@@ -25131,7 +25133,7 @@ var items = [{
     rad: 0,
     speed: 0
 }, {
-    id: IID.kevlarsuit,
+    id: IID.__ARMOR_FIRE_2__,
     img: {
         src: ["img/inv-kevlar-suit-out.png", "img/inv-kevlar-suit-in.png", "img/inv-kevlar-suit-click.png"],
         W: [{
@@ -25143,13 +25145,13 @@ var items = [{
         }]
     },
     detail: new Detail("Kevlar Suit", "Protects you from guns", SKILLS.__CLOTHE__, [
-        [IID.shapedmetal, 6],
-        [IID.string, 4],
-        [IID.leather, 6],
-        [IID.alloys, 2],
-        [IID.leatherjacket, 1]
+        [IID.__SHAPED_METAL__, 6],
+        [IID.__STRING__, 4],
+        [IID.__LEATHER_BOAR__, 6],
+        [IID.__ALLOYS__, 2],
+        [IID.__LEATHER_BOAR__jacket, 1]
     ], 1, [
-        [AREAS.weavingmachine, 100000]
+        [AREAS.__WEAVING__, 100000]
     ], 12),
     idClothe: 11,
     stack: 1,
@@ -25163,7 +25165,7 @@ var items = [{
     rad: 0,
     speed: 0
 }, {
-    id: IID.SWATsuit,
+    id: IID.__ARMOR_FIRE_3__,
     img: {
         src: ["img/inv-SWAT-suit-out.png", "img/inv-SWAT-suit-in.png", "img/inv-SWAT-suit-click.png"],
         W: [{
@@ -25175,14 +25177,14 @@ var items = [{
         }]
     },
     detail: new Detail("SWAT Suit", "Protects you from guns", SKILLS.__CLOTHE__, [
-        [IID.shapedmetal, 10],
-        [IID.string, 10],
-        [IID.leather, 10],
-        [IID.alloys, 4],
-        [IID.kevlarsuit, 1]
+        [IID.__SHAPED_METAL__, 10],
+        [IID.__STRING__, 10],
+        [IID.__LEATHER_BOAR__, 10],
+        [IID.__ALLOYS__, 4],
+        [IID.__ARMOR_FIRE_2__, 1]
     ], 1, [
-        [AREAS.weavingmachine, 200000]
-    ], 18, IID.kevlarsuit),
+        [AREAS.__WEAVING__, 200000]
+    ], 18, IID.__ARMOR_FIRE_2__),
     idClothe: 12,
     stack: 1,
     loot: LOOTID.__ARMOR_FIRE_3__,
@@ -25195,7 +25197,7 @@ var items = [{
     rad: 0,
     speed: -0.01
 }, {
-    id: IID.protectivesuit,
+    id: IID.__ARMOR_DEMINER__,
     img: {
         src: ["img/inv-protective-suit-out.png", "img/inv-protective-suit-in.png", "img/inv-protective-suit-click.png"],
         W: [{
@@ -25207,13 +25209,13 @@ var items = [{
         }]
     },
     detail: new Detail("Protective Suit", "Protects you from explosives", SKILLS.__CLOTHE__, [
-        [IID.shapedmetal, 6],
-        [IID.string, 6],
-        [IID.leather, 6],
-        [IID.alloys, 2]
+        [IID.__SHAPED_METAL__, 6],
+        [IID.__STRING__, 6],
+        [IID.__LEATHER_BOAR__, 6],
+        [IID.__ALLOYS__, 2]
     ], 1, [
-        [AREAS.weavingmachine, 200000]
-    ], 12, IID.lightweightskill),
+        [AREAS.__WEAVING__, 200000]
+    ], 12, IID.__FEATHERWEIGHT__),
     idClothe: 13,
     stack: 1,
     loot: LOOTID.__ARMOR_DEMINER__,
@@ -25226,7 +25228,7 @@ var items = [{
     rad: 0,
     speed: -0.03
 }, {
-    id: IID.tesla1,
+    id: IID.__ARMOR_TESLA_1__,
     img: {
         src: ["img/inv-tesla-0-out.png", "img/inv-tesla-0-in.png", "img/inv-tesla-0-click.png"],
         W: [{
@@ -25238,13 +25240,13 @@ var items = [{
         }]
     },
     detail: new Detail("Power Armor", "Protects you from energy weapons", SKILLS.__CLOTHE__, [
-        [IID.shapedmetal, 20],
-        [IID.shapeduranium, 2],
-        [IID.electronicpart, 1],
-        [IID.wires, 2],
-        [IID.alloys, 2]
+        [IID.__SHAPED_METAL__, 20],
+        [IID.__SHAPED_URANIUM__, 2],
+        [IID.__ELECTRONICS__, 1],
+        [IID.__WIRE__, 2],
+        [IID.__ALLOYS__, 2]
     ], 1, [
-        [AREAS.teslabench, 150000]
+        [AREAS.__TESLA__, 150000]
     ], 10),
     idClothe: 14,
     stack: 1,
@@ -25258,7 +25260,7 @@ var items = [{
     rad: 0,
     speed: 0
 }, {
-    id: IID.tesla2,
+    id: IID.__ARMOR_TESLA_2__,
     img: {
         src: ["img/inv-tesla-armor-out.png", "img/inv-tesla-armor-in.png", "img/inv-tesla-armor-click.png"],
         W: [{
@@ -25270,14 +25272,14 @@ var items = [{
         }]
     },
     detail: new Detail("Tesla Armor", "Protects you from energy weapons", SKILLS.__CLOTHE__, [
-        [IID.tesla1, 1],
-        [IID.shapeduranium, 10],
-        [IID.electronicpart, 5],
-        [IID.wires, 5],
-        [IID.alloys, 10]
+        [IID.__ARMOR_TESLA_1__, 1],
+        [IID.__SHAPED_URANIUM__, 10],
+        [IID.__ELECTRONICS__, 5],
+        [IID.__WIRE__, 5],
+        [IID.__ALLOYS__, 10]
     ], 1, [
-        [AREAS.teslabench, 300000]
-    ], 18, IID.tesla1, 3),
+        [AREAS.__TESLA__, 300000]
+    ], 18, IID.__ARMOR_TESLA_1__, 3),
     idClothe: 15,
     stack: 1,
     loot: LOOTID.__ARMOR_TESLA_2__,
@@ -25290,7 +25292,7 @@ var items = [{
     rad: 0.01,
     speed: -0.02
 }, {
-    id: IID.woodespike,
+    id: IID.__WOOD__espike,
     img: {
         src: ["img/inv-wood-spike-out.png", "img/inv-wood-spike-in.png", "img/inv-wood-spike-click.png"],
         W: [{
@@ -25302,9 +25304,9 @@ var items = [{
         }]
     },
     detail: new Detail("Wooden Spike", "Hurt and slow down", SKILLS.__BUILDING__, [
-        [IID.wood, 80]
+        [IID.__WOOD__, 80]
     ], 1, [
-        [AREAS.workbench, 25000]
+        [AREAS.__WORKBENCH__, 25000]
     ]),
     idWeapon: 21,     
     fuel: -1,
@@ -25378,7 +25380,7 @@ var items = [{
     life: 200,
     score: 0
 }, {
-    id: IID.lasersubmachine,
+    id: IID.__LASER_SUBMACHINE__,
     img: {
         src: ["img/inv-laser-submachine-out.png", "img/inv-laser-submachine-in.png", "img/inv-laser-submachine-click.png"],
         W: [{
@@ -25390,21 +25392,21 @@ var items = [{
         }]
     },
     detail: new Detail("Laser Submachine", "It's the best weapon", SKILLS.__WEAPON__, [
-        [IID.alloys, 10],
-        [IID.shapedmetal, 6],
-        [IID.shapeduranium, 6],
-        [IID.wires, 2],
-        [IID.electronicpart, 3]
+        [IID.__ALLOYS__, 10],
+        [IID.__SHAPED_METAL__, 6],
+        [IID.__SHAPED_URANIUM__, 6],
+        [IID.__WIRE__, 2],
+        [IID.__ELECTRONICS__, 3]
     ], 1, [
-        [AREAS.teslabench, 180000]
-    ], 14, IID.laserpistol, 2),
+        [AREAS.__TESLA__, 180000]
+    ], 14, IID.__LASER_PISTOL__, 2),
     idWeapon: 37,     
-    bullet: IID.energycell,
+    bullet: IID.__ENERGY_CELLS__,
     stack: 1,
     loot: LOOTID.__LASER_SUBMACHINE__,
     wait: 10
 }, {
-    id: IID.granade,
+    id: IID.__GRENADE__,
     img: {
         src: ["img/inv-grenade-out.png", "img/inv-grenade-in.png", "img/inv-grenade-click.png"],
         W: [{
@@ -25416,12 +25418,12 @@ var items = [{
         }]
     },
     detail: new Detail("Grenade", "Explodes when you throw it away.", SKILLS.__WEAPON__, [
-        [IID.shapedmetal, 2],
-        [IID.junk, 2],
-        [IID.sulfur, 2],
-        [IID.animalfat, 2]
+        [IID.__SHAPED_METAL__, 2],
+        [IID.__JUNK__, 2],
+        [IID.__SULFUR__, 2],
+        [IID.__ANIMAL_FAT__, 2]
     ], 2, [
-        [AREAS.researchbench, 30000]
+        [AREAS.__WORKBENCH2__, 30000]
     ], 10),
     idWeapon: 38,     
     damage: 130,
@@ -25430,7 +25432,7 @@ var items = [{
     loot: LOOTID.__GRENADE__,
     wait: 10
 }, {
-    id: IID.superhammer,
+    id: IID.__SUPER_HAMMER__,
     img: {
         src: ["img/inv-super-hammer-out.png", "img/inv-super-hammer-in.png", "img/inv-super-hammer-click.png"],
         W: [{
@@ -25447,7 +25449,7 @@ var items = [{
     loot: LOOTID.__SUPER_HAMMER__,
     wait: 10
 }, {
-    id: IID.ghoulblood,
+    id: IID.__GHOUL_BLOOD__,
     img: {
         src: ["img/inv-ghoul-blood-out.png", "img/inv-ghoul-blood-in.png", "img/inv-ghoul-blood-click.png"],
         W: [{
@@ -25465,7 +25467,7 @@ var items = [{
 }, 
 
 {
-    id: IID.camouflage,
+    id: IID.__CAMOUFLAGE_GEAR__,
     img: {
         src: ["img/inv-camouflage-gear-out.png", "img/inv-camouflage-gear-in.png", "img/inv-camouflage-gear-click.png"],
         W: [{
@@ -25477,11 +25479,11 @@ var items = [{
         }]
     },
     detail: new Detail("Camouflage Gear", "Hide you in the forest", SKILLS.__CLOTHE__, [
-        [IID.wood, 90],
-        [IID.string, 2],
-        [IID.leather, 2]
+        [IID.__WOOD__, 90],
+        [IID.__STRING__, 2],
+        [IID.__LEATHER_BOAR__, 2]
     ], 1, [
-        [AREAS.weavingmachine, 40000]
+        [AREAS.__WEAVING__, 40000]
     ]),
     idClothe: 16,
     stack: 1,
@@ -25497,7 +25499,7 @@ var items = [{
 },
 
 {
-    id: IID.agitator,
+    id: IID.__AGITATOR__,
     img: {
         src: ["img/inv-agitator-out.png", "img/inv-agitator-in.png", "img/inv-agitator-click.png"],
         W: [{
@@ -25509,16 +25511,16 @@ var items = [{
         }]
     },
     detail: new Detail("Agitator", "Allows to craft drugs", SKILLS.__SURVIVAL__, [
-        [IID.shapedmetal, 6],
-        [IID.electronicpart, 1]
+        [IID.__SHAPED_METAL__, 6],
+        [IID.__ELECTRONICS__, 1]
     ], 1, [
-        [AREAS.researchbench, 100000]
+        [AREAS.__WORKBENCH2__, 100000]
     ], 8),
     idWeapon: 21,     
     fuel: 100000,
     zid: 0,
     z: 1,
-    area: AREAS.agitator,
+    area: AREAS.__AGITATOR__,
     stack: 255,
     loot: LOOTID.__AGITATOR__,
     wait: 10,
@@ -25559,8 +25561,8 @@ var items = [{
             isLoaded: 0
         }
     },
-    impact: SOUNDID.metal,
-    destroy: SOUNDID.metaldes,
+    impact: SOUNDID.__STEEL_IMPACT__,
+    destroy: SOUNDID.__STEEL_DESTROY__,
     building: [{
         src: "img/day-agitator1-off.png",
         W: {
@@ -25594,7 +25596,7 @@ var items = [{
     life: 500,
     score: 0
 }, {
-    id: IID.ghouldrug,
+    id: IID.__GHOUL_DRUG__,
     img: {
         src: ["img/inv-ghoul-drug-out.png", "img/inv-ghoul-drug-in.png", "img/inv-ghoul-drug-click.png"],
         W: [{
@@ -25606,20 +25608,20 @@ var items = [{
         }]
     },
     detail: new Detail("Ghoul Drug", "Ghouls does not attack you.", SKILLS.__DRUG__, [
-        [IID.syringe, 1],
-        [IID.chemicalcomponent, 1],
-        [IID.mushroom2, 1],
-        [IID.mushroom3, 1],
-        [IID.ghoulblood, 1]
+        [IID.__SYRINGE__, 1],
+        [IID.__CHEMICAL_COMPONENT__, 1],
+        [IID.__MUSHROOM1__2, 1],
+        [IID.__MUSHROOM1__3, 1],
+        [IID.__GHOUL_BLOOD__, 1]
     ], 1, [
-        [AREAS.agitator, 30000]
+        [AREAS.__AGITATOR__, 30000]
     ], 10),
     idWeapon: 40,     
     stack: 5,
     loot: LOOTID.__GHOUL_DRUG__,
     wait: 10
 }, {
-    id: IID.mushroom,
+    id: IID.__MUSHROOM1__,
     img: {
         src: ["img/inv-mushroom1-out.png", "img/inv-mushroom1-in.png", "img/inv-mushroom1-click.png"],
         W: [{
@@ -25635,11 +25637,11 @@ var items = [{
     loot: LOOTID.__MUSHROOM1__,
     wait: 5,
     perish: 10,
-    perishId: IID.rottenmushroom1,
+    perishId: IID.__ROTTEN_MUSHROOM1__,
     idWeapon: 41,     
     score: 24
 }, {
-    id: IID.mushroom2,
+    id: IID.__MUSHROOM1__2,
     img: {
         src: ["img/inv-mushroom2-out.png", "img/inv-mushroom2-in.png", "img/inv-mushroom2-click.png"],
         W: [{
@@ -25655,11 +25657,11 @@ var items = [{
     loot: LOOTID.__MUSHROOM2__,
     wait: 5,
     perish: 10,
-    perishId: IID.rottenmushroom2,
+    perishId: IID.__ROTTEN_MUSHROOM2__,
     idWeapon: 42,     
     score: 24
 }, {
-    id: IID.mushroom3,
+    id: IID.__MUSHROOM1__3,
     img: {
         src: ["img/inv-mushroom3-out.png", "img/inv-mushroom3-in.png", "img/inv-mushroom3-click.png"],
         W: [{
@@ -25675,11 +25677,11 @@ var items = [{
     loot: LOOTID.__MUSHROOM3__,
     wait: 5,
     perish: 10,
-    perishId: IID.rottenmushroom3,
+    perishId: IID.__ROTTEN_MUSHROOM3__,
     idWeapon: 43,     
     score: 24
 }, {
-    id: IID.rottenmushroom1,
+    id: IID.__ROTTEN_MUSHROOM1__,
     img: {
         src: ["img/inv-rotten-mushroom1-out.png", "img/inv-rotten-mushroom1-in.png", "img/inv-rotten-mushroom1-click.png"],
         W: [{
@@ -25697,7 +25699,7 @@ var items = [{
     idWeapon: 44,     
     score: 20
 }, {
-    id: IID.rottenmushroom2,
+    id: IID.__ROTTEN_MUSHROOM2__,
     img: {
         src: ["img/inv-rotten-mushroom2-out.png", "img/inv-rotten-mushroom2-in.png", "img/inv-rotten-mushroom2-click.png"],
         W: [{
@@ -25715,7 +25717,7 @@ var items = [{
     idWeapon: 45,     
     score: 20
 }, {
-    id: IID.rottenmushroom3,
+    id: IID.__ROTTEN_MUSHROOM3__,
     img: {
         src: ["img/inv-rotten-mushroom3-out.png", "img/inv-rotten-mushroom3-in.png", "img/inv-rotten-mushroom3-click.png"],
         W: [{
@@ -25733,7 +25735,7 @@ var items = [{
     idWeapon: 46,     
     score: 20
 }, {
-    id: IID.lapadoine,
+    id: IID.__LAPADONE__,
     img: {
         src: ["img/inv-lapadoine-out.png", "img/inv-lapadoine-in.png", "img/inv-lapadoine-click.png"],
         W: [{
@@ -25745,19 +25747,19 @@ var items = [{
         }]
     },
     detail: new Detail("Lapadone", "You are faster a certain time.", SKILLS.__DRUG__, [
-        [IID.syringe, 1],
-        [IID.chemicalcomponent, 1],
-        [IID.mushroom, 1],
-        [IID.ghoulblood, 1]
+        [IID.__SYRINGE__, 1],
+        [IID.__CHEMICAL_COMPONENT__, 1],
+        [IID.__MUSHROOM1__, 1],
+        [IID.__GHOUL_BLOOD__, 1]
     ], 1, [
-        [AREAS.agitator, 45000]
+        [AREAS.__AGITATOR__, 45000]
     ], 14),
     idWeapon: 47,     
     stack: 5,
     loot: LOOTID.__LAPADONE__,
     wait: 10
 }, {
-    id: IID.lapabot,
+    id: IID.__LAPABOT_REPAIR__,
     img: {
         src: ["img/inv-lapabot-out.png", "img/inv-lapabot-in.png", "img/inv-lapabot-click.png"],
         W: [{
@@ -25769,12 +25771,12 @@ var items = [{
         }]
     },
     detail: new Detail("LapaBot", "Repair your base for you", SKILLS.__SURVIVAL__, [
-        [IID.shapedmetal, 6],
-        [IID.electronicpart, 1],
-        [IID.smallwire, 1],
-        [IID.alloys, 1]
+        [IID.__SHAPED_METAL__, 6],
+        [IID.__ELECTRONICS__, 1],
+        [IID.__SMALL_WIRE__, 1],
+        [IID.__ALLOYS__, 1]
     ], 1, [
-        [AREAS.researchbench, 100000]
+        [AREAS.__WORKBENCH2__, 100000]
     ], 8),
     stack: 5,
     loot: LOOTID.__LAPABOT_REPAIR__,
@@ -25811,8 +25813,8 @@ var items = [{
     collision: 0,
     areaEffect: 0,
     draw: Render.construction,
-    impact: SOUNDID.metal,
-    destroy: SOUNDID.metaldes,
+    impact: SOUNDID.__STEEL_IMPACT__,
+    destroy: SOUNDID.__STEEL_DESTROY__,
     building: [{
         src: "img/lapabot0.png",
         W: {
@@ -25856,7 +25858,7 @@ var items = [{
     evolveMaxStep: 4,
     killConstructor: 1
 }, {
-    id: IID.smallwire,
+    id: IID.__SMALL_WIRE__,
     img: {
         src: ["img/inv-small-wire-out.png", "img/inv-small-wire-in.png", "img/inv-small-wire-click.png"],
         W: [{
@@ -25872,7 +25874,7 @@ var items = [{
     loot: LOOTID.__SMALL_WIRE__,
     score: 40
 }, {
-    id: IID.pumpkin,
+    id: IID.__PUMPKIN__,
     img: {
         src: ["img/inv-pumpkin-out.png", "img/inv-pumpkin-in.png", "img/inv-pumpkin-click.png"],
         W: [{
@@ -25888,11 +25890,11 @@ var items = [{
     loot: LOOTID.__PUMPKIN__,
     wait: 5,
     perish: 10,
-    perishId: IID.rottenpumpkin,
+    perishId: IID.__ROTTEN_PUMPKIN__,
     idWeapon: 48,     
     score: 24
 }, {
-    id: IID.rottenpumpkin,
+    id: IID.__ROTTEN_PUMPKIN__,
     img: {
         src: ["img/inv-rotten-pumpkin-out.png", "img/inv-rotten-pumpkin-in.png", "img/inv-rotten-pumpkin-click.png"],
         W: [{
@@ -25910,7 +25912,7 @@ var items = [{
     idWeapon: 49,     
     score: 20
 }, {
-    id: IID.ghoulseed,
+    id: IID.__SEED_GHOUL__,
     img: {
         src: ["img/inv-ghoul5-out.png", "img/inv-ghoul5-in.png", "img/inv-ghoul5-click.png"],
         W: [{
@@ -25922,11 +25924,11 @@ var items = [{
         }]
     },
     detail: new Detail("Ghoul Seed", "Plant your pumpkin pet", -1, [
-        [IID.pumpkin, 1],
-        [IID.ghoulblood, 1]
+        [IID.__PUMPKIN__, 1],
+        [IID.__GHOUL_BLOOD__, 1]
     ], 1, [
-        [AREAS.firepart, 30000],
-        [AREAS.bbq, 20000]
+        [AREAS.__FIRE__, 30000],
+        [AREAS.__BBQ__, 20000]
     ], 99),
     stack: 40,
     loot: LOOTID.__SEED_GHOUL__,
@@ -25963,8 +25965,8 @@ var items = [{
     collision: 0,
     areaEffect: 0,
     draw: Render.orangeSeed,
-    impact: SOUNDID.pillow,
-    destroy: SOUNDID.pillowdes,
+    impact: SOUNDID.__PILLOW_IMPACT__,
+    destroy: SOUNDID.__PILLOW_DESTROY__,
     building: [{
         src: "img/day-root0-ghoul.png",
         W: {
@@ -26002,7 +26004,7 @@ var items = [{
     evolveMaxStep: 3,
     killConstructor: 0
 }, {
-    id: IID.extractor,
+    id: IID.__EXTRACTOR__,
     img: {
         src: ["img/inv-extractor-out.png", "img/inv-extractor-in.png", "img/inv-extractor-click.png"],
         W: [{
@@ -26014,19 +26016,19 @@ var items = [{
         }]
     },
     detail: new Detail("Extractor", "Allows you to extract minerals from the ground", SKILLS.__SURVIVAL__, [
-        [IID.alloys, 2],
-        [IID.shapedmetal, 10],
-        [IID.shapeduranium, 2],
-        [IID.smallwire, 2],
-        [IID.electronicpart, 1]
+        [IID.__ALLOYS__, 2],
+        [IID.__SHAPED_METAL__, 10],
+        [IID.__SHAPED_URANIUM__, 2],
+        [IID.__SMALL_WIRE__, 2],
+        [IID.__ELECTRONICS__, 1]
     ], 1, [
-        [AREAS.researchbench, 100000]
+        [AREAS.__WORKBENCH2__, 100000]
     ], 12),
     idWeapon: 21,     
     fuel: 740000,
     zid: 0,
     z: 1,
-    area: AREAS.extractor,
+    area: AREAS.__EXTRACTOR__,
     stack: 255,
     loot: LOOTID.__EXTRACTOR__,
     wait: 10,
@@ -26067,8 +26069,8 @@ var items = [{
             isLoaded: 0
         }
     },
-    impact: SOUNDID.metal,
-    destroy: SOUNDID.metaldes,
+    impact: SOUNDID.__STEEL_IMPACT__,
+    destroy: SOUNDID.__STEEL_DESTROY__,
     building: [{
         src: "img/day-extractor.png",
         W: {
@@ -26097,7 +26099,7 @@ var items = [{
     life: 500,
     score: 0
 }, {
-    id: IID.antidote,
+    id: IID.__ANTIDOTE__,
     img: {
         src: ["img/inv-antidote-out.png", "img/inv-antidote-in.png", "img/inv-antidote-click.png"],
         W: [{
@@ -26109,19 +26111,19 @@ var items = [{
         }]
     },
     detail: new Detail("Antidote", "Remove the withdrawal effects (pink skin)", SKILLS.__DRUG__, [
-        [IID.syringe, 1],
-        [IID.chemicalcomponent, 1],
-        [IID.mushroom, 1],
-        [IID.antidoteflower, 1]
+        [IID.__SYRINGE__, 1],
+        [IID.__CHEMICAL_COMPONENT__, 1],
+        [IID.__MUSHROOM1__, 1],
+        [IID.__ANTIDOTE__flower, 1]
     ], 1, [
-        [AREAS.agitator, 45000]
+        [AREAS.__AGITATOR__, 45000]
     ], 14),
     idWeapon: 50,     
     stack: 5,
     loot: LOOTID.__ANTIDOTE__,
     wait: 10
 }, {
-    id: IID.antidoteflower,
+    id: IID.__ANTIDOTE__flower,
     img: {
         src: ["img/inv-antidote-flower-out.png", "img/inv-antidote-flower-in.png", "img/inv-antidote-flower-click.png"],
         W: [{
@@ -26137,7 +26139,7 @@ var items = [{
     loot: LOOTID.__ANTIDOTE_FLOWER__,
     score: 400
 }, {
-    id: IID.treeseed,
+    id: IID.__SEED_TREE__,
     img: {
         src: ["img/inv-seed-tree-out.png", "img/inv-seed-tree-in.png", "img/inv-seed-tree-click.png"],
         W: [{
@@ -26149,10 +26151,10 @@ var items = [{
         }]
     },
     detail: new Detail("Tree Seed", "Plant your forest", SKILLS.__PLANT__, [
-        [IID.acorn, 1]
+        [IID.__ACORN__, 1]
     ], 5, [
-        [AREAS.firepart, 60000],
-        [AREAS.bbq, 40000]
+        [AREAS.__FIRE__, 60000],
+        [AREAS.__BBQ__, 40000]
     ]),
     stack: 100,
     loot: LOOTID.__SEED_TREE__,
@@ -26189,8 +26191,8 @@ var items = [{
     collision: 1,
     areaEffect: 0,
     draw: Render.treeSeed,
-    impact: SOUNDID.wood,
-    destroy: SOUNDID.wooddes,
+    impact: SOUNDID.__WOOD_IMPACT__,
+    destroy: SOUNDID.__WOOD_DESTROY__,
     building: [{
         src: "img/day-plant-tree0.png",
         W: {
@@ -26223,7 +26225,7 @@ var items = [{
     life: 150,
     score: 0
 }, {
-    id: IID.acorn,
+    id: IID.__ACORN__,
     img: {
         src: ["img/inv-acorn-out.png", "img/inv-acorn-in.png", "img/inv-acorn-click.png"],
         W: [{
@@ -26239,11 +26241,11 @@ var items = [{
     loot: LOOTID.__ACORN__,
     wait: 5,
     perish: 3,
-    perishId: IID.rottenacorn,
+    perishId: IID.__ROTTEN_ACORN__,
     idWeapon: 51,     
     score: 24
 }, {
-    id: IID.rottenacorn,
+    id: IID.__ROTTEN_ACORN__,
     img: {
         src: ["img/inv-rotten-acorn-out.png", "img/inv-rotten-acorn-in.png", "img/inv-rotten-acorn-click.png"],
         W: [{
@@ -26261,7 +26263,7 @@ var items = [{
     idWeapon: 52,     
     score: 20
 }, {
-    id: IID.lasersniper,
+    id: IID.__LASER_SNIPER__,
     img: {
         src: ["img/inv-laser-sniper-out.png", "img/inv-laser-sniper-in.png", "img/inv-laser-sniper-click.png"],
         W: [{
@@ -26273,21 +26275,21 @@ var items = [{
         }]
     },
     detail: new Detail("Laser Sniper", "Faster than a sniper", SKILLS.__WEAPON__, [
-        [IID.alloys, 8],
-        [IID.shapedmetal, 6],
-        [IID.shapeduranium, 5],
-        [IID.wires, 3],
-        [IID.electronicpart, 3]
+        [IID.__ALLOYS__, 8],
+        [IID.__SHAPED_METAL__, 6],
+        [IID.__SHAPED_URANIUM__, 5],
+        [IID.__WIRE__, 3],
+        [IID.__ELECTRONICS__, 3]
     ], 1, [
-        [AREAS.teslabench, 180000]
-    ], 14, IID.laserpistol, 2),
+        [AREAS.__TESLA__, 180000]
+    ], 14, IID.__LASER_PISTOL__, 2),
     idWeapon: 53,     
-    bullet: IID.energycell,
+    bullet: IID.__ENERGY_CELLS__,
     stack: 1,
     loot: LOOTID.__LASER_SNIPER__,
     wait: 10
 }, {
-    id: IID.halbot,
+    id: IID.__HAL_BOT__,
     img: {
         src: ["img/inv-hal-bot-out.png", "img/inv-hal-bot-in.png", "img/inv-hal-bot-click.png"],
         W: [{
@@ -26299,12 +26301,12 @@ var items = [{
         }]
     },
     detail: new Detail("HAL Bot", "Protect you", SKILLS.__SURVIVAL__, [
-        [IID.shapedmetal, 6],
-        [IID.electronicpart, 1],
-        [IID.smallwire, 1],
-        [IID.alloys, 1]
+        [IID.__SHAPED_METAL__, 6],
+        [IID.__ELECTRONICS__, 1],
+        [IID.__SMALL_WIRE__, 1],
+        [IID.__ALLOYS__, 1]
     ], 1, [
-        [AREAS.researchbench, 100000]
+        [AREAS.__WORKBENCH2__, 100000]
     ], 8),
     stack: 5,
     loot: LOOTID.__HAL_BOT__,
@@ -26341,8 +26343,8 @@ var items = [{
     collision: 0,
     areaEffect: 0,
     draw: Render.construction,
-    impact: SOUNDID.metal,
-    destroy: SOUNDID.metaldes,
+    impact: SOUNDID.__STEEL_IMPACT__,
+    destroy: SOUNDID.__STEEL_DESTROY__,
     building: [{
         src: "img/hal-bot0.png",
         W: {
@@ -26386,7 +26388,7 @@ var items = [{
     evolveMaxStep: 4,
     killConstructor: 1
 }, {
-    id: IID.teslabot,
+    id: IID.__TESLA_BOT__,
     img: {
         src: ["img/inv-tesla-bot-out.png", "img/inv-tesla-bot-in.png", "img/inv-tesla-bot-click.png"],
         W: [{
@@ -26398,13 +26400,13 @@ var items = [{
         }]
     },
     detail: new Detail("Tesla Bot", "Protect you", SKILLS.__SURVIVAL__, [
-        [IID.shapeduranium, 3],
-        [IID.electronicpart, 1],
-        [IID.smallwire, 3],
-        [IID.wires, 3],
-        [IID.alloys, 3]
+        [IID.__SHAPED_URANIUM__, 3],
+        [IID.__ELECTRONICS__, 1],
+        [IID.__SMALL_WIRE__, 3],
+        [IID.__WIRE__, 3],
+        [IID.__ALLOYS__, 3]
     ], 1, [
-        [AREAS.teslabench, 200000]
+        [AREAS.__TESLA__, 200000]
     ], 16),
     stack: 5,
     loot: LOOTID.__TESLA_BOT__,
@@ -26441,8 +26443,8 @@ var items = [{
     collision: 0,
     areaEffect: 0,
     draw: Render.construction,
-    impact: SOUNDID.metal,
-    destroy: SOUNDID.metaldes,
+    impact: SOUNDID.__STEEL_IMPACT__,
+    destroy: SOUNDID.__STEEL_DESTROY__,
     building: [{
         src: "img/tesla-bot0.png",
         W: {
@@ -26486,7 +26488,7 @@ var items = [{
     evolveMaxStep: 4,
     killConstructor: 1
 }, {
-    id: IID.cable,
+    id: IID.__CABLE0__,
     img: {
         src: ["img/inv-wire0-out.png", "img/inv-wire0-in.png", "img/inv-wire0-click.png"],
         W: [{
@@ -26498,9 +26500,9 @@ var items = [{
         }]
     },
     detail: new Detail("Cable", "Create automatic mechanisms", SKILLS.__LOGIC__, [
-        [IID.smallwire, 1]
+        [IID.__SMALL_WIRE__, 1]
     ], 3, [
-        [AREAS.weldingmachine, 15000]
+        [AREAS.__WELDING_MACHINE__, 15000]
     ]),
     stack: 255,
     loot: LOOTID.__CABLE0__,
@@ -26545,8 +26547,8 @@ var items = [{
     collision: 0,
     areaEffect: 0,
     draw: Render.hiddenBuilding,
-    impact: SOUNDID.pillow,
-    destroy: SOUNDID.pillowdes,
+    impact: SOUNDID.__PILLOW_IMPACT__,
+    destroy: SOUNDID.__PILLOW_DESTROY__,
     building: {
         src: "img/day-wire0.png",
         W: {
@@ -26559,7 +26561,7 @@ var items = [{
     life: 250,
     score: 0
 }, {
-    id: IID.cable2,
+    id: IID.__CABLE0__2,
     img: {
         src: ["img/inv-wire1-out.png", "img/inv-wire1-in.png", "img/inv-wire1-click.png"],
         W: [{
@@ -26571,9 +26573,9 @@ var items = [{
         }]
     },
     detail: new Detail("Cable", "Create automatic mechanisms", SKILLS.__LOGIC__, [
-        [IID.smallwire, 1]
+        [IID.__SMALL_WIRE__, 1]
     ], 3, [
-        [AREAS.weldingmachine, 15000]
+        [AREAS.__WELDING_MACHINE__, 15000]
     ]),
     stack: 255,
     loot: LOOTID.__CABLE1__,
@@ -26618,8 +26620,8 @@ var items = [{
     collision: 0,
     areaEffect: 0,
     draw: Render.hiddenBuilding,
-    impact: SOUNDID.pillow,
-    destroy: SOUNDID.pillowdes,
+    impact: SOUNDID.__PILLOW_IMPACT__,
+    destroy: SOUNDID.__PILLOW_DESTROY__,
     building: {
         src: "img/day-wire1.png",
         W: {
@@ -26632,7 +26634,7 @@ var items = [{
     life: 250,
     score: 0
 }, {
-    id: IID.cable3,
+    id: IID.__CABLE0__3,
     img: {
         src: ["img/inv-wire2-out.png", "img/inv-wire2-in.png", "img/inv-wire2-click.png"],
         W: [{
@@ -26644,9 +26646,9 @@ var items = [{
         }]
     },
     detail: new Detail("Cable", "Create automatic mechanisms", SKILLS.__LOGIC__, [
-        [IID.smallwire, 1]
+        [IID.__SMALL_WIRE__, 1]
     ], 3, [
-        [AREAS.weldingmachine, 15000]
+        [AREAS.__WELDING_MACHINE__, 15000]
     ]),
     stack: 255,
     loot: LOOTID.__CABLE2__,
@@ -26691,8 +26693,8 @@ var items = [{
     collision: 0,
     areaEffect: 0,
     draw: Render.hiddenBuilding,
-    impact: SOUNDID.pillow,
-    destroy: SOUNDID.pillowdes,
+    impact: SOUNDID.__PILLOW_IMPACT__,
+    destroy: SOUNDID.__PILLOW_DESTROY__,
     building: {
         src: "img/day-wire2.png",
         W: {
@@ -26705,7 +26707,7 @@ var items = [{
     life: 250,
     score: 0
 }, {
-    id: IID.cable4,
+    id: IID.__CABLE0__4,
     img: {
         src: ["img/inv-wire3-out.png", "img/inv-wire3-in.png", "img/inv-wire3-click.png"],
         W: [{
@@ -26717,9 +26719,9 @@ var items = [{
         }]
     },
     detail: new Detail("Cable", "Create automatic mechanisms", SKILLS.__LOGIC__, [
-        [IID.smallwire, 1]
+        [IID.__SMALL_WIRE__, 1]
     ], 3, [
-        [AREAS.weldingmachine, 15000]
+        [AREAS.__WELDING_MACHINE__, 15000]
     ]),
     stack: 255,
     loot: LOOTID.__CABLE3__,
@@ -26764,8 +26766,8 @@ var items = [{
     collision: 0,
     areaEffect: 0,
     draw: Render.hiddenBuilding,
-    impact: SOUNDID.pillow,
-    destroy: SOUNDID.pillowdes,
+    impact: SOUNDID.__PILLOW_IMPACT__,
+    destroy: SOUNDID.__PILLOW_DESTROY__,
     building: {
         src: "img/day-wire3.png",
         W: {
@@ -26778,7 +26780,7 @@ var items = [{
     life: 250,
     score: 0
 }, {
-    id: IID.switch,
+    id: IID.__SWITCH__,
     img: {
         src: ["img/inv-switch-out.png", "img/inv-switch-in.png", "img/inv-switch-click.png"],
         W: [{
@@ -26790,10 +26792,10 @@ var items = [{
         }]
     },
     detail: new Detail("Switch", "Turn on/off mechanisms", SKILLS.__LOGIC__, [
-        [IID.shapedmetal, 1],
-        [IID.smallwire, 1]
+        [IID.__SHAPED_METAL__, 1],
+        [IID.__SMALL_WIRE__, 1]
     ], 3, [
-        [AREAS.weldingmachine, 15000]
+        [AREAS.__WELDING_MACHINE__, 15000]
     ]),
     stack: 255,
     loot: LOOTID.__SWITCH__,
@@ -26845,8 +26847,8 @@ var items = [{
             isLoaded: 0
         }
     },
-    impact: SOUNDID.metal,
-    destroy: SOUNDID.metaldes,
+    impact: SOUNDID.__STEEL_IMPACT__,
+    destroy: SOUNDID.__STEEL_DESTROY__,
     building: [{
         src: "img/day-switch-off.png",
         W: {
@@ -26864,7 +26866,7 @@ var items = [{
     life: 250,
     score: 0
 }, {
-    id: IID.orgate,
+    id: IID.__GATE_OR__,
     img: {
         src: ["img/inv-switch-or-out.png", "img/inv-switch-or-in.png", "img/inv-switch-or-click.png"],
         W: [{
@@ -26876,10 +26878,10 @@ var items = [{
         }]
     },
     detail: new Detail("Gate OR", "Activate only if an entry is on.", SKILLS.__LOGIC__, [
-        [IID.shapedmetal, 1],
-        [IID.smallwire, 1]
+        [IID.__SHAPED_METAL__, 1],
+        [IID.__SMALL_WIRE__, 1]
     ], 3, [
-        [AREAS.weldingmachine, 15000]
+        [AREAS.__WELDING_MACHINE__, 15000]
     ]),
     stack: 255,
     loot: LOOTID.__GATE_OR__,
@@ -26924,8 +26926,8 @@ var items = [{
     collision: 0,
     areaEffect: 0,
     draw: Render.hiddenBuilding,
-    impact: SOUNDID.metal,
-    destroy: SOUNDID.metaldes,
+    impact: SOUNDID.__STEEL_IMPACT__,
+    destroy: SOUNDID.__STEEL_DESTROY__,
     building: {
         src: "img/day-switch-or.png",
         W: {
@@ -26938,7 +26940,7 @@ var items = [{
     life: 250,
     score: 0
 }, {
-    id: IID.andgate,
+    id: IID.__GATE_AND__,
     img: {
         src: ["img/inv-switch-and-out.png", "img/inv-switch-and-in.png", "img/inv-switch-and-click.png"],
         W: [{
@@ -26950,10 +26952,10 @@ var items = [{
         }]
     },
     detail: new Detail("Gate AND", "Activate only if all entries are on.", SKILLS.__LOGIC__, [
-        [IID.shapedmetal, 1],
-        [IID.smallwire, 1]
+        [IID.__SHAPED_METAL__, 1],
+        [IID.__SMALL_WIRE__, 1]
     ], 3, [
-        [AREAS.weldingmachine, 15000]
+        [AREAS.__WELDING_MACHINE__, 15000]
     ]),
     stack: 255,
     loot: LOOTID.__GATE_AND__,
@@ -26998,8 +27000,8 @@ var items = [{
     collision: 0,
     areaEffect: 0,
     draw: Render.hiddenBuilding,
-    impact: SOUNDID.metal,
-    destroy: SOUNDID.metaldes,
+    impact: SOUNDID.__STEEL_IMPACT__,
+    destroy: SOUNDID.__STEEL_DESTROY__,
     building: {
         src: "img/day-switch-and.png",
         W: {
@@ -27012,7 +27014,7 @@ var items = [{
     life: 250,
     score: 0
 }, {
-    id: IID.notgate,
+    id: IID.__GATE_NOT__,
     img: {
         src: ["img/inv-switch-reverse-out.png", "img/inv-switch-reverse-in.png", "img/inv-switch-reverse-click.png"],
         W: [{
@@ -27024,10 +27026,10 @@ var items = [{
         }]
     },
     detail: new Detail("Gate NOT", "Activate only if no entry is on.", SKILLS.__LOGIC__, [
-        [IID.shapedmetal, 1],
-        [IID.smallwire, 1]
+        [IID.__SHAPED_METAL__, 1],
+        [IID.__SMALL_WIRE__, 1]
     ], 3, [
-        [AREAS.weldingmachine, 15000]
+        [AREAS.__WELDING_MACHINE__, 15000]
     ]),
     stack: 255,
     loot: LOOTID.__GATE_NOT__,
@@ -27072,8 +27074,8 @@ var items = [{
     collision: 0,
     areaEffect: 0,
     draw: Render.hiddenBuilding,
-    impact: SOUNDID.metal,
-    destroy: SOUNDID.metaldes,
+    impact: SOUNDID.__STEEL_IMPACT__,
+    destroy: SOUNDID.__STEEL_DESTROY__,
     building: {
         src: "img/day-switch-reverse.png",
         W: {
@@ -27086,7 +27088,7 @@ var items = [{
     life: 250,
     score: 0
 }, {
-    id: IID.lamp,
+    id: IID.__LAMP__,
     img: {
         src: ["img/inv-lamp-white-out.png", "img/inv-lamp-white-in.png", "img/inv-lamp-white-click.png"],
         W: [{
@@ -27098,10 +27100,10 @@ var items = [{
         }]
     },
     detail: new Detail("Lamp", "Turn on when connected, damage ghoul", SKILLS.__LOGIC__, [
-        [IID.shapedmetal, 1],
-        [IID.smallwire, 1]
+        [IID.__SHAPED_METAL__, 1],
+        [IID.__SMALL_WIRE__, 1]
     ], 3, [
-        [AREAS.weldingmachine, 15000]
+        [AREAS.__WELDING_MACHINE__, 15000]
     ]),
     stack: 255,
     loot: LOOTID.__LAMP__,
@@ -27155,8 +27157,8 @@ var items = [{
             isLoaded: 0
         }
     },
-    impact: SOUNDID.metal,
-    destroy: SOUNDID.metaldes,
+    impact: SOUNDID.__STEEL_IMPACT__,
+    destroy: SOUNDID.__STEEL_DESTROY__,
     building: {
         src: "img/day-lamp-off.png",
         W: {
@@ -27241,7 +27243,7 @@ var items = [{
     life: 600,
     score: 0
 }, {
-    id: IID.cablewall,
+    id: IID.__CABLE0__wall,
     img: {
         src: ["img/inv-cable-wall-out.png", "img/inv-cable-wall-in.png", "img/inv-cable-wall-click.png"],
         W: [{
@@ -27253,10 +27255,10 @@ var items = [{
         }]
     },
     detail: new Detail("Cable  - Wall", "Wall that can be connected to a cable", SKILLS.__LOGIC__, [
-        [IID.shapedmetal, 8],
-        [IID.smallwire, 1]
+        [IID.__SHAPED_METAL__, 8],
+        [IID.__SMALL_WIRE__, 1]
     ], 1, [
-        [AREAS.weldingmachine, 15000]
+        [AREAS.__WELDING_MACHINE__, 15000]
     ], 7),
     stack: 255,
     loot: LOOTID.__CABLE_WALL__,
@@ -27301,8 +27303,8 @@ var items = [{
     collision: 1,
     areaEffect: 0,
     draw: Render.breakable,
-    impact: SOUNDID.metal,
-    destroy: SOUNDID.metaldes,
+    impact: SOUNDID.__STEEL_IMPACT__,
+    destroy: SOUNDID.__STEEL_DESTROY__,
     building: [{
         src: "img/day-cable-wall.png",
         W: {
@@ -27330,7 +27332,7 @@ var items = [{
     life: 15000,
     score: 0
 }, {
-    id: IID.autodoor,
+    id: IID.__AUTOMATIC_DOOR__,
     img: {
         src: ["img/inv-automatic-door-out.png", "img/inv-automatic-door-in.png", "img/inv-automatic-door-click.png"],
         W: [{
@@ -27342,11 +27344,11 @@ var items = [{
         }]
     },
     detail: new Detail("Automatic Door", "Connect it to a switch to open and close it.", SKILLS.__LOGIC__, [
-        [IID.shapedmetal, 8],
-        [IID.smallwire, 2],
-        [IID.electronicpart, 1]
+        [IID.__SHAPED_METAL__, 8],
+        [IID.__SMALL_WIRE__, 2],
+        [IID.__ELECTRONICS__, 1]
     ], 1, [
-        [AREAS.weldingmachine, 15000]
+        [AREAS.__WELDING_MACHINE__, 15000]
     ], 7),
     stack: 255,
     loot: LOOTID.__AUTOMATIC_DOOR__,
@@ -27391,8 +27393,8 @@ var items = [{
     collision: 1,
     areaEffect: 0,
     draw: Render.automaticDoor,
-    impact: SOUNDID.metal,
-    destroy: SOUNDID.metaldes,
+    impact: SOUNDID.__STEEL_IMPACT__,
+    destroy: SOUNDID.__STEEL_DESTROY__,
     building: [
         [{
             src: "img/day-automatic-door-off.png",
@@ -27443,7 +27445,7 @@ var items = [{
     life: 15000,
     score: 0
 }, {
-    id: IID.platform,
+    id: IID.__PLATFORM__,
     img: {
         src: ["img/inv-platform-out.png", "img/inv-platform-in.png", "img/inv-platform-click.png"],
         W: [{
@@ -27455,10 +27457,10 @@ var items = [{
         }]
     },
     detail: new Detail("Platform", "Weight detector", SKILLS.__LOGIC__, [
-        [IID.shapedmetal, 1],
-        [IID.smallwire, 1]
+        [IID.__SHAPED_METAL__, 1],
+        [IID.__SMALL_WIRE__, 1]
     ], 3, [
-        [AREAS.weldingmachine, 15000]
+        [AREAS.__WELDING_MACHINE__, 15000]
     ]),
     stack: 255,
     loot: LOOTID.__PLATFORM__,
@@ -27503,8 +27505,8 @@ var items = [{
     collision: 0,
     areaEffect: 0,
     draw: Render.defaultBuilding,
-    impact: SOUNDID.metal,
-    destroy: SOUNDID.metaldes,
+    impact: SOUNDID.__STEEL_IMPACT__,
+    destroy: SOUNDID.__STEEL_DESTROY__,
     building: {
         src: "img/day-platform-off.png",
         W: {
@@ -27517,7 +27519,7 @@ var items = [{
     life: 250,
     score: 0
 }, {
-    id: IID.stonecave,
+    id: IID.__STONE__cave,
     img: {
         src: ["img/inv-stone-cave-out.png", "img/inv-stone-cave-in.png", "img/inv-stone-cave-click.png"],
         W: [{
@@ -27529,9 +27531,9 @@ var items = [{
         }]
     },
     detail: new Detail("Stone Cave", "Build mountains.", -1, [
-        [IID.stone, 140]
+        [IID.__STONE__, 140]
     ], 1, [
-        [AREAS.workbench, 30000]
+        [AREAS.__WORKBENCH__, 30000]
     ], 99),
     idWeapon: 21,     
     fuel: -1,
@@ -27560,7 +27562,7 @@ var items = [{
         }
     },
     wall: 1,
-    idWall: IID.stonecave,
+    idWall: IID.__STONE__cave,
     lowWall: 0,
     door: 0,
     broke: 1,
@@ -27588,8 +27590,8 @@ var items = [{
             isLoaded: 0
         }
     }],
-    impact: SOUNDID.stone,
-    destroy: SOUNDID.stonedes,
+    impact: SOUNDID.__STONE_IMPACT__,
+    destroy: SOUNDID.__STONE_DESTROY__,
     building: [{
         src: "img/day-stone-cave0.png",
         W: {
@@ -27832,7 +27834,7 @@ var items = [{
     life: 300,
     score: 0
 }, {
-    id: IID.bunkerwall,
+    id: IID.__BUNKER_WALL__,
     img: {
         src: ["img/inv-bunker-wall-out.png", "img/inv-bunker-wall-in.png", "img/inv-bunker-wall-click.png"],
         W: [{
@@ -27844,10 +27846,10 @@ var items = [{
         }]
     },
     detail: new Detail("Bunker Wall", "Good old memory of the wasteland.", -1, [
-        [IID.stone, 150],
-        [IID.shapedmetal, 12]
+        [IID.__STONE__, 150],
+        [IID.__SHAPED_METAL__, 12]
     ], 1, [
-        [AREAS.workbench, 30000]
+        [AREAS.__WORKBENCH__, 30000]
     ], 99),
     idWeapon: 21,     
     fuel: -1,
@@ -27876,7 +27878,7 @@ var items = [{
         }
     },
     wall: 1,
-    idWall: IID.stonecave,
+    idWall: IID.__STONE__cave,
     lowWall: 0,
     door: 0,
     broke: 1,
@@ -27904,8 +27906,8 @@ var items = [{
             isLoaded: 0
         }
     }],
-    impact: SOUNDID.metal,
-    destroy: SOUNDID.metaldes,
+    impact: SOUNDID.__STEEL_IMPACT__,
+    destroy: SOUNDID.__STEEL_DESTROY__,
     building: [{
         src: "img/day-bunker-wall0.png",
         W: {
@@ -28148,7 +28150,7 @@ var items = [{
     life: 10000,
     score: 0
 }, {
-    id: IID.mustardfloor,
+    id: IID.__GOLD_FLOOR__,
     img: {
         src: ["img/inv-mustard-floor-out.png", "img/inv-mustard-floor-in.png", "img/inv-mustard-floor-click.png"],
         W: [{
@@ -28160,9 +28162,9 @@ var items = [{
         }]
     },
     detail: new Detail("Golden Floor", "Players can't spawn on it", SKILLS.__BUILDING__, [
-        [IID.leather, 2]
+        [IID.__LEATHER_BOAR__, 2]
     ], 2, [
-        [AREAS.workbench, 15000]
+        [AREAS.__WORKBENCH__, 15000]
     ]),
     stack: 255,
     loot: LOOTID.__GOLD_FLOOR__,
@@ -28191,7 +28193,7 @@ var items = [{
         }
     },
     wall: 1,
-    idWall: IID.mustardfloor,
+    idWall: IID.__GOLD_FLOOR__,
     lowWall: 0,
     door: 0,
     broke: 1,
@@ -28219,7 +28221,7 @@ var items = [{
         }
     }],
     impact: SOUNDID.__NO_SOUND__,
-    destroy: SOUNDID.pillowdes,
+    destroy: SOUNDID.__PILLOW_DESTROY__,
     building: [{
         src: "img/day-mustard-floor-0.png",
         W: {
@@ -28462,7 +28464,7 @@ var items = [{
     life: 3000,
     score: 0
 }, {
-    id: IID.redfloor,
+    id: IID.__RED_FLOOR__,
     img: {
         src: ["img/inv-red-floor-out.png", "img/inv-red-floor-in.png", "img/inv-red-floor-click.png"],
         W: [{
@@ -28474,9 +28476,9 @@ var items = [{
         }]
     },
     detail: new Detail("Red floor", "Players can't spawn on it", SKILLS.__BUILDING__, [
-        [IID.leather, 2]
+        [IID.__LEATHER_BOAR__, 2]
     ], 2, [
-        [AREAS.workbench, 15000]
+        [AREAS.__WORKBENCH__, 15000]
     ]),
     stack: 255,
     loot: LOOTID.__RED_FLOOR__,
@@ -28505,7 +28507,7 @@ var items = [{
         }
     },
     wall: 1,
-    idWall: IID.redfloor,
+    idWall: IID.__RED_FLOOR__,
     lowWall: 0,
     door: 0,
     broke: 1,
@@ -28533,7 +28535,7 @@ var items = [{
         }
     }],
     impact: SOUNDID.__NO_SOUND__,
-    destroy: SOUNDID.pillowdes,
+    destroy: SOUNDID.__PILLOW_DESTROY__,
     building: [{
         src: "img/day-red-floor-0.png",
         W: {
@@ -28776,7 +28778,7 @@ var items = [{
     life: 3000,
     score: 0
 }, {
-    id: IID.weldingmachine,
+    id: IID.__WELDING_MACHINE__,
     img: {
         src: ["img/inv-welding-machine-out.png", "img/inv-welding-machine-in.png", "img/inv-welding-machine-click.png"],
         W: [{
@@ -28788,17 +28790,17 @@ var items = [{
         }]
     },
     detail: new Detail("Welding Machine", "Allow you to make logic gates", SKILLS.__SURVIVAL__, [
-        [IID.junk, 2],
-        [IID.shapedmetal, 4],
-        [IID.electronicpart, 1]
+        [IID.__JUNK__, 2],
+        [IID.__SHAPED_METAL__, 4],
+        [IID.__ELECTRONICS__, 1]
     ], 1, [
-        [AREAS.workbench, 50000]
+        [AREAS.__WORKBENCH__, 50000]
     ]),
     idWeapon: 21,     
     fuel: -1,
     zid: 0,
     z: 1,
-    area: AREAS.weldingmachine,
+    area: AREAS.__WELDING_MACHINE__,
     stack: 255,
     loot: LOOTID.__WELDING_MACHINE__,
     wait: 10,
@@ -28839,8 +28841,8 @@ var items = [{
             isLoaded: 0
         }
     },
-    impact: SOUNDID.metal,
-    destroy: SOUNDID.metaldes,
+    impact: SOUNDID.__STEEL_IMPACT__,
+    destroy: SOUNDID.__STEEL_DESTROY__,
     building: {
         src: "img/day-welding-machine.png",
         W: {
@@ -28853,7 +28855,7 @@ var items = [{
     life: 500,
     score: 0
 }, {
-    id: IID.cable4,
+    id: IID.__CABLE0__4,
     img: {
         src: ["img/inv-wire4-out.png", "img/inv-wire4-in.png", "img/inv-wire4-click.png"],
         W: [{
@@ -28865,9 +28867,9 @@ var items = [{
         }]
     },
     detail: new Detail("Cable  - Bridge", "Create automatic mechanisms", SKILLS.__LOGIC__, [
-        [IID.smallwire, 1]
+        [IID.__SMALL_WIRE__, 1]
     ], 3, [
-        [AREAS.weldingmachine, 15000]
+        [AREAS.__WELDING_MACHINE__, 15000]
     ]),
     stack: 255,
     loot: LOOTID.__CABLE4__,
@@ -28912,8 +28914,8 @@ var items = [{
     collision: 0,
     areaEffect: 0,
     draw: Render.hiddenBuilding,
-    impact: SOUNDID.pillow,
-    destroy: SOUNDID.pillowdes,
+    impact: SOUNDID.__PILLOW_IMPACT__,
+    destroy: SOUNDID.__PILLOW_DESTROY__,
     building: {
         src: "img/day-wire4.png",
         W: {
@@ -28938,10 +28940,10 @@ var items = [{
         }]
     },
     detail: new Detail("Gate Timer", "Emit a signal regularly.", SKILLS.__LOGIC__, [
-        [IID.shapedmetal, 1],
-        [IID.smallwire, 1]
+        [IID.__SHAPED_METAL__, 1],
+        [IID.__SMALL_WIRE__, 1]
     ], 3, [
-        [AREAS.weldingmachine, 15000]
+        [AREAS.__WELDING_MACHINE__, 15000]
     ]),
     stack: 255,
     loot: LOOTID.__GATE_TIMER__,
@@ -28993,8 +28995,8 @@ var items = [{
             isLoaded: 0
         }
     },
-    impact: SOUNDID.metal,
-    destroy: SOUNDID.metaldes,
+    impact: SOUNDID.__STEEL_IMPACT__,
+    destroy: SOUNDID.__STEEL_DESTROY__,
     building: [{
         src: "img/day-timer-0.png",
         W: {
@@ -29022,7 +29024,7 @@ var items = [{
     life: 250,
     score: 0
 }, {
-    id: IID.xorgate,
+    id: IID.__GATE_XOR__,
     img: {
         src: ["img/inv-xor-out.png", "img/inv-xor-in.png", "img/inv-xor-click.png"],
         W: [{
@@ -29034,10 +29036,10 @@ var items = [{
         }]
     },
     detail: new Detail("Gate Xor", "Activate only if only one entry is on.", SKILLS.__LOGIC__, [
-        [IID.shapedmetal, 1],
-        [IID.smallwire, 1]
+        [IID.__SHAPED_METAL__, 1],
+        [IID.__SMALL_WIRE__, 1]
     ], 3, [
-        [AREAS.weldingmachine, 15000]
+        [AREAS.__WELDING_MACHINE__, 15000]
     ]),
     stack: 255,
     loot: LOOTID.__GATE_XOR__,
@@ -29082,8 +29084,8 @@ var items = [{
     collision: 0,
     areaEffect: 0,
     draw: Render.hiddenBuilding,
-    impact: SOUNDID.metal,
-    destroy: SOUNDID.metaldes,
+    impact: SOUNDID.__STEEL_IMPACT__,
+    destroy: SOUNDID.__STEEL_DESTROY__,
     building: {
         src: "img/day-xor.png",
         W: {
@@ -29100,7 +29102,7 @@ var items = [{
 
 
 {
-    id: IID.skilleye1,
+    id: IID.__VISION_1__,
     img: {
         src: ["img/skill-eye1-out.png", "img/skill-eye1-in.png", "img/skill-eye1-click.png"],
         W: [{
@@ -29116,7 +29118,7 @@ var items = [{
 },
 
 {
-    id: IID.skilleye2,
+    id: IID.__VISION_2__,
     img: {
         src: ["img/skill-eye2-out.png", "img/skill-eye2-in.png", "img/skill-eye2-click.png"],
         W: [{
@@ -29127,12 +29129,12 @@ var items = [{
             isLoaded: 0
         }]
     },
-    detail: new Detail("Vision 2", "Improve your vision", SKILLS.__SKILL__, window.undefined, window.undefined, window.undefined, 5, IID.skilleye1),
+    detail: new Detail("Vision 2", "Improve your vision", SKILLS.__SKILL__, window.undefined, window.undefined, window.undefined, 5, IID.__VISION_1__),
     scale: -0.35
 },
 
 {
-    id: IID.skilleye3,
+    id: IID.__VISION_3__,
     img: {
         src: ["img/skill-eye3-out.png", "img/skill-eye3-in.png", "img/skill-eye3-click.png"],
         W: [{
@@ -29143,13 +29145,13 @@ var items = [{
             isLoaded: 0
         }]
     },
-    detail: new Detail("Vision 3", "Improve your vision", SKILLS.__SKILL__, window.undefined, window.undefined, window.undefined, 7, IID.skilleye2),
+    detail: new Detail("Vision 3", "Improve your vision", SKILLS.__SKILL__, window.undefined, window.undefined, window.undefined, 7, IID.__VISION_2__),
     scale: -0.45
 },
 
 
 {
-    id: IID.builderskill1,
+    id: IID.__BUILDER_1__,
     img: {
         src: ["img/skill-builder1-out.png", "img/skill-builder1-in.png", "img/skill-builder1-click.png"],
         W: [{
@@ -29162,7 +29164,7 @@ var items = [{
     },
     detail: new Detail("Builder 1", "Multiplies some craft by two", SKILLS.__SKILL__, window.undefined, window.undefined, window.undefined, 6, window.undefined, 2)
 }, {
-    id: IID.builderskill2,
+    id: IID.__BUILDER_2__,
     img: {
         src: ["img/skill-builder2-out.png", "img/skill-builder2-in.png", "img/skill-builder2-click.png"],
         W: [{
@@ -29173,13 +29175,13 @@ var items = [{
             isLoaded: 0
         }]
     },
-    detail: new Detail("Builder 2", "Repair much faster", SKILLS.__SKILL__, window.undefined, window.undefined, window.undefined, 18, IID.builderskill1)
+    detail: new Detail("Builder 2", "Repair much faster", SKILLS.__SKILL__, window.undefined, window.undefined, window.undefined, 18, IID.__BUILDER_1__)
 },
 
 
 
 {
-    id: IID.inventoryskill1,
+    id: IID.__INV_1__,
     img: {
         src: ["img/skill-inv1-out.png", "img/skill-inv1-in.png", "img/skill-inv1-click.png"],
         W: [{
@@ -29195,7 +29197,7 @@ var items = [{
 },
 
 {
-    id: IID.inventoryskill2,
+    id: IID.__INV_2__,
     img: {
         src: ["img/skill-inv2-out.png", "img/skill-inv2-in.png", "img/skill-inv2-click.png"],
         W: [{
@@ -29206,12 +29208,12 @@ var items = [{
             isLoaded: 0
         }]
     },
-    detail: new Detail("Inventory 2", "Add a slot in your inventory", SKILLS.__SKILL__, window.undefined, window.undefined, window.undefined, 5, IID.inventoryskill1),
+    detail: new Detail("Inventory 2", "Add a slot in your inventory", SKILLS.__SKILL__, window.undefined, window.undefined, window.undefined, 5, IID.__INV_1__),
     bag: 1
 },
 
 {
-    id: IID.inventoryskill3,
+    id: IID.__INV_3__,
     img: {
         src: ["img/skill-inv3-out.png", "img/skill-inv3-in.png", "img/skill-inv3-click.png"],
         W: [{
@@ -29222,12 +29224,12 @@ var items = [{
             isLoaded: 0
         }]
     },
-    detail: new Detail("Inventory 3", "Add a slot in your bag", SKILLS.__SKILL__, window.undefined, window.undefined, window.undefined, 7, IID.inventoryskill2),
+    detail: new Detail("Inventory 3", "Add a slot in your bag", SKILLS.__SKILL__, window.undefined, window.undefined, window.undefined, 7, IID.__INV_2__),
     bag: 1
 },
 
 {
-    id: IID.inventoryskill4,
+    id: IID.__INV_4__,
     img: {
         src: ["img/skill-inv4-out.png", "img/skill-inv4-in.png", "img/skill-inv4-click.png"],
         W: [{
@@ -29238,12 +29240,12 @@ var items = [{
             isLoaded: 0
         }]
     },
-    detail: new Detail("Inventory 4", "Add two slots in your bag", SKILLS.__SKILL__, window.undefined, window.undefined, window.undefined, 10, IID.inventoryskill3, 2),
+    detail: new Detail("Inventory 4", "Add two slots in your bag", SKILLS.__SKILL__, window.undefined, window.undefined, window.undefined, 10, IID.__INV_3__, 2),
     bag: 2
 },
 
 {
-    id: IID.inventoryskill5,
+    id: IID.__INV_5__,
     img: {
         src: ["img/skill-inv5-out.png", "img/skill-inv5-in.png", "img/skill-inv5-click.png"],
         W: [{
@@ -29254,7 +29256,7 @@ var items = [{
             isLoaded: 0
         }]
     },
-    detail: new Detail("Inventory 5", "Add three slots in your bag", SKILLS.__SKILL__, window.undefined, window.undefined, window.undefined, 12, IID.inventoryskill4, 3),
+    detail: new Detail("Inventory 5", "Add three slots in your bag", SKILLS.__SKILL__, window.undefined, window.undefined, window.undefined, 12, IID.__INV_4__, 3),
     bag: 3
 },
 
@@ -29262,7 +29264,7 @@ var items = [{
 
     
 {
-    id: IID.lightweightskill,
+    id: IID.__FEATHERWEIGHT__,
     img: {
         src: ["img/skill-lightweight-out.png", "img/skill-lightweight-in.png", "img/skill-lightweight-click.png"],
         W: [{
@@ -29355,7 +29357,7 @@ ROAD[COUNTER] = {
         }
     },
     detail: new Detail("", "", -1, [
-        [IID.stone, 100]
+        [IID.__STONE__, 100]
     ]),
     life: 100000000,
     score: 0,
@@ -29376,14 +29378,14 @@ for (var i = 0; i < 45; i++) {
     ROAD[COUNTER] = window.JSON.parse(window.JSON.stringify(ROAD[0]));
     ROAD[COUNTER].building.src = ("img/day-road" + COUNTER) + ".png";
 }
-var VV = items[IID.MMnVW].subtype;
+var VV = items[IID.__FURNITURE__].subtype;
 VV[FURNITUREID.__SOFA0__] = {
     width: [100, 100, 100, 100],
     height: [100, 100, 100, 100],
     _x: [0, 0, 0, 0],
     _y: [0, 0, 0, 0],
-    impact: SOUNDID.pillow,
-    destroy: SOUNDID.pillowdes,
+    impact: SOUNDID.__PILLOW_IMPACT__,
+    destroy: SOUNDID.__PILLOW_DESTROY__,
     building: {
         src: "img/day-sofa0.png",
         W: {
@@ -29391,9 +29393,9 @@ VV[FURNITUREID.__SOFA0__] = {
         }
     },
     detail: new Detail("", "", -1, [
-        [IID.wood, 99],
-        [IID.leather, 9],
-        [IID.string, 6]
+        [IID.__WOOD__, 99],
+        [IID.__LEATHER_BOAR__, 9],
+        [IID.__STRING__, 6]
     ]),
     life: 450,
     score: 0,
@@ -29429,19 +29431,19 @@ VV[FURNITUREID.__RENFORCED__] = window.JSON.parse(window.JSON.stringify(VV[FURNI
 VV[FURNITUREID.__RENFORCED__].building.src = "img/day-renforced-door.png";
 VV[FURNITUREID.__RENFORCED__].particles = PARTICLESID.__STEEL__;
 VV[FURNITUREID.__RENFORCED__].detail = new Detail("", "", -1, [
-    [IID.shapedmetal, 40]
+    [IID.__SHAPED_METAL__, 40]
 ]);
 VV[FURNITUREID.__RENFORCED__].life = 7000;
 VV[FURNITUREID.__MACHINE0__] = window.JSON.parse(window.JSON.stringify(VV[FURNITUREID.__SOFA0__]));
 VV[FURNITUREID.__MACHINE0__].building.src = "img/day-electronic-box0.png";
-VV[FURNITUREID.__MACHINE0__].impact = SOUNDID.metal;
-VV[FURNITUREID.__MACHINE0__].destroy = SOUNDID.metaldes;
+VV[FURNITUREID.__MACHINE0__].impact = SOUNDID.__STEEL_IMPACT__;
+VV[FURNITUREID.__MACHINE0__].destroy = SOUNDID.__STEEL_DESTROY__;
 VV[FURNITUREID.__MACHINE0__].particles = PARTICLESID.__STEEL__;
 VV[FURNITUREID.__MACHINE0__].detail = new Detail("", "", -1, [
-    [IID.energycell, 8],
-    [IID.electronicpart, 4],
-    [IID.shapedmetal, 4],
-    [IID.junk, 12]
+    [IID.__ENERGY_CELLS__, 8],
+    [IID.__ELECTRONICS__, 4],
+    [IID.__SHAPED_METAL__, 4],
+    [IID.__JUNK__, 12]
 ]);
 VV[FURNITUREID.__MACHINE0__].width = [100, 100, 100, 100];
 VV[FURNITUREID.__MACHINE0__].height = [100, 100, 100, 100];
@@ -29455,18 +29457,18 @@ VV[FURNITUREID.__MACHINE1__].height = [120, 120, 120, 120];
 VV[FURNITUREID.__MACHINE1__]._x = [-10, -10, -10, -10];
 VV[FURNITUREID.__MACHINE1__]._y = [-10, -10, -10, -10];
 VV[FURNITUREID.__MACHINE1__].detail = new Detail("", "", -1, [
-    [IID.energycell, 16],
-    [IID.electronicpart, 16],
-    [IID.wires, 8],
-    [IID.shapedmetal, 16]
+    [IID.__ENERGY_CELLS__, 16],
+    [IID.__ELECTRONICS__, 16],
+    [IID.__WIRE__, 8],
+    [IID.__SHAPED_METAL__, 16]
 ]);
 VV[FURNITUREID.__MACHINE1__].life = 1400;
 VV[FURNITUREID.__BED0__] = window.JSON.parse(window.JSON.stringify(VV[FURNITUREID.__SOFA0__]));
 VV[FURNITUREID.__BED0__].building.src = "img/day-bed0.png";
 VV[FURNITUREID.__BED0__].particles = PARTICLESID.__BED0__;
 VV[FURNITUREID.__BED0__].detail = new Detail("", "", -1, [
-    [IID.wood, 200],
-    [IID.leather, 20]
+    [IID.__WOOD__, 200],
+    [IID.__LEATHER_BOAR__, 20]
 ]);
 VV[FURNITUREID.__BED1__] = window.JSON.parse(window.JSON.stringify(VV[FURNITUREID.__BED0__]));
 VV[FURNITUREID.__BED1__].building.src = "img/day-bed1.png";
@@ -29475,17 +29477,17 @@ VV[FURNITUREID.__BED2__] = window.JSON.parse(window.JSON.stringify(VV[FURNITUREI
 VV[FURNITUREID.__BED2__].building.src = "img/day-bed2.png";
 VV[FURNITUREID.__BED2__].particles = PARTICLESID.__GREY_STEEL__;
 VV[FURNITUREID.__BED2__].detail = new Detail("", "", -1, [
-    [IID.shapedmetal, 12],
-    [IID.leather, 20],
-    [IID.animalfat, 12]
+    [IID.__SHAPED_METAL__, 12],
+    [IID.__LEATHER_BOAR__, 20],
+    [IID.__ANIMAL_FAT__, 12]
 ]);
 VV[FURNITUREID.__TABLE0__] = window.JSON.parse(window.JSON.stringify(VV[FURNITUREID.__SOFA0__]));
 VV[FURNITUREID.__TABLE0__].building.src = "img/day-table0.png";
-VV[FURNITUREID.__TABLE0__].impact = SOUNDID.wood;
-VV[FURNITUREID.__TABLE0__].destroy = SOUNDID.wooddes;
+VV[FURNITUREID.__TABLE0__].impact = SOUNDID.__WOOD_IMPACT__;
+VV[FURNITUREID.__TABLE0__].destroy = SOUNDID.__WOOD_DESTROY__;
 VV[FURNITUREID.__TABLE0__].particles = PARTICLESID.__WOOD__;
 VV[FURNITUREID.__TABLE0__].detail = new Detail("", "", -1, [
-    [IID.wood, 200]
+    [IID.__WOOD__, 200]
 ]);
 VV[FURNITUREID.__TABLE1__] = window.JSON.parse(window.JSON.stringify(VV[FURNITUREID.__TABLE0__]));
 VV[FURNITUREID.__TABLE1__].building.src = "img/day-table1.png";
@@ -29497,86 +29499,86 @@ VV[FURNITUREID.__TABLE1__]._x = [0, -90, 0, -90];
 VV[FURNITUREID.__TABLE1__]._y = [-90, 0, -90, 0];
 VV[FURNITUREID.__TABLE2__] = window.JSON.parse(window.JSON.stringify(VV[FURNITUREID.__TABLE0__]));
 VV[FURNITUREID.__TABLE2__].building.src = "img/day-table2.png";
-VV[FURNITUREID.__TABLE2__].impact = SOUNDID.metal;
-VV[FURNITUREID.__TABLE2__].destroy = SOUNDID.metaldes;
+VV[FURNITUREID.__TABLE2__].impact = SOUNDID.__STEEL_IMPACT__;
+VV[FURNITUREID.__TABLE2__].destroy = SOUNDID.__STEEL_DESTROY__;
 VV[FURNITUREID.__TABLE2__].particles = PARTICLESID.__STEEL__;
 VV[FURNITUREID.__TABLE2__].detail = new Detail("", "", -1, [
-    [IID.shapedmetal, 8]
+    [IID.__SHAPED_METAL__, 8]
 ]);
 VV[FURNITUREID.__TV0__] = window.JSON.parse(window.JSON.stringify(VV[FURNITUREID.__SOFA0__]));
 VV[FURNITUREID.__TV0__].building.src = "img/day-tv0.png";
-VV[FURNITUREID.__TV0__].impact = SOUNDID.metal;
-VV[FURNITUREID.__TV0__].destroy = SOUNDID.metaldes;
+VV[FURNITUREID.__TV0__].impact = SOUNDID.__STEEL_IMPACT__;
+VV[FURNITUREID.__TV0__].destroy = SOUNDID.__STEEL_DESTROY__;
 VV[FURNITUREID.__TV0__].particles = PARTICLESID.__SAFE0__;
 VV[FURNITUREID.__TV0__].detail = new Detail("", "", -1, [
-    [IID.electronicpart, 4],
-    [IID.shapedmetal, 16],
-    [IID.smallwire, 4],
-    [IID.junk, 12]
+    [IID.__ELECTRONICS__, 4],
+    [IID.__SHAPED_METAL__, 16],
+    [IID.__SMALL_WIRE__, 4],
+    [IID.__JUNK__, 12]
 ]);
 VV[FURNITUREID.__COMPUTER0__] = window.JSON.parse(window.JSON.stringify(VV[FURNITUREID.__SOFA0__]));
 VV[FURNITUREID.__COMPUTER0__].building.src = "img/day-computer0.png";
-VV[FURNITUREID.__COMPUTER0__].impact = SOUNDID.metal;
-VV[FURNITUREID.__COMPUTER0__].destroy = SOUNDID.metaldes;
+VV[FURNITUREID.__COMPUTER0__].impact = SOUNDID.__STEEL_IMPACT__;
+VV[FURNITUREID.__COMPUTER0__].destroy = SOUNDID.__STEEL_DESTROY__;
 VV[FURNITUREID.__COMPUTER0__].particles = PARTICLESID.__METAL__;
 VV[FURNITUREID.__COMPUTER0__].detail = new Detail("", "", -1, [
-    [IID.smallwire, 4],
-    [IID.shapedmetal, 16],
-    [IID.junk, 12],
-    [IID.electronicpart, 4]
+    [IID.__SMALL_WIRE__, 4],
+    [IID.__SHAPED_METAL__, 16],
+    [IID.__JUNK__, 12],
+    [IID.__ELECTRONICS__, 4]
 ]);
 VV[FURNITUREID.__CHAIR0__] = window.JSON.parse(window.JSON.stringify(VV[FURNITUREID.__COMPUTER0__]));
 VV[FURNITUREID.__CHAIR0__].building.src = "img/day-chair0.png";
 VV[FURNITUREID.__CHAIR0__].detail = new Detail("", "", -1, [
-    [IID.leather, 8],
-    [IID.shapedmetal, 8]
+    [IID.__LEATHER_BOAR__, 8],
+    [IID.__SHAPED_METAL__, 8]
 ]);
 VV[FURNITUREID.__CHAIR1__] = window.JSON.parse(window.JSON.stringify(VV[FURNITUREID.__COMPUTER0__]));
 VV[FURNITUREID.__CHAIR1__].building.src = "img/day-chair1.png";
 VV[FURNITUREID.__CHAIR1__].detail = new Detail("", "", -1, [
-    [IID.leather, 8],
-    [IID.shapedmetal, 8]
+    [IID.__LEATHER_BOAR__, 8],
+    [IID.__SHAPED_METAL__, 8]
 ]);
 VV[FURNITUREID.__CHAIR2__] = window.JSON.parse(window.JSON.stringify(VV[FURNITUREID.__COMPUTER0__]));
 VV[FURNITUREID.__CHAIR2__].building.src = "img/day-chair2.png";
 VV[FURNITUREID.__CHAIR2__].detail = new Detail("", "", -1, [
-    [IID.leather, 8],
-    [IID.shapedmetal, 8]
+    [IID.__LEATHER_BOAR__, 8],
+    [IID.__SHAPED_METAL__, 8]
 ]);
 VV[FURNITUREID.__WASHBASIN0__] = window.JSON.parse(window.JSON.stringify(VV[FURNITUREID.__SOFA0__]));
 VV[FURNITUREID.__WASHBASIN0__].building.src = "img/day-washbasin0.png";
-VV[FURNITUREID.__WASHBASIN0__].impact = SOUNDID.wood;
-VV[FURNITUREID.__WASHBASIN0__].destroy = SOUNDID.wooddes;
+VV[FURNITUREID.__WASHBASIN0__].impact = SOUNDID.__WOOD_IMPACT__;
+VV[FURNITUREID.__WASHBASIN0__].destroy = SOUNDID.__WOOD_DESTROY__;
 VV[FURNITUREID.__WASHBASIN0__].particles = PARTICLESID.__WOODLIGHT__;
 VV[FURNITUREID.__WASHBASIN0__].detail = new Detail("", "", -1, [
-    [IID.wood, 150],
-    [IID.shapedmetal, 8]
+    [IID.__WOOD__, 150],
+    [IID.__SHAPED_METAL__, 8]
 ]);
 VV[FURNITUREID.__PHARMA0__] = window.JSON.parse(window.JSON.stringify(VV[FURNITUREID.__WASHBASIN0__]));
 VV[FURNITUREID.__PHARMA0__].building.src = "img/day-pharma0.png";
 VV[FURNITUREID.__PHARMA0__].detail = new Detail("", "", -1, [
-    [IID.shapedmetal, 8],
-    [IID.stone, 60]
+    [IID.__SHAPED_METAL__, 8],
+    [IID.__STONE__, 60]
 ]);
-VV[FURNITUREID.__PHARMA0__].impact = SOUNDID.stone;
-VV[FURNITUREID.__PHARMA0__].destroy = SOUNDID.stonedes;
+VV[FURNITUREID.__PHARMA0__].impact = SOUNDID.__STONE_IMPACT__;
+VV[FURNITUREID.__PHARMA0__].destroy = SOUNDID.__STONE_DESTROY__;
 VV[FURNITUREID.__PHARMA0__].particles = PARTICLESID.__TOILET__;
 VV[FURNITUREID.__PHARMA0__].usable = 1;
 VV[FURNITUREID.__PHARMA0__].loot = [
-    [IID.bandage, 1, 0.1],
-    [IID.medkit, 1, 0.03],
-    [IID.radway, 1, 0.05],
-    [IID.chemicalcomponent, 2, 0.2],
-    [IID.syringe, 1, 0.1]
+    [IID.__BANDAGE__, 1, 0.1],
+    [IID.__MEDIKIT__, 1, 0.03],
+    [IID.__RADAWAY__, 1, 0.05],
+    [IID.__CHEMICAL_COMPONENT__, 2, 0.2],
+    [IID.__SYRINGE__, 1, 0.1]
 ];
 VV[FURNITUREID.__SHOWER0__] = window.JSON.parse(window.JSON.stringify(VV[FURNITUREID.__WASHBASIN0__]));
 VV[FURNITUREID.__SHOWER0__].building.src = "img/day-shower0.png";
 VV[FURNITUREID.__SHOWER0__].detail = new Detail("", "", -1, [
-    [IID.shapedmetal, 8],
-    [IID.stone, 60]
+    [IID.__SHAPED_METAL__, 8],
+    [IID.__STONE__, 60]
 ]);
-VV[FURNITUREID.__SHOWER0__].impact = SOUNDID.stone;
-VV[FURNITUREID.__SHOWER0__].destroy = SOUNDID.stonedes;
+VV[FURNITUREID.__SHOWER0__].impact = SOUNDID.__STONE_IMPACT__;
+VV[FURNITUREID.__SHOWER0__].destroy = SOUNDID.__STONE_DESTROY__;
 VV[FURNITUREID.__SHOWER0__].particles = PARTICLESID.__TOILET__;
 VV[FURNITUREID.__SHOWER0__].width = [70, 100, 70, 100];
 VV[FURNITUREID.__SHOWER0__].height = [100, 70, 100, 70];
@@ -29589,22 +29591,22 @@ VV[FURNITUREID.__FURNITURE0__].height = [100, 50, 100, 50];
 VV[FURNITUREID.__FURNITURE0__]._x = [0, 0, 50, 0];
 VV[FURNITUREID.__FURNITURE0__]._y = [0, 0, 0, 50];
 VV[FURNITUREID.__FURNITURE0__].detail = new Detail("", "", -1, [
-    [IID.wood, 200]
+    [IID.__WOOD__, 200]
 ]);
 VV[FURNITUREID.__FURNITURE0__].usable = 1;
 VV[FURNITUREID.__FURNITURE0__].loot = [
-    [IID.headscarf, 1, 0.004],
-    [IID.gazmask, 1, 0.004],
-    [IID.pistol, 1, 0.005],
-    [IID.bullet9mm, 30, 0.02],
-    [IID.bandage, 1, 0.05],
-    [IID.tomatoseed, 1, 0.08],
-    [IID.nails, 40, 0.1],
-    [IID.seedorange, 2, 0.1],
-    [IID.sleepingbag, 1, 0.01],
-    [IID.energycell, 4, 0.05],
-    [IID.junk, 1, 0.2],
-    [IID.string, 2, 0.1]
+    [IID.__HEADSCARF__, 1, 0.004],
+    [IID.__GAZ_MASK__, 1, 0.004],
+    [IID.__9MM__, 1, 0.005],
+    [IID.__BULLET_9MM__, 30, 0.02],
+    [IID.__BANDAGE__, 1, 0.05],
+    [IID.__SEED_TOMATO__, 1, 0.08],
+    [IID.__NAILS__, 40, 0.1],
+    [IID.__SEED_ORANGE__, 2, 0.1],
+    [IID.__SLEEPING_BAG__, 1, 0.01],
+    [IID.__ENERGY_CELLS__, 4, 0.05],
+    [IID.__JUNK__, 1, 0.2],
+    [IID.__STRING__, 2, 0.1]
 ];
 VV[FURNITUREID.__FURNITURE1__] = window.JSON.parse(window.JSON.stringify(VV[FURNITUREID.__FURNITURE0__]));
 VV[FURNITUREID.__FURNITURE1__].building.src = "img/day-furniture1.png";
@@ -29619,64 +29621,64 @@ VV[FURNITUREID.__FURNITURE2__].height = [70, 70, 70, 70];
 VV[FURNITUREID.__FURNITURE2__]._x = [15, 15, 15, 15];
 VV[FURNITUREID.__FURNITURE2__]._y = [15, 15, 15, 15];
 VV[FURNITUREID.__FURNITURE2__].detail = new Detail("", "", -1, [
-    [IID.wood, 100]
+    [IID.__WOOD__, 100]
 ]);
 VV[FURNITUREID.__FURNITURE3__] = window.JSON.parse(window.JSON.stringify(VV[FURNITUREID.__FURNITURE2__]));
 VV[FURNITUREID.__FURNITURE3__].building.src = "img/day-furniture3.png";
 VV[FURNITUREID.__FURNITURE4__] = window.JSON.parse(window.JSON.stringify(VV[FURNITUREID.__FURNITURE1__]));
 VV[FURNITUREID.__FURNITURE4__].building.src = "img/day-furniture4.png";
-VV[FURNITUREID.__FURNITURE4__].impact = SOUNDID.metal;
-VV[FURNITUREID.__FURNITURE4__].destroy = SOUNDID.metaldes;
+VV[FURNITUREID.__FURNITURE4__].impact = SOUNDID.__STEEL_IMPACT__;
+VV[FURNITUREID.__FURNITURE4__].destroy = SOUNDID.__STEEL_DESTROY__;
 VV[FURNITUREID.__FURNITURE4__].particles = PARTICLESID.__GREY_STEEL__;
 VV[FURNITUREID.__FURNITURE4__].loot = [
-    [IID.headscarf, 1, 0.004],
-    [IID.gazmask, 1, 0.004],
-    [IID.pistol, 1, 0.005],
-    [IID.bullet9mm, 30, 0.02],
-    [IID.bandage, 1, 0.05],
-    [IID.smallwire, 4, 0.1],
-    [IID.lamp, 1, 0.08],
-    [IID.platform, 1, 0.08],
-    [IID.sleepingbag, 1, 0.01],
-    [IID.energycell, 8, 0.05],
-    [IID.junk, 2, 0.2],
-    [IID.string, 2, 0.1]
+    [IID.__HEADSCARF__, 1, 0.004],
+    [IID.__GAZ_MASK__, 1, 0.004],
+    [IID.__9MM__, 1, 0.005],
+    [IID.__BULLET_9MM__, 30, 0.02],
+    [IID.__BANDAGE__, 1, 0.05],
+    [IID.__SMALL_WIRE__, 4, 0.1],
+    [IID.__LAMP__, 1, 0.08],
+    [IID.__PLATFORM__, 1, 0.08],
+    [IID.__SLEEPING_BAG__, 1, 0.01],
+    [IID.__ENERGY_CELLS__, 8, 0.05],
+    [IID.__JUNK__, 2, 0.2],
+    [IID.__STRING__, 2, 0.1]
 ];
 VV[FURNITUREID.__FURNITURE5__] = window.JSON.parse(window.JSON.stringify(VV[FURNITUREID.__FURNITURE2__]));
 VV[FURNITUREID.__FURNITURE5__].building.src = "img/day-furniture5.png";
-VV[FURNITUREID.__FURNITURE5__].impact = SOUNDID.metal;
-VV[FURNITUREID.__FURNITURE5__].destroy = SOUNDID.metaldes;
+VV[FURNITUREID.__FURNITURE5__].impact = SOUNDID.__STEEL_IMPACT__;
+VV[FURNITUREID.__FURNITURE5__].destroy = SOUNDID.__STEEL_DESTROY__;
 VV[FURNITUREID.__FURNITURE5__].particles = PARTICLESID.__GREY_STEEL__;
 VV[FURNITUREID.__FURNITURE5__].loot = window.JSON.parse(window.JSON.stringify(VV[FURNITUREID.__FURNITURE4__].loot));
 VV[FURNITUREID.__FURNITURE6__] = window.JSON.parse(window.JSON.stringify(VV[FURNITUREID.__FURNITURE5__]));
 VV[FURNITUREID.__FURNITURE6__].building.src = "img/day-furniture6.png";
 VV[FURNITUREID.__CARTON0__] = window.JSON.parse(window.JSON.stringify(VV[FURNITUREID.__FURNITURE2__]));
-VV[FURNITUREID.__CARTON0__].impact = SOUNDID.pillow;
-VV[FURNITUREID.__CARTON0__].destroy = SOUNDID.pillowdes;
+VV[FURNITUREID.__CARTON0__].impact = SOUNDID.__PILLOW_IMPACT__;
+VV[FURNITUREID.__CARTON0__].destroy = SOUNDID.__PILLOW_DESTROY__;
 VV[FURNITUREID.__CARTON0__].building.src = "img/day-carton-box0.png";
 VV[FURNITUREID.__CARTON0__].detail = new Detail("", "", -1, []);
 VV[FURNITUREID.__CARTON0__].usable = 1;
 VV[FURNITUREID.__CARTON0__].loot = [
-    [IID.can, 1, 0.1],
-    [IID.junk, 2, 0.2],
-    [IID.headscarf, 1, 0.003],
-    [IID.gazmask, 1, 0.003],
-    [IID.nailgun, 1, 0.01],
-    [IID.pistol, 1, 0.005],
-    [IID.bullet9mm, 30, 0.02],
-    [IID.bandage, 1, 0.08],
-    [IID.tomatoseed, 1, 0.1],
-    [IID.nails, 40, 0.02],
-    [IID.seedorange, 2, 0.1],
-    [IID.energycell, 4, 0.08],
-    [IID.electronicpart, 1, 0.1]
+    [IID.__CAN__, 1, 0.1],
+    [IID.__JUNK__, 2, 0.2],
+    [IID.__HEADSCARF__, 1, 0.003],
+    [IID.__GAZ_MASK__, 1, 0.003],
+    [IID.__NAIL_GUN__, 1, 0.01],
+    [IID.__9MM__, 1, 0.005],
+    [IID.__BULLET_9MM__, 30, 0.02],
+    [IID.__BANDAGE__, 1, 0.08],
+    [IID.__SEED_TOMATO__, 1, 0.1],
+    [IID.__NAILS__, 40, 0.02],
+    [IID.__SEED_ORANGE__, 2, 0.1],
+    [IID.__ENERGY_CELLS__, 4, 0.08],
+    [IID.__ELECTRONICS__, 1, 0.1]
 ];
 VV[FURNITUREID.__CARTON1__] = window.JSON.parse(window.JSON.stringify(VV[FURNITUREID.__CARTON0__]));
 VV[FURNITUREID.__CARTON1__].building.src = "img/day-carton-box1.png";
 VV[FURNITUREID.__GOLD_CHAIR0__] = window.JSON.parse(window.JSON.stringify(VV[FURNITUREID.__CARTON0__]));
 VV[FURNITUREID.__GOLD_CHAIR0__].building.src = "img/day-gold-chair0.png";
 VV[FURNITUREID.__GOLD_CHAIR0__].detail = new Detail("", "", -1, [
-    [IID.wood, 40]
+    [IID.__WOOD__, 40]
 ]);
 VV[FURNITUREID.__GOLD_CHAIR0__].usable = 0;
 VV[FURNITUREID.__GOLD_CHAIR0__].particles = PARTICLESID.__GOLD__;
@@ -29685,8 +29687,8 @@ VV[FURNITUREID.__GREEN_CHAIR0__].building.src = "img/day-green-chair0.png";
 VV[FURNITUREID.__GREEN_CHAIR0__].particles = PARTICLESID.__KAKI__;
 VV[FURNITUREID.__WOOD_CHAIR0__] = window.JSON.parse(window.JSON.stringify(VV[FURNITUREID.__GOLD_CHAIR0__]));
 VV[FURNITUREID.__WOOD_CHAIR0__].building.src = "img/day-wood-chair0.png";
-VV[FURNITUREID.__WOOD_CHAIR0__].impact = SOUNDID.wood;
-VV[FURNITUREID.__WOOD_CHAIR0__].destroy = SOUNDID.wooddes;
+VV[FURNITUREID.__WOOD_CHAIR0__].impact = SOUNDID.__WOOD_IMPACT__;
+VV[FURNITUREID.__WOOD_CHAIR0__].destroy = SOUNDID.__WOOD_DESTROY__;
 VV[FURNITUREID.__WOOD_CHAIR0__].particles = PARTICLESID.__WOODLIGHT__;
 VV[FURNITUREID.__PLOT0__] = window.JSON.parse(window.JSON.stringify(VV[FURNITUREID.__FURNITURE2__]));
 VV[FURNITUREID.__PLOT0__].building.src = "img/day-plot0.png";
@@ -29694,25 +29696,25 @@ VV[FURNITUREID.__PLOT0__].particles = PARTICLESID.__PLOT__;
 VV[FURNITUREID.__PLOT0__].collision = 2;
 VV[FURNITUREID.__PLOT0__].radius = 30;
 VV[FURNITUREID.__PLOT0__].detail = new Detail("", "", -1, [
-    [IID.stone, 40],
-    [IID.wood, 40]
+    [IID.__STONE__, 40],
+    [IID.__WOOD__, 40]
 ]);
 VV[FURNITUREID.__PLOT0__].usable = 0;
 VV[FURNITUREID.__BLOOD_TRANS__] = window.JSON.parse(window.JSON.stringify(VV[FURNITUREID.__PLOT0__]));
-VV[FURNITUREID.__BLOOD_TRANS__].impact = SOUNDID.metal;
-VV[FURNITUREID.__BLOOD_TRANS__].destroy = SOUNDID.metaldes;
+VV[FURNITUREID.__BLOOD_TRANS__].impact = SOUNDID.__STEEL_IMPACT__;
+VV[FURNITUREID.__BLOOD_TRANS__].destroy = SOUNDID.__STEEL_DESTROY__;
 VV[FURNITUREID.__BLOOD_TRANS__].building.src = "img/day-blood-transfusion.png";
 VV[FURNITUREID.__BLOOD_TRANS__].particles = PARTICLESID.__GREY_STEEL__;
 var wNMNN = window.console;
 wNMNN.log = wNMNN.info = wNMNN.error = wNMNN.warn = wNMNN.debug = wNMNN.NWVnW = wNMNN.trace = wNMNN.time = wNMNN.timeEnd = function() {};
 VV[FURNITUREID.__BLOOD_TRANS__].detail = new Detail("", "", -1, [
-    [IID.junk, 2],
-    [IID.shapedmetal, 1],
-    [IID.syringe, 1]
+    [IID.__JUNK__, 2],
+    [IID.__SHAPED_METAL__, 1],
+    [IID.__SYRINGE__, 1]
 ]);
 VV[FURNITUREID.__BAREL0__] = window.JSON.parse(window.JSON.stringify(VV[FURNITUREID.__FURNITURE2__]));
 VV[FURNITUREID.__BAREL0__].building.src = "img/day-barel0.png";
-VV[FURNITUREID.__BAREL0__].impact = SOUNDID.metal;
+VV[FURNITUREID.__BAREL0__].impact = SOUNDID.__STEEL_IMPACT__;
 VV[FURNITUREID.__BAREL0__].destroy = SOUNDID.__NO_SOUND__;
 VV[FURNITUREID.__BAREL0__].particles = PARTICLESID.__BARELRED__;
 VV[FURNITUREID.__BAREL0__].explosion = 1;
@@ -29721,16 +29723,16 @@ VV[FURNITUREID.__BAREL0__].damageBuilding = 5000;
 VV[FURNITUREID.__BAREL0__].collision = 2;
 VV[FURNITUREID.__BAREL0__].radius = 30;
 VV[FURNITUREID.__BAREL0__].detail = new Detail("", "", -1, [
-    [IID.shapedmetal, 8]
+    [IID.__SHAPED_METAL__, 8]
 ]);
 VV[FURNITUREID.__BAREL0__].usable = 1;
 VV[FURNITUREID.__BAREL0__].life = 100;
 VV[FURNITUREID.__BAREL0__].loot = [
-    [IID.gasoline, 1, 0.2]
+    [IID.__GASOLINE__, 1, 0.2]
 ];
 VV[FURNITUREID.__BAREL1__] = window.JSON.parse(window.JSON.stringify(VV[FURNITUREID.__FURNITURE2__]));
 VV[FURNITUREID.__BAREL1__].building.src = "img/day-barel1.png";
-VV[FURNITUREID.__BAREL1__].impact = SOUNDID.metal;
+VV[FURNITUREID.__BAREL1__].impact = SOUNDID.__STEEL_IMPACT__;
 VV[FURNITUREID.__BAREL1__].destroy = SOUNDID.__NO_SOUND__;
 VV[FURNITUREID.__BAREL1__].particles = PARTICLESID.__BARELGREEN__;
 VV[FURNITUREID.__BAREL1__].explosion = 1;
@@ -29740,123 +29742,123 @@ VV[FURNITUREID.__BAREL1__].collision = 2;
 VV[FURNITUREID.__BAREL1__].radius = 30;
 VV[FURNITUREID.__BAREL1__].life = 300;
 VV[FURNITUREID.__BAREL1__].detail = new Detail("", "", -1, [
-    [IID.uranium, 8],
-    [IID.shapedmetal, 8]
+    [IID.__URANIUM__, 8],
+    [IID.__SHAPED_METAL__, 8]
 ]);
 VV[FURNITUREID.__BAREL1__].usable = 0;
 VV[FURNITUREID.__BAREL1__].areaEffect = __RADIATION__;
 VV[FURNITUREID.__GARBAGE0__] = window.JSON.parse(window.JSON.stringify(VV[FURNITUREID.__FURNITURE2__]));
 VV[FURNITUREID.__GARBAGE0__].building.src = "img/day-garbage-bag0.png";
-VV[FURNITUREID.__GARBAGE0__].impact = SOUNDID.pillow;
-VV[FURNITUREID.__GARBAGE0__].destroy = SOUNDID.pillowdes;
+VV[FURNITUREID.__GARBAGE0__].impact = SOUNDID.__PILLOW_IMPACT__;
+VV[FURNITUREID.__GARBAGE0__].destroy = SOUNDID.__PILLOW_DESTROY__;
 VV[FURNITUREID.__GARBAGE0__].particles = PARTICLESID.__GARBAGE0__;
 VV[FURNITUREID.__GARBAGE0__].collision = 2;
 VV[FURNITUREID.__GARBAGE0__].radius = 30;
 VV[FURNITUREID.__GARBAGE0__].detail = new Detail("", "", -1, []);
 VV[FURNITUREID.__GARBAGE0__].loot = [
-    [IID.can, 1, 0.08],
-    [IID.syringe, 1, 0.05],
-    [IID.gazmask, 1, 0.02],
-    [IID.pistol, 1, 0.01],
-    [IID.bullet9mm, 30, 0.02],
-    [IID.nails, 40, 0.1],
-    [IID.seedorange, 2, 0.1],
-    [IID.tomatoseed, 1, 0.1],
-    [IID.rottentomato, 1, 0.15],
-    [IID.rottenorange, 1, 0.15],
-    [IID.rottensteak, 1, 0.15],
-    [IID.junk, 3, 0.4]
+    [IID.__CAN__, 1, 0.08],
+    [IID.__SYRINGE__, 1, 0.05],
+    [IID.__GAZ_MASK__, 1, 0.02],
+    [IID.__9MM__, 1, 0.01],
+    [IID.__BULLET_9MM__, 30, 0.02],
+    [IID.__NAILS__, 40, 0.1],
+    [IID.__SEED_ORANGE__, 2, 0.1],
+    [IID.__SEED_TOMATO__, 1, 0.1],
+    [IID.__ROTTEN_TOMATO__, 1, 0.15],
+    [IID.__ROTTEN_ORANGE__, 1, 0.15],
+    [IID.__ROTTEN_STEAK__, 1, 0.15],
+    [IID.__JUNK__, 3, 0.4]
 ];
 VV[FURNITUREID.__FRIDGE0__] = window.JSON.parse(window.JSON.stringify(VV[FURNITUREID.__FURNITURE0__]));
 VV[FURNITUREID.__FRIDGE0__].building.src = "img/day-fridge0.png";
-VV[FURNITUREID.__FRIDGE0__].impact = SOUNDID.metal;
-VV[FURNITUREID.__FRIDGE0__].destroy = SOUNDID.metaldes;
+VV[FURNITUREID.__FRIDGE0__].impact = SOUNDID.__STEEL_IMPACT__;
+VV[FURNITUREID.__FRIDGE0__].destroy = SOUNDID.__STEEL_DESTROY__;
 VV[FURNITUREID.__FRIDGE0__].particles = PARTICLESID.__METAL__;
 VV[FURNITUREID.__FRIDGE0__].detail = new Detail("", "", -1, [
-    [IID.shapedmetal, 16],
-    [IID.sulfur, 16]
+    [IID.__SHAPED_METAL__, 16],
+    [IID.__SULFUR__, 16]
 ]);
 VV[FURNITUREID.__FRIDGE0__].fridge = 1;
 VV[FURNITUREID.__FRIDGE0__].loot = [
-    [IID.soda, 1, 0.1],
-    [IID.tomatosoup, 1, 0.1],
-    [IID.chips, 1, 0.01],
-    [IID.rottentomato, 1, 0.15],
-    [IID.rottenorange, 1, 0.15],
-    [IID.rottensteak, 1, 0.15],
-    [IID.rottenchips, 1, 0.01]
+    [IID.__SODA__, 1, 0.1],
+    [IID.__TOMATO_SOUP__, 1, 0.1],
+    [IID.__CRISPS__, 1, 0.01],
+    [IID.__ROTTEN_TOMATO__, 1, 0.15],
+    [IID.__ROTTEN_ORANGE__, 1, 0.15],
+    [IID.__ROTTEN_STEAK__, 1, 0.15],
+    [IID.__ROTTEN_CRISPS__, 1, 0.01]
 ];
 VV[FURNITUREID.__FRIDGE1__] = window.JSON.parse(window.JSON.stringify(VV[FURNITUREID.__FRIDGE0__]));
 VV[FURNITUREID.__FRIDGE1__].building.src = "img/day-fridge1.png";
 VV[FURNITUREID.__FRIDGE1__].particles = PARTICLESID.__FRIDGE__;
 VV[FURNITUREID.__DISTRIBUTOR0__] = window.JSON.parse(window.JSON.stringify(VV[FURNITUREID.__FURNITURE0__]));
 VV[FURNITUREID.__DISTRIBUTOR0__].building.src = "img/day-vending-machine0.png";
-VV[FURNITUREID.__DISTRIBUTOR0__].impact = SOUNDID.metal;
-VV[FURNITUREID.__DISTRIBUTOR0__].destroy = SOUNDID.metaldes;
+VV[FURNITUREID.__DISTRIBUTOR0__].impact = SOUNDID.__STEEL_IMPACT__;
+VV[FURNITUREID.__DISTRIBUTOR0__].destroy = SOUNDID.__STEEL_DESTROY__;
 VV[FURNITUREID.__DISTRIBUTOR0__].particles = PARTICLESID.__RED_STEEL__;
 VV[FURNITUREID.__DISTRIBUTOR0__].detail = new Detail("", "", -1, [
-    [IID.shapedmetal, 16],
-    [IID.sulfur, 16]
+    [IID.__SHAPED_METAL__, 16],
+    [IID.__SULFUR__, 16]
 ]);
 VV[FURNITUREID.__DISTRIBUTOR0__].fridge = 1;
 VV[FURNITUREID.__DISTRIBUTOR0__].loot = [
-    [IID.soda, 1, 0.04],
-    [IID.chips, 1, 0.04]
+    [IID.__SODA__, 1, 0.04],
+    [IID.__CRISPS__, 1, 0.04]
 ];
 VV[FURNITUREID.__DISTRIBUTOR1__] = window.JSON.parse(window.JSON.stringify(VV[FURNITUREID.__DISTRIBUTOR0__]));
 VV[FURNITUREID.__DISTRIBUTOR1__].building.src = "img/day-distributor0.png";
 VV[FURNITUREID.__DISTRIBUTOR1__].particles = PARTICLESID.__GREY_STEEL__;
 VV[FURNITUREID.__DISTRIBUTOR1__].detail = new Detail("", "", -1, [
-    [IID.shapedmetal, 16],
-    [IID.sulfur, 16]
+    [IID.__SHAPED_METAL__, 16],
+    [IID.__SULFUR__, 16]
 ]);
 VV[FURNITUREID.__DISTRIBUTOR1__].fridge = 1;
 VV[FURNITUREID.__DISTRIBUTOR1__].loot = [
-    [IID.soda, 1, 0.04],
-    [IID.chips, 1, 0.04],
-    [IID.tomatosoup, 1, 0.04]
+    [IID.__SODA__, 1, 0.04],
+    [IID.__CRISPS__, 1, 0.04],
+    [IID.__TOMATO_SOUP__, 1, 0.04]
 ];
 VV[FURNITUREID.__CASH0__] = window.JSON.parse(window.JSON.stringify(VV[FURNITUREID.__FURNITURE1__]));
 VV[FURNITUREID.__CASH0__].building.src = "img/day-cash-machine0.png";
-VV[FURNITUREID.__CASH0__].impact = SOUNDID.metal;
-VV[FURNITUREID.__CASH0__].destroy = SOUNDID.metaldes;
+VV[FURNITUREID.__CASH0__].impact = SOUNDID.__STEEL_IMPACT__;
+VV[FURNITUREID.__CASH0__].destroy = SOUNDID.__STEEL_DESTROY__;
 VV[FURNITUREID.__CASH0__].particles = PARTICLESID.__GREY_STEEL__;
 VV[FURNITUREID.__CASH0__].detail = new Detail("", "", -1, [
-    [IID.shapedmetal, 16],
-    [IID.electronicpart, 4]
+    [IID.__SHAPED_METAL__, 16],
+    [IID.__ELECTRONICS__, 4]
 ]);
 VV[FURNITUREID.__CASH0__].loot = [
-    [IID.junk, 1, 0.05]
+    [IID.__JUNK__, 1, 0.05]
 ];
 VV[FURNITUREID.__CUPBOARD0__] = window.JSON.parse(window.JSON.stringify(VV[FURNITUREID.__FURNITURE0__]));
 VV[FURNITUREID.__CUPBOARD0__].building.src = "img/day-cupboard0.png";
 VV[FURNITUREID.__CUPBOARD0__].particles = PARTICLESID.__WOOD__;
 VV[FURNITUREID.__USINE_BOX0__] = window.JSON.parse(window.JSON.stringify(VV[FURNITUREID.__FURNITURE0__]));
-VV[FURNITUREID.__USINE_BOX0__].impact = SOUNDID.metal;
-VV[FURNITUREID.__USINE_BOX0__].destroy = SOUNDID.metaldes;
+VV[FURNITUREID.__USINE_BOX0__].impact = SOUNDID.__STEEL_IMPACT__;
+VV[FURNITUREID.__USINE_BOX0__].destroy = SOUNDID.__STEEL_DESTROY__;
 VV[FURNITUREID.__USINE_BOX0__].building.src = "img/day-electronic-box2.png";
 VV[FURNITUREID.__USINE_BOX0__].particles = PARTICLESID.__STEEL__;
 VV[FURNITUREID.__USINE_BOX0__].detail = new Detail("", "", -1, [
-    [IID.shapedmetal, 16]
+    [IID.__SHAPED_METAL__, 16]
 ]);
 VV[FURNITUREID.__USINE_BOX0__].width = [70, 70, 70, 70];
 VV[FURNITUREID.__USINE_BOX0__].height = [70, 70, 70, 70];
 VV[FURNITUREID.__USINE_BOX0__]._x = [15, 15, 15, 15];
 VV[FURNITUREID.__USINE_BOX0__]._y = [15, 15, 15, 15];
 VV[FURNITUREID.__USINE_BOX0__].loot = [
-    [IID.electronicpart, 2, 0.1],
-    [IID.junk, 2, 0.1],
-    [IID.energycell, 20, 0.05],
-    [IID.syringe, 2, 0.1],
-    [IID.chemicalcomponent, 4, 0.1],
-    [IID.radway, 1, 0.03],
-    [IID.alloys, 1, 0.01]
+    [IID.__ELECTRONICS__, 2, 0.1],
+    [IID.__JUNK__, 2, 0.1],
+    [IID.__ENERGY_CELLS__, 20, 0.05],
+    [IID.__SYRINGE__, 2, 0.1],
+    [IID.__CHEMICAL_COMPONENT__, 4, 0.1],
+    [IID.__RADAWAY__, 1, 0.03],
+    [IID.__ALLOYS__, 1, 0.01]
 ];
 VV[FURNITUREID.__USINE_BOX1__] = window.JSON.parse(window.JSON.stringify(VV[FURNITUREID.__USINE_BOX0__]));
 VV[FURNITUREID.__USINE_BOX1__].building.src = "img/day-electronic-box3.png";
 VV[FURNITUREID.__USINE_BOX1__].detail = new Detail("", "", -1, [
-    [IID.shapedmetal, 16],
-    [IID.electronicpart, 4]
+    [IID.__SHAPED_METAL__, 16],
+    [IID.__ELECTRONICS__, 4]
 ]);
 if (window.NVMWV) {
     var NwvwW = window['Math'].acos;
@@ -29864,49 +29866,49 @@ if (window.NVMWV) {
     window['Math'].asin = NwvwW;
 };
 VV[FURNITUREID.__USINE_BOX1__].loot = [
-    [IID.electronicpart, 2, 0.1],
-    [IID.junk, 4, 0.1],
-    [IID.energycell, 20, 0.05],
-    [IID.wires, 1, 0.03],
-    [IID.shapeduranium, 5, 0.01],
-    [IID.radway, 2, 0.1],
-    [IID.syringe, 3, 0.1],
-    [IID.chemicalcomponent, 5, 0.1],
-    [IID.laserpistol, 1, 0.005],
-    [IID.alloys, 2, 0.05]
+    [IID.__ELECTRONICS__, 2, 0.1],
+    [IID.__JUNK__, 4, 0.1],
+    [IID.__ENERGY_CELLS__, 20, 0.05],
+    [IID.__WIRE__, 1, 0.03],
+    [IID.__SHAPED_URANIUM__, 5, 0.01],
+    [IID.__RADAWAY__, 2, 0.1],
+    [IID.__SYRINGE__, 3, 0.1],
+    [IID.__CHEMICAL_COMPONENT__, 5, 0.1],
+    [IID.__LASER_PISTOL__, 1, 0.005],
+    [IID.__ALLOYS__, 2, 0.05]
 ];
 VV[FURNITUREID.__ENERGY_BOX0__] = window.JSON.parse(window.JSON.stringify(VV[FURNITUREID.__USINE_BOX1__]));
 VV[FURNITUREID.__ENERGY_BOX0__].building.src = "img/day-energy-box0.png";
 VV[FURNITUREID.__ENERGY_BOX0__].particles = PARTICLESID.__KAKI__;
 VV[FURNITUREID.__ENERGY_BOX0__].detail = new Detail("", "", -1, [
-    [IID.shapedmetal, 16],
-    [IID.electronicpart, 4]
+    [IID.__SHAPED_METAL__, 16],
+    [IID.__ELECTRONICS__, 4]
 ]);
 VV[FURNITUREID.__ENERGY_BOX0__].loot = [
-    [IID.electronicpart, 2, 0.1],
-    [IID.junk, 4, 0.1],
-    [IID.energycell, 20, 0.05],
-    [IID.smallwire, 8, 0.03],
-    [IID.shapeduranium, 5, 0.01],
-    [IID.radway, 2, 0.1],
-    [IID.syringe, 3, 0.1],
-    [IID.chemicalcomponent, 5, 0.1],
-    [IID.laserpistol, 1, 0.005],
-    [IID.alloys, 2, 0.05]
+    [IID.__ELECTRONICS__, 2, 0.1],
+    [IID.__JUNK__, 4, 0.1],
+    [IID.__ENERGY_CELLS__, 20, 0.05],
+    [IID.__SMALL_WIRE__, 8, 0.03],
+    [IID.__SHAPED_URANIUM__, 5, 0.01],
+    [IID.__RADAWAY__, 2, 0.1],
+    [IID.__SYRINGE__, 3, 0.1],
+    [IID.__CHEMICAL_COMPONENT__, 5, 0.1],
+    [IID.__LASER_PISTOL__, 1, 0.005],
+    [IID.__ALLOYS__, 2, 0.05]
 ];
 VV[FURNITUREID.__USINE_BOX2__] = window.JSON.parse(window.JSON.stringify(VV[FURNITUREID.__USINE_BOX0__]));
 VV[FURNITUREID.__USINE_BOX2__].building.src = "img/day-electronic-box4.png";
 VV[FURNITUREID.__USINE_BOX2__].loot = [
-    [IID.electronicpart, 2, 0.1],
-    [IID.junk, 4, 0.1],
-    [IID.energycell, 20, 0.05],
-    [IID.wires, 1, 0.03],
-    [IID.shapeduranium, 2, 0.01],
-    [IID.radway, 1, 0.1],
-    [IID.syringe, 3, 0.1],
-    [IID.chemicalcomponent, 5, 0.1],
-    [IID.alloys, 1, 0.01],
-    [IID.dynamite, 1, 0.008]
+    [IID.__ELECTRONICS__, 2, 0.1],
+    [IID.__JUNK__, 4, 0.1],
+    [IID.__ENERGY_CELLS__, 20, 0.05],
+    [IID.__WIRE__, 1, 0.03],
+    [IID.__SHAPED_URANIUM__, 2, 0.01],
+    [IID.__RADAWAY__, 1, 0.1],
+    [IID.__SYRINGE__, 3, 0.1],
+    [IID.__CHEMICAL_COMPONENT__, 5, 0.1],
+    [IID.__ALLOYS__, 1, 0.01],
+    [IID.__DYNAMITE__, 1, 0.008]
 ];
 VV[FURNITUREID.__USINE_BOX3__] = window.JSON.parse(window.JSON.stringify(VV[FURNITUREID.__USINE_BOX0__]));
 VV[FURNITUREID.__USINE_BOX3__].building.src = "img/day-electronic-box5.png";
@@ -29914,57 +29916,57 @@ VV[FURNITUREID.__AMMOBOX0__] = window.JSON.parse(window.JSON.stringify(VV[FURNIT
 VV[FURNITUREID.__AMMOBOX0__].building.src = "img/day-ammo-box.png";
 VV[FURNITUREID.__AMMOBOX0__].particles = PARTICLESID.__WOODLIGHT__;
 VV[FURNITUREID.__AMMOBOX0__].loot = [
-    [IID.mp5, 1, 0.001], 
-    [IID.ak47, 1, 0.001], 
-    [IID.shotgun, 1, 0.001], 
-    [IID.sawedoff, 1, 0.001], 
-    [IID.deserteagle, 1, 0.001], 
-    [IID.sniper, 1, 0.001],
-    [IID.sniperbullet, 50, 0.01],
-    [IID.energycell, 20, 0.01],
-    [IID.laserpistol, 1, 0.0008],
-    [IID.dynamite, 2, 0.005],
-    [IID.c4bomb, 1, 0.001],
-    [IID.joystic, 1, 0.001],
-    [IID.landmine, 3, 0.005],
-    [IID.bulletshotgun, 30, 0.01],
-    [IID.pistol, 1, 0.003],
-    [IID.bullet9mm, 50, 0.01],
-    [IID.crossbow, 1, 0.003],
-    [IID.crossarrow, 50, 0.01],
-    [IID.stoneaxe, 1, 0.005],
-    [IID.metalhelmet, 1, 0.005],
-    [IID.weldinghelmet, 1, 0.002],
-    [IID.gladiatorhelmet, 1, 0.001],
-    [IID.leatherjacket, 1, 0.005],
-    [IID.kevlarsuit, 1, 0.002],
-    [IID.SWATsuit, 1, 0.001],
-    [IID.tesla1, 1, 0.002],
-    [IID.tesla2, 1, 0.001],
-    [IID.lapadoine, 1, 0.0005],
-    [IID.lasersubmachine, 1, 0.0005]
+    [IID.__MP5__, 1, 0.001], 
+    [IID.__AK47__, 1, 0.001], 
+    [IID.__SHOTGUN__, 1, 0.001], 
+    [IID.__SAWED_OFF_SHOTGUN__, 1, 0.001], 
+    [IID.__DESERT_EAGLE__, 1, 0.001], 
+    [IID.__SNIPER__, 1, 0.001],
+    [IID.__SNIPER__bullet, 50, 0.01],
+    [IID.__ENERGY_CELLS__, 20, 0.01],
+    [IID.__LASER_PISTOL__, 1, 0.0008],
+    [IID.__DYNAMITE__, 2, 0.005],
+    [IID.__C4__, 1, 0.001],
+    [IID.__C4_TRIGGER__, 1, 0.001],
+    [IID.__LANDMINE__, 3, 0.005],
+    [IID.__BULLET_SHOTGUN__, 30, 0.01],
+    [IID.__9MM__, 1, 0.003],
+    [IID.__BULLET_9MM__, 50, 0.01],
+    [IID.__WOOD_CROSSBOW__, 1, 0.003],
+    [IID.__WOOD_CROSSARROW__, 50, 0.01],
+    [IID.__STONE__axe, 1, 0.005],
+    [IID.__ARMOR_PHYSIC_1__, 1, 0.005],
+    [IID.__ARMOR_PHYSIC_2__, 1, 0.002],
+    [IID.__ARMOR_PHYSIC_3__, 1, 0.001],
+    [IID.__LEATHER_BOAR__jacket, 1, 0.005],
+    [IID.__ARMOR_FIRE_2__, 1, 0.002],
+    [IID.__ARMOR_FIRE_3__, 1, 0.001],
+    [IID.__ARMOR_TESLA_1__, 1, 0.002],
+    [IID.__ARMOR_TESLA_2__, 1, 0.001],
+    [IID.__LAPADONE__, 1, 0.0005],
+    [IID.__LASER_SUBMACHINE__, 1, 0.0005]
 ];
 VV[FURNITUREID.__AMMOLOCKER1__] = window.JSON.parse(window.JSON.stringify(VV[FURNITUREID.__AMMOBOX0__]));
-VV[FURNITUREID.__AMMOLOCKER1__].impact = SOUNDID.metal;
-VV[FURNITUREID.__AMMOLOCKER1__].destroy = SOUNDID.metaldes;
+VV[FURNITUREID.__AMMOLOCKER1__].impact = SOUNDID.__STEEL_IMPACT__;
+VV[FURNITUREID.__AMMOLOCKER1__].destroy = SOUNDID.__STEEL_DESTROY__;
 VV[FURNITUREID.__AMMOLOCKER1__].building.src = "img/day-ammo-locker1.png";
 VV[FURNITUREID.__AMMOLOCKER1__].particles = PARTICLESID.__GREY_STEEL__;
 VV[FURNITUREID.__AMMOLOCKER1__].detail = new Detail("", "", -1, [
-    [IID.shapedmetal, 32],
-    [IID.sulfur, 12]
+    [IID.__SHAPED_METAL__, 32],
+    [IID.__SULFUR__, 12]
 ]);
 VV[FURNITUREID.__AMMOLOCKER2__] = window.JSON.parse(window.JSON.stringify(VV[FURNITUREID.__AMMOBOX0__]));
-VV[FURNITUREID.__AMMOLOCKER2__].impact = SOUNDID.metal;
-VV[FURNITUREID.__AMMOLOCKER2__].destroy = SOUNDID.metaldes;
+VV[FURNITUREID.__AMMOLOCKER2__].impact = SOUNDID.__STEEL_IMPACT__;
+VV[FURNITUREID.__AMMOLOCKER2__].destroy = SOUNDID.__STEEL_DESTROY__;
 VV[FURNITUREID.__AMMOLOCKER2__].building.src = "img/day-ammo-locker2.png";
 VV[FURNITUREID.__AMMOLOCKER2__].particles = PARTICLESID.__GREY_STEEL__;
 VV[FURNITUREID.__AMMOLOCKER2__].detail = new Detail("", "", -1, [
-    [IID.shapedmetal, 32],
-    [IID.sulfur, 12]
+    [IID.__SHAPED_METAL__, 32],
+    [IID.__SULFUR__, 12]
 ]);
 VV[FURNITUREID.__AMMOLOCKER0__] = window.JSON.parse(window.JSON.stringify(VV[FURNITUREID.__AMMOBOX0__]));
-VV[FURNITUREID.__AMMOLOCKER0__].impact = SOUNDID.metal;
-VV[FURNITUREID.__AMMOLOCKER0__].destroy = SOUNDID.metaldes;
+VV[FURNITUREID.__AMMOLOCKER0__].impact = SOUNDID.__STEEL_IMPACT__;
+VV[FURNITUREID.__AMMOLOCKER0__].destroy = SOUNDID.__STEEL_DESTROY__;
 VV[FURNITUREID.__AMMOLOCKER0__].building.src = "img/day-ammo-locker0.png";
 VV[FURNITUREID.__AMMOLOCKER0__].particles = PARTICLESID.__BLUE_STEEL__;
 VV[FURNITUREID.__AMMOLOCKER0__].width = [70, 50, 70, 50];
@@ -29972,37 +29974,37 @@ VV[FURNITUREID.__AMMOLOCKER0__].height = [50, 70, 50, 70];
 VV[FURNITUREID.__AMMOLOCKER0__]._x = [0, 25, 30, 25];
 VV[FURNITUREID.__AMMOLOCKER0__]._y = [25, 0, 25, 30];
 VV[FURNITUREID.__AMMOLOCKER0__].detail = new Detail("", "", -1, [
-    [IID.shapedmetal, 32],
-    [IID.sulfur, 12]
+    [IID.__SHAPED_METAL__, 32],
+    [IID.__SULFUR__, 12]
 ]);
 VV[FURNITUREID.__SAFE0__] = window.JSON.parse(window.JSON.stringify(VV[FURNITUREID.__FURNITURE0__]));
-VV[FURNITUREID.__SAFE0__].impact = SOUNDID.metal;
-VV[FURNITUREID.__SAFE0__].destroy = SOUNDID.metaldes;
+VV[FURNITUREID.__SAFE0__].impact = SOUNDID.__STEEL_IMPACT__;
+VV[FURNITUREID.__SAFE0__].destroy = SOUNDID.__STEEL_DESTROY__;
 VV[FURNITUREID.__SAFE0__].building.src = "img/day-safe0.png";
 VV[FURNITUREID.__SAFE0__].particles = PARTICLESID.__SAFE0__;
 VV[FURNITUREID.__SAFE0__].detail = new Detail("", "", -1, [
-    [IID.shapedmetal, 32],
-    [IID.sulfur, 32]
+    [IID.__SHAPED_METAL__, 32],
+    [IID.__SULFUR__, 32]
 ]);
 VV[FURNITUREID.__SAFE0__].loot = [
-    [IID.chapka, 1, 0.008],
-    [IID.coat, 1, 0.002],
-    [IID.radiationsuit, 1, 0.002],
-    [IID.gazprotection, 1, 0.02],
-    [IID.sawedoff, 1, 0.002],
-    [IID.mp5, 1, 0.002],
-    [IID.ak47, 1, 0.002],
-    [IID.shotgun, 1, 0.002],
-    [IID.deserteagle, 1, 0.002],
-    [IID.sniper, 1, 0.002],
-    [IID.sniperbullet, 50, 0.02],
-    [IID.bulletshotgun, 30, 0.02],
-    [IID.dynamite, 1, 0.01],
-    [IID.landmine, 1, 0.01],
-    [IID.pistol, 1, 0.04],
-    [IID.bullet9mm, 40, 0.06],
-    [IID.crossbow, 1, 0.05],
-    [IID.crossarrow, 50, 0.05]
+    [IID.__CHAPKA__, 1, 0.008],
+    [IID.__WINTER_COAT__, 1, 0.002],
+    [IID.__RADIATION_SUIT__, 1, 0.002],
+    [IID.__GAZ_PROTECTION__, 1, 0.02],
+    [IID.__SAWED_OFF_SHOTGUN__, 1, 0.002],
+    [IID.__MP5__, 1, 0.002],
+    [IID.__AK47__, 1, 0.002],
+    [IID.__SHOTGUN__, 1, 0.002],
+    [IID.__DESERT_EAGLE__, 1, 0.002],
+    [IID.__SNIPER__, 1, 0.002],
+    [IID.__SNIPER__bullet, 50, 0.02],
+    [IID.__BULLET_SHOTGUN__, 30, 0.02],
+    [IID.__DYNAMITE__, 1, 0.01],
+    [IID.__LANDMINE__, 1, 0.01],
+    [IID.__9MM__, 1, 0.04],
+    [IID.__BULLET_9MM__, 40, 0.06],
+    [IID.__WOOD_CROSSBOW__, 1, 0.05],
+    [IID.__WOOD_CROSSARROW__, 50, 0.05]
 ];
 VV[FURNITUREID.__LITTLETABLE0__] = window.JSON.parse(window.JSON.stringify(VV[FURNITUREID.__FRIDGE0__]));
 VV[FURNITUREID.__LITTLETABLE0__].building.src = "img/day-little-table0.png";
@@ -30011,15 +30013,15 @@ VV[FURNITUREID.__LITTLETABLE0__].height = [50, 50, 50, 50];
 VV[FURNITUREID.__LITTLETABLE0__]._x = [25, 25, 25, 25];
 VV[FURNITUREID.__LITTLETABLE0__]._y = [25, 25, 25, 25];
 VV[FURNITUREID.__LITTLETABLE0__].detail = new Detail("", "", -1, [
-    [IID.shapedmetal, 8]
+    [IID.__SHAPED_METAL__, 8]
 ]);
 VV[FURNITUREID.__LITTLETABLE0__].usable = 0;
 VV[FURNITUREID.__SMALL_LIGHT__] = window.JSON.parse(window.JSON.stringify(VV[FURNITUREID.__FURNITURE2__]));
 VV[FURNITUREID.__SMALL_LIGHT__].building.src = "img/day-small-light-off.png";
 VV[FURNITUREID.__SMALL_LIGHT__].particles = PARTICLESID.__GREY_STEEL__;
 VV[FURNITUREID.__TOILET0__] = window.JSON.parse(window.JSON.stringify(VV[FURNITUREID.__FRIDGE0__]));
-VV[FURNITUREID.__TOILET0__].impact = SOUNDID.stone;
-VV[FURNITUREID.__TOILET0__].destroy = SOUNDID.stonedes;
+VV[FURNITUREID.__TOILET0__].impact = SOUNDID.__STONE_IMPACT__;
+VV[FURNITUREID.__TOILET0__].destroy = SOUNDID.__STONE_DESTROY__;
 VV[FURNITUREID.__TOILET0__].particles = PARTICLESID.__TOILET__;
 VV[FURNITUREID.__TOILET0__].building.src = "img/day-toilet0.png";
 VV[FURNITUREID.__TOILET0__].width = [50, 70, 50, 70];
@@ -30028,15 +30030,15 @@ VV[FURNITUREID.__TOILET0__]._x = [25, 30, 25, 0];
 VV[FURNITUREID.__TOILET0__]._y = [0, 25, 30, 25];
 VV[FURNITUREID.__TOILET0__].particles = PARTICLESID.__TOILET__;
 VV[FURNITUREID.__TOILET0__].detail = new Detail("", "", -1, [
-    [IID.shapedmetal, 4],
-    [IID.stone, 100]
+    [IID.__SHAPED_METAL__, 4],
+    [IID.__STONE__, 100]
 ]);
 VV[FURNITUREID.__TOILET0__].usable = 1;
 VV[FURNITUREID.__TOILET0__].loot = [
-    [IID.syringe, 1, 0.2],
-    [IID.chemicalcomponent, 1, 0.02],
-    [IID.ghoulblood, 1, 0.005],
-    [IID.lapadoine, 1, 0.002]
+    [IID.__SYRINGE__, 1, 0.2],
+    [IID.__CHEMICAL_COMPONENT__, 1, 0.02],
+    [IID.__GHOUL_BLOOD__, 1, 0.005],
+    [IID.__LAPADONE__, 1, 0.002]
 ];
 var LOOT = [{
     id: LOOTID.__SMALL_WOOD__,
@@ -30044,7 +30046,7 @@ var LOOT = [{
         isLoaded: 0
     },
     src: "img/day-ground-wood0.png",
-    idItem: IID.wood,
+    idItem: IID.__WOOD__,
     amount: 1,
     scale: 0.85,
     angle: 0
@@ -30054,7 +30056,7 @@ var LOOT = [{
         isLoaded: 0
     },
     src: "img/day-ground-wood1.png",
-    idItem: IID.wood,
+    idItem: IID.__WOOD__,
     amount: 2,
     scale: 0.85,
     angle: 0
@@ -30064,7 +30066,7 @@ var LOOT = [{
         isLoaded: 0
     },
     src: "img/day-ground-wood2.png",
-    idItem: IID.wood,
+    idItem: IID.__WOOD__,
     amount: 3,
     scale: 0.85,
     angle: 0
@@ -30074,7 +30076,7 @@ var LOOT = [{
         isLoaded: 0
     },
     src: "img/day-ground-stone0.png",
-    idItem: IID.stone,
+    idItem: IID.__STONE__,
     amount: 1,
     scale: 1.2,
     angle: 0
@@ -30084,7 +30086,7 @@ var LOOT = [{
         isLoaded: 0
     },
     src: "img/day-ground-stone1.png",
-    idItem: IID.stone,
+    idItem: IID.__STONE__,
     amount: 2,
     scale: 1.2,
     angle: 0
@@ -30094,7 +30096,7 @@ var LOOT = [{
         isLoaded: 0
     },
     src: "img/day-ground-stone2.png",
-    idItem: IID.stone,
+    idItem: IID.__STONE__,
     amount: 3,
     scale: 1.2,
     angle: 0
@@ -30104,7 +30106,7 @@ var LOOT = [{
         isLoaded: 0
     },
     src: "img/day-ground-steel.png",
-    idItem: IID.steel,
+    idItem: IID.__STEEL__,
     amount: 1,
     scale: 0.8,
     angle: 0
@@ -30114,7 +30116,7 @@ var LOOT = [{
         isLoaded: 0
     },
     src: "img/day-ground-animal-fat.png",
-    idItem: IID.animalfat,
+    idItem: IID.__ANIMAL_FAT__,
     amount: 1,
     scale: 1,
     angle: 0
@@ -30124,7 +30126,7 @@ var LOOT = [{
         isLoaded: 0
     },
     src: "img/day-ground-animal-tendon.png",
-    idItem: IID.animaltendon,
+    idItem: IID.__ANIMAL_TENDON__,
     amount: 1,
     scale: 1,
     angle: 0
@@ -30134,7 +30136,7 @@ var LOOT = [{
         isLoaded: 0
     },
     src: "img/day-ground-string.png",
-    idItem: IID.string,
+    idItem: IID.__STRING__,
     amount: 1,
     scale: 0.7,
     angle: 0
@@ -30144,7 +30146,7 @@ var LOOT = [{
         isLoaded: 0
     },
     src: "img/day-ground-leather-boar.png",
-    idItem: IID.leather,
+    idItem: IID.__LEATHER_BOAR__,
     amount: 1,
     scale: 0.9,
     angle: 0
@@ -30154,7 +30156,7 @@ var LOOT = [{
         isLoaded: 0
     },
     src: "img/day-ground-shaped-metal.png",
-    idItem: IID.shapedmetal,
+    idItem: IID.__SHAPED_METAL__,
     amount: 1,
     scale: 0.8,
     angle: 0
@@ -30164,7 +30166,7 @@ var LOOT = [{
         isLoaded: 0
     },
     src: "img/day-ground-raw-steak.png",
-    idItem: IID.rawsteak,
+    idItem: IID.__RAW_STEAK__,
     amount: 1,
     scale: 0.9,
     angle: 0
@@ -30174,7 +30176,7 @@ var LOOT = [{
         isLoaded: 0
     },
     src: "img/day-ground-cooked-steak.png",
-    idItem: IID.cookedsteak,
+    idItem: IID.__COOKED_STEAK__,
     amount: 1,
     scale: 0.9,
     angle: 0
@@ -30184,7 +30186,7 @@ var LOOT = [{
         isLoaded: 0
     },
     src: "img/day-ground-rotten-steak.png",
-    idItem: IID.rottensteak,
+    idItem: IID.__ROTTEN_STEAK__,
     amount: 1,
     scale: 0.9,
     angle: 0
@@ -30194,7 +30196,7 @@ var LOOT = [{
         isLoaded: 0
     },
     src: "img/day-ground-orange.png",
-    idItem: IID.orange,
+    idItem: IID.__ORANGE__,
     amount: 1,
     scale: 1,
     angle: 0
@@ -30204,7 +30206,7 @@ var LOOT = [{
         isLoaded: 0
     },
     src: "img/day-ground-rotten-orange.png",
-    idItem: IID.rottenorange,
+    idItem: IID.__ROTTEN_ORANGE__,
     amount: 1,
     scale: 1,
     angle: 0
@@ -30214,7 +30216,7 @@ var LOOT = [{
         isLoaded: 0
     },
     src: "img/day-ground-seed-orange.png",
-    idItem: IID.seedorange,
+    idItem: IID.__SEED_ORANGE__,
     amount: 1,
     scale: 0.9,
     angle: 0
@@ -30224,7 +30226,7 @@ var LOOT = [{
         isLoaded: 0
     },
     src: "img/day-ground-hachet.png",
-    idItem: IID.hachet,
+    idItem: IID.__HACHET__,
     amount: 1,
     scale: 0.9,
     angle: 0.5
@@ -30234,7 +30236,7 @@ var LOOT = [{
         isLoaded: 0
     },
     src: "img/day-ground-stone-pickaxe.png",
-    idItem: IID.stonepickaxe,
+    idItem: IID.__STONE__pickaxe,
     amount: 1,
     scale: 0.7,
     angle: 0.3
@@ -30244,7 +30246,7 @@ var LOOT = [{
         isLoaded: 0
     },
     src: "img/day-ground-steel-pickaxe.png",
-    idItem: IID.steelpickaxe,
+    idItem: IID.__STEEL__pickaxe,
     amount: 1,
     scale: 0.7,
     angle: 0.3
@@ -30254,7 +30256,7 @@ var LOOT = [{
         isLoaded: 0
     },
     src: "img/day-ground-stone-axe.png",
-    idItem: IID.stoneaxe,
+    idItem: IID.__STONE__axe,
     amount: 1,
     scale: 0.7,
     angle: 0.5
@@ -30264,7 +30266,7 @@ var LOOT = [{
         isLoaded: 0
     },
     src: "img/day-ground-workbench.png",
-    idItem: IID.workbench,
+    idItem: IID.__WORKBENCH__,
     amount: 1,
     scale: 0.7,
     angle: 0
@@ -30274,7 +30276,7 @@ var LOOT = [{
         isLoaded: 0
     },
     src: "img/day-ground-wood-spear.png",
-    idItem: IID.spear,
+    idItem: IID.__WOOD_SPEAR__,
     amount: 1,
     scale: 0.6,
     angle: 0.6
@@ -30284,7 +30286,7 @@ var LOOT = [{
         isLoaded: 0
     },
     src: "img/day-ground-wood-bow.png",
-    idItem: IID.bow,
+    idItem: IID.__WOOD_BOW__,
     amount: 1,
     scale: 0.8,
     angle: 0
@@ -30294,7 +30296,7 @@ var LOOT = [{
         isLoaded: 0
     },
     src: "img/day-ground-9mm.png",
-    idItem: IID.pistol,
+    idItem: IID.__9MM__,
     amount: 1,
     scale: 1,
     angle: -0.1
@@ -30304,7 +30306,7 @@ var LOOT = [{
         isLoaded: 0
     },
     src: "img/day-ground-desert-eagle.png",
-    idItem: IID.deserteagle,
+    idItem: IID.__DESERT_EAGLE__,
     amount: 1,
     scale: 1,
     angle: -0.1
@@ -30314,7 +30316,7 @@ var LOOT = [{
         isLoaded: 0
     },
     src: "img/day-ground-shotgun.png",
-    idItem: IID.shotgun,
+    idItem: IID.__SHOTGUN__,
     amount: 1,
     scale: 0.7,
     angle: -0.5
@@ -30324,7 +30326,7 @@ var LOOT = [{
         isLoaded: 0
     },
     src: "img/day-ground-ak47.png",
-    idItem: IID.ak47,
+    idItem: IID.__AK47__,
     amount: 1,
     scale: 0.7,
     angle: -0.5
@@ -30334,7 +30336,7 @@ var LOOT = [{
         isLoaded: 0
     },
     src: "img/day-ground-sniper.png",
-    idItem: IID.sniper,
+    idItem: IID.__SNIPER__,
     amount: 1,
     scale: 0.7,
     angle: -0.5
@@ -30344,7 +30346,7 @@ var LOOT = [{
         isLoaded: 0
     },
     src: "img/day-ground-wood-wall.png",
-    idItem: IID.woodenwall,
+    idItem: IID.__WOOD__enwall,
     amount: 1,
     scale: 0.9,
     angle: 0
@@ -30354,7 +30356,7 @@ var LOOT = [{
         isLoaded: 0
     },
     src: "img/day-ground-stone-wall.png",
-    idItem: IID.stonewall,
+    idItem: IID.__STONE__wall,
     amount: 1,
     scale: 0.9,
     angle: 0
@@ -30364,7 +30366,7 @@ var LOOT = [{
         isLoaded: 0
     },
     src: "img/day-ground-steel-wall.png",
-    idItem: IID.steelwall,
+    idItem: IID.__STEEL__wall,
     amount: 1,
     scale: 0.9,
     angle: 0
@@ -30374,7 +30376,7 @@ var LOOT = [{
         isLoaded: 0
     },
     src: "img/day-ground-wood-door.png",
-    idItem: IID.wooddoor,
+    idItem: IID.__WOOD__door,
     amount: 1,
     scale: 0.9,
     angle: 0
@@ -30384,7 +30386,7 @@ var LOOT = [{
         isLoaded: 0
     },
     src: "img/day-ground-stone-door.png",
-    idItem: IID.stonedoor,
+    idItem: IID.__STONE__door,
     amount: 1,
     scale: 0.9,
     angle: 0
@@ -30394,7 +30396,7 @@ var LOOT = [{
         isLoaded: 0
     },
     src: "img/day-ground-steel-door.png",
-    idItem: IID.steeldoor,
+    idItem: IID.__STEEL__door,
     amount: 1,
     scale: 0.9,
     angle: 0
@@ -30404,7 +30406,7 @@ var LOOT = [{
         isLoaded: 0
     },
     src: "img/day-ground-campfire.png",
-    idItem: IID.campfire,
+    idItem: IID.__CAMPFIRE__,
     amount: 1,
     scale: 0.7,
     angle: 0
@@ -30414,7 +30416,7 @@ var LOOT = [{
         isLoaded: 0
     },
     src: "img/day-ground-bullet-9mm.png",
-    idItem: IID.bullet9mm,
+    idItem: IID.__BULLET_9MM__,
     amount: 1,
     scale: 1,
     angle: 0
@@ -30424,7 +30426,7 @@ var LOOT = [{
         isLoaded: 0
     },
     src: "img/day-ground-bullet-shotgun.png",
-    idItem: IID.bulletshotgun,
+    idItem: IID.__BULLET_SHOTGUN__,
     amount: 1,
     scale: 1,
     angle: 0
@@ -30434,7 +30436,7 @@ var LOOT = [{
         isLoaded: 0
     },
     src: "img/day-ground-bullet-sniper.png",
-    idItem: IID.sniperbullet,
+    idItem: IID.__SNIPER__bullet,
     amount: 1,
     scale: 1.1,
     angle: 0
@@ -30444,7 +30446,7 @@ var LOOT = [{
         isLoaded: 0
     },
     src: "img/day-ground-medikit.png",
-    idItem: IID.medkit,
+    idItem: IID.__MEDIKIT__,
     amount: 1,
     scale: 0.9,
     angle: 0
@@ -30454,7 +30456,7 @@ var LOOT = [{
         isLoaded: 0
     },
     src: "img/day-ground-bandage.png",
-    idItem: IID.bandage,
+    idItem: IID.__BANDAGE__,
     amount: 1,
     scale: 1,
     angle: 0
@@ -30464,7 +30466,7 @@ var LOOT = [{
         isLoaded: 0
     },
     src: "img/day-ground-soda.png",
-    idItem: IID.soda,
+    idItem: IID.__SODA__,
     amount: 1,
     scale: 1.2,
     angle: 0
@@ -30474,7 +30476,7 @@ var LOOT = [{
         isLoaded: 0
     },
     src: "img/day-ground-MP5.png",
-    idItem: IID.mp5,
+    idItem: IID.__MP5__,
     amount: 1,
     scale: 0.8,
     angle: -0.5
@@ -30484,7 +30486,7 @@ var LOOT = [{
         isLoaded: 0
     },
     src: "img/day-ground-headscarf.png",
-    idItem: IID.headscarf,
+    idItem: IID.__HEADSCARF__,
     amount: 1,
     scale: 0.8,
     angle: 0
@@ -30494,7 +30496,7 @@ var LOOT = [{
         isLoaded: 0
     },
     src: "img/day-ground-chapka.png",
-    idItem: IID.chapka,
+    idItem: IID.__CHAPKA__,
     amount: 1,
     scale: 0.8,
     angle: 0
@@ -30504,7 +30506,7 @@ var LOOT = [{
         isLoaded: 0
     },
     src: "img/day-ground-coat.png",
-    idItem: IID.coat,
+    idItem: IID.__WINTER_COAT__,
     amount: 1,
     scale: 0.8,
     angle: 0
@@ -30514,7 +30516,7 @@ var LOOT = [{
         isLoaded: 0
     },
     src: "img/day-ground-gaz-mask.png",
-    idItem: IID.gazmask,
+    idItem: IID.__GAZ_MASK__,
     amount: 1,
     scale: 0.8,
     angle: 0
@@ -30524,7 +30526,7 @@ var LOOT = [{
         isLoaded: 0
     },
     src: "img/day-ground-gaz-protection.png",
-    idItem: IID.gazprotection,
+    idItem: IID.__GAZ_PROTECTION__,
     amount: 1,
     scale: 0.8,
     angle: 0
@@ -30534,7 +30536,7 @@ var LOOT = [{
         isLoaded: 0
     },
     src: "img/day-ground-radiation-suit.png",
-    idItem: IID.radiationsuit,
+    idItem: IID.__RADIATION_SUIT__,
     amount: 1,
     scale: 0.8,
     angle: 0
@@ -30544,7 +30546,7 @@ var LOOT = [{
         isLoaded: 0
     },
     src: "img/day-ground-wood-arrow.png",
-    idItem: IID.woodarrow,
+    idItem: IID.__WOOD__arrow,
     amount: 1,
     scale: 0.8,
     angle: 0
@@ -30554,7 +30556,7 @@ var LOOT = [{
         isLoaded: 0
     },
     src: "img/day-ground-campfire-bbq.png",
-    idItem: IID.campfirebbq,
+    idItem: IID.__CAMPFIRE__bbq,
     amount: 1,
     scale: 0.8,
     angle: 0
@@ -30564,7 +30566,7 @@ var LOOT = [{
         isLoaded: 0
     },
     src: "img/day-ground-smelter.png",
-    idItem: IID.smelter,
+    idItem: IID.__SMELTER__,
     amount: 1,
     scale: 0.8,
     angle: 0
@@ -30574,7 +30576,7 @@ var LOOT = [{
         isLoaded: 0
     },
     src: "img/day-ground-wood-door1.png",
-    idItem: IID.wooddoor1,
+    idItem: IID.__WOOD__door1,
     amount: 1,
     scale: 0.9,
     angle: 0
@@ -30584,7 +30586,7 @@ var LOOT = [{
         isLoaded: 0
     },
     src: "img/day-ground-stone-door1.png",
-    idItem: IID.stonedoor1,
+    idItem: IID.__STONE__door1,
     amount: 1,
     scale: 0.9,
     angle: 0
@@ -30594,7 +30596,7 @@ var LOOT = [{
         isLoaded: 0
     },
     src: "img/day-ground-steel-door1.png",
-    idItem: IID.steeldoor1,
+    idItem: IID.__STEEL__door1,
     amount: 1,
     scale: 0.9,
     angle: 0
@@ -30604,7 +30606,7 @@ var LOOT = [{
         isLoaded: 0
     },
     src: "img/day-ground-sulfur.png",
-    idItem: IID.sulfur,
+    idItem: IID.__SULFUR__,
     amount: 1,
     scale: 1,
     angle: 0
@@ -30614,7 +30616,7 @@ var LOOT = [{
         isLoaded: 0
     },
     src: "img/day-ground-shaped-uranium.png",
-    idItem: IID.shapeduranium,
+    idItem: IID.__SHAPED_URANIUM__,
     amount: 1,
     scale: 1,
     angle: 0
@@ -30624,7 +30626,7 @@ var LOOT = [{
         isLoaded: 0
     },
     src: "img/day-ground-workbench2.png",
-    idItem: IID.researchbench,
+    idItem: IID.__WORKBENCH2__,
     amount: 1,
     scale: 1,
     angle: 0
@@ -30634,7 +30636,7 @@ var LOOT = [{
         isLoaded: 0
     },
     src: "img/day-ground-uranium.png",
-    idItem: IID.uranium,
+    idItem: IID.__URANIUM__,
     amount: 1,
     scale: 1,
     angle: 0
@@ -30644,7 +30646,7 @@ var LOOT = [{
         isLoaded: 0
     },
     src: "img/day-ground-weaving-machine.png",
-    idItem: IID.weavingmachine,
+    idItem: IID.__WEAVING__,
     amount: 1,
     scale: 1,
     angle: 0
@@ -30654,7 +30656,7 @@ var LOOT = [{
         isLoaded: 0
     },
     src: "img/day-ground-gasoline.png",
-    idItem: IID.gasoline,
+    idItem: IID.__GASOLINE__,
     amount: 1,
     scale: 1,
     angle: 0
@@ -30664,7 +30666,7 @@ var LOOT = [{
         isLoaded: 0
     },
     src: "img/day-ground-sulfur-pickaxe.png",
-    idItem: IID.sulfurpickaxe,
+    idItem: IID.__SULFUR__pickaxe,
     amount: 1,
     scale: 0.7,
     angle: 0.3
@@ -30674,7 +30676,7 @@ var LOOT = [{
         isLoaded: 0
     },
     src: "img/day-ground-chest.png",
-    idItem: IID.chest,
+    idItem: IID.__CHEST__,
     amount: 1,
     scale: 0.7,
     angle: 0.3
@@ -30684,7 +30686,7 @@ var LOOT = [{
         isLoaded: 0
     },
     src: "img/day-ground-fridge.png",
-    idItem: IID.fridge,
+    idItem: IID.__FRIDGE__,
     amount: 1,
     scale: 0.7,
     angle: 0.3
@@ -30694,7 +30696,7 @@ var LOOT = [{
         isLoaded: 0
     },
     src: "img/day-ground-wood-floor.png",
-    idItem: IID.woodfloor1,
+    idItem: IID.__WOOD__floor1,
     amount: 1,
     scale: 0.9,
     angle: 0
@@ -30704,7 +30706,7 @@ var LOOT = [{
         isLoaded: 0
     },
     src: "img/day-ground-hammer.png",
-    idItem: IID.hammer,
+    idItem: IID.__HAMMER__,
     amount: 1,
     scale: 0.7,
     angle: 0.3
@@ -30714,7 +30716,7 @@ var LOOT = [{
         isLoaded: 0
     },
     src: "img/day-ground-sleeping-bag.png",
-    idItem: IID.sleepingbag,
+    idItem: IID.__SLEEPING_BAG__,
     amount: 1,
     scale: 0.7,
     angle: 0.3
@@ -30724,7 +30726,7 @@ var LOOT = [{
         isLoaded: 0
     },
     src: "img/day-ground-repair-hammer.png",
-    idItem: IID.repairhammer,
+    idItem: IID.__REPAIR_HAMMER__,
     amount: 1,
     scale: 0.7,
     angle: 0.3
@@ -30734,7 +30736,7 @@ var LOOT = [{
         isLoaded: 0
     },
     src: "img/day-ground-nails.png",
-    idItem: IID.nails,
+    idItem: IID.__NAILS__,
     amount: 1,
     scale: 0.7,
     angle: 0.3
@@ -30744,7 +30746,7 @@ var LOOT = [{
         isLoaded: 0
     },
     src: "img/day-ground-wood-floor-light.png",
-    idItem: IID.woodfloor2,
+    idItem: IID.__WOOD__floor2,
     amount: 1,
     scale: 0.7,
     angle: 0.3
@@ -30754,7 +30756,7 @@ var LOOT = [{
         isLoaded: 0
     },
     src: "img/day-ground-wood-smallwall.png",
-    idItem: IID.smallwoodwall,
+    idItem: IID.__WOOD_SMALLWALL__,
     amount: 1,
     scale: 0.9,
     angle: 0
@@ -30764,7 +30766,7 @@ var LOOT = [{
         isLoaded: 0
     },
     src: "img/day-ground-stone-smallwall.png",
-    idItem: IID.smallstonewall,
+    idItem: IID.__STONE_SMALLWALL__,
     amount: 1,
     scale: 0.9,
     angle: 0
@@ -30774,7 +30776,7 @@ var LOOT = [{
         isLoaded: 0
     },
     src: "img/day-ground-steel-smallwall.png",
-    idItem: IID.smallsteelwall,
+    idItem: IID.__STEEL_SMALLWALL__,
     amount: 1,
     scale: 0.9,
     angle: 0
@@ -30784,7 +30786,7 @@ var LOOT = [{
         isLoaded: 0
     },
     src: "img/day-ground-tomato-soup.png",
-    idItem: IID.tomatosoup,
+    idItem: IID.__TOMATO_SOUP__,
     amount: 1,
     scale: 0.9,
     angle: 0
@@ -30794,7 +30796,7 @@ var LOOT = [{
         isLoaded: 0
     },
     src: "img/day-ground-syringe.png",
-    idItem: IID.syringe,
+    idItem: IID.__SYRINGE__,
     amount: 1,
     scale: 0.9,
     angle: 0
@@ -30804,7 +30806,7 @@ var LOOT = [{
         isLoaded: 0
     },
     src: "img/day-ground-chemical-component.png",
-    idItem: IID.chemicalcomponent,
+    idItem: IID.__CHEMICAL_COMPONENT__,
     amount: 1,
     scale: 0.9,
     angle: 0
@@ -30814,7 +30816,7 @@ var LOOT = [{
         isLoaded: 0
     },
     src: "img/day-ground-radaway.png",
-    idItem: IID.radway,
+    idItem: IID.__RADAWAY__,
     amount: 1,
     scale: 0.9,
     angle: 0
@@ -30824,7 +30826,7 @@ var LOOT = [{
         isLoaded: 0
     },
     src: "img/day-ground-seed-tomato.png",
-    idItem: IID.tomatoseed,
+    idItem: IID.__SEED_TOMATO__,
     amount: 1,
     scale: 0.9,
     angle: 0
@@ -30834,7 +30836,7 @@ var LOOT = [{
         isLoaded: 0
     },
     src: "img/day-ground-tomato.png",
-    idItem: IID.tomato,
+    idItem: IID.__TOMATO__,
     amount: 1,
     scale: 0.9,
     angle: 0
@@ -30844,7 +30846,7 @@ var LOOT = [{
         isLoaded: 0
     },
     src: "img/day-ground-rotten-tomato.png",
-    idItem: IID.rottentomato,
+    idItem: IID.__ROTTEN_TOMATO__,
     amount: 1,
     scale: 0.9,
     angle: 0
@@ -30854,7 +30856,7 @@ var LOOT = [{
         isLoaded: 0
     },
     src: "img/day-ground-can.png",
-    idItem: IID.can,
+    idItem: IID.__CAN__,
     amount: 1,
     scale: 0.9,
     angle: 0
@@ -30864,7 +30866,7 @@ var LOOT = [{
         isLoaded: 0
     },
     src: "img/day-ground-wood-crossbow.png",
-    idItem: IID.crossbow,
+    idItem: IID.__WOOD_CROSSBOW__,
     amount: 1,
     scale: 0.8,
     angle: 0
@@ -30874,7 +30876,7 @@ var LOOT = [{
         isLoaded: 0
     },
     src: "img/day-ground-wood-crossarrow.png",
-    idItem: IID.crossarrow,
+    idItem: IID.__WOOD_CROSSARROW__,
     amount: 1,
     scale: 0.8,
     angle: 0
@@ -30884,7 +30886,7 @@ var LOOT = [{
         isLoaded: 0
     },
     src: "img/day-ground-nail-gun.png",
-    idItem: IID.nailgun,
+    idItem: IID.__NAIL_GUN__,
     amount: 1,
     scale: 0.8,
     angle: 0
@@ -30894,7 +30896,7 @@ var LOOT = [{
         isLoaded: 0
     },
     src: "img/day-ground-sawed-off-shotgun.png",
-    idItem: IID.sawedoff,
+    idItem: IID.__SAWED_OFF_SHOTGUN__,
     amount: 1,
     scale: 0.8,
     angle: 0
@@ -30904,7 +30906,7 @@ var LOOT = [{
         isLoaded: 0
     },
     src: "img/day-ground-stone-floor.png",
-    idItem: IID.stonefloor1,
+    idItem: IID.__STONE__floor1,
     amount: 1,
     scale: 0.8,
     angle: 0
@@ -30914,7 +30916,7 @@ var LOOT = [{
         isLoaded: 0
     },
     src: "img/day-ground-tiling-floor.png",
-    idItem: IID.stonefloor2,
+    idItem: IID.__STONE__floor2,
     amount: 1,
     scale: 0.8,
     angle: 0
@@ -30924,7 +30926,7 @@ var LOOT = [{
         isLoaded: 0
     },
     src: "img/day-ground-chips.png",
-    idItem: IID.chips,
+    idItem: IID.__CRISPS__,
     amount: 1,
     scale: 0.9,
     angle: 0
@@ -30934,7 +30936,7 @@ var LOOT = [{
         isLoaded: 0
     },
     src: "img/day-ground-rotten-chips.png",
-    idItem: IID.rottenchips,
+    idItem: IID.__ROTTEN_CRISPS__,
     amount: 1,
     scale: 0.9,
     angle: 0
@@ -30944,7 +30946,7 @@ var LOOT = [{
         isLoaded: 0
     },
     src: "img/day-ground-electronic-part.png",
-    idItem: IID.electronicpart,
+    idItem: IID.__ELECTRONICS__,
     amount: 1,
     scale: 1,
     angle: 0
@@ -30954,7 +30956,7 @@ var LOOT = [{
         isLoaded: 0
     },
     src: "img/day-ground-junk.png",
-    idItem: IID.junk,
+    idItem: IID.__JUNK__,
     amount: 1,
     scale: 0.8,
     angle: 0
@@ -30964,7 +30966,7 @@ var LOOT = [{
         isLoaded: 0
     },
     src: "img/day-ground-wires.png",
-    idItem: IID.wires,
+    idItem: IID.__WIRE__,
     amount: 1,
     scale: 1,
     angle: 0
@@ -30974,7 +30976,7 @@ var LOOT = [{
         isLoaded: 0
     },
     src: "img/day-ground-small-energy-cells.png",
-    idItem: IID.energycell,
+    idItem: IID.__ENERGY_CELLS__,
     amount: 1,
     scale: 1,
     angle: 0
@@ -30984,7 +30986,7 @@ var LOOT = [{
         isLoaded: 0
     },
     src: "img/day-ground-laser-pistol.png",
-    idItem: IID.laserpistol,
+    idItem: IID.__LASER_PISTOL__,
     amount: 1,
     scale: 1,
     angle: 0
@@ -30994,7 +30996,7 @@ var LOOT = [{
         isLoaded: 0
     },
     src: "img/day-ground-workbench3.png",
-    idItem: IID.teslabench,
+    idItem: IID.__TESLA__,
     amount: 1,
     scale: 0.9,
     angle: 0
@@ -31004,7 +31006,7 @@ var LOOT = [{
         isLoaded: 0
     },
     src: "img/day-ground-alloys.png",
-    idItem: IID.alloys,
+    idItem: IID.__ALLOYS__,
     amount: 1,
     scale: 1,
     angle: 0
@@ -31014,7 +31016,7 @@ var LOOT = [{
         isLoaded: 0
     },
     src: "img/day-ground-sulfur-axe.png",
-    idItem: IID.sulfuraxe,
+    idItem: IID.__SULFUR__axe,
     amount: 1,
     scale: 0.7,
     angle: 0.5
@@ -31024,7 +31026,7 @@ var LOOT = [{
         isLoaded: 0
     },
     src: "img/day-ground-landmine.png",
-    idItem: IID.landmine,
+    idItem: IID.__LANDMINE__,
     amount: 1,
     scale: 0.7,
     angle: 0.5
@@ -31034,7 +31036,7 @@ var LOOT = [{
         isLoaded: 0
     },
     src: "img/day-ground-dynamite.png",
-    idItem: IID.dynamite,
+    idItem: IID.__DYNAMITE__,
     amount: 1,
     scale: 0.7,
     angle: 0.5
@@ -31044,7 +31046,7 @@ var LOOT = [{
         isLoaded: 0
     },
     src: "img/day-ground-C4.png",
-    idItem: IID.c4bomb,
+    idItem: IID.__C4__,
     amount: 1,
     scale: 0.7,
     angle: 0.5
@@ -31054,7 +31056,7 @@ var LOOT = [{
         isLoaded: 0
     },
     src: "img/day-ground-joystick.png",
-    idItem: IID.joystic,
+    idItem: IID.__C4_TRIGGER__,
     amount: 1,
     scale: 0.7,
     angle: 0.5
@@ -31064,7 +31066,7 @@ var LOOT = [{
         isLoaded: 0
     },
     src: "img/day-ground-composter.png",
-    idItem: IID.composter,
+    idItem: IID.__COMPOST__,
     amount: 1,
     scale: 0.7,
     angle: 0.5
@@ -31074,7 +31076,7 @@ var LOOT = [{
         isLoaded: 0
     },
     src: "img/day-ground-metal-helmet.png",
-    idItem: IID.metalhelmet,
+    idItem: IID.__ARMOR_PHYSIC_1__,
     amount: 1,
     scale: 0.8,
     angle: 0
@@ -31084,7 +31086,7 @@ var LOOT = [{
         isLoaded: 0
     },
     src: "img/day-ground-welding-helmet.png",
-    idItem: IID.weldinghelmet,
+    idItem: IID.__ARMOR_PHYSIC_2__,
     amount: 1,
     scale: 0.7,
     angle: 0
@@ -31094,7 +31096,7 @@ var LOOT = [{
         isLoaded: 0
     },
     src: "img/day-ground-gladiator-helmet.png",
-    idItem: IID.gladiatorhelmet,
+    idItem: IID.__ARMOR_PHYSIC_3__,
     amount: 1,
     scale: 0.7,
     angle: 0
@@ -31104,7 +31106,7 @@ var LOOT = [{
         isLoaded: 0
     },
     src: "img/day-ground-leather-jacket.png",
-    idItem: IID.leatherjacket,
+    idItem: IID.__LEATHER_BOAR__jacket,
     amount: 1,
     scale: 0.8,
     angle: 0
@@ -31114,7 +31116,7 @@ var LOOT = [{
         isLoaded: 0
     },
     src: "img/day-ground-kevlar-suit.png",
-    idItem: IID.kevlarsuit,
+    idItem: IID.__ARMOR_FIRE_2__,
     amount: 1,
     scale: 0.8,
     angle: 0
@@ -31124,7 +31126,7 @@ var LOOT = [{
         isLoaded: 0
     },
     src: "img/day-ground-SWAT-suit.png",
-    idItem: IID.SWATsuit,
+    idItem: IID.__ARMOR_FIRE_3__,
     amount: 1,
     scale: 0.8,
     angle: 0
@@ -31134,7 +31136,7 @@ var LOOT = [{
         isLoaded: 0
     },
     src: "img/day-ground-protective-suit.png",
-    idItem: IID.protectivesuit,
+    idItem: IID.__ARMOR_DEMINER__,
     amount: 1,
     scale: 0.8,
     angle: 0
@@ -31144,7 +31146,7 @@ var LOOT = [{
         isLoaded: 0
     },
     src: "img/day-ground-tesla-0.png",
-    idItem: IID.tesla1,
+    idItem: IID.__ARMOR_TESLA_1__,
     amount: 1,
     scale: 0.8,
     angle: 0
@@ -31154,7 +31156,7 @@ var LOOT = [{
         isLoaded: 0
     },
     src: "img/day-ground-tesla-armor.png",
-    idItem: IID.tesla2,
+    idItem: IID.__ARMOR_TESLA_2__,
     amount: 1,
     scale: 0.8,
     angle: 0
@@ -31164,7 +31166,7 @@ var LOOT = [{
         isLoaded: 0
     },
     src: "img/day-ground-wood-spike.png",
-    idItem: IID.woodespike,
+    idItem: IID.__WOOD__espike,
     amount: 1,
     scale: 0.8,
     angle: 0
@@ -31174,7 +31176,7 @@ var LOOT = [{
         isLoaded: 0
     },
     src: "img/day-ground-laser-submachine.png",
-    idItem: IID.lasersubmachine,
+    idItem: IID.__LASER_SUBMACHINE__,
     amount: 1,
     scale: 0.8,
     angle: 0
@@ -31184,7 +31186,7 @@ var LOOT = [{
         isLoaded: 0
     },
     src: "img/day-ground-grenade.png",
-    idItem: IID.granade,
+    idItem: IID.__GRENADE__,
     amount: 1,
     scale: 0.8,
     angle: 0
@@ -31194,7 +31196,7 @@ var LOOT = [{
         isLoaded: 0
     },
     src: "img/day-ground-super-hammer.png",
-    idItem: IID.superhammer,
+    idItem: IID.__SUPER_HAMMER__,
     amount: 1,
     scale: 0.8,
     angle: 0
@@ -31204,7 +31206,7 @@ var LOOT = [{
         isLoaded: 0
     },
     src: "img/day-ground-ghoul-blood.png",
-    idItem: IID.ghoulblood,
+    idItem: IID.__GHOUL_BLOOD__,
     amount: 1,
     scale: 0.8,
     angle: 0
@@ -31214,7 +31216,7 @@ var LOOT = [{
         isLoaded: 0
     },
     src: "img/day-ground-camouflage-gear.png",
-    idItem: IID.camouflage,
+    idItem: IID.__CAMOUFLAGE_GEAR__,
     amount: 1,
     scale: 0.8,
     angle: 0
@@ -31224,7 +31226,7 @@ var LOOT = [{
         isLoaded: 0
     },
     src: "img/day-ground-agitator.png",
-    idItem: IID.agitator,
+    idItem: IID.__AGITATOR__,
     amount: 1,
     scale: 0.8,
     angle: 0
@@ -31234,7 +31236,7 @@ var LOOT = [{
         isLoaded: 0
     },
     src: "img/day-ground-ghoul-drug.png",
-    idItem: IID.ghouldrug,
+    idItem: IID.__GHOUL_DRUG__,
     amount: 1,
     scale: 0.8,
     angle: 0
@@ -31244,7 +31246,7 @@ var LOOT = [{
         isLoaded: 0
     },
     src: "img/day-ground-mushroom1.png",
-    idItem: IID.mushroom,
+    idItem: IID.__MUSHROOM1__,
     amount: 1,
     scale: 0.8,
     angle: 0
@@ -31254,7 +31256,7 @@ var LOOT = [{
         isLoaded: 0
     },
     src: "img/day-ground-mushroom2.png",
-    idItem: IID.mushroom2,
+    idItem: IID.__MUSHROOM1__2,
     amount: 1,
     scale: 0.8,
     angle: 0
@@ -31264,7 +31266,7 @@ var LOOT = [{
         isLoaded: 0
     },
     src: "img/day-ground-mushroom3.png",
-    idItem: IID.mushroom3,
+    idItem: IID.__MUSHROOM1__3,
     amount: 1,
     scale: 0.8,
     angle: 0
@@ -31274,7 +31276,7 @@ var LOOT = [{
         isLoaded: 0
     },
     src: "img/day-ground-rotten-mushroom1.png",
-    idItem: IID.rottenmushroom1,
+    idItem: IID.__ROTTEN_MUSHROOM1__,
     amount: 1,
     scale: 0.8,
     angle: 0
@@ -31284,7 +31286,7 @@ var LOOT = [{
         isLoaded: 0
     },
     src: "img/day-ground-rotten-mushroom2.png",
-    idItem: IID.rottenmushroom2,
+    idItem: IID.__ROTTEN_MUSHROOM2__,
     amount: 1,
     scale: 0.8,
     angle: 0
@@ -31294,7 +31296,7 @@ var LOOT = [{
         isLoaded: 0
     },
     src: "img/day-ground-rotten-mushroom3.png",
-    idItem: IID.rottenmushroom3,
+    idItem: IID.__ROTTEN_MUSHROOM3__,
     amount: 1,
     scale: 0.8,
     angle: 0
@@ -31304,7 +31306,7 @@ var LOOT = [{
         isLoaded: 0
     },
     src: "img/day-ground-lapadoine.png",
-    idItem: IID.lapadoine,
+    idItem: IID.__LAPADONE__,
     amount: 1,
     scale: 0.8,
     angle: 0
@@ -31314,7 +31316,7 @@ var LOOT = [{
         isLoaded: 0
     },
     src: "img/day-ground-lapabot.png",
-    idItem: IID.lapabot,
+    idItem: IID.__LAPABOT_REPAIR__,
     amount: 1,
     scale: 0.8,
     angle: 0
@@ -31324,7 +31326,7 @@ var LOOT = [{
         isLoaded: 0
     },
     src: "img/day-ground-small-wire.png",
-    idItem: IID.smallwire,
+    idItem: IID.__SMALL_WIRE__,
     amount: 1,
     scale: 0.8,
     angle: 0
@@ -31334,7 +31336,7 @@ var LOOT = [{
         isLoaded: 0
     },
     src: "img/day-ground-pumpkin.png",
-    idItem: IID.pumpkin,
+    idItem: IID.__PUMPKIN__,
     amount: 1,
     scale: 0.8,
     angle: 0
@@ -31344,7 +31346,7 @@ var LOOT = [{
         isLoaded: 0
     },
     src: "img/day-ground-rotten-pumpkin.png",
-    idItem: IID.rottenpumpkin,
+    idItem: IID.__ROTTEN_PUMPKIN__,
     amount: 1,
     scale: 0.8,
     angle: 0
@@ -31354,7 +31356,7 @@ var LOOT = [{
         isLoaded: 0
     },
     src: "img/day-ground-ghoul5.png",
-    idItem: IID.ghoulseed,
+    idItem: IID.__SEED_GHOUL__,
     amount: 1,
     scale: 0.8,
     angle: 0
@@ -31364,7 +31366,7 @@ var LOOT = [{
         isLoaded: 0
     },
     src: "img/day-ground-extractor.png",
-    idItem: IID.extractor,
+    idItem: IID.__EXTRACTOR__,
     amount: 1,
     scale: 0.8,
     angle: 0
@@ -31374,7 +31376,7 @@ var LOOT = [{
         isLoaded: 0
     },
     src: "img/day-ground-antidote.png",
-    idItem: IID.antidote,
+    idItem: IID.__ANTIDOTE__,
     amount: 1,
     scale: 0.8,
     angle: 0
@@ -31384,7 +31386,7 @@ var LOOT = [{
         isLoaded: 0
     },
     src: "img/day-ground-antidote-flower.png",
-    idItem: IID.antidoteflower,
+    idItem: IID.__ANTIDOTE__flower,
     amount: 1,
     scale: 0.8,
     angle: 0
@@ -31394,7 +31396,7 @@ var LOOT = [{
         isLoaded: 0
     },
     src: "img/day-ground-seed-tree.png",
-    idItem: IID.treeseed,
+    idItem: IID.__SEED_TREE__,
     amount: 1,
     scale: 0.8,
     angle: 0
@@ -31404,7 +31406,7 @@ var LOOT = [{
         isLoaded: 0
     },
     src: "img/day-ground-acorn.png",
-    idItem: IID.acorn,
+    idItem: IID.__ACORN__,
     amount: 1,
     scale: 0.8,
     angle: 0
@@ -31414,7 +31416,7 @@ var LOOT = [{
         isLoaded: 0
     },
     src: "img/day-ground-rotten-acorn.png",
-    idItem: IID.rottenacorn,
+    idItem: IID.__ROTTEN_ACORN__,
     amount: 1,
     scale: 0.8,
     angle: 0
@@ -31424,7 +31426,7 @@ var LOOT = [{
         isLoaded: 0
     },
     src: "img/day-ground-laser-sniper.png",
-    idItem: IID.lasersniper,
+    idItem: IID.__LASER_SNIPER__,
     amount: 1,
     scale: 0.8,
     angle: 0
@@ -31434,7 +31436,7 @@ var LOOT = [{
         isLoaded: 0
     },
     src: "img/day-ground-hal-bot.png",
-    idItem: IID.halbot,
+    idItem: IID.__HAL_BOT__,
     amount: 1,
     scale: 0.8,
     angle: 0
@@ -31444,7 +31446,7 @@ var LOOT = [{
         isLoaded: 0
     },
     src: "img/day-ground-tesla-bot.png",
-    idItem: IID.teslabot,
+    idItem: IID.__TESLA_BOT__,
     amount: 1,
     scale: 0.8,
     angle: 0
@@ -31454,7 +31456,7 @@ var LOOT = [{
         isLoaded: 0
     },
     src: "img/day-ground-wire0.png",
-    idItem: IID.cable,
+    idItem: IID.__CABLE0__,
     amount: 1,
     scale: 0.8,
     angle: 0
@@ -31464,7 +31466,7 @@ var LOOT = [{
         isLoaded: 0
     },
     src: "img/day-ground-wire1.png",
-    idItem: IID.cable2,
+    idItem: IID.__CABLE0__2,
     amount: 1,
     scale: 0.8,
     angle: 0
@@ -31474,7 +31476,7 @@ var LOOT = [{
         isLoaded: 0
     },
     src: "img/day-ground-wire2.png",
-    idItem: IID.cable3,
+    idItem: IID.__CABLE0__3,
     amount: 1,
     scale: 0.8,
     angle: 0
@@ -31484,7 +31486,7 @@ var LOOT = [{
         isLoaded: 0
     },
     src: "img/day-ground-wire3.png",
-    idItem: IID.cable4,
+    idItem: IID.__CABLE0__4,
     amount: 1,
     scale: 0.8,
     angle: 0
@@ -31494,7 +31496,7 @@ var LOOT = [{
         isLoaded: 0
     },
     src: "img/day-ground-switch.png",
-    idItem: IID.switch,
+    idItem: IID.__SWITCH__,
     amount: 1,
     scale: 0.8,
     angle: 0
@@ -31504,7 +31506,7 @@ var LOOT = [{
         isLoaded: 0
     },
     src: "img/day-ground-switch-or.png",
-    idItem: IID.orgate,
+    idItem: IID.__GATE_OR__,
     amount: 1,
     scale: 0.8,
     angle: 0
@@ -31514,7 +31516,7 @@ var LOOT = [{
         isLoaded: 0
     },
     src: "img/day-ground-switch-and.png",
-    idItem: IID.andgate,
+    idItem: IID.__GATE_AND__,
     amount: 1,
     scale: 0.8,
     angle: 0
@@ -31524,7 +31526,7 @@ var LOOT = [{
         isLoaded: 0
     },
     src: "img/day-ground-switch-reverse.png",
-    idItem: IID.notgate,
+    idItem: IID.__GATE_NOT__,
     amount: 1,
     scale: 0.8,
     angle: 0
@@ -31534,7 +31536,7 @@ var LOOT = [{
         isLoaded: 0
     },
     src: "img/day-ground-lamp-white.png",
-    idItem: IID.lamp,
+    idItem: IID.__LAMP__,
     amount: 1,
     scale: 0.8,
     angle: 0
@@ -31544,7 +31546,7 @@ var LOOT = [{
         isLoaded: 0
     },
     src: "img/day-ground-cable-wall.png",
-    idItem: IID.cablewall,
+    idItem: IID.__CABLE0__wall,
     amount: 1,
     scale: 0.8,
     angle: 0
@@ -31554,7 +31556,7 @@ var LOOT = [{
         isLoaded: 0
     },
     src: "img/day-ground-automatic-door.png",
-    idItem: IID.autodoor,
+    idItem: IID.__AUTOMATIC_DOOR__,
     amount: 1,
     scale: 0.8,
     angle: 0
@@ -31564,7 +31566,7 @@ var LOOT = [{
         isLoaded: 0
     },
     src: "img/day-ground-platform.png",
-    idItem: IID.platform,
+    idItem: IID.__PLATFORM__,
     amount: 1,
     scale: 0.8,
     angle: 0
@@ -31574,7 +31576,7 @@ var LOOT = [{
         isLoaded: 0
     },
     src: "img/day-ground-stone-cave.png",
-    idItem: IID.stonecave,
+    idItem: IID.__STONE__cave,
     amount: 1,
     scale: 0.8,
     angle: 0
@@ -31584,7 +31586,7 @@ var LOOT = [{
         isLoaded: 0
     },
     src: "img/day-ground-bunker-wall.png",
-    idItem: IID.bunkerwall,
+    idItem: IID.__BUNKER_WALL__,
     amount: 1,
     scale: 0.8,
     angle: 0
@@ -31594,7 +31596,7 @@ var LOOT = [{
         isLoaded: 0
     },
     src: "img/day-ground-mustard-floor.png",
-    idItem: IID.mustardfloor,
+    idItem: IID.__GOLD_FLOOR__,
     amount: 1,
     scale: 0.8,
     angle: 0
@@ -31604,7 +31606,7 @@ var LOOT = [{
         isLoaded: 0
     },
     src: "img/day-ground-red-floor.png",
-    idItem: IID.redfloor,
+    idItem: IID.__RED_FLOOR__,
     amount: 1,
     scale: 0.8,
     angle: 0
@@ -31614,7 +31616,7 @@ var LOOT = [{
         isLoaded: 0
     },
     src: "img/day-ground-welding-machine.png",
-    idItem: IID.weldingmachine,
+    idItem: IID.__WELDING_MACHINE__,
     amount: 1,
     scale: 0.8,
     angle: 0
@@ -31624,7 +31626,7 @@ var LOOT = [{
         isLoaded: 0
     },
     src: "img/day-ground-wire4.png",
-    idItem: IID.cable4,
+    idItem: IID.__CABLE0__4,
     amount: 1,
     scale: 0.8,
     angle: 0
@@ -31644,7 +31646,7 @@ var LOOT = [{
         isLoaded: 0
     },
     src: "img/day-ground-xor.png",
-    idItem: IID.xorgate,
+    idItem: IID.__GATE_XOR__,
     amount: 1,
     scale: 0.8,
     angle: 0
@@ -31677,7 +31679,7 @@ var RESOURCES = [];
 RESOURCES[object.WOOD] = {
     loot: [LOOTID.__BIG_WOOD__, LOOTID.__MEDIUM_WOOD__, LOOTID.__SMALL_WOOD__],
     rare: [0.2, 0.4, 1],
-    tool: [-1, IID.hachet, IID.stoneaxe, IID.sulfuraxe],
+    tool: [-1, IID.__HACHET__, IID.__STONE__axe, IID.__SULFUR__axe],
     effect: [1, 2, 4, 5],
     areaEffect: 0,
     type: [{
@@ -31757,14 +31759,14 @@ RESOURCES[object.WOOD] = {
         radius: 30
     }],
     particles: PARTICLESID.__WOOD__,
-    impact: SOUNDID.wood,
-    destroy: SOUNDID.wooddes,
+    impact: SOUNDID.__WOOD_IMPACT__,
+    destroy: SOUNDID.__WOOD_DESTROY__,
     score: 5
 };
 RESOURCES[object.LEAFTREE] = {
     loot: [LOOTID.acorn, LOOTID.__BIG_WOOD__, LOOTID.__MEDIUM_WOOD__, LOOTID.__SMALL_WOOD__],
     rare: [0.015, 0.2, 0.4, 1],
-    tool: [-1, IID.hachet, IID.stoneaxe, IID.sulfuraxe],
+    tool: [-1, IID.__HACHET__, IID.__STONE__axe, IID.__SULFUR__axe],
     effect: [1, 2, 4, 5],
     areaEffect: 0,
     type: [{
@@ -31904,14 +31906,14 @@ RESOURCES[object.LEAFTREE] = {
         radius: 54
     }],
     particles: PARTICLESID.__LEAFTREE__,
-    impact: SOUNDID.wood,
-    destroy: SOUNDID.wooddes,
+    impact: SOUNDID.__WOOD_IMPACT__,
+    destroy: SOUNDID.__WOOD_DESTROY__,
     score: 5
 };
 RESOURCES[object.STONE] = {
     loot: [LOOTID.__BIG_STONE__, LOOTID.__MEDIUM_STONE__, LOOTID.__SMALL_STONE__],
     rare: [0.1, 0.3, 1],
-    tool: [IID.hachet, IID.stonepickaxe, IID.steelpickaxe, IID.sulfurpickaxe],
+    tool: [IID.__HACHET__, IID.__STONE__pickaxe, IID.__STEEL__pickaxe, IID.__SULFUR__pickaxe],
     effect: [1, 3, 4, 5],
     areaEffect: 0,
     type: [{
@@ -32006,14 +32008,14 @@ RESOURCES[object.STONE] = {
         radius: 41
     }],
     particles: PARTICLESID.__STONE__,
-    impact: SOUNDID.stone2,
-    destroy: SOUNDID.stonedes,
+    impact: SOUNDID.__STONE_IMPACT_2__,
+    destroy: SOUNDID.__STONE_DESTROY__,
     score: 15
 };
 RESOURCES[object.STEEL] = {
     loot: [LOOTID.__STEEL__, LOOTID.__BIG_STONE__, LOOTID.__MEDIUM_STONE__, LOOTID.__SMALL_STONE__],
     rare: [0.4, 0.45, 0.6, 1],
-    tool: [IID.stonepickaxe, IID.steelpickaxe, IID.sulfurpickaxe],
+    tool: [IID.__STONE__pickaxe, IID.__STEEL__pickaxe, IID.__SULFUR__pickaxe],
     effect: [1, 2, 3],
     areaEffect: 0,
     type: [{
@@ -32078,14 +32080,14 @@ RESOURCES[object.STEEL] = {
         radius: 50
     }],
     particles: PARTICLESID.__STEEL__,
-    impact: SOUNDID.stone2,
-    destroy: SOUNDID.stonedes,
+    impact: SOUNDID.__STONE_IMPACT_2__,
+    destroy: SOUNDID.__STONE_DESTROY__,
     score: 40
 };
 RESOURCES[object.SULFUR] = {
     loot: [LOOTID.sulfur, LOOTID.__BIG_STONE__, LOOTID.__MEDIUM_STONE__, LOOTID.__SMALL_STONE__],
     rare: [0.4, 0.45, 0.6, 1],
-    tool: [IID.steelpickaxe, IID.sulfurpickaxe],
+    tool: [IID.__STEEL__pickaxe, IID.__SULFUR__pickaxe],
     effect: [1, 2],
     areaEffect: 0,
     type: [{
@@ -32135,14 +32137,14 @@ RESOURCES[object.SULFUR] = {
         radius: 38
     }],
     particles: PARTICLESID.__SULFUR__,
-    impact: SOUNDID.stone2,
-    destroy: SOUNDID.stonedes,
+    impact: SOUNDID.__STONE_IMPACT_2__,
+    destroy: SOUNDID.__STONE_DESTROY__,
     score: 70
 };
 RESOURCES[object.URANIUM] = {
     loot: [LOOTID.uranium, LOOTID.__BIG_STONE__, LOOTID.__MEDIUM_STONE__, LOOTID.__SMALL_STONE__],
     rare: [0.3, 0.45, 0.6, 1],
-    tool: [IID.sulfurpickaxe],
+    tool: [IID.__SULFUR__pickaxe],
     effect: [1],
     areaEffect: __RADIATION__,
     type: [{
@@ -32192,8 +32194,8 @@ RESOURCES[object.URANIUM] = {
         radius: 42
     }],
     particles: PARTICLESID.__URANIUM__,
-    impact: SOUNDID.stone2,
-    destroy: SOUNDID.stonedes,
+    impact: SOUNDID.__STONE_IMPACT_2__,
+    destroy: SOUNDID.__STONE_DESTROY__,
     score: 140
 };
 RESOURCES[object.ORANGETREE] = {
@@ -32385,7 +32387,7 @@ RESOURCES[object.TOMATOTREE] = {
 RESOURCES[object.BOAR] = {
     loot: [LOOTID.rawsteak, LOOTID.__ANIMAL_FAT__, LOOTID.__LEATHER_BOAR__],
     rare: [0.25, 0.85, 1],
-    tool: [IID.hachet, IID.stoneaxe, IID.sulfuraxe],
+    tool: [IID.__HACHET__, IID.__STONE__axe, IID.__SULFUR__axe],
     effect: [1, 3, 4],
     areaEffect: 0,
     type: [{
@@ -32412,7 +32414,7 @@ RESOURCES[object.BOAR] = {
 RESOURCES[object.DEER] = {
     loot: [LOOTID.rawsteak, LOOTID.__ANIMAL_TENDON__, LOOTID.__LEATHER_BOAR__, LOOTID.__ANIMAL_FAT__],
     rare: [0.28, 0.7, 0.85, 1],
-    tool: [IID.hachet, IID.stoneaxe, IID.sulfuraxe],
+    tool: [IID.__HACHET__, IID.__STONE__axe, IID.__SULFUR__axe],
     effect: [1, 3, 4],
     areaEffect: 0,
     type: [{
@@ -32771,200 +32773,200 @@ try {
             r: 0
         };
         _WF = {
-            v: IID.woodfloor1,
+            v: IID.__WOOD__floor1,
             b: 0,
             V: -1,
             r: 0
         };
         _LF = {
-            v: IID.woodfloor2,
+            v: IID.__WOOD__floor2,
             b: 0,
             V: -1,
             r: 0
         };
         _SF = {
-            v: IID.stonefloor1,
+            v: IID.__STONE__floor1,
             b: 0,
             V: -1,
             r: 0
         };
         _TF = {
-            v: IID.stonefloor2,
+            v: IID.__STONE__floor2,
             b: 0,
             V: -1,
             r: 0
         };
         _GF = {
-            v: IID.mustardfloor,
+            v: IID.__GOLD_FLOOR__,
             b: 0,
             V: -1,
             r: 0
         };
         _RF = {
-            v: IID.redfloor,
+            v: IID.__RED_FLOOR__,
             b: 0,
             V: -1,
             r: 0
         };
         _WW = {
             v: 0,
-            b: IID.woodenwall,
+            b: IID.__WOOD__enwall,
             V: -1,
             r: 0
         };
         _WWWF = {
-            v: IID.woodfloor1,
-            b: IID.woodenwall,
+            v: IID.__WOOD__floor1,
+            b: IID.__WOOD__enwall,
             V: -1,
             r: 0
         };
         _WWLF = {
-            v: IID.woodfloor2,
-            b: IID.woodenwall,
+            v: IID.__WOOD__floor2,
+            b: IID.__WOOD__enwall,
             V: -1,
             r: 0
         };
         _WWSF = {
-            v: IID.stonefloor1,
-            b: IID.woodenwall,
+            v: IID.__STONE__floor1,
+            b: IID.__WOOD__enwall,
             V: -1,
             r: 0
         };
         _WWTF = {
-            v: IID.stonefloor2,
-            b: IID.woodenwall,
+            v: IID.__STONE__floor2,
+            b: IID.__WOOD__enwall,
             V: -1,
             r: 0
         };
         _WWGF = {
-            v: IID.mustardfloor,
-            b: IID.woodenwall,
+            v: IID.__GOLD_FLOOR__,
+            b: IID.__WOOD__enwall,
             V: -1,
             r: 0
         };
         _WWRF = {
-            v: IID.redfloor,
-            b: IID.woodenwall,
+            v: IID.__RED_FLOOR__,
+            b: IID.__WOOD__enwall,
             V: -1,
             r: 0
         };
         _SW = {
             v: 0,
-            b: IID.stonewall,
+            b: IID.__STONE__wall,
             V: -1,
             r: 0
         };
         _SWWF = {
-            v: IID.woodfloor1,
-            b: IID.stonewall,
+            v: IID.__WOOD__floor1,
+            b: IID.__STONE__wall,
             V: -1,
             r: 0
         };
         _SWLF = {
-            v: IID.woodfloor2,
-            b: IID.stonewall,
+            v: IID.__WOOD__floor2,
+            b: IID.__STONE__wall,
             V: -1,
             r: 0
         };
         _SWSF = {
-            v: IID.stonefloor1,
-            b: IID.stonewall,
+            v: IID.__STONE__floor1,
+            b: IID.__STONE__wall,
             V: -1,
             r: 0
         };
         _SWTF = {
-            v: IID.stonefloor2,
-            b: IID.stonewall,
+            v: IID.__STONE__floor2,
+            b: IID.__STONE__wall,
             V: -1,
             r: 0
         };
         _SWGF = {
-            v: IID.mustardfloor,
-            b: IID.stonewall,
+            v: IID.__GOLD_FLOOR__,
+            b: IID.__STONE__wall,
             V: -1,
             r: 0
         };
         _SWRF = {
-            v: IID.redfloor,
-            b: IID.stonewall,
+            v: IID.__RED_FLOOR__,
+            b: IID.__STONE__wall,
             V: -1,
             r: 0
         };
         _MW = {
             v: 0,
-            b: IID.steelwall,
+            b: IID.__STEEL__wall,
             V: -1,
             r: 0
         };
         _MWWF = {
-            v: IID.woodfloor1,
-            b: IID.steelwall,
+            v: IID.__WOOD__floor1,
+            b: IID.__STEEL__wall,
             V: -1,
             r: 0
         };
         _MWLF = {
-            v: IID.woodfloor2,
-            b: IID.steelwall,
+            v: IID.__WOOD__floor2,
+            b: IID.__STEEL__wall,
             V: -1,
             r: 0
         };
         _MWSF = {
-            v: IID.stonefloor1,
-            b: IID.steelwall,
+            v: IID.__STONE__floor1,
+            b: IID.__STEEL__wall,
             V: -1,
             r: 0
         };
         _MWTF = {
-            v: IID.stonefloor2,
-            b: IID.steelwall,
+            v: IID.__STONE__floor2,
+            b: IID.__STEEL__wall,
             V: -1,
             r: 0
         };
         _MWGF = {
-            v: IID.mustardfloor,
-            b: IID.steelwall,
+            v: IID.__GOLD_FLOOR__,
+            b: IID.__STEEL__wall,
             V: -1,
             r: 0
         };
         _MWRF = {
-            v: IID.redfloor,
-            b: IID.steelwall,
+            v: IID.__RED_FLOOR__,
+            b: IID.__STEEL__wall,
             V: -1,
             r: 0
         };
         _SC = {
             v: 0,
-            b: IID.stonecave,
+            b: IID.__STONE__cave,
             V: -1,
             r: 0
         };
         _SCSF = {
-            v: IID.stonefloor1,
-            b: IID.stonecave,
+            v: IID.__STONE__floor1,
+            b: IID.__STONE__cave,
             V: -1,
             r: 0
         };
         _SCTF = {
-            v: IID.stonefloor2,
-            b: IID.stonecave,
+            v: IID.__STONE__floor2,
+            b: IID.__STONE__cave,
             V: -1,
             r: 0
         };
         _BW = {
             v: 0,
-            b: IID.bunkerwall,
+            b: IID.__BUNKER_WALL__,
             V: -1,
             r: 0
         };
         _BWSF = {
-            v: IID.stonefloor1,
-            b: IID.bunkerwall,
+            v: IID.__STONE__floor1,
+            b: IID.__BUNKER_WALL__,
             V: -1,
             r: 0
         };
         _BWTF = {
-            v: IID.stonefloor2,
-            b: IID.bunkerwall,
+            v: IID.__STONE__floor2,
+            b: IID.__BUNKER_WALL__,
             V: -1,
             r: 0
         };
@@ -40590,16 +40592,16 @@ for (var i = 0; i < HOUSE.length; i++) {
         house.width = window.Math.max(housePlan[j].length, house.width);
 }
 var AREASTOITEM = [];
-AREASTOITEM[AREAS.firepart] = IID.campfire;
-AREASTOITEM[AREAS.bbq] = IID.campfirebbq;
-AREASTOITEM[AREAS.workbench] = IID.workbench;
-AREASTOITEM[AREAS.researchbench] = IID.researchbench;
-AREASTOITEM[AREAS.teslabench] = IID.teslabench;
-AREASTOITEM[AREAS.smelter] = IID.smelter;
-AREASTOITEM[AREAS.weavingmachine] = IID.weavingmachine;
-AREASTOITEM[AREAS.composter] = IID.composter;
-AREASTOITEM[AREAS.agitator] = IID.agitator;
-AREASTOITEM[AREAS.extractor] = IID.extractor;
+AREASTOITEM[AREAS.__FIRE__] = IID.__CAMPFIRE__;
+AREASTOITEM[AREAS.__BBQ__] = IID.__CAMPFIRE__bbq;
+AREASTOITEM[AREAS.__WORKBENCH__] = IID.__WORKBENCH__;
+AREASTOITEM[AREAS.__WORKBENCH2__] = IID.__WORKBENCH2__;
+AREASTOITEM[AREAS.__TESLA__] = IID.__TESLA__;
+AREASTOITEM[AREAS.__SMELTER__] = IID.__SMELTER__;
+AREASTOITEM[AREAS.__WEAVING__] = IID.__WEAVING__;
+AREASTOITEM[AREAS.__COMPOST__] = IID.__COMPOST__;
+AREASTOITEM[AREAS.__AGITATOR__] = IID.__AGITATOR__;
+AREASTOITEM[AREAS.__EXTRACTOR__] = IID.__EXTRACTOR__;
 
 var INVENTORY2  = null;
 var ENTITIES2   = null;
@@ -40612,928 +40614,928 @@ var GROUND      = "#\x33\x38\x35\x31\x33\x44";
 var GROUND2     = "#\x30\x42\x31\x44\x32\x33";
 
 var BRKIT = [{
-    id: IID.stone,
+    id: IID.__STONE__,
     amount: 50,
     life: 255
 }, {
-    id: IID.wood,
+    id: IID.__WOOD__,
     amount: 100,
     life: 255
 }, {
-    id: IID.workbench,
+    id: IID.__WORKBENCH__,
     amount: 1,
     life: 255
 }];
 var KIT = [];
 COUNTER = 0;
 KIT[COUNTER++] = [{
-    id: IID.hachet,
+    id: IID.__HACHET__,
     amount: 1,
     life: 255
 }, {
-    id: IID.stone,
+    id: IID.__STONE__,
     amount: 20,
     life: 255
 }, {
-    id: IID.wood,
+    id: IID.__WOOD__,
     amount: 40,
     life: 255
 }, {
-    id: IID.orange,
+    id: IID.__ORANGE__,
     amount: 1,
     life: 255
 }];
 KIT[COUNTER++] = [{
-    id: IID.hachet,
+    id: IID.__HACHET__,
     amount: 1,
     life: 255
 }, {
-    id: IID.stone,
+    id: IID.__STONE__,
     amount: 20,
     life: 255
 }, {
-    id: IID.wood,
+    id: IID.__WOOD__,
     amount: 40,
     life: 255
 }, {
-    id: IID.orange,
+    id: IID.__ORANGE__,
     amount: 3,
     life: 255
 }];
 KIT[COUNTER++] = [{
-    id: IID.hachet,
+    id: IID.__HACHET__,
     amount: 1,
     life: 255
 }, {
-    id: IID.stone,
+    id: IID.__STONE__,
     amount: 30,
     life: 255
 }, {
-    id: IID.wood,
+    id: IID.__WOOD__,
     amount: 50,
     life: 255
 }, {
-    id: IID.campfire,
+    id: IID.__CAMPFIRE__,
     amount: 1,
     life: 255
 }, {
-    id: IID.orange,
+    id: IID.__ORANGE__,
     amount: 4,
     life: 255
 }];
 KIT[COUNTER++] = [{
-    id: IID.hachet,
+    id: IID.__HACHET__,
     amount: 1,
     life: 255
 }, {
-    id: IID.stone,
+    id: IID.__STONE__,
     amount: 30,
     life: 255
 }, {
-    id: IID.wood,
+    id: IID.__WOOD__,
     amount: 60,
     life: 255
 }, {
-    id: IID.campfire,
+    id: IID.__CAMPFIRE__,
     amount: 1,
     life: 255
 }, {
-    id: IID.workbench,
+    id: IID.__WORKBENCH__,
     amount: 1,
     life: 255
 }, {
-    id: IID.orange,
+    id: IID.__ORANGE__,
     amount: 5,
     life: 255
 }];
 KIT[COUNTER++] = [{
-    id: IID.hachet,
+    id: IID.__HACHET__,
     amount: 1,
     life: 255
 }, {
-    id: IID.stone,
+    id: IID.__STONE__,
     amount: 40,
     life: 255
 }, {
-    id: IID.wood,
+    id: IID.__WOOD__,
     amount: 90,
     life: 255
 }, {
-    id: IID.campfire,
+    id: IID.__CAMPFIRE__,
     amount: 1,
     life: 255
 }, {
-    id: IID.workbench,
+    id: IID.__WORKBENCH__,
     amount: 1,
     life: 255
 }, {
-    id: IID.rawsteak,
+    id: IID.__RAW_STEAK__,
     amount: 1,
     life: 255
 }];
 KIT[COUNTER++] = [{
-    id: IID.hachet,
+    id: IID.__HACHET__,
     amount: 1,
     life: 255
 }, {
-    id: IID.stone,
+    id: IID.__STONE__,
     amount: 40,
     life: 255
 }, {
-    id: IID.wood,
+    id: IID.__WOOD__,
     amount: 150,
     life: 255
 }, {
-    id: IID.campfire,
+    id: IID.__CAMPFIRE__,
     amount: 1,
     life: 255
 }, {
-    id: IID.workbench,
+    id: IID.__WORKBENCH__,
     amount: 1,
     life: 255
 }, {
-    id: IID.rawsteak,
+    id: IID.__RAW_STEAK__,
     amount: 1,
     life: 255
 }];
 KIT[COUNTER++] = [{
-    id: IID.hachet,
+    id: IID.__HACHET__,
     amount: 1,
     life: 255
 }, {
-    id: IID.stonepickaxe,
+    id: IID.__STONE__pickaxe,
     amount: 1,
     life: 255
 }, {
-    id: IID.campfire,
+    id: IID.__CAMPFIRE__,
     amount: 1,
     life: 255
 }, {
-    id: IID.workbench,
+    id: IID.__WORKBENCH__,
     amount: 1,
     life: 255
 }, {
-    id: IID.rawsteak,
+    id: IID.__RAW_STEAK__,
     amount: 2,
     life: 255
 }];
 KIT[COUNTER++] = [{
-    id: IID.hachet,
+    id: IID.__HACHET__,
     amount: 1,
     life: 255
 }, {
-    id: IID.stonepickaxe,
+    id: IID.__STONE__pickaxe,
     amount: 1,
     life: 255
 }, {
-    id: IID.campfire,
+    id: IID.__CAMPFIRE__,
     amount: 1,
     life: 255
 }, {
-    id: IID.steel,
+    id: IID.__STEEL__,
     amount: 6,
     life: 255
 }, {
-    id: IID.workbench,
+    id: IID.__WORKBENCH__,
     amount: 1,
     life: 255
 }, {
-    id: IID.rawsteak,
+    id: IID.__RAW_STEAK__,
     amount: 2,
     life: 255
 }];
 KIT[COUNTER++] = [{
-    id: IID.hachet,
+    id: IID.__HACHET__,
     amount: 1,
     life: 255
 }, {
-    id: IID.stonepickaxe,
+    id: IID.__STONE__pickaxe,
     amount: 1,
     life: 255
 }, {
-    id: IID.campfirebbq,
+    id: IID.__CAMPFIRE__bbq,
     amount: 1,
     life: 255
 }, {
-    id: IID.spear,
+    id: IID.__WOOD_SPEAR__,
     amount: 1,
     life: 255
 }, {
-    id: IID.workbench,
+    id: IID.__WORKBENCH__,
     amount: 1,
     life: 255
 }, {
-    id: IID.rawsteak,
+    id: IID.__RAW_STEAK__,
     amount: 3,
     life: 255
 }];
 KIT[COUNTER++] = [{
-    id: IID.hachet,
+    id: IID.__HACHET__,
     amount: 1,
     life: 255
 }, {
-    id: IID.stonepickaxe,
+    id: IID.__STONE__pickaxe,
     amount: 1,
     life: 255
 }, {
-    id: IID.campfirebbq,
+    id: IID.__CAMPFIRE__bbq,
     amount: 1,
     life: 255
 }, {
-    id: IID.bow,
+    id: IID.__WOOD_BOW__,
     amount: 1,
     life: 255
 }, {
-    id: IID.woodarrow,
+    id: IID.__WOOD__arrow,
     amount: 20,
     life: 255
 }, {
-    id: IID.workbench,
+    id: IID.__WORKBENCH__,
     amount: 1,
     life: 255
 }, {
-    id: IID.rawsteak,
+    id: IID.__RAW_STEAK__,
     amount: 4,
     life: 255
 }];
 KIT[COUNTER++] = [{
-    id: IID.hachet,
+    id: IID.__HACHET__,
     amount: 1,
     life: 255
 }, {
-    id: IID.stonepickaxe,
+    id: IID.__STONE__pickaxe,
     amount: 1,
     life: 255
 }, {
-    id: IID.campfirebbq,
+    id: IID.__CAMPFIRE__bbq,
     amount: 1,
     life: 255
 }, {
-    id: IID.woodenwall,
+    id: IID.__WOOD__enwall,
     amount: 10,
     life: 255
 }, {
-    id: IID.wooddoor,
+    id: IID.__WOOD__door,
     amount: 2,
     life: 255
 }, {
-    id: IID.workbench,
+    id: IID.__WORKBENCH__,
     amount: 1,
     life: 255
 }, {
-    id: IID.rawsteak,
+    id: IID.__RAW_STEAK__,
     amount: 4,
     life: 255
 }];
 KIT[COUNTER++] = [{
-    id: IID.hachet,
+    id: IID.__HACHET__,
     amount: 1,
     life: 255
 }, {
-    id: IID.stonepickaxe,
+    id: IID.__STONE__pickaxe,
     amount: 1,
     life: 255
 }, {
-    id: IID.campfirebbq,
+    id: IID.__CAMPFIRE__bbq,
     amount: 1,
     life: 255
 }, {
-    id: IID.woodenwall,
+    id: IID.__WOOD__enwall,
     amount: 16,
     life: 255
 }, {
-    id: IID.stonedoor,
+    id: IID.__STONE__door,
     amount: 2,
     life: 255
 }, {
-    id: IID.workbench,
+    id: IID.__WORKBENCH__,
     amount: 2,
     life: 255
 }, {
-    id: IID.rawsteak,
+    id: IID.__RAW_STEAK__,
     amount: 4,
     life: 255
 }];
 KIT[COUNTER++] = [{
-    id: IID.hachet,
+    id: IID.__HACHET__,
     amount: 1,
     life: 255
 }, {
-    id: IID.stonepickaxe,
+    id: IID.__STONE__pickaxe,
     amount: 1,
     life: 255
 }, {
-    id: IID.campfirebbq,
+    id: IID.__CAMPFIRE__bbq,
     amount: 1,
     life: 255
 }, {
-    id: IID.stonewall,
+    id: IID.__STONE__wall,
     amount: 14,
     life: 255
 }, {
-    id: IID.stonedoor,
+    id: IID.__STONE__door,
     amount: 2,
     life: 255
 }, {
-    id: IID.workbench,
+    id: IID.__WORKBENCH__,
     amount: 2,
     life: 255
 }, {
-    id: IID.rawsteak,
+    id: IID.__RAW_STEAK__,
     amount: 4,
     life: 255
 }];
 KIT[COUNTER++] = [{
-    id: IID.hachet,
+    id: IID.__HACHET__,
     amount: 1,
     life: 255
 }, {
-    id: IID.stonepickaxe,
+    id: IID.__STONE__pickaxe,
     amount: 1,
     life: 255
 }, {
-    id: IID.campfirebbq,
+    id: IID.__CAMPFIRE__bbq,
     amount: 1,
     life: 255
 }, {
-    id: IID.landmine,
+    id: IID.__LANDMINE__,
     amount: 1,
     life: 255
 }, {
-    id: IID.stonewall,
+    id: IID.__STONE__wall,
     amount: 14,
     life: 255
 }, {
-    id: IID.stonedoor,
+    id: IID.__STONE__door,
     amount: 2,
     life: 255
 }, {
-    id: IID.workbench,
+    id: IID.__WORKBENCH__,
     amount: 2,
     life: 255
 }, {
-    id: IID.rawsteak,
+    id: IID.__RAW_STEAK__,
     amount: 4,
     life: 255
 }];
 KIT[COUNTER++] = [{
-    id: IID.hachet,
+    id: IID.__HACHET__,
     amount: 1,
     life: 255
 }, {
-    id: IID.stonepickaxe,
+    id: IID.__STONE__pickaxe,
     amount: 1,
     life: 255
 }, {
-    id: IID.campfirebbq,
+    id: IID.__CAMPFIRE__bbq,
     amount: 1,
     life: 255
 }, {
-    id: IID.metalhelmet,
+    id: IID.__ARMOR_PHYSIC_1__,
     amount: 1,
     life: 255
 }, {
-    id: IID.stonewall,
+    id: IID.__STONE__wall,
     amount: 14,
     life: 255
 }, {
-    id: IID.stonedoor,
+    id: IID.__STONE__door,
     amount: 2,
     life: 255
 }, {
-    id: IID.workbench,
+    id: IID.__WORKBENCH__,
     amount: 2,
     life: 255
 }, {
-    id: IID.rawsteak,
+    id: IID.__RAW_STEAK__,
     amount: 4,
     life: 255
 }];
 KIT[COUNTER++] = [{
-    id: IID.hachet,
+    id: IID.__HACHET__,
     amount: 1,
     life: 255
 }, {
-    id: IID.stonepickaxe,
+    id: IID.__STONE__pickaxe,
     amount: 1,
     life: 255
 }, {
-    id: IID.campfirebbq,
+    id: IID.__CAMPFIRE__bbq,
     amount: 1,
     life: 255
 }, {
-    id: IID.stonewall,
+    id: IID.__STONE__wall,
     amount: 16,
     life: 255
 }, {
-    id: IID.stonedoor,
+    id: IID.__STONE__door,
     amount: 2,
     life: 255
 }, {
-    id: IID.chest,
+    id: IID.__CHEST__,
     amount: 1,
     life: 255
 }, {
-    id: IID.workbench,
+    id: IID.__WORKBENCH__,
     amount: 2,
     life: 255
 }, {
-    id: IID.rawsteak,
+    id: IID.__RAW_STEAK__,
     amount: 4,
     life: 255
 }];
 KIT[COUNTER++] = [{
-    id: IID.hachet,
+    id: IID.__HACHET__,
     amount: 1,
     life: 255
 }, {
-    id: IID.steelpickaxe,
+    id: IID.__STEEL__pickaxe,
     amount: 1,
     life: 255
 }, {
-    id: IID.campfirebbq,
+    id: IID.__CAMPFIRE__bbq,
     amount: 1,
     life: 255
 }, {
-    id: IID.stonewall,
+    id: IID.__STONE__wall,
     amount: 16,
     life: 255
 }, {
-    id: IID.stonedoor,
+    id: IID.__STONE__door,
     amount: 2,
     life: 255
 }, {
-    id: IID.chest,
+    id: IID.__CHEST__,
     amount: 1,
     life: 255
 }, {
-    id: IID.workbench,
+    id: IID.__WORKBENCH__,
     amount: 2,
     life: 255
 }, {
-    id: IID.rawsteak,
+    id: IID.__RAW_STEAK__,
     amount: 4,
     life: 255
 }];
 KIT[COUNTER++] = [{
-    id: IID.hachet,
+    id: IID.__HACHET__,
     amount: 1,
     life: 255
 }, {
-    id: IID.steelpickaxe,
+    id: IID.__STEEL__pickaxe,
     amount: 1,
     life: 255
 }, {
-    id: IID.campfirebbq,
+    id: IID.__CAMPFIRE__bbq,
     amount: 1,
     life: 255
 }, {
-    id: IID.stonewall,
+    id: IID.__STONE__wall,
     amount: 16,
     life: 255
 }, {
-    id: IID.stonedoor,
+    id: IID.__STONE__door,
     amount: 2,
     life: 255
 }, {
-    id: IID.chest,
+    id: IID.__CHEST__,
     amount: 1,
     life: 255
 }, {
-    id: IID.researchbench,
+    id: IID.__WORKBENCH2__,
     amount: 1,
     life: 255
 }, {
-    id: IID.rawsteak,
+    id: IID.__RAW_STEAK__,
     amount: 4,
     life: 255
 }];
 KIT[COUNTER++] = [{
-    id: IID.stoneaxe,
+    id: IID.__STONE__axe,
     amount: 1,
     life: 255
 }, {
-    id: IID.steelpickaxe,
+    id: IID.__STEEL__pickaxe,
     amount: 1,
     life: 255
 }, {
-    id: IID.campfirebbq,
+    id: IID.__CAMPFIRE__bbq,
     amount: 1,
     life: 255
 }, {
-    id: IID.stonewall,
+    id: IID.__STONE__wall,
     amount: 16,
     life: 255
 }, {
-    id: IID.stonedoor,
+    id: IID.__STONE__door,
     amount: 2,
     life: 255
 }, {
-    id: IID.chest,
+    id: IID.__CHEST__,
     amount: 1,
     life: 255
 }, {
-    id: IID.researchbench,
+    id: IID.__WORKBENCH2__,
     amount: 1,
     life: 255
 }, {
-    id: IID.rawsteak,
+    id: IID.__RAW_STEAK__,
     amount: 4,
     life: 255
 }];
 KIT[COUNTER++] = [{
-    id: IID.stoneaxe,
+    id: IID.__STONE__axe,
     amount: 1,
     life: 255
 }, {
-    id: IID.steelpickaxe,
+    id: IID.__STEEL__pickaxe,
     amount: 1,
     life: 255
 }, {
-    id: IID.campfirebbq,
+    id: IID.__CAMPFIRE__bbq,
     amount: 2,
     life: 255
 }, {
-    id: IID.stonewall,
+    id: IID.__STONE__wall,
     amount: 20,
     life: 255
 }, {
-    id: IID.stonedoor,
+    id: IID.__STONE__door,
     amount: 4,
     life: 255
 }, {
-    id: IID.chest,
+    id: IID.__CHEST__,
     amount: 2,
     life: 255
 }, {
-    id: IID.researchbench,
+    id: IID.__WORKBENCH2__,
     amount: 1,
     life: 255
 }, {
-    id: IID.rawsteak,
+    id: IID.__RAW_STEAK__,
     amount: 4,
     life: 255
 }];
 KIT[COUNTER++] = [{
-    id: IID.stoneaxe,
+    id: IID.__STONE__axe,
     amount: 1,
     life: 255
 }, {
-    id: IID.steelpickaxe,
+    id: IID.__STEEL__pickaxe,
     amount: 1,
     life: 255
 }, {
-    id: IID.campfirebbq,
+    id: IID.__CAMPFIRE__bbq,
     amount: 2,
     life: 255
 }, {
-    id: IID.stonewall,
+    id: IID.__STONE__wall,
     amount: 26,
     life: 255
 }, {
-    id: IID.stonedoor,
+    id: IID.__STONE__door,
     amount: 6,
     life: 255
 }, {
-    id: IID.chest,
+    id: IID.__CHEST__,
     amount: 3,
     life: 255
 }, {
-    id: IID.researchbench,
+    id: IID.__WORKBENCH2__,
     amount: 1,
     life: 255
 }, {
-    id: IID.seedorange,
+    id: IID.__SEED_ORANGE__,
     amount: 8,
     life: 255
 }];
 KIT[COUNTER++] = [{
-    id: IID.stoneaxe,
+    id: IID.__STONE__axe,
     amount: 1,
     life: 255
 }, {
-    id: IID.steelpickaxe,
+    id: IID.__STEEL__pickaxe,
     amount: 1,
     life: 255
 }, {
-    id: IID.headscarf,
+    id: IID.__HEADSCARF__,
     amount: 1,
     life: 255
 }, {
-    id: IID.stonewall,
+    id: IID.__STONE__wall,
     amount: 26,
     life: 255
 }, {
-    id: IID.stonedoor,
+    id: IID.__STONE__door,
     amount: 6,
     life: 255
 }, {
-    id: IID.chest,
+    id: IID.__CHEST__,
     amount: 3,
     life: 255
 }, {
-    id: IID.researchbench,
+    id: IID.__WORKBENCH2__,
     amount: 1,
     life: 255
 }, {
-    id: IID.seedorange,
+    id: IID.__SEED_ORANGE__,
     amount: 8,
     life: 255
 }];
 KIT[COUNTER++] = [{
-    id: IID.stoneaxe,
+    id: IID.__STONE__axe,
     amount: 1,
     life: 255
 }, {
-    id: IID.steelpickaxe,
+    id: IID.__STEEL__pickaxe,
     amount: 1,
     life: 255
 }, {
-    id: IID.headscarf,
+    id: IID.__HEADSCARF__,
     amount: 1,
     life: 255
 }, {
-    id: IID.stonewall,
+    id: IID.__STONE__wall,
     amount: 26,
     life: 255
 }, {
-    id: IID.stonedoor,
+    id: IID.__STONE__door,
     amount: 6,
     life: 255
 }, {
-    id: IID.chest,
+    id: IID.__CHEST__,
     amount: 3,
     life: 255
 }, {
-    id: IID.pistol,
+    id: IID.__9MM__,
     amount: 1,
     life: 20
 }, {
-    id: IID.researchbench,
+    id: IID.__WORKBENCH2__,
     amount: 1,
     life: 255
 }];
 KIT[COUNTER++] = [{
-    id: IID.sulfurpickaxe,
+    id: IID.__SULFUR__pickaxe,
     amount: 1,
     life: 255
 }, {
-    id: IID.stoneaxe,
+    id: IID.__STONE__axe,
     amount: 1,
     life: 255
 }, {
-    id: IID.headscarf,
+    id: IID.__HEADSCARF__,
     amount: 1,
     life: 255
 }, {
-    id: IID.stonewall,
+    id: IID.__STONE__wall,
     amount: 26,
     life: 255
 }, {
-    id: IID.stonedoor,
+    id: IID.__STONE__door,
     amount: 6,
     life: 255
 }, {
-    id: IID.chest,
+    id: IID.__CHEST__,
     amount: 3,
     life: 255
 }, {
-    id: IID.pistol,
+    id: IID.__9MM__,
     amount: 1,
     life: 20
 }, {
-    id: IID.researchbench,
+    id: IID.__WORKBENCH2__,
     amount: 1,
     life: 255
 }];
 KIT[COUNTER++] = [{
-    id: IID.sulfurpickaxe,
+    id: IID.__SULFUR__pickaxe,
     amount: 1,
     life: 255
 }, {
-    id: IID.stoneaxe,
+    id: IID.__STONE__axe,
     amount: 1,
     life: 255
 }, {
-    id: IID.headscarf,
+    id: IID.__HEADSCARF__,
     amount: 1,
     life: 255
 }, {
-    id: IID.stonewall,
+    id: IID.__STONE__wall,
     amount: 26,
     life: 255
 }, {
-    id: IID.smelter,
+    id: IID.__SMELTER__,
     amount: 1,
     life: 255
 }, {
-    id: IID.chest,
+    id: IID.__CHEST__,
     amount: 3,
     life: 255
 }, {
-    id: IID.pistol,
+    id: IID.__9MM__,
     amount: 1,
     life: 20
 }, {
-    id: IID.researchbench,
+    id: IID.__WORKBENCH2__,
     amount: 1,
     life: 255
 }];
 KIT[COUNTER++] = [{
-    id: IID.sulfurpickaxe,
+    id: IID.__SULFUR__pickaxe,
     amount: 1,
     life: 255
 }, {
-    id: IID.sulfuraxe,
+    id: IID.__SULFUR__axe,
     amount: 1,
     life: 255
 }, {
-    id: IID.headscarf,
+    id: IID.__HEADSCARF__,
     amount: 1,
     life: 255
 }, {
-    id: IID.stonewall,
+    id: IID.__STONE__wall,
     amount: 26,
     life: 255
 }, {
-    id: IID.smelter,
+    id: IID.__SMELTER__,
     amount: 1,
     life: 255
 }, {
-    id: IID.chest,
+    id: IID.__CHEST__,
     amount: 3,
     life: 255
 }, {
-    id: IID.pistol,
+    id: IID.__9MM__,
     amount: 1,
     life: 20
 }, {
-    id: IID.researchbench,
+    id: IID.__WORKBENCH2__,
     amount: 1,
     life: 255
 }];
 KIT[COUNTER++] = [{
-    id: IID.sulfurpickaxe,
+    id: IID.__SULFUR__pickaxe,
     amount: 1,
     life: 255
 }, {
-    id: IID.sulfuraxe,
+    id: IID.__SULFUR__axe,
     amount: 1,
     life: 255
 }, {
-    id: IID.chapka,
+    id: IID.__CHAPKA__,
     amount: 1,
     life: 255
 }, {
-    id: IID.stonewall,
+    id: IID.__STONE__wall,
     amount: 26,
     life: 255
 }, {
-    id: IID.smelter,
+    id: IID.__SMELTER__,
     amount: 1,
     life: 255
 }, {
-    id: IID.chest,
+    id: IID.__CHEST__,
     amount: 3,
     life: 255
 }, {
-    id: IID.pistol,
+    id: IID.__9MM__,
     amount: 1,
     life: 20
 }, {
-    id: IID.researchbench,
+    id: IID.__WORKBENCH2__,
     amount: 1,
     life: 255
 }];
 KIT[COUNTER++] = [{
-    id: IID.sulfurpickaxe,
+    id: IID.__SULFUR__pickaxe,
     amount: 1,
     life: 255
 }, {
-    id: IID.sulfuraxe,
+    id: IID.__SULFUR__axe,
     amount: 1,
     life: 255
 }, {
-    id: IID.chapka,
+    id: IID.__CHAPKA__,
     amount: 1,
     life: 255
 }, {
-    id: IID.steelwall,
+    id: IID.__STEEL__wall,
     amount: 14,
     life: 255
 }, {
-    id: IID.smelter,
+    id: IID.__SMELTER__,
     amount: 1,
     life: 255
 }, {
-    id: IID.chest,
+    id: IID.__CHEST__,
     amount: 3,
     life: 255
 }, {
-    id: IID.pistol,
+    id: IID.__9MM__,
     amount: 1,
     life: 20
 }, {
-    id: IID.researchbench,
+    id: IID.__WORKBENCH2__,
     amount: 1,
     life: 255
 }];
 KIT[COUNTER++] = [{
-    id: IID.sulfurpickaxe,
+    id: IID.__SULFUR__pickaxe,
     amount: 1,
     life: 255
 }, {
-    id: IID.sulfuraxe,
+    id: IID.__SULFUR__axe,
     amount: 1,
     life: 255
 }, {
-    id: IID.chapka,
+    id: IID.__CHAPKA__,
     amount: 1,
     life: 255
 }, {
-    id: IID.steelwall,
+    id: IID.__STEEL__wall,
     amount: 14,
     life: 255
 }, {
-    id: IID.smelter,
+    id: IID.__SMELTER__,
     amount: 1,
     life: 255
 }, {
-    id: IID.chest,
+    id: IID.__CHEST__,
     amount: 3,
     life: 255
 }, {
-    id: IID.deserteagle,
+    id: IID.__DESERT_EAGLE__,
     amount: 1,
     life: 7
 }, {
-    id: IID.researchbench,
+    id: IID.__WORKBENCH2__,
     amount: 1,
     life: 255
 }];
 KIT[COUNTER++] = [{
-    id: IID.sulfurpickaxe,
+    id: IID.__SULFUR__pickaxe,
     amount: 1,
     life: 255
 }, {
-    id: IID.sulfuraxe,
+    id: IID.__SULFUR__axe,
     amount: 1,
     life: 255
 }, {
-    id: IID.chapka,
+    id: IID.__CHAPKA__,
     amount: 1,
     life: 255
 }, {
-    id: IID.steelwall,
+    id: IID.__STEEL__wall,
     amount: 14,
     life: 255
 }, {
-    id: IID.smelter,
+    id: IID.__SMELTER__,
     amount: 1,
     life: 255
 }, {
-    id: IID.dynamite,
+    id: IID.__DYNAMITE__,
     amount: 6,
     life: 255
 }, {
-    id: IID.deserteagle,
+    id: IID.__DESERT_EAGLE__,
     amount: 1,
     life: 7
 }, {
-    id: IID.researchbench,
+    id: IID.__WORKBENCH2__,
     amount: 1,
     life: 255
 }];
 KIT[COUNTER++] = [{
-    id: IID.sulfurpickaxe,
+    id: IID.__SULFUR__pickaxe,
     amount: 1,
     life: 255
 }, {
-    id: IID.sulfuraxe,
+    id: IID.__SULFUR__axe,
     amount: 1,
     life: 255
 }, {
-    id: IID.chapka,
+    id: IID.__CHAPKA__,
     amount: 1,
     life: 255
 }, {
-    id: IID.steelwall,
+    id: IID.__STEEL__wall,
     amount: 20,
     life: 255
 }, {
-    id: IID.smelter,
+    id: IID.__SMELTER__,
     amount: 1,
     life: 255
 }, {
-    id: IID.landmine,
+    id: IID.__LANDMINE__,
     amount: 6,
     life: 255
 }, {
-    id: IID.deserteagle,
+    id: IID.__DESERT_EAGLE__,
     amount: 1,
     life: 7
 }, {
-    id: IID.researchbench,
+    id: IID.__WORKBENCH2__,
     amount: 1,
     life: 255
 }];
@@ -41599,7 +41601,7 @@ AI[AIID.__NORMAL_GHOUL__] = {
     speed: [0.12, 0.22],
     speedRun: [0.14, 0.25],
     loot: [
-        [IID.animalfat, 4, LOOTID.__ANIMAL_FAT__]
+        [IID.__ANIMAL_FAT__, 4, LOOTID.__ANIMAL_FAT__]
     ],
     light: 1,
     areaEffect: 0,
@@ -41667,7 +41669,7 @@ AI[AIID.__FAST_GHOUL__] = {
     speed: [0.18, 0.28],
     speedRun: [0.22, 0.38],
     loot: [
-        [IID.ghoulblood, 4, LOOTID.ghoulblood]
+        [IID.__GHOUL_BLOOD__, 4, LOOTID.ghoulblood]
     ],
     light: 1,
     areaEffect: 0,
@@ -41735,9 +41737,9 @@ AI[AIID.__EXPLOSIVE_GHOUL__] = {
     speed: [0.12, 0.23],
     speedRun: [0.14, 0.26],
     loot: [
-        [IID.sulfur, 4, LOOTID.sulfur],
-        [IID.animalfat, 4, LOOTID.__ANIMAL_FAT__],
-        [IID.junk, 4, LOOTID.junk]
+        [IID.__SULFUR__, 4, LOOTID.sulfur],
+        [IID.__ANIMAL_FAT__, 4, LOOTID.__ANIMAL_FAT__],
+        [IID.__JUNK__, 4, LOOTID.junk]
     ],
     light: 1,
     areaEffect: 0,
@@ -41805,7 +41807,7 @@ AI[AIID.__RADIOACTIVE_GHOUL__] = {
     speed: [0.12, 0.23],
     speedRun: [0.14, 0.26],
     loot: [
-        [IID.uranium, 4, LOOTID.uranium]
+        [IID.__URANIUM__, 4, LOOTID.uranium]
     ],
     light: 1,
     areaEffect: __RADIATION__,
@@ -41873,8 +41875,8 @@ AI[AIID.__ARMORED_GHOUL__] = {
     speed: [0.11, 0.21],
     speedRun: [0.14, 0.24],
     loot: [
-        [IID.alloys, 4, LOOTID.alloys],
-        [IID.shapedmetal, 12, LOOTID.__SHAPED_METAL__]
+        [IID.__ALLOYS__, 4, LOOTID.alloys],
+        [IID.__SHAPED_METAL__, 12, LOOTID.__SHAPED_METAL__]
     ],
     light: 1,
     areaEffect: 0,
@@ -41941,7 +41943,7 @@ AI[AIID.__PUMPKIN_GHOUL__] = {
     life: 160,
     speed: [0.04, 0.04],
     loot: [
-        [IID.pumpkin, 4, LOOTID.pumpkin]
+        [IID.__PUMPKIN__, 4, LOOTID.pumpkin]
     ],
     light: 0,
     areaEffect: 0,
@@ -42008,7 +42010,7 @@ AI[AIID.__LAPABOT_REPAIR__] = {
     life: 600,
     speed: [0.08, 0.08],
     loot: [
-        [IID.shapedmetal, 4, LOOTID.shapedmetal]
+        [IID.__SHAPED_METAL__, 4, LOOTID.shapedmetal]
     ],
     light: 0,
     areaEffect: 0,
@@ -42075,7 +42077,7 @@ AI[AIID.__HAL_BOT__] = {
     life: 800,
     speed: [0.12, 0.12],
     loot: [
-        [IID.shapedmetal, 4, LOOTID.shapedmetal]
+        [IID.__SHAPED_METAL__, 4, LOOTID.shapedmetal]
     ],
     light: 0,
     areaEffect: 0,
@@ -42142,8 +42144,8 @@ AI[AIID.__TESLA_BOT__] = {
     life: 3000,
     speed: [0.1, 0.1],
     loot: [
-        [IID.shapeduranium, 4, LOOTID.shapeduranium],
-        [IID.alloys, 4, LOOTID.alloys]
+        [IID.__SHAPED_URANIUM__, 4, LOOTID.shapeduranium],
+        [IID.__ALLOYS__, 4, LOOTID.alloys]
     ],
     light: 0,
     areaEffect: 0,
