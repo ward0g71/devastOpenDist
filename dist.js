@@ -8017,41 +8017,41 @@ var Home = (function() {
         Render.reset(1);
         vmV = 0;
 
-        nnn(__ENTITIE_RESOURCES_DOWN__, 200, 0, 127, object.STONE, 3);
-        nnn(__ENTITIE_RESOURCES_TOP__, 400, 100, 127, object.ORANGETREE, 2);
-        nnn(__ENTITIE_RESOURCES_STOP__, 100, 100, 127, object.LEAFTREE, 0);
+        nnn(__ENTITIE_RESOURCES_DOWN__, 200, 0, 127, RESID.STONE, 3);
+        nnn(__ENTITIE_RESOURCES_TOP__, 400, 100, 127, RESID.ORANGETREE, 2);
+        nnn(__ENTITIE_RESOURCES_STOP__, 100, 100, 127, RESID.LEAFTREE, 0);
         Vnvmv(__ENTITIE_BUILD_GROUND__, 900, 500, 0, 33, IID.__SMELTER__);
         Vnvmv(__ENTITIE_BUILD_DOWN__, 800, 400, 1, 1, IID.__WORKBENCH__);
-        nnn(__ENTITIE_RESOURCES_STOP__, 1100, 300, 10, object.LEAFTREE, 1);
-        nnn(__ENTITIE_RESOURCES_STOP__, 800, 200, 127, object.LEAFTREE, 2);
-        nnn(__ENTITIE_RESOURCES_STOP__, 700, 100, 127, object.LEAFTREE, 3);
-        nnn(__ENTITIE_RESOURCES_STOP__, 1200, 0, 127, object.LEAFTREE, 0);
-        nnn(__ENTITIE_RESOURCES_STOP__, 1300, 100, 127, object.LEAFTREE, 4);
-        nnn(__ENTITIE_RESOURCES_STOP__, 1300, 300, 127, object.LEAFTREE, 2);
-        nnn(__ENTITIE_RESOURCES_STOP__, 800, 500, 127, object.LEAFTREE, 4);
-        nnn(__ENTITIE_RESOURCES_TOP__, 1000, 200, 127, object.ORANGETREE, 0);
-        nnn(__ENTITIE_RESOURCES_STOP__, 700, 600, 127, object.LEAFTREE, 0);
-        nnn(__ENTITIE_RESOURCES_STOP__, 500, 400, 127, object.LEAFTREE, 2);
-        nnn(__ENTITIE_RESOURCES_DOWN__, 500, 700, 127, object.STONE, 3);
-        nnn(__ENTITIE_RESOURCES_DOWN__, 1000, 300, 127, object.STONE, 4);
-        nnn(__ENTITIE_RESOURCES_STOP__, 1300, 500, 100, object.LEAFTREE, 2);
-        nnn(__ENTITIE_RESOURCES_STOP__, 1200, 700, 127, object.LEAFTREE, 4);
-        nnn(__ENTITIE_RESOURCES_STOP__, 1300, 700, 127, object.LEAFTREE, 0);
-        nnn(__ENTITIE_RESOURCES_DOWN__, 800, 600, 127, object.STONE, 5);
-        nnn(__ENTITIE_RESOURCES_STOP__, 500, 600, 127, object.LEAFTREE, 4);
-        nnn(__ENTITIE_RESOURCES_DOWN__, 200, 400, 127, object.URANIUM, 0);
-        nnn(__ENTITIE_RESOURCES_DOWN__, 400, 500, 50, object.WOOD, 3);
-        nnn(__ENTITIE_RESOURCES_STOP__, 100, 400, 190, object.LEAFTREE, 2);
-        nnn(__ENTITIE_RESOURCES_STOP__, 100, 500, 190, object.LEAFTREE, 3);
-        nnn(__ENTITIE_RESOURCES_STOP__, 100, 600, 127, object.LEAFTREE, 4);
-        nnn(__ENTITIE_RESOURCES_STOP__, 0, 500, 127, object.LEAFTREE, 1);
-        nnn(__ENTITIE_RESOURCES_STOP__, 200, 300, 50, object.LEAFTREE, 4);
-        nnn(__ENTITIE_RESOURCES_STOP__, 400, 200, 10, object.LEAFTREE, 2);
-        nnn(__ENTITIE_RESOURCES_STOP__, 500, 200, 10, object.LEAFTREE, 1);
-        nnn(__ENTITIE_RESOURCES_STOP__, 100, 800, 10, object.LEAFTREE, 0);
-        nnn(__ENTITIE_RESOURCES_STOP__, 400, 800, 10, object.LEAFTREE, 1);
-        nnn(__ENTITIE_RESOURCES_STOP__, 700, 800, 10, object.LEAFTREE, 2);
-        nnn(__ENTITIE_RESOURCES_DOWN__, 900, 700, 50, object.WOOD, 4);
+        nnn(__ENTITIE_RESOURCES_STOP__, 1100, 300, 10, RESID.LEAFTREE, 1);
+        nnn(__ENTITIE_RESOURCES_STOP__, 800, 200, 127, RESID.LEAFTREE, 2);
+        nnn(__ENTITIE_RESOURCES_STOP__, 700, 100, 127, RESID.LEAFTREE, 3);
+        nnn(__ENTITIE_RESOURCES_STOP__, 1200, 0, 127, RESID.LEAFTREE, 0);
+        nnn(__ENTITIE_RESOURCES_STOP__, 1300, 100, 127, RESID.LEAFTREE, 4);
+        nnn(__ENTITIE_RESOURCES_STOP__, 1300, 300, 127, RESID.LEAFTREE, 2);
+        nnn(__ENTITIE_RESOURCES_STOP__, 800, 500, 127, RESID.LEAFTREE, 4);
+        nnn(__ENTITIE_RESOURCES_TOP__, 1000, 200, 127, RESID.ORANGETREE, 0);
+        nnn(__ENTITIE_RESOURCES_STOP__, 700, 600, 127, RESID.LEAFTREE, 0);
+        nnn(__ENTITIE_RESOURCES_STOP__, 500, 400, 127, RESID.LEAFTREE, 2);
+        nnn(__ENTITIE_RESOURCES_DOWN__, 500, 700, 127, RESID.STONE, 3);
+        nnn(__ENTITIE_RESOURCES_DOWN__, 1000, 300, 127, RESID.STONE, 4);
+        nnn(__ENTITIE_RESOURCES_STOP__, 1300, 500, 100, RESID.LEAFTREE, 2);
+        nnn(__ENTITIE_RESOURCES_STOP__, 1200, 700, 127, RESID.LEAFTREE, 4);
+        nnn(__ENTITIE_RESOURCES_STOP__, 1300, 700, 127, RESID.LEAFTREE, 0);
+        nnn(__ENTITIE_RESOURCES_DOWN__, 800, 600, 127, RESID.STONE, 5);
+        nnn(__ENTITIE_RESOURCES_STOP__, 500, 600, 127, RESID.LEAFTREE, 4);
+        nnn(__ENTITIE_RESOURCES_DOWN__, 200, 400, 127, RESID.URANIUM, 0);
+        nnn(__ENTITIE_RESOURCES_DOWN__, 400, 500, 50, RESID.WOOD, 3);
+        nnn(__ENTITIE_RESOURCES_STOP__, 100, 400, 190, RESID.LEAFTREE, 2);
+        nnn(__ENTITIE_RESOURCES_STOP__, 100, 500, 190, RESID.LEAFTREE, 3);
+        nnn(__ENTITIE_RESOURCES_STOP__, 100, 600, 127, RESID.LEAFTREE, 4);
+        nnn(__ENTITIE_RESOURCES_STOP__, 0, 500, 127, RESID.LEAFTREE, 1);
+        nnn(__ENTITIE_RESOURCES_STOP__, 200, 300, 50, RESID.LEAFTREE, 4);
+        nnn(__ENTITIE_RESOURCES_STOP__, 400, 200, 10, RESID.LEAFTREE, 2);
+        nnn(__ENTITIE_RESOURCES_STOP__, 500, 200, 10, RESID.LEAFTREE, 1);
+        nnn(__ENTITIE_RESOURCES_STOP__, 100, 800, 10, RESID.LEAFTREE, 0);
+        nnn(__ENTITIE_RESOURCES_STOP__, 400, 800, 10, RESID.LEAFTREE, 1);
+        nnn(__ENTITIE_RESOURCES_STOP__, 700, 800, 10, RESID.LEAFTREE, 2);
+        nnn(__ENTITIE_RESOURCES_DOWN__, 900, 700, 50, RESID.WOOD, 4);
 
 
         if (isTouchScreen === 1) VmV = GUI.createBackground(650, 312, "img/logo-homepage-mobile2.png");
@@ -31656,7 +31656,7 @@ var LOOT = [{
 }];
 var COUNTER = 0;
 
-var object = {
+var RESID = {
     WOOD:           COUNTER++,
     STONE:          COUNTER++,
     STEEL:          COUNTER++,
@@ -31679,7 +31679,7 @@ var __MID   = 10;
 var __STOP  = 11;
 
 var RESOURCES = [];
-RESOURCES[object.WOOD] = {
+RESOURCES[RESID.WOOD] = {
     loot: [LOOTID.__BIG_WOOD__, LOOTID.__MEDIUM_WOOD__, LOOTID.__SMALL_WOOD__],
     rare: [0.2, 0.4, 1],
     tool: [-1, IID.__HACHET__, IID.__STONE__axe, IID.__SULFUR__axe],
@@ -31766,7 +31766,7 @@ RESOURCES[object.WOOD] = {
     destroy: SOUNDID.__WOOD_DESTROY__,
     score: 5
 };
-RESOURCES[object.LEAFTREE] = {
+RESOURCES[RESID.LEAFTREE] = {
     loot: [LOOTID.acorn, LOOTID.__BIG_WOOD__, LOOTID.__MEDIUM_WOOD__, LOOTID.__SMALL_WOOD__],
     rare: [0.015, 0.2, 0.4, 1],
     tool: [-1, IID.__HACHET__, IID.__STONE__axe, IID.__SULFUR__axe],
@@ -31913,7 +31913,7 @@ RESOURCES[object.LEAFTREE] = {
     destroy: SOUNDID.__WOOD_DESTROY__,
     score: 5
 };
-RESOURCES[object.STONE] = {
+RESOURCES[RESID.STONE] = {
     loot: [LOOTID.__BIG_STONE__, LOOTID.__MEDIUM_STONE__, LOOTID.__SMALL_STONE__],
     rare: [0.1, 0.3, 1],
     tool: [IID.__HACHET__, IID.__STONE__pickaxe, IID.__STEEL__pickaxe, IID.__SULFUR__pickaxe],
@@ -32015,7 +32015,7 @@ RESOURCES[object.STONE] = {
     destroy: SOUNDID.__STONE_DESTROY__,
     score: 15
 };
-RESOURCES[object.STEEL] = {
+RESOURCES[RESID.STEEL] = {
     loot: [LOOTID.__STEEL__, LOOTID.__BIG_STONE__, LOOTID.__MEDIUM_STONE__, LOOTID.__SMALL_STONE__],
     rare: [0.4, 0.45, 0.6, 1],
     tool: [IID.__STONE__pickaxe, IID.__STEEL__pickaxe, IID.__SULFUR__pickaxe],
@@ -32087,7 +32087,7 @@ RESOURCES[object.STEEL] = {
     destroy: SOUNDID.__STONE_DESTROY__,
     score: 40
 };
-RESOURCES[object.SULFUR] = {
+RESOURCES[RESID.SULFUR] = {
     loot: [LOOTID.sulfur, LOOTID.__BIG_STONE__, LOOTID.__MEDIUM_STONE__, LOOTID.__SMALL_STONE__],
     rare: [0.4, 0.45, 0.6, 1],
     tool: [IID.__STEEL__pickaxe, IID.__SULFUR__pickaxe],
@@ -32144,7 +32144,7 @@ RESOURCES[object.SULFUR] = {
     destroy: SOUNDID.__STONE_DESTROY__,
     score: 70
 };
-RESOURCES[object.URANIUM] = {
+RESOURCES[RESID.URANIUM] = {
     loot: [LOOTID.uranium, LOOTID.__BIG_STONE__, LOOTID.__MEDIUM_STONE__, LOOTID.__SMALL_STONE__],
     rare: [0.3, 0.45, 0.6, 1],
     tool: [IID.__SULFUR__pickaxe],
@@ -32201,7 +32201,7 @@ RESOURCES[object.URANIUM] = {
     destroy: SOUNDID.__STONE_DESTROY__,
     score: 140
 };
-RESOURCES[object.ORANGETREE] = {
+RESOURCES[RESID.ORANGETREE] = {
     loot: [LOOTID.seedorange, LOOTID.orange],
     rare: [0.05, 1],
     tool: [-1],
@@ -32294,7 +32294,7 @@ RESOURCES[object.ORANGETREE] = {
     destroy: SOUNDID.__NO_SOUND__,
     score: 50
 };
-RESOURCES[object.TOMATOTREE] = {
+RESOURCES[RESID.TOMATOTREE] = {
     loot: [LOOTID.tomatoseed, LOOTID.tomato],
     rare: [0.05, 1],
     tool: [-1],
@@ -32387,7 +32387,7 @@ RESOURCES[object.TOMATOTREE] = {
     destroy: SOUNDID.__NO_SOUND__,
     score: 50
 };
-RESOURCES[object.BOAR] = {
+RESOURCES[RESID.BOAR] = {
     loot: [LOOTID.rawsteak, LOOTID.__ANIMAL_FAT__, LOOTID.__LEATHER_BOAR__],
     rare: [0.25, 0.85, 1],
     tool: [IID.__HACHET__, IID.__STONE__axe, IID.__SULFUR__axe],
@@ -32414,7 +32414,7 @@ RESOURCES[object.BOAR] = {
     destroy: SOUNDID.__NO_SOUND__,
     score: 40
 };
-RESOURCES[object.DEER] = {
+RESOURCES[RESID.DEER] = {
     loot: [LOOTID.rawsteak, LOOTID.__ANIMAL_TENDON__, LOOTID.__LEATHER_BOAR__, LOOTID.__ANIMAL_FAT__],
     rare: [0.28, 0.7, 0.85, 1],
     tool: [IID.__HACHET__, IID.__STONE__axe, IID.__SULFUR__axe],
@@ -32441,7 +32441,7 @@ RESOURCES[object.DEER] = {
     destroy: SOUNDID.__NO_SOUND__,
     score: 40
 };
-RESOURCES[object.MUSHROOM1] = {
+RESOURCES[RESID.MUSHROOM1] = {
     loot: [LOOTID.mushroom],
     rare: [1],
     tool: [-1],
@@ -32513,7 +32513,7 @@ RESOURCES[object.MUSHROOM1] = {
     destroy: SOUNDID.__NO_SOUND__,
     score: 40
 };
-RESOURCES[object.WHITE_FLOWER] = {
+RESOURCES[RESID.WHITE_FLOWER] = {
     loot: [LOOTID.antidoteflower],
     rare: [1],
     tool: [-1],
@@ -32540,7 +32540,7 @@ RESOURCES[object.WHITE_FLOWER] = {
     destroy: SOUNDID.__NO_SOUND__,
     score: 1000
 };
-RESOURCES[object.MUSHROOM2] = {
+RESOURCES[RESID.MUSHROOM2] = {
     loot: [LOOTID.mushroom2],
     rare: [1],
     tool: [-1],
@@ -32612,7 +32612,7 @@ RESOURCES[object.MUSHROOM2] = {
     destroy: SOUNDID.__NO_SOUND__,
     score: 40
 };
-RESOURCES[object.MUSHROOM3] = {
+RESOURCES[RESID.MUSHROOM3] = {
     loot: [LOOTID.mushroom3],
     rare: [1],
     tool: [-1],
@@ -42171,7 +42171,7 @@ try {
         exports.items = items;
         exports.LOOT = LOOT;
         exports.LOOTID = LOOTID;
-        exports.object = object;
+        exports.RESID = RESID;
         exports.RESOURCES = RESOURCES;
         exports.AREAS = AREAS;
         exports.SKILLS = SKILLS;
