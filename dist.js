@@ -237,11 +237,11 @@ var CanvasUtils = (function() {
     };
 
     function canvasToImage(Mwwwm) {
-        var W = new window.Image;
-        W.src = Mwwwm.toDataURL("image/png");
-        W.width = Mwwwm.width;
-        W.height = Mwwwm.height;
-        return W;
+        var img = new window.Image;
+        img.src = Mwwwm.toDataURL("image/png");
+        img.width = Mwwwm.width;
+        img.height = Mwwwm.height;
+        return img;
     };
 
     function line(ctx, WNvmm, MMNwm, wNnMn, Vvwwm) {
@@ -323,15 +323,15 @@ var CanvasUtils = (function() {
         this.isLoaded = 0;
     };
 
-    function loadImage(MnM, W) {
-        if ((W !== window.undefined) && (W.isLoaded === 2))
-            return W;
-        W = new window.Image;
-        W.isLoaded = 2;
-        W.onload = onloadimg;
-        W.onerror = onloadimgerror;
-        W.src = MnM;
-        return W;
+    function loadImage(MnM, img) {
+        if ((img !== window.undefined) && (img.isLoaded === 2))
+            return img;
+        img = new window.Image;
+        img.isLoaded = 2;
+        img.onload = onloadimg;
+        img.onerror = onloadimgerror;
+        img.src = MnM;
+        return img;
     };
 
     function lerp(WMwvw, WnnmM, VwW) {
@@ -363,7 +363,7 @@ var CanvasUtils = (function() {
     function createImageContainer(MnM) {
         return {
             src: MnM,
-            W: {
+            img: {
                 isLoaded: 0
             }
         };
@@ -371,21 +371,21 @@ var CanvasUtils = (function() {
 
     function loadImageContainer(MnM) {
         var WVV = createImageContainer(MnM);
-        WVV.W = CanvasUtils.loadImage(WVV.src, WVV.W);
+        WVV.img = CanvasUtils.loadImage(WVV.src, WVV.img);
         return WVV;
     };
 
     function drawImageHd(WVV, WX, WY, angle, wWNWN, wnwnM, imgMovement) {
-        var W = WVV.W;
-        if (W.isLoaded !== 1) {
-            WVV.W = CanvasUtils.loadImage(WVV.src, WVV.W);
+        var img = WVV.img;
+        if (img.isLoaded !== 1) {
+            WVV.img = CanvasUtils.loadImage(WVV.src, WVV.img);
             return;
         }
         imgMovement *= scaleby;
         WX *= scaleby;
         WY *= scaleby;
-        var VwW = W.wh * imgMovement;
-        var h = W.h2 * imgMovement;
+        var VwW = img.wh * imgMovement;
+        var h = img.h2 * imgMovement;
         var nnvvn = (-VwW / 2) + (wWNWN * imgMovement);
         var nNmWM = (-h / 2) + (wnwnM * imgMovement);
         if ((((((WX + nnvvn) + VwW) < 0) || (((WY + nNmWM) + h) < 0)) || (((WX - VwW) - canw) > 0)) || (((WY - h) - canh) > 0))
@@ -393,32 +393,32 @@ var CanvasUtils = (function() {
         ctx.save();
         ctx.translate(WX, WY);
         ctx.rotate(angle);
-        ctx.drawImage(W, nnvvn, nNmWM, VwW, h);
+        ctx.drawImage(img, nnvvn, nNmWM, VwW, h);
         ctx.restore();
     };
 
     function drawImageHd2(WVV, WX, WY, angle, wWNWN, wnwnM, imgMovement, wwvMW, nMmWV, vwWmv) {
-        var W = WVV.W;
-        if (W.isLoaded !== 1) {
-            WVV.W = CanvasUtils.loadImage(WVV.src, WVV.W);
+        var img = WVV.img;
+        if (img.isLoaded !== 1) {
+            WVV.img = CanvasUtils.loadImage(WVV.src, WVV.img);
             return;
         }
         imgMovement *= scaleby;
-        var VwW = W.wh * imgMovement;
-        var h = W.h2 * imgMovement;
+        var VwW = img.wh * imgMovement;
+        var h = img.h2 * imgMovement;
         ctx.save();
         ctx.translate(WX * scaleby, WY * scaleby);
         ctx.rotate(angle);
         ctx.translate(wWNWN * imgMovement, wnwnM * imgMovement);
         ctx.rotate(wwvMW);
-        ctx.drawImage(W, (-VwW / 2) + (nMmWV * imgMovement), (-h / 2) + (vwWmv * imgMovement), VwW, h);
+        ctx.drawImage(img, (-VwW / 2) + (nMmWV * imgMovement), (-h / 2) + (vwWmv * imgMovement), VwW, h);
         ctx.restore();
     };
 
     function drawImageHdCrop(WVV, WX, WY, angle, mnmvW, vNwWN, nwmmW, wVnWn, imgMovement) {
-        var W = WVV.W;
-        if (W.isLoaded !== 1) {
-            WVV.W = CanvasUtils.loadImage(WVV.src, WVV.W);
+        var img = WVV.img;
+        if (img.isLoaded !== 1) {
+            WVV.img = CanvasUtils.loadImage(WVV.src, WVV.img);
             return;
         }
         imgMovement *= scaleby;
@@ -433,7 +433,7 @@ var CanvasUtils = (function() {
         ctx.save();
         ctx.translate(WX, WY);
         ctx.rotate(angle);
-        ctx.drawImage(W, mnmvW, vNwWN, nwmmW, wVnWn, nnvvn, nNmWM, VwW, h);
+        ctx.drawImage(img, mnmvW, vNwWN, nwmmW, wVnWn, nnvvn, nNmWM, VwW, h);
         ctx.restore();
     };
 
@@ -694,20 +694,20 @@ var GUI = (function() {
             y: 0
         };
         var mMm = mMm;
-        var W = CanvasUtils.loadImage(mMm);
+        var img = CanvasUtils.loadImage(mMm);
         var vvWww = 0;
         var VNWnw = 0;
         var WvWMm = VmWnw;
 
         function draw() {
-            if (W.isLoaded !== 1)
+            if (img.isLoaded !== 1)
                 return;
             vvWww += window.Math.min(delta, 3 * VWnmW);
             if (vvWww > VWnmW) {
                 vvWww -= VWnmW;
-                VNWnw = window.Math.floor((VNWnw + 1) % (W.width / WvWMm));
+                VNWnw = window.Math.floor((VNWnw + 1) % (img.width / WvWMm));
             }
-            ctx.drawImage(W, WvWMm * VNWnw, 0, WvWMm, W.height, pos.x, pos.y, SY * scaleby, SX * scaleby);
+            ctx.drawImage(img, WvWMm * VNWnw, 0, WvWMm, img.height, pos.x, pos.y, SY * scaleby, SX * scaleby);
         };
         return {
             draw:   draw,
@@ -722,9 +722,9 @@ var GUI = (function() {
             disable: 0
         };
         var mMm = mMm;
-        var W;
+        var img;
         if (mMm !== window.undefined)
-            W = CanvasUtils.loadImage(mMm);
+            img = CanvasUtils.loadImage(mMm);
         else
             pos.disable = 1;
 
@@ -737,9 +737,9 @@ var GUI = (function() {
         };
 
         function draw() {
-            if ((pos.disable === 1) || (W.isLoaded !== 1))
+            if ((pos.disable === 1) || (img.isLoaded !== 1))
                 return;
-            ctx.drawImage(W, 0, 0, W.width, W.height, pos.x, pos.y, SY * scaleby, SX * scaleby);
+            ctx.drawImage(img, 0, 0, img.width, img.height, pos.x, pos.y, SY * scaleby, SX * scaleby);
         };
         return {
             draw:   draw,
@@ -768,10 +768,10 @@ var GUI = (function() {
         function setImages(Vwvwv, wWwmv) {
             wvnwv = wWwmv;
             for (var i = 0; i < 3; i++) {
-                var W = wvnwv[i];
+                var img = wvnwv[i];
                 var n = Vwvwv[i];
-                if (W.isLoaded !== 1)
-                    wvnwv[i] = CanvasUtils.loadImage(n, W);
+                if (img.isLoaded !== 1)
+                    wvnwv[i] = CanvasUtils.loadImage(n, img);
             }
         };
 
@@ -794,10 +794,10 @@ var GUI = (function() {
         function draw() {
             if (pos.disable === 1)
                 return;
-            var W = wvnwv[Mnn];
+            var img = wvnwv[Mnn];
             if (wvnwv[Mnn].isLoaded !== 1)
                 return;
-            ctx.drawImage(W, 0, 0, W.width, W.height, pos.x, pos.y, SY * scaleby, SX * scaleby);
+            ctx.drawImage(img, 0, 0, img.width, img.height, pos.x, pos.y, SY * scaleby, SX * scaleby);
         };
 
         function trigger() {
@@ -1165,7 +1165,7 @@ function onFullInventory(MWwnV) {
     for (var i = 1; i < MWwnV.length; i += 4) {
         var IID = MWwnV[i];
         if (IID !== 0)
-            Game.inventory[j].setImages(items[IID].img.src, items[IID].img.W);
+            Game.inventory[j].setImages(items[IID].itemButton.src, items[IID].itemButton.img);
         else
             continue;
         var invtr = World.PLAYER.inventory[j];
@@ -1200,7 +1200,7 @@ function onNewItem(IID) {
             invtr[i][1] = IID[2];
             invtr[i][2] = IID[3];
             invtr[i][3] = IID[4];
-            Game.inventory[i].setImages(items[IID[1]].img.src, items[IID[1]].img.W);
+            Game.inventory[i].setImages(items[IID[1]].itemButton.src, items[IID[1]].itemButton.img);
             if ((Game.MvN() === 1) && (World.PLAYER.craftCategory === -1))
                 World.buildCraftList(World.PLAYER.craftArea);
             return;
@@ -1288,7 +1288,7 @@ function onSplitItem(buf) {
             invtr[i][0] = buf[1];
             invtr[i][1] = amount;
             invtr[i][2] = buf[4];
-            Game.inventory[i].setImages(items[buf[1]].img.src, items[buf[1]].img.W);
+            Game.inventory[i].setImages(items[buf[1]].itemButton.src, items[buf[1]].itemButton.img);
         }
     }
     invtr[nvMvW][3] = invtr[VVmWn][3];
@@ -1435,7 +1435,7 @@ function onOpenBuilding(unit8) {
         var IID = unit8[i + 4];
         queue[i] = IID;
         if (IID !== 0)
-            Game.queue[i].setImages(items[IID].img.src, items[IID].img.W);
+            Game.queue[i].setImages(items[IID].itemButton.src, items[IID].itemButton.img);
         else {
             World.PLAYER.building.len = i;
             break;
@@ -1546,7 +1546,7 @@ function onFullChest(unit8) {
                     itemsinside[space][3] = 0;
                     break;
                 }
-                Game.chest[space].setImages(items[itemimage].img.src, items[itemimage].img.W);
+                Game.chest[space].setImages(items[itemimage].itemButton.src, items[itemimage].itemButton.img);
             }
             itemsinside[space][j] = itemimage;
         }
@@ -2649,7 +2649,7 @@ var World = (function() {
         nVnwv(gauges.xp, 255, 0, 0, 0);
         gauges.xp.value = 0;
         gauges.xp.current = 0;
-        PLAYER.nextLevel = NwwNn;
+        PLAYER.nextLevel = __XP_START__;
         if (day === NwVWM)
             gauges.cold.vww = 1;
     };
@@ -2749,7 +2749,7 @@ var World = (function() {
     function selectRecipe(Wn) {
         var len = 0;
         var IID = items[Wn];
-        Game.preview.setImages(IID.img.src, IID.img.W);
+        Game.preview.setImages(IID.itemButton.src, IID.itemButton.img);
         var MWVwN = IID.detail.recipe;
         var canvasZ = IID.detail.area;
         var recipe = Game.recipe;
@@ -2761,7 +2761,7 @@ var World = (function() {
                 var tool = AREASTOITEM[canvasZ[i]];
                 if (tool !== window.undefined) {
                     IID = items[tool];
-                    tools[len].setImages(IID.img.src, IID.img.W);
+                    tools[len].setImages(IID.itemButton.src, IID.itemButton.img);
                     len++;
                 }
             }
@@ -2771,7 +2771,7 @@ var World = (function() {
         if (MWVwN !== window.undefined) {
             for (i = 0; i < MWVwN.length; i++) {
                 IID = items[MWVwN[i][0]];
-                recipe[len].setImages(IID.img.src, IID.img.W);
+                recipe[len].setImages(IID.itemButton.src, IID.itemButton.img);
                 recipeList[len] = IID.id;
                 len++;
             }
@@ -2837,7 +2837,7 @@ var World = (function() {
                     nnNVM = i;
                     vVWmn = len;
                 }
-                craftList[len].setImages(IID.img.src, IID.img.W);
+                craftList[len].setImages(IID.itemButton.src, IID.itemButton.img);
                 craft[len] = i;
                 craftAvailable[len] = NMvWv(i, IID.detail);
                 len++;
@@ -2870,7 +2870,7 @@ var World = (function() {
                     nnNVM = i;
                     vVWmn = len;
                 }
-                craftList[len].setImages(IID.img.src, IID.img.W);
+                craftList[len].setImages(IID.itemButton.src, IID.itemButton.img);
                 craft[len] = i;
                 craftAvailable[len] = MMMWN(NW.recipe);
                 len++;
@@ -2883,13 +2883,13 @@ var World = (function() {
         if (nnNVM > 0)
             selectRecipe(nnNVM);
     };
-    NwwNn = 900;
-    wnvmW = 1.105;
+    __XP_START__ = 900;
+    __XP_SPEED__ = 1.105;
 
     function getXpFromLevel(level) {
-        var xp = NwwNn;
+        var xp = __XP_START__;
         for (var i = 0; i < level; i++)
-            xp = window.Math.floor(xp * wnvmW);
+            xp = window.Math.floor(xp * __XP_SPEED__);
         return xp;
     };
 
@@ -2902,68 +2902,69 @@ var World = (function() {
                 PLAYER.skillPoint++;
                 if ((Game.MvN() === 1) && (PLAYER.craftCategory !== -1))
                     buildSkillList(PLAYER.craftCategory);
-                AudioUtils.playFx(AudioUtils._fx.nNwmw, 1, 0);
+                AudioUtils.playFx(AudioUtils._fx.levelup, 1, 0);
                 return;
             }
             if (PLAYER.xp >= PLAYER.nextLevel) {
-                gauges.xp.value = 255;
-                PLAYER.xp -= PLAYER.nextLevel;
-                PLAYER.nextLevel = window.Math.floor(PLAYER.nextLevel * wnvmW);
+                gauges.xp.value     = 255;
+                PLAYER.xp           -= PLAYER.nextLevel;
+                PLAYER.nextLevel    = window.Math.floor(PLAYER.nextLevel * __XP_SPEED__);
             } else
                 gauges.xp.value = window.Math.floor((255 * PLAYER.xp) / PLAYER.nextLevel);
         }
     };
+
     var PLAYER = {
-        id: 0,
-        x: 0,
-        y: 0,
-        _i: 0,
-        _j: 0,
-        score: 0,
-        lastScore: -1,
-        inLeaderboard: 0,
-        scoreLabel: null,
-        click: 0,
-        inventory: [],
-        recipeLen: 0,
-        toolsLen: 0,
-        toolsList: 0,
-        craftLen: 0,
-        isInBuilding: 0,
-        isInChest: 0,
-        craftArea: -1,
-        craftCategory: -1,
-        craftSelected: -1,
-        craftIdSelected: -1,
-        skillUnlocked: [],
-        level: 0,
-        kill: 0,
-        xp: 0,
-        nextLevel: 0,
-        skillPoint: 0,
-        recipeList: [],
-        craftList: [],
-        craftAvailable: [],
-        recipeAvailable: [],
-        crafting: 0,
-        craftingMax: 0,
+        id:                 0,
+        x:                  0,
+        y:                  0,
+        _i:                 0,
+        _j:                 0,
+        score:              0,
+        lastScore:          -1,
+        inLeaderboard:      0,
+        scoreLabel:         null,
+        click:              0,
+        inventory:          [],
+        recipeLen:          0,
+        toolsLen:           0,
+        toolsList:          0,
+        craftLen:           0,
+        isInBuilding:       0,
+        isInChest:          0,
+        craftArea:          -1,
+        craftCategory:      -1,
+        craftSelected:      -1,
+        craftIdSelected:    -1,
+        skillUnlocked:      [],
+        level:              0,
+        kill:               0,
+        xp:                 0,
+        nextLevel:          0,
+        skillPoint:         0,
+        recipeList:         [],
+        craftList:          [],
+        craftAvailable:     [],
+        recipeAvailable:    [],
+        crafting:           0,
+        craftingMax:        0,
         drag: {
             begin: 0,
             x: 0,
             y: 0,
             id: 0
         },
-        eInteract: null,
-        interaction: -1,
-        interactionDelay: 0,
-        interactionWait: 0,
-        loot: -1,
-        lootId: -1,
-        extraLoot: 0,
-        packetId: -1,
-        buildingArea: -1,
-        buildingId: -1,
-        buildingPid: -1,
+        eInteract:          null,
+        interaction:        -1,
+        interactionDelay:   0,
+        interactionWait:    0,
+        loot:               -1,
+        lootId:             -1,
+        extraLoot:          0,
+        packetId:           -1,
+        buildingArea:       -1,
+        buildingId:         -1,
+        buildingPid:        -1,
         chest: [
             [0, 0, 0, 0],
             [0, 0, 0, 0],
@@ -2973,54 +2974,55 @@ var World = (function() {
         chestLen: 0,
         building: {
             queue: [0, 0, 0, 0],
-            pos: 0,
-            time: 0,
-            timeMax: 0,
-            len: 0,
-            fuel: 0
+            pos:        0,
+            time:       0,
+            timeMax:    0,
+            len:        0,
+            fuel:       0
         },
-        blueprint: 0,
-        furniture: 0,
-        buildRotate: 0,
-        hintRotate: 0,
-        grid: 0,
-        gridPrev: [0, 0, 0],
-        iGrid: 0,
-        jGrid: 0,
-        iGridPrev: [0, 0, 0],
-        jGridPrev: [0, 0, 0],
-        isBuilding: 0,
-        iBuild: 0,
-        jBuild: 0,
-        canBuild: 0,
-        warm: 0,
-        wrongTool: 0,
+        blueprint:      0,
+        furniture:      0,
+        buildRotate:    0,
+        hintRotate:     0,
+        grid:           0,
+        gridPrev:   [0, 0, 0],
+        iGrid:          0,
+        jGrid:          0,
+        iGridPrev:  [0, 0, 0],
+        jGridPrev:  [0, 0, 0],
+        isBuilding:     0,
+        iBuild:         0,
+        jBuild:         0,
+        canBuild:       0,
+        warm:           0,
+        wrongTool:      0,
         wrongToolTimer: 0,
-        teamEffect: 0,
-        teamLeader: 0,
-        teamLocked: 0,
-        teamDelay: 0,
-        teamNameValid: 0,
+        teamEffect:     0,
+        teamLeader:     0,
+        teamLocked:     0,
+        teamDelay:      0,
+        teamNameValid:  0,
         teamCreateDelay: 0,
-        teamQueue: [0, 0, 0, 0, 0],
-        teamJoin: 0,
-        teamDelay: 0,
-        team: -1,
-        teamPos: [],
-        teamLength: 0,
-        KARMA: 0,
-        badKarma: 0,
-        badKarmaDelay: 0,
-        lastAreas: null,
-        nextAreas: 0,
-        craftFactor: 1,
-        timePlayed: 0,
-        toxicMap: 0,
-        toxicStep: 0,
-        admin: 0,
-        ghoul: 0,
-        cities: []
+        teamQueue:      [0, 0, 0, 0, 0],
+        teamJoin:       0,
+        teamDelay:      0,
+        team:           -1,
+        teamPos:        [],
+        teamLength:     0,
+        KARMA:          0,
+        badKarma:       0,
+        badKarmaDelay:  0,
+        lastAreas:      null,
+        nextAreas:      0,
+        craftFactor:    1,
+        timePlayed:     0,
+        toxicMap:       0,
+        toxicStep:      0,
+        admin:          0,
+        ghoul:          0,
+        cities:         []
     };
+
     return {
         __SURVIVAL__:       0,
         __BR__:             1,
@@ -3059,6 +3061,7 @@ var World = (function() {
         releaseBuilding:    releaseBuilding,
         getXpFromLevel:     getXpFromLevel
     };
+
 })();
 var Entitie = (function() {
     var MwvWW = 0;
@@ -3176,144 +3179,146 @@ var Entitie = (function() {
 
 })();
 var ENTITIES = [{
+
     gauges: {
         life: {
-            _max: 255,
-            speedDec: 0.005,
-            speedInc: 0.005
+            _max:       255,
+            speedDec:   0.005,
+            speedInc:   0.005
         },
         food: {
-            _max: 255,
-            speedDec: 0.0012,
-            speedInc: 0.0012
+            _max:       255,
+            speedDec:   0.0012,
+            speedInc:   0.0012
         },
         cold: {
-            _max: 255,
-            speedDec: 0.0035,
-            speedInc: 0.005
+            _max:       255,
+            speedDec:   0.0035,
+            speedInc:   0.005
         },
         rad: {
-            _max: 255,
-            speedDec: 0.024,
-            speedInc: 0.003
+            _max:       255,
+            speedDec:   0.024,
+            speedInc:   0.003
         },
         stamina: {
-            _max: 255,
-            speedDec: 0.03,
-            speedInc: 0.015
+            _max:       255,
+            speedDec:   0.03,
+            speedInc:   0.015
         }
     },
+
     skins: [{
         head: {
             src: "img/day-skin0.png",
-            W: {
+            img: {
                 isLoaded: 0
             }
         },
         leftArm: {
             src: "img/day-left-arm0.png",
-            W: {
+            img: {
                 isLoaded: 0
             }
         },
         rightArm: {
             src: "img/day-right-arm0.png",
-            W: {
+            img: {
                 isLoaded: 0
             }
         }
     }, {
         head: {
             src: "img/day-skin1.png",
-            W: {
+            img: {
                 isLoaded: 0
             }
         },
         leftArm: {
             src: "img/day-left-arm0.png",
-            W: {
+            img: {
                 isLoaded: 0
             }
         },
         rightArm: {
             src: "img/day-right-arm0.png",
-            W: {
+            img: {
                 isLoaded: 0
             }
         }
     }, {
         head: {
             src: "img/day-skin2.png",
-            W: {
+            img: {
                 isLoaded: 0
             }
         },
         leftArm: {
             src: "img/day-left-arm2.png",
-            W: {
+            img: {
                 isLoaded: 0
             }
         },
         rightArm: {
             src: "img/day-right-arm2.png",
-            W: {
+            img: {
                 isLoaded: 0
             }
         }
     }, {
         head: {
             src: "img/day-skin3.png",
-            W: {
+            img: {
                 isLoaded: 0
             }
         },
         leftArm: {
             src: "img/day-left-arm2.png",
-            W: {
+            img: {
                 isLoaded: 0
             }
         },
         rightArm: {
             src: "img/day-right-arm2.png",
-            W: {
+            img: {
                 isLoaded: 0
             }
         }
     }, {
         head: {
             src: "img/day-skin4.png",
-            W: {
+            img: {
                 isLoaded: 0
             }
         },
         leftArm: {
             src: "img/day-left-arm4.png",
-            W: {
+            img: {
                 isLoaded: 0
             }
         },
         rightArm: {
             src: "img/day-right-arm4.png",
-            W: {
+            img: {
                 isLoaded: 0
             }
         }
     }, {
         head: {
             src: "img/day-skin5.png",
-            W: {
+            img: {
                 isLoaded: 0
             }
         },
         leftArm: {
             src: "img/day-left-arm4.png",
-            W: {
+            img: {
                 isLoaded: 0
             }
         },
         rightArm: {
             src: "img/day-right-arm4.png",
-            W: {
+            img: {
                 isLoaded: 0
             }
         }
@@ -3321,527 +3326,527 @@ var ENTITIES = [{
     clothes: [{}, {
         head: {
             src: "img/day-headscarf.png",
-            W: {
+            img: {
                 isLoaded: 0
             }
         }
     }, {
         head: {
             src: "img/day-chapka.png",
-            W: {
+            img: {
                 isLoaded: 0
             }
         },
         leftArm: {
             src: "img/day-left-arm-chapka.png",
-            W: {
+            img: {
                 isLoaded: 0
             }
         },
         rightArm: {
             src: "img/day-right-arm-chapka.png",
-            W: {
+            img: {
                 isLoaded: 0
             }
         }
     }, {
         head: {
             src: "img/day-coat.png",
-            W: {
+            img: {
                 isLoaded: 0
             }
         },
         leftArm: {
             src: "img/day-left-arm-coat.png",
-            W: {
+            img: {
                 isLoaded: 0
             }
         },
         rightArm: {
             src: "img/day-right-arm-coat.png",
-            W: {
+            img: {
                 isLoaded: 0
             }
         }
     }, {
         head: {
             src: "img/day-gaz-mask.png",
-            W: {
+            img: {
                 isLoaded: 0
             }
         }
     }, {
         head: {
             src: "img/day-gaz-protection.png",
-            W: {
+            img: {
                 isLoaded: 0
             }
         },
         leftArm: {
             src: "img/day-left-arm-gaz-protection.png",
-            W: {
+            img: {
                 isLoaded: 0
             }
         },
         rightArm: {
             src: "img/day-right-arm-gaz-protection.png",
-            W: {
+            img: {
                 isLoaded: 0
             }
         }
     }, {
         head: {
             src: "img/day-radiation-suit.png",
-            W: {
+            img: {
                 isLoaded: 0
             }
         },
         leftArm: {
             src: "img/day-left-arm-radiation-suit.png",
-            W: {
+            img: {
                 isLoaded: 0
             }
         },
         rightArm: {
             src: "img/day-right-arm-radiation-suit.png",
-            W: {
+            img: {
                 isLoaded: 0
             }
         }
     }, {
         head: {
             src: "img/day-metal-helmet.png",
-            W: {
+            img: {
                 isLoaded: 0
             }
         }
     }, {
         head: {
             src: "img/day-welding-helmet.png",
-            W: {
+            img: {
                 isLoaded: 0
             }
         },
         leftArm: {
             src: "img/day-left-arm-welding-helmet.png",
-            W: {
+            img: {
                 isLoaded: 0
             }
         },
         rightArm: {
             src: "img/day-right-arm-welding-helmet.png",
-            W: {
+            img: {
                 isLoaded: 0
             }
         }
     }, {
         head: {
             src: "img/day-gladiator-helmet.png",
-            W: {
+            img: {
                 isLoaded: 0
             }
         },
         leftArm: {
             src: "img/day-left-arm-gladiator-armor.png",
-            W: {
+            img: {
                 isLoaded: 0
             }
         },
         rightArm: {
             src: "img/day-right-arm-gladiator-armor.png",
-            W: {
+            img: {
                 isLoaded: 0
             }
         }
     }, {
         head: {
             src: "img/day-leather-jacket.png",
-            W: {
+            img: {
                 isLoaded: 0
             }
         },
         leftArm: {
             src: "img/day-left-arm-leather-jacket.png",
-            W: {
+            img: {
                 isLoaded: 0
             }
         },
         rightArm: {
             src: "img/day-right-arm-leather-jacket.png",
-            W: {
+            img: {
                 isLoaded: 0
             }
         }
     }, {
         head: {
             src: "img/day-kevlar-suit.png",
-            W: {
+            img: {
                 isLoaded: 0
             }
         },
         leftArm: {
             src: "img/day-left-arm-kevlar-suit.png",
-            W: {
+            img: {
                 isLoaded: 0
             }
         },
         rightArm: {
             src: "img/day-right-arm-kevlar-suit.png",
-            W: {
+            img: {
                 isLoaded: 0
             }
         }
     }, {
         head: {
             src: "img/day-SWAT-suit.png",
-            W: {
+            img: {
                 isLoaded: 0
             }
         },
         leftArm: {
             src: "img/day-left-arm-SWAT-suit.png",
-            W: {
+            img: {
                 isLoaded: 0
             }
         },
         rightArm: {
             src: "img/day-right-arm-SWAT-suit.png",
-            W: {
+            img: {
                 isLoaded: 0
             }
         }
     }, {
         head: {
             src: "img/day-protective-suit.png",
-            W: {
+            img: {
                 isLoaded: 0
             }
         },
         leftArm: {
             src: "img/day-left-arm-protective-suit.png",
-            W: {
+            img: {
                 isLoaded: 0
             }
         },
         rightArm: {
             src: "img/day-right-arm-protective-suit.png",
-            W: {
+            img: {
                 isLoaded: 0
             }
         }
     }, {
         head: {
             src: "img/day-tesla-0.png",
-            W: {
+            img: {
                 isLoaded: 0
             }
         },
         leftArm: {
             src: "img/day-left-arm-tesla-0.png",
-            W: {
+            img: {
                 isLoaded: 0
             }
         },
         rightArm: {
             src: "img/day-right-arm-tesla-0.png",
-            W: {
+            img: {
                 isLoaded: 0
             }
         }
     }, {
         head: {
             src: "img/day-tesla-armor.png",
-            W: {
+            img: {
                 isLoaded: 0
             }
         },
         leftArm: {
             src: "img/day-left-arm-tesla-armor.png",
-            W: {
+            img: {
                 isLoaded: 0
             }
         },
         rightArm: {
             src: "img/day-right-arm-tesla-armor.png",
-            W: {
+            img: {
                 isLoaded: 0
             }
         }
     }, {
         head: {
             src: "img/day-camouflage-gear.png",
-            W: {
+            img: {
                 isLoaded: 0
             }
         },
         leftArm: {
             src: "img/day-left-arm-camouflage-gear.png",
-            W: {
+            img: {
                 isLoaded: 0
             }
         },
         rightArm: {
             src: "img/day-right-arm-camouflage-gear.png",
-            W: {
+            img: {
                 isLoaded: 0
             }
         }
     }, {
         head: {
             src: "img/day-christmas-hat.png",
-            W: {
+            img: {
                 isLoaded: 0
             }
         }
     }, {
         head: {
             src: "img/day-deer-hat.png",
-            W: {
+            img: {
                 isLoaded: 0
             }
         }
     }, {
         head: {
             src: "img/day-snowman-hat.png",
-            W: {
+            img: {
                 isLoaded: 0
             }
         },
         leftArm: {
             src: "img/day-left-arm-snowman-hat.png",
-            W: {
+            img: {
                 isLoaded: 0
             }
         },
         rightArm: {
             src: "img/day-right-arm-snowman-hat.png",
-            W: {
+            img: {
                 isLoaded: 0
             }
         }
     }, {
         head: {
             src: "img/day-elf-hat.png",
-            W: {
+            img: {
                 isLoaded: 0
             }
         },
         leftArm: {
             src: "img/day-left-arm-elf-hat.png",
-            W: {
+            img: {
                 isLoaded: 0
             }
         },
         rightArm: {
             src: "img/day-right-arm-elf-hat.png",
-            W: {
+            img: {
                 isLoaded: 0
             }
         }
     }],
     runEffect: {
         src: "img/day-run-effect.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     },
     death: {
         src: "img/day-dead-player.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     },
     hurt: {
         src: "img/hurt-player.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     },
     heal: {
         src: "img/heal-player.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     },
     food: {
         src: "img/food-player.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     },
     cartridges: [{
         src: "img/day-shotgun-cartridge.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-9mm-cartridge.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-AK47-cartridge.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-crossbow-cartridge.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-nails-cartridge.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-cells-cartridge.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }],
     bullets: [
         [{
             src: "img/day-bullet1.png",
-            W: {
+            img: {
                 isLoaded: 0
             }
         }, {
             src: "img/day-bullet2.png",
-            W: {
+            img: {
                 isLoaded: 0
             }
         }, {
             src: "img/day-bullet2l.png",
-            W: {
+            img: {
                 isLoaded: 0
             }
         }],
         [{
             src: "img/day-bullet3.png",
-            W: {
+            img: {
                 isLoaded: 0
             }
         }, {
             src: "img/day-bullet4.png",
-            W: {
+            img: {
                 isLoaded: 0
             }
         }, {
             src: "img/day-bullet4l.png",
-            W: {
+            img: {
                 isLoaded: 0
             }
         }],
         [{
             src: "img/day-bullet5.png",
-            W: {
+            img: {
                 isLoaded: 0
             }
         }, {
             src: "img/day-bullet6.png",
-            W: {
+            img: {
                 isLoaded: 0
             }
         }, {
             src: "img/day-bullet6l.png",
-            W: {
+            img: {
                 isLoaded: 0
             }
         }],
         [{
             src: "img/day-wood-arrow.png",
-            W: {
+            img: {
                 isLoaded: 0
             }
         }, {
             src: "img/day-wood-arrow1.png",
-            W: {
+            img: {
                 isLoaded: 0
             }
         }, {
             src: "img/day-wood-arrowl.png",
-            W: {
+            img: {
                 isLoaded: 0
             }
         }],
         [{
             src: "img/day-wood-spear0.png",
-            W: {
+            img: {
                 isLoaded: 0
             }
         }, {
             src: "img/day-wood-spear1.png",
-            W: {
+            img: {
                 isLoaded: 0
             }
         }, {
             src: "img/day-wood-spearl.png",
-            W: {
+            img: {
                 isLoaded: 0
             }
         }],
         [{
             src: "img/day-wood-crossarrow.png",
-            W: {
+            img: {
                 isLoaded: 0
             }
         }, {
             src: "img/day-wood-crossarrow1.png",
-            W: {
+            img: {
                 isLoaded: 0
             }
         }, {
             src: "img/day-wood-crossarrowl.png",
-            W: {
+            img: {
                 isLoaded: 0
             }
         }],
         [{
             src: "img/day-nail1.png",
-            W: {
+            img: {
                 isLoaded: 0
             }
         }, {
             src: "img/day-nail2.png",
-            W: {
+            img: {
                 isLoaded: 0
             }
         }, {
             src: "img/day-nail2l.png",
-            W: {
+            img: {
                 isLoaded: 0
             }
         }],
         [{
             src: "img/day-laser0.png",
-            W: {
+            img: {
                 isLoaded: 0
             }
         }, {
             src: "img/day-laser1.png",
-            W: {
+            img: {
                 isLoaded: 0
             }
         }, {
             src: "img/day-laser1l.png",
-            W: {
+            img: {
                 isLoaded: 0
             }
         }],
         [{
             src: "img/day-grenade0.png",
-            W: {
+            img: {
                 isLoaded: 0
             }
         }, {
             src: "img/day-grenade1.png",
-            W: {
+            img: {
                 isLoaded: 0
             }
         }, {
             src: "img/day-grenadel.png",
-            W: {
+            img: {
                 isLoaded: 0
             }
         }]
@@ -3849,43 +3854,43 @@ var ENTITIES = [{
     gunEffect: [
         [{
             src: "img/day-gun-effect0.png",
-            W: {
+            img: {
                 isLoaded: 0
             }
         }, {
             src: "img/day-gun-effect1.png",
-            W: {
+            img: {
                 isLoaded: 0
             }
         }, {
             src: "img/day-gun-effect2.png",
-            W: {
+            img: {
                 isLoaded: 0
             }
         }],
         [{
             src: "img/day-laser-effect0.png",
-            W: {
+            img: {
                 isLoaded: 0
             }
         }, {
             src: "img/day-laser-effect1.png",
-            W: {
+            img: {
                 isLoaded: 0
             }
         }, {
             src: "img/day-laser-effect2.png",
-            W: {
+            img: {
                 isLoaded: 0
             }
         }, {
             src: "img/day-laser-effect3.png",
-            W: {
+            img: {
                 isLoaded: 0
             }
         }, {
             src: "img/day-laser-effect4.png",
-            W: {
+            img: {
                 isLoaded: 0
             }
         }]
@@ -3932,7 +3937,7 @@ var ENTITIES = [{
         sound: ["audio/pickaxe-swing.mp3"],
         weapon: {
             src: "img/day-stone-pickaxe.png",
-            W: {
+            img: {
                 isLoaded: 0
             },
             angle: 0,
@@ -3980,7 +3985,7 @@ var ENTITIES = [{
         sound: ["audio/pickaxe-swing.mp3"],
         weapon: {
             src: "img/day-steel-pickaxe.png",
-            W: {
+            img: {
                 isLoaded: 0
             },
             angle: 0,
@@ -4028,7 +4033,7 @@ var ENTITIES = [{
         sound: ["audio/hatchet-swing.mp3"],
         weapon: {
             src: "img/day-hachet.png",
-            W: {
+            img: {
                 isLoaded: 0
             },
             angle: 0,
@@ -4076,7 +4081,7 @@ var ENTITIES = [{
         sound: ["audio/axe-swing.mp3"],
         weapon: {
             src: "img/day-stone-axe.png",
-            W: {
+            img: {
                 isLoaded: 0
             },
             angle: 0,
@@ -4123,7 +4128,7 @@ var ENTITIES = [{
         sound: ["audio/spear-shot.mp3"],
         weapon: {
             src: "img/day-wood-spear.png",
-            W: {
+            img: {
                 isLoaded: 0
             },
             angle: 0,
@@ -4165,7 +4170,7 @@ var ENTITIES = [{
         shot: 1,
         WnVmv: {
             src: "img/day-wood-arrow1.png",
-            W: {
+            img: {
                 isLoaded: 0
             },
             x: 50,
@@ -4177,7 +4182,7 @@ var ENTITIES = [{
         sound: ["audio/bow-shot.mp3"],
         weapon: {
             src: "img/day-wood-bow.png",
-            W: {
+            img: {
                 isLoaded: 0
             },
             angle: 0,
@@ -4233,7 +4238,7 @@ var ENTITIES = [{
         sound: ["audio/shotgun-shot.mp3"],
         weapon: {
             src: "img/day-shotgun.png",
-            W: {
+            img: {
                 isLoaded: 0
             },
             x: 60,
@@ -4288,7 +4293,7 @@ var ENTITIES = [{
         sound: ["audio/9mm-shot.mp3"],
         weapon: {
             src: "img/day-9mm.png",
-            W: {
+            img: {
                 isLoaded: 0
             },
             x: 50,
@@ -4343,7 +4348,7 @@ var ENTITIES = [{
         sound: ["audio/desert-eagle-shot.mp3"],
         weapon: {
             src: "img/day-desert-eagle.png",
-            W: {
+            img: {
                 isLoaded: 0
             },
             x: 50,
@@ -4398,7 +4403,7 @@ var ENTITIES = [{
         sound: ["audio/ak47-shot.mp3"],
         weapon: {
             src: "img/day-AK47.png",
-            W: {
+            img: {
                 isLoaded: 0
             },
             x: 60,
@@ -4453,7 +4458,7 @@ var ENTITIES = [{
         sound: ["audio/sniper-shot.mp3"],
         weapon: {
             src: "img/day-sniper.png",
-            W: {
+            img: {
                 isLoaded: 0
             },
             x: 60,
@@ -4498,7 +4503,7 @@ var ENTITIES = [{
         sound: 1,
         weapon: {
             src: "img/day-hand-raw-steak.png",
-            W: {
+            img: {
                 isLoaded: 0
             },
             angle: 1,
@@ -4538,7 +4543,7 @@ var ENTITIES = [{
         sound: 1,
         weapon: {
             src: "img/day-hand-cooked-steak.png",
-            W: {
+            img: {
                 isLoaded: 0
             },
             angle: 1,
@@ -4578,7 +4583,7 @@ var ENTITIES = [{
         sound: 1,
         weapon: {
             src: "img/day-hand-rotten-steak.png",
-            W: {
+            img: {
                 isLoaded: 0
             },
             angle: 0,
@@ -4618,7 +4623,7 @@ var ENTITIES = [{
         sound: 1,
         weapon: {
             src: "img/day-hand-orange.png",
-            W: {
+            img: {
                 isLoaded: 0
             },
             angle: 0,
@@ -4658,7 +4663,7 @@ var ENTITIES = [{
         sound: 1,
         weapon: {
             src: "img/day-hand-rotten-orange.png",
-            W: {
+            img: {
                 isLoaded: 0
             },
             angle: 0,
@@ -4694,7 +4699,7 @@ var ENTITIES = [{
         shot: 0,
         weapon: {
             src: "img/day-hand-medikit.png",
-            W: {
+            img: {
                 isLoaded: 0
             },
             angle: 0,
@@ -4730,7 +4735,7 @@ var ENTITIES = [{
         shot: 0,
         weapon: {
             src: "img/day-hand-bandage.png",
-            W: {
+            img: {
                 isLoaded: 0
             },
             angle: 0,
@@ -4766,7 +4771,7 @@ var ENTITIES = [{
         shot: 0,
         weapon: {
             src: "img/day-hand-soda.png",
-            W: {
+            img: {
                 isLoaded: 0
             },
             angle: 0,
@@ -4816,7 +4821,7 @@ var ENTITIES = [{
         sound: ["audio/mp5-shot.mp3"],
         weapon: {
             src: "img/day-MP5.png",
-            W: {
+            img: {
                 isLoaded: 0
             },
             x: 60,
@@ -4869,13 +4874,13 @@ var ENTITIES = [{
         malusSpeed: 0,
         blueprint: {
             src: "img/day-hand-craft.png",
-            W: {
+            img: {
                 isLoaded: 0
             }
         },
         pencil: {
             src: "img/day-hand-craftpencil.png",
-            W: {
+            img: {
                 isLoaded: 0
             }
         },
@@ -4891,7 +4896,7 @@ var ENTITIES = [{
         sound: ["audio/pickaxe-swing.mp3"],
         weapon: {
             src: "img/day-sulfur-pickaxe.png",
-            W: {
+            img: {
                 isLoaded: 0
             },
             angle: 0,
@@ -4939,7 +4944,7 @@ var ENTITIES = [{
         sound: ["audio/hammer-swing.mp3"],
         weapon: {
             src: "img/day-hammer.png",
-            W: {
+            img: {
                 isLoaded: 0
             },
             angle: 0,
@@ -4983,7 +4988,7 @@ var ENTITIES = [{
         shot: 0,
         weapon: {
             src: "img/day-repair-hammer.png",
-            W: {
+            img: {
                 isLoaded: 0
             },
             angle: 0,
@@ -5031,7 +5036,7 @@ var ENTITIES = [{
         sound: 1,
         weapon: {
             src: "img/day-hand-tomato-soup.png",
-            W: {
+            img: {
                 isLoaded: 0
             },
             angle: 0,
@@ -5067,7 +5072,7 @@ var ENTITIES = [{
         shot: 0,
         weapon: {
             src: "img/day-hand-radaway.png",
-            W: {
+            img: {
                 isLoaded: 0
             },
             angle: 0,
@@ -5107,7 +5112,7 @@ var ENTITIES = [{
         sound: 1,
         weapon: {
             src: "img/day-hand-tomato.png",
-            W: {
+            img: {
                 isLoaded: 0
             },
             angle: 0,
@@ -5147,7 +5152,7 @@ var ENTITIES = [{
         sound: 1,
         weapon: {
             src: "img/day-hand-rotten-tomato.png",
-            W: {
+            img: {
                 isLoaded: 0
             },
             angle: 0,
@@ -5197,7 +5202,7 @@ var ENTITIES = [{
         sound: ["audio/crossbow-shot.mp3"],
         weapon: {
             src: "img/day-wood-crossbow.png",
-            W: {
+            img: {
                 isLoaded: 0
             },
             x: 50,
@@ -5252,7 +5257,7 @@ var ENTITIES = [{
         sound: ["audio/nail-gun-shot.mp3"],
         weapon: {
             src: "img/day-nail-gun.png",
-            W: {
+            img: {
                 isLoaded: 0
             },
             x: 50,
@@ -5307,7 +5312,7 @@ var ENTITIES = [{
         sound: ["audio/shotgun-shot.mp3"],
         weapon: {
             src: "img/day-sawed-off-shotgun.png",
-            W: {
+            img: {
                 isLoaded: 0
             },
             x: 50,
@@ -5352,7 +5357,7 @@ var ENTITIES = [{
         sound: 1,
         weapon: {
             src: "img/day-hand-chips.png",
-            W: {
+            img: {
                 isLoaded: 0
             },
             angle: 1,
@@ -5392,7 +5397,7 @@ var ENTITIES = [{
         sound: 1,
         weapon: {
             src: "img/day-hand-rotten-chips.png",
-            W: {
+            img: {
                 isLoaded: 0
             },
             angle: 0,
@@ -5442,7 +5447,7 @@ var ENTITIES = [{
         sound: ["audio/laser-pistol-shot.mp3"],
         weapon: {
             src: "img/day-laser-pistol.png",
-            W: {
+            img: {
                 isLoaded: 0
             },
             x: 50,
@@ -5487,7 +5492,7 @@ var ENTITIES = [{
         sound: ["audio/axe-swing.mp3"],
         weapon: {
             src: "img/day-sulfur-axe.png",
-            W: {
+            img: {
                 isLoaded: 0
             },
             angle: 0,
@@ -5530,7 +5535,7 @@ var ENTITIES = [{
         shot: 0,
         weapon: {
             src: "img/day-hand-joystick.png",
-            W: {
+            img: {
                 isLoaded: 0
             },
             angle: 0,
@@ -5580,7 +5585,7 @@ var ENTITIES = [{
         sound: ["audio/laser-submachine-shot.mp3"],
         weapon: {
             src: "img/day-laser-submachine.png",
-            W: {
+            img: {
                 isLoaded: 0
             },
             x: 50,
@@ -5621,7 +5626,7 @@ var ENTITIES = [{
         shot: 1,
         weapon: {
             src: "img/day-hand-grenade.png",
-            W: {
+            img: {
                 isLoaded: 0
             },
             angle: 0,
@@ -5663,7 +5668,7 @@ var ENTITIES = [{
         shot: 0,
         weapon: {
             src: "img/day-super-hammer.png",
-            W: {
+            img: {
                 isLoaded: 0
             },
             angle: 0,
@@ -5707,7 +5712,7 @@ var ENTITIES = [{
         shot: 0,
         weapon: {
             src: "img/day-hand-ghoul-drug.png",
-            W: {
+            img: {
                 isLoaded: 0
             },
             angle: 0,
@@ -5747,7 +5752,7 @@ var ENTITIES = [{
         sound: 1,
         weapon: {
             src: "img/day-hand-mushroom1.png",
-            W: {
+            img: {
                 isLoaded: 0
             },
             angle: 0,
@@ -5787,7 +5792,7 @@ var ENTITIES = [{
         sound: 1,
         weapon: {
             src: "img/day-hand-mushroom2.png",
-            W: {
+            img: {
                 isLoaded: 0
             },
             angle: 0,
@@ -5827,7 +5832,7 @@ var ENTITIES = [{
         sound: 1,
         weapon: {
             src: "img/day-hand-mushroom3.png",
-            W: {
+            img: {
                 isLoaded: 0
             },
             angle: 0,
@@ -5867,7 +5872,7 @@ var ENTITIES = [{
         sound: 1,
         weapon: {
             src: "img/day-hand-rotten-mushroom1.png",
-            W: {
+            img: {
                 isLoaded: 0
             },
             angle: 0,
@@ -5907,7 +5912,7 @@ var ENTITIES = [{
         sound: 1,
         weapon: {
             src: "img/day-hand-rotten-mushroom2.png",
-            W: {
+            img: {
                 isLoaded: 0
             },
             angle: 0,
@@ -5947,7 +5952,7 @@ var ENTITIES = [{
         sound: 1,
         weapon: {
             src: "img/day-hand-rotten-mushroom3.png",
-            W: {
+            img: {
                 isLoaded: 0
             },
             angle: 0,
@@ -5983,7 +5988,7 @@ var ENTITIES = [{
         shot: 0,
         weapon: {
             src: "img/day-hand-lapadoine.png",
-            W: {
+            img: {
                 isLoaded: 0
             },
             angle: 0,
@@ -6023,7 +6028,7 @@ var ENTITIES = [{
         sound: 1,
         weapon: {
             src: "img/day-hand-pumpkin.png",
-            W: {
+            img: {
                 isLoaded: 0
             },
             angle: 0,
@@ -6063,7 +6068,7 @@ var ENTITIES = [{
         sound: 1,
         weapon: {
             src: "img/day-hand-rotten-pumpkin.png",
-            W: {
+            img: {
                 isLoaded: 0
             },
             angle: 0,
@@ -6099,7 +6104,7 @@ var ENTITIES = [{
         shot: 0,
         weapon: {
             src: "img/day-hand-antidote.png",
-            W: {
+            img: {
                 isLoaded: 0
             },
             angle: 0,
@@ -6139,7 +6144,7 @@ var ENTITIES = [{
         sound: 1,
         weapon: {
             src: "img/day-hand-acorn.png",
-            W: {
+            img: {
                 isLoaded: 0
             },
             angle: 0,
@@ -6179,7 +6184,7 @@ var ENTITIES = [{
         sound: 1,
         weapon: {
             src: "img/day-hand-rotten-acorn.png",
-            W: {
+            img: {
                 isLoaded: 0
             },
             angle: 0,
@@ -6229,7 +6234,7 @@ var ENTITIES = [{
         sound: ["audio/laser-sniper-shot.mp3"],
         weapon: {
             src: "img/day-laser-sniper.png",
-            W: {
+            img: {
                 isLoaded: 0
             },
             x: 55,
@@ -6270,7 +6275,7 @@ var ENTITIES = [{
         shot: 0,
         weapon: {
             src: "img/day-hand-christmas-cake.png",
-            W: {
+            img: {
                 isLoaded: 0
             },
             angle: 0,
@@ -6306,7 +6311,7 @@ var ENTITIES = [{
         shot: 0,
         weapon: {
             src: "img/day-hand-rotten-christmas-cake.png",
-            W: {
+            img: {
                 isLoaded: 0
             },
             angle: 0,
@@ -6342,7 +6347,7 @@ var ENTITIES = [{
         shot: 0,
         weapon: {
             src: "img/day-hand-gingerbread-man.png",
-            W: {
+            img: {
                 isLoaded: 0
             },
             angle: 0,
@@ -6378,7 +6383,7 @@ var ENTITIES = [{
         shot: 0,
         weapon: {
             src: "img/day-hand-rotten-gingerbread-man.png",
-            W: {
+            img: {
                 isLoaded: 0
             },
             angle: 0,
@@ -6414,7 +6419,7 @@ var ENTITIES = [{
         shot: 0,
         weapon: {
             src: "img/day-sugar-can.png",
-            W: {
+            img: {
                 isLoaded: 0
             },
             angle: 0,
@@ -6458,7 +6463,7 @@ var ENTITIES = [{
         shot: 0,
         weapon: {
             src: "img/day-hand-sugar-can-bow.png",
-            W: {
+            img: {
                 isLoaded: 0
             },
             angle: 0,
@@ -6694,52 +6699,52 @@ var ENTITIES = [{
     },
     explosions: [{
         src: "img/day-explosion0.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-explosion1.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-explosion2.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-explosion3.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-explosion4.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-explosion5.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-explosion6.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-explosion7.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-explosion8.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-explosion9.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }],
@@ -7788,8 +7793,8 @@ var Loader = (function() {
                 var vvwMM = ENTITIES[__ENTITIE_EXPLOSION__].explosions;
                 var NWvwV = ENTITIES2[__ENTITIE_EXPLOSION__].explosions;
                 for (var i = 0; i < vvwMM.length; i++) {
-                    vvwMM[i].W = CanvasUtils.loadImage(vvwMM[i].src, vvwMM[i].W);
-                    NWvwV[i].W = CanvasUtils.loadImage(NWvwV[i].src, NWvwV[i].W);
+                    vvwMM[i].img = CanvasUtils.loadImage(vvwMM[i].src, vvwMM[i].img);
+                    NWvwV[i].img = CanvasUtils.loadImage(NWvwV[i].src, NWvwV[i].img);
                 }
             }
             MNw -= delta;
@@ -7937,7 +7942,7 @@ var Home = (function() {
     var wMMNm = GUI.createButton(mnMMV[0].wh, mnMMV[0].h2, window.undefined, mnMMV);
     var wvmwM = GUI.createButton(120, 67, WWNWM.button);
     var WnwMN = {
-        W: null
+        img: null
     };
     var VmV;
     var mVwVw;
@@ -8487,9 +8492,9 @@ var Home = (function() {
         mNVWV.draw();
         privateServer.draw();
         vvmMm.draw();
-        if (WnwMN.W === null) {
-            WnwMN.W = GUI.renderText((('0.' + versionInf[0]) + '.') + versionInf[1], "'Viga', sans-serif", "#d6ddde", 24, 400, window.undefined, 16, 25, window.undefined, window.undefined, window.undefined, window.undefined, "#2b3c3e", 8);
-            WnwMN.W.isLoaded = 1;
+        if (WnwMN.img === null) {
+            WnwMN.img = GUI.renderText((('0.' + versionInf[0]) + '.') + versionInf[1], "'Viga', sans-serif", "#d6ddde", 24, 400, window.undefined, 16, 25, window.undefined, window.undefined, window.undefined, window.undefined, "#2b3c3e", 8);
+            WnwMN.img.isLoaded = 1;
         }
         CanvasUtils.drawImageHd(WnwMN, (VmV.pos.x / scaleby) + 484.5, (VmV.pos.y / scaleby) + 124, 0, 0, 0, 1);
         wvmwM.pos.x = WMmmM.pos.x + (27 * scaleby);
@@ -9054,8 +9059,8 @@ var Game = (function() {
         }
         if (NVVNW[World.PLAYER._j] === window.undefined) NVVNW[World.PLAYER._j] = [];
         if (NVVNW[World.PLAYER._j][World.PLAYER._i] === window.undefined) NVVNW[World.PLAYER._j][World.PLAYER._i] = GUI.renderText(((("(" + World.PLAYER._j) + ",") + World.PLAYER._i) + ")", "'Viga', sans-serif", "#FFFFFF", 30, 300, "#000000", 22, 22, window.undefined, window.undefined, 0.4, window.undefined, "#000000", 15.6);
-        var W = NVVNW[World.PLAYER._j][World.PLAYER._i];
-        ctx.drawImage(W, 5 * scaleby, fullscreenimg.pos.y, W.wh * scaleby, W.h2 * scaleby);
+        var img = NVVNW[World.PLAYER._j][World.PLAYER._i];
+        ctx.drawImage(img, 5 * scaleby, fullscreenimg.pos.y, img.wh * scaleby, img.h2 * scaleby);
     };
 
     var NVVNW = [];
@@ -9927,8 +9932,8 @@ var Game = (function() {
                         invtr[drag.id][1] = amount;
                         invtr[drag.id][2] = vmM;
                         invtr[drag.id][3] = wvmvw;
-                        if (IID !== 0) Game.inventory[drag.id].setImages(items[IID].img.src, items[IID].img.W);
-                        Game.inventory[i].setImages(items[invtr[i][0]].img.src, items[invtr[i][0]].img.W);
+                        if (IID !== 0) Game.inventory[drag.id].setImages(items[IID].itemButton.src, items[IID].itemButton.img);
+                        Game.inventory[i].setImages(items[invtr[i][0]].itemButton.src, items[invtr[i][0]].itemButton.img);
                         World.PLAYER.drag.begin = 0;
                         AudioUtils.playFx(AudioUtils._fx.drag, 1, 0);
                         return;
@@ -10498,7 +10503,7 @@ var Score = (function() {
     var NNN = 0;
     var nMwNn = {
         src: "img/adblocker-msg.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     };
@@ -10506,21 +10511,21 @@ var Score = (function() {
     var VwvVv = -1;
     var WwwvV = null;
     var WMwMN = {
-        W: null
+        img: null
     };
     var wNnwN = null;
     var nwWMv = {
-        W: null
+        img: null
     };
     var lastScore = -1;
     var MnvWv = {
-        W: null
+        img: null
     };
     var scoreLabel = null;
     var vvWmM = -1;
     var VMnMw = null;
     var vMMnW = {
-        W: null
+        img: null
     };
 
     function nmNnw() {
@@ -10531,26 +10536,26 @@ var Score = (function() {
         if ((scoreLabel === null) || (lastScore !== World.PLAYER.exp)) {
             lastScore = World.PLAYER.exp;
             scoreLabel = GUI.renderText(lastScore + "", "'Viga', sans-serif", "#FFFFFF", 38, 400, window.undefined, 16, 25, window.undefined, window.undefined, window.undefined, window.undefined, "#000000", 12);
-            MnvWv.W = scoreLabel;
-            MnvWv.W.isLoaded = 1;
+            MnvWv.img = scoreLabel;
+            MnvWv.img.isLoaded = 1;
         }
         CanvasUtils.drawImageHd(MnvWv, wVw + 280, VVm + 117, 0, 0, 0, 1);
         if ((WwwvV === null) || (VwvVv !== World.PLAYER.level)) {
             VwvVv = World.PLAYER.level;
             WwwvV = GUI.renderText(VwvVv + "", "'Viga', sans-serif", "#FFFFFF", 38, 400, window.undefined, 16, 25, window.undefined, window.undefined, window.undefined, window.undefined, "#000000", 12);
             wNnwN = GUI.renderText(window.Math.floor(VwvVv / 2), "'Viga', sans-serif", "#FFFFFF", 38, 400, window.undefined, 16, 25, window.undefined, window.undefined, window.undefined, window.undefined, "#000000", 12);
-            WMwMN.W = WwwvV;
-            WMwMN.W.isLoaded = 1;
-            nwWMv.W = wNnwN;
-            nwWMv.W.isLoaded = 1;
+            WMwMN.img = WwwvV;
+            WMwMN.img.isLoaded = 1;
+            nwWMv.img = wNnwN;
+            nwWMv.img.isLoaded = 1;
         }
         CanvasUtils.drawImageHd(WMwMN, wVw + 108, VVm + 117, 0, 0, 0, 1);
         CanvasUtils.drawImageHd(nwWMv, wVw + 288, VVm + 147, 0, 0, 0, 1);
         if ((VMnMw === null) || (vvWmM !== World.PLAYER.kill)) {
             vvWmM = World.PLAYER.kill;
             VMnMw = GUI.renderText(vvWmM + "", "'Viga', sans-serif", "#FFFFFF", 38, 400, window.undefined, 16, 25, window.undefined, window.undefined, window.undefined, window.undefined, "#000000", 12);
-            vMMnW.W = VMnMw;
-            vMMnW.W.isLoaded = 1;
+            vMMnW.img = VMnMw;
+            vMMnW.img.isLoaded = 1;
         }
         CanvasUtils.drawImageHd(vMMnW, wVw + 453, VVm + 117, 0, 0, 0, 1);
         var inventory = Game.inventory;
@@ -10615,7 +10620,7 @@ var Score = (function() {
         var MWMwV = KIT[window.Math.min(KIT.length - 1, World.PLAYER.level)];
         for (var i = 0; i < MWMwV.length; i++) {
             var IID = MWMwV[i];
-            if (IID.id !== 0) Game.inventory[i].setImages(items[IID.id].img.src, items[IID.id].img.W);
+            if (IID.id !== 0) Game.inventory[i].setImages(items[IID.id].itemButton.src, items[IID.id].itemButton.img);
             var invtr = World.PLAYER.inventory[i];
             invtr[1] = IID.amount;
             invtr[2] = 0;
@@ -10824,17 +10829,17 @@ var Rank = (function() {
     var vWvVM = -1;
     var VmvNV = null;
     var vnvvM = {
-        W: null
+        img: null
     };
     var mvNVM = -1;
     var mmvMV = {
-        W: null
+        img: null
     };
     var NmwnM = null;
     var vvWmM = -1;
     var VMnMw = null;
     var vMMnW = {
-        W: null
+        img: null
     };
 
     function nmNnw() {
@@ -10845,8 +10850,8 @@ var Rank = (function() {
         if ((NmwnM === null) || (mvNVM !== World.playerAlive)) {
             mvNVM = World.playerAlive;
             NmwnM = GUI.renderText("#" + window.Math.max(mvNVM, 1), "'Viga', sans-serif", "#FFFFFF", 60, 140, window.undefined, 16, 25, window.undefined, window.undefined, window.undefined, window.undefined, "#000000", 12);
-            mmvMV.W = NmwnM;
-            mmvMV.W.isLoaded = 1;
+            mmvMV.img = NmwnM;
+            mmvMV.img.isLoaded = 1;
         }
         CanvasUtils.drawImageHd(mmvMV, wVw + 207, VVm + 93, 0, 0, 0, 1);
         if ((VmvNV === null) || (vWvVM !== World.PLAYER.timePlayed)) {
@@ -10855,15 +10860,15 @@ var Rank = (function() {
             var wWvWM = window.Math.floor(vMWwM / 60);
             var NNvMn = vMWwM % 60;
             VmvNV = GUI.renderText((((((wWvWM < 10) ? "0" : "") + wWvWM) + ":") + ((NNvMn < 10) ? "0" : "")) + NNvMn, "'Viga', sans-serif", "#FFFFFF", 38, 400, window.undefined, 16, 25, window.undefined, window.undefined, window.undefined, window.undefined, "#000000", 12);
-            vnvvM.W = VmvNV;
-            vnvvM.W.isLoaded = 1;
+            vnvvM.img = VmvNV;
+            vnvvM.img.isLoaded = 1;
         }
         CanvasUtils.drawImageHd(vnvvM, wVw + 110, VVm + 100, 0, 0, 0, 1);
         if ((VMnMw === null) || (vvWmM !== World.PLAYER.kill)) {
             vvWmM = World.PLAYER.kill;
             VMnMw = GUI.renderText(vvWmM + "", "'Viga', sans-serif", "#FFFFFF", 38, 400, window.undefined, 16, 25, window.undefined, window.undefined, window.undefined, window.undefined, "#000000", 12);
-            vMMnW.W = VMnMw;
-            vMMnW.W.isLoaded = 1;
+            vMMnW.img = VMnMw;
+            vMMnW.img.isLoaded = 1;
         }
         CanvasUtils.drawImageHd(vMMnW, wVw + 309, VVm + 100, 0, 0, 0, 1);
     };
@@ -11386,8 +11391,8 @@ var Editor = (function() {
         }
         if (NVVNW[World.PLAYER._j] === window.undefined) NVVNW[World.PLAYER._j] = [];
         if (NVVNW[World.PLAYER._j][World.PLAYER._i] === window.undefined) NVVNW[World.PLAYER._j][World.PLAYER._i] = GUI.renderText(((("(" + World.PLAYER._j) + ",") + World.PLAYER._i) + ")", "'Viga', sans-serif", "#FFFFFF", 52, 455, "#000000", 22, 22, window.undefined, window.undefined, 0.4, window.undefined, "#000000", 15.6);
-        var W = NVVNW[World.PLAYER._j][World.PLAYER._i];
-        ctx.drawImage(W, 5 * scaleby, zoombutton.pos.y - (42 * scaleby), W.wh * scaleby, W.h2 * scaleby);
+        var img = NVVNW[World.PLAYER._j][World.PLAYER._i];
+        ctx.drawImage(img, 5 * scaleby, zoombutton.pos.y - (42 * scaleby), img.wh * scaleby, img.h2 * scaleby);
     };
 
     function markposition() {
@@ -11400,8 +11405,8 @@ var Editor = (function() {
         }
         if (NVVNW[World.PLAYER._j] === window.undefined) NVVNW[World.PLAYER._j] = [];
         if (NVVNW[World.PLAYER._j][World.PLAYER._i] === window.undefined) NVVNW[World.PLAYER._j][World.PLAYER._i] = GUI.renderText(((("(" + World.PLAYER._j) + ",") + World.PLAYER._i) + ")", "'Viga', sans-serif", "#FFFFFF", 52, 455, "#000000", 22, 22, window.undefined, window.undefined, 0.4, window.undefined, "#000000", 15.6);
-        var W = NVVNW[World.PLAYER._j][World.PLAYER._i];
-        ctx.drawImage(W, 5 * scaleby, zoombutton.pos.y - (42 * scaleby), W.wh * scaleby, W.h2 * scaleby);
+        var img = NVVNW[World.PLAYER._j][World.PLAYER._i];
+        ctx.drawImage(img, 5 * scaleby, zoombutton.pos.y - (42 * scaleby), img.wh * scaleby, img.h2 * scaleby);
     };
     var VWWvn = null;
     var VWWvn = null;
@@ -11471,9 +11476,9 @@ var Editor = (function() {
             var vnvwV = items[IID.__ROAD__].subtype;
             for (var i = 0; i < vnvwV.length; i++) {
                 var IID = vnvwV[i];
-                IID.img = {
+                IID.itemButton = {
                     src: [IID.building.src, "img/useless.png", "img/useless.png"],
-                    W: [{
+                    img: [{
                         isLoaded: 0
                     }, {
                         isLoaded: 0
@@ -11485,9 +11490,9 @@ var Editor = (function() {
             var vnvwV = items[IID.__FURNITURE__].subtype;
             for (var i = 0; i < vnvwV.length; i++) {
                 var IID = vnvwV[i];
-                IID.img = {
+                IID.itemButton = {
                     src: [IID.building.src, "img/useless.png", "img/useless.png"],
-                    W: [{
+                    img: [{
                         isLoaded: 0
                     }, {
                         isLoaded: 0
@@ -11774,7 +11779,7 @@ var Editor = (function() {
             for (var i = 1; i < items.length; i++) {
                 var IID = items[i];
                 if (IID.behavior === BEHAVIOR.__LOGIC__) {
-                    Wnw[NWw].setImages(IID.img.src, IID.img.W);
+                    Wnw[NWw].setImages(IID.itemButton.src, IID.itemButton.img);
                     Wnw[NWw].vmM = IID.id;
                     NWw++;
                 }
@@ -11787,7 +11792,7 @@ var Editor = (function() {
             for (var i = 1; i < items.length; i++) {
                 var IID = items[i];
                 if ((((IID.id === IID.__LANDMINE__) || (IID.id === IID.__C4__)) || (IID.id === IID.__WOOD__espike)) || (IID.id === IID.__DYNAMITE__)) {
-                    Wnw[NWw].setImages(IID.img.src, IID.img.W);
+                    Wnw[NWw].setImages(IID.itemButton.src, IID.itemButton.img);
                     Wnw[NWw].vmM = IID.id;
                     NWw++;
                 }
@@ -11800,7 +11805,7 @@ var Editor = (function() {
             var vnvwV = items[IID.__ROAD__].subtype;
             for (var i = 0; i < vnvwV.length; i++) {
                 var IID = vnvwV[i];
-                Wnw[NWw].setImages(IID.img.src, IID.img.W);
+                Wnw[NWw].setImages(IID.itemButton.src, IID.itemButton.img);
                 Wnw[NWw].vmM = IID.__ROAD__;
                 Wnw[NWw].nVWnM = i;
                 NWw++;
@@ -11813,7 +11818,7 @@ var Editor = (function() {
             var vnvwV = items[IID.__FURNITURE__].subtype;
             for (var i = 0; i < vnvwV.length; i++) {
                 var IID = vnvwV[i];
-                Wnw[NWw].setImages(IID.img.src, IID.img.W);
+                Wnw[NWw].setImages(IID.itemButton.src, IID.itemButton.img);
                 Wnw[NWw].vmM = IID.__FURNITURE__;
                 Wnw[NWw].nVWnM = i;
                 NWw++;
@@ -11826,7 +11831,7 @@ var Editor = (function() {
             for (var i = 1; i < items.length; i++) {
                 var IID = items[i];
                 if (((((IID.wall === 1) || (IID.lowWall === 1)) || (IID.door === 1)) || (IID.__CHEST__ === 1)) || (IID.__FRIDGE__ === 1)) {
-                    Wnw[NWw].setImages(IID.img.src, IID.img.W);
+                    Wnw[NWw].setImages(IID.itemButton.src, IID.itemButton.img);
                     Wnw[NWw].vmM = IID.id;
                     NWw++;
                 }
@@ -12311,7 +12316,7 @@ wMM.VWVNW = __COUNTER__++;
 var NVwvn = [{}, {
     id: wMM.MMvVn,
     src: "img/road-T0B0L0R1.png",
-    W: {
+    img: {
         isLoaded: 0
     },
     minimap: {
@@ -12330,7 +12335,7 @@ var NVwvn = [{}, {
 }, {
     id: wMM.vwWVn,
     src: "img/road-T0B0L1R0.png",
-    W: {
+    img: {
         isLoaded: 0
     },
     minimap: {
@@ -12349,7 +12354,7 @@ var NVwvn = [{}, {
 }, {
     id: wMM.VWwWM,
     src: "img/road-T0B0L1R1.png",
-    W: {
+    img: {
         isLoaded: 0
     },
     minimap: {
@@ -12368,7 +12373,7 @@ var NVwvn = [{}, {
 }, {
     id: wMM.Vwmwn,
     src: "img/road-T0B1L0R0.png",
-    W: {
+    img: {
         isLoaded: 0
     },
     minimap: {
@@ -12387,7 +12392,7 @@ var NVwvn = [{}, {
 }, {
     id: wMM.wNWmV,
     src: "img/road-T0B1L0R1.png",
-    W: {
+    img: {
         isLoaded: 0
     },
     minimap: {
@@ -12405,7 +12410,7 @@ var NVwvn = [{}, {
 }, {
     id: wMM.vnvMn,
     src: "img/road-T0B1L1R0.png",
-    W: {
+    img: {
         isLoaded: 0
     },
     minimap: {
@@ -12423,7 +12428,7 @@ var NVwvn = [{}, {
 }, {
     id: wMM.MwwMM,
     src: "img/road-T0B1L1R1.png",
-    W: {
+    img: {
         isLoaded: 0
     },
     minimap: {
@@ -12441,7 +12446,7 @@ var NVwvn = [{}, {
 }, {
     id: wMM.wvMWm,
     src: "img/road-T1B0L0R0.png",
-    W: {
+    img: {
         isLoaded: 0
     },
     minimap: {
@@ -12459,7 +12464,7 @@ var NVwvn = [{}, {
 }, {
     id: wMM.NWnVN,
     src: "img/road-T1B0L0R1.png",
-    W: {
+    img: {
         isLoaded: 0
     },
     minimap: {
@@ -12477,7 +12482,7 @@ var NVwvn = [{}, {
 }, {
     id: wMM.vWWNm,
     src: "img/road-T1B0L1R0.png",
-    W: {
+    img: {
         isLoaded: 0
     },
     minimap: {
@@ -12495,7 +12500,7 @@ var NVwvn = [{}, {
 }, {
     id: wMM.VnWMW,
     src: "img/road-T1B0L1R1.png",
-    W: {
+    img: {
         isLoaded: 0
     },
     minimap: {
@@ -12513,7 +12518,7 @@ var NVwvn = [{}, {
 }, {
     id: wMM.nmWVN,
     src: "img/road-T1B1L0R0.png",
-    W: {
+    img: {
         isLoaded: 0
     },
     minimap: {
@@ -12531,7 +12536,7 @@ var NVwvn = [{}, {
 }, {
     id: wMM.MvVmM,
     src: "img/road-T1B1L0R1.png",
-    W: {
+    img: {
         isLoaded: 0
     },
     minimap: {
@@ -12549,7 +12554,7 @@ var NVwvn = [{}, {
 }, {
     id: wMM.WmvMn,
     src: "img/road-T1B1L1R0.png",
-    W: {
+    img: {
         isLoaded: 0
     },
     minimap: {
@@ -12567,7 +12572,7 @@ var NVwvn = [{}, {
 }, {
     id: wMM.VWVNW,
     src: "img/road-T1B1L1R1.png",
-    W: {
+    img: {
         isLoaded: 0
     },
     minimap: {
@@ -12830,7 +12835,7 @@ try {
             move: 0,
             effect: 0,
             src: arrowcraft,
-            W: {
+            img: {
                 isLoaded: 0
             }
         };
@@ -12838,39 +12843,39 @@ try {
             move: 0,
             effect: 0,
             src: unlockskill,
-            W: {
+            img: {
                 isLoaded: 0
             }
         };
         var timeleft = {
             src: timebox,
-            W: {
+            img: {
                 isLoaded: 0
             }
         };
         var WvWnV = {
             src: rankbox,
-            W: {
+            img: {
                 isLoaded: 0
             }
         };
         var WWmMW = {
             src: toxicalert,
-            W: {
+            img: {
                 isLoaded: 0
             }
         };
         var MvvNN = 0;
         var VmWNN = {
             src: radalert,
-            W: {
+            img: {
                 isLoaded: 0
             }
         };
         var WNmVW = 0;
         var econtainericon = {
             src: "img/e-furniture.png",
-            W: {
+            img: {
                 isLoaded: 0
             }
         };
@@ -12912,20 +12917,20 @@ try {
         };
         var vvNWN = {
             src: strokebonus,
-            W: {
+            img: {
                 isLoaded: 0
             }
         };
         var VnwNw = 0;
         var wrongTool = {
             src: wrongtool,
-            W: {
+            img: {
                 isLoaded: 0
             }
         };
         var vwnWv = {
             src: handtool,
-            W: {
+            img: {
                 isLoaded: 0
             }
         };
@@ -12947,13 +12952,13 @@ try {
         }
         var arrowiconmap2 = {
             src: maparrowicon,
-            W: {
+            img: {
                 isLoaded: 0
             }
         };
         var arrowiconmap = {
             src: maparrowicon2,
-            W: {
+            img: {
                 isLoaded: 0
             }
         };
@@ -12962,67 +12967,67 @@ try {
         };
         var houseiconmap = {
             src: houseicon,
-            W: {
+            img: {
                 isLoaded: 0
             }
         };
         var cityiconmap = {
             src: cityicon,
-            W: {
+            img: {
                 isLoaded: 0
             }
         };
         var WmVNn = {
             src: nightclock,
-            W: {
+            img: {
                 isLoaded: 0
             }
         };
         var nvvVW = {
             src: dayclock,
-            W: {
+            img: {
                 isLoaded: 0
             }
         };
         var nMmvV = {
             src: clockhand,
-            W: {
+            img: {
                 isLoaded: 0
             }
         };
         var VWmVV = {
             src: dayclockhand,
-            W: {
+            img: {
                 isLoaded: 0
             }
         };
         var wmmvv = {
             src: clockhandrad,
-            W: {
+            img: {
                 isLoaded: 0
             }
         };
         var MnNnW = {
             src: serverfull,
-            W: {
+            img: {
                 isLoaded: 0
             }
         };
         var VVvnW = {
             src: serverold,
-            W: {
+            img: {
                 isLoaded: 0
             }
         };
         var WWwmW = {
             src: clientold,
-            W: {
+            img: {
                 isLoaded: 0
             }
         };
         var nWvvv = {
             src: serverwrong,
-            W: {
+            img: {
                 isLoaded: 0
             }
         };
@@ -13041,7 +13046,7 @@ try {
         canvasZ.wh = canvasZ.width / 2;
         canvasZ.h2 = canvasZ.height / 2;
         var MWNMV = {
-            W: canvasZ
+            img: canvasZ
         };
         var canvasD = window.document.createElement('canvas');
         var context2dD = canvasD.getContext('2d');
@@ -13051,7 +13056,7 @@ try {
         canvasD.wh = canvasZ.width / 2;
         canvasD.h2 = canvasZ.height / 2;
         var MMvWn = {
-            W: canvasD
+            img: canvasD
         };
         var mWWwn = 0;
 
@@ -13439,9 +13444,9 @@ try {
             if (amount > 1) {
                 if (inventoryItemNumber[amount] === window.undefined) {
                     inventoryItemNumber[amount] = {
-                        W: GUI.renderText("x" + amount, "'Black Han Sans', sans-serif", "#ffffff", 30, 250, window.undefined, 15, 12, window.undefined, window.undefined, window.undefined, window.undefined, "#000000", 12)
+                        img: GUI.renderText("x" + amount, "'Black Han Sans', sans-serif", "#ffffff", 30, 250, window.undefined, 15, 12, window.undefined, window.undefined, window.undefined, window.undefined, "#000000", 12)
                     };
-                    inventoryItemNumber[amount].W.isLoaded = 1;
+                    inventoryItemNumber[amount].img.isLoaded = 1;
                 }
                 CanvasUtils.drawImageHd(inventoryItemNumber[amount], (WX / scaleby) + 53, (WY / scaleby) + 55, -0.5, 0, 0, 1);
             }
@@ -13449,18 +13454,18 @@ try {
                 var amount = invtr[3];
                 if (inventoryAmmoNumber[amount] === window.undefined) {
                     inventoryAmmoNumber[amount] = {
-                        W: GUI.renderText("x" + amount, "'Black Han Sans', sans-serif", "#FFFF00", 30, 250, window.undefined, 15, 12, window.undefined, window.undefined, window.undefined, window.undefined, "#000000", 12)
+                        img: GUI.renderText("x" + amount, "'Black Han Sans', sans-serif", "#FFFF00", 30, 250, window.undefined, 15, 12, window.undefined, window.undefined, window.undefined, window.undefined, "#000000", 12)
                     };
-                    inventoryAmmoNumber[amount].W.isLoaded = 1;
+                    inventoryAmmoNumber[amount].img.isLoaded = 1;
                 }
                 CanvasUtils.drawImageHd(inventoryAmmoNumber[amount], (WX / scaleby) + 53, (WY / scaleby) + 55, -0.5, 0, 0, 1);
             }
             if (IID.perish !== window.undefined) {
                 var VWNwv = window.Math.floor(invtr[3] / 12.8);
-                var W = wwvmV[VWNwv];
-                if (W.isLoaded !== 1) {
-                    wwvmV[VWNwv] = CanvasUtils.loadImage(("img/rotten" + VWNwv) + ".png", W);
-                } else ctx.drawImage(W, WX + (0.5 * scaleby), WY, (scaleby * W.width) / 2, (scaleby * W.height) / 2);
+                var img = wwvmV[VWNwv];
+                if (img.isLoaded !== 1) {
+                    wwvmV[VWNwv] = CanvasUtils.loadImage(("img/rotten" + VWNwv) + ".png", img);
+                } else ctx.drawImage(img, WX + (0.5 * scaleby), WY, (scaleby * img.width) / 2, (scaleby * img.height) / 2);
             }
         };
 
@@ -13526,11 +13531,11 @@ try {
             if (((drag.begin === 1) && (Mouse.state === Mouse.__MOUSE_DOWN__)) && (Math2d.dist(drag.x, drag.y, Mouse.x, Mouse.y) > (4 * scaleby))) {
                 var IID = invtr[drag.id][0];
                 if (IID > 0) {
-                    var W = items[IID].img.W[0];
-                    if (W.isLoaded === 0) W = INVENTORY2[IID].img.W[0];
+                    var img = items[IID].itemButton.img[0];
+                    if (img.isLoaded === 0) img = INVENTORY2[IID].itemButton.img[0];
                     ctx.globalAlpha = 0.7;
                     var SY = 68 * scaleby;
-                    ctx.drawImage(W, (Mouse.x * scaleby) - (SY / 2), (Mouse.y * scaleby) - (SY / 2), SY, SY);
+                    ctx.drawImage(img, (Mouse.x * scaleby) - (SY / 2), (Mouse.y * scaleby) - (SY / 2), SY, SY);
                     ctx.globalAlpha = 1;
                 }
             } else if ((MmV !== -1) && (invtr[MmV][0] !== 0)) {
@@ -13544,9 +13549,9 @@ try {
             var level = World.PLAYER.level;
             if (NmWnM[level] === window.undefined) {
                 NmWnM[level] = {
-                    W: GUI.renderText("" + level, "'Black Han Sans', sans-serif", "#ffffff", 44, 250, window.undefined, 18, 15, window.undefined, window.undefined, window.undefined, window.undefined, "#000000", 15)
+                    img: GUI.renderText("" + level, "'Black Han Sans', sans-serif", "#ffffff", 44, 250, window.undefined, 18, 15, window.undefined, window.undefined, window.undefined, window.undefined, "#000000", 15)
                 };
-                NmWnM[level].W.isLoaded = 1;
+                NmWnM[level].img.isLoaded = 1;
             }
             CanvasUtils.drawImageHd(NmWnM[level], (WX / scaleby) + 234, (WY / scaleby) + 79, 0, 0, 0, 1);
             var rad = World.gauges.rad;
@@ -13571,7 +13576,7 @@ try {
             var vW = xp.current / xp._max;
             CanvasUtils.fillRect(ctx, (WX / scaleby) + 226, (WY / scaleby) + 172, 16, -vW * 77, white);
             var wVnVV = World.updateHour();
-            var W;
+            var img;
             var wnvmV;
             if (wVnVV >= 10000000) {
                 if (WmVNn.isLoaded !== 1) {
@@ -13579,19 +13584,19 @@ try {
                     return;
                 }
                 wVnVV -= 10000000;
-                W = WmVNn;
+                img = WmVNn;
                 wnvmV = nMmvV;
             } else {
                 if (nvvVW.isLoaded !== 1) {
                     nvvVW = CanvasUtils.loadImage(dayclock, nvvVW);
                     return;
                 }
-                W = nvvVW;
+                img = nvvVW;
                 wnvmV = VWmVV;
             }
-            var SY = (scaleby * W.width) / 2;
-            var SX = (scaleby * W.height) / 2;
-            ctx.drawImage(W, WX + (100 * scaleby), WY + (14 * scaleby), SY, SX);
+            var SY = (scaleby * img.width) / 2;
+            var SX = (scaleby * img.height) / 2;
+            ctx.drawImage(img, WX + (100 * scaleby), WY + (14 * scaleby), SY, SX);
             CanvasUtils.drawImageHd(wnvmV, 144.5 + (WX / scaleby), (WY / scaleby) + 56, wVnVV * mWvNn, 0, 0, 1);
         };
 
@@ -13619,13 +13624,13 @@ try {
                     }
                     if ((PLAYER.leaderboardLabel.width !== 0) && (PLAYER.leaderboardLabel.height !== 0)) context2dF.drawImage(PLAYER.leaderboardLabel, 90, 114 + (i * 50), PLAYER.leaderboardLabel.width, PLAYER.leaderboardLabel.height);
                     context2dF.drawImage(PLAYER.scoreLabel, 484, 114 + (i * 50), PLAYER.scoreLabel.width, PLAYER.scoreLabel.height);
-                    var W = KARMA[PLAYER.KARMA].W;
-                    if (W.isLoaded === 1) context2dF.drawImage(W, 612, 114 + (i * 50), W.width, W.height);
+                    var img = KARMA[PLAYER.KARMA].img;
+                    if (img.isLoaded === 1) context2dF.drawImage(img, 612, 114 + (i * 50), img.width, img.height);
                 }
                 World.PLAYER.inLeaderboard = nWnWm;
                 if (nWnWm === 1) {
-                    var W = KARMA[World.PLAYER.KARMA].W;
-                    if (W.isLoaded === 1) context2dF.drawImage(W, 375, 645, W.width * 1.5, W.height * 1.5);
+                    var img = KARMA[World.PLAYER.KARMA].img;
+                    if (img.isLoaded === 1) context2dF.drawImage(img, 375, 645, img.width * 1.5, img.height * 1.5);
                 }
             }
             var score = World.PLAYER.exp;
@@ -13715,10 +13720,10 @@ try {
                 if (Home.alertDelay > 2500) ctx.globalAlpha = MathUtils.Ease.inOutQuad((3000 - Home.alertDelay) / 500);
                 else if (Home.alertDelay > 500) ctx.globalAlpha = 1;
                 else ctx.globalAlpha = MathUtils.Ease.inOutQuad(Home.alertDelay / 500);
-                if (Home.alertId === 0) CanvasUtils.drawImageHd(WWwmW, canw2ns, WWwmW.W.h2 / 2, 0, 0, 0, 1);
-                else if (Home.alertId === 1) CanvasUtils.drawImageHd(VVvnW, canw2ns, VVvnW.W.h2 / 2, 0, 0, 0, 1);
-                else if (Home.alertId === 2) CanvasUtils.drawImageHd(MnNnW, canw2ns, MnNnW.W.h2 / 2, 0, 0, 0, 1);
-                else if (Home.alertId === 3) CanvasUtils.drawImageHd(nWvvv, canw2ns, nWvvv.W.h2 / 2, 0, 0, 0, 1);
+                if (Home.alertId === 0) CanvasUtils.drawImageHd(WWwmW, canw2ns, WWwmW.img.h2 / 2, 0, 0, 0, 1);
+                else if (Home.alertId === 1) CanvasUtils.drawImageHd(VVvnW, canw2ns, VVvnW.img.h2 / 2, 0, 0, 0, 1);
+                else if (Home.alertId === 2) CanvasUtils.drawImageHd(MnNnW, canw2ns, MnNnW.img.h2 / 2, 0, 0, 0, 1);
+                else if (Home.alertId === 3) CanvasUtils.drawImageHd(nWvvv, canw2ns, nWvvv.img.h2 / 2, 0, 0, 0, 1);
                 ctx.globalAlpha = 1;
                 Home.alertDelay -= delta;
             }
@@ -13763,9 +13768,9 @@ try {
                     var wWvWM = window.Math.floor(nnW / 60);
                     var NNvMn = nnW % 60;
                     wVVVn[nnW] = {
-                        W: GUI.renderText((((((wWvWM < 10) ? "0" : "") + wWvWM) + ":") + ((NNvMn < 10) ? "0" : "")) + NNvMn, "'Viga', sans-serif", "#FF0000", 38, 100, window.undefined, 16, 25, window.undefined, window.undefined, window.undefined, window.undefined, "#000000", 12)
+                        img: GUI.renderText((((((wWvWM < 10) ? "0" : "") + wWvWM) + ":") + ((NNvMn < 10) ? "0" : "")) + NNvMn, "'Viga', sans-serif", "#FF0000", 38, 100, window.undefined, 16, 25, window.undefined, window.undefined, window.undefined, window.undefined, "#000000", 12)
                     };
-                    wVVVn[nnW].W.isLoaded = 1;
+                    wVVVn[nnW].img.isLoaded = 1;
                 }
                 CanvasUtils.drawImageHd(wVVVn[nnW], (WX / scaleby) + 60, (WY / scaleby) + 145, 0, 0, 0, 1);
             }
@@ -13775,9 +13780,9 @@ try {
             CanvasUtils.drawImageHd(WvWnV, ((WX / scaleby) + canwns) - 63, 25 + (WY / scaleby), 0, 0, 0, 1);
             if (playerAlive[World.playerAlive] === window.undefined) {
                 playerAlive[World.playerAlive] = {
-                    W: GUI.renderText("#" + World.playerAlive, "'Viga', sans-serif", "#FFFFFF", 60, 140)
+                    img: GUI.renderText("#" + World.playerAlive, "'Viga', sans-serif", "#FFFFFF", 60, 140)
                 };
-                playerAlive[World.playerAlive].W.isLoaded = 1;
+                playerAlive[World.playerAlive].img.isLoaded = 1;
             }
             CanvasUtils.drawImageHd(playerAlive[World.playerAlive], ((WX / scaleby) + canwns) - 50, 25 + (WY / scaleby), 0, 0, 0, 1);
         };
@@ -13815,10 +13820,10 @@ try {
                     CanvasUtils.drawImageHd(WWmMW, canw2ns, 58, 0, 0, 0, 1);
                     ctx.globalAlpha = 1;
                 }
-                ctx.drawImage(MWNMV.W, sx / 2, sy / 2, WWn, WWn, WX, WY, SY, SY);
+                ctx.drawImage(MWNMV.img, sx / 2, sy / 2, WWn, WWn, WX, WY, SY, SY);
                 ctx.globalAlpha = (mWWwn > 600) ? MathUtils.Ease.inOutQuad((1200 - mWWwn) / 600) : MathUtils.Ease.inOutQuad(mWWwn / 600);
                 mWWwn = (mWWwn + delta) % 1200;
-                ctx.drawImage(MMvWn.W, sx / 2, sy / 2, WWn, WWn, WX, WY, SY, SY);
+                ctx.drawImage(MMvWn.img, sx / 2, sy / 2, WWn, WWn, WX, WY, SY, SY);
                 ctx.globalAlpha = 1;
                 vmnWW(0, WY);
                 timeleftfunc(WX, WY, 0);
@@ -14267,9 +14272,9 @@ try {
                     }
                     if (inventoryAmmoNumber[amount] === window.undefined) {
                         inventoryAmmoNumber[amount] = {
-                            W: GUI.renderText("x" + amount, "'Black Han Sans', sans-serif", "#FFFF00", 30, 250, window.undefined, 15, 12, window.undefined, window.undefined, window.undefined, window.undefined, "#000000", 12)
+                            img: GUI.renderText("x" + amount, "'Black Han Sans', sans-serif", "#FFFF00", 30, 250, window.undefined, 15, 12, window.undefined, window.undefined, window.undefined, window.undefined, "#000000", 12)
                         };
-                        inventoryAmmoNumber[amount].W.isLoaded = 1;
+                        inventoryAmmoNumber[amount].img.isLoaded = 1;
                     }
                     CanvasUtils.drawImageHd(inventoryAmmoNumber[amount], (wm.pos.x / scaleby) + 42, (wm.pos.y / scaleby) + 42, -0.5, 0, 0, 0.9);
                 }
@@ -14349,9 +14354,9 @@ try {
                 var amount = window.Math.abs(recipeAvailable[i]);
                 if (inventoryItemNumber[amount] === window.undefined) {
                     inventoryItemNumber[amount] = {
-                        W: GUI.renderText("x" + amount, "'Black Han Sans', sans-serif", "#ffffff", 30, 250, window.undefined, 15, 12, window.undefined, window.undefined, window.undefined, window.undefined, "#000000", 12)
+                        img: GUI.renderText("x" + amount, "'Black Han Sans', sans-serif", "#ffffff", 30, 250, window.undefined, 15, 12, window.undefined, window.undefined, window.undefined, window.undefined, "#000000", 12)
                     };
-                    inventoryItemNumber[amount].W.isLoaded = 1;
+                    inventoryItemNumber[amount].img.isLoaded = 1;
                 }
                 if (recipeAvailable[i] < 0) {
                     ctx.globalAlpha = 0.45;
@@ -14449,8 +14454,8 @@ try {
                         else if (effect > 4.75) ctx.globalAlpha = window.Math.max((5 - effect) * 5, 0);
                         else ctx.globalAlpha = 1;
                         var WY = 118;
-                        var W = PLAYER.label[i];
-                        ctx.drawImage(W, 0, 0, W.width, W.height, ((vertst + player.x) - (W.width / 4)) * scaleby, (((horist + player.y) - WY) - PLAYER.textMove[i]) * scaleby, (W.width / 2) * scaleby, (W.height / 2) * scaleby);
+                        var img = PLAYER.label[i];
+                        ctx.drawImage(img, 0, 0, img.width, img.height, ((vertst + player.x) - (img.width / 4)) * scaleby, (((horist + player.y) - WY) - PLAYER.textMove[i]) * scaleby, (img.width / 2) * scaleby, (img.height / 2) * scaleby);
                         ctx.globalAlpha = 1;
                     }
                 }
@@ -14469,9 +14474,9 @@ try {
             var PLAYER = World.players[player.pid];
             if (((((player.extra & 255) === 16) && (World.PLAYER.admin !== 1)) && (player.pid !== World.PLAYER.id)) && (((PLAYER.team === -1) || (World.teams[PLAYER.team].uid !== PLAYER.teamUid)) || (World.PLAYER.team !== PLAYER.team))) return;
             if (PLAYER.nicknameLabel === null) PLAYER.nicknameLabel = GUI.renderText(PLAYER.nickname, "'Viga', sans-serif", "#FFFFFF", 38, 400, window.undefined, 16, 25, window.undefined, window.undefined, window.undefined, window.undefined, "#000000", 12);
-            var W = PLAYER.nicknameLabel;
+            var img = PLAYER.nicknameLabel;
             var WY = 90;
-            if (PLAYER.team === -1) ctx.drawImage(W, ((vertst + player.x) - (W.wh / 2)) * scaleby, ((horist + player.y) - WY) * scaleby, W.wh * scaleby, W.h2 * scaleby);
+            if (PLAYER.team === -1) ctx.drawImage(img, ((vertst + player.x) - (img.wh / 2)) * scaleby, ((horist + player.y) - WY) * scaleby, img.wh * scaleby, img.h2 * scaleby);
             else if (PLAYER.team !== -1) {
                 var team = World.teams[PLAYER.team];
                 if (team.uid === PLAYER.teamUid) {
@@ -14481,8 +14486,8 @@ try {
                         team.WWMWm = GUI.renderText(("[" + team.name) + "]", "'Viga', sans-serif", "#000000", 38, 400, window.undefined, 16, 25, window.undefined, window.undefined, window.undefined, window.undefined, "#83F6A4", 12); //#699CBB
                     } else team.WWMWm = GUI.renderText(("[" + team.name) + "]", "'Viga', sans-serif", "#FFFFFF", 38, 400, window.undefined, 16, 25, window.undefined, window.undefined, window.undefined, window.undefined, "#000000", 12); //#699CBB
                     var wvMMv = team.WWMWm;
-                    ctx.drawImage(wvMMv, ((((vertst + player.x) - (W.wh / 2)) - (wvMMv.wh / 2)) - 0.5) * scaleby, ((horist + player.y) - WY) * scaleby, wvMMv.wh * scaleby, wvMMv.h2 * scaleby);
-                    if ((W.width !== 0) && (W.height !== 0)) ctx.drawImage(W, (((vertst + player.x) - (W.wh / 2)) + (wvMMv.wh / 2)) * scaleby, ((horist + player.y) - WY) * scaleby, W.wh * scaleby, W.h2 * scaleby);
+                    ctx.drawImage(wvMMv, ((((vertst + player.x) - (img.wh / 2)) - (wvMMv.wh / 2)) - 0.5) * scaleby, ((horist + player.y) - WY) * scaleby, wvMMv.wh * scaleby, wvMMv.h2 * scaleby);
+                    if ((img.width !== 0) && (img.height !== 0)) ctx.drawImage(img, (((vertst + player.x) - (img.wh / 2)) + (wvMMv.wh / 2)) * scaleby, ((horist + player.y) - WY) * scaleby, img.wh * scaleby, img.h2 * scaleby);
                 } else PLAYER.team = -1;
             }
         };
@@ -14491,9 +14496,9 @@ try {
 
         function vmNmW(NMn, i, j, wVNVN, vWMwn, NVWwM, MWMvm) {
             var building = NVwvn[NMn.type];
-            var W = building.W;
-            if (W.isLoaded !== 1) {
-                building.W = CanvasUtils.loadImage(building.src, building.W);
+            var img = building.img;
+            if (img.isLoaded !== 1) {
+                building.img = CanvasUtils.loadImage(building.src, building.img);
                 return;
             }
             var nVNNn = NVWwM - NMn.i;
@@ -14523,17 +14528,17 @@ try {
                 WY = (((NMn.i + nVNNn) * __TILE_SIZE__) + horist) * scaleby;
                 nVNNn *= 32;
                 VwMWn *= 32;
-                SX = (W.height - (nMNww * 32)) + nVNNn;
-                SY = (W.width - (WvMwV * 32)) + VwMWn;
+                SX = (img.height - (nMNww * 32)) + nVNNn;
+                SY = (img.width - (WvMwV * 32)) + VwMWn;
             } else {
                 WX = (((NMn.j + VwMWn) * __TILE_SIZE__) + vertst) * scaleby;
                 WY = (((NMn.i + nVNNn) * __TILE_SIZE__) + horist) * scaleby;
                 nVNNn *= 32;
                 VwMWn *= 32;
-                SX = W.height - nVNNn;
-                SY = W.width - VwMWn;
+                SX = img.height - nVNNn;
+                SY = img.width - VwMWn;
             }
-            ctx.drawImage(W, VwMWn, nVNNn, SY, SX, WX, WY, (SY * 3) * scaleby, (SX * 3) * scaleby);
+            ctx.drawImage(img, VwMWn, nVNNn, SY, SX, WX, WY, (SY * 3) * scaleby, (SX * 3) * scaleby);
         };
 
         function wNnvM() {
@@ -14680,9 +14685,9 @@ try {
                     PLAYER.notificationLevel.shift();
                     PLAYER.notification.shift();
                 }
-                var W = wVMNN[vV][level];
-                if (W.isLoaded !== 1) {
-                    wVMNN[vV][level] = CanvasUtils.loadImage((((NVvVm + vV) + "_") + level) + ".png", W);
+                var img = wVMNN[vV][level];
+                if (img.isLoaded !== 1) {
+                    wVMNN[vV][level] = CanvasUtils.loadImage((((NVvVm + vV) + "_") + level) + ".png", img);
                     return;
                 }
                 var move = 0;
@@ -14695,7 +14700,7 @@ try {
                     ctx.globalAlpha = mwVvV;
                     move = 40 * (mwVvV - 1);
                 }
-                ctx.drawImage(W, ((vertst + player.x) - 120) * scaleby, ((horist + player.y) + (move - 45)) * scaleby, (W.width * scaleby) / 2, (W.height * scaleby) / 2);
+                ctx.drawImage(img, ((vertst + player.x) - 120) * scaleby, ((horist + player.y) + (move - 45)) * scaleby, (img.width * scaleby) / 2, (img.height * scaleby) / 2);
                 ctx.globalAlpha = 1;
             }
         };
@@ -14710,9 +14715,9 @@ try {
                 }
                 if ((player.speed > ENTITIES[__ENTITIE_PLAYER__].speed) || (effect.delay > 0)) {
                     var mVn = ENTITIES[__ENTITIE_PLAYER__].runEffect;
-                    var W = mVn.W;
-                    if (W.isLoaded !== 1) {
-                        mVn.W = CanvasUtils.loadImage(mVn.src, mVn.W);
+                    var img = mVn.img;
+                    if (img.isLoaded !== 1) {
+                        mVn.img = CanvasUtils.loadImage(mVn.src, mVn.img);
                         return;
                     }
                     if (effect.delay <= 0) {
@@ -14723,13 +14728,13 @@ try {
                         effect.size = 1 + (window.Math.random() * 0.8);
                     } else effect.delay -= delta;
                     var vW = MathUtils.Ease.outQuart(window.Math.max(0, effect.delay / 750));
-                    var VwW = (((scaleby * (effect.size + 1)) * vW) * W.width) / 7;
+                    var VwW = (((scaleby * (effect.size + 1)) * vW) * img.width) / 7;
                     var wh = -VwW / 2;
                     ctx.save();
                     ctx.translate((vertst + effect.x) * scaleby, (horist + effect.y) * scaleby);
                     ctx.rotate(effect.angle);
                     ctx.globalAlpha = window.Math.max(0, vW * vW);
-                    ctx.drawImage(W, wh, wh, VwW, VwW);
+                    ctx.drawImage(img, wh, wh, VwW, VwW);
                     ctx.restore();
                 }
             }
@@ -15617,15 +15622,15 @@ try {
                     ctx.globalAlpha = 1;
                     break;
                 case 2:
-                    var W = World.PLAYER.eInteract.W;
-                    if (W.isLoaded !== 1) {
-                        if (isTouchScreen === 0) World.PLAYER.eInteract.W = CanvasUtils.loadImage(World.PLAYER.eInteract.src, W);
-                        else World.PLAYER.eInteract.W = CanvasUtils.loadImage(World.PLAYER.eInteract.src.replace("e-", "e-isTouchScreen-"), W);
+                    var img = World.PLAYER.eInteract.img;
+                    if (img.isLoaded !== 1) {
+                        if (isTouchScreen === 0) World.PLAYER.eInteract.img = CanvasUtils.loadImage(World.PLAYER.eInteract.src, img);
+                        else World.PLAYER.eInteract.img = CanvasUtils.loadImage(World.PLAYER.eInteract.src.replace("e-", "e-isTouchScreen-"), img);
                         return;
                     }
                     var imgMovement = scaleby + (WvmnV * scaleby);
-                    var scalex = (scaleby * W.width) / 2;
-                    var scaley = (scaleby * W.height) / 2;
+                    var scalex = (scaleby * img.width) / 2;
+                    var scaley = (scaleby * img.height) / 2;
                     var posx;
                     if (World.PLAYER.extraLoot === 1) posx = (((vertst + NmM) - 5) * imgMovement) - scalex;
                     else posx = ((vertst + NmM) * imgMovement) - (scalex / 2);
@@ -15636,7 +15641,7 @@ try {
                         Game.vwVnW = scalex;
                         Game.mnNnW = scaley;
                     }
-                    ctx.drawImage(W, posx, posy, scalex, scaley);
+                    ctx.drawImage(img, posx, posy, scalex, scaley);
                     if (World.PLAYER.extraLoot === 1) {
                         if (VWvVN.isLoaded !== 1) {
                             if (isTouchScreen === 0) VWvVN = CanvasUtils.loadImage(loot2icon, VWvVN);
@@ -15686,11 +15691,11 @@ try {
         };
 
         function mWNvV(player) {
-            var W = PARTICLES[player.state][player.extra];
+            var img = PARTICLES[player.state][player.extra];
             if (player.death > 0) {
                 player.death = window.Math.min(1, player.death + (delta / 500));
                 ctx.globalAlpha = 1 - player.death;
-                CanvasUtils.drawImageHd(W, vertst + player.x, horist + player.y, player.angle, 0, 0, 1);
+                CanvasUtils.drawImageHd(img, vertst + player.x, horist + player.y, player.angle, 0, 0, 1);
                 ctx.globalAlpha = 1;
                 if (player.death === 1) {
                     VwmMm.id = player.id;
@@ -15698,7 +15703,7 @@ try {
                 }
                 return;
             } else if (Math2d.fastDist(player.x, player.y, player.nx, player.ny) < 0.01) player.death = 0.001;
-            CanvasUtils.drawImageHd(W, vertst + player.x, horist + player.y, player.angle, 0, 0, 1);
+            CanvasUtils.drawImageHd(img, vertst + player.x, horist + player.y, player.angle, 0, 0, 1);
         };
 
         function _Dynamite(IID, player, WX, WY, Rot, imgMovement) {
@@ -15846,18 +15851,18 @@ try {
 
         function _LowWall(IID, player, WX, WY, Rot, imgMovement) {
             var WVV = (player.broke > 0) ? IID.broken[player.broke - 1] : IID.building[wmNMv(player, Rot)];
-            var W = WVV.W;
-            if (W.isLoaded !== 1) {
-                WVV.W = CanvasUtils.loadImage(WVV.src, WVV.W);
+            var img = WVV.img;
+            if (img.isLoaded !== 1) {
+                WVV.img = CanvasUtils.loadImage(WVV.src, WVV.img);
                 return;
             }
-            var VwW = ((scaleby * W.width) / 2) * imgMovement;
-            var h = ((scaleby * W.height) / 2) * imgMovement;
+            var VwW = ((scaleby * img.width) / 2) * imgMovement;
+            var h = ((scaleby * img.height) / 2) * imgMovement;
             ctx.save();
             ctx.translate(scaleby * ((vertst + player.x) + WX), scaleby * ((horist + player.y) + WY));
             ctx.rotate(Rot * PIby2);
             ctx.translate((IID.xRotate * scaleby) - (VwW / 2), (IID.yRotate * scaleby) - (h / 2));
-            ctx.drawImage(W, -IID.xRotate * scaleby, -IID.yRotate * scaleby, VwW, h);
+            ctx.drawImage(img, -IID.xRotate * scaleby, -IID.yRotate * scaleby, VwW, h);
             ctx.restore();
         };
 
@@ -15927,19 +15932,19 @@ try {
             if (NVNvv === 0) angle *= MathUtils.Ease.inOutQuad(player.hitMax / 500);
             else angle *= MathUtils.Ease.inOutQuad(1 - (player.hitMax / 500));
             var WVV = (player.broke > 0) ? IID.broken[player.broke - 1] : IID.building;
-            var W = WVV.W;
-            if (W.isLoaded !== 1) {
-                WVV.W = CanvasUtils.loadImage(WVV.src, WVV.W);
+            var img = WVV.img;
+            if (img.isLoaded !== 1) {
+                WVV.img = CanvasUtils.loadImage(WVV.src, WVV.img);
                 return;
             }
-            var VwW = ((scaleby * W.width) / 2) * imgMovement;
-            var h = ((scaleby * W.height) / 2) * imgMovement;
+            var VwW = ((scaleby * img.width) / 2) * imgMovement;
+            var h = ((scaleby * img.height) / 2) * imgMovement;
             ctx.save();
             ctx.translate(scaleby * ((vertst + player.x) + WX), scaleby * ((horist + player.y) + WY));
             ctx.rotate(Rot * PIby2);
             ctx.translate((IID.xRotate * scaleby) - (VwW / 2), (IID.yRotate * scaleby) - (h / 2));
             ctx.rotate(angle);
-            ctx.drawImage(W, -IID.xRotate * scaleby, -IID.yRotate * scaleby, VwW, h);
+            ctx.drawImage(img, -IID.xRotate * scaleby, -IID.yRotate * scaleby, VwW, h);
             ctx.restore();
             if ((player.state & 32) === 32) {
                 player.state -= 32;
@@ -16237,14 +16242,14 @@ try {
         };
 
         function nVmNm(player) {
-            var W = ENTITIES[__ENTITIE_EXPLOSION__].explosions;
+            var img = ENTITIES[__ENTITIE_EXPLOSION__].explosions;
             var mVn = window.Math.floor(player.born / 70);
             if (mVn < 10) {
                 if (player.born === 0) {
                     if (Render.explosionShake !== -2) Render.explosionShake = 20;
                     AudioUtils.playFx(AudioUtils._fx.explosion, 0.7, Math2d.dist(World.PLAYER.x, World.PLAYER.y, player.x, player.y) / 4);
                 }
-                CanvasUtils.drawImageHd(W[mVn], vertst + player.x, horist + player.y, 0, 0, 0, 1);
+                CanvasUtils.drawImageHd(img[mVn], vertst + player.x, horist + player.y, 0, 0, 0, 1);
             }
             player.born += delta;
         };
@@ -16310,7 +16315,7 @@ try {
                 }
                 return;
             }
-            CanvasUtils.drawImageHd(vV.W, (vertst + player.x) + WX, (horist + player.y) + WY, player.angle, 0, 0, imgMovement);
+            CanvasUtils.drawImageHd(vV.img, (vertst + player.x) + WX, (horist + player.y) + WY, player.angle, 0, 0, imgMovement);
             if (vV.imgTop !== window.undefined) {
                 WX = 0;
                 WY = 0;
@@ -17525,27 +17530,27 @@ var PARTICLESID = {
 
 var WAITADS = [{
     src: "img/wait-ads-1.png",
-    W: {
+    img: {
         isLoaded: 0
     }
 }, {
     src: "img/wait-ads-2.png",
-    W: {
+    img: {
         isLoaded: 0
     }
 }, {
     src: "img/wait-ads-3.png",
-    W: {
+    img: {
         isLoaded: 0
     }
 }, {
     src: "img/wait-ads-4.png",
-    W: {
+    img: {
         isLoaded: 0
     }
 }, {
     src: "img/wait-ads-5.png",
-    W: {
+    img: {
         isLoaded: 0
     }
 }];
@@ -17553,932 +17558,932 @@ var PARTICLES = [];
 PARTICLES[PARTICLESID.__NOTHING__] = [];
 PARTICLES[PARTICLESID.__WOOD__] = [{
     src: "img/day-particules-wood1.png",
-    W: {
+    img: {
         isLoaded: 0
     }
 }, {
     src: "img/day-particules-wood2.png",
-    W: {
+    img: {
         isLoaded: 0
     }
 }, {
     src: "img/day-particules-wood3.png",
-    W: {
+    img: {
         isLoaded: 0
     }
 }, {
     src: "img/day-particules-wood4.png",
-    W: {
+    img: {
         isLoaded: 0
     }
 }, {
     src: "img/day-particules-wood5.png",
-    W: {
+    img: {
         isLoaded: 0
     }
 }];
 PARTICLES[PARTICLESID.__STONE__] = [{
     src: "img/day-particules-stone1.png",
-    W: {
+    img: {
         isLoaded: 0
     }
 }, {
     src: "img/day-particules-stone2.png",
-    W: {
+    img: {
         isLoaded: 0
     }
 }, {
     src: "img/day-particules-stone3.png",
-    W: {
+    img: {
         isLoaded: 0
     }
 }, {
     src: "img/day-particules-stone4.png",
-    W: {
+    img: {
         isLoaded: 0
     }
 }, {
     src: "img/day-particules-stone5.png",
-    W: {
+    img: {
         isLoaded: 0
     }
 }];
 PARTICLES[PARTICLESID.__STEEL__] = [{
     src: "img/day-particules-steel1.png",
-    W: {
+    img: {
         isLoaded: 0
     }
 }, {
     src: "img/day-particules-steel2.png",
-    W: {
+    img: {
         isLoaded: 0
     }
 }, {
     src: "img/day-particules-steel3.png",
-    W: {
+    img: {
         isLoaded: 0
     }
 }, {
     src: "img/day-particules-steel4.png",
-    W: {
+    img: {
         isLoaded: 0
     }
 }, {
     src: "img/day-particules-steel5.png",
-    W: {
+    img: {
         isLoaded: 0
     }
 }];
 PARTICLES[PARTICLESID.__URANIUM__] = [{
     src: "img/day-particules-uranium1.png",
-    W: {
+    img: {
         isLoaded: 0
     }
 }, {
     src: "img/day-particules-uranium2.png",
-    W: {
+    img: {
         isLoaded: 0
     }
 }, {
     src: "img/day-particules-uranium3.png",
-    W: {
+    img: {
         isLoaded: 0
     }
 }, {
     src: "img/day-particules-uranium4.png",
-    W: {
+    img: {
         isLoaded: 0
     }
 }, {
     src: "img/day-particules-uranium5.png",
-    W: {
+    img: {
         isLoaded: 0
     }
 }, {
     src: "img/day-particules-uranium6.png",
-    W: {
+    img: {
         isLoaded: 0
     }
 }, {
     src: "img/day-particules-uranium7.png",
-    W: {
+    img: {
         isLoaded: 0
     }
 }, {
     src: "img/day-particules-uranium8.png",
-    W: {
+    img: {
         isLoaded: 0
     }
 }, {
     src: "img/day-particules-uranium9.png",
-    W: {
+    img: {
         isLoaded: 0
     }
 }];
 PARTICLES[PARTICLESID.__SULFUR__] = [{
     src: "img/day-particules-sulfur1.png",
-    W: {
+    img: {
         isLoaded: 0
     }
 }, {
     src: "img/day-particules-sulfur2.png",
-    W: {
+    img: {
         isLoaded: 0
     }
 }, {
     src: "img/day-particules-sulfur3.png",
-    W: {
+    img: {
         isLoaded: 0
     }
 }, {
     src: "img/day-particules-sulfur4.png",
-    W: {
+    img: {
         isLoaded: 0
     }
 }, {
     src: "img/day-particules-sulfur5.png",
-    W: {
+    img: {
         isLoaded: 0
     }
 }, {
     src: "img/day-particules-sulfur6.png",
-    W: {
+    img: {
         isLoaded: 0
     }
 }, {
     src: "img/day-particules-sulfur7.png",
-    W: {
+    img: {
         isLoaded: 0
     }
 }, {
     src: "img/day-particules-sulfur8.png",
-    W: {
+    img: {
         isLoaded: 0
     }
 }, {
     src: "img/day-particules-sulfur9.png",
-    W: {
+    img: {
         isLoaded: 0
     }
 }];
 PARTICLES[PARTICLESID.__LEAF__] = [{
     src: "img/day-particules-leaf1.png",
-    W: {
+    img: {
         isLoaded: 0
     }
 }, {
     src: "img/day-particules-leaf2.png",
-    W: {
+    img: {
         isLoaded: 0
     }
 }, {
     src: "img/day-particules-leaf3.png",
-    W: {
+    img: {
         isLoaded: 0
     }
 }, {
     src: "img/day-particules-leaf4.png",
-    W: {
+    img: {
         isLoaded: 0
     }
 }, {
     src: "img/day-particules-leaf5.png",
-    W: {
+    img: {
         isLoaded: 0
     }
 }];
 PARTICLES[PARTICLESID.__LEAFTREE__] = [{
     src: "img/day-particules-wood1.png",
-    W: {
+    img: {
         isLoaded: 0
     }
 }, {
     src: "img/day-particules-wood3.png",
-    W: {
+    img: {
         isLoaded: 0
     }
 }, {
     src: "img/day-particules-leaftree1.png",
-    W: {
+    img: {
         isLoaded: 0
     }
 }, {
     src: "img/day-particules-leaftree2.png",
-    W: {
+    img: {
         isLoaded: 0
     }
 }, {
     src: "img/day-particules-leaftree3.png",
-    W: {
+    img: {
         isLoaded: 0
     }
 }, {
     src: "img/day-particules-leaftree4.png",
-    W: {
+    img: {
         isLoaded: 0
     }
 }, {
     src: "img/day-particules-leaftree5.png",
-    W: {
+    img: {
         isLoaded: 0
     }
 }];
 PARTICLES[PARTICLESID.flower] = [{
     src: "img/day-particules-flower1.png",
-    W: {
+    img: {
         isLoaded: 0
     }
 }, {
     src: "img/day-particules-flower2.png",
-    W: {
+    img: {
         isLoaded: 0
     }
 }, {
     src: "img/day-particules-flower3.png",
-    W: {
+    img: {
         isLoaded: 0
     }
 }, {
     src: "img/day-particules-flower4.png",
-    W: {
+    img: {
         isLoaded: 0
     }
 }, {
     src: "img/day-particules-flower5.png",
-    W: {
+    img: {
         isLoaded: 0
     }
 }];
 PARTICLES[PARTICLESID.__ORANGE__] = [{
     src: "img/day-particules-leaf1.png",
-    W: {
+    img: {
         isLoaded: 0
     }
 }, {
     src: "img/day-particules-leaf2.png",
-    W: {
+    img: {
         isLoaded: 0
     }
 }, {
     src: "img/day-particules-leaf3.png",
-    W: {
+    img: {
         isLoaded: 0
     }
 }, {
     src: "img/day-particules-leaf4.png",
-    W: {
+    img: {
         isLoaded: 0
     }
 }, {
     src: "img/day-particules-leaf5.png",
-    W: {
+    img: {
         isLoaded: 0
     }
 }, {
     src: "img/day-particules-leaf6.png",
-    W: {
+    img: {
         isLoaded: 0
     }
 }, {
     src: "img/day-particules-leaf7.png",
-    W: {
+    img: {
         isLoaded: 0
     }
 }, {
     src: "img/day-particules-leaf8.png",
-    W: {
+    img: {
         isLoaded: 0
     }
 }, {
     src: "img/day-particules-leaf9.png",
-    W: {
+    img: {
         isLoaded: 0
     }
 }];
 PARTICLES[PARTICLESID.__BLOOD__] = [{
     src: "img/day-particules-blood1.png",
-    W: {
+    img: {
         isLoaded: 0
     }
 }, {
     src: "img/day-particules-blood2.png",
-    W: {
+    img: {
         isLoaded: 0
     }
 }, {
     src: "img/day-particules-blood3.png",
-    W: {
+    img: {
         isLoaded: 0
     }
 }, {
     src: "img/day-particules-blood4.png",
-    W: {
+    img: {
         isLoaded: 0
     }
 }, {
     src: "img/day-particules-blood5.png",
-    W: {
+    img: {
         isLoaded: 0
     }
 }];
 var NVMWV = 380;
 PARTICLES[PARTICLESID.__FIRE__] = [{
     src: "img/day-particules-fire1.png",
-    W: {
+    img: {
         isLoaded: 0
     }
 }, {
     src: "img/day-particules-fire2.png",
-    W: {
+    img: {
         isLoaded: 0
     }
 }, {
     src: "img/day-particules-fire3.png",
-    W: {
+    img: {
         isLoaded: 0
     }
 }, {
     src: "img/day-particules-fire4.png",
-    W: {
+    img: {
         isLoaded: 0
     }
 }, {
     src: "img/day-particules-fire5.png",
-    W: {
+    img: {
         isLoaded: 0
     }
 }];
 PARTICLES[PARTICLESID.__FUR__] = [{
     src: "img/day-particules-fur1.png",
-    W: {
+    img: {
         isLoaded: 0
     }
 }, {
     src: "img/day-particules-fur2.png",
-    W: {
+    img: {
         isLoaded: 0
     }
 }, {
     src: "img/day-particules-fur3.png",
-    W: {
+    img: {
         isLoaded: 0
     }
 }, {
     src: "img/day-particules-fur4.png",
-    W: {
+    img: {
         isLoaded: 0
     }
 }, {
     src: "img/day-particules-fur5.png",
-    W: {
+    img: {
         isLoaded: 0
     }
 }];
 PARTICLES[PARTICLESID.__BED0__] = [{
     src: "img/day-particules-bed0.png",
-    W: {
+    img: {
         isLoaded: 0
     }
 }, {
     src: "img/day-particules-bed1.png",
-    W: {
+    img: {
         isLoaded: 0
     }
 }, {
     src: "img/day-particules-bed2.png",
-    W: {
+    img: {
         isLoaded: 0
     }
 }, {
     src: "img/day-particules-bed6.png",
-    W: {
+    img: {
         isLoaded: 0
     }
 }, {
     src: "img/day-particules-wood1.png",
-    W: {
+    img: {
         isLoaded: 0
     }
 }, {
     src: "img/day-particules-wood3.png",
-    W: {
+    img: {
         isLoaded: 0
     }
 }];
 PARTICLES[PARTICLESID.__BED1__] = [{
     src: "img/day-particules-bed3.png",
-    W: {
+    img: {
         isLoaded: 0
     }
 }, {
     src: "img/day-particules-bed4.png",
-    W: {
+    img: {
         isLoaded: 0
     }
 }, {
     src: "img/day-particules-bed5.png",
-    W: {
+    img: {
         isLoaded: 0
     }
 }, {
     src: "img/day-particules-bed6.png",
-    W: {
+    img: {
         isLoaded: 0
     }
 }, {
     src: "img/day-particules-wood1.png",
-    W: {
+    img: {
         isLoaded: 0
     }
 }, {
     src: "img/day-particules-wood3.png",
-    W: {
+    img: {
         isLoaded: 0
     }
 }];
 PARTICLES[PARTICLESID.__SOFA0__] = [{
     src: "img/day-particules-sofa0.png",
-    W: {
+    img: {
         isLoaded: 0
     }
 }, {
     src: "img/day-particules-sofa1.png",
-    W: {
+    img: {
         isLoaded: 0
     }
 }, {
     src: "img/day-particules-sofa2.png",
-    W: {
+    img: {
         isLoaded: 0
     }
 }, {
     src: "img/day-particules-sofa3.png",
-    W: {
+    img: {
         isLoaded: 0
     }
 }, {
     src: "img/day-particules-sofa4.png",
-    W: {
+    img: {
         isLoaded: 0
     }
 }];
 PARTICLES[PARTICLESID.__SOFA1__] = [{
     src: "img/day-particules-sofa0.png",
-    W: {
+    img: {
         isLoaded: 0
     }
 }, {
     src: "img/day-particules-sofa1.png",
-    W: {
+    img: {
         isLoaded: 0
     }
 }, {
     src: "img/day-particules-sofa2.png",
-    W: {
+    img: {
         isLoaded: 0
     }
 }, {
     src: "img/day-particules-sofa5.png",
-    W: {
+    img: {
         isLoaded: 0
     }
 }, {
     src: "img/day-particules-sofa6.png",
-    W: {
+    img: {
         isLoaded: 0
     }
 }];
 PARTICLES[PARTICLESID.__SOFA2__] = [{
     src: "img/day-particules-sofa0.png",
-    W: {
+    img: {
         isLoaded: 0
     }
 }, {
     src: "img/day-particules-sofa1.png",
-    W: {
+    img: {
         isLoaded: 0
     }
 }, {
     src: "img/day-particules-sofa2.png",
-    W: {
+    img: {
         isLoaded: 0
     }
 }, {
     src: "img/day-particules-sofa7.png",
-    W: {
+    img: {
         isLoaded: 0
     }
 }, {
     src: "img/day-particules-sofa8.png",
-    W: {
+    img: {
         isLoaded: 0
     }
 }];
 PARTICLES[PARTICLESID.__TOILET__] = [{
     src: "img/day-particules-toilet0.png",
-    W: {
+    img: {
         isLoaded: 0
     }
 }, {
     src: "img/day-particules-toilet1.png",
-    W: {
+    img: {
         isLoaded: 0
     }
 }, {
     src: "img/day-particules-toilet2.png",
-    W: {
+    img: {
         isLoaded: 0
     }
 }, {
     src: "img/day-particules-toilet3.png",
-    W: {
+    img: {
         isLoaded: 0
     }
 }, {
     src: "img/day-particules-toilet4.png",
-    W: {
+    img: {
         isLoaded: 0
     }
 }];
 PARTICLES[PARTICLESID.__WOODLIGHT__] = [{
     src: "img/day-particules-woodlight0.png",
-    W: {
+    img: {
         isLoaded: 0
     }
 }, {
     src: "img/day-particules-woodlight1.png",
-    W: {
+    img: {
         isLoaded: 0
     }
 }, {
     src: "img/day-particules-woodlight2.png",
-    W: {
+    img: {
         isLoaded: 0
     }
 }, {
     src: "img/day-particules-woodlight3.png",
-    W: {
+    img: {
         isLoaded: 0
     }
 }, {
     src: "img/day-particules-woodlight4.png",
-    W: {
+    img: {
         isLoaded: 0
     }
 }];
 PARTICLES[PARTICLESID.__SAFE0__] = [{
     src: "img/day-particules-safe0.png",
-    W: {
+    img: {
         isLoaded: 0
     }
 }, {
     src: "img/day-particules-safe1.png",
-    W: {
+    img: {
         isLoaded: 0
     }
 }, {
     src: "img/day-particules-safe2.png",
-    W: {
+    img: {
         isLoaded: 0
     }
 }, {
     src: "img/day-particules-safe3.png",
-    W: {
+    img: {
         isLoaded: 0
     }
 }, {
     src: "img/day-particules-safe4.png",
-    W: {
+    img: {
         isLoaded: 0
     }
 }];
 PARTICLES[PARTICLESID.__GARBAGE0__] = [{
     src: "img/day-particules-garbage0.png",
-    W: {
+    img: {
         isLoaded: 0
     }
 }, {
     src: "img/day-particules-garbage1.png",
-    W: {
+    img: {
         isLoaded: 0
     }
 }, {
     src: "img/day-particules-garbage2.png",
-    W: {
+    img: {
         isLoaded: 0
     }
 }, {
     src: "img/day-particules-garbage3.png",
-    W: {
+    img: {
         isLoaded: 0
     }
 }];
 PARTICLES[PARTICLESID.__FRIDGE__] = [{
     src: "img/day-particules-fridge0.png",
-    W: {
+    img: {
         isLoaded: 0
     }
 }, {
     src: "img/day-particules-fridge1.png",
-    W: {
+    img: {
         isLoaded: 0
     }
 }, {
     src: "img/day-particules-fridge2.png",
-    W: {
+    img: {
         isLoaded: 0
     }
 }, {
     src: "img/day-particules-fridge3.png",
-    W: {
+    img: {
         isLoaded: 0
     }
 }, {
     src: "img/day-particules-fridge4.png",
-    W: {
+    img: {
         isLoaded: 0
     }
 }];
 PARTICLES[PARTICLESID.__PLOT__] = [{
     src: "img/day-particules-plot0.png",
-    W: {
+    img: {
         isLoaded: 0
     }
 }, {
     src: "img/day-particules-plot1.png",
-    W: {
+    img: {
         isLoaded: 0
     }
 }, {
     src: "img/day-particules-plot2.png",
-    W: {
+    img: {
         isLoaded: 0
     }
 }, {
     src: "img/day-particules-plot3.png",
-    W: {
+    img: {
         isLoaded: 0
     }
 }, {
     src: "img/day-particules-wood1.png",
-    W: {
+    img: {
         isLoaded: 0
     }
 }, {
     src: "img/day-particules-wood3.png",
-    W: {
+    img: {
         isLoaded: 0
     }
 }];
 PARTICLES[PARTICLESID.__BARELRED__] = [{
     src: "img/day-particules-barel0.png",
-    W: {
+    img: {
         isLoaded: 0
     }
 }, {
     src: "img/day-particules-barel1.png",
-    W: {
+    img: {
         isLoaded: 0
     }
 }, {
     src: "img/day-particules-barel2.png",
-    W: {
+    img: {
         isLoaded: 0
     }
 }];
 PARTICLES[PARTICLESID.__BARELGREEN__] = [{
     src: "img/day-particules-barel3.png",
-    W: {
+    img: {
         isLoaded: 0
     }
 }, {
     src: "img/day-particules-barel4.png",
-    W: {
+    img: {
         isLoaded: 0
     }
 }, {
     src: "img/day-particules-barel5.png",
-    W: {
+    img: {
         isLoaded: 0
     }
 }];
 PARTICLES[PARTICLESID.__METAL__] = [{
     src: "img/day-particules-metal0.png",
-    W: {
+    img: {
         isLoaded: 0
     }
 }, {
     src: "img/day-particules-metal1.png",
-    W: {
+    img: {
         isLoaded: 0
     }
 }, {
     src: "img/day-particules-metal2.png",
-    W: {
+    img: {
         isLoaded: 0
     }
 }, {
     src: "img/day-particules-metal3.png",
-    W: {
+    img: {
         isLoaded: 0
     }
 }, {
     src: "img/day-particules-metal4.png",
-    W: {
+    img: {
         isLoaded: 0
     }
 }];
 PARTICLES[PARTICLESID.__TOMATO__] = [{
     src: "img/day-particules-tomato0.png",
-    W: {
+    img: {
         isLoaded: 0
     }
 }, {
     src: "img/day-particules-tomato1.png",
-    W: {
+    img: {
         isLoaded: 0
     }
 }, {
     src: "img/day-particules-tomato2.png",
-    W: {
+    img: {
         isLoaded: 0
     }
 }, {
     src: "img/day-particules-tomato3.png",
-    W: {
+    img: {
         isLoaded: 0
     }
 }, {
     src: "img/day-particules-tomato4.png",
-    W: {
+    img: {
         isLoaded: 0
     }
 }];
 PARTICLES[PARTICLESID.__BLUE_STEEL__] = [{
     src: "img/day-particules-blue-steel0.png",
-    W: {
+    img: {
         isLoaded: 0
     }
 }, {
     src: "img/day-particules-blue-steel1.png",
-    W: {
+    img: {
         isLoaded: 0
     }
 }, {
     src: "img/day-particules-blue-steel2.png",
-    W: {
+    img: {
         isLoaded: 0
     }
 }, {
     src: "img/day-particules-blue-steel3.png",
-    W: {
+    img: {
         isLoaded: 0
     }
 }, {
     src: "img/day-particules-blue-steel4.png",
-    W: {
+    img: {
         isLoaded: 0
     }
 }];
 PARTICLES[PARTICLESID.__GREY_STEEL__] = [{
     src: "img/day-particules-grey-steel0.png",
-    W: {
+    img: {
         isLoaded: 0
     }
 }, {
     src: "img/day-particules-grey-steel1.png",
-    W: {
+    img: {
         isLoaded: 0
     }
 }, {
     src: "img/day-particules-grey-steel2.png",
-    W: {
+    img: {
         isLoaded: 0
     }
 }, {
     src: "img/day-particules-grey-steel3.png",
-    W: {
+    img: {
         isLoaded: 0
     }
 }, {
     src: "img/day-particules-grey-steel4.png",
-    W: {
+    img: {
         isLoaded: 0
     }
 }];
 PARTICLES[PARTICLESID.__RED_STEEL__] = [{
     src: "img/day-particules-red-steel0.png",
-    W: {
+    img: {
         isLoaded: 0
     }
 }, {
     src: "img/day-particules-red-steel1.png",
-    W: {
+    img: {
         isLoaded: 0
     }
 }, {
     src: "img/day-particules-red-steel2.png",
-    W: {
+    img: {
         isLoaded: 0
     }
 }, {
     src: "img/day-particules-red-steel3.png",
-    W: {
+    img: {
         isLoaded: 0
     }
 }, {
     src: "img/day-particules-red-steel4.png",
-    W: {
+    img: {
         isLoaded: 0
     }
 }];
 PARTICLES[PARTICLESID.__KAKI__] = [{
     src: "img/day-particules-kaki0.png",
-    W: {
+    img: {
         isLoaded: 0
     }
 }, {
     src: "img/day-particules-kaki1.png",
-    W: {
+    img: {
         isLoaded: 0
     }
 }, {
     src: "img/day-particules-kaki2.png",
-    W: {
+    img: {
         isLoaded: 0
     }
 }, {
     src: "img/day-particules-kaki3.png",
-    W: {
+    img: {
         isLoaded: 0
     }
 }, {
     src: "img/day-particules-kaki4.png",
-    W: {
+    img: {
         isLoaded: 0
     }
 }];
 PARTICLES[PARTICLESID.__MUSHROOM1__] = [{
     src: "img/day-particules-mushroom4.png",
-    W: {
+    img: {
         isLoaded: 0
     }
 }, {
     src: "img/day-particules-mushroom5.png",
-    W: {
+    img: {
         isLoaded: 0
     }
 }, {
     src: "img/day-particules-mushroom6.png",
-    W: {
+    img: {
         isLoaded: 0
     }
 }];
 PARTICLES[PARTICLESID.__MUSHROOM2__] = [{
     src: "img/day-particules-mushroom1.png",
-    W: {
+    img: {
         isLoaded: 0
     }
 }, {
     src: "img/day-particules-mushroom2.png",
-    W: {
+    img: {
         isLoaded: 0
     }
 }, {
     src: "img/day-particules-mushroom3.png",
-    W: {
+    img: {
         isLoaded: 0
     }
 }];
 PARTICLES[PARTICLESID.__MUSHROOM3__] = [{
     src: "img/day-particules-mushroom7.png",
-    W: {
+    img: {
         isLoaded: 0
     }
 }, {
     src: "img/day-particules-mushroom8.png",
-    W: {
+    img: {
         isLoaded: 0
     }
 }, {
     src: "img/day-particules-mushroom9.png",
-    W: {
+    img: {
         isLoaded: 0
     }
 }];
 PARTICLES[PARTICLESID.__GOLD__] = [{
     src: "img/day-particules-gold0.png",
-    W: {
+    img: {
         isLoaded: 0
     }
 }, {
     src: "img/day-particules-gold1.png",
-    W: {
+    img: {
         isLoaded: 0
     }
 }, {
     src: "img/day-particules-gold2.png",
-    W: {
+    img: {
         isLoaded: 0
     }
 }];
@@ -18512,12 +18517,12 @@ function Detail(_name, _description, category, recipe, mm, area, level, previous
 
 var items = [{
     src: [],
-    W: []
+    img: []
 }, {
     id: IID.__WOOD__,
-    img: {
+    itemButton: {
         src: ["img/inv-wood-out.png", "img/inv-wood-in.png", "img/inv-wood-click.png"],
-        W: [{
+        img: [{
             isLoaded: 0
         }, {
             isLoaded: 0
@@ -18531,9 +18536,9 @@ var items = [{
     score: 10
 }, {
     id: IID.__STONE__,
-    img: {
+    itemButton: {
         src: ["img/inv-stone-out.png", "img/inv-stone-in.png", "img/inv-stone-click.png"],
-        W: [{
+        img: [{
             isLoaded: 0
         }, {
             isLoaded: 0
@@ -18551,9 +18556,9 @@ var items = [{
     score: 14
 }, {
     id: IID.__STEEL__,
-    img: {
+    itemButton: {
         src: ["img/inv-steel-out.png", "img/inv-steel-in.png", "img/inv-steel-click.png"],
-        W: [{
+        img: [{
             isLoaded: 0
         }, {
             isLoaded: 0
@@ -18571,9 +18576,9 @@ var items = [{
     score: 28
 }, {
     id: IID.__ANIMAL_FAT__,
-    img: {
+    itemButton: {
         src: ["img/inv-animal-fat-out.png", "img/inv-animal-fat-in.png", "img/inv-animal-fat-click.png"],
-        W: [{
+        img: [{
             isLoaded: 0
         }, {
             isLoaded: 0
@@ -18587,9 +18592,9 @@ var items = [{
     score: 32
 }, {
     id: IID.__ANIMAL_TENDON__,
-    img: {
+    itemButton: {
         src: ["img/inv-animal-tendon-out.png", "img/inv-animal-tendon-in.png", "img/inv-animal-tendon-click.png"],
-        W: [{
+        img: [{
             isLoaded: 0
         }, {
             isLoaded: 0
@@ -18603,9 +18608,9 @@ var items = [{
     score: 100
 }, {
     id: IID.__STRING__,
-    img: {
+    itemButton: {
         src: ["img/inv-string-out.png", "img/inv-string-in.png", "img/inv-string-click.png"],
-        W: [{
+        img: [{
             isLoaded: 0
         }, {
             isLoaded: 0
@@ -18622,9 +18627,9 @@ var items = [{
     loot: LOOTID.__STRING__
 }, {
     id: IID.__LEATHER_BOAR__,
-    img: {
+    itemButton: {
         src: ["img/inv-leather-boar-out.png", "img/inv-leather-boar-in.png", "img/inv-leather-boar-click.png"],
-        W: [{
+        img: [{
             isLoaded: 0
         }, {
             isLoaded: 0
@@ -18638,9 +18643,9 @@ var items = [{
     score: 32
 }, {
     id: IID.__SHAPED_METAL__,
-    img: {
+    itemButton: {
         src: ["img/inv-shaped-metal-out.png", "img/inv-shaped-metal-in.png", "img/inv-shaped-metal-click.png"],
-        W: [{
+        img: [{
             isLoaded: 0
         }, {
             isLoaded: 0
@@ -18658,9 +18663,9 @@ var items = [{
     loot: LOOTID.__SHAPED_METAL__
 }, {
     id: IID.__RAW_STEAK__,
-    img: {
+    itemButton: {
         src: ["img/inv-raw-steak-out.png", "img/inv-raw-steak-in.png", "img/inv-raw-steak-click.png"],
-        W: [{
+        img: [{
             isLoaded: 0
         }, {
             isLoaded: 0
@@ -18678,9 +18683,9 @@ var items = [{
     score: 28
 }, {
     id: IID.__COOKED_STEAK__,
-    img: {
+    itemButton: {
         src: ["img/inv-cooked-steak-out.png", "img/inv-cooked-steak-in.png", "img/inv-cooked-steak-click.png"],
-        W: [{
+        img: [{
             isLoaded: 0
         }, {
             isLoaded: 0
@@ -18702,9 +18707,9 @@ var items = [{
     idWeapon: 13     
 }, {
     id: IID.__ROTTEN_STEAK__,
-    img: {
+    itemButton: {
         src: ["img/inv-rotten-steak-out.png", "img/inv-rotten-steak-in.png", "img/inv-rotten-steak-click.png"],
-        W: [{
+        img: [{
             isLoaded: 0
         }, {
             isLoaded: 0
@@ -18720,9 +18725,9 @@ var items = [{
     score: 20
 }, {
     id: IID.__ORANGE__,
-    img: {
+    itemButton: {
         src: ["img/inv-orange-out.png", "img/inv-orange-in.png", "img/inv-orange-click.png"],
-        W: [{
+        img: [{
             isLoaded: 0
         }, {
             isLoaded: 0
@@ -18740,9 +18745,9 @@ var items = [{
     score: 24
 }, {
     id: IID.__ROTTEN_ORANGE__,
-    img: {
+    itemButton: {
         src: ["img/inv-rotten-orange-out.png", "img/inv-rotten-orange-in.png", "img/inv-rotten-orange-click.png"],
-        W: [{
+        img: [{
             isLoaded: 0
         }, {
             isLoaded: 0
@@ -18762,9 +18767,9 @@ var items = [{
     score: 20
 }, {
     id: IID.__SEED_ORANGE__,
-    img: {
+    itemButton: {
         src: ["img/inv-orange-seed-out.png", "img/inv-orange-seed-in.png", "img/inv-orange-seed-click.png"],
-        W: [{
+        img: [{
             isLoaded: 0
         }, {
             isLoaded: 0
@@ -18795,13 +18800,13 @@ var items = [{
     _y: [35, 35, 35, 35],
     blueprint: {
         src: "img/day-clear-blue-plant2-orange.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     },
     redprint: {
         src: "img/day-redprint-plant2-orange.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     },
@@ -18817,27 +18822,27 @@ var items = [{
     destroy: SOUNDID.__NO_SOUND__,
     building: [{
         src: "img/day-plant0-orange.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-plant1-orange.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-plant2-orange.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-plant3-orange.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-plant4-orange.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }],
@@ -18848,9 +18853,9 @@ var items = [{
     score: 0
 }, {
     id: IID.__HACHET__,
-    img: {
+    itemButton: {
         src: ["img/inv-hachet-out.png", "img/inv-hachet-in.png", "img/inv-hachet-click.png"],
-        W: [{
+        img: [{
             isLoaded: 0
         }, {
             isLoaded: 0
@@ -18871,9 +18876,9 @@ var items = [{
     wait: 10
 }, {
     id: IID.__STONE__pickaxe,
-    img: {
+    itemButton: {
         src: ["img/inv-stone-pickaxe-out.png", "img/inv-stone-pickaxe-in.png", "img/inv-stone-pickaxe-click.png"],
-        W: [{
+        img: [{
             isLoaded: 0
         }, {
             isLoaded: 0
@@ -18893,9 +18898,9 @@ var items = [{
     wait: 10
 }, {
     id: IID.__STEEL__pickaxe,
-    img: {
+    itemButton: {
         src: ["img/inv-steel-pickaxe-out.png", "img/inv-steel-pickaxe-in.png", "img/inv-steel-pickaxe-click.png"],
-        W: [{
+        img: [{
             isLoaded: 0
         }, {
             isLoaded: 0
@@ -18915,9 +18920,9 @@ var items = [{
     wait: 10
 }, {
     id: IID.__STONE__axe,
-    img: {
+    itemButton: {
         src: ["img/inv-stone-axe-out.png", "img/inv-stone-axe-in.png", "img/inv-stone-axe-click.png"],
-        W: [{
+        img: [{
             isLoaded: 0
         }, {
             isLoaded: 0
@@ -18937,9 +18942,9 @@ var items = [{
     wait: 10
 }, {
     id: IID.__WORKBENCH__,
-    img: {
+    itemButton: {
         src: ["img/inv-workbench-out.png", "img/inv-workbench-in.png", "img/inv-workbench-click.png"],
-        W: [{
+        img: [{
             isLoaded: 0
         }, {
             isLoaded: 0
@@ -18971,13 +18976,13 @@ var items = [{
     _y: [0, 0, 0, 0],
     blueprint: {
         src: "img/day-clear-blue-workbench.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     },
     redprint: {
         src: "img/day-redprint-workbench.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     },
@@ -18995,7 +19000,7 @@ var items = [{
     packetId: 16,
     interact: {
         src: "img/e-workbench.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     },
@@ -19003,7 +19008,7 @@ var items = [{
     destroy: SOUNDID.__WOOD_DESTROY__,
     building: {
         src: "img/day-workbench.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     },
@@ -19014,9 +19019,9 @@ var items = [{
     score: 0
 }, {
     id: IID.__WOOD_SPEAR__,
-    img: {
+    itemButton: {
         src: ["img/inv-wood-spear-out.png", "img/inv-wood-spear-in.png", "img/inv-wood-spear-click.png"],
-        W: [{
+        img: [{
             isLoaded: 0
         }, {
             isLoaded: 0
@@ -19036,9 +19041,9 @@ var items = [{
     wait: 10
 }, {
     id: IID.__WOOD_BOW__,
-    img: {
+    itemButton: {
         src: ["img/inv-wood-bow-out.png", "img/inv-wood-bow-in.png", "img/inv-wood-bow-click.png"],
-        W: [{
+        img: [{
             isLoaded: 0
         }, {
             isLoaded: 0
@@ -19061,9 +19066,9 @@ var items = [{
     wait: 10
 }, {
     id: IID.__9MM__,
-    img: {
+    itemButton: {
         src: ["img/inv-9mm-out.png", "img/inv-9mm-in.png", "img/inv-9mm-click.png"],
-        W: [{
+        img: [{
             isLoaded: 0
         }, {
             isLoaded: 0
@@ -19084,9 +19089,9 @@ var items = [{
     wait: 10
 }, {
     id: IID.__DESERT_EAGLE__,
-    img: {
+    itemButton: {
         src: ["img/inv-desert-eagle-out.png", "img/inv-desert-eagle-in.png", "img/inv-desert-eagle-click.png"],
-        W: [{
+        img: [{
             isLoaded: 0
         }, {
             isLoaded: 0
@@ -19107,9 +19112,9 @@ var items = [{
     wait: 10
 }, {
     id: IID.__SHOTGUN__,
-    img: {
+    itemButton: {
         src: ["img/inv-shotgun-out.png", "img/inv-shotgun-in.png", "img/inv-shotgun-click.png"],
-        W: [{
+        img: [{
             isLoaded: 0
         }, {
             isLoaded: 0
@@ -19130,9 +19135,9 @@ var items = [{
     wait: 10
 }, {
     id: IID.__AK47__,
-    img: {
+    itemButton: {
         src: ["img/inv-ak47-out.png", "img/inv-ak47-in.png", "img/inv-ak47-click.png"],
-        W: [{
+        img: [{
             isLoaded: 0
         }, {
             isLoaded: 0
@@ -19153,9 +19158,9 @@ var items = [{
     wait: 10
 }, {
     id: IID.__SNIPER__,
-    img: {
+    itemButton: {
         src: ["img/inv-sniper-out.png", "img/inv-sniper-in.png", "img/inv-sniper-click.png"],
-        W: [{
+        img: [{
             isLoaded: 0
         }, {
             isLoaded: 0
@@ -19176,9 +19181,9 @@ var items = [{
     wait: 10
 }, {
     id: IID.__WOOD__enwall,
-    img: {
+    itemButton: {
         src: ["img/inv-wood-wall-out.png", "img/inv-wood-wall-in.png", "img/inv-wood-wall-click.png"],
-        W: [{
+        img: [{
             isLoaded: 0
         }, {
             isLoaded: 0
@@ -19207,13 +19212,13 @@ var items = [{
     _y: [0, 0, 0, 0],
     blueprint: {
         src: "img/day-clear-blue-wood-wall.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     },
     redprint: {
         src: "img/day-redprint-wood-wall.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     },
@@ -19232,17 +19237,17 @@ var items = [{
     drawFloor: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
     broken: [{
         src: "img/day-wood-wall-broken0.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-wood-wall-broken1.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-wood-wall-broken2.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }],
@@ -19250,237 +19255,237 @@ var items = [{
     destroy: SOUNDID.__WOOD_DESTROY__,
     building: [{
         src: "img/day-wood-wall0.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-wood-wall1.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-wood-wall2.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-wood-wall3.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-wood-wall4.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-wood-wall5.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-wood-wall6.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-wood-wall7.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-wood-wall8.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-wood-wall9.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-wood-wall10.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-wood-wall11.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-wood-wall12.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-wood-wall13.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-wood-wall14.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-wood-wall15.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-wood-wall16.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-wood-wall17.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-wood-wall18.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-wood-wall19.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-wood-wall20.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-wood-wall21.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-wood-wall22.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-wood-wall23.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-wood-wall24.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-wood-wall25.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-wood-wall26.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-wood-wall27.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-wood-wall28.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-wood-wall29.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-wood-wall30.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-wood-wall31.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-wood-wall32.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-wood-wall33.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-wood-wall34.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-wood-wall35.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-wood-wall36.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-wood-wall37.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-wood-wall38.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-wood-wall39.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-wood-wall40.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-wood-wall41.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-wood-wall42.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-wood-wall43.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-wood-wall44.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-wood-wall45.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-wood-wall46.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }],
@@ -19491,9 +19496,9 @@ var items = [{
     score: 0
 }, {
     id: IID.__STONE__wall,
-    img: {
+    itemButton: {
         src: ["img/inv-stone-wall-out.png", "img/inv-stone-wall-in.png", "img/inv-stone-wall-click.png"],
-        W: [{
+        img: [{
             isLoaded: 0
         }, {
             isLoaded: 0
@@ -19522,13 +19527,13 @@ var items = [{
     _y: [0, 0, 0, 0],
     blueprint: {
         src: "img/day-clear-blue-stone-wall.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     },
     redprint: {
         src: "img/day-redprint-stone-wall.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     },
@@ -19547,17 +19552,17 @@ var items = [{
     drawFloor: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
     broken: [{
         src: "img/day-stone-wall-broken0.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-stone-wall-broken1.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-stone-wall-broken2.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }],
@@ -19565,237 +19570,237 @@ var items = [{
     destroy: SOUNDID.__STONE_DESTROY__,
     building: [{
         src: "img/day-stone-wall0.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-stone-wall1.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-stone-wall2.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-stone-wall3.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-stone-wall4.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-stone-wall5.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-stone-wall6.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-stone-wall7.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-stone-wall8.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-stone-wall9.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-stone-wall10.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-stone-wall11.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-stone-wall12.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-stone-wall13.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-stone-wall14.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-stone-wall15.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-stone-wall16.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-stone-wall17.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-stone-wall18.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-stone-wall19.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-stone-wall20.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-stone-wall21.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-stone-wall22.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-stone-wall23.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-stone-wall24.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-stone-wall25.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-stone-wall26.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-stone-wall27.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-stone-wall28.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-stone-wall29.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-stone-wall30.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-stone-wall31.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-stone-wall32.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-stone-wall33.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-stone-wall34.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-stone-wall35.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-stone-wall36.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-stone-wall37.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-stone-wall38.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-stone-wall39.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-stone-wall40.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-stone-wall41.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-stone-wall42.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-stone-wall43.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-stone-wall44.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-stone-wall45.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-stone-wall46.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }],
@@ -19806,9 +19811,9 @@ var items = [{
     score: 0
 }, {
     id: IID.__STEEL__wall,
-    img: {
+    itemButton: {
         src: ["img/inv-steel-wall-out.png", "img/inv-steel-wall-in.png", "img/inv-steel-wall-click.png"],
-        W: [{
+        img: [{
             isLoaded: 0
         }, {
             isLoaded: 0
@@ -19837,13 +19842,13 @@ var items = [{
     _y: [0, 0, 0, 0],
     blueprint: {
         src: "img/day-clear-blue-stone-wall.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     },
     redprint: {
         src: "img/day-redprint-stone-wall.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     },
@@ -19862,17 +19867,17 @@ var items = [{
     drawFloor: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
     broken: [{
         src: "img/day-steel-wall-broken0.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-steel-wall-broken1.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-steel-wall-broken2.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }],
@@ -19880,237 +19885,237 @@ var items = [{
     destroy: SOUNDID.__STEEL_DESTROY__,
     building: [{
         src: "img/day-steel-wall0.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-steel-wall1.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-steel-wall2.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-steel-wall3.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-steel-wall4.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-steel-wall5.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-steel-wall6.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-steel-wall7.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-steel-wall8.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-steel-wall9.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-steel-wall10.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-steel-wall11.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-steel-wall12.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-steel-wall13.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-steel-wall14.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-steel-wall15.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-steel-wall16.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-steel-wall17.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-steel-wall18.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-steel-wall19.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-steel-wall20.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-steel-wall21.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-steel-wall22.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-steel-wall23.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-steel-wall24.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-steel-wall25.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-steel-wall26.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-steel-wall27.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-steel-wall28.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-steel-wall29.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-steel-wall30.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-steel-wall31.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-steel-wall32.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-steel-wall33.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-steel-wall34.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-steel-wall35.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-steel-wall36.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-steel-wall37.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-steel-wall38.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-steel-wall39.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-steel-wall40.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-steel-wall41.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-steel-wall42.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-steel-wall43.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-steel-wall44.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-steel-wall45.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-steel-wall46.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }],
@@ -20121,9 +20126,9 @@ var items = [{
     score: 0
 }, {
     id: IID.__WOOD__door,
-    img: {
+    itemButton: {
         src: ["img/inv-wood-door-out.png", "img/inv-wood-door-in.png", "img/inv-wood-door-click.png"],
-        W: [{
+        img: [{
             isLoaded: 0
         }, {
             isLoaded: 0
@@ -20152,13 +20157,13 @@ var items = [{
     _y: [65, 0, 0, 0],
     blueprint: {
         src: "img/day-clear-blue-wood-door.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     },
     redprint: {
         src: "img/day-redprint-wood-door.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     },
@@ -20184,29 +20189,29 @@ var items = [{
     packetId: 15,
     interact: {
         src: "img/e-opendoor.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     },
     interactclose: {
         src: "img/e-closedoor.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     },
     broken: [{
         src: "img/day-wood-door-broken0.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-wood-door-broken1.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-wood-door-broken2.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }],
@@ -20214,7 +20219,7 @@ var items = [{
     destroy: SOUNDID.__WOOD_DESTROY__,
     building: {
         src: "img/day-wood-door.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     },
@@ -20225,9 +20230,9 @@ var items = [{
     score: 0
 }, {
     id: IID.__STONE__door,
-    img: {
+    itemButton: {
         src: ["img/inv-stone-door-out.png", "img/inv-stone-door-in.png", "img/inv-stone-door-click.png"],
-        W: [{
+        img: [{
             isLoaded: 0
         }, {
             isLoaded: 0
@@ -20256,13 +20261,13 @@ var items = [{
     _y: [65, 0, 0, 0],
     blueprint: {
         src: "img/day-clear-blue-stone-door.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     },
     redprint: {
         src: "img/day-redprint-stone-door.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     },
@@ -20288,29 +20293,29 @@ var items = [{
     packetId: 15,
     interact: {
         src: "img/e-opendoor.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     },
     interactclose: {
         src: "img/e-closedoor.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     },
     broken: [{
         src: "img/day-stone-door-broken0.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-stone-door-broken1.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-stone-door-broken2.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }],
@@ -20318,7 +20323,7 @@ var items = [{
     destroy: SOUNDID.__STONE_DESTROY__,
     building: {
         src: "img/day-stone-door.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     },
@@ -20329,9 +20334,9 @@ var items = [{
     score: 0
 }, {
     id: IID.__STEEL__door,
-    img: {
+    itemButton: {
         src: ["img/inv-steel-door-out.png", "img/inv-steel-door-in.png", "img/inv-steel-door-click.png"],
-        W: [{
+        img: [{
             isLoaded: 0
         }, {
             isLoaded: 0
@@ -20360,13 +20365,13 @@ var items = [{
     _y: [65, 0, 0, 0],
     blueprint: {
         src: "img/day-clear-blue-stone-door.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     },
     redprint: {
         src: "img/day-redprint-stone-door.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     },
@@ -20392,29 +20397,29 @@ var items = [{
     packetId: 15,
     interact: {
         src: "img/e-opendoor.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     },
     interactclose: {
         src: "img/e-closedoor.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     },
     broken: [{
         src: "img/day-steel-door-broken0.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-steel-door-broken1.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-steel-door-broken2.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }],
@@ -20422,7 +20427,7 @@ var items = [{
     destroy: SOUNDID.__STEEL_DESTROY__,
     building: {
         src: "img/day-steel-door.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     },
@@ -20433,9 +20438,9 @@ var items = [{
     score: 0
 }, {
     id: IID.__CAMPFIRE__,
-    img: {
+    itemButton: {
         src: ["img/inv-campfire-out.png", "img/inv-campfire-in.png", "img/inv-campfire-click.png"],
-        W: [{
+        img: [{
             isLoaded: 0
         }, {
             isLoaded: 0
@@ -20467,13 +20472,13 @@ var items = [{
     _y: [0, 0, 0, 0],
     blueprint: {
         src: "img/day-clear-blue-campfire.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     },
     redprint: {
         src: "img/day-redprint-campfire.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     },
@@ -20492,7 +20497,7 @@ var items = [{
     packetId: 16,
     interact: {
         src: "img/e-campfire.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     },
@@ -20500,7 +20505,7 @@ var items = [{
     destroy: SOUNDID.__WOOD_DESTROY__,
     building: {
         src: "img/day-campfire.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     },
@@ -20511,9 +20516,9 @@ var items = [{
     score: 0
 }, {
     id: IID.__BULLET_9MM__,
-    img: {
+    itemButton: {
         src: ["img/inv-bullet-9mm-out.png", "img/inv-bullet-9mm-in.png", "img/inv-bullet-9mm-click.png"],
-        W: [{
+        img: [{
             isLoaded: 0
         }, {
             isLoaded: 0
@@ -20532,9 +20537,9 @@ var items = [{
     loot: LOOTID.__BULLET_9MM__
 }, {
     id: IID.__BULLET_SHOTGUN__,
-    img: {
+    itemButton: {
         src: ["img/inv-bullet-shotgun-out.png", "img/inv-bullet-shotgun-in.png", "img/inv-bullet-shotgun-click.png"],
-        W: [{
+        img: [{
             isLoaded: 0
         }, {
             isLoaded: 0
@@ -20553,9 +20558,9 @@ var items = [{
     loot: LOOTID.__BULLET_SHOTGUN__
 }, {
     id: IID.__SNIPER__bullet,
-    img: {
+    itemButton: {
         src: ["img/inv-bullet-sniper-out.png", "img/inv-bullet-sniper-in.png", "img/inv-bullet-sniper-click.png"],
-        W: [{
+        img: [{
             isLoaded: 0
         }, {
             isLoaded: 0
@@ -20574,9 +20579,9 @@ var items = [{
     loot: LOOTID.__BULLET_SNIPER__
 }, {
     id: IID.__MEDIKIT__,
-    img: {
+    itemButton: {
         src: ["img/inv-medikit-out.png", "img/inv-medikit-in.png", "img/inv-medikit-click.png"],
-        W: [{
+        img: [{
             isLoaded: 0
         }, {
             isLoaded: 0
@@ -20598,9 +20603,9 @@ var items = [{
     wait: 10
 }, {
     id: IID.__BANDAGE__,
-    img: {
+    itemButton: {
         src: ["img/inv-bandage-out.png", "img/inv-bandage-in.png", "img/inv-bandage-click.png"],
-        W: [{
+        img: [{
             isLoaded: 0
         }, {
             isLoaded: 0
@@ -20620,9 +20625,9 @@ var items = [{
     wait: 10
 }, {
     id: IID.__SODA__,
-    img: {
+    itemButton: {
         src: ["img/inv-soda-out.png", "img/inv-soda-in.png", "img/inv-soda-click.png"],
-        W: [{
+        img: [{
             isLoaded: 0
         }, {
             isLoaded: 0
@@ -20646,9 +20651,9 @@ var items = [{
     wait: 10
 }, {
     id: IID.__MP5__,
-    img: {
+    itemButton: {
         src: ["img/inv-MP5-out.png", "img/inv-MP5-in.png", "img/inv-MP5-click.png"],
-        W: [{
+        img: [{
             isLoaded: 0
         }, {
             isLoaded: 0
@@ -20669,9 +20674,9 @@ var items = [{
     wait: 10
 }, {
     id: IID.__HEADSCARF__,
-    img: {
+    itemButton: {
         src: ["img/inv-headscarf-out.png", "img/inv-headscarf-in.png", "img/inv-headscarf-click.png"],
-        W: [{
+        img: [{
             isLoaded: 0
         }, {
             isLoaded: 0
@@ -20698,9 +20703,9 @@ var items = [{
     speed: 0
 }, {
     id: IID.__CHAPKA__,
-    img: {
+    itemButton: {
         src: ["img/inv-chapka-out.png", "img/inv-chapka-in.png", "img/inv-chapka-click.png"],
-        W: [{
+        img: [{
             isLoaded: 0
         }, {
             isLoaded: 0
@@ -20728,9 +20733,9 @@ var items = [{
     speed: 0
 }, {
     id: IID.__WINTER_COAT__,
-    img: {
+    itemButton: {
         src: ["img/inv-coat-out.png", "img/inv-coat-in.png", "img/inv-coat-click.png"],
-        W: [{
+        img: [{
             isLoaded: 0
         }, {
             isLoaded: 0
@@ -20758,9 +20763,9 @@ var items = [{
     speed: 0
 }, {
     id: IID.__GAZ_MASK__,
-    img: {
+    itemButton: {
         src: ["img/inv-gaz-mask-out.png", "img/inv-gaz-mask-in.png", "img/inv-gaz-mask-click.png"],
-        W: [{
+        img: [{
             isLoaded: 0
         }, {
             isLoaded: 0
@@ -20788,9 +20793,9 @@ var items = [{
     speed: 0
 }, {
     id: IID.__GAZ_PROTECTION__,
-    img: {
+    itemButton: {
         src: ["img/inv-gaz-protection-out.png", "img/inv-gaz-protection-in.png", "img/inv-gaz-protection-click.png"],
-        W: [{
+        img: [{
             isLoaded: 0
         }, {
             isLoaded: 0
@@ -20820,9 +20825,9 @@ var items = [{
     speed: 0
 }, {
     id: IID.__RADIATION_SUIT__,
-    img: {
+    itemButton: {
         src: ["img/inv-radiation-suit-out.png", "img/inv-radiation-suit-in.png", "img/inv-radiation-suit-click.png"],
-        W: [{
+        img: [{
             isLoaded: 0
         }, {
             isLoaded: 0
@@ -20852,9 +20857,9 @@ var items = [{
     speed: -0.01
 }, {
     id: IID.__WOOD__arrow,
-    img: {
+    itemButton: {
         src: ["img/inv-wood-arrow-out.png", "img/inv-wood-arrow-in.png", "img/inv-wood-arrow-click.png"],
-        W: [{
+        img: [{
             isLoaded: 0
         }, {
             isLoaded: 0
@@ -20872,9 +20877,9 @@ var items = [{
     loot: LOOTID.__WOOD_ARROW__
 }, {
     id: IID.__CAMPFIRE__bbq,
-    img: {
+    itemButton: {
         src: ["img/inv-campfire-bbq-out.png", "img/inv-campfire-bbq-in.png", "img/inv-campfire-bbq-click.png"],
-        W: [{
+        img: [{
             isLoaded: 0
         }, {
             isLoaded: 0
@@ -20906,13 +20911,13 @@ var items = [{
     _y: [0, 0, 0, 0],
     blueprint: {
         src: "img/day-clear-blue-campfire-bbq.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     },
     redprint: {
         src: "img/day-redprint-campfire-bbq.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     },
@@ -20931,7 +20936,7 @@ var items = [{
     packetId: 16,
     interact: {
         src: "img/e-campfire-bbq.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     },
@@ -20939,7 +20944,7 @@ var items = [{
     destroy: SOUNDID.__WOOD_DESTROY__,
     building: {
         src: "img/day-campfire-bbq.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     },
@@ -20950,9 +20955,9 @@ var items = [{
     score: 0
 }, {
     id: IID.__SMELTER__,
-    img: {
+    itemButton: {
         src: ["img/inv-smelter-out.png", "img/inv-smelter-in.png", "img/inv-smelter-click.png"],
-        W: [{
+        img: [{
             isLoaded: 0
         }, {
             isLoaded: 0
@@ -20985,13 +20990,13 @@ var items = [{
     jTile: [0, -1, 0, -1],
     blueprint: {
         src: "img/day-clear-blue-smelter.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     },
     redprint: {
         src: "img/day-redprint-smelter.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     },
@@ -21011,7 +21016,7 @@ var items = [{
     packetId: 16,
     interact: {
         src: "img/e-smelter.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     },
@@ -21019,22 +21024,22 @@ var items = [{
     destroy: SOUNDID.__STEEL_DESTROY__,
     building: [{
         src: "img/day-smelter-off.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-smelter-on.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-smelter-light-up.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-smelter-light-down.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }],
@@ -21045,9 +21050,9 @@ var items = [{
     score: 0
 }, {
     id: IID.__WOOD__door1,
-    img: {
+    itemButton: {
         src: ["img/inv-wood-door1-out.png", "img/inv-wood-door1-in.png", "img/inv-wood-door1-click.png"],
-        W: [{
+        img: [{
             isLoaded: 0
         }, {
             isLoaded: 0
@@ -21076,13 +21081,13 @@ var items = [{
     _y: [0, 0, 0, 0],
     blueprint: {
         src: "img/day-clear-blue-wood-door1.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     },
     redprint: {
         src: "img/day-redprint-wood-door1.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     },
@@ -21108,29 +21113,29 @@ var items = [{
     packetId: 15,
     interact: {
         src: "img/e-opendoor.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     },
     interactclose: {
         src: "img/e-closedoor.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     },
     broken: [{
         src: "img/day-wood-door1-broken0.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-wood-door1-broken1.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-wood-door1-broken2.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }],
@@ -21138,7 +21143,7 @@ var items = [{
     destroy: SOUNDID.__WOOD_DESTROY__,
     building: {
         src: "img/day-wood-door1.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     },
@@ -21149,9 +21154,9 @@ var items = [{
     score: 0
 }, {
     id: IID.__STONE__door1,
-    img: {
+    itemButton: {
         src: ["img/inv-stone-door1-out.png", "img/inv-stone-door1-in.png", "img/inv-stone-door1-click.png"],
-        W: [{
+        img: [{
             isLoaded: 0
         }, {
             isLoaded: 0
@@ -21180,13 +21185,13 @@ var items = [{
     _y: [0, 0, 0, 0],
     blueprint: {
         src: "img/day-clear-blue-stone-door1.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     },
     redprint: {
         src: "img/day-redprint-stone-door1.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     },
@@ -21212,29 +21217,29 @@ var items = [{
     packetId: 15,
     interact: {
         src: "img/e-opendoor.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     },
     interactclose: {
         src: "img/e-closedoor.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     },
     broken: [{
         src: "img/day-stone-door1-broken0.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-stone-door1-broken1.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-stone-door1-broken2.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }],
@@ -21242,7 +21247,7 @@ var items = [{
     destroy: SOUNDID.__STONE_DESTROY__,
     building: {
         src: "img/day-stone-door1.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     },
@@ -21253,9 +21258,9 @@ var items = [{
     score: 0
 }, {
     id: IID.__STEEL__door1,
-    img: {
+    itemButton: {
         src: ["img/inv-steel-door1-out.png", "img/inv-steel-door1-in.png", "img/inv-steel-door1-click.png"],
-        W: [{
+        img: [{
             isLoaded: 0
         }, {
             isLoaded: 0
@@ -21284,13 +21289,13 @@ var items = [{
     _y: [0, 0, 0, 0],
     blueprint: {
         src: "img/day-clear-blue-stone-door1.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     },
     redprint: {
         src: "img/day-redprint-stone-door1.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     },
@@ -21316,29 +21321,29 @@ var items = [{
     packetId: 15,
     interact: {
         src: "img/e-opendoor.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     },
     interactclose: {
         src: "img/e-closedoor.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     },
     broken: [{
         src: "img/day-steel-door1-broken0.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-steel-door1-broken1.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-steel-door1-broken2.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }],
@@ -21346,7 +21351,7 @@ var items = [{
     destroy: SOUNDID.__STEEL_DESTROY__,
     building: {
         src: "img/day-steel-door1.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     },
@@ -21357,9 +21362,9 @@ var items = [{
     score: 0
 }, {
     id: IID.__SULFUR__,
-    img: {
+    itemButton: {
         src: ["img/inv-sulfur-out.png", "img/inv-sulfur-in.png", "img/inv-sulfur-click.png"],
-        W: [{
+        img: [{
             isLoaded: 0
         }, {
             isLoaded: 0
@@ -21377,9 +21382,9 @@ var items = [{
     score: 32
 }, {
     id: IID.__SHAPED_URANIUM__,
-    img: {
+    itemButton: {
         src: ["img/inv-shaped-uranium-out.png", "img/inv-shaped-uranium-in.png", "img/inv-shaped-uranium-click.png"],
-        W: [{
+        img: [{
             isLoaded: 0
         }, {
             isLoaded: 0
@@ -21397,9 +21402,9 @@ var items = [{
     score: 0
 }, {
     id: IID.__WORKBENCH2__,
-    img: {
+    itemButton: {
         src: ["img/inv-workbench2-out.png", "img/inv-workbench2-in.png", "img/inv-workbench2-click.png"],
-        W: [{
+        img: [{
             isLoaded: 0
         }, {
             isLoaded: 0
@@ -21432,13 +21437,13 @@ var items = [{
     jTile: [0, -1, 0, -1],
     blueprint: {
         src: "img/day-clear-blue-workbench2.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     },
     redprint: {
         src: "img/day-redprint-workbench2.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     },
@@ -21456,7 +21461,7 @@ var items = [{
     packetId: 16,
     interact: {
         src: "img/e-workbench2.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     },
@@ -21464,7 +21469,7 @@ var items = [{
     destroy: SOUNDID.__STEEL_DESTROY__,
     building: {
         src: "img/day-workbench2.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     },
@@ -21475,9 +21480,9 @@ var items = [{
     score: 0
 }, {
     id: IID.__URANIUM__,
-    img: {
+    itemButton: {
         src: ["img/inv-uranium-out.png", "img/inv-uranium-in.png", "img/inv-uranium-click.png"],
-        W: [{
+        img: [{
             isLoaded: 0
         }, {
             isLoaded: 0
@@ -21495,9 +21500,9 @@ var items = [{
     score: 45
 }, {
     id: IID.__WEAVING__,
-    img: {
+    itemButton: {
         src: ["img/inv-weaving-machine-out.png", "img/inv-weaving-machine-in.png", "img/inv-weaving-machine-click.png"],
-        W: [{
+        img: [{
             isLoaded: 0
         }, {
             isLoaded: 0
@@ -21529,13 +21534,13 @@ var items = [{
     _y: [0, 0, 0, 0],
     blueprint: {
         src: "img/day-clear-blue-weaving-machine.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     },
     redprint: {
         src: "img/day-redprint-weaving-machine.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     },
@@ -21553,7 +21558,7 @@ var items = [{
     packetId: 16,
     interact: {
         src: "img/e-weaving-machine.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     },
@@ -21561,7 +21566,7 @@ var items = [{
     destroy: SOUNDID.__WOOD_DESTROY__,
     building: {
         src: "img/day-weaving-machine.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     },
@@ -21572,9 +21577,9 @@ var items = [{
     score: 0
 }, {
     id: IID.__GASOLINE__,
-    img: {
+    itemButton: {
         src: ["img/inv-gasoline-out.png", "img/inv-gasoline-in.png", "img/inv-gasoline-click.png"],
-        W: [{
+        img: [{
             isLoaded: 0
         }, {
             isLoaded: 0
@@ -21592,9 +21597,9 @@ var items = [{
     loot: LOOTID.__GASOLINE__
 }, {
     id: IID.__SULFUR__pickaxe,
-    img: {
+    itemButton: {
         src: ["img/inv-sulfur-pickaxe-out.png", "img/inv-sulfur-pickaxe-in.png", "img/inv-sulfur-pickaxe-click.png"],
-        W: [{
+        img: [{
             isLoaded: 0
         }, {
             isLoaded: 0
@@ -21615,9 +21620,9 @@ var items = [{
     wait: 10
 }, {
     id: IID.__CHEST__,
-    img: {
+    itemButton: {
         src: ["img/inv-chest-out.png", "img/inv-chest-in.png", "img/inv-chest-click.png"],
-        W: [{
+        img: [{
             isLoaded: 0
         }, {
             isLoaded: 0
@@ -21648,13 +21653,13 @@ var items = [{
     _y: [0, 0, 0, 0],
     blueprint: {
         src: "img/day-clear-blue-chest.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     },
     redprint: {
         src: "img/day-redprint-chest.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     },
@@ -21672,7 +21677,7 @@ var items = [{
     packetId: 25,
     interact: {
         src: "img/e-chest.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     },
@@ -21680,7 +21685,7 @@ var items = [{
     destroy: SOUNDID.__WOOD_DESTROY__,
     building: {
         src: "img/day-chest.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     },
@@ -21691,9 +21696,9 @@ var items = [{
     score: 0
 }, {
     id: IID.__FRIDGE__,
-    img: {
+    itemButton: {
         src: ["img/inv-fridge-out.png", "img/inv-fridge-in.png", "img/inv-fridge-click.png"],
-        W: [{
+        img: [{
             isLoaded: 0
         }, {
             isLoaded: 0
@@ -21725,13 +21730,13 @@ var items = [{
     _y: [0, 0, 0, 50],
     blueprint: {
         src: "img/day-clear-blue-fridge.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     },
     redprint: {
         src: "img/day-redprint-fridge.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     },
@@ -21749,7 +21754,7 @@ var items = [{
     packetId: 25,
     interact: {
         src: "img/e-fridge.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     },
@@ -21757,7 +21762,7 @@ var items = [{
     destroy: SOUNDID.__STEEL_DESTROY__,
     building: {
         src: "img/day-fridge.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     },
@@ -21768,9 +21773,9 @@ var items = [{
     score: 0
 }, {
     id: IID.__WOOD__floor1,
-    img: {
+    itemButton: {
         src: ["img/inv-wood-floor-out.png", "img/inv-wood-floor-in.png", "img/inv-wood-floor-click.png"],
-        W: [{
+        img: [{
             isLoaded: 0
         }, {
             isLoaded: 0
@@ -21799,13 +21804,13 @@ var items = [{
     _y: [0, 0, 0, 0],
     blueprint: {
         src: "img/day-clear-blue-wood-floor.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     },
     redprint: {
         src: "img/day-redprint-wood-floor.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     },
@@ -21823,17 +21828,17 @@ var items = [{
     draw: Render.groundFloor,
     broken: [{
         src: "img/day-wood-floor-broken0.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-wood-floor-broken1.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-wood-floor-broken2.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }],
@@ -21841,237 +21846,237 @@ var items = [{
     destroy: SOUNDID.__WOOD_DESTROY__,
     building: [{
         src: "img/day-wood-floor-0.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-wood-floor-1.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-wood-floor-2.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-wood-floor-3.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-wood-floor-4.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-wood-floor-5.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-wood-floor-6.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-wood-floor-7.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-wood-floor-8.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-wood-floor-9.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-wood-floor-10.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-wood-floor-11.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-wood-floor-12.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-wood-floor-13.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-wood-floor-14.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-wood-floor-15.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-wood-floor-16.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-wood-floor-17.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-wood-floor-18.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-wood-floor-19.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-wood-floor-20.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-wood-floor-21.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-wood-floor-22.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-wood-floor-23.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-wood-floor-24.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-wood-floor-25.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-wood-floor-26.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-wood-floor-27.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-wood-floor-28.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-wood-floor-29.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-wood-floor-30.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-wood-floor-31.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-wood-floor-32.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-wood-floor-33.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-wood-floor-34.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-wood-floor-35.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-wood-floor-36.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-wood-floor-37.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-wood-floor-38.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-wood-floor-39.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-wood-floor-40.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-wood-floor-41.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-wood-floor-42.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-wood-floor-43.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-wood-floor-44.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-wood-floor-45.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-wood-floor-46.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }],
@@ -22082,9 +22087,9 @@ var items = [{
     score: 0
 }, {
     id: IID.__HAMMER__,
-    img: {
+    itemButton: {
         src: ["img/inv-hammer-out.png", "img/inv-hammer-in.png", "img/inv-hammer-click.png"],
-        W: [{
+        img: [{
             isLoaded: 0
         }, {
             isLoaded: 0
@@ -22104,9 +22109,9 @@ var items = [{
     wait: 10
 }, {
     id: IID.__SLEEPING_BAG__,
-    img: {
+    itemButton: {
         src: ["img/inv-sleeping-bag-out.png", "img/inv-sleeping-bag-in.png", "img/inv-sleeping-bag-click.png"],
-        W: [{
+        img: [{
             isLoaded: 0
         }, {
             isLoaded: 0
@@ -22137,13 +22142,13 @@ var items = [{
     _y: [0, 0, 0, 0],
     blueprint: {
         src: "img/day-clear-blue-sleeping-bag.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     },
     redprint: {
         src: "img/day-redprint-sleeping-bag.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     },
@@ -22159,7 +22164,7 @@ var items = [{
     destroy: SOUNDID.__PILLOW_DESTROY__,
     building: {
         src: "img/day-sleeping-bag.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     },
@@ -22170,9 +22175,9 @@ var items = [{
     score: 0
 }, {
     id: IID.__REPAIR_HAMMER__,
-    img: {
+    itemButton: {
         src: ["img/inv-repair-hammer-out.png", "img/inv-repair-hammer-in.png", "img/inv-repair-hammer-click.png"],
-        W: [{
+        img: [{
             isLoaded: 0
         }, {
             isLoaded: 0
@@ -22192,9 +22197,9 @@ var items = [{
     wait: 10
 }, {
     id: IID.__NAILS__,
-    img: {
+    itemButton: {
         src: ["img/inv-nails-out.png", "img/inv-nails-in.png", "img/inv-nails-click.png"],
-        W: [{
+        img: [{
             isLoaded: 0
         }, {
             isLoaded: 0
@@ -22211,9 +22216,9 @@ var items = [{
     loot: LOOTID.__NAILS__
 }, {
     id: IID.__WOOD__floor2,
-    img: {
+    itemButton: {
         src: ["img/inv-wood-floor-light-out.png", "img/inv-wood-floor-light-in.png", "img/inv-wood-floor-light-click.png"],
-        W: [{
+        img: [{
             isLoaded: 0
         }, {
             isLoaded: 0
@@ -22242,13 +22247,13 @@ var items = [{
     _y: [0, 0, 0, 0],
     blueprint: {
         src: "img/day-clear-blue-woodlight-floor.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     },
     redprint: {
         src: "img/day-redprint-woodlight-floor.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     },
@@ -22266,17 +22271,17 @@ var items = [{
     draw: Render.groundFloor,
     broken: [{
         src: "img/day-wood-floor-light-broken0.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-wood-floor-light-broken1.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-wood-floor-light-broken2.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }],
@@ -22284,237 +22289,237 @@ var items = [{
     destroy: SOUNDID.__WOOD_DESTROY__,
     building: [{
         src: "img/day-wood-floor-light-0.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-wood-floor-light-1.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-wood-floor-light-2.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-wood-floor-light-3.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-wood-floor-light-4.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-wood-floor-light-5.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-wood-floor-light-6.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-wood-floor-light-7.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-wood-floor-light-8.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-wood-floor-light-9.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-wood-floor-light-10.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-wood-floor-light-11.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-wood-floor-light-12.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-wood-floor-light-13.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-wood-floor-light-14.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-wood-floor-light-15.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-wood-floor-light-16.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-wood-floor-light-17.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-wood-floor-light-18.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-wood-floor-light-19.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-wood-floor-light-20.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-wood-floor-light-21.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-wood-floor-light-22.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-wood-floor-light-23.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-wood-floor-light-24.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-wood-floor-light-25.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-wood-floor-light-26.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-wood-floor-light-27.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-wood-floor-light-28.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-wood-floor-light-29.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-wood-floor-light-30.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-wood-floor-light-31.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-wood-floor-light-32.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-wood-floor-light-33.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-wood-floor-light-34.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-wood-floor-light-35.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-wood-floor-light-36.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-wood-floor-light-37.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-wood-floor-light-38.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-wood-floor-light-39.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-wood-floor-light-40.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-wood-floor-light-41.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-wood-floor-light-42.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-wood-floor-light-43.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-wood-floor-light-44.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-wood-floor-light-45.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-wood-floor-light-46.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }],
@@ -22525,9 +22530,9 @@ var items = [{
     score: 0
 }, {
     id: IID.__WOOD_SMALLWALL__,
-    img: {
+    itemButton: {
         src: ["img/inv-wood-smallwall-out.png", "img/inv-wood-smallwall-in.png", "img/inv-wood-smallwall-click.png"],
-        W: [{
+        img: [{
             isLoaded: 0
         }, {
             isLoaded: 0
@@ -22556,13 +22561,13 @@ var items = [{
     _y: [65, 0, 0, 0],
     blueprint: {
         src: "img/day-clear-blue-wood-smallwall.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     },
     redprint: {
         src: "img/day-redprint-wood-smallwall.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     },
@@ -22588,17 +22593,17 @@ var items = [{
     draw: Render.lowWall,
     broken: [{
         src: "img/day-wood-smallwalls-broken0.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-wood-smallwalls-broken1.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-wood-smallwalls-broken2.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }],
@@ -22606,202 +22611,202 @@ var items = [{
     destroy: SOUNDID.__WOOD_DESTROY__,
     building: [{
         src: "img/day-wood-smallwalls-0.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-wood-smallwalls-1.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-wood-smallwalls-2.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-wood-smallwalls-3.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-wood-smallwalls-4.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-wood-smallwalls-5.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-wood-smallwalls-6.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-wood-smallwalls-7.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-wood-smallwalls-8.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-wood-smallwalls-9.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-wood-smallwalls-10.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-wood-smallwalls-11.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-wood-smallwalls-12.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-wood-smallwalls-13.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-wood-smallwalls-14.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-wood-smallwalls-15.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-wood-smallwalls-16.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-wood-smallwalls-17.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-wood-smallwalls-18.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-wood-smallwalls-19.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-wood-smallwalls-20.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-wood-smallwalls-21.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-wood-smallwalls-22.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-wood-smallwalls-23.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-wood-smallwalls-24.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-wood-smallwalls-25.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-wood-smallwalls-26.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-wood-smallwalls-27.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-wood-smallwalls-28.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-wood-smallwalls-29.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-wood-smallwalls-30.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-wood-smallwalls-31.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-wood-smallwalls-32.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-wood-smallwalls-33.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-wood-smallwalls-34.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-wood-smallwalls-35.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-wood-smallwalls-36.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-wood-smallwalls-37.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-wood-smallwalls-38.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-wood-smallwalls-39.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }],
@@ -22812,9 +22817,9 @@ var items = [{
     score: 0
 }, {
     id: IID.__STONE_SMALLWALL__,
-    img: {
+    itemButton: {
         src: ["img/inv-stone-smallwall-out.png", "img/inv-stone-smallwall-in.png", "img/inv-stone-smallwall-click.png"],
-        W: [{
+        img: [{
             isLoaded: 0
         }, {
             isLoaded: 0
@@ -22843,13 +22848,13 @@ var items = [{
     _y: [65, 0, 0, 0],
     blueprint: {
         src: "img/day-clear-blue-stone-smallwalls.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     },
     redprint: {
         src: "img/day-redprint-stone-smallwalls.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     },
@@ -22875,17 +22880,17 @@ var items = [{
     draw: Render.lowWall,
     broken: [{
         src: "img/day-stone-smallwalls-broken0.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-stone-smallwalls-broken1.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-stone-smallwalls-broken2.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }],
@@ -22893,202 +22898,202 @@ var items = [{
     destroy: SOUNDID.__STONE_DESTROY__,
     building: [{
         src: "img/day-stone-smallwalls-0.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-stone-smallwalls-1.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-stone-smallwalls-2.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-stone-smallwalls-3.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-stone-smallwalls-4.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-stone-smallwalls-5.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-stone-smallwalls-6.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-stone-smallwalls-7.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-stone-smallwalls-8.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-stone-smallwalls-9.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-stone-smallwalls-10.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-stone-smallwalls-11.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-stone-smallwalls-12.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-stone-smallwalls-13.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-stone-smallwalls-14.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-stone-smallwalls-15.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-stone-smallwalls-16.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-stone-smallwalls-17.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-stone-smallwalls-18.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-stone-smallwalls-19.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-stone-smallwalls-20.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-stone-smallwalls-21.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-stone-smallwalls-22.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-stone-smallwalls-23.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-stone-smallwalls-24.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-stone-smallwalls-25.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-stone-smallwalls-26.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-stone-smallwalls-27.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-stone-smallwalls-28.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-stone-smallwalls-29.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-stone-smallwalls-30.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-stone-smallwalls-31.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-stone-smallwalls-32.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-stone-smallwalls-33.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-stone-smallwalls-34.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-stone-smallwalls-35.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-stone-smallwalls-36.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-stone-smallwalls-37.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-stone-smallwalls-38.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-stone-smallwalls-39.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }],
@@ -23099,9 +23104,9 @@ var items = [{
     score: 0
 }, {
     id: IID.__STEEL_SMALLWALL__,
-    img: {
+    itemButton: {
         src: ["img/inv-steel-smallwall-out.png", "img/inv-steel-smallwall-in.png", "img/inv-steel-smallwall-click.png"],
-        W: [{
+        img: [{
             isLoaded: 0
         }, {
             isLoaded: 0
@@ -23130,13 +23135,13 @@ var items = [{
     _y: [65, 0, 0, 0],
     blueprint: {
         src: "img/day-clear-blue-stone-smallwalls.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     },
     redprint: {
         src: "img/day-redprint-stone-smallwalls.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     },
@@ -23162,17 +23167,17 @@ var items = [{
     draw: Render.lowWall,
     broken: [{
         src: "img/day-steel-smallwalls-broken0.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-steel-smallwalls-broken1.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-steel-smallwalls-broken2.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }],
@@ -23180,202 +23185,202 @@ var items = [{
     destroy: SOUNDID.__STEEL_DESTROY__,
     building: [{
         src: "img/day-steel-smallwalls-0.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-steel-smallwalls-1.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-steel-smallwalls-2.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-steel-smallwalls-3.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-steel-smallwalls-4.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-steel-smallwalls-5.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-steel-smallwalls-6.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-steel-smallwalls-7.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-steel-smallwalls-8.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-steel-smallwalls-9.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-steel-smallwalls-10.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-steel-smallwalls-11.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-steel-smallwalls-12.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-steel-smallwalls-13.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-steel-smallwalls-14.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-steel-smallwalls-15.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-steel-smallwalls-16.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-steel-smallwalls-17.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-steel-smallwalls-18.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-steel-smallwalls-19.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-steel-smallwalls-20.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-steel-smallwalls-21.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-steel-smallwalls-22.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-steel-smallwalls-23.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-steel-smallwalls-24.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-steel-smallwalls-25.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-steel-smallwalls-26.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-steel-smallwalls-27.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-steel-smallwalls-28.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-steel-smallwalls-29.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-steel-smallwalls-30.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-steel-smallwalls-31.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-steel-smallwalls-32.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-steel-smallwalls-33.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-steel-smallwalls-34.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-steel-smallwalls-35.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-steel-smallwalls-36.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-steel-smallwalls-37.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-steel-smallwalls-38.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-steel-smallwalls-39.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }],
@@ -23404,9 +23409,9 @@ var items = [{
     draw: Render.furniture
 }, {
     id: IID.__TOMATO_SOUP__,
-    img: {
+    itemButton: {
         src: ["img/inv-tomato-soup-out.png", "img/inv-tomato-soup-in.png", "img/inv-tomato-soup-click.png"],
-        W: [{
+        img: [{
             isLoaded: 0
         }, {
             isLoaded: 0
@@ -23429,9 +23434,9 @@ var items = [{
     wait: 10
 }, {
     id: IID.__SYRINGE__,
-    img: {
+    itemButton: {
         src: ["img/inv-syringe-out.png", "img/inv-syringe-in.png", "img/inv-syringe-click.png"],
-        W: [{
+        img: [{
             isLoaded: 0
         }, {
             isLoaded: 0
@@ -23449,9 +23454,9 @@ var items = [{
     score: 50
 }, {
     id: IID.__CHEMICAL_COMPONENT__,
-    img: {
+    itemButton: {
         src: ["img/inv-chemical-component-out.png", "img/inv-chemical-component-in.png", "img/inv-chemical-component-click.png"],
-        W: [{
+        img: [{
             isLoaded: 0
         }, {
             isLoaded: 0
@@ -23465,9 +23470,9 @@ var items = [{
     score: 50
 }, {
     id: IID.__RADAWAY__,
-    img: {
+    itemButton: {
         src: ["img/inv-radaway-out.png", "img/inv-radaway-in.png", "img/inv-radaway-click.png"],
-        W: [{
+        img: [{
             isLoaded: 0
         }, {
             isLoaded: 0
@@ -23488,9 +23493,9 @@ var items = [{
     wait: 10
 }, {
     id: IID.__SEED_TOMATO__,
-    img: {
+    itemButton: {
         src: ["img/inv-tomato-seed-out.png", "img/inv-tomato-seed-in.png", "img/inv-tomato-seed-click.png"],
-        W: [{
+        img: [{
             isLoaded: 0
         }, {
             isLoaded: 0
@@ -23521,13 +23526,13 @@ var items = [{
     _y: [35, 35, 35, 35],
     blueprint: {
         src: "img/day-clear-blue-tomato.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     },
     redprint: {
         src: "img/day-redprint-tomato.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     },
@@ -23543,27 +23548,27 @@ var items = [{
     destroy: SOUNDID.__NO_SOUND__,
     building: [{
         src: "img/day-plant0-tomato.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-plant1-tomato.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-plant2-tomato.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-plant3-tomato.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-plant4-tomato.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }],
@@ -23574,9 +23579,9 @@ var items = [{
     score: 0
 }, {
     id: IID.__TOMATO__,
-    img: {
+    itemButton: {
         src: ["img/inv-tomato-out.png", "img/inv-tomato-in.png", "img/inv-tomato-click.png"],
-        W: [{
+        img: [{
             isLoaded: 0
         }, {
             isLoaded: 0
@@ -23594,9 +23599,9 @@ var items = [{
     score: 24
 }, {
     id: IID.__ROTTEN_TOMATO__,
-    img: {
+    itemButton: {
         src: ["img/inv-rotten-tomato-out.png", "img/inv-rotten-tomato-in.png", "img/inv-rotten-tomato-click.png"],
-        W: [{
+        img: [{
             isLoaded: 0
         }, {
             isLoaded: 0
@@ -23612,9 +23617,9 @@ var items = [{
     score: 20
 }, {
     id: IID.__CAN__,
-    img: {
+    itemButton: {
         src: ["img/inv-can-out.png", "img/inv-can-in.png", "img/inv-can-click.png"],
-        W: [{
+        img: [{
             isLoaded: 0
         }, {
             isLoaded: 0
@@ -23632,9 +23637,9 @@ var items = [{
     loot: LOOTID.__CAN__
 }, {
     id: IID.__WOOD_CROSSBOW__,
-    img: {
+    itemButton: {
         src: ["img/inv-wood-crossbow-out.png", "img/inv-wood-crossbow-in.png", "img/inv-wood-crossbow-click.png"],
-        W: [{
+        img: [{
             isLoaded: 0
         }, {
             isLoaded: 0
@@ -23656,9 +23661,9 @@ var items = [{
     wait: 10
 }, {
     id: IID.__WOOD_CROSSARROW__,
-    img: {
+    itemButton: {
         src: ["img/inv-wood-crossarrow-out.png", "img/inv-wood-crossarrow-in.png", "img/inv-wood-crossarrow-click.png"],
-        W: [{
+        img: [{
             isLoaded: 0
         }, {
             isLoaded: 0
@@ -23676,9 +23681,9 @@ var items = [{
     loot: LOOTID.__WOOD_CROSSARROW__
 }, {
     id: IID.__NAIL_GUN__,
-    img: {
+    itemButton: {
         src: ["img/inv-nail-gun-out.png", "img/inv-nail-gun-in.png", "img/inv-nail-gun-click.png"],
-        W: [{
+        img: [{
             isLoaded: 0
         }, {
             isLoaded: 0
@@ -23701,9 +23706,9 @@ var items = [{
     wait: 10
 }, {
     id: IID.__SAWED_OFF_SHOTGUN__,
-    img: {
+    itemButton: {
         src: ["img/inv-sawed-off-shotgun-out.png", "img/inv-sawed-off-shotgun-in.png", "img/inv-sawed-off-shotgun-click.png"],
-        W: [{
+        img: [{
             isLoaded: 0
         }, {
             isLoaded: 0
@@ -23725,9 +23730,9 @@ var items = [{
     wait: 10
 }, {
     id: IID.__STONE__floor1,
-    img: {
+    itemButton: {
         src: ["img/inv-stone-floor-out.png", "img/inv-stone-floor-in.png", "img/inv-stone-floor-click.png"],
-        W: [{
+        img: [{
             isLoaded: 0
         }, {
             isLoaded: 0
@@ -23756,13 +23761,13 @@ var items = [{
     _y: [0, 0, 0, 0],
     blueprint: {
         src: "img/day-clear-blue-stone-floor.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     },
     redprint: {
         src: "img/day-redprint-stone-floor.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     },
@@ -23780,17 +23785,17 @@ var items = [{
     draw: Render.groundFloor,
     broken: [{
         src: "img/day-stone-floor-broken0.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-stone-floor-broken1.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-stone-floor-broken2.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }],
@@ -23798,237 +23803,237 @@ var items = [{
     destroy: SOUNDID.__STONE_DESTROY__,
     building: [{
         src: "img/day-stone-floor-0.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-stone-floor-1.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-stone-floor-2.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-stone-floor-3.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-stone-floor-4.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-stone-floor-5.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-stone-floor-6.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-stone-floor-7.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-stone-floor-8.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-stone-floor-9.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-stone-floor-10.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-stone-floor-11.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-stone-floor-12.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-stone-floor-13.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-stone-floor-14.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-stone-floor-15.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-stone-floor-16.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-stone-floor-17.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-stone-floor-18.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-stone-floor-19.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-stone-floor-20.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-stone-floor-21.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-stone-floor-22.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-stone-floor-23.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-stone-floor-24.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-stone-floor-25.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-stone-floor-26.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-stone-floor-27.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-stone-floor-28.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-stone-floor-29.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-stone-floor-30.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-stone-floor-31.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-stone-floor-32.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-stone-floor-33.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-stone-floor-34.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-stone-floor-35.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-stone-floor-36.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-stone-floor-37.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-stone-floor-38.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-stone-floor-39.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-stone-floor-40.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-stone-floor-41.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-stone-floor-42.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-stone-floor-43.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-stone-floor-44.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-stone-floor-45.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-stone-floor-46.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }],
@@ -24039,9 +24044,9 @@ var items = [{
     score: 0
 }, {
     id: IID.__STONE__floor2,
-    img: {
+    itemButton: {
         src: ["img/inv-tiling-floor-out.png", "img/inv-tiling-floor-in.png", "img/inv-tiling-floor-click.png"],
-        W: [{
+        img: [{
             isLoaded: 0
         }, {
             isLoaded: 0
@@ -24070,13 +24075,13 @@ var items = [{
     _y: [0, 0, 0, 0],
     blueprint: {
         src: "img/day-clear-blue-tiling-floor.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     },
     redprint: {
         src: "img/day-redprint-tiling-floor.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     },
@@ -24094,17 +24099,17 @@ var items = [{
     draw: Render.groundFloor,
     broken: [{
         src: "img/day-tiling-floor-broken0.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-tiling-floor-broken1.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-tiling-floor-broken2.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }],
@@ -24112,237 +24117,237 @@ var items = [{
     destroy: SOUNDID.__STONE_DESTROY__,
     building: [{
         src: "img/day-tiling-floor-0.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-tiling-floor-1.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-tiling-floor-2.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-tiling-floor-3.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-tiling-floor-4.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-tiling-floor-5.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-tiling-floor-6.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-tiling-floor-7.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-tiling-floor-8.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-tiling-floor-9.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-tiling-floor-10.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-tiling-floor-11.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-tiling-floor-12.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-tiling-floor-13.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-tiling-floor-14.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-tiling-floor-15.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-tiling-floor-16.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-tiling-floor-17.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-tiling-floor-18.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-tiling-floor-19.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-tiling-floor-20.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-tiling-floor-21.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-tiling-floor-22.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-tiling-floor-23.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-tiling-floor-24.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-tiling-floor-25.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-tiling-floor-26.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-tiling-floor-27.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-tiling-floor-28.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-tiling-floor-29.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-tiling-floor-30.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-tiling-floor-31.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-tiling-floor-32.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-tiling-floor-33.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-tiling-floor-34.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-tiling-floor-35.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-tiling-floor-36.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-tiling-floor-37.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-tiling-floor-38.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-tiling-floor-39.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-tiling-floor-40.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-tiling-floor-41.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-tiling-floor-42.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-tiling-floor-43.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-tiling-floor-44.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-tiling-floor-45.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-tiling-floor-46.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }],
@@ -24372,9 +24377,9 @@ var items = [{
     draw: Render.road
 }, {
     id: IID.__CRISPS__,
-    img: {
+    itemButton: {
         src: ["img/inv-chips-out.png", "img/inv-chips-in.png", "img/inv-chips-click.png"],
-        W: [{
+        img: [{
             isLoaded: 0
         }, {
             isLoaded: 0
@@ -24391,9 +24396,9 @@ var items = [{
     wait: 10
 }, {
     id: IID.__ROTTEN_CRISPS__,
-    img: {
+    itemButton: {
         src: ["img/inv-rotten-chips-out.png", "img/inv-rotten-chips-in.png", "img/inv-rotten-chips-click.png"],
-        W: [{
+        img: [{
             isLoaded: 0
         }, {
             isLoaded: 0
@@ -24409,9 +24414,9 @@ var items = [{
     score: 20
 }, {
     id: IID.__ELECTRONICS__,
-    img: {
+    itemButton: {
         src: ["img/inv-electronic-part-out.png", "img/inv-electronic-part-in.png", "img/inv-electronic-part-click.png"],
-        W: [{
+        img: [{
             isLoaded: 0
         }, {
             isLoaded: 0
@@ -24425,9 +24430,9 @@ var items = [{
     score: 100
 }, {
     id: IID.__JUNK__,
-    img: {
+    itemButton: {
         src: ["img/inv-junk-out.png", "img/inv-junk-in.png", "img/inv-junk-click.png"],
-        W: [{
+        img: [{
             isLoaded: 0
         }, {
             isLoaded: 0
@@ -24441,9 +24446,9 @@ var items = [{
     score: 40
 }, {
     id: IID.__WIRE__,
-    img: {
+    itemButton: {
         src: ["img/inv-wires-out.png", "img/inv-wires-in.png", "img/inv-wires-click.png"],
-        W: [{
+        img: [{
             isLoaded: 0
         }, {
             isLoaded: 0
@@ -24457,9 +24462,9 @@ var items = [{
     score: 40
 }, {
     id: IID.__ENERGY_CELLS__,
-    img: {
+    itemButton: {
         src: ["img/inv-small-energy-cells-out.png", "img/inv-small-energy-cells-in.png", "img/inv-small-energy-cells-click.png"],
-        W: [{
+        img: [{
             isLoaded: 0
         }, {
             isLoaded: 0
@@ -24477,9 +24482,9 @@ var items = [{
     loot: LOOTID.__ENERGY_CELLS__
 }, {
     id: IID.__LASER_PISTOL__,
-    img: {
+    itemButton: {
         src: ["img/inv-laser-pistol-out.png", "img/inv-laser-pistol-in.png", "img/inv-laser-pistol-click.png"],
-        W: [{
+        img: [{
             isLoaded: 0
         }, {
             isLoaded: 0
@@ -24503,9 +24508,9 @@ var items = [{
     wait: 10
 }, {
     id: IID.__TESLA__,
-    img: {
+    itemButton: {
         src: ["img/inv-workbench3-out.png", "img/inv-workbench3-in.png", "img/inv-workbench3-click.png"],
-        W: [{
+        img: [{
             isLoaded: 0
         }, {
             isLoaded: 0
@@ -24541,13 +24546,13 @@ var items = [{
     jTile: [0, -1, 0, -1],
     blueprint: {
         src: "img/day-clear-blue-workbench3.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     },
     redprint: {
         src: "img/day-redprint-workbench3.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     },
@@ -24567,7 +24572,7 @@ var items = [{
     packetId: 16,
     interact: {
         src: "img/e-workbench3.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     },
@@ -24575,53 +24580,53 @@ var items = [{
     destroy: SOUNDID.__STEEL_DESTROY__,
     building: [{
         src: "img/day-workbench3.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-workbench3-1.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-workbench3-2.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-workbench3-3.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }],
     light: [{
         src: "img/day-tesla-light0.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, 0, {
         src: "img/day-tesla-light1.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-tesla-light2.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, 0, {
         src: "img/day-tesla-light3.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-tesla-light4.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-tesla-light5.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
@@ -24632,9 +24637,9 @@ var items = [{
     score: 0
 }, {
     id: IID.__ALLOYS__,
-    img: {
+    itemButton: {
         src: ["img/inv-alloys-out.png", "img/inv-alloys-in.png", "img/inv-alloys-click.png"],
-        W: [{
+        img: [{
             isLoaded: 0
         }, {
             isLoaded: 0
@@ -24653,9 +24658,9 @@ var items = [{
     loot: LOOTID.__ALLOYS__
 }, {
     id: IID.__SULFUR__axe,
-    img: {
+    itemButton: {
         src: ["img/inv-sulfur-axe-out.png", "img/inv-sulfur-axe-in.png", "img/inv-sulfur-axe-click.png"],
-        W: [{
+        img: [{
             isLoaded: 0
         }, {
             isLoaded: 0
@@ -24677,9 +24682,9 @@ var items = [{
     wait: 10
 }, {
     id: IID.__LANDMINE__,
-    img: {
+    itemButton: {
         src: ["img/inv-landmine-out.png", "img/inv-landmine-in.png", "img/inv-landmine-click.png"],
-        W: [{
+        img: [{
             isLoaded: 0
         }, {
             isLoaded: 0
@@ -24711,13 +24716,13 @@ var items = [{
     yCenter: [0, 0, 0, 0],
     blueprint: {
         src: "img/clear-blue-landmine.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     },
     redprint: {
         src: "img/redprint-landmine.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     },
@@ -24735,17 +24740,17 @@ var items = [{
     destroy: SOUNDID.__STEEL_DESTROY__,
     building: [{
         src: "img/day-landmine-0.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-landmine-1.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-landmine-2.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }],
@@ -24756,9 +24761,9 @@ var items = [{
     score: 0
 }, {
     id: IID.__DYNAMITE__,
-    img: {
+    itemButton: {
         src: ["img/inv-dynamite-out.png", "img/inv-dynamite-in.png", "img/inv-dynamite-click.png"],
-        W: [{
+        img: [{
             isLoaded: 0
         }, {
             isLoaded: 0
@@ -24790,13 +24795,13 @@ var items = [{
     _y: [0, 0, 0, 0],
     blueprint: {
         src: "img/clear-blue-dynamite.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     },
     redprint: {
         src: "img/redprint-dynamite.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     },
@@ -24814,12 +24819,12 @@ var items = [{
     destroy: SOUNDID.__NO_SOUND__,
     building: [{
         src: "img/day-dynamite.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/dynamite-yellow.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }],
@@ -24830,9 +24835,9 @@ var items = [{
     score: 0
 }, {
     id: IID.__C4__,
-    img: {
+    itemButton: {
         src: ["img/inv-C4-out.png", "img/inv-C4-in.png", "img/inv-C4-click.png"],
-        W: [{
+        img: [{
             isLoaded: 0
         }, {
             isLoaded: 0
@@ -24864,13 +24869,13 @@ var items = [{
     _y: [0, 0, 0, 0],
     blueprint: {
         src: "img/clear-blue-C4.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     },
     redprint: {
         src: "img/redprint-C4.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     },
@@ -24888,12 +24893,12 @@ var items = [{
     destroy: SOUNDID.__NO_SOUND__,
     building: [{
         src: "img/day-C4.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/C4-red.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }],
@@ -24904,9 +24909,9 @@ var items = [{
     score: 0
 }, {
     id: IID.__C4_TRIGGER__,
-    img: {
+    itemButton: {
         src: ["img/inv-joystick-out.png", "img/inv-joystick-in.png", "img/inv-joystick-click.png"],
-        W: [{
+        img: [{
             isLoaded: 0
         }, {
             isLoaded: 0
@@ -24929,9 +24934,9 @@ var items = [{
     score: 0
 }, {
     id: IID.__COMPOST__,
-    img: {
+    itemButton: {
         src: ["img/inv-composter-out.png", "img/inv-composter-in.png", "img/inv-composter-click.png"],
-        W: [{
+        img: [{
             isLoaded: 0
         }, {
             isLoaded: 0
@@ -24962,13 +24967,13 @@ var items = [{
     _y: [0, 0, 0, 0],
     blueprint: {
         src: "img/clear-blue-composter.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     },
     redprint: {
         src: "img/redprint-composter.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     },
@@ -24986,7 +24991,7 @@ var items = [{
     packetId: 16,
     interact: {
         src: "img/e-composter.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     },
@@ -24994,12 +24999,12 @@ var items = [{
     destroy: SOUNDID.__STEEL_DESTROY__,
     building: [{
         src: "img/day-composter-off.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-composter.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }],
@@ -25010,9 +25015,9 @@ var items = [{
     score: 0
 }, {
     id: IID.__ARMOR_PHYSIC_1__,
-    img: {
+    itemButton: {
         src: ["img/inv-metal-helmet-out.png", "img/inv-metal-helmet-in.png", "img/inv-metal-helmet-click.png"],
-        W: [{
+        img: [{
             isLoaded: 0
         }, {
             isLoaded: 0
@@ -25041,9 +25046,9 @@ var items = [{
     speed: -0.01
 }, {
     id: IID.__ARMOR_PHYSIC_2__,
-    img: {
+    itemButton: {
         src: ["img/inv-welding-helmet-out.png", "img/inv-welding-helmet-in.png", "img/inv-welding-helmet-click.png"],
-        W: [{
+        img: [{
             isLoaded: 0
         }, {
             isLoaded: 0
@@ -25073,9 +25078,9 @@ var items = [{
     speed: -0.02
 }, {
     id: IID.__ARMOR_PHYSIC_3__,
-    img: {
+    itemButton: {
         src: ["img/inv-gladiator-helmet-out.png", "img/inv-gladiator-helmet-in.png", "img/inv-gladiator-helmet-click.png"],
-        W: [{
+        img: [{
             isLoaded: 0
         }, {
             isLoaded: 0
@@ -25105,9 +25110,9 @@ var items = [{
     speed: -0.03
 }, {
     id: IID.__LEATHER_BOAR__jacket,
-    img: {
+    itemButton: {
         src: ["img/inv-leather-jacket-out.png", "img/inv-leather-jacket-in.png", "img/inv-leather-jacket-click.png"],
-        W: [{
+        img: [{
             isLoaded: 0
         }, {
             isLoaded: 0
@@ -25134,9 +25139,9 @@ var items = [{
     speed: 0
 }, {
     id: IID.__ARMOR_FIRE_2__,
-    img: {
+    itemButton: {
         src: ["img/inv-kevlar-suit-out.png", "img/inv-kevlar-suit-in.png", "img/inv-kevlar-suit-click.png"],
-        W: [{
+        img: [{
             isLoaded: 0
         }, {
             isLoaded: 0
@@ -25166,9 +25171,9 @@ var items = [{
     speed: 0
 }, {
     id: IID.__ARMOR_FIRE_3__,
-    img: {
+    itemButton: {
         src: ["img/inv-SWAT-suit-out.png", "img/inv-SWAT-suit-in.png", "img/inv-SWAT-suit-click.png"],
-        W: [{
+        img: [{
             isLoaded: 0
         }, {
             isLoaded: 0
@@ -25198,9 +25203,9 @@ var items = [{
     speed: -0.01
 }, {
     id: IID.__ARMOR_DEMINER__,
-    img: {
+    itemButton: {
         src: ["img/inv-protective-suit-out.png", "img/inv-protective-suit-in.png", "img/inv-protective-suit-click.png"],
-        W: [{
+        img: [{
             isLoaded: 0
         }, {
             isLoaded: 0
@@ -25229,9 +25234,9 @@ var items = [{
     speed: -0.03
 }, {
     id: IID.__ARMOR_TESLA_1__,
-    img: {
+    itemButton: {
         src: ["img/inv-tesla-0-out.png", "img/inv-tesla-0-in.png", "img/inv-tesla-0-click.png"],
-        W: [{
+        img: [{
             isLoaded: 0
         }, {
             isLoaded: 0
@@ -25261,9 +25266,9 @@ var items = [{
     speed: 0
 }, {
     id: IID.__ARMOR_TESLA_2__,
-    img: {
+    itemButton: {
         src: ["img/inv-tesla-armor-out.png", "img/inv-tesla-armor-in.png", "img/inv-tesla-armor-click.png"],
-        W: [{
+        img: [{
             isLoaded: 0
         }, {
             isLoaded: 0
@@ -25293,9 +25298,9 @@ var items = [{
     speed: -0.02
 }, {
     id: IID.__WOOD__espike,
-    img: {
+    itemButton: {
         src: ["img/inv-wood-spike-out.png", "img/inv-wood-spike-in.png", "img/inv-wood-spike-click.png"],
-        W: [{
+        img: [{
             isLoaded: 0
         }, {
             isLoaded: 0
@@ -25324,13 +25329,13 @@ var items = [{
     yCenter: [0, 0, 0, 0],
     blueprint: {
         src: "img/clear-blue-wood-spike.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     },
     redprint: {
         src: "img/redprint-wood-spike.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     },
@@ -25344,33 +25349,33 @@ var items = [{
     draw: Render.spike,
     hidden: [{
         src: "img/day-wood-spike-cover1.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-wood-spike-cover2.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-wood-spike-cover3.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }],
     deployed: [{
         src: "img/day-wood-spike-1.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-wood-spike-2.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-wood-spike-3.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }],
@@ -25381,9 +25386,9 @@ var items = [{
     score: 0
 }, {
     id: IID.__LASER_SUBMACHINE__,
-    img: {
+    itemButton: {
         src: ["img/inv-laser-submachine-out.png", "img/inv-laser-submachine-in.png", "img/inv-laser-submachine-click.png"],
-        W: [{
+        img: [{
             isLoaded: 0
         }, {
             isLoaded: 0
@@ -25407,9 +25412,9 @@ var items = [{
     wait: 10
 }, {
     id: IID.__GRENADE__,
-    img: {
+    itemButton: {
         src: ["img/inv-grenade-out.png", "img/inv-grenade-in.png", "img/inv-grenade-click.png"],
-        W: [{
+        img: [{
             isLoaded: 0
         }, {
             isLoaded: 0
@@ -25433,9 +25438,9 @@ var items = [{
     wait: 10
 }, {
     id: IID.__SUPER_HAMMER__,
-    img: {
+    itemButton: {
         src: ["img/inv-super-hammer-out.png", "img/inv-super-hammer-in.png", "img/inv-super-hammer-click.png"],
-        W: [{
+        img: [{
             isLoaded: 0
         }, {
             isLoaded: 0
@@ -25450,9 +25455,9 @@ var items = [{
     wait: 10
 }, {
     id: IID.__GHOUL_BLOOD__,
-    img: {
+    itemButton: {
         src: ["img/inv-ghoul-blood-out.png", "img/inv-ghoul-blood-in.png", "img/inv-ghoul-blood-click.png"],
-        W: [{
+        img: [{
             isLoaded: 0
         }, {
             isLoaded: 0
@@ -25468,9 +25473,9 @@ var items = [{
 
 {
     id: IID.__CAMOUFLAGE_GEAR__,
-    img: {
+    itemButton: {
         src: ["img/inv-camouflage-gear-out.png", "img/inv-camouflage-gear-in.png", "img/inv-camouflage-gear-click.png"],
-        W: [{
+        img: [{
             isLoaded: 0
         }, {
             isLoaded: 0
@@ -25500,9 +25505,9 @@ var items = [{
 
 {
     id: IID.__AGITATOR__,
-    img: {
+    itemButton: {
         src: ["img/inv-agitator-out.png", "img/inv-agitator-in.png", "img/inv-agitator-click.png"],
-        W: [{
+        img: [{
             isLoaded: 0
         }, {
             isLoaded: 0
@@ -25533,13 +25538,13 @@ var items = [{
     _y: [0, 0, 0, 0],
     blueprint: {
         src: "img/clear-blue-agitator.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     },
     redprint: {
         src: "img/redprint-agitator.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     },
@@ -25557,7 +25562,7 @@ var items = [{
     packetId: 16,
     interact: {
         src: "img/e-agitator.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     },
@@ -25565,22 +25570,22 @@ var items = [{
     destroy: SOUNDID.__STEEL_DESTROY__,
     building: [{
         src: "img/day-agitator1-off.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-agitator1-on.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-agitator-1.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-agitator-2.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }],
@@ -25597,9 +25602,9 @@ var items = [{
     score: 0
 }, {
     id: IID.__GHOUL_DRUG__,
-    img: {
+    itemButton: {
         src: ["img/inv-ghoul-drug-out.png", "img/inv-ghoul-drug-in.png", "img/inv-ghoul-drug-click.png"],
-        W: [{
+        img: [{
             isLoaded: 0
         }, {
             isLoaded: 0
@@ -25622,9 +25627,9 @@ var items = [{
     wait: 10
 }, {
     id: IID.__MUSHROOM1__,
-    img: {
+    itemButton: {
         src: ["img/inv-mushroom1-out.png", "img/inv-mushroom1-in.png", "img/inv-mushroom1-click.png"],
-        W: [{
+        img: [{
             isLoaded: 0
         }, {
             isLoaded: 0
@@ -25642,9 +25647,9 @@ var items = [{
     score: 24
 }, {
     id: IID.__MUSHROOM1__2,
-    img: {
+    itemButton: {
         src: ["img/inv-mushroom2-out.png", "img/inv-mushroom2-in.png", "img/inv-mushroom2-click.png"],
-        W: [{
+        img: [{
             isLoaded: 0
         }, {
             isLoaded: 0
@@ -25662,9 +25667,9 @@ var items = [{
     score: 24
 }, {
     id: IID.__MUSHROOM1__3,
-    img: {
+    itemButton: {
         src: ["img/inv-mushroom3-out.png", "img/inv-mushroom3-in.png", "img/inv-mushroom3-click.png"],
-        W: [{
+        img: [{
             isLoaded: 0
         }, {
             isLoaded: 0
@@ -25682,9 +25687,9 @@ var items = [{
     score: 24
 }, {
     id: IID.__ROTTEN_MUSHROOM1__,
-    img: {
+    itemButton: {
         src: ["img/inv-rotten-mushroom1-out.png", "img/inv-rotten-mushroom1-in.png", "img/inv-rotten-mushroom1-click.png"],
-        W: [{
+        img: [{
             isLoaded: 0
         }, {
             isLoaded: 0
@@ -25700,9 +25705,9 @@ var items = [{
     score: 20
 }, {
     id: IID.__ROTTEN_MUSHROOM2__,
-    img: {
+    itemButton: {
         src: ["img/inv-rotten-mushroom2-out.png", "img/inv-rotten-mushroom2-in.png", "img/inv-rotten-mushroom2-click.png"],
-        W: [{
+        img: [{
             isLoaded: 0
         }, {
             isLoaded: 0
@@ -25718,9 +25723,9 @@ var items = [{
     score: 20
 }, {
     id: IID.__ROTTEN_MUSHROOM3__,
-    img: {
+    itemButton: {
         src: ["img/inv-rotten-mushroom3-out.png", "img/inv-rotten-mushroom3-in.png", "img/inv-rotten-mushroom3-click.png"],
-        W: [{
+        img: [{
             isLoaded: 0
         }, {
             isLoaded: 0
@@ -25736,9 +25741,9 @@ var items = [{
     score: 20
 }, {
     id: IID.__LAPADONE__,
-    img: {
+    itemButton: {
         src: ["img/inv-lapadoine-out.png", "img/inv-lapadoine-in.png", "img/inv-lapadoine-click.png"],
-        W: [{
+        img: [{
             isLoaded: 0
         }, {
             isLoaded: 0
@@ -25760,9 +25765,9 @@ var items = [{
     wait: 10
 }, {
     id: IID.__LAPABOT_REPAIR__,
-    img: {
+    itemButton: {
         src: ["img/inv-lapabot-out.png", "img/inv-lapabot-in.png", "img/inv-lapabot-click.png"],
-        W: [{
+        img: [{
             isLoaded: 0
         }, {
             isLoaded: 0
@@ -25795,13 +25800,13 @@ var items = [{
     _y: [35, 35, 35, 35],
     blueprint: {
         src: "img/clear-blue-lapabot.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     },
     redprint: {
         src: "img/redprint-lapabot.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     },
@@ -25817,33 +25822,33 @@ var items = [{
     destroy: SOUNDID.__STEEL_DESTROY__,
     building: [{
         src: "img/lapabot0.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/lapabot1.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/lapabot2.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/lapabot3.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/lapabot4.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }],
     builder: {
         src: "img/day-lapabot-builder.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     },
@@ -25859,9 +25864,9 @@ var items = [{
     killConstructor: 1
 }, {
     id: IID.__SMALL_WIRE__,
-    img: {
+    itemButton: {
         src: ["img/inv-small-wire-out.png", "img/inv-small-wire-in.png", "img/inv-small-wire-click.png"],
-        W: [{
+        img: [{
             isLoaded: 0
         }, {
             isLoaded: 0
@@ -25875,9 +25880,9 @@ var items = [{
     score: 40
 }, {
     id: IID.__PUMPKIN__,
-    img: {
+    itemButton: {
         src: ["img/inv-pumpkin-out.png", "img/inv-pumpkin-in.png", "img/inv-pumpkin-click.png"],
-        W: [{
+        img: [{
             isLoaded: 0
         }, {
             isLoaded: 0
@@ -25895,9 +25900,9 @@ var items = [{
     score: 24
 }, {
     id: IID.__ROTTEN_PUMPKIN__,
-    img: {
+    itemButton: {
         src: ["img/inv-rotten-pumpkin-out.png", "img/inv-rotten-pumpkin-in.png", "img/inv-rotten-pumpkin-click.png"],
-        W: [{
+        img: [{
             isLoaded: 0
         }, {
             isLoaded: 0
@@ -25913,9 +25918,9 @@ var items = [{
     score: 20
 }, {
     id: IID.__SEED_GHOUL__,
-    img: {
+    itemButton: {
         src: ["img/inv-ghoul5-out.png", "img/inv-ghoul5-in.png", "img/inv-ghoul5-click.png"],
-        W: [{
+        img: [{
             isLoaded: 0
         }, {
             isLoaded: 0
@@ -25947,13 +25952,13 @@ var items = [{
     _y: [35, 35, 35, 35],
     blueprint: {
         src: "img/clear-blue-root.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     },
     redprint: {
         src: "img/redprint-root.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     },
@@ -25969,27 +25974,27 @@ var items = [{
     destroy: SOUNDID.__PILLOW_DESTROY__,
     building: [{
         src: "img/day-root0-ghoul.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-root1-ghoul.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-root2-ghoul.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-root3-ghoul.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-root4-ghoul.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }],
@@ -26005,9 +26010,9 @@ var items = [{
     killConstructor: 0
 }, {
     id: IID.__EXTRACTOR__,
-    img: {
+    itemButton: {
         src: ["img/inv-extractor-out.png", "img/inv-extractor-in.png", "img/inv-extractor-click.png"],
-        W: [{
+        img: [{
             isLoaded: 0
         }, {
             isLoaded: 0
@@ -26041,13 +26046,13 @@ var items = [{
     _y: [0, 0, 0, 0],
     blueprint: {
         src: "img/clear-blue-extractor.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     },
     redprint: {
         src: "img/redprint-extractor.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     },
@@ -26065,7 +26070,7 @@ var items = [{
     packetId: 16,
     interact: {
         src: "img/e-extractor.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     },
@@ -26073,17 +26078,17 @@ var items = [{
     destroy: SOUNDID.__STEEL_DESTROY__,
     building: [{
         src: "img/day-extractor.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-extractor-rotate.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-extractor-off.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }],
@@ -26100,9 +26105,9 @@ var items = [{
     score: 0
 }, {
     id: IID.__ANTIDOTE__,
-    img: {
+    itemButton: {
         src: ["img/inv-antidote-out.png", "img/inv-antidote-in.png", "img/inv-antidote-click.png"],
-        W: [{
+        img: [{
             isLoaded: 0
         }, {
             isLoaded: 0
@@ -26124,9 +26129,9 @@ var items = [{
     wait: 10
 }, {
     id: IID.__ANTIDOTE__flower,
-    img: {
+    itemButton: {
         src: ["img/inv-antidote-flower-out.png", "img/inv-antidote-flower-in.png", "img/inv-antidote-flower-click.png"],
-        W: [{
+        img: [{
             isLoaded: 0
         }, {
             isLoaded: 0
@@ -26140,9 +26145,9 @@ var items = [{
     score: 400
 }, {
     id: IID.__SEED_TREE__,
-    img: {
+    itemButton: {
         src: ["img/inv-seed-tree-out.png", "img/inv-seed-tree-in.png", "img/inv-seed-tree-click.png"],
-        W: [{
+        img: [{
             isLoaded: 0
         }, {
             isLoaded: 0
@@ -26173,13 +26178,13 @@ var items = [{
     _y: [35, 35, 35, 35],
     blueprint: {
         src: "img/clear-blue-plant-tree.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     },
     redprint: {
         src: "img/redprint-plant-tree.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     },
@@ -26195,27 +26200,27 @@ var items = [{
     destroy: SOUNDID.__WOOD_DESTROY__,
     building: [{
         src: "img/day-plant-tree0.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-plant-tree1.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-plant-tree2.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-plant-tree3.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-plant4-orange.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }],
@@ -26226,9 +26231,9 @@ var items = [{
     score: 0
 }, {
     id: IID.__ACORN__,
-    img: {
+    itemButton: {
         src: ["img/inv-acorn-out.png", "img/inv-acorn-in.png", "img/inv-acorn-click.png"],
-        W: [{
+        img: [{
             isLoaded: 0
         }, {
             isLoaded: 0
@@ -26246,9 +26251,9 @@ var items = [{
     score: 24
 }, {
     id: IID.__ROTTEN_ACORN__,
-    img: {
+    itemButton: {
         src: ["img/inv-rotten-acorn-out.png", "img/inv-rotten-acorn-in.png", "img/inv-rotten-acorn-click.png"],
-        W: [{
+        img: [{
             isLoaded: 0
         }, {
             isLoaded: 0
@@ -26264,9 +26269,9 @@ var items = [{
     score: 20
 }, {
     id: IID.__LASER_SNIPER__,
-    img: {
+    itemButton: {
         src: ["img/inv-laser-sniper-out.png", "img/inv-laser-sniper-in.png", "img/inv-laser-sniper-click.png"],
-        W: [{
+        img: [{
             isLoaded: 0
         }, {
             isLoaded: 0
@@ -26290,9 +26295,9 @@ var items = [{
     wait: 10
 }, {
     id: IID.__HAL_BOT__,
-    img: {
+    itemButton: {
         src: ["img/inv-hal-bot-out.png", "img/inv-hal-bot-in.png", "img/inv-hal-bot-click.png"],
-        W: [{
+        img: [{
             isLoaded: 0
         }, {
             isLoaded: 0
@@ -26325,13 +26330,13 @@ var items = [{
     _y: [35, 35, 35, 35],
     blueprint: {
         src: "img/clear-blue-hal-bot.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     },
     redprint: {
         src: "img/redprint-hal-bot.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     },
@@ -26347,33 +26352,33 @@ var items = [{
     destroy: SOUNDID.__STEEL_DESTROY__,
     building: [{
         src: "img/hal-bot0.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/hal-bot1.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/hal-bot2.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/hal-bot3.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/hal-bot4.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }],
     builder: {
         src: "img/day-hal-bot-builder.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     },
@@ -26389,9 +26394,9 @@ var items = [{
     killConstructor: 1
 }, {
     id: IID.__TESLA_BOT__,
-    img: {
+    itemButton: {
         src: ["img/inv-tesla-bot-out.png", "img/inv-tesla-bot-in.png", "img/inv-tesla-bot-click.png"],
-        W: [{
+        img: [{
             isLoaded: 0
         }, {
             isLoaded: 0
@@ -26425,13 +26430,13 @@ var items = [{
     _y: [35, 35, 35, 35],
     blueprint: {
         src: "img/clear-blue-tesla-bot.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     },
     redprint: {
         src: "img/redprint-tesla-bot.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     },
@@ -26447,33 +26452,33 @@ var items = [{
     destroy: SOUNDID.__STEEL_DESTROY__,
     building: [{
         src: "img/tesla-bot0.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/tesla-bot1.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/tesla-bot2.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/tesla-bot3.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/tesla-bot4.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }],
     builder: {
         src: "img/day-lapabot-builder.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     },
@@ -26489,9 +26494,9 @@ var items = [{
     killConstructor: 1
 }, {
     id: IID.__CABLE0__,
-    img: {
+    itemButton: {
         src: ["img/inv-wire0-out.png", "img/inv-wire0-in.png", "img/inv-wire0-click.png"],
-        W: [{
+        img: [{
             isLoaded: 0
         }, {
             isLoaded: 0
@@ -26520,13 +26525,13 @@ var items = [{
     _y: [0, 0, 0, 0],
     blueprint: {
         src: "img/clear-blue-wire0.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     },
     redprint: {
         src: "img/redprint-wire0.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     },
@@ -26551,7 +26556,7 @@ var items = [{
     destroy: SOUNDID.__PILLOW_DESTROY__,
     building: {
         src: "img/day-wire0.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     },
@@ -26562,9 +26567,9 @@ var items = [{
     score: 0
 }, {
     id: IID.__CABLE0__2,
-    img: {
+    itemButton: {
         src: ["img/inv-wire1-out.png", "img/inv-wire1-in.png", "img/inv-wire1-click.png"],
-        W: [{
+        img: [{
             isLoaded: 0
         }, {
             isLoaded: 0
@@ -26593,13 +26598,13 @@ var items = [{
     _y: [0, 0, 0, 0],
     blueprint: {
         src: "img/clear-blue-wire1.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     },
     redprint: {
         src: "img/redprint-wire1.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     },
@@ -26624,7 +26629,7 @@ var items = [{
     destroy: SOUNDID.__PILLOW_DESTROY__,
     building: {
         src: "img/day-wire1.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     },
@@ -26635,9 +26640,9 @@ var items = [{
     score: 0
 }, {
     id: IID.__CABLE0__3,
-    img: {
+    itemButton: {
         src: ["img/inv-wire2-out.png", "img/inv-wire2-in.png", "img/inv-wire2-click.png"],
-        W: [{
+        img: [{
             isLoaded: 0
         }, {
             isLoaded: 0
@@ -26666,13 +26671,13 @@ var items = [{
     _y: [0, 0, 0, 0],
     blueprint: {
         src: "img/clear-blue-wire2.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     },
     redprint: {
         src: "img/redprint-wire2.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     },
@@ -26697,7 +26702,7 @@ var items = [{
     destroy: SOUNDID.__PILLOW_DESTROY__,
     building: {
         src: "img/day-wire2.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     },
@@ -26708,9 +26713,9 @@ var items = [{
     score: 0
 }, {
     id: IID.__CABLE0__4,
-    img: {
+    itemButton: {
         src: ["img/inv-wire3-out.png", "img/inv-wire3-in.png", "img/inv-wire3-click.png"],
-        W: [{
+        img: [{
             isLoaded: 0
         }, {
             isLoaded: 0
@@ -26739,13 +26744,13 @@ var items = [{
     _y: [0, 0, 0, 0],
     blueprint: {
         src: "img/clear-blue-wire3.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     },
     redprint: {
         src: "img/redprint-wire3.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     },
@@ -26770,7 +26775,7 @@ var items = [{
     destroy: SOUNDID.__PILLOW_DESTROY__,
     building: {
         src: "img/day-wire3.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     },
@@ -26781,9 +26786,9 @@ var items = [{
     score: 0
 }, {
     id: IID.__SWITCH__,
-    img: {
+    itemButton: {
         src: ["img/inv-switch-out.png", "img/inv-switch-in.png", "img/inv-switch-click.png"],
-        W: [{
+        img: [{
             isLoaded: 0
         }, {
             isLoaded: 0
@@ -26813,13 +26818,13 @@ var items = [{
     _y: [0, 0, 0, 0],
     blueprint: {
         src: "img/clear-blue-switch.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     },
     redprint: {
         src: "img/redprint-switch.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     },
@@ -26843,7 +26848,7 @@ var items = [{
     packetId: 37,
     interact: {
         src: "img/e-turnon.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     },
@@ -26851,12 +26856,12 @@ var items = [{
     destroy: SOUNDID.__STEEL_DESTROY__,
     building: [{
         src: "img/day-switch-off.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-switch-on.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }],
@@ -26867,9 +26872,9 @@ var items = [{
     score: 0
 }, {
     id: IID.__GATE_OR__,
-    img: {
+    itemButton: {
         src: ["img/inv-switch-or-out.png", "img/inv-switch-or-in.png", "img/inv-switch-or-click.png"],
-        W: [{
+        img: [{
             isLoaded: 0
         }, {
             isLoaded: 0
@@ -26899,13 +26904,13 @@ var items = [{
     _y: [0, 0, 0, 0],
     blueprint: {
         src: "img/clear-blue-switch-or.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     },
     redprint: {
         src: "img/redprint-switch-or.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     },
@@ -26930,7 +26935,7 @@ var items = [{
     destroy: SOUNDID.__STEEL_DESTROY__,
     building: {
         src: "img/day-switch-or.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     },
@@ -26941,9 +26946,9 @@ var items = [{
     score: 0
 }, {
     id: IID.__GATE_AND__,
-    img: {
+    itemButton: {
         src: ["img/inv-switch-and-out.png", "img/inv-switch-and-in.png", "img/inv-switch-and-click.png"],
-        W: [{
+        img: [{
             isLoaded: 0
         }, {
             isLoaded: 0
@@ -26973,13 +26978,13 @@ var items = [{
     _y: [0, 0, 0, 0],
     blueprint: {
         src: "img/clear-blue-switch-and.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     },
     redprint: {
         src: "img/redprint-switch-and.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     },
@@ -27004,7 +27009,7 @@ var items = [{
     destroy: SOUNDID.__STEEL_DESTROY__,
     building: {
         src: "img/day-switch-and.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     },
@@ -27015,9 +27020,9 @@ var items = [{
     score: 0
 }, {
     id: IID.__GATE_NOT__,
-    img: {
+    itemButton: {
         src: ["img/inv-switch-reverse-out.png", "img/inv-switch-reverse-in.png", "img/inv-switch-reverse-click.png"],
-        W: [{
+        img: [{
             isLoaded: 0
         }, {
             isLoaded: 0
@@ -27047,13 +27052,13 @@ var items = [{
     _y: [0, 0, 0, 0],
     blueprint: {
         src: "img/clear-blue-switch-reverse.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     },
     redprint: {
         src: "img/redprint-switch-reverse.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     },
@@ -27078,7 +27083,7 @@ var items = [{
     destroy: SOUNDID.__STEEL_DESTROY__,
     building: {
         src: "img/day-switch-reverse.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     },
@@ -27089,9 +27094,9 @@ var items = [{
     score: 0
 }, {
     id: IID.__LAMP__,
-    img: {
+    itemButton: {
         src: ["img/inv-lamp-white-out.png", "img/inv-lamp-white-in.png", "img/inv-lamp-white-click.png"],
-        W: [{
+        img: [{
             isLoaded: 0
         }, {
             isLoaded: 0
@@ -27121,13 +27126,13 @@ var items = [{
     _y: [0, 0, 0, 0],
     blueprint: {
         src: "img/clear-blue-lamp.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     },
     redprint: {
         src: "img/redprint-lamp.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     },
@@ -27153,7 +27158,7 @@ var items = [{
     packetId: 36,
     interact: {
         src: "img/e-light.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     },
@@ -27161,79 +27166,79 @@ var items = [{
     destroy: SOUNDID.__STEEL_DESTROY__,
     building: {
         src: "img/day-lamp-off.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     },
     buildingOn: [{
         src: "img/day-lamp-white.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-lamp-yellow.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-lamp-green.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-lamp-clear-blue.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-lamp-purple.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-lamp-pink.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-lamp-orange.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }],
     buildingTop: [{
         src: "img/day-lamp-light-white.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-lamp-light-yellow.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-lamp-light-green.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-lamp-light-clear-blue.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-lamp-light-purple.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-lamp-light-pink.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-lamp-light-orange.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }],
@@ -27244,9 +27249,9 @@ var items = [{
     score: 0
 }, {
     id: IID.__CABLE0__wall,
-    img: {
+    itemButton: {
         src: ["img/inv-cable-wall-out.png", "img/inv-cable-wall-in.png", "img/inv-cable-wall-click.png"],
-        W: [{
+        img: [{
             isLoaded: 0
         }, {
             isLoaded: 0
@@ -27276,13 +27281,13 @@ var items = [{
     _y: [0, 0, 0, 0],
     blueprint: {
         src: "img/clear-blue-cable-wall.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     },
     redprint: {
         src: "img/redprint-cable-wall.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     },
@@ -27307,22 +27312,22 @@ var items = [{
     destroy: SOUNDID.__STEEL_DESTROY__,
     building: [{
         src: "img/day-cable-wall.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-cable-wall1.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-cable-wall2.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-cable-wall3.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }],
@@ -27333,9 +27338,9 @@ var items = [{
     score: 0
 }, {
     id: IID.__AUTOMATIC_DOOR__,
-    img: {
+    itemButton: {
         src: ["img/inv-automatic-door-out.png", "img/inv-automatic-door-in.png", "img/inv-automatic-door-click.png"],
-        W: [{
+        img: [{
             isLoaded: 0
         }, {
             isLoaded: 0
@@ -27366,13 +27371,13 @@ var items = [{
     _y: [0, 0, 0, 0],
     blueprint: {
         src: "img/clear-blue-automatic-door.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     },
     redprint: {
         src: "img/redprint-automatic-door.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     },
@@ -27398,43 +27403,43 @@ var items = [{
     building: [
         [{
             src: "img/day-automatic-door-off.png",
-            W: {
+            img: {
                 isLoaded: 0
             }
         }, {
             src: "img/day-automatic-door1-off.png",
-            W: {
+            img: {
                 isLoaded: 0
             }
         }, {
             src: "img/day-automatic-door2-off.png",
-            W: {
+            img: {
                 isLoaded: 0
             }
         }, {
             src: "img/day-automatic-door3-off.png",
-            W: {
+            img: {
                 isLoaded: 0
             }
         }],
         [{
             src: "img/day-automatic-door-on.png",
-            W: {
+            img: {
                 isLoaded: 0
             }
         }, {
             src: "img/day-automatic-door1-on.png",
-            W: {
+            img: {
                 isLoaded: 0
             }
         }, {
             src: "img/day-automatic-door2-on.png",
-            W: {
+            img: {
                 isLoaded: 0
             }
         }, {
             src: "img/day-automatic-door3-on.png",
-            W: {
+            img: {
                 isLoaded: 0
             }
         }]
@@ -27446,9 +27451,9 @@ var items = [{
     score: 0
 }, {
     id: IID.__PLATFORM__,
-    img: {
+    itemButton: {
         src: ["img/inv-platform-out.png", "img/inv-platform-in.png", "img/inv-platform-click.png"],
-        W: [{
+        img: [{
             isLoaded: 0
         }, {
             isLoaded: 0
@@ -27478,13 +27483,13 @@ var items = [{
     _y: [0, 0, 0, 0],
     blueprint: {
         src: "img/clear-blue-platform-off.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     },
     redprint: {
         src: "img/redprint-platform-off.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     },
@@ -27509,7 +27514,7 @@ var items = [{
     destroy: SOUNDID.__STEEL_DESTROY__,
     building: {
         src: "img/day-platform-off.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     },
@@ -27520,9 +27525,9 @@ var items = [{
     score: 0
 }, {
     id: IID.__STONE__cave,
-    img: {
+    itemButton: {
         src: ["img/inv-stone-cave-out.png", "img/inv-stone-cave-in.png", "img/inv-stone-cave-click.png"],
-        W: [{
+        img: [{
             isLoaded: 0
         }, {
             isLoaded: 0
@@ -27551,13 +27556,13 @@ var items = [{
     _y: [0, 0, 0, 0],
     blueprint: {
         src: "img/clear-blue-stone-cave.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     },
     redprint: {
         src: "img/redprint-stone-cave.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     },
@@ -27576,17 +27581,17 @@ var items = [{
     drawFloor: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
     broken: [{
         src: "img/day-stone-cave-broken0.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-stone-cave-broken1.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-stone-cave-broken2.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }],
@@ -27594,237 +27599,237 @@ var items = [{
     destroy: SOUNDID.__STONE_DESTROY__,
     building: [{
         src: "img/day-stone-cave0.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-stone-cave1.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-stone-cave2.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-stone-cave3.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-stone-cave4.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-stone-cave5.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-stone-cave6.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-stone-cave7.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-stone-cave8.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-stone-cave9.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-stone-cave10.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-stone-cave11.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-stone-cave12.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-stone-cave13.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-stone-cave14.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-stone-cave15.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-stone-cave16.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-stone-cave17.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-stone-cave18.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-stone-cave19.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-stone-cave20.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-stone-cave21.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-stone-cave22.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-stone-cave23.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-stone-cave24.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-stone-cave25.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-stone-cave26.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-stone-cave27.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-stone-cave28.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-stone-cave29.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-stone-cave30.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-stone-cave31.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-stone-cave32.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-stone-cave33.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-stone-cave34.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-stone-cave35.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-stone-cave36.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-stone-cave37.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-stone-cave38.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-stone-cave39.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-stone-cave40.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-stone-cave41.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-stone-cave42.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-stone-cave43.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-stone-cave44.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-stone-cave45.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-stone-cave46.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }],
@@ -27835,9 +27840,9 @@ var items = [{
     score: 0
 }, {
     id: IID.__BUNKER_WALL__,
-    img: {
+    itemButton: {
         src: ["img/inv-bunker-wall-out.png", "img/inv-bunker-wall-in.png", "img/inv-bunker-wall-click.png"],
-        W: [{
+        img: [{
             isLoaded: 0
         }, {
             isLoaded: 0
@@ -27867,13 +27872,13 @@ var items = [{
     _y: [0, 0, 0, 0],
     blueprint: {
         src: "img/clear-blue-bunker-wall.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     },
     redprint: {
         src: "img/redprint-bunker-wall.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     },
@@ -27892,17 +27897,17 @@ var items = [{
     drawFloor: [1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
     broken: [{
         src: "img/day-bunker-wall-broken0.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-bunker-wall-broken1.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-bunker-wall-broken2.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }],
@@ -27910,237 +27915,237 @@ var items = [{
     destroy: SOUNDID.__STEEL_DESTROY__,
     building: [{
         src: "img/day-bunker-wall0.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-bunker-wall1.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-bunker-wall2.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-bunker-wall3.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-bunker-wall4.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-bunker-wall5.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-bunker-wall6.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-bunker-wall7.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-bunker-wall8.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-bunker-wall9.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-bunker-wall10.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-bunker-wall11.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-bunker-wall12.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-bunker-wall13.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-bunker-wall14.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-bunker-wall15.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-bunker-wall16.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-bunker-wall17.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-bunker-wall18.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-bunker-wall19.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-bunker-wall20.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-bunker-wall21.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-bunker-wall22.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-bunker-wall23.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-bunker-wall24.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-bunker-wall25.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-bunker-wall26.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-bunker-wall27.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-bunker-wall28.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-bunker-wall29.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-bunker-wall30.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-bunker-wall31.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-bunker-wall32.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-bunker-wall33.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-bunker-wall34.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-bunker-wall35.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-bunker-wall36.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-bunker-wall37.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-bunker-wall38.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-bunker-wall39.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-bunker-wall40.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-bunker-wall41.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-bunker-wall42.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-bunker-wall43.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-bunker-wall44.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-bunker-wall45.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-bunker-wall46.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }],
@@ -28151,9 +28156,9 @@ var items = [{
     score: 0
 }, {
     id: IID.__GOLD_FLOOR__,
-    img: {
+    itemButton: {
         src: ["img/inv-mustard-floor-out.png", "img/inv-mustard-floor-in.png", "img/inv-mustard-floor-click.png"],
-        W: [{
+        img: [{
             isLoaded: 0
         }, {
             isLoaded: 0
@@ -28182,13 +28187,13 @@ var items = [{
     _y: [0, 0, 0, 0],
     blueprint: {
         src: "img/day-clear-blue-stone-floor.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     },
     redprint: {
         src: "img/day-redprint-stone-floor.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     },
@@ -28206,17 +28211,17 @@ var items = [{
     draw: Render.groundFloor,
     broken: [{
         src: "img/day-mustard-floor-broken0.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-mustard-floor-broken1.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-mustard-floor-broken2.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }],
@@ -28224,237 +28229,237 @@ var items = [{
     destroy: SOUNDID.__PILLOW_DESTROY__,
     building: [{
         src: "img/day-mustard-floor-0.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-mustard-floor-1.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-mustard-floor-2.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-mustard-floor-3.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-mustard-floor-4.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-mustard-floor-5.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-mustard-floor-6.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-mustard-floor-7.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-mustard-floor-8.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-mustard-floor-9.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-mustard-floor-10.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-mustard-floor-11.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-mustard-floor-12.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-mustard-floor-13.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-mustard-floor-14.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-mustard-floor-15.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-mustard-floor-16.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-mustard-floor-17.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-mustard-floor-18.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-mustard-floor-19.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-mustard-floor-20.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-mustard-floor-21.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-mustard-floor-22.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-mustard-floor-23.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-mustard-floor-24.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-mustard-floor-25.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-mustard-floor-26.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-mustard-floor-27.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-mustard-floor-28.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-mustard-floor-29.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-mustard-floor-30.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-mustard-floor-31.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-mustard-floor-32.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-mustard-floor-33.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-mustard-floor-34.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-mustard-floor-35.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-mustard-floor-36.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-mustard-floor-37.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-mustard-floor-38.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-mustard-floor-39.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-mustard-floor-40.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-mustard-floor-41.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-mustard-floor-42.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-mustard-floor-43.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-mustard-floor-44.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-mustard-floor-45.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-mustard-floor-46.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }],
@@ -28465,9 +28470,9 @@ var items = [{
     score: 0
 }, {
     id: IID.__RED_FLOOR__,
-    img: {
+    itemButton: {
         src: ["img/inv-red-floor-out.png", "img/inv-red-floor-in.png", "img/inv-red-floor-click.png"],
-        W: [{
+        img: [{
             isLoaded: 0
         }, {
             isLoaded: 0
@@ -28496,13 +28501,13 @@ var items = [{
     _y: [0, 0, 0, 0],
     blueprint: {
         src: "img/day-clear-blue-stone-floor.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     },
     redprint: {
         src: "img/day-redprint-stone-floor.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     },
@@ -28520,17 +28525,17 @@ var items = [{
     draw: Render.groundFloor,
     broken: [{
         src: "img/day-red-floor-broken0.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-red-floor-broken1.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-red-floor-broken2.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }],
@@ -28538,237 +28543,237 @@ var items = [{
     destroy: SOUNDID.__PILLOW_DESTROY__,
     building: [{
         src: "img/day-red-floor-0.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-red-floor-1.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-red-floor-2.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-red-floor-3.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-red-floor-4.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-red-floor-5.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-red-floor-6.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-red-floor-7.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-red-floor-8.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-red-floor-9.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-red-floor-10.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-red-floor-11.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-red-floor-12.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-red-floor-13.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-red-floor-14.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-red-floor-15.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-red-floor-16.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-red-floor-17.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-red-floor-18.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-red-floor-19.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-red-floor-20.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-red-floor-21.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-red-floor-22.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-red-floor-23.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-red-floor-24.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-red-floor-25.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-red-floor-26.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-red-floor-27.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-red-floor-28.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-red-floor-29.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-red-floor-30.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-red-floor-31.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-red-floor-32.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-red-floor-33.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-red-floor-34.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-red-floor-35.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-red-floor-36.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-red-floor-37.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-red-floor-38.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-red-floor-39.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-red-floor-40.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-red-floor-41.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-red-floor-42.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-red-floor-43.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-red-floor-44.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-red-floor-45.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-red-floor-46.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }],
@@ -28779,9 +28784,9 @@ var items = [{
     score: 0
 }, {
     id: IID.__WELDING_MACHINE__,
-    img: {
+    itemButton: {
         src: ["img/inv-welding-machine-out.png", "img/inv-welding-machine-in.png", "img/inv-welding-machine-click.png"],
-        W: [{
+        img: [{
             isLoaded: 0
         }, {
             isLoaded: 0
@@ -28813,13 +28818,13 @@ var items = [{
     _y: [0, 0, 0, 0],
     blueprint: {
         src: "img/clear-blue-welding-machine.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     },
     redprint: {
         src: "img/redprint-welding-machine.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     },
@@ -28837,7 +28842,7 @@ var items = [{
     packetId: 16,
     interact: {
         src: "img/e-welding-machine.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     },
@@ -28845,7 +28850,7 @@ var items = [{
     destroy: SOUNDID.__STEEL_DESTROY__,
     building: {
         src: "img/day-welding-machine.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     },
@@ -28856,9 +28861,9 @@ var items = [{
     score: 0
 }, {
     id: IID.__CABLE0__4,
-    img: {
+    itemButton: {
         src: ["img/inv-wire4-out.png", "img/inv-wire4-in.png", "img/inv-wire4-click.png"],
-        W: [{
+        img: [{
             isLoaded: 0
         }, {
             isLoaded: 0
@@ -28887,13 +28892,13 @@ var items = [{
     _y: [0, 0, 0, 0],
     blueprint: {
         src: "img/clear-blue-wire4.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     },
     redprint: {
         src: "img/redprint-wire4.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     },
@@ -28918,7 +28923,7 @@ var items = [{
     destroy: SOUNDID.__PILLOW_DESTROY__,
     building: {
         src: "img/day-wire4.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     },
@@ -28929,9 +28934,9 @@ var items = [{
     score: 0
 }, {
     id: IID.__GATE_TIMER__,
-    img: {
+    itemButton: {
         src: ["img/inv-timer-out.png", "img/inv-timer-in.png", "img/inv-timer-click.png"],
-        W: [{
+        img: [{
             isLoaded: 0
         }, {
             isLoaded: 0
@@ -28961,13 +28966,13 @@ var items = [{
     _y: [0, 0, 0, 0],
     blueprint: {
         src: "img/clear-blue-timer.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     },
     redprint: {
         src: "img/redprint-timer.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     },
@@ -28991,7 +28996,7 @@ var items = [{
     packetId: 38,
     interact: {
         src: "img/e-light.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     },
@@ -28999,22 +29004,22 @@ var items = [{
     destroy: SOUNDID.__STEEL_DESTROY__,
     building: [{
         src: "img/day-timer-0.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-timer-1.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-timer-2.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }, {
         src: "img/day-timer-3.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     }],
@@ -29025,9 +29030,9 @@ var items = [{
     score: 0
 }, {
     id: IID.__GATE_XOR__,
-    img: {
+    itemButton: {
         src: ["img/inv-xor-out.png", "img/inv-xor-in.png", "img/inv-xor-click.png"],
-        W: [{
+        img: [{
             isLoaded: 0
         }, {
             isLoaded: 0
@@ -29057,13 +29062,13 @@ var items = [{
     _y: [0, 0, 0, 0],
     blueprint: {
         src: "img/clear-blue-xor.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     },
     redprint: {
         src: "img/redprint-xor.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     },
@@ -29088,7 +29093,7 @@ var items = [{
     destroy: SOUNDID.__STEEL_DESTROY__,
     building: {
         src: "img/day-xor.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     },
@@ -29103,9 +29108,9 @@ var items = [{
 
 {
     id: IID.__VISION_1__,
-    img: {
+    itemButton: {
         src: ["img/skill-eye1-out.png", "img/skill-eye1-in.png", "img/skill-eye1-click.png"],
-        W: [{
+        img: [{
             isLoaded: 0
         }, {
             isLoaded: 0
@@ -29119,9 +29124,9 @@ var items = [{
 
 {
     id: IID.__VISION_2__,
-    img: {
+    itemButton: {
         src: ["img/skill-eye2-out.png", "img/skill-eye2-in.png", "img/skill-eye2-click.png"],
-        W: [{
+        img: [{
             isLoaded: 0
         }, {
             isLoaded: 0
@@ -29135,9 +29140,9 @@ var items = [{
 
 {
     id: IID.__VISION_3__,
-    img: {
+    itemButton: {
         src: ["img/skill-eye3-out.png", "img/skill-eye3-in.png", "img/skill-eye3-click.png"],
-        W: [{
+        img: [{
             isLoaded: 0
         }, {
             isLoaded: 0
@@ -29152,9 +29157,9 @@ var items = [{
 
 {
     id: IID.__BUILDER_1__,
-    img: {
+    itemButton: {
         src: ["img/skill-builder1-out.png", "img/skill-builder1-in.png", "img/skill-builder1-click.png"],
-        W: [{
+        img: [{
             isLoaded: 0
         }, {
             isLoaded: 0
@@ -29165,9 +29170,9 @@ var items = [{
     detail: new Detail("Builder 1", "Multiplies some craft by two", SKILLS.__SKILL__, window.undefined, window.undefined, window.undefined, 6, window.undefined, 2)
 }, {
     id: IID.__BUILDER_2__,
-    img: {
+    itemButton: {
         src: ["img/skill-builder2-out.png", "img/skill-builder2-in.png", "img/skill-builder2-click.png"],
-        W: [{
+        img: [{
             isLoaded: 0
         }, {
             isLoaded: 0
@@ -29182,9 +29187,9 @@ var items = [{
 
 {
     id: IID.__INV_1__,
-    img: {
+    itemButton: {
         src: ["img/skill-inv1-out.png", "img/skill-inv1-in.png", "img/skill-inv1-click.png"],
-        W: [{
+        img: [{
             isLoaded: 0
         }, {
             isLoaded: 0
@@ -29198,9 +29203,9 @@ var items = [{
 
 {
     id: IID.__INV_2__,
-    img: {
+    itemButton: {
         src: ["img/skill-inv2-out.png", "img/skill-inv2-in.png", "img/skill-inv2-click.png"],
-        W: [{
+        img: [{
             isLoaded: 0
         }, {
             isLoaded: 0
@@ -29214,9 +29219,9 @@ var items = [{
 
 {
     id: IID.__INV_3__,
-    img: {
+    itemButton: {
         src: ["img/skill-inv3-out.png", "img/skill-inv3-in.png", "img/skill-inv3-click.png"],
-        W: [{
+        img: [{
             isLoaded: 0
         }, {
             isLoaded: 0
@@ -29230,9 +29235,9 @@ var items = [{
 
 {
     id: IID.__INV_4__,
-    img: {
+    itemButton: {
         src: ["img/skill-inv4-out.png", "img/skill-inv4-in.png", "img/skill-inv4-click.png"],
-        W: [{
+        img: [{
             isLoaded: 0
         }, {
             isLoaded: 0
@@ -29246,9 +29251,9 @@ var items = [{
 
 {
     id: IID.__INV_5__,
-    img: {
+    itemButton: {
         src: ["img/skill-inv5-out.png", "img/skill-inv5-in.png", "img/skill-inv5-click.png"],
-        W: [{
+        img: [{
             isLoaded: 0
         }, {
             isLoaded: 0
@@ -29265,9 +29270,9 @@ var items = [{
     
 {
     id: IID.__FEATHERWEIGHT__,
-    img: {
+    itemButton: {
         src: ["img/skill-lightweight-out.png", "img/skill-lightweight-in.png", "img/skill-lightweight-click.png"],
-        W: [{
+        img: [{
             isLoaded: 0
         }, {
             isLoaded: 0
@@ -29352,7 +29357,7 @@ ROAD[COUNTER] = {
     destroy: SOUNDID.__NO_SOUND__,
     building: {
         src: "img/day-road0.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     },
@@ -29388,7 +29393,7 @@ FURNITURE[FURNITUREID.__SOFA0__] = {
     destroy: SOUNDID.__PILLOW_DESTROY__,
     building: {
         src: "img/day-sofa0.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     },
@@ -30040,7 +30045,7 @@ FURNITURE[FURNITUREID.__TOILET0__].loot = [
 ];
 var LOOT = [{
     id: LOOTID.__SMALL_WOOD__,
-    W: {
+    img: {
         isLoaded: 0
     },
     src: "img/day-ground-wood0.png",
@@ -30050,7 +30055,7 @@ var LOOT = [{
     angle: 0
 }, {
     id: LOOTID.__MEDIUM_WOOD__,
-    W: {
+    img: {
         isLoaded: 0
     },
     src: "img/day-ground-wood1.png",
@@ -30060,7 +30065,7 @@ var LOOT = [{
     angle: 0
 }, {
     id: LOOTID.__BIG_WOOD__,
-    W: {
+    img: {
         isLoaded: 0
     },
     src: "img/day-ground-wood2.png",
@@ -30070,7 +30075,7 @@ var LOOT = [{
     angle: 0
 }, {
     id: LOOTID.__SMALL_STONE__,
-    W: {
+    img: {
         isLoaded: 0
     },
     src: "img/day-ground-stone0.png",
@@ -30080,7 +30085,7 @@ var LOOT = [{
     angle: 0
 }, {
     id: LOOTID.__MEDIUM_STONE__,
-    W: {
+    img: {
         isLoaded: 0
     },
     src: "img/day-ground-stone1.png",
@@ -30090,7 +30095,7 @@ var LOOT = [{
     angle: 0
 }, {
     id: LOOTID.__BIG_STONE__,
-    W: {
+    img: {
         isLoaded: 0
     },
     src: "img/day-ground-stone2.png",
@@ -30100,7 +30105,7 @@ var LOOT = [{
     angle: 0
 }, {
     id: LOOTID.__STEEL__,
-    W: {
+    img: {
         isLoaded: 0
     },
     src: "img/day-ground-steel.png",
@@ -30110,7 +30115,7 @@ var LOOT = [{
     angle: 0
 }, {
     id: LOOTID.__ANIMAL_FAT__,
-    W: {
+    img: {
         isLoaded: 0
     },
     src: "img/day-ground-animal-fat.png",
@@ -30120,7 +30125,7 @@ var LOOT = [{
     angle: 0
 }, {
     id: LOOTID.__ANIMAL_TENDON__,
-    W: {
+    img: {
         isLoaded: 0
     },
     src: "img/day-ground-animal-tendon.png",
@@ -30130,7 +30135,7 @@ var LOOT = [{
     angle: 0
 }, {
     id: LOOTID.__STRING__,
-    W: {
+    img: {
         isLoaded: 0
     },
     src: "img/day-ground-string.png",
@@ -30140,7 +30145,7 @@ var LOOT = [{
     angle: 0
 }, {
     id: LOOTID.__LEATHER_BOAR__,
-    W: {
+    img: {
         isLoaded: 0
     },
     src: "img/day-ground-leather-boar.png",
@@ -30150,7 +30155,7 @@ var LOOT = [{
     angle: 0
 }, {
     id: LOOTID.__SHAPED_METAL__,
-    W: {
+    img: {
         isLoaded: 0
     },
     src: "img/day-ground-shaped-metal.png",
@@ -30160,7 +30165,7 @@ var LOOT = [{
     angle: 0
 }, {
     id: LOOTID.__RAW_STEAK__,
-    W: {
+    img: {
         isLoaded: 0
     },
     src: "img/day-ground-raw-steak.png",
@@ -30170,7 +30175,7 @@ var LOOT = [{
     angle: 0
 }, {
     id: LOOTID.__COOKED_STEAK__,
-    W: {
+    img: {
         isLoaded: 0
     },
     src: "img/day-ground-cooked-steak.png",
@@ -30180,7 +30185,7 @@ var LOOT = [{
     angle: 0
 }, {
     id: LOOTID.__ROTTEN_STEAK__,
-    W: {
+    img: {
         isLoaded: 0
     },
     src: "img/day-ground-rotten-steak.png",
@@ -30190,7 +30195,7 @@ var LOOT = [{
     angle: 0
 }, {
     id: LOOTID.__ORANGE__,
-    W: {
+    img: {
         isLoaded: 0
     },
     src: "img/day-ground-orange.png",
@@ -30200,7 +30205,7 @@ var LOOT = [{
     angle: 0
 }, {
     id: LOOTID.__ROTTEN_ORANGE__,
-    W: {
+    img: {
         isLoaded: 0
     },
     src: "img/day-ground-rotten-orange.png",
@@ -30210,7 +30215,7 @@ var LOOT = [{
     angle: 0
 }, {
     id: LOOTID.__SEED_ORANGE__,
-    W: {
+    img: {
         isLoaded: 0
     },
     src: "img/day-ground-seed-orange.png",
@@ -30220,7 +30225,7 @@ var LOOT = [{
     angle: 0
 }, {
     id: LOOTID.__HACHET__,
-    W: {
+    img: {
         isLoaded: 0
     },
     src: "img/day-ground-hachet.png",
@@ -30230,7 +30235,7 @@ var LOOT = [{
     angle: 0.5
 }, {
     id: LOOTID.__STONE_PICKAXE__,
-    W: {
+    img: {
         isLoaded: 0
     },
     src: "img/day-ground-stone-pickaxe.png",
@@ -30240,7 +30245,7 @@ var LOOT = [{
     angle: 0.3
 }, {
     id: LOOTID.__STEEL_PICKAXE__,
-    W: {
+    img: {
         isLoaded: 0
     },
     src: "img/day-ground-steel-pickaxe.png",
@@ -30250,7 +30255,7 @@ var LOOT = [{
     angle: 0.3
 }, {
     id: LOOTID.__STONE_AXE__,
-    W: {
+    img: {
         isLoaded: 0
     },
     src: "img/day-ground-stone-axe.png",
@@ -30260,7 +30265,7 @@ var LOOT = [{
     angle: 0.5
 }, {
     id: LOOTID.__WORKBENCH__,
-    W: {
+    img: {
         isLoaded: 0
     },
     src: "img/day-ground-workbench.png",
@@ -30270,7 +30275,7 @@ var LOOT = [{
     angle: 0
 }, {
     id: LOOTID.__WOOD_SPEAR__,
-    W: {
+    img: {
         isLoaded: 0
     },
     src: "img/day-ground-wood-spear.png",
@@ -30280,7 +30285,7 @@ var LOOT = [{
     angle: 0.6
 }, {
     id: LOOTID.__WOOD_BOW__,
-    W: {
+    img: {
         isLoaded: 0
     },
     src: "img/day-ground-wood-bow.png",
@@ -30290,7 +30295,7 @@ var LOOT = [{
     angle: 0
 }, {
     id: LOOTID.__9MM__,
-    W: {
+    img: {
         isLoaded: 0
     },
     src: "img/day-ground-9mm.png",
@@ -30300,7 +30305,7 @@ var LOOT = [{
     angle: -0.1
 }, {
     id: LOOTID.__DESERT_EAGLE__,
-    W: {
+    img: {
         isLoaded: 0
     },
     src: "img/day-ground-desert-eagle.png",
@@ -30310,7 +30315,7 @@ var LOOT = [{
     angle: -0.1
 }, {
     id: LOOTID.__SHOTGUN__,
-    W: {
+    img: {
         isLoaded: 0
     },
     src: "img/day-ground-shotgun.png",
@@ -30320,7 +30325,7 @@ var LOOT = [{
     angle: -0.5
 }, {
     id: LOOTID.__AK47__,
-    W: {
+    img: {
         isLoaded: 0
     },
     src: "img/day-ground-ak47.png",
@@ -30330,7 +30335,7 @@ var LOOT = [{
     angle: -0.5
 }, {
     id: LOOTID.__SNIPER__,
-    W: {
+    img: {
         isLoaded: 0
     },
     src: "img/day-ground-sniper.png",
@@ -30340,7 +30345,7 @@ var LOOT = [{
     angle: -0.5
 }, {
     id: LOOTID.__WOOD_WALL__,
-    W: {
+    img: {
         isLoaded: 0
     },
     src: "img/day-ground-wood-wall.png",
@@ -30350,7 +30355,7 @@ var LOOT = [{
     angle: 0
 }, {
     id: LOOTID.__STONE_WALL__,
-    W: {
+    img: {
         isLoaded: 0
     },
     src: "img/day-ground-stone-wall.png",
@@ -30360,7 +30365,7 @@ var LOOT = [{
     angle: 0
 }, {
     id: LOOTID.__STEEL_WALL__,
-    W: {
+    img: {
         isLoaded: 0
     },
     src: "img/day-ground-steel-wall.png",
@@ -30370,7 +30375,7 @@ var LOOT = [{
     angle: 0
 }, {
     id: LOOTID.__WOOD_DOOR__,
-    W: {
+    img: {
         isLoaded: 0
     },
     src: "img/day-ground-wood-door.png",
@@ -30380,7 +30385,7 @@ var LOOT = [{
     angle: 0
 }, {
     id: LOOTID.__STONE_DOOR__,
-    W: {
+    img: {
         isLoaded: 0
     },
     src: "img/day-ground-stone-door.png",
@@ -30390,7 +30395,7 @@ var LOOT = [{
     angle: 0
 }, {
     id: LOOTID.__STEEL_DOOR__,
-    W: {
+    img: {
         isLoaded: 0
     },
     src: "img/day-ground-steel-door.png",
@@ -30400,7 +30405,7 @@ var LOOT = [{
     angle: 0
 }, {
     id: LOOTID.__CAMPFIRE__,
-    W: {
+    img: {
         isLoaded: 0
     },
     src: "img/day-ground-campfire.png",
@@ -30410,7 +30415,7 @@ var LOOT = [{
     angle: 0
 }, {
     id: LOOTID.__BULLET_9MM__,
-    W: {
+    img: {
         isLoaded: 0
     },
     src: "img/day-ground-bullet-9mm.png",
@@ -30420,7 +30425,7 @@ var LOOT = [{
     angle: 0
 }, {
     id: LOOTID.__BULLET_SHOTGUN__,
-    W: {
+    img: {
         isLoaded: 0
     },
     src: "img/day-ground-bullet-shotgun.png",
@@ -30430,7 +30435,7 @@ var LOOT = [{
     angle: 0
 }, {
     id: LOOTID.__BULLET_SNIPER__,
-    W: {
+    img: {
         isLoaded: 0
     },
     src: "img/day-ground-bullet-sniper.png",
@@ -30440,7 +30445,7 @@ var LOOT = [{
     angle: 0
 }, {
     id: LOOTID.__MEDIKIT__,
-    W: {
+    img: {
         isLoaded: 0
     },
     src: "img/day-ground-medikit.png",
@@ -30450,7 +30455,7 @@ var LOOT = [{
     angle: 0
 }, {
     id: LOOTID.__BANDAGE__,
-    W: {
+    img: {
         isLoaded: 0
     },
     src: "img/day-ground-bandage.png",
@@ -30460,7 +30465,7 @@ var LOOT = [{
     angle: 0
 }, {
     id: LOOTID.__SODA__,
-    W: {
+    img: {
         isLoaded: 0
     },
     src: "img/day-ground-soda.png",
@@ -30470,7 +30475,7 @@ var LOOT = [{
     angle: 0
 }, {
     id: LOOTID.__MP5__,
-    W: {
+    img: {
         isLoaded: 0
     },
     src: "img/day-ground-MP5.png",
@@ -30480,7 +30485,7 @@ var LOOT = [{
     angle: -0.5
 }, {
     id: LOOTID.__HEADSCARF__,
-    W: {
+    img: {
         isLoaded: 0
     },
     src: "img/day-ground-headscarf.png",
@@ -30490,7 +30495,7 @@ var LOOT = [{
     angle: 0
 }, {
     id: LOOTID.__CHAPKA__,
-    W: {
+    img: {
         isLoaded: 0
     },
     src: "img/day-ground-chapka.png",
@@ -30500,7 +30505,7 @@ var LOOT = [{
     angle: 0
 }, {
     id: LOOTID.__WINTER_COAT__,
-    W: {
+    img: {
         isLoaded: 0
     },
     src: "img/day-ground-coat.png",
@@ -30510,7 +30515,7 @@ var LOOT = [{
     angle: 0
 }, {
     id: LOOTID.__GAZ_MASK__,
-    W: {
+    img: {
         isLoaded: 0
     },
     src: "img/day-ground-gaz-mask.png",
@@ -30520,7 +30525,7 @@ var LOOT = [{
     angle: 0
 }, {
     id: LOOTID.__GAZ_PROTECTION__,
-    W: {
+    img: {
         isLoaded: 0
     },
     src: "img/day-ground-gaz-protection.png",
@@ -30530,7 +30535,7 @@ var LOOT = [{
     angle: 0
 }, {
     id: LOOTID.__RADIATION_SUIT__,
-    W: {
+    img: {
         isLoaded: 0
     },
     src: "img/day-ground-radiation-suit.png",
@@ -30540,7 +30545,7 @@ var LOOT = [{
     angle: 0
 }, {
     id: LOOTID.__WOOD_ARROW__,
-    W: {
+    img: {
         isLoaded: 0
     },
     src: "img/day-ground-wood-arrow.png",
@@ -30550,7 +30555,7 @@ var LOOT = [{
     angle: 0
 }, {
     id: LOOTID.__CAMPFIRE_BBQ__,
-    W: {
+    img: {
         isLoaded: 0
     },
     src: "img/day-ground-campfire-bbq.png",
@@ -30560,7 +30565,7 @@ var LOOT = [{
     angle: 0
 }, {
     id: LOOTID.__SMELTER__,
-    W: {
+    img: {
         isLoaded: 0
     },
     src: "img/day-ground-smelter.png",
@@ -30570,7 +30575,7 @@ var LOOT = [{
     angle: 0
 }, {
     id: LOOTID.__WOOD_BIGDOOR__,
-    W: {
+    img: {
         isLoaded: 0
     },
     src: "img/day-ground-wood-door1.png",
@@ -30580,7 +30585,7 @@ var LOOT = [{
     angle: 0
 }, {
     id: LOOTID.__STONE_BIGDOOR__,
-    W: {
+    img: {
         isLoaded: 0
     },
     src: "img/day-ground-stone-door1.png",
@@ -30590,7 +30595,7 @@ var LOOT = [{
     angle: 0
 }, {
     id: LOOTID.__STEEL_BIGDOOR__,
-    W: {
+    img: {
         isLoaded: 0
     },
     src: "img/day-ground-steel-door1.png",
@@ -30600,7 +30605,7 @@ var LOOT = [{
     angle: 0
 }, {
     id: LOOTID.__SULFUR__,
-    W: {
+    img: {
         isLoaded: 0
     },
     src: "img/day-ground-sulfur.png",
@@ -30610,7 +30615,7 @@ var LOOT = [{
     angle: 0
 }, {
     id: LOOTID.__SHAPED_URANIUM__,
-    W: {
+    img: {
         isLoaded: 0
     },
     src: "img/day-ground-shaped-uranium.png",
@@ -30620,7 +30625,7 @@ var LOOT = [{
     angle: 0
 }, {
     id: LOOTID.__WORKBENCH2__,
-    W: {
+    img: {
         isLoaded: 0
     },
     src: "img/day-ground-workbench2.png",
@@ -30630,7 +30635,7 @@ var LOOT = [{
     angle: 0
 }, {
     id: LOOTID.__URANIUM__,
-    W: {
+    img: {
         isLoaded: 0
     },
     src: "img/day-ground-uranium.png",
@@ -30640,7 +30645,7 @@ var LOOT = [{
     angle: 0
 }, {
     id: LOOTID.__WEAVING__,
-    W: {
+    img: {
         isLoaded: 0
     },
     src: "img/day-ground-weaving-machine.png",
@@ -30650,7 +30655,7 @@ var LOOT = [{
     angle: 0
 }, {
     id: LOOTID.__GASOLINE__,
-    W: {
+    img: {
         isLoaded: 0
     },
     src: "img/day-ground-gasoline.png",
@@ -30660,7 +30665,7 @@ var LOOT = [{
     angle: 0
 }, {
     id: LOOTID.__SULFUR_PICKAXE__,
-    W: {
+    img: {
         isLoaded: 0
     },
     src: "img/day-ground-sulfur-pickaxe.png",
@@ -30670,7 +30675,7 @@ var LOOT = [{
     angle: 0.3
 }, {
     id: LOOTID.__CHEST__,
-    W: {
+    img: {
         isLoaded: 0
     },
     src: "img/day-ground-chest.png",
@@ -30680,7 +30685,7 @@ var LOOT = [{
     angle: 0.3
 }, {
     id: LOOTID.__FRIDGE__,
-    W: {
+    img: {
         isLoaded: 0
     },
     src: "img/day-ground-fridge.png",
@@ -30690,7 +30695,7 @@ var LOOT = [{
     angle: 0.3
 }, {
     id: LOOTID.__WOOD_FLOOR__,
-    W: {
+    img: {
         isLoaded: 0
     },
     src: "img/day-ground-wood-floor.png",
@@ -30700,7 +30705,7 @@ var LOOT = [{
     angle: 0
 }, {
     id: LOOTID.__HAMMER__,
-    W: {
+    img: {
         isLoaded: 0
     },
     src: "img/day-ground-hammer.png",
@@ -30710,7 +30715,7 @@ var LOOT = [{
     angle: 0.3
 }, {
     id: LOOTID.__SLEEPING_BAG__,
-    W: {
+    img: {
         isLoaded: 0
     },
     src: "img/day-ground-sleeping-bag.png",
@@ -30720,7 +30725,7 @@ var LOOT = [{
     angle: 0.3
 }, {
     id: LOOTID.__REPAIR_HAMMER__,
-    W: {
+    img: {
         isLoaded: 0
     },
     src: "img/day-ground-repair-hammer.png",
@@ -30730,7 +30735,7 @@ var LOOT = [{
     angle: 0.3
 }, {
     id: LOOTID.__NAILS__,
-    W: {
+    img: {
         isLoaded: 0
     },
     src: "img/day-ground-nails.png",
@@ -30740,7 +30745,7 @@ var LOOT = [{
     angle: 0.3
 }, {
     id: LOOTID.__WOODLIGHT_FLOOR__,
-    W: {
+    img: {
         isLoaded: 0
     },
     src: "img/day-ground-wood-floor-light.png",
@@ -30750,7 +30755,7 @@ var LOOT = [{
     angle: 0.3
 }, {
     id: LOOTID.__WOOD_SMALLWALL__,
-    W: {
+    img: {
         isLoaded: 0
     },
     src: "img/day-ground-wood-smallwall.png",
@@ -30760,7 +30765,7 @@ var LOOT = [{
     angle: 0
 }, {
     id: LOOTID.__STONE_SMALLWALL__,
-    W: {
+    img: {
         isLoaded: 0
     },
     src: "img/day-ground-stone-smallwall.png",
@@ -30770,7 +30775,7 @@ var LOOT = [{
     angle: 0
 }, {
     id: LOOTID.__STEEL_SMALLWALL__,
-    W: {
+    img: {
         isLoaded: 0
     },
     src: "img/day-ground-steel-smallwall.png",
@@ -30780,7 +30785,7 @@ var LOOT = [{
     angle: 0
 }, {
     id: LOOTID.__TOMATO_SOUP__,
-    W: {
+    img: {
         isLoaded: 0
     },
     src: "img/day-ground-tomato-soup.png",
@@ -30790,7 +30795,7 @@ var LOOT = [{
     angle: 0
 }, {
     id: LOOTID.__SYRINGE__,
-    W: {
+    img: {
         isLoaded: 0
     },
     src: "img/day-ground-syringe.png",
@@ -30800,7 +30805,7 @@ var LOOT = [{
     angle: 0
 }, {
     id: LOOTID.__CHEMICAL_COMPONENT__,
-    W: {
+    img: {
         isLoaded: 0
     },
     src: "img/day-ground-chemical-component.png",
@@ -30810,7 +30815,7 @@ var LOOT = [{
     angle: 0
 }, {
     id: LOOTID.__RADAWAY__,
-    W: {
+    img: {
         isLoaded: 0
     },
     src: "img/day-ground-radaway.png",
@@ -30820,7 +30825,7 @@ var LOOT = [{
     angle: 0
 }, {
     id: LOOTID.__SEED_TOMATO__,
-    W: {
+    img: {
         isLoaded: 0
     },
     src: "img/day-ground-seed-tomato.png",
@@ -30830,7 +30835,7 @@ var LOOT = [{
     angle: 0
 }, {
     id: LOOTID.__TOMATO__,
-    W: {
+    img: {
         isLoaded: 0
     },
     src: "img/day-ground-tomato.png",
@@ -30840,7 +30845,7 @@ var LOOT = [{
     angle: 0
 }, {
     id: LOOTID.__ROTTEN_TOMATO__,
-    W: {
+    img: {
         isLoaded: 0
     },
     src: "img/day-ground-rotten-tomato.png",
@@ -30850,7 +30855,7 @@ var LOOT = [{
     angle: 0
 }, {
     id: LOOTID.__CAN__,
-    W: {
+    img: {
         isLoaded: 0
     },
     src: "img/day-ground-can.png",
@@ -30860,7 +30865,7 @@ var LOOT = [{
     angle: 0
 }, {
     id: LOOTID.__WOOD_CROSSBOW__,
-    W: {
+    img: {
         isLoaded: 0
     },
     src: "img/day-ground-wood-crossbow.png",
@@ -30870,7 +30875,7 @@ var LOOT = [{
     angle: 0
 }, {
     id: LOOTID.__WOOD_CROSSARROW__,
-    W: {
+    img: {
         isLoaded: 0
     },
     src: "img/day-ground-wood-crossarrow.png",
@@ -30880,7 +30885,7 @@ var LOOT = [{
     angle: 0
 }, {
     id: LOOTID.__NAIL_GUN__,
-    W: {
+    img: {
         isLoaded: 0
     },
     src: "img/day-ground-nail-gun.png",
@@ -30890,7 +30895,7 @@ var LOOT = [{
     angle: 0
 }, {
     id: LOOTID.__SAWED_OFF_SHOTGUN__,
-    W: {
+    img: {
         isLoaded: 0
     },
     src: "img/day-ground-sawed-off-shotgun.png",
@@ -30900,7 +30905,7 @@ var LOOT = [{
     angle: 0
 }, {
     id: LOOTID.__STONE_FLOOR__,
-    W: {
+    img: {
         isLoaded: 0
     },
     src: "img/day-ground-stone-floor.png",
@@ -30910,7 +30915,7 @@ var LOOT = [{
     angle: 0
 }, {
     id: LOOTID.__TILING_FLOOR__,
-    W: {
+    img: {
         isLoaded: 0
     },
     src: "img/day-ground-tiling-floor.png",
@@ -30920,7 +30925,7 @@ var LOOT = [{
     angle: 0
 }, {
     id: LOOTID.__CRISPS__,
-    W: {
+    img: {
         isLoaded: 0
     },
     src: "img/day-ground-chips.png",
@@ -30930,7 +30935,7 @@ var LOOT = [{
     angle: 0
 }, {
     id: LOOTID.__ROTTEN_CRISPS__,
-    W: {
+    img: {
         isLoaded: 0
     },
     src: "img/day-ground-rotten-chips.png",
@@ -30940,7 +30945,7 @@ var LOOT = [{
     angle: 0
 }, {
     id: LOOTID.__ELECTRONICS__,
-    W: {
+    img: {
         isLoaded: 0
     },
     src: "img/day-ground-electronic-part.png",
@@ -30950,7 +30955,7 @@ var LOOT = [{
     angle: 0
 }, {
     id: LOOTID.__JUNK__,
-    W: {
+    img: {
         isLoaded: 0
     },
     src: "img/day-ground-junk.png",
@@ -30960,7 +30965,7 @@ var LOOT = [{
     angle: 0
 }, {
     id: LOOTID.__WIRE__,
-    W: {
+    img: {
         isLoaded: 0
     },
     src: "img/day-ground-wires.png",
@@ -30970,7 +30975,7 @@ var LOOT = [{
     angle: 0
 }, {
     id: LOOTID.__ENERGY_CELLS__,
-    W: {
+    img: {
         isLoaded: 0
     },
     src: "img/day-ground-small-energy-cells.png",
@@ -30980,7 +30985,7 @@ var LOOT = [{
     angle: 0
 }, {
     id: LOOTID.__LASER_PISTOL__,
-    W: {
+    img: {
         isLoaded: 0
     },
     src: "img/day-ground-laser-pistol.png",
@@ -30990,7 +30995,7 @@ var LOOT = [{
     angle: 0
 }, {
     id: LOOTID.__TESLA__,
-    W: {
+    img: {
         isLoaded: 0
     },
     src: "img/day-ground-workbench3.png",
@@ -31000,7 +31005,7 @@ var LOOT = [{
     angle: 0
 }, {
     id: LOOTID.__ALLOYS__,
-    W: {
+    img: {
         isLoaded: 0
     },
     src: "img/day-ground-alloys.png",
@@ -31010,7 +31015,7 @@ var LOOT = [{
     angle: 0
 }, {
     id: LOOTID.__SULFUR_AXE__,
-    W: {
+    img: {
         isLoaded: 0
     },
     src: "img/day-ground-sulfur-axe.png",
@@ -31020,7 +31025,7 @@ var LOOT = [{
     angle: 0.5
 }, {
     id: LOOTID.__LANDMINE__,
-    W: {
+    img: {
         isLoaded: 0
     },
     src: "img/day-ground-landmine.png",
@@ -31030,7 +31035,7 @@ var LOOT = [{
     angle: 0.5
 }, {
     id: LOOTID.__DYNAMITE__,
-    W: {
+    img: {
         isLoaded: 0
     },
     src: "img/day-ground-dynamite.png",
@@ -31040,7 +31045,7 @@ var LOOT = [{
     angle: 0.5
 }, {
     id: LOOTID.__C4__,
-    W: {
+    img: {
         isLoaded: 0
     },
     src: "img/day-ground-C4.png",
@@ -31050,7 +31055,7 @@ var LOOT = [{
     angle: 0.5
 }, {
     id: LOOTID.__C4_TRIGGER__,
-    W: {
+    img: {
         isLoaded: 0
     },
     src: "img/day-ground-joystick.png",
@@ -31060,7 +31065,7 @@ var LOOT = [{
     angle: 0.5
 }, {
     id: LOOTID.__COMPOST__,
-    W: {
+    img: {
         isLoaded: 0
     },
     src: "img/day-ground-composter.png",
@@ -31070,7 +31075,7 @@ var LOOT = [{
     angle: 0.5
 }, {
     id: LOOTID.__ARMOR_PHYSIC_1__,
-    W: {
+    img: {
         isLoaded: 0
     },
     src: "img/day-ground-metal-helmet.png",
@@ -31080,7 +31085,7 @@ var LOOT = [{
     angle: 0
 }, {
     id: LOOTID.__ARMOR_PHYSIC_2__,
-    W: {
+    img: {
         isLoaded: 0
     },
     src: "img/day-ground-welding-helmet.png",
@@ -31090,7 +31095,7 @@ var LOOT = [{
     angle: 0
 }, {
     id: LOOTID.__ARMOR_PHYSIC_3__,
-    W: {
+    img: {
         isLoaded: 0
     },
     src: "img/day-ground-gladiator-helmet.png",
@@ -31100,7 +31105,7 @@ var LOOT = [{
     angle: 0
 }, {
     id: LOOTID.__ARMOR_FIRE_1__,
-    W: {
+    img: {
         isLoaded: 0
     },
     src: "img/day-ground-leather-jacket.png",
@@ -31110,7 +31115,7 @@ var LOOT = [{
     angle: 0
 }, {
     id: LOOTID.__ARMOR_FIRE_2__,
-    W: {
+    img: {
         isLoaded: 0
     },
     src: "img/day-ground-kevlar-suit.png",
@@ -31120,7 +31125,7 @@ var LOOT = [{
     angle: 0
 }, {
     id: LOOTID.__ARMOR_FIRE_3__,
-    W: {
+    img: {
         isLoaded: 0
     },
     src: "img/day-ground-SWAT-suit.png",
@@ -31130,7 +31135,7 @@ var LOOT = [{
     angle: 0
 }, {
     id: LOOTID.__ARMOR_DEMINER__,
-    W: {
+    img: {
         isLoaded: 0
     },
     src: "img/day-ground-protective-suit.png",
@@ -31140,7 +31145,7 @@ var LOOT = [{
     angle: 0
 }, {
     id: LOOTID.__ARMOR_TESLA_1__,
-    W: {
+    img: {
         isLoaded: 0
     },
     src: "img/day-ground-tesla-0.png",
@@ -31150,7 +31155,7 @@ var LOOT = [{
     angle: 0
 }, {
     id: LOOTID.__ARMOR_TESLA_2__,
-    W: {
+    img: {
         isLoaded: 0
     },
     src: "img/day-ground-tesla-armor.png",
@@ -31160,7 +31165,7 @@ var LOOT = [{
     angle: 0
 }, {
     id: LOOTID.__WOOD_SPIKE__,
-    W: {
+    img: {
         isLoaded: 0
     },
     src: "img/day-ground-wood-spike.png",
@@ -31170,7 +31175,7 @@ var LOOT = [{
     angle: 0
 }, {
     id: LOOTID.__LASER_SUBMACHINE__,
-    W: {
+    img: {
         isLoaded: 0
     },
     src: "img/day-ground-laser-submachine.png",
@@ -31180,7 +31185,7 @@ var LOOT = [{
     angle: 0
 }, {
     id: LOOTID.__GRENADE__,
-    W: {
+    img: {
         isLoaded: 0
     },
     src: "img/day-ground-grenade.png",
@@ -31190,7 +31195,7 @@ var LOOT = [{
     angle: 0
 }, {
     id: LOOTID.__SUPER_HAMMER__,
-    W: {
+    img: {
         isLoaded: 0
     },
     src: "img/day-ground-super-hammer.png",
@@ -31200,7 +31205,7 @@ var LOOT = [{
     angle: 0
 }, {
     id: LOOTID.__GHOUL_BLOOD__,
-    W: {
+    img: {
         isLoaded: 0
     },
     src: "img/day-ground-ghoul-blood.png",
@@ -31210,7 +31215,7 @@ var LOOT = [{
     angle: 0
 }, {
     id: LOOTID.__CAMOUFLAGE_GEAR__,
-    W: {
+    img: {
         isLoaded: 0
     },
     src: "img/day-ground-camouflage-gear.png",
@@ -31220,7 +31225,7 @@ var LOOT = [{
     angle: 0
 }, {
     id: LOOTID.__AGITATOR__,
-    W: {
+    img: {
         isLoaded: 0
     },
     src: "img/day-ground-agitator.png",
@@ -31230,7 +31235,7 @@ var LOOT = [{
     angle: 0
 }, {
     id: LOOTID.__GHOUL_DRUG__,
-    W: {
+    img: {
         isLoaded: 0
     },
     src: "img/day-ground-ghoul-drug.png",
@@ -31240,7 +31245,7 @@ var LOOT = [{
     angle: 0
 }, {
     id: LOOTID.__MUSHROOM1__,
-    W: {
+    img: {
         isLoaded: 0
     },
     src: "img/day-ground-mushroom1.png",
@@ -31250,7 +31255,7 @@ var LOOT = [{
     angle: 0
 }, {
     id: LOOTID.__MUSHROOM2__,
-    W: {
+    img: {
         isLoaded: 0
     },
     src: "img/day-ground-mushroom2.png",
@@ -31260,7 +31265,7 @@ var LOOT = [{
     angle: 0
 }, {
     id: LOOTID.__MUSHROOM3__,
-    W: {
+    img: {
         isLoaded: 0
     },
     src: "img/day-ground-mushroom3.png",
@@ -31270,7 +31275,7 @@ var LOOT = [{
     angle: 0
 }, {
     id: LOOTID.__ROTTEN_MUSHROOM1__,
-    W: {
+    img: {
         isLoaded: 0
     },
     src: "img/day-ground-rotten-mushroom1.png",
@@ -31280,7 +31285,7 @@ var LOOT = [{
     angle: 0
 }, {
     id: LOOTID.__ROTTEN_MUSHROOM2__,
-    W: {
+    img: {
         isLoaded: 0
     },
     src: "img/day-ground-rotten-mushroom2.png",
@@ -31290,7 +31295,7 @@ var LOOT = [{
     angle: 0
 }, {
     id: LOOTID.__ROTTEN_MUSHROOM3__,
-    W: {
+    img: {
         isLoaded: 0
     },
     src: "img/day-ground-rotten-mushroom3.png",
@@ -31300,7 +31305,7 @@ var LOOT = [{
     angle: 0
 }, {
     id: LOOTID.__LAPADONE__,
-    W: {
+    img: {
         isLoaded: 0
     },
     src: "img/day-ground-lapadoine.png",
@@ -31310,7 +31315,7 @@ var LOOT = [{
     angle: 0
 }, {
     id: LOOTID.__LAPABOT_REPAIR__,
-    W: {
+    img: {
         isLoaded: 0
     },
     src: "img/day-ground-lapabot.png",
@@ -31320,7 +31325,7 @@ var LOOT = [{
     angle: 0
 }, {
     id: LOOTID.__SMALL_WIRE__,
-    W: {
+    img: {
         isLoaded: 0
     },
     src: "img/day-ground-small-wire.png",
@@ -31330,7 +31335,7 @@ var LOOT = [{
     angle: 0
 }, {
     id: LOOTID.__PUMPKIN__,
-    W: {
+    img: {
         isLoaded: 0
     },
     src: "img/day-ground-pumpkin.png",
@@ -31340,7 +31345,7 @@ var LOOT = [{
     angle: 0
 }, {
     id: LOOTID.__ROTTEN_PUMPKIN__,
-    W: {
+    img: {
         isLoaded: 0
     },
     src: "img/day-ground-rotten-pumpkin.png",
@@ -31350,7 +31355,7 @@ var LOOT = [{
     angle: 0
 }, {
     id: LOOTID.__SEED_GHOUL__,
-    W: {
+    img: {
         isLoaded: 0
     },
     src: "img/day-ground-ghoul5.png",
@@ -31360,7 +31365,7 @@ var LOOT = [{
     angle: 0
 }, {
     id: LOOTID.__EXTRACTOR__,
-    W: {
+    img: {
         isLoaded: 0
     },
     src: "img/day-ground-extractor.png",
@@ -31370,7 +31375,7 @@ var LOOT = [{
     angle: 0
 }, {
     id: LOOTID.__ANTIDOTE__,
-    W: {
+    img: {
         isLoaded: 0
     },
     src: "img/day-ground-antidote.png",
@@ -31380,7 +31385,7 @@ var LOOT = [{
     angle: 0
 }, {
     id: LOOTID.__ANTIDOTE_FLOWER__,
-    W: {
+    img: {
         isLoaded: 0
     },
     src: "img/day-ground-antidote-flower.png",
@@ -31390,7 +31395,7 @@ var LOOT = [{
     angle: 0
 }, {
     id: LOOTID.__SEED_TREE__,
-    W: {
+    img: {
         isLoaded: 0
     },
     src: "img/day-ground-seed-tree.png",
@@ -31400,7 +31405,7 @@ var LOOT = [{
     angle: 0
 }, {
     id: LOOTID.__ACORN__,
-    W: {
+    img: {
         isLoaded: 0
     },
     src: "img/day-ground-acorn.png",
@@ -31410,7 +31415,7 @@ var LOOT = [{
     angle: 0
 }, {
     id: LOOTID.__ROTTEN_ACORN__,
-    W: {
+    img: {
         isLoaded: 0
     },
     src: "img/day-ground-rotten-acorn.png",
@@ -31420,7 +31425,7 @@ var LOOT = [{
     angle: 0
 }, {
     id: LOOTID.__LASER_SNIPER__,
-    W: {
+    img: {
         isLoaded: 0
     },
     src: "img/day-ground-laser-sniper.png",
@@ -31430,7 +31435,7 @@ var LOOT = [{
     angle: 0
 }, {
     id: LOOTID.__HAL_BOT__,
-    W: {
+    img: {
         isLoaded: 0
     },
     src: "img/day-ground-hal-bot.png",
@@ -31440,7 +31445,7 @@ var LOOT = [{
     angle: 0
 }, {
     id: LOOTID.__TESLA_BOT__,
-    W: {
+    img: {
         isLoaded: 0
     },
     src: "img/day-ground-tesla-bot.png",
@@ -31450,7 +31455,7 @@ var LOOT = [{
     angle: 0
 }, {
     id: LOOTID.__CABLE0__,
-    W: {
+    img: {
         isLoaded: 0
     },
     src: "img/day-ground-wire0.png",
@@ -31460,7 +31465,7 @@ var LOOT = [{
     angle: 0
 }, {
     id: LOOTID.__CABLE1__,
-    W: {
+    img: {
         isLoaded: 0
     },
     src: "img/day-ground-wire1.png",
@@ -31470,7 +31475,7 @@ var LOOT = [{
     angle: 0
 }, {
     id: LOOTID.__CABLE2__,
-    W: {
+    img: {
         isLoaded: 0
     },
     src: "img/day-ground-wire2.png",
@@ -31480,7 +31485,7 @@ var LOOT = [{
     angle: 0
 }, {
     id: LOOTID.__CABLE3__,
-    W: {
+    img: {
         isLoaded: 0
     },
     src: "img/day-ground-wire3.png",
@@ -31490,7 +31495,7 @@ var LOOT = [{
     angle: 0
 }, {
     id: LOOTID.__SWITCH__,
-    W: {
+    img: {
         isLoaded: 0
     },
     src: "img/day-ground-switch.png",
@@ -31500,7 +31505,7 @@ var LOOT = [{
     angle: 0
 }, {
     id: LOOTID.__GATE_OR__,
-    W: {
+    img: {
         isLoaded: 0
     },
     src: "img/day-ground-switch-or.png",
@@ -31510,7 +31515,7 @@ var LOOT = [{
     angle: 0
 }, {
     id: LOOTID.__GATE_AND__,
-    W: {
+    img: {
         isLoaded: 0
     },
     src: "img/day-ground-switch-and.png",
@@ -31520,7 +31525,7 @@ var LOOT = [{
     angle: 0
 }, {
     id: LOOTID.__GATE_NOT__,
-    W: {
+    img: {
         isLoaded: 0
     },
     src: "img/day-ground-switch-reverse.png",
@@ -31530,7 +31535,7 @@ var LOOT = [{
     angle: 0
 }, {
     id: LOOTID.__LAMP__,
-    W: {
+    img: {
         isLoaded: 0
     },
     src: "img/day-ground-lamp-white.png",
@@ -31540,7 +31545,7 @@ var LOOT = [{
     angle: 0
 }, {
     id: LOOTID.__CABLE_WALL__,
-    W: {
+    img: {
         isLoaded: 0
     },
     src: "img/day-ground-cable-wall.png",
@@ -31550,7 +31555,7 @@ var LOOT = [{
     angle: 0
 }, {
     id: LOOTID.__AUTOMATIC_DOOR__,
-    W: {
+    img: {
         isLoaded: 0
     },
     src: "img/day-ground-automatic-door.png",
@@ -31560,7 +31565,7 @@ var LOOT = [{
     angle: 0
 }, {
     id: LOOTID.__PLATFORM__,
-    W: {
+    img: {
         isLoaded: 0
     },
     src: "img/day-ground-platform.png",
@@ -31570,7 +31575,7 @@ var LOOT = [{
     angle: 0
 }, {
     id: LOOTID.__STONE_CAVE__,
-    W: {
+    img: {
         isLoaded: 0
     },
     src: "img/day-ground-stone-cave.png",
@@ -31580,7 +31585,7 @@ var LOOT = [{
     angle: 0
 }, {
     id: LOOTID.__BUNKER_WALL__,
-    W: {
+    img: {
         isLoaded: 0
     },
     src: "img/day-ground-bunker-wall.png",
@@ -31590,7 +31595,7 @@ var LOOT = [{
     angle: 0
 }, {
     id: LOOTID.__GOLD_FLOOR__,
-    W: {
+    img: {
         isLoaded: 0
     },
     src: "img/day-ground-mustard-floor.png",
@@ -31600,7 +31605,7 @@ var LOOT = [{
     angle: 0
 }, {
     id: LOOTID.__RED_FLOOR__,
-    W: {
+    img: {
         isLoaded: 0
     },
     src: "img/day-ground-red-floor.png",
@@ -31610,7 +31615,7 @@ var LOOT = [{
     angle: 0
 }, {
     id: LOOTID.__WELDING_MACHINE__,
-    W: {
+    img: {
         isLoaded: 0
     },
     src: "img/day-ground-welding-machine.png",
@@ -31620,7 +31625,7 @@ var LOOT = [{
     angle: 0
 }, {
     id: LOOTID.__CABLE4__,
-    W: {
+    img: {
         isLoaded: 0
     },
     src: "img/day-ground-wire4.png",
@@ -31630,7 +31635,7 @@ var LOOT = [{
     angle: 0
 }, {
     id: LOOTID.__GATE_TIMER__,
-    W: {
+    img: {
         isLoaded: 0
     },
     src: "img/day-ground-timer.png",
@@ -31640,7 +31645,7 @@ var LOOT = [{
     angle: 0
 }, {
     id: LOOTID.__GATE_XOR__,
-    W: {
+    img: {
         isLoaded: 0
     },
     src: "img/day-ground-xor.png",
@@ -31682,8 +31687,8 @@ RESOURCES[object.WOOD] = {
     areaEffect: 0,
     type: [{
         life: 200,
-        W: {
-            W: {
+        img: {
+            img: {
                 isLoaded: 0
             },
             src: "img/day-wood1.png"
@@ -31697,8 +31702,8 @@ RESOURCES[object.WOOD] = {
         radius: 80
     }, {
         life: 150,
-        W: {
-            W: {
+        img: {
+            img: {
                 isLoaded: 0
             },
             src: "img/day-wood0.png"
@@ -31712,8 +31717,8 @@ RESOURCES[object.WOOD] = {
         radius: 55
     }, {
         life: 120,
-        W: {
-            W: {
+        img: {
+            img: {
                 isLoaded: 0
             },
             src: "img/day-wood2.png"
@@ -31727,8 +31732,8 @@ RESOURCES[object.WOOD] = {
         radius: 48
     }, {
         life: 100,
-        W: {
-            W: {
+        img: {
+            img: {
                 isLoaded: 0
             },
             src: "img/day-wood3.png"
@@ -31742,8 +31747,8 @@ RESOURCES[object.WOOD] = {
         radius: 37
     }, {
         life: 75,
-        W: {
-            W: {
+        img: {
+            img: {
                 isLoaded: 0
             },
             src: "img/day-wood4.png"
@@ -31769,20 +31774,20 @@ RESOURCES[object.LEAFTREE] = {
     areaEffect: 0,
     type: [{
         life: 250,
-        W: {
-            W: {
+        img: {
+            img: {
                 isLoaded: 0
             },
             src: "img/day-tree0.png"
         },
         imgTop: {
-            W: {
+            img: {
                 isLoaded: 0
             },
             src: "img/day-treeleaf0.png"
         },
         imgFull: {
-            W: {
+            img: {
                 isLoaded: 0
             },
             src: "img/day-tree-and-leaf0.png"
@@ -31796,20 +31801,20 @@ RESOURCES[object.LEAFTREE] = {
         radius: 70
     }, {
         life: 250,
-        W: {
-            W: {
+        img: {
+            img: {
                 isLoaded: 0
             },
             src: "img/day-tree1.png"
         },
         imgTop: {
-            W: {
+            img: {
                 isLoaded: 0
             },
             src: "img/day-treeleaf1.png"
         },
         imgFull: {
-            W: {
+            img: {
                 isLoaded: 0
             },
             src: "img/day-tree-and-leaf1.png"
@@ -31823,20 +31828,20 @@ RESOURCES[object.LEAFTREE] = {
         radius: 52
     }, {
         life: 150,
-        W: {
-            W: {
+        img: {
+            img: {
                 isLoaded: 0
             },
             src: "img/day-tree2.png"
         },
         imgTop: {
-            W: {
+            img: {
                 isLoaded: 0
             },
             src: "img/day-treeleaf2.png"
         },
         imgFull: {
-            W: {
+            img: {
                 isLoaded: 0
             },
             src: "img/day-tree-and-leaf2.png"
@@ -31850,20 +31855,20 @@ RESOURCES[object.LEAFTREE] = {
         radius: 42
     }, {
         life: 75,
-        W: {
-            W: {
+        img: {
+            img: {
                 isLoaded: 0
             },
             src: "img/day-tree3.png"
         },
         imgTop: {
-            W: {
+            img: {
                 isLoaded: 0
             },
             src: "img/day-treeleaf3.png"
         },
         imgFull: {
-            W: {
+            img: {
                 isLoaded: 0
             },
             src: "img/day-tree-and-leaf3.png"
@@ -31877,20 +31882,20 @@ RESOURCES[object.LEAFTREE] = {
         radius: 34
     }, {
         life: 250,
-        W: {
-            W: {
+        img: {
+            img: {
                 isLoaded: 0
             },
             src: "img/day-tree4.png"
         },
         imgTop: {
-            W: {
+            img: {
                 isLoaded: 0
             },
             src: "img/day-treeleaf4.png"
         },
         imgFull: {
-            W: {
+            img: {
                 isLoaded: 0
             },
             src: "img/day-tree-and-leaf4.png"
@@ -31916,8 +31921,8 @@ RESOURCES[object.STONE] = {
     areaEffect: 0,
     type: [{
         life: 1000,
-        W: {
-            W: {
+        img: {
+            img: {
                 isLoaded: 0
             },
             src: "img/day-stone0.png"
@@ -31931,8 +31936,8 @@ RESOURCES[object.STONE] = {
         radius: 60
     }, {
         life: 800,
-        W: {
-            W: {
+        img: {
+            img: {
                 isLoaded: 0
             },
             src: "img/day-stone2.png"
@@ -31946,8 +31951,8 @@ RESOURCES[object.STONE] = {
         radius: 58
     }, {
         life: 600,
-        W: {
-            W: {
+        img: {
+            img: {
                 isLoaded: 0
             },
             src: "img/day-stone1.png"
@@ -31961,8 +31966,8 @@ RESOURCES[object.STONE] = {
         radius: 54
     }, {
         life: 400,
-        W: {
-            W: {
+        img: {
+            img: {
                 isLoaded: 0
             },
             src: "img/day-stone3.png"
@@ -31976,8 +31981,8 @@ RESOURCES[object.STONE] = {
         radius: 45
     }, {
         life: 200,
-        W: {
-            W: {
+        img: {
+            img: {
                 isLoaded: 0
             },
             src: "img/day-stone4.png"
@@ -31991,8 +31996,8 @@ RESOURCES[object.STONE] = {
         radius: 43
     }, {
         life: 150,
-        W: {
-            W: {
+        img: {
+            img: {
                 isLoaded: 0
             },
             src: "img/day-stone5.png"
@@ -32018,8 +32023,8 @@ RESOURCES[object.STEEL] = {
     areaEffect: 0,
     type: [{
         life: 1200,
-        W: {
-            W: {
+        img: {
+            img: {
                 isLoaded: 0
             },
             src: "img/day-steel0.png"
@@ -32033,8 +32038,8 @@ RESOURCES[object.STEEL] = {
         radius: 61
     }, {
         life: 1000,
-        W: {
-            W: {
+        img: {
+            img: {
                 isLoaded: 0
             },
             src: "img/day-steel1.png"
@@ -32048,8 +32053,8 @@ RESOURCES[object.STEEL] = {
         radius: 61
     }, {
         life: 300,
-        W: {
-            W: {
+        img: {
+            img: {
                 isLoaded: 0
             },
             src: "img/day-steel2.png"
@@ -32063,8 +32068,8 @@ RESOURCES[object.STEEL] = {
         radius: 42
     }, {
         life: 500,
-        W: {
-            W: {
+        img: {
+            img: {
                 isLoaded: 0
             },
             src: "img/day-steel3.png"
@@ -32090,8 +32095,8 @@ RESOURCES[object.SULFUR] = {
     areaEffect: 0,
     type: [{
         life: 1000,
-        W: {
-            W: {
+        img: {
+            img: {
                 isLoaded: 0
             },
             src: "img/day-sulfur0.png"
@@ -32105,8 +32110,8 @@ RESOURCES[object.SULFUR] = {
         radius: 42
     }, {
         life: 400,
-        W: {
-            W: {
+        img: {
+            img: {
                 isLoaded: 0
             },
             src: "img/day-sulfur1.png"
@@ -32120,8 +32125,8 @@ RESOURCES[object.SULFUR] = {
         radius: 50
     }, {
         life: 400,
-        W: {
-            W: {
+        img: {
+            img: {
                 isLoaded: 0
             },
             src: "img/day-sulfur2.png"
@@ -32147,8 +32152,8 @@ RESOURCES[object.URANIUM] = {
     areaEffect: __RADIATION__,
     type: [{
         life: 6000,
-        W: {
-            W: {
+        img: {
+            img: {
                 isLoaded: 0
             },
             src: "img/day-uranium0.png"
@@ -32162,8 +32167,8 @@ RESOURCES[object.URANIUM] = {
         radius: 75
     }, {
         life: 4000,
-        W: {
-            W: {
+        img: {
+            img: {
                 isLoaded: 0
             },
             src: "img/day-uranium1.png"
@@ -32177,8 +32182,8 @@ RESOURCES[object.URANIUM] = {
         radius: 55
     }, {
         life: 2000,
-        W: {
-            W: {
+        img: {
+            img: {
                 isLoaded: 0
             },
             src: "img/day-uranium2.png"
@@ -32204,20 +32209,20 @@ RESOURCES[object.ORANGETREE] = {
     areaEffect: 0,
     type: [{
         life: 80,
-        W: {
-            W: {
+        img: {
+            img: {
                 isLoaded: 0
             },
             src: "img/day-orange-tree-leaf0.png"
         },
         imgTop: {
-            W: {
+            img: {
                 isLoaded: 0
             },
             src: "img/day-orange0.png"
         },
         imgFull: {
-            W: {
+            img: {
                 isLoaded: 0
             },
             src: "img/day-orange-tree0.png"
@@ -32231,20 +32236,20 @@ RESOURCES[object.ORANGETREE] = {
         radius: 38
     }, {
         life: 100,
-        W: {
-            W: {
+        img: {
+            img: {
                 isLoaded: 0
             },
             src: "img/day-orange-tree-leaf1.png"
         },
         imgTop: {
-            W: {
+            img: {
                 isLoaded: 0
             },
             src: "img/day-orange1.png"
         },
         imgFull: {
-            W: {
+            img: {
                 isLoaded: 0
             },
             src: "img/day-orange-tree1.png"
@@ -32258,20 +32263,20 @@ RESOURCES[object.ORANGETREE] = {
         radius: 37
     }, {
         life: 120,
-        W: {
-            W: {
+        img: {
+            img: {
                 isLoaded: 0
             },
             src: "img/day-orange-tree-leaf2.png"
         },
         imgTop: {
-            W: {
+            img: {
                 isLoaded: 0
             },
             src: "img/day-orange2.png"
         },
         imgFull: {
-            W: {
+            img: {
                 isLoaded: 0
             },
             src: "img/day-orange-tree2.png"
@@ -32297,20 +32302,20 @@ RESOURCES[object.TOMATOTREE] = {
     areaEffect: 0,
     type: [{
         life: 80,
-        W: {
-            W: {
+        img: {
+            img: {
                 isLoaded: 0
             },
             src: "img/day-tomato-tree-leaf0.png"
         },
         imgTop: {
-            W: {
+            img: {
                 isLoaded: 0
             },
             src: "img/day-tomato0.png"
         },
         imgFull: {
-            W: {
+            img: {
                 isLoaded: 0
             },
             src: "img/day-tomato-tree0.png"
@@ -32324,20 +32329,20 @@ RESOURCES[object.TOMATOTREE] = {
         radius: 38
     }, {
         life: 100,
-        W: {
-            W: {
+        img: {
+            img: {
                 isLoaded: 0
             },
             src: "img/day-tomato-tree-leaf1.png"
         },
         imgTop: {
-            W: {
+            img: {
                 isLoaded: 0
             },
             src: "img/day-tomato1.png"
         },
         imgFull: {
-            W: {
+            img: {
                 isLoaded: 0
             },
             src: "img/day-tomato-tree1.png"
@@ -32351,20 +32356,20 @@ RESOURCES[object.TOMATOTREE] = {
         radius: 37
     }, {
         life: 120,
-        W: {
-            W: {
+        img: {
+            img: {
                 isLoaded: 0
             },
             src: "img/day-tomato-tree-leaf2.png"
         },
         imgTop: {
-            W: {
+            img: {
                 isLoaded: 0
             },
             src: "img/day-tomato2.png"
         },
         imgFull: {
-            W: {
+            img: {
                 isLoaded: 0
             },
             src: "img/day-tomato-tree2.png"
@@ -32390,8 +32395,8 @@ RESOURCES[object.BOAR] = {
     areaEffect: 0,
     type: [{
         life: 250,
-        W: {
-            W: {
+        img: {
+            img: {
                 isLoaded: 0
             },
             src: "img/day-boar-dead.png"
@@ -32417,8 +32422,8 @@ RESOURCES[object.DEER] = {
     areaEffect: 0,
     type: [{
         life: 200,
-        W: {
-            W: {
+        img: {
+            img: {
                 isLoaded: 0
             },
             src: "img/day-deer-dead.png"
@@ -32444,8 +32449,8 @@ RESOURCES[object.MUSHROOM1] = {
     areaEffect: 0,
     type: [{
         life: 1,
-        W: {
-            W: {
+        img: {
+            img: {
                 isLoaded: 0
             },
             src: "img/day-mushroom1.png"
@@ -32459,8 +32464,8 @@ RESOURCES[object.MUSHROOM1] = {
         radius: 32
     }, {
         life: 1,
-        W: {
-            W: {
+        img: {
+            img: {
                 isLoaded: 0
             },
             src: "img/day-mushroom2.png"
@@ -32474,8 +32479,8 @@ RESOURCES[object.MUSHROOM1] = {
         radius: 32
     }, {
         life: 1,
-        W: {
-            W: {
+        img: {
+            img: {
                 isLoaded: 0
             },
             src: "img/day-mushroom3.png"
@@ -32489,8 +32494,8 @@ RESOURCES[object.MUSHROOM1] = {
         radius: 32
     }, {
         life: 1,
-        W: {
-            W: {
+        img: {
+            img: {
                 isLoaded: 0
             },
             src: "img/day-mushroom4.png"
@@ -32516,8 +32521,8 @@ RESOURCES[object.WHITE_FLOWER] = {
     areaEffect: 0,
     type: [{
         life: 1,
-        W: {
-            W: {
+        img: {
+            img: {
                 isLoaded: 0
             },
             src: "img/day-antidote-tree.png"
@@ -32543,8 +32548,8 @@ RESOURCES[object.MUSHROOM2] = {
     areaEffect: 0,
     type: [{
         life: 1,
-        W: {
-            W: {
+        img: {
+            img: {
                 isLoaded: 0
             },
             src: "img/day-mushroom5.png"
@@ -32558,8 +32563,8 @@ RESOURCES[object.MUSHROOM2] = {
         radius: 32
     }, {
         life: 1,
-        W: {
-            W: {
+        img: {
+            img: {
                 isLoaded: 0
             },
             src: "img/day-mushroom6.png"
@@ -32573,8 +32578,8 @@ RESOURCES[object.MUSHROOM2] = {
         radius: 32
     }, {
         life: 1,
-        W: {
-            W: {
+        img: {
+            img: {
                 isLoaded: 0
             },
             src: "img/day-mushroom7.png"
@@ -32588,8 +32593,8 @@ RESOURCES[object.MUSHROOM2] = {
         radius: 32
     }, {
         life: 1,
-        W: {
-            W: {
+        img: {
+            img: {
                 isLoaded: 0
             },
             src: "img/day-mushroom8.png"
@@ -32615,8 +32620,8 @@ RESOURCES[object.MUSHROOM3] = {
     areaEffect: 0,
     type: [{
         life: 1,
-        W: {
-            W: {
+        img: {
+            img: {
                 isLoaded: 0
             },
             src: "img/day-mushroom9.png"
@@ -32630,8 +32635,8 @@ RESOURCES[object.MUSHROOM3] = {
         radius: 32
     }, {
         life: 1,
-        W: {
-            W: {
+        img: {
+            img: {
                 isLoaded: 0
             },
             src: "img/day-mushroom10.png"
@@ -32645,8 +32650,8 @@ RESOURCES[object.MUSHROOM3] = {
         radius: 32
     }, {
         life: 1,
-        W: {
-            W: {
+        img: {
+            img: {
                 isLoaded: 0
             },
             src: "img/day-mushroom11.png"
@@ -32660,8 +32665,8 @@ RESOURCES[object.MUSHROOM3] = {
         radius: 32
     }, {
         life: 1,
-        W: {
-            W: {
+        img: {
+            img: {
                 isLoaded: 0
             },
             src: "img/day-mushroom12.png"
@@ -32684,63 +32689,63 @@ var LIGHTFIREX = [-26, 25, -7, 0];
 var LIGHTFIREY = [-28, -15, 25, 0];
 var LIGHTFIRE = [{
     src: "img/day-campfire-light-1.png",
-    W: {
+    img: {
         isLoaded: 0
     }
 }, {
     src: "img/day-campfire-light-2.png",
-    W: {
+    img: {
         isLoaded: 0
     }
 }, {
     src: "img/day-campfire-light-3.png",
-    W: {
+    img: {
         isLoaded: 0
     }
 }, {
     src: "img/day-campfire-light-down.png",
-    W: {
+    img: {
         isLoaded: 0
     }
 }, {
     src: "img/ghoul-hurt.png",
-    W: {
+    img: {
         isLoaded: 0
     }
 }, {
     src: "img/heal-player.png",
-    W: {
+    img: {
         isLoaded: 0
     }
 }];
 var KARMA = [{
     src: "img/karma4.png",
-    W: {
+    img: {
         isLoaded: 0
     }
 }, {
     src: "img/karma3.png",
-    W: {
+    img: {
         isLoaded: 0
     }
 }, {
     src: "img/karma2.png",
-    W: {
+    img: {
         isLoaded: 0
     }
 }, {
     src: "img/karma1.png",
-    W: {
+    img: {
         isLoaded: 0
     }
 }, {
     src: "img/karma0.png",
-    W: {
+    img: {
         isLoaded: 0
     }
 }, {
     src: "img/karma5.png",
-    W: {
+    img: {
         isLoaded: 0
     }
 }];
@@ -41560,7 +41565,7 @@ AI[AIID.__NORMAL_GHOUL__] = {
         x: 28,
         y: -50,
         src: "img/day-ghoul-left-arm.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     },
@@ -41569,25 +41574,25 @@ AI[AIID.__NORMAL_GHOUL__] = {
         x: 28,
         y: 50,
         src: "img/day-ghoul-right-arm.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     },
     head: {
         src: "img/day-ghoul.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     },
     hurt: {
         src: "img/ghoul-hurt.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     },
     death: {
         src: "img/day-ghoul-death.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     },
@@ -41628,7 +41633,7 @@ AI[AIID.__FAST_GHOUL__] = {
         x: 28,
         y: -40,
         src: "img/day-ghoul3-left-arm.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     },
@@ -41637,25 +41642,25 @@ AI[AIID.__FAST_GHOUL__] = {
         x: 28,
         y: 40,
         src: "img/day-ghoul3-right-arm.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     },
     head: {
         src: "img/day-ghoul3.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     },
     hurt: {
         src: "img/ghoul3-hurt.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     },
     death: {
         src: "img/day-ghoul3-death.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     },
@@ -41696,7 +41701,7 @@ AI[AIID.__EXPLOSIVE_GHOUL__] = {
         x: 28,
         y: -48,
         src: "img/day-ghoul4-left-arm.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     },
@@ -41705,25 +41710,25 @@ AI[AIID.__EXPLOSIVE_GHOUL__] = {
         x: 28,
         y: 48,
         src: "img/day-ghoul4-right-arm.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     },
     head: {
         src: "img/day-ghoul4.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     },
     hurt: {
         src: "img/ghoul4-hurt.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     },
     death: {
         src: "img/day-ghoul4-death.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     },
@@ -41766,7 +41771,7 @@ AI[AIID.__RADIOACTIVE_GHOUL__] = {
         x: 28,
         y: -40,
         src: "img/day-ghoul2-left-arm.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     },
@@ -41775,25 +41780,25 @@ AI[AIID.__RADIOACTIVE_GHOUL__] = {
         x: 28,
         y: 40,
         src: "img/day-ghoul2-right-arm.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     },
     head: {
         src: "img/day-ghoul2.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     },
     hurt: {
         src: "img/ghoul2-hurt.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     },
     death: {
         src: "img/day-ghoul2-death.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     },
@@ -41834,7 +41839,7 @@ AI[AIID.__ARMORED_GHOUL__] = {
         x: 28,
         y: -50,
         src: "img/day-ghoul1-left-arm.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     },
@@ -41843,25 +41848,25 @@ AI[AIID.__ARMORED_GHOUL__] = {
         x: 28,
         y: 50,
         src: "img/day-ghoul1-right-arm.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     },
     head: {
         src: "img/day-ghoul1.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     },
     hurt: {
         src: "img/ghoul1-hurt.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     },
     death: {
         src: "img/day-ghoul1-death.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     },
@@ -41903,7 +41908,7 @@ AI[AIID.__PUMPKIN_GHOUL__] = {
         x: 28,
         y: -50,
         src: "img/day-ghoul5-left-arm.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     },
@@ -41912,25 +41917,25 @@ AI[AIID.__PUMPKIN_GHOUL__] = {
         x: 28,
         y: 50,
         src: "img/day-ghoul5-right-arm.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     },
     head: {
         src: "img/day-ghoul5.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     },
     hurt: {
         src: "img/ghoul5-hurt.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     },
     death: {
         src: "img/day-ghoul5-death.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     },
@@ -41970,7 +41975,7 @@ AI[AIID.__LAPABOT_REPAIR__] = {
         x: 28,
         y: -50,
         src: "img/day-lapabot-left-arm.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     },
@@ -41979,25 +41984,25 @@ AI[AIID.__LAPABOT_REPAIR__] = {
         x: 28,
         y: 50,
         src: "img/day-lapabot-right-arm.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     },
     head: {
         src: "img/day-lapabot.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     },
     hurt: {
         src: "img/lapabot-hurt.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     },
     death: {
         src: "img/day-lapabot-death.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     },
@@ -42037,7 +42042,7 @@ AI[AIID.__HAL_BOT__] = {
         x: 8,
         y: -45,
         src: "img/day-hal-bot-left-arm.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     },
@@ -42046,25 +42051,25 @@ AI[AIID.__HAL_BOT__] = {
         x: 8,
         y: 45,
         src: "img/day-hal-bot-right-arm.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     },
     head: {
         src: "img/day-hal-bot.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     },
     hurt: {
         src: "img/hal-bot-hurt.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     },
     death: {
         src: "img/day-hal-bot-death.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     },
@@ -42104,7 +42109,7 @@ AI[AIID.__TESLA_BOT__] = {
         x: 18,
         y: -60,
         src: "img/day-tesla-bot-left-arm.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     },
@@ -42113,25 +42118,25 @@ AI[AIID.__TESLA_BOT__] = {
         x: 18,
         y: 60,
         src: "img/day-tesla-bot-right-arm.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     },
     head: {
         src: "img/day-tesla-bot.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     },
     hurt: {
         src: "img/tesla-bot-hurt.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     },
     death: {
         src: "img/day-tesla-bot-death.png",
-        W: {
+        img: {
             isLoaded: 0
         }
     },
@@ -42203,7 +42208,7 @@ try {
         }
     }
 } catch (error) {
-    for (var i = 0; i < KARMA.length; i++) KARMA[i].W = CanvasUtils.loadImage(KARMA[i].src, KARMA[i].W);
+    for (var i = 0; i < KARMA.length; i++) KARMA[i].img = CanvasUtils.loadImage(KARMA[i].src, KARMA[i].img);
     INVENTORY2 = window.JSON.parse(window.JSON.stringify(items));
     PARTICLES2 = window.JSON.parse(window.JSON.stringify(PARTICLES));
     LOOT2 = window.JSON.parse(window.JSON.stringify(LOOT));
@@ -42289,7 +42294,7 @@ var AudioManager = (function() {
     AudioUtils._fx.craft = new AudioUtils.Sound("audio/craft.mp3", 1, false, 1);
     AudioUtils._fx.button = new AudioUtils.Sound("audio/button.mp3", 1, false, 1);
     AudioUtils._fx.wWwnM = new AudioUtils.Sound("audio/throwLoot.mp3", 1, false, 1);
-    AudioUtils._fx.nNwmw = new AudioUtils.Sound("audio/levelup.mp3", 1, false, 1);
+    AudioUtils._fx.levelup = new AudioUtils.Sound("audio/levelup.mp3", 1, false, 1);
     AudioUtils._fx.explosion = new AudioUtils.Sound("audio/explosion.mp3", 1, false, 1);
     AudioUtils._fx.NwMWW = new AudioUtils.Sound("audio/zipper-on.mp3", 0.7, false, 1);
     AudioUtils._fx.NwmVN = new AudioUtils.Sound("audio/zipper-off.mp3", 0.7, false, 1);
@@ -42322,7 +42327,7 @@ var AudioManager = (function() {
         AudioUtils.loadSound(AudioUtils._fx.nwVvN);
         AudioUtils.loadSound(AudioUtils._fx.craft);
         AudioUtils.loadSound(AudioUtils._fx.button);
-        AudioUtils.loadSound(AudioUtils._fx.nNwmw);
+        AudioUtils.loadSound(AudioUtils._fx.levelup);
         AudioUtils.loadSound(AudioUtils._fx.explosion);
         for (var i = 0; i < AudioUtils._fx.WmnwN.length; i++) AudioUtils.loadSound(AudioUtils._fx.WmnwN[i]);
         for (var i = 1; i < AudioUtils._fx.damage.length; i++) AudioUtils.loadSound(AudioUtils._fx.damage[i]);
