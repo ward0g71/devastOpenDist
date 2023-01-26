@@ -17319,167 +17319,167 @@ var IID = {
 };
 COUNTER = 0;
 var LOOTID = {
-    mvnnv: COUNTER++,
-    wWvMW: COUNTER++,
-    wood: COUNTER++,
-    mnVVV: COUNTER++,
-    vWVMv: COUNTER++,
-    stone: COUNTER++,
-    steel: COUNTER++,
-    animalfat: COUNTER++,
-    animaltendon: COUNTER++,
-    string: COUNTER++,
-    leather: COUNTER++,
-    shapedmetal: COUNTER++,
-    rawsteak: COUNTER++,
-    cookedsteak: COUNTER++,
-    rottensteak: COUNTER++,
-    orange: COUNTER++,
-    rottenorange: COUNTER++,
-    seedorange: COUNTER++,
-    hachet: COUNTER++,
-    stonepickaxe: COUNTER++,
-    steelpickaxe: COUNTER++,
-    stoneaxe: COUNTER++,
-    workbench: COUNTER++,
-    spear: COUNTER++,
-    bow: COUNTER++,
-    pistol: COUNTER++,
-    deserteagle: COUNTER++,
-    shotgun: COUNTER++,
-    ak47: COUNTER++,
-    sniper: COUNTER++,
-    woodenwall: COUNTER++,
-    stonewall: COUNTER++,
-    steelwall: COUNTER++,
-    wooddoor: COUNTER++,
-    stonedoor: COUNTER++,
-    steeldoor: COUNTER++,
-    campfire: COUNTER++,
-    bullet9mm: COUNTER++,
-    bulletshotgun: COUNTER++,
-    sniperbullet: COUNTER++,
-    medkit: COUNTER++,
-    bandage: COUNTER++,
-    soda: COUNTER++,
-    mp5: COUNTER++,
-    headscarf: COUNTER++,
-    chapka: COUNTER++,
-    coat: COUNTER++,
-    gazmask: COUNTER++,
-    gazprotection: COUNTER++,
-    radiationsuit: COUNTER++,
-    woodarrow: COUNTER++,
-    campfirebbq: COUNTER++,
-    smelter: COUNTER++,
-    wooddoor1: COUNTER++,
-    stonedoor1: COUNTER++,
-    steeldoor1: COUNTER++,
-    sulfur: COUNTER++,
-    shapeduranium: COUNTER++,
-    researchbench: COUNTER++,
-    uranium: COUNTER++,
-    weavingmachine: COUNTER++,
-    gasoline: COUNTER++,
-    sulfurpickaxe: COUNTER++,
-    chest: COUNTER++,
-    fridge: COUNTER++,
-    woodfloor1: COUNTER++,
-    hammer: COUNTER++,
-    sleepingbag: COUNTER++,
-    repairhammer: COUNTER++,
-    nails: COUNTER++,
-    woodfloor2: COUNTER++,
-    smallwoodwall: COUNTER++,
-    smallstonewall: COUNTER++,
-    smallsteelwall: COUNTER++,
-    tomatosoup: COUNTER++,
-    syringe: COUNTER++,
-    chemicalcomponent: COUNTER++,
-    radway: COUNTER++,
-    tomatoseed: COUNTER++,
-    tomato: COUNTER++,
-    rottentomato: COUNTER++,
-    can: COUNTER++,
-    crossbow: COUNTER++,
-    crossarrow: COUNTER++,
-    nailgun: COUNTER++,
-    sawedoff: COUNTER++,
-    stonefloor1: COUNTER++,
-    stonefloor2: COUNTER++,
-    chips: COUNTER++,
-    rottenchips: COUNTER++,
-    electronicpart: COUNTER++,
-    junk: COUNTER++,
-    wires: COUNTER++,
-    energycell: COUNTER++,
-    laserpistol: COUNTER++,
-    teslabench: COUNTER++,
-    alloys: COUNTER++,
-    sulfuraxe: COUNTER++,
-    landmine: COUNTER++,
-    dynamite: COUNTER++,
-    c4bomb: COUNTER++,
-    joystic: COUNTER++,
-    composter: COUNTER++,
-    metalhelmet: COUNTER++,
-    weldinghelmet: COUNTER++,
-    gladiatorhelmet: COUNTER++,
-    leatherjacket: COUNTER++,
-    kevlarsuit: COUNTER++,
-    SWATsuit: COUNTER++,
-    protectivesuit: COUNTER++,
-    tesla1: COUNTER++,
-    tesla2: COUNTER++,
-    woodespike: COUNTER++,
-    lasersubmachine: COUNTER++,
-    granade: COUNTER++,
-    superhammer: COUNTER++,
-    ghoulblood: COUNTER++,
-    camouflage: COUNTER++,
-    agitator: COUNTER++,
-    ghouldrug: COUNTER++,
-    mushroom: COUNTER++,
-    mushroom2: COUNTER++,
-    mushroom3: COUNTER++,
-    rottenmushroom1: COUNTER++,
-    rottenmushroom2: COUNTER++,
-    rottenmushroom3: COUNTER++,
-    lapadoine: COUNTER++,
-    lapabot: COUNTER++,
-    smallwire: COUNTER++,
-    pumpkin: COUNTER++,
-    rottenpumpkin: COUNTER++,
-    ghoulseed: COUNTER++,
-    extractor: COUNTER++,
-    antidote: COUNTER++,
-    antidoteflower: COUNTER++,
-    treeseed: COUNTER++,
-    acorn: COUNTER++,
-    rottenacorn: COUNTER++,
-    lasersniper: COUNTER++,
-    halbot: COUNTER++,
-    teslabot: COUNTER++,
-    cable: COUNTER++,
-    cable2: COUNTER++,
-    cable3: COUNTER++,
-    cable4: COUNTER++,
-    switch: COUNTER++,
-    orgate: COUNTER++,
-    andgate: COUNTER++,
-    notgate: COUNTER++,
-    lamp: COUNTER++,
-    cablewall: COUNTER++,
-    autodoor: COUNTER++,
-    platform: COUNTER++,
-    stonecave: COUNTER++,
-    bunkerwall: COUNTER++,
-    mustardfloor: COUNTER++,
-    redfloor: COUNTER++,
-    weldingmachine: COUNTER++,
-    cable4: COUNTER++,
-    __GATE_TIMER__: COUNTER++,
-    xorgate: COUNTER++
+    __SMALL_WOOD__:             COUNTER++,
+    __MEDIUM_WOOD__:            COUNTER++,
+    __BIG_WOOD__:               COUNTER++,
+    __SMALL_STONE__:            COUNTER++,
+    __MEDIUM_STONE__:           COUNTER++,
+    __BIG_STONE__:              COUNTER++,
+    __STEEL__:                  COUNTER++,
+    __ANIMAL_FAT__:             COUNTER++,
+    __ANIMAL_TENDON__:          COUNTER++,
+    __STRING__:                 COUNTER++,
+    __LEATHER_BOAR__:           COUNTER++,
+    __SHAPED_METAL__:           COUNTER++,
+    __RAW_STEAK__:              COUNTER++,
+    __COOKED_STEAK__:           COUNTER++,
+    __ROTTEN_STEAK__:           COUNTER++,
+    __ORANGE__:                 COUNTER++,
+    __ROTTEN_ORANGE__:          COUNTER++,
+    __SEED_ORANGE__:            COUNTER++,
+    __HACHET__:                 COUNTER++,
+    __STONE_PICKAXE__:          COUNTER++,
+    __STEEL_PICKAXE__:          COUNTER++,
+    __STONE_AXE__:              COUNTER++,
+    __WORKBENCH__:              COUNTER++,
+    __WOOD_SPEAR__:             COUNTER++,
+    __WOOD_BOW__:               COUNTER++,
+    __9MM__:                    COUNTER++,
+    __DESERT_EAGLE__:           COUNTER++,
+    __SHOTGUN__:                COUNTER++,
+    __AK47__:                   COUNTER++,
+    __SNIPER__:                 COUNTER++,
+    __WOOD_WALL__:              COUNTER++,
+    __STONE_WALL__:             COUNTER++,
+    __STEEL_WALL__:             COUNTER++,
+    __WOOD_DOOR__:              COUNTER++,
+    __STONE_DOOR__:             COUNTER++,
+    __STEEL_DOOR__:             COUNTER++,
+    __CAMPFIRE__:               COUNTER++,
+    __BULLET_9MM__:             COUNTER++,
+    __BULLET_SHOTGUN__:         COUNTER++,
+    __BULLET_SNIPER__:          COUNTER++,
+    __MEDIKIT__:                COUNTER++,
+    __BANDAGE__:                COUNTER++,
+    __SODA__:                   COUNTER++,
+    __MP5__:                    COUNTER++,
+    __HEADSCARF__:              COUNTER++,
+    __CHAPKA__:                 COUNTER++,
+    __WINTER_COAT__:            COUNTER++,
+    __GAZ_MASK__:               COUNTER++,
+    __GAZ_PROTECTION__:         COUNTER++,
+    __RADIATION_SUIT__:         COUNTER++,
+    __WOOD_ARROW__:             COUNTER++,
+    __CAMPFIRE_BBQ__:           COUNTER++,
+    __SMELTER__:                COUNTER++,
+    __WOOD_BIGDOOR__:           COUNTER++,
+    __STONE_BIGDOOR__:          COUNTER++,
+    __STEEL_BIGDOOR__:          COUNTER++,
+    __SULFUR__:                 COUNTER++,
+    __SHAPED_URANIUM__:         COUNTER++,
+    __WORKBENCH2__:             COUNTER++,
+    __URANIUM__:                COUNTER++,
+    __WEAVING__:                COUNTER++,
+    __GASOLINE__:               COUNTER++,
+    __SULFUR_PICKAXE__:         COUNTER++,
+    __CHEST__:                  COUNTER++,
+    __FRIDGE__:                 COUNTER++,
+    __WOOD_FLOOR__:             COUNTER++,
+    __HAMMER__:                 COUNTER++,
+    __SLEEPING_BAG__:           COUNTER++,
+    __REPAIR_HAMMER__:          COUNTER++,
+    __NAILS__:                  COUNTER++,
+    __WOODLIGHT_FLOOR__:        COUNTER++,
+    __WOOD_SMALLWALL__:         COUNTER++,
+    __STONE_SMALLWALL__:        COUNTER++,
+    __STEEL_SMALLWALL__:        COUNTER++,
+    __TOMATO_SOUP__:            COUNTER++,
+    __SYRINGE__:                COUNTER++,
+    __CHEMICAL_COMPONENT__:     COUNTER++,
+    __RADAWAY__:                COUNTER++,
+    __SEED_TOMATO__:            COUNTER++,
+    __TOMATO__:                 COUNTER++,
+    __ROTTEN_TOMATO__:          COUNTER++,
+    __CAN__:                    COUNTER++,
+    __WOOD_CROSSBOW__:          COUNTER++,
+    __WOOD_CROSSARROW__:        COUNTER++,
+    __NAIL_GUN__:               COUNTER++,
+    __SAWED_OFF_SHOTGUN__:      COUNTER++,
+    __STONE_FLOOR__:            COUNTER++,
+    __TILING_FLOOR__:           COUNTER++,
+    __CRISPS__:                 COUNTER++,
+    __ROTTEN_CRISPS__:          COUNTER++,
+    __ELECTRONICS__:            COUNTER++,
+    __JUNK__:                   COUNTER++,
+    __WIRE__:                   COUNTER++,
+    __ENERGY_CELLS__:           COUNTER++,
+    __LASER_PISTOL__:           COUNTER++,
+    __TESLA__:                  COUNTER++,
+    __ALLOYS__:                 COUNTER++,
+    __SULFUR_AXE__:             COUNTER++,
+    __LANDMINE__:               COUNTER++,
+    __DYNAMITE__:               COUNTER++,
+    __C4__:                     COUNTER++,
+    __C4_TRIGGER__:             COUNTER++,
+    __COMPOST__:                COUNTER++,
+    __ARMOR_PHYSIC_1__:         COUNTER++,
+    __ARMOR_PHYSIC_2__:         COUNTER++,
+    __ARMOR_PHYSIC_3__:         COUNTER++,
+    __ARMOR_FIRE_1__:           COUNTER++,
+    __ARMOR_FIRE_2__:           COUNTER++,
+    __ARMOR_FIRE_3__:           COUNTER++,
+    __ARMOR_DEMINER__:          COUNTER++,
+    __ARMOR_TESLA_1__:          COUNTER++,
+    __ARMOR_TESLA_2__:          COUNTER++,
+    __WOOD_SPIKE__:             COUNTER++,
+    __LASER_SUBMACHINE__:       COUNTER++,
+    __GRENADE__:                COUNTER++,
+    __SUPER_HAMMER__:           COUNTER++,
+    __GHOUL_BLOOD__:            COUNTER++,
+    __CAMOUFLAGE_GEAR__:        COUNTER++,
+    __AGITATOR__:               COUNTER++,
+    __GHOUL_DRUG__:             COUNTER++,
+    __MUSHROOM1__:              COUNTER++,
+    __MUSHROOM2__:              COUNTER++,
+    __MUSHROOM3__:              COUNTER++,
+    __ROTTEN_MUSHROOM1__:       COUNTER++,
+    __ROTTEN_MUSHROOM2__:       COUNTER++,
+    __ROTTEN_MUSHROOM3__:       COUNTER++,
+    __LAPADONE__:               COUNTER++,
+    __LAPABOT_REPAIR__:         COUNTER++,
+    __SMALL_WIRE__:             COUNTER++,
+    __PUMPKIN__:                COUNTER++,
+    __ROTTEN_PUMPKIN__:         COUNTER++,
+    __SEED_GHOUL__:             COUNTER++,
+    __EXTRACTOR__:              COUNTER++,
+    __ANTIDOTE__:               COUNTER++,
+    __ANTIDOTE_FLOWER__:        COUNTER++,
+    __SEED_TREE__:              COUNTER++,
+    __ACORN__:                  COUNTER++,
+    __ROTTEN_ACORN__:           COUNTER++,
+    __LASER_SNIPER__:           COUNTER++,
+    __HAL_BOT__:                COUNTER++,
+    __TESLA_BOT__:              COUNTER++,
+    __CABLE0__:                 COUNTER++,
+    __CABLE1__:                 COUNTER++,
+    __CABLE2__:                 COUNTER++,
+    __CABLE3__:                 COUNTER++,
+    __SWITCH__:                 COUNTER++,
+    __GATE_OR__:                COUNTER++,
+    __GATE_AND__:               COUNTER++,
+    __GATE_NOT__:               COUNTER++,
+    __LAMP__:                   COUNTER++,
+    __CABLE_WALL__:             COUNTER++,
+    __AUTOMATIC_DOOR__:         COUNTER++,
+    __PLATFORM__:               COUNTER++,
+    __STONE_CAVE__:             COUNTER++,
+    __BUNKER_WALL__:            COUNTER++,
+    __GOLD_FLOOR__:             COUNTER++,
+    __RED_FLOOR__:              COUNTER++,
+    __WELDING_MACHINE__:        COUNTER++,
+    __CABLE4__:                 COUNTER++,
+    __GATE_TIMER__:             COUNTER++,
+    __GATE_XOR__:               COUNTER++
 };
 
 COUNTER = 0;
@@ -18525,7 +18525,7 @@ var items = [{
     },
     detail: new Detail("Wood", "Found in trees, or on the ground."),
     stack: 255,
-    loot: LOOTID.wood,
+    loot: LOOTID.__BIG_WOOD__,
     score: 10
 }, {
     id: IID.stone,
@@ -18545,7 +18545,7 @@ var items = [{
     craftStart: 50,
     craftRng: 200,
     stack: 255,
-    loot: LOOTID.stone,
+    loot: LOOTID.__BIG_STONE__,
     score: 14
 }, {
     id: IID.steel,
@@ -18565,7 +18565,7 @@ var items = [{
     craftStart: 4,
     craftRng: 8,
     stack: 255,
-    loot: LOOTID.steel,
+    loot: LOOTID.__STEEL__,
     score: 28
 }, {
     id: IID.animalfat,
@@ -18581,7 +18581,7 @@ var items = [{
     },
     detail: new Detail("Animal Fat", "Useful to craft bullet and clothes"),
     stack: 255,
-    loot: LOOTID.animalfat,
+    loot: LOOTID.__ANIMAL_FAT__,
     score: 32
 }, {
     id: IID.animaltendon,
@@ -18597,7 +18597,7 @@ var items = [{
     },
     detail: new Detail("Animal Tendon", "Useful to make string"),
     stack: 255,
-    loot: LOOTID.animaltendon,
+    loot: LOOTID.__ANIMAL_TENDON__,
     score: 100
 }, {
     id: IID.string,
@@ -18617,7 +18617,7 @@ var items = [{
         [AREAS.workbench, 20000]
     ]),
     stack: 255,
-    loot: LOOTID.string
+    loot: LOOTID.__STRING__
 }, {
     id: IID.leather,
     img: {
@@ -18632,7 +18632,7 @@ var items = [{
     },
     detail: new Detail("Leather", "Useful to make clothes"),
     stack: 255,
-    loot: LOOTID.leather,
+    loot: LOOTID.__LEATHER_BOAR__,
     score: 32
 }, {
     id: IID.shapedmetal,
@@ -18653,7 +18653,7 @@ var items = [{
         [AREAS.bbq, 30000]
     ]),
     stack: 255,
-    loot: LOOTID.shapedmetal
+    loot: LOOTID.__SHAPED_METAL__
 }, {
     id: IID.rawsteak,
     img: {
@@ -18668,7 +18668,7 @@ var items = [{
     },
     detail: new Detail("Raw Steak", "#Vegan"),
     stack: 10,
-    loot: LOOTID.rawsteak,
+    loot: LOOTID.__RAW_STEAK__,
     perish: 15,
     perishId: IID.rottensteak,
     idWeapon: 12,
@@ -18693,7 +18693,7 @@ var items = [{
         [AREAS.bbq, 10000]
     ]),
     stack: 10,
-    loot: LOOTID.cookedsteak,
+    loot: LOOTID.__COOKED_STEAK__,
     wait: 5,
     perish: 3,
     perishId: IID.rottensteak,
@@ -18711,7 +18711,7 @@ var items = [{
         }]
     },
     stack: 10,
-    loot: LOOTID.rottensteak,
+    loot: LOOTID.__ROTTEN_STEAK__,
     wait: 5,
     idWeapon: 14,    
     detail: new Detail("Rotten Steak", "Don't eat that."),
@@ -18730,7 +18730,7 @@ var items = [{
     },
     detail: new Detail("Orange", "A little hungry?"),
     stack: 20,
-    loot: LOOTID.orange,
+    loot: LOOTID.__ORANGE__,
     wait: 5,
     perish: 10,
     perishId: IID.rottenorange,
@@ -18754,7 +18754,7 @@ var items = [{
         [AREAS.composter, 40000]
     ]),
     stack: 20,
-    loot: LOOTID.rottenorange,
+    loot: LOOTID.__ROTTEN_ORANGE__,
     wait: 5,
     idWeapon: 16,     
     score: 20
@@ -18777,7 +18777,7 @@ var items = [{
         [AREAS.bbq, 15000]
     ]),
     stack: 40,
-    loot: LOOTID.seedorange,
+    loot: LOOTID.__SEED_ORANGE__,
     fruit: LOOTID.orange,
     wait: 10,
     idWeapon: 21,     
@@ -18865,7 +18865,7 @@ var items = [{
     ]),
     idWeapon: 3,     
     stack: 1,
-    loot: LOOTID.hachet, 
+    loot: LOOTID.__HACHET__, 
     wait: 10
 }, {
     id: IID.stonepickaxe,
@@ -18887,7 +18887,7 @@ var items = [{
     ]),
     idWeapon: 1,     
     stack: 1,
-    loot: LOOTID.stonepickaxe,
+    loot: LOOTID.__STONE_PICKAXE__,
     wait: 10
 }, {
     id: IID.steelpickaxe,
@@ -18909,7 +18909,7 @@ var items = [{
     ], 6),
     idWeapon: 2,     
     stack: 1,
-    loot: LOOTID.steelpickaxe,
+    loot: LOOTID.__STEEL_PICKAXE__,
     wait: 10
 }, {
     id: IID.stoneaxe,
@@ -18931,7 +18931,7 @@ var items = [{
     ], 5),
     idWeapon: 4,     
     stack: 1,
-    loot: LOOTID.stoneaxe,
+    loot: LOOTID.__STONE_AXE__,
     wait: 10
 }, {
     id: IID.workbench,
@@ -18958,7 +18958,7 @@ var items = [{
     z: 1,
     area: AREAS.workbench,
     stack: 255,
-    loot: LOOTID.workbench,
+    loot: LOOTID.__WORKBENCH__,
     wait: 10,
     delay: 1000,
     width: [100, 100, 100, 100],
@@ -19030,7 +19030,7 @@ var items = [{
     ]),
     idWeapon: 5,     
     stack: 1,
-    loot: LOOTID.spear,
+    loot: LOOTID.__WOOD_SPEAR__,
     wait: 10
 }, {
     id: IID.bow,
@@ -19055,7 +19055,7 @@ var items = [{
     mMVwm: 1,
     idWeapon: 6,     
     stack: 1,
-    loot: LOOTID.bow,
+    loot: LOOTID.__WOOD_BOW__,
     wait: 10
 }, {
     id: IID.pistol,
@@ -19078,7 +19078,7 @@ var items = [{
     idWeapon: 8,     
     bullet: IID.bullet9mm,
     stack: 1,
-    loot: LOOTID.pistol,
+    loot: LOOTID.__9MM__,
     wait: 10
 }, {
     id: IID.deserteagle,
@@ -19101,7 +19101,7 @@ var items = [{
     idWeapon: 9,     
     bullet: IID.bullet9mm,
     stack: 1,
-    loot: LOOTID.deserteagle,
+    loot: LOOTID.__DESERT_EAGLE__,
     wait: 10
 }, {
     id: IID.shotgun,
@@ -19124,7 +19124,7 @@ var items = [{
     idWeapon: 7,     
     bullet: IID.bulletshotgun,
     stack: 1,
-    loot: LOOTID.shotgun,
+    loot: LOOTID.__SHOTGUN__,
     wait: 10
 }, {
     id: IID.ak47,
@@ -19147,7 +19147,7 @@ var items = [{
     idWeapon: 10,     
     bullet: IID.sniperbullet,
     stack: 1,
-    loot: LOOTID.ak47,
+    loot: LOOTID.__AK47__,
     wait: 10
 }, {
     id: IID.sniper,
@@ -19170,7 +19170,7 @@ var items = [{
     idWeapon: 11,     
     bullet: IID.sniperbullet,
     stack: 1,
-    loot: LOOTID.sniper,
+    loot: LOOTID.__SNIPER__,
     wait: 10
 }, {
     id: IID.woodenwall,
@@ -19194,7 +19194,7 @@ var items = [{
     zid: 1,
     z: 1,
     stack: 255,
-    loot: LOOTID.woodenwall,
+    loot: LOOTID.__WOOD_WALL__,
     wait: 10,
     delay: 1000,
     width: [100, 100, 100, 100],
@@ -19509,7 +19509,7 @@ var items = [{
     zid: 1,
     z: 1,
     stack: 255,
-    loot: LOOTID.stonewall,
+    loot: LOOTID.__STONE_WALL__,
     wait: 10,
     delay: 1000,
     width: [100, 100, 100, 100],
@@ -19824,7 +19824,7 @@ var items = [{
     zid: 1,
     z: 1,
     stack: 255,
-    loot: LOOTID.steelwall,
+    loot: LOOTID.__STEEL_WALL__,
     wait: 10,
     delay: 1000,
     width: [100, 100, 100, 100],
@@ -20139,7 +20139,7 @@ var items = [{
     zid: 0,
     z: 0,
     stack: 255,
-    loot: LOOTID.wooddoor,
+    loot: LOOTID.__WOOD_DOOR__,
     wait: 10,
     delay: 600,
     width: [100, 35, 100, 35],
@@ -20243,7 +20243,7 @@ var items = [{
     zid: 0,
     z: 0,
     stack: 255,
-    loot: LOOTID.stonedoor,
+    loot: LOOTID.__STONE_DOOR__,
     wait: 10,
     delay: 600,
     width: [100, 35, 100, 35],
@@ -20347,7 +20347,7 @@ var items = [{
     zid: 0,
     z: 0,
     stack: 255,
-    loot: LOOTID.steeldoor,
+    loot: LOOTID.__STEEL_DOOR__,
     wait: 10,
     delay: 600,
     width: [100, 35, 100, 35],
@@ -20454,7 +20454,7 @@ var items = [{
     z: 0,
     area: AREAS.firepart,
     stack: 255,
-    loot: LOOTID.campfire,
+    loot: LOOTID.__CAMPFIRE__,
     wait: 10,
     delay: 1000,
     width: [100, 100, 100, 100],
@@ -20527,7 +20527,7 @@ var items = [{
         [AREAS.researchbench, 10000]
     ], 6),
     stack: 255,
-    loot: LOOTID.bullet9mm
+    loot: LOOTID.__BULLET_9MM__
 }, {
     id: IID.bulletshotgun,
     img: {
@@ -20548,7 +20548,7 @@ var items = [{
         [AREAS.researchbench, 10000]
     ], 10),
     stack: 255,
-    loot: LOOTID.bulletshotgun
+    loot: LOOTID.__BULLET_SHOTGUN__
 }, {
     id: IID.sniperbullet,
     img: {
@@ -20569,7 +20569,7 @@ var items = [{
         [AREAS.researchbench, 10000]
     ], 11),
     stack: 255,
-    loot: LOOTID.sniperbullet
+    loot: LOOTID.__BULLET_SNIPER__
 }, {
     id: IID.medkit,
     img: {
@@ -20592,7 +20592,7 @@ var items = [{
     ], 10),
     idWeapon: 17,     
     stack: 2,
-    loot: LOOTID.medkit,
+    loot: LOOTID.__MEDIKIT__,
     wait: 10
 }, {
     id: IID.bandage,
@@ -20614,7 +20614,7 @@ var items = [{
     ]),
     idWeapon: 18,     
     stack: 5,
-    loot: LOOTID.bandage,
+    loot: LOOTID.__BANDAGE__,
     wait: 10
 }, {
     id: IID.soda,
@@ -20638,7 +20638,7 @@ var items = [{
     ], 5),
     idWeapon: 19,     
     stack: 5,
-    loot: LOOTID.soda,
+    loot: LOOTID.__SODA__,
     perish: 2,
     perishId: IID.can,
     wait: 10
@@ -20663,7 +20663,7 @@ var items = [{
     idWeapon: 20,     
     bullet: IID.bullet9mm,
     stack: 1,
-    loot: LOOTID.mp5,
+    loot: LOOTID.__MP5__,
     wait: 10
 }, {
     id: IID.headscarf,
@@ -20685,7 +20685,7 @@ var items = [{
     ]),
     idClothe: 1,
     stack: 1,
-    loot: LOOTID.headscarf,
+    loot: LOOTID.__HEADSCARF__,
     wait: 10,
     warm: 0.00085,
     def: 0,
@@ -20715,7 +20715,7 @@ var items = [{
     ], 7),
     idClothe: 2,
     stack: 1,
-    loot: LOOTID.chapka,
+    loot: LOOTID.__CHAPKA__,
     wait: 10,
     warm: 0.0017,
     def: 0,
@@ -20745,7 +20745,7 @@ var items = [{
     ], 9, IID.chapka),
     idClothe: 3,
     stack: 1,
-    loot: LOOTID.coat,
+    loot: LOOTID.__WINTER_COAT__,
     wait: 10,
     warm: 0.0026,
     def: 0,
@@ -20775,7 +20775,7 @@ var items = [{
     ]),
     idClothe: 4,
     stack: 1,
-    loot: LOOTID.gazmask,
+    loot: LOOTID.__GAZ_MASK__,
     wait: 10,
     warm: 0,
     def: 0,
@@ -20807,7 +20807,7 @@ var items = [{
     ], 8),
     idClothe: 5,
     stack: 1,
-    loot: LOOTID.gazprotection,
+    loot: LOOTID.__GAZ_PROTECTION__,
     wait: 10,
     warm: 0.0006,
     def: 0,
@@ -20839,7 +20839,7 @@ var items = [{
     ], 10, IID.gazprotection),
     idClothe: 6,
     stack: 1,
-    loot: LOOTID.radiationsuit,
+    loot: LOOTID.__RADIATION_SUIT__,
     wait: 10,
     warm: 0,
     def: 0,
@@ -20867,7 +20867,7 @@ var items = [{
         [AREAS.workbench, 10000]
     ]),
     stack: 255,
-    loot: LOOTID.woodarrow
+    loot: LOOTID.__WOOD_ARROW__
 }, {
     id: IID.campfirebbq,
     img: {
@@ -20893,7 +20893,7 @@ var items = [{
     z: 0,
     area: AREAS.bbq,
     stack: 255,
-    loot: LOOTID.campfirebbq,
+    loot: LOOTID.__CAMPFIRE_BBQ__,
     wait: 10,
     delay: 1000,
     width: [100, 100, 100, 100],
@@ -20970,7 +20970,7 @@ var items = [{
     z: 1,
     area: AREAS.smelter,
     stack: 255,
-    loot: LOOTID.smelter,
+    loot: LOOTID.__SMELTER__,
     wait: 10,
     delay: 1000,
     width: [100, 260, 100, 260],
@@ -21063,7 +21063,7 @@ var items = [{
     zid: 1,
     z: 1,
     stack: 255,
-    loot: LOOTID.wooddoor1,
+    loot: LOOTID.__WOOD_BIGDOOR__,
     wait: 10,
     delay: 600,
     width: [100, 100, 100, 100],
@@ -21167,7 +21167,7 @@ var items = [{
     zid: 1,
     z: 1,
     stack: 255,
-    loot: LOOTID.stonedoor1,
+    loot: LOOTID.__STONE_BIGDOOR__,
     wait: 10,
     delay: 600,
     width: [100, 100, 100, 100],
@@ -21271,7 +21271,7 @@ var items = [{
     zid: 1,
     z: 1,
     stack: 255,
-    loot: LOOTID.steeldoor1,
+    loot: LOOTID.__STEEL_BIGDOOR__,
     wait: 10,
     delay: 600,
     width: [100, 100, 100, 100],
@@ -21371,7 +21371,7 @@ var items = [{
     craftStart: 4,
     craftRng: 8,
     stack: 255,
-    loot: LOOTID.sulfur,
+    loot: LOOTID.__SULFUR__,
     score: 32
 }, {
     id: IID.shapeduranium,
@@ -21391,7 +21391,7 @@ var items = [{
         [AREAS.smelter, 20000]
     ]),
     stack: 255,
-    loot: LOOTID.shapeduranium,
+    loot: LOOTID.__SHAPED_URANIUM__,
     score: 0
 }, {
     id: IID.researchbench,
@@ -21417,7 +21417,7 @@ var items = [{
     z: 1,
     area: AREAS.researchbench,
     stack: 255,
-    loot: LOOTID.researchbench,
+    loot: LOOTID.__WORKBENCH2__,
     wait: 10,
     delay: 1000,
     width: [100, 290, 100, 280],
@@ -21489,7 +21489,7 @@ var items = [{
     craftStart: 2,
     craftRng: 4,
     stack: 255,
-    loot: LOOTID.uranium,
+    loot: LOOTID.__URANIUM__,
     score: 45
 }, {
     id: IID.weavingmachine,
@@ -21516,7 +21516,7 @@ var items = [{
     z: 1,
     area: AREAS.weavingmachine,
     stack: 255,
-    loot: LOOTID.weavingmachine,
+    loot: LOOTID.__WEAVING__,
     wait: 10,
     delay: 1000,
     width: [100, 100, 100, 100],
@@ -21587,7 +21587,7 @@ var items = [{
         [AREAS.researchbench, 20000]
     ]),
     stack: 255,
-    loot: LOOTID.gasoline
+    loot: LOOTID.__GASOLINE__
 }, {
     id: IID.sulfurpickaxe,
     img: {
@@ -21609,7 +21609,7 @@ var items = [{
     ], 9, IID.steelpickaxe),
     idWeapon: 22,     
     stack: 1,
-    loot: LOOTID.sulfurpickaxe,
+    loot: LOOTID.__SULFUR_PICKAXE__,
     wait: 10
 }, {
     id: IID.chest,
@@ -21634,7 +21634,7 @@ var items = [{
     zid: 0,
     z: 0,
     stack: 255,
-    loot: LOOTID.chest,
+    loot: LOOTID.__CHEST__,
     wait: 10,
     chest: 1,
     delay: 600,
@@ -21710,7 +21710,7 @@ var items = [{
     zid: 0,
     z: 0,
     stack: 255,
-    loot: LOOTID.fridge,
+    loot: LOOTID.__FRIDGE__,
     wait: 10,
     chest: 1,
     fridge: 1,
@@ -21782,7 +21782,7 @@ var items = [{
         [AREAS.workbench, 15000]
     ]),
     stack: 255,
-    loot: LOOTID.woodfloor1,
+    loot: LOOTID.__WOOD_FLOOR__,
     wait: 10,
     idWeapon: 21,     
     fuel: -1,
@@ -22098,7 +22098,7 @@ var items = [{
     ], 7),
     idWeapon: 23,     
     stack: 1,
-    loot: LOOTID.hammer,
+    loot: LOOTID.__HAMMER__,
     wait: 10
 }, {
     id: IID.sleepingbag,
@@ -22120,7 +22120,7 @@ var items = [{
         [AREAS.weavingmachine, 20000]
     ], 9),
     stack: 255,
-    loot: LOOTID.sleepingbag,
+    loot: LOOTID.__SLEEPING_BAG__,
     wait: 10,
     idWeapon: 21,     
     fuel: -1,
@@ -22186,7 +22186,7 @@ var items = [{
     ], 5),
     idWeapon: 24,     
     stack: 1,
-    loot: LOOTID.repairhammer,
+    loot: LOOTID.__REPAIR_HAMMER__,
     wait: 10
 }, {
     id: IID.nails,
@@ -22206,7 +22206,7 @@ var items = [{
         [AREAS.workbench, 20000]
     ]),
     stack: 255,
-    loot: LOOTID.nails
+    loot: LOOTID.__NAILS__
 }, {
     id: IID.woodfloor2,
     img: {
@@ -22225,7 +22225,7 @@ var items = [{
         [AREAS.workbench, 15000]
     ]),
     stack: 255,
-    loot: LOOTID.woodfloor2,
+    loot: LOOTID.__WOODLIGHT_FLOOR__,
     wait: 10,
     idWeapon: 21,     
     fuel: -1,
@@ -22543,7 +22543,7 @@ var items = [{
     zid: 0,
     z: 0,
     stack: 255,
-    loot: LOOTID.smallwoodwall,
+    loot: LOOTID.__WOOD_SMALLWALL__,
     wait: 10,
     delay: 1000,
     width: [100, 35, 100, 35],
@@ -22830,7 +22830,7 @@ var items = [{
     zid: 0,
     z: 0,
     stack: 255,
-    loot: LOOTID.smallstonewall,
+    loot: LOOTID.__STONE_SMALLWALL__,
     wait: 10,
     delay: 1000,
     width: [100, 35, 100, 35],
@@ -23117,7 +23117,7 @@ var items = [{
     zid: 0,
     z: 0,
     stack: 255,
-    loot: LOOTID.smallsteelwall,
+    loot: LOOTID.__STEEL_SMALLWALL__,
     wait: 10,
     delay: 1000,
     width: [100, 35, 100, 35],
@@ -23421,7 +23421,7 @@ var items = [{
     ]),
     idWeapon: 25,     
     stack: 5,
-    loot: LOOTID.tomatosoup,
+    loot: LOOTID.__TOMATO_SOUP__,
     perish: 2,
     perishId: IID.can,
     wait: 10
@@ -23443,7 +23443,7 @@ var items = [{
         [AREAS.researchbench, 30000]
     ]),
     stack: 20,
-    loot: LOOTID.syringe,
+    loot: LOOTID.__SYRINGE__,
     score: 50
 }, {
     id: IID.chemicalcomponent,
@@ -23459,7 +23459,7 @@ var items = [{
     },
     detail: new Detail("Chemical Component", "Useful to make a drugs."),
     stack: 20,
-    loot: LOOTID.chemicalcomponent,
+    loot: LOOTID.__CHEMICAL_COMPONENT__,
     score: 50
 }, {
     id: IID.radway,
@@ -23482,7 +23482,7 @@ var items = [{
     ]),
     idWeapon: 26,     
     stack: 5,
-    loot: LOOTID.radway,
+    loot: LOOTID.__RADAWAY__,
     wait: 10
 }, {
     id: IID.tomatoseed,
@@ -23503,8 +23503,8 @@ var items = [{
         [AREAS.bbq, 20000]
     ]),
     stack: 40,
-    loot: LOOTID.tomatoseed,
-    fruit: LOOTID.tomato,
+    loot: LOOTID.__SEED_TOMATO__,
+    fruit: LOOTID.__TOMATO__,
     wait: 10,
     idWeapon: 21,     
     fuel: -1,
@@ -23604,7 +23604,7 @@ var items = [{
     },
     detail: new Detail("Rotten Tomato", "Go on, have a bite!"),
     stack: 20,
-    loot: LOOTID.rottentomato,
+    loot: LOOTID.__ROTTEN_TOMATO__,
     wait: 5,
     idWeapon: 28,     
     score: 20
@@ -23627,7 +23627,7 @@ var items = [{
     ]),
     idWeapon: 0,     
     stack: 255,
-    loot: LOOTID.can
+    loot: LOOTID.__CAN__
 }, {
     id: IID.crossbow,
     img: {
@@ -23650,7 +23650,7 @@ var items = [{
     idWeapon: 29,     
     bullet: IID.crossarrow,
     stack: 1,
-    loot: LOOTID.crossbow,
+    loot: LOOTID.__WOOD_CROSSBOW__,
     wait: 10
 }, {
     id: IID.crossarrow,
@@ -23671,7 +23671,7 @@ var items = [{
         [AREAS.workbench, 30000]
     ]),
     stack: 255,
-    loot: LOOTID.crossarrow
+    loot: LOOTID.__WOOD_CROSSARROW__
 }, {
     id: IID.nailgun,
     img: {
@@ -23695,7 +23695,7 @@ var items = [{
     idWeapon: 30,     
     bullet: IID.nails,
     stack: 1,
-    loot: LOOTID.nailgun,
+    loot: LOOTID.__NAIL_GUN__,
     wait: 10
 }, {
     id: IID.sawedoff,
@@ -23719,7 +23719,7 @@ var items = [{
     idWeapon: 31,     
     bullet: IID.bulletshotgun,
     stack: 1,
-    loot: LOOTID.sawedoff,
+    loot: LOOTID.__SAWED_OFF_SHOTGUN__,
     wait: 10
 }, {
     id: IID.stonefloor1,
@@ -23739,7 +23739,7 @@ var items = [{
         [AREAS.workbench, 15000]
     ], 4),
     stack: 255,
-    loot: LOOTID.stonefloor1,
+    loot: LOOTID.__STONE_FLOOR__,
     wait: 10,
     idWeapon: 21,     
     fuel: -1,
@@ -24053,7 +24053,7 @@ var items = [{
         [AREAS.workbench, 15000]
     ], 4),
     stack: 255,
-    loot: LOOTID.stonefloor2,
+    loot: LOOTID.__TILING_FLOOR__,
     wait: 10,
     idWeapon: 21,     
     fuel: -1,
@@ -24383,7 +24383,7 @@ var items = [{
     detail: new Detail("Crisps", "You salty?"),
     idWeapon: 32,     
     stack: 5,
-    loot: LOOTID.chips,
+    loot: LOOTID.__CRISPS__,
     perish: 2,
     perishId: IID.rottenchips,
     wait: 10
@@ -24401,7 +24401,7 @@ var items = [{
     },
     detail: new Detail("Expired Crisps", "Go on, have a bite!"),
     stack: 5,
-    loot: LOOTID.rottenchips,
+    loot: LOOTID.__ROTTEN_CRISPS__,
     wait: 5,
     idWeapon: 33,     
     score: 20
@@ -24419,7 +24419,7 @@ var items = [{
     },
     detail: new Detail("Electronic Parts", "Break TV's and Computers to find it"),
     stack: 255,
-    loot: LOOTID.electronicpart,
+    loot: LOOTID.__ELECTRONICS__,
     score: 100
 }, {
     id: IID.junk,
@@ -24435,7 +24435,7 @@ var items = [{
     },
     detail: new Detail("Junk", "Find it in houses"),
     stack: 255,
-    loot: LOOTID.junk,
+    loot: LOOTID.__JUNK__,
     score: 40
 }, {
     id: IID.wires,
@@ -24451,7 +24451,7 @@ var items = [{
     },
     detail: new Detail("Big Wire", "Break big computers in power AREAS (in the city)"),
     stack: 255,
-    loot: LOOTID.wires,
+    loot: LOOTID.__WIRE__,
     score: 40
 }, {
     id: IID.energycell,
@@ -24472,7 +24472,7 @@ var items = [{
         [AREAS.teslabench, 28000]
     ], 6),
     stack: 255,
-    loot: LOOTID.energycell
+    loot: LOOTID.__ENERGY_CELLS__
 }, {
     id: IID.laserpistol,
     img: {
@@ -24497,7 +24497,7 @@ var items = [{
     idWeapon: 34,     
     bullet: IID.energycell,
     stack: 1,
-    loot: LOOTID.laserpistol,
+    loot: LOOTID.__LASER_PISTOL__,
     wait: 10
 }, {
     id: IID.teslabench,
@@ -24526,7 +24526,7 @@ var items = [{
     z: 1,
     area: AREAS.teslabench,
     stack: 255,
-    loot: LOOTID.teslabench,
+    loot: LOOTID.__TESLA__,
     wait: 10,
     delay: 1000,
     width: [100, 260, 100, 260],
@@ -24648,7 +24648,7 @@ var items = [{
         [AREAS.smelter, 10000]
     ]),
     stack: 255,
-    loot: LOOTID.alloys
+    loot: LOOTID.__ALLOYS__
 }, {
     id: IID.sulfuraxe,
     img: {
@@ -24671,7 +24671,7 @@ var items = [{
     ], 10, IID.stoneaxe),
     idWeapon: 35,     
     stack: 1,
-    loot: LOOTID.sulfuraxe,
+    loot: LOOTID.__SULFUR_AXE__,
     wait: 10
 }, {
     id: IID.landmine,
@@ -24694,7 +24694,7 @@ var items = [{
         [AREAS.researchbench, 40000]
     ], 9),
     stack: 20,
-    loot: LOOTID.landmine,
+    loot: LOOTID.__LANDMINE__,
     wait: 10,
     idWeapon: 21,     
     fuel: -1,
@@ -24773,7 +24773,7 @@ var items = [{
         [AREAS.researchbench, 40000]
     ], 9),
     stack: 10,
-    loot: LOOTID.dynamite,
+    loot: LOOTID.__DYNAMITE__,
     wait: 10,
     idWeapon: 21,     
     fuel: -1,
@@ -24847,7 +24847,7 @@ var items = [{
         [AREAS.researchbench, 60000]
     ], 16, IID.dynamite),
     stack: 5,
-    loot: LOOTID.c4bomb,
+    loot: LOOTID.__C4__,
     wait: 10,
     idWeapon: 21,     
     fuel: -1,
@@ -24921,7 +24921,7 @@ var items = [{
         [AREAS.researchbench, 100000]
     ], 16, IID.c4bomb),
     stack: 1,
-    loot: LOOTID.joystic,
+    loot: LOOTID.__C4_TRIGGER__,
     wait: 10,
     idWeapon: 36,     
     score: 0
@@ -24949,7 +24949,7 @@ var items = [{
     z: 1,
     area: AREAS.composter,
     stack: 255,
-    loot: LOOTID.composter,
+    loot: LOOTID.__COMPOST__,
     wait: 10,
     delay: 1000,
     width: [100, 100, 100, 100],
@@ -25028,7 +25028,7 @@ var items = [{
     ]),
     idClothe: 7,
     stack: 1,
-    loot: LOOTID.metalhelmet,
+    loot: LOOTID.__ARMOR_PHYSIC_1__,
     wait: 10,
     warm: 0,
     def: 0.15,
@@ -25060,7 +25060,7 @@ var items = [{
     ], 7),
     idClothe: 8,
     stack: 1,
-    loot: LOOTID.weldinghelmet,
+    loot: LOOTID.__ARMOR_PHYSIC_2__,
     wait: 10,
     warm: 0,
     def: 0.4,
@@ -25092,7 +25092,7 @@ var items = [{
     ], 17, IID.weldinghelmet),
     idClothe: 9,
     stack: 1,
-    loot: LOOTID.gladiatorhelmet,
+    loot: LOOTID.__ARMOR_PHYSIC_3__,
     wait: 10,
     warm: 0,
     def: 0.6,
@@ -25121,7 +25121,7 @@ var items = [{
     ]),
     idClothe: 10,
     stack: 1,
-    loot: LOOTID.leatherjacket,
+    loot: LOOTID.__ARMOR_FIRE_1__,
     wait: 10,
     warm: 0.0006,
     def: 0,
@@ -25153,7 +25153,7 @@ var items = [{
     ], 12),
     idClothe: 11,
     stack: 1,
-    loot: LOOTID.kevlarsuit,
+    loot: LOOTID.__ARMOR_FIRE_2__,
     wait: 10,
     warm: 0,
     def: 0,
@@ -25185,7 +25185,7 @@ var items = [{
     ], 18, IID.kevlarsuit),
     idClothe: 12,
     stack: 1,
-    loot: LOOTID.SWATsuit,
+    loot: LOOTID.__ARMOR_FIRE_3__,
     wait: 10,
     warm: 0,
     def: 0.1,
@@ -25216,7 +25216,7 @@ var items = [{
     ], 12, IID.lightweightskill),
     idClothe: 13,
     stack: 1,
-    loot: LOOTID.protectivesuit,
+    loot: LOOTID.__ARMOR_DEMINER__,
     wait: 10,
     warm: 0.00085,
     def: 0,
@@ -25248,7 +25248,7 @@ var items = [{
     ], 10),
     idClothe: 14,
     stack: 1,
-    loot: LOOTID.tesla1,
+    loot: LOOTID.__ARMOR_TESLA_1__,
     wait: 10,
     warm: 0,
     def: 0,
@@ -25280,7 +25280,7 @@ var items = [{
     ], 18, IID.tesla1, 3),
     idClothe: 15,
     stack: 1,
-    loot: LOOTID.tesla2,
+    loot: LOOTID.__ARMOR_TESLA_2__,
     wait: 10,
     warm: 0.00085,
     def: 0.2,
@@ -25311,7 +25311,7 @@ var items = [{
     zid: -1,
     z: 0,
     stack: 40,
-    loot: LOOTID.woodespike,
+    loot: LOOTID.__WOOD_SPIKE__,
     wait: 10,
     delay: 1000,
     width: [50, 50, 50, 50],
@@ -25401,7 +25401,7 @@ var items = [{
     idWeapon: 37,     
     bullet: IID.energycell,
     stack: 1,
-    loot: LOOTID.lasersubmachine,
+    loot: LOOTID.__LASER_SUBMACHINE__,
     wait: 10
 }, {
     id: IID.granade,
@@ -25427,7 +25427,7 @@ var items = [{
     damage: 130,
     damageBuilding: 400,
     stack: 10,
-    loot: LOOTID.granade,
+    loot: LOOTID.__GRENADE__,
     wait: 10
 }, {
     id: IID.superhammer,
@@ -25444,7 +25444,7 @@ var items = [{
     detail: new Detail("Super Hammer", "Destroy indestructible walls."),
     idWeapon: 39,     
     stack: 1,
-    loot: LOOTID.superhammer,
+    loot: LOOTID.__SUPER_HAMMER__,
     wait: 10
 }, {
     id: IID.ghoulblood,
@@ -25460,7 +25460,7 @@ var items = [{
     },
     detail: new Detail("Ghoul Blood", "Find it on speedy ghouls"),
     stack: 255,
-    loot: LOOTID.ghoulblood,
+    loot: LOOTID.__GHOUL_BLOOD__,
     score: 100
 }, 
 
@@ -25485,7 +25485,7 @@ var items = [{
     ]),
     idClothe: 16,
     stack: 1,
-    loot: LOOTID.camouflage,
+    loot: LOOTID.__CAMOUFLAGE_GEAR__,
     wait: 10,
     warm: 0,
     def: 0,
@@ -25520,7 +25520,7 @@ var items = [{
     z: 1,
     area: AREAS.agitator,
     stack: 255,
-    loot: LOOTID.agitator,
+    loot: LOOTID.__AGITATOR__,
     wait: 10,
     delay: 1000,
     width: [100, 100, 100, 100],
@@ -25616,7 +25616,7 @@ var items = [{
     ], 10),
     idWeapon: 40,     
     stack: 5,
-    loot: LOOTID.ghouldrug,
+    loot: LOOTID.__GHOUL_DRUG__,
     wait: 10
 }, {
     id: IID.mushroom,
@@ -25632,7 +25632,7 @@ var items = [{
     },
     detail: new Detail("Amanita", "Poisoned, really dangerous"),
     stack: 20,
-    loot: LOOTID.mushroom,
+    loot: LOOTID.__MUSHROOM1__,
     wait: 5,
     perish: 10,
     perishId: IID.rottenmushroom1,
@@ -25652,7 +25652,7 @@ var items = [{
     },
     detail: new Detail("Boletus", "Can be eaten."),
     stack: 20,
-    loot: LOOTID.mushroom2,
+    loot: LOOTID.__MUSHROOM2__,
     wait: 5,
     perish: 10,
     perishId: IID.rottenmushroom2,
@@ -25672,7 +25672,7 @@ var items = [{
     },
     detail: new Detail("Russula", "Can be eaten."),
     stack: 20,
-    loot: LOOTID.mushroom3,
+    loot: LOOTID.__MUSHROOM3__,
     wait: 5,
     perish: 10,
     perishId: IID.rottenmushroom3,
@@ -25692,7 +25692,7 @@ var items = [{
     },
     detail: new Detail("Rotten Mushroom", "Go on, have a bite!"),
     stack: 20,
-    loot: LOOTID.rottenmushroom1,
+    loot: LOOTID.__ROTTEN_MUSHROOM1__,
     wait: 5,
     idWeapon: 44,     
     score: 20
@@ -25710,7 +25710,7 @@ var items = [{
     },
     detail: new Detail("Rotten Mushroom", "Go on, have a bite!"),
     stack: 20,
-    loot: LOOTID.rottenmushroom2,
+    loot: LOOTID.__ROTTEN_MUSHROOM2__,
     wait: 5,
     idWeapon: 45,     
     score: 20
@@ -25728,7 +25728,7 @@ var items = [{
     },
     detail: new Detail("Rotten Mushroom", "Go on, have a bite!"),
     stack: 20,
-    loot: LOOTID.rottenmushroom3,
+    loot: LOOTID.__ROTTEN_MUSHROOM3__,
     wait: 5,
     idWeapon: 46,     
     score: 20
@@ -25754,7 +25754,7 @@ var items = [{
     ], 14),
     idWeapon: 47,     
     stack: 5,
-    loot: LOOTID.lapadoine,
+    loot: LOOTID.__LAPADONE__,
     wait: 10
 }, {
     id: IID.lapabot,
@@ -25777,7 +25777,7 @@ var items = [{
         [AREAS.researchbench, 100000]
     ], 8),
     stack: 5,
-    loot: LOOTID.lapabot,
+    loot: LOOTID.__LAPABOT_REPAIR__,
     fruit: LOOTID.tomato,
     wait: 10,
     idWeapon: 21,     
@@ -25869,7 +25869,7 @@ var items = [{
     },
     detail: new Detail("Small Wire", "Find it on TV's and computers in abandonned houses"),
     stack: 255,
-    loot: LOOTID.smallwire,
+    loot: LOOTID.__SMALL_WIRE__,
     score: 40
 }, {
     id: IID.pumpkin,
@@ -25885,7 +25885,7 @@ var items = [{
     },
     detail: new Detail("Pumpkin", "Eat it or craft a pumpkin ghoul"),
     stack: 20,
-    loot: LOOTID.pumpkin,
+    loot: LOOTID.__PUMPKIN__,
     wait: 5,
     perish: 10,
     perishId: IID.rottenpumpkin,
@@ -25905,7 +25905,7 @@ var items = [{
     },
     detail: new Detail("Rotten Pumpkin", "You should not click"),
     stack: 20,
-    loot: LOOTID.rottenpumpkin,
+    loot: LOOTID.__ROTTEN_PUMPKIN__,
     wait: 5,
     idWeapon: 49,     
     score: 20
@@ -25929,7 +25929,7 @@ var items = [{
         [AREAS.bbq, 20000]
     ], 99),
     stack: 40,
-    loot: LOOTID.ghoulseed,
+    loot: LOOTID.__SEED_GHOUL__,
     fruit: LOOTID.tomato,
     wait: 10,
     idWeapon: 21,     
@@ -26028,7 +26028,7 @@ var items = [{
     z: 1,
     area: AREAS.extractor,
     stack: 255,
-    loot: LOOTID.extractor,
+    loot: LOOTID.__EXTRACTOR__,
     wait: 10,
     delay: 1000,
     width: [100, 100, 100, 100],
@@ -26118,7 +26118,7 @@ var items = [{
     ], 14),
     idWeapon: 50,     
     stack: 5,
-    loot: LOOTID.antidote,
+    loot: LOOTID.__ANTIDOTE__,
     wait: 10
 }, {
     id: IID.antidoteflower,
@@ -26134,7 +26134,7 @@ var items = [{
     },
     detail: new Detail("Rare Flower", "Use it to make an antidote"),
     stack: 5,
-    loot: LOOTID.antidoteflower,
+    loot: LOOTID.__ANTIDOTE_FLOWER__,
     score: 400
 }, {
     id: IID.treeseed,
@@ -26155,7 +26155,7 @@ var items = [{
         [AREAS.bbq, 40000]
     ]),
     stack: 100,
-    loot: LOOTID.treeseed,
+    loot: LOOTID.__SEED_TREE__,
     fruit: LOOTID.orange,
     wait: 10,
     idWeapon: 21,     
@@ -26236,7 +26236,7 @@ var items = [{
     },
     detail: new Detail("Acorn", "Eat it or plant a tree"),
     stack: 20,
-    loot: LOOTID.acorn,
+    loot: LOOTID.__ACORN__,
     wait: 5,
     perish: 3,
     perishId: IID.rottenacorn,
@@ -26256,7 +26256,7 @@ var items = [{
     },
     detail: new Detail("Rotten Acorn", "Not really good"),
     stack: 20,
-    loot: LOOTID.rottenacorn,
+    loot: LOOTID.__ROTTEN_ACORN__,
     wait: 5,
     idWeapon: 52,     
     score: 20
@@ -26284,7 +26284,7 @@ var items = [{
     idWeapon: 53,     
     bullet: IID.energycell,
     stack: 1,
-    loot: LOOTID.lasersniper,
+    loot: LOOTID.__LASER_SNIPER__,
     wait: 10
 }, {
     id: IID.halbot,
@@ -26307,7 +26307,7 @@ var items = [{
         [AREAS.researchbench, 100000]
     ], 8),
     stack: 5,
-    loot: LOOTID.halbot,
+    loot: LOOTID.__HAL_BOT__,
     fruit: LOOTID.tomato,
     wait: 10,
     idWeapon: 21,     
@@ -26407,7 +26407,7 @@ var items = [{
         [AREAS.teslabench, 200000]
     ], 16),
     stack: 5,
-    loot: LOOTID.teslabot,
+    loot: LOOTID.__TESLA_BOT__,
     fruit: LOOTID.tomato,
     wait: 10,
     idWeapon: 21,     
@@ -26503,7 +26503,7 @@ var items = [{
         [AREAS.weldingmachine, 15000]
     ]),
     stack: 255,
-    loot: LOOTID.cable,
+    loot: LOOTID.__CABLE0__,
     wait: 10,
     idWeapon: 21,     
     fuel: -1,
@@ -26576,7 +26576,7 @@ var items = [{
         [AREAS.weldingmachine, 15000]
     ]),
     stack: 255,
-    loot: LOOTID.cable2,
+    loot: LOOTID.__CABLE1__,
     wait: 10,
     idWeapon: 21,     
     fuel: -1,
@@ -26649,7 +26649,7 @@ var items = [{
         [AREAS.weldingmachine, 15000]
     ]),
     stack: 255,
-    loot: LOOTID.cable3,
+    loot: LOOTID.__CABLE2__,
     wait: 10,
     idWeapon: 21,     
     fuel: -1,
@@ -26722,7 +26722,7 @@ var items = [{
         [AREAS.weldingmachine, 15000]
     ]),
     stack: 255,
-    loot: LOOTID.cable4,
+    loot: LOOTID.__CABLE3__,
     wait: 10,
     idWeapon: 21,     
     fuel: -1,
@@ -26796,7 +26796,7 @@ var items = [{
         [AREAS.weldingmachine, 15000]
     ]),
     stack: 255,
-    loot: LOOTID.switch,
+    loot: LOOTID.__SWITCH__,
     wait: 10,
     idWeapon: 21,     
     fuel: -1,
@@ -26882,7 +26882,7 @@ var items = [{
         [AREAS.weldingmachine, 15000]
     ]),
     stack: 255,
-    loot: LOOTID.orgate,
+    loot: LOOTID.__GATE_OR__,
     wait: 10,
     idWeapon: 21,     
     fuel: -1,
@@ -26956,7 +26956,7 @@ var items = [{
         [AREAS.weldingmachine, 15000]
     ]),
     stack: 255,
-    loot: LOOTID.andgate,
+    loot: LOOTID.__GATE_AND__,
     wait: 10,
     idWeapon: 21,     
     fuel: -1,
@@ -27030,7 +27030,7 @@ var items = [{
         [AREAS.weldingmachine, 15000]
     ]),
     stack: 255,
-    loot: LOOTID.notgate,
+    loot: LOOTID.__GATE_NOT__,
     wait: 10,
     idWeapon: 21,     
     fuel: -1,
@@ -27104,7 +27104,7 @@ var items = [{
         [AREAS.weldingmachine, 15000]
     ]),
     stack: 255,
-    loot: LOOTID.lamp,
+    loot: LOOTID.__LAMP__,
     wait: 10,
     idWeapon: 21,     
     fuel: -1,
@@ -27259,7 +27259,7 @@ var items = [{
         [AREAS.weldingmachine, 15000]
     ], 7),
     stack: 255,
-    loot: LOOTID.cablewall,
+    loot: LOOTID.__CABLE_WALL__,
     wait: 10,
     idWeapon: 21,     
     fuel: -1,
@@ -27349,7 +27349,7 @@ var items = [{
         [AREAS.weldingmachine, 15000]
     ], 7),
     stack: 255,
-    loot: LOOTID.autodoor,
+    loot: LOOTID.__AUTOMATIC_DOOR__,
     wait: 10,
     idWeapon: 21,     
     fuel: -1,
@@ -27461,7 +27461,7 @@ var items = [{
         [AREAS.weldingmachine, 15000]
     ]),
     stack: 255,
-    loot: LOOTID.platform,
+    loot: LOOTID.__PLATFORM__,
     wait: 10,
     idWeapon: 21,     
     fuel: -1,
@@ -27538,7 +27538,7 @@ var items = [{
     zid: 1,
     z: 1,
     stack: 255,
-    loot: LOOTID.stonecave,
+    loot: LOOTID.__STONE_CAVE__,
     wait: 10,
     delay: 1000,
     width: [100, 100, 100, 100],
@@ -27854,7 +27854,7 @@ var items = [{
     zid: 1,
     z: 1,
     stack: 255,
-    loot: LOOTID.bunkerwall,
+    loot: LOOTID.__BUNKER_WALL__,
     wait: 10,
     delay: 1000,
     width: [100, 100, 100, 100],
@@ -28165,7 +28165,7 @@ var items = [{
         [AREAS.workbench, 15000]
     ]),
     stack: 255,
-    loot: LOOTID.mustardfloor,
+    loot: LOOTID.__GOLD_FLOOR__,
     wait: 10,
     idWeapon: 21,     
     fuel: -1,
@@ -28479,7 +28479,7 @@ var items = [{
         [AREAS.workbench, 15000]
     ]),
     stack: 255,
-    loot: LOOTID.redfloor,
+    loot: LOOTID.__RED_FLOOR__,
     wait: 10,
     idWeapon: 21,     
     fuel: -1,
@@ -28800,7 +28800,7 @@ var items = [{
     z: 1,
     area: AREAS.weldingmachine,
     stack: 255,
-    loot: LOOTID.weldingmachine,
+    loot: LOOTID.__WELDING_MACHINE__,
     wait: 10,
     delay: 1000,
     width: [100, 100, 100, 100],
@@ -28870,7 +28870,7 @@ var items = [{
         [AREAS.weldingmachine, 15000]
     ]),
     stack: 255,
-    loot: LOOTID.cable4,
+    loot: LOOTID.__CABLE4__,
     wait: 10,
     idWeapon: 21,     
     fuel: -1,
@@ -29040,7 +29040,7 @@ var items = [{
         [AREAS.weldingmachine, 15000]
     ]),
     stack: 255,
-    loot: LOOTID.xorgate,
+    loot: LOOTID.__GATE_XOR__,
     wait: 10,
     idWeapon: 21,     
     fuel: -1,
@@ -30039,7 +30039,7 @@ VV[FURNITUREID.__TOILET0__].loot = [
     [IID.lapadoine, 1, 0.002]
 ];
 var LOOT = [{
-    id: LOOTID.mvnnv,
+    id: LOOTID.__SMALL_WOOD__,
     W: {
         isLoaded: 0
     },
@@ -30049,7 +30049,7 @@ var LOOT = [{
     scale: 0.85,
     angle: 0
 }, {
-    id: LOOTID.wWvMW,
+    id: LOOTID.__MEDIUM_WOOD__,
     W: {
         isLoaded: 0
     },
@@ -30059,7 +30059,7 @@ var LOOT = [{
     scale: 0.85,
     angle: 0
 }, {
-    id: LOOTID.wood,
+    id: LOOTID.__BIG_WOOD__,
     W: {
         isLoaded: 0
     },
@@ -30069,7 +30069,7 @@ var LOOT = [{
     scale: 0.85,
     angle: 0
 }, {
-    id: LOOTID.mnVVV,
+    id: LOOTID.__SMALL_STONE__,
     W: {
         isLoaded: 0
     },
@@ -30079,7 +30079,7 @@ var LOOT = [{
     scale: 1.2,
     angle: 0
 }, {
-    id: LOOTID.vWVMv,
+    id: LOOTID.__MEDIUM_STONE__,
     W: {
         isLoaded: 0
     },
@@ -30089,7 +30089,7 @@ var LOOT = [{
     scale: 1.2,
     angle: 0
 }, {
-    id: LOOTID.stone,
+    id: LOOTID.__BIG_STONE__,
     W: {
         isLoaded: 0
     },
@@ -30099,7 +30099,7 @@ var LOOT = [{
     scale: 1.2,
     angle: 0
 }, {
-    id: LOOTID.steel,
+    id: LOOTID.__STEEL__,
     W: {
         isLoaded: 0
     },
@@ -30109,7 +30109,7 @@ var LOOT = [{
     scale: 0.8,
     angle: 0
 }, {
-    id: LOOTID.animalfat,
+    id: LOOTID.__ANIMAL_FAT__,
     W: {
         isLoaded: 0
     },
@@ -30119,7 +30119,7 @@ var LOOT = [{
     scale: 1,
     angle: 0
 }, {
-    id: LOOTID.animaltendon,
+    id: LOOTID.__ANIMAL_TENDON__,
     W: {
         isLoaded: 0
     },
@@ -30129,7 +30129,7 @@ var LOOT = [{
     scale: 1,
     angle: 0
 }, {
-    id: LOOTID.string,
+    id: LOOTID.__STRING__,
     W: {
         isLoaded: 0
     },
@@ -30139,7 +30139,7 @@ var LOOT = [{
     scale: 0.7,
     angle: 0
 }, {
-    id: LOOTID.leather,
+    id: LOOTID.__LEATHER_BOAR__,
     W: {
         isLoaded: 0
     },
@@ -30149,7 +30149,7 @@ var LOOT = [{
     scale: 0.9,
     angle: 0
 }, {
-    id: LOOTID.shapedmetal,
+    id: LOOTID.__SHAPED_METAL__,
     W: {
         isLoaded: 0
     },
@@ -30159,7 +30159,7 @@ var LOOT = [{
     scale: 0.8,
     angle: 0
 }, {
-    id: LOOTID.rawsteak,
+    id: LOOTID.__RAW_STEAK__,
     W: {
         isLoaded: 0
     },
@@ -30169,7 +30169,7 @@ var LOOT = [{
     scale: 0.9,
     angle: 0
 }, {
-    id: LOOTID.cookedsteak,
+    id: LOOTID.__COOKED_STEAK__,
     W: {
         isLoaded: 0
     },
@@ -30179,7 +30179,7 @@ var LOOT = [{
     scale: 0.9,
     angle: 0
 }, {
-    id: LOOTID.rottensteak,
+    id: LOOTID.__ROTTEN_STEAK__,
     W: {
         isLoaded: 0
     },
@@ -30189,7 +30189,7 @@ var LOOT = [{
     scale: 0.9,
     angle: 0
 }, {
-    id: LOOTID.orange,
+    id: LOOTID.__ORANGE__,
     W: {
         isLoaded: 0
     },
@@ -30199,7 +30199,7 @@ var LOOT = [{
     scale: 1,
     angle: 0
 }, {
-    id: LOOTID.rottenorange,
+    id: LOOTID.__ROTTEN_ORANGE__,
     W: {
         isLoaded: 0
     },
@@ -30209,7 +30209,7 @@ var LOOT = [{
     scale: 1,
     angle: 0
 }, {
-    id: LOOTID.seedorange,
+    id: LOOTID.__SEED_ORANGE__,
     W: {
         isLoaded: 0
     },
@@ -30219,7 +30219,7 @@ var LOOT = [{
     scale: 0.9,
     angle: 0
 }, {
-    id: LOOTID.hachet,
+    id: LOOTID.__HACHET__,
     W: {
         isLoaded: 0
     },
@@ -30229,7 +30229,7 @@ var LOOT = [{
     scale: 0.9,
     angle: 0.5
 }, {
-    id: LOOTID.stonepickaxe,
+    id: LOOTID.__STONE_PICKAXE__,
     W: {
         isLoaded: 0
     },
@@ -30239,7 +30239,7 @@ var LOOT = [{
     scale: 0.7,
     angle: 0.3
 }, {
-    id: LOOTID.steelpickaxe,
+    id: LOOTID.__STEEL_PICKAXE__,
     W: {
         isLoaded: 0
     },
@@ -30249,7 +30249,7 @@ var LOOT = [{
     scale: 0.7,
     angle: 0.3
 }, {
-    id: LOOTID.stoneaxe,
+    id: LOOTID.__STONE_AXE__,
     W: {
         isLoaded: 0
     },
@@ -30259,7 +30259,7 @@ var LOOT = [{
     scale: 0.7,
     angle: 0.5
 }, {
-    id: LOOTID.workbench,
+    id: LOOTID.__WORKBENCH__,
     W: {
         isLoaded: 0
     },
@@ -30269,7 +30269,7 @@ var LOOT = [{
     scale: 0.7,
     angle: 0
 }, {
-    id: LOOTID.spear,
+    id: LOOTID.__WOOD_SPEAR__,
     W: {
         isLoaded: 0
     },
@@ -30279,7 +30279,7 @@ var LOOT = [{
     scale: 0.6,
     angle: 0.6
 }, {
-    id: LOOTID.bow,
+    id: LOOTID.__WOOD_BOW__,
     W: {
         isLoaded: 0
     },
@@ -30289,7 +30289,7 @@ var LOOT = [{
     scale: 0.8,
     angle: 0
 }, {
-    id: LOOTID.pistol,
+    id: LOOTID.__9MM__,
     W: {
         isLoaded: 0
     },
@@ -30299,7 +30299,7 @@ var LOOT = [{
     scale: 1,
     angle: -0.1
 }, {
-    id: LOOTID.deserteagle,
+    id: LOOTID.__DESERT_EAGLE__,
     W: {
         isLoaded: 0
     },
@@ -30309,7 +30309,7 @@ var LOOT = [{
     scale: 1,
     angle: -0.1
 }, {
-    id: LOOTID.shotgun,
+    id: LOOTID.__SHOTGUN__,
     W: {
         isLoaded: 0
     },
@@ -30319,7 +30319,7 @@ var LOOT = [{
     scale: 0.7,
     angle: -0.5
 }, {
-    id: LOOTID.ak47,
+    id: LOOTID.__AK47__,
     W: {
         isLoaded: 0
     },
@@ -30329,7 +30329,7 @@ var LOOT = [{
     scale: 0.7,
     angle: -0.5
 }, {
-    id: LOOTID.sniper,
+    id: LOOTID.__SNIPER__,
     W: {
         isLoaded: 0
     },
@@ -30339,7 +30339,7 @@ var LOOT = [{
     scale: 0.7,
     angle: -0.5
 }, {
-    id: LOOTID.woodenwall,
+    id: LOOTID.__WOOD_WALL__,
     W: {
         isLoaded: 0
     },
@@ -30349,7 +30349,7 @@ var LOOT = [{
     scale: 0.9,
     angle: 0
 }, {
-    id: LOOTID.stonewall,
+    id: LOOTID.__STONE_WALL__,
     W: {
         isLoaded: 0
     },
@@ -30359,7 +30359,7 @@ var LOOT = [{
     scale: 0.9,
     angle: 0
 }, {
-    id: LOOTID.steelwall,
+    id: LOOTID.__STEEL_WALL__,
     W: {
         isLoaded: 0
     },
@@ -30369,7 +30369,7 @@ var LOOT = [{
     scale: 0.9,
     angle: 0
 }, {
-    id: LOOTID.wooddoor,
+    id: LOOTID.__WOOD_DOOR__,
     W: {
         isLoaded: 0
     },
@@ -30379,7 +30379,7 @@ var LOOT = [{
     scale: 0.9,
     angle: 0
 }, {
-    id: LOOTID.stonedoor,
+    id: LOOTID.__STONE_DOOR__,
     W: {
         isLoaded: 0
     },
@@ -30389,7 +30389,7 @@ var LOOT = [{
     scale: 0.9,
     angle: 0
 }, {
-    id: LOOTID.steeldoor,
+    id: LOOTID.__STEEL_DOOR__,
     W: {
         isLoaded: 0
     },
@@ -30399,7 +30399,7 @@ var LOOT = [{
     scale: 0.9,
     angle: 0
 }, {
-    id: LOOTID.campfire,
+    id: LOOTID.__CAMPFIRE__,
     W: {
         isLoaded: 0
     },
@@ -30409,7 +30409,7 @@ var LOOT = [{
     scale: 0.7,
     angle: 0
 }, {
-    id: LOOTID.bullet9mm,
+    id: LOOTID.__BULLET_9MM__,
     W: {
         isLoaded: 0
     },
@@ -30419,7 +30419,7 @@ var LOOT = [{
     scale: 1,
     angle: 0
 }, {
-    id: LOOTID.bulletshotgun,
+    id: LOOTID.__BULLET_SHOTGUN__,
     W: {
         isLoaded: 0
     },
@@ -30429,7 +30429,7 @@ var LOOT = [{
     scale: 1,
     angle: 0
 }, {
-    id: LOOTID.sniperbullet,
+    id: LOOTID.__BULLET_SNIPER__,
     W: {
         isLoaded: 0
     },
@@ -30439,7 +30439,7 @@ var LOOT = [{
     scale: 1.1,
     angle: 0
 }, {
-    id: LOOTID.medkit,
+    id: LOOTID.__MEDIKIT__,
     W: {
         isLoaded: 0
     },
@@ -30449,7 +30449,7 @@ var LOOT = [{
     scale: 0.9,
     angle: 0
 }, {
-    id: LOOTID.bandage,
+    id: LOOTID.__BANDAGE__,
     W: {
         isLoaded: 0
     },
@@ -30459,7 +30459,7 @@ var LOOT = [{
     scale: 1,
     angle: 0
 }, {
-    id: LOOTID.soda,
+    id: LOOTID.__SODA__,
     W: {
         isLoaded: 0
     },
@@ -30469,7 +30469,7 @@ var LOOT = [{
     scale: 1.2,
     angle: 0
 }, {
-    id: LOOTID.mp5,
+    id: LOOTID.__MP5__,
     W: {
         isLoaded: 0
     },
@@ -30479,7 +30479,7 @@ var LOOT = [{
     scale: 0.8,
     angle: -0.5
 }, {
-    id: LOOTID.headscarf,
+    id: LOOTID.__HEADSCARF__,
     W: {
         isLoaded: 0
     },
@@ -30489,7 +30489,7 @@ var LOOT = [{
     scale: 0.8,
     angle: 0
 }, {
-    id: LOOTID.chapka,
+    id: LOOTID.__CHAPKA__,
     W: {
         isLoaded: 0
     },
@@ -30499,7 +30499,7 @@ var LOOT = [{
     scale: 0.8,
     angle: 0
 }, {
-    id: LOOTID.coat,
+    id: LOOTID.__WINTER_COAT__,
     W: {
         isLoaded: 0
     },
@@ -30509,7 +30509,7 @@ var LOOT = [{
     scale: 0.8,
     angle: 0
 }, {
-    id: LOOTID.gazmask,
+    id: LOOTID.__GAZ_MASK__,
     W: {
         isLoaded: 0
     },
@@ -30519,7 +30519,7 @@ var LOOT = [{
     scale: 0.8,
     angle: 0
 }, {
-    id: LOOTID.gazprotection,
+    id: LOOTID.__GAZ_PROTECTION__,
     W: {
         isLoaded: 0
     },
@@ -30529,7 +30529,7 @@ var LOOT = [{
     scale: 0.8,
     angle: 0
 }, {
-    id: LOOTID.radiationsuit,
+    id: LOOTID.__RADIATION_SUIT__,
     W: {
         isLoaded: 0
     },
@@ -30539,7 +30539,7 @@ var LOOT = [{
     scale: 0.8,
     angle: 0
 }, {
-    id: LOOTID.woodarrow,
+    id: LOOTID.__WOOD_ARROW__,
     W: {
         isLoaded: 0
     },
@@ -30549,7 +30549,7 @@ var LOOT = [{
     scale: 0.8,
     angle: 0
 }, {
-    id: LOOTID.campfirebbq,
+    id: LOOTID.__CAMPFIRE_BBQ__,
     W: {
         isLoaded: 0
     },
@@ -30559,7 +30559,7 @@ var LOOT = [{
     scale: 0.8,
     angle: 0
 }, {
-    id: LOOTID.smelter,
+    id: LOOTID.__SMELTER__,
     W: {
         isLoaded: 0
     },
@@ -30569,7 +30569,7 @@ var LOOT = [{
     scale: 0.8,
     angle: 0
 }, {
-    id: LOOTID.wooddoor1,
+    id: LOOTID.__WOOD_BIGDOOR__,
     W: {
         isLoaded: 0
     },
@@ -30579,7 +30579,7 @@ var LOOT = [{
     scale: 0.9,
     angle: 0
 }, {
-    id: LOOTID.stonedoor1,
+    id: LOOTID.__STONE_BIGDOOR__,
     W: {
         isLoaded: 0
     },
@@ -30589,7 +30589,7 @@ var LOOT = [{
     scale: 0.9,
     angle: 0
 }, {
-    id: LOOTID.steeldoor1,
+    id: LOOTID.__STEEL_BIGDOOR__,
     W: {
         isLoaded: 0
     },
@@ -30599,7 +30599,7 @@ var LOOT = [{
     scale: 0.9,
     angle: 0
 }, {
-    id: LOOTID.sulfur,
+    id: LOOTID.__SULFUR__,
     W: {
         isLoaded: 0
     },
@@ -30609,7 +30609,7 @@ var LOOT = [{
     scale: 1,
     angle: 0
 }, {
-    id: LOOTID.shapeduranium,
+    id: LOOTID.__SHAPED_URANIUM__,
     W: {
         isLoaded: 0
     },
@@ -30619,7 +30619,7 @@ var LOOT = [{
     scale: 1,
     angle: 0
 }, {
-    id: LOOTID.researchbench,
+    id: LOOTID.__WORKBENCH2__,
     W: {
         isLoaded: 0
     },
@@ -30629,7 +30629,7 @@ var LOOT = [{
     scale: 1,
     angle: 0
 }, {
-    id: LOOTID.uranium,
+    id: LOOTID.__URANIUM__,
     W: {
         isLoaded: 0
     },
@@ -30639,7 +30639,7 @@ var LOOT = [{
     scale: 1,
     angle: 0
 }, {
-    id: LOOTID.weavingmachine,
+    id: LOOTID.__WEAVING__,
     W: {
         isLoaded: 0
     },
@@ -30649,7 +30649,7 @@ var LOOT = [{
     scale: 1,
     angle: 0
 }, {
-    id: LOOTID.gasoline,
+    id: LOOTID.__GASOLINE__,
     W: {
         isLoaded: 0
     },
@@ -30659,7 +30659,7 @@ var LOOT = [{
     scale: 1,
     angle: 0
 }, {
-    id: LOOTID.sulfurpickaxe,
+    id: LOOTID.__SULFUR_PICKAXE__,
     W: {
         isLoaded: 0
     },
@@ -30669,7 +30669,7 @@ var LOOT = [{
     scale: 0.7,
     angle: 0.3
 }, {
-    id: LOOTID.chest,
+    id: LOOTID.__CHEST__,
     W: {
         isLoaded: 0
     },
@@ -30679,7 +30679,7 @@ var LOOT = [{
     scale: 0.7,
     angle: 0.3
 }, {
-    id: LOOTID.fridge,
+    id: LOOTID.__FRIDGE__,
     W: {
         isLoaded: 0
     },
@@ -30689,7 +30689,7 @@ var LOOT = [{
     scale: 0.7,
     angle: 0.3
 }, {
-    id: LOOTID.woodfloor1,
+    id: LOOTID.__WOOD_FLOOR__,
     W: {
         isLoaded: 0
     },
@@ -30699,7 +30699,7 @@ var LOOT = [{
     scale: 0.9,
     angle: 0
 }, {
-    id: LOOTID.hammer,
+    id: LOOTID.__HAMMER__,
     W: {
         isLoaded: 0
     },
@@ -30709,7 +30709,7 @@ var LOOT = [{
     scale: 0.7,
     angle: 0.3
 }, {
-    id: LOOTID.sleepingbag,
+    id: LOOTID.__SLEEPING_BAG__,
     W: {
         isLoaded: 0
     },
@@ -30719,7 +30719,7 @@ var LOOT = [{
     scale: 0.7,
     angle: 0.3
 }, {
-    id: LOOTID.repairhammer,
+    id: LOOTID.__REPAIR_HAMMER__,
     W: {
         isLoaded: 0
     },
@@ -30729,7 +30729,7 @@ var LOOT = [{
     scale: 0.7,
     angle: 0.3
 }, {
-    id: LOOTID.nails,
+    id: LOOTID.__NAILS__,
     W: {
         isLoaded: 0
     },
@@ -30739,7 +30739,7 @@ var LOOT = [{
     scale: 0.7,
     angle: 0.3
 }, {
-    id: LOOTID.woodfloor2,
+    id: LOOTID.__WOODLIGHT_FLOOR__,
     W: {
         isLoaded: 0
     },
@@ -30749,7 +30749,7 @@ var LOOT = [{
     scale: 0.7,
     angle: 0.3
 }, {
-    id: LOOTID.smallwoodwall,
+    id: LOOTID.__WOOD_SMALLWALL__,
     W: {
         isLoaded: 0
     },
@@ -30759,7 +30759,7 @@ var LOOT = [{
     scale: 0.9,
     angle: 0
 }, {
-    id: LOOTID.smallstonewall,
+    id: LOOTID.__STONE_SMALLWALL__,
     W: {
         isLoaded: 0
     },
@@ -30769,7 +30769,7 @@ var LOOT = [{
     scale: 0.9,
     angle: 0
 }, {
-    id: LOOTID.smallsteelwall,
+    id: LOOTID.__STEEL_SMALLWALL__,
     W: {
         isLoaded: 0
     },
@@ -30779,7 +30779,7 @@ var LOOT = [{
     scale: 0.9,
     angle: 0
 }, {
-    id: LOOTID.tomatosoup,
+    id: LOOTID.__TOMATO_SOUP__,
     W: {
         isLoaded: 0
     },
@@ -30789,7 +30789,7 @@ var LOOT = [{
     scale: 0.9,
     angle: 0
 }, {
-    id: LOOTID.syringe,
+    id: LOOTID.__SYRINGE__,
     W: {
         isLoaded: 0
     },
@@ -30799,7 +30799,7 @@ var LOOT = [{
     scale: 0.9,
     angle: 0
 }, {
-    id: LOOTID.chemicalcomponent,
+    id: LOOTID.__CHEMICAL_COMPONENT__,
     W: {
         isLoaded: 0
     },
@@ -30809,7 +30809,7 @@ var LOOT = [{
     scale: 0.9,
     angle: 0
 }, {
-    id: LOOTID.radway,
+    id: LOOTID.__RADAWAY__,
     W: {
         isLoaded: 0
     },
@@ -30819,7 +30819,7 @@ var LOOT = [{
     scale: 0.9,
     angle: 0
 }, {
-    id: LOOTID.tomatoseed,
+    id: LOOTID.__SEED_TOMATO__,
     W: {
         isLoaded: 0
     },
@@ -30829,7 +30829,7 @@ var LOOT = [{
     scale: 0.9,
     angle: 0
 }, {
-    id: LOOTID.tomato,
+    id: LOOTID.__TOMATO__,
     W: {
         isLoaded: 0
     },
@@ -30839,7 +30839,7 @@ var LOOT = [{
     scale: 0.9,
     angle: 0
 }, {
-    id: LOOTID.rottentomato,
+    id: LOOTID.__ROTTEN_TOMATO__,
     W: {
         isLoaded: 0
     },
@@ -30849,7 +30849,7 @@ var LOOT = [{
     scale: 0.9,
     angle: 0
 }, {
-    id: LOOTID.can,
+    id: LOOTID.__CAN__,
     W: {
         isLoaded: 0
     },
@@ -30859,7 +30859,7 @@ var LOOT = [{
     scale: 0.9,
     angle: 0
 }, {
-    id: LOOTID.crossbow,
+    id: LOOTID.__WOOD_CROSSBOW__,
     W: {
         isLoaded: 0
     },
@@ -30869,7 +30869,7 @@ var LOOT = [{
     scale: 0.8,
     angle: 0
 }, {
-    id: LOOTID.crossarrow,
+    id: LOOTID.__WOOD_CROSSARROW__,
     W: {
         isLoaded: 0
     },
@@ -30879,7 +30879,7 @@ var LOOT = [{
     scale: 0.8,
     angle: 0
 }, {
-    id: LOOTID.nailgun,
+    id: LOOTID.__NAIL_GUN__,
     W: {
         isLoaded: 0
     },
@@ -30889,7 +30889,7 @@ var LOOT = [{
     scale: 0.8,
     angle: 0
 }, {
-    id: LOOTID.sawedoff,
+    id: LOOTID.__SAWED_OFF_SHOTGUN__,
     W: {
         isLoaded: 0
     },
@@ -30899,7 +30899,7 @@ var LOOT = [{
     scale: 0.8,
     angle: 0
 }, {
-    id: LOOTID.stonefloor1,
+    id: LOOTID.__STONE_FLOOR__,
     W: {
         isLoaded: 0
     },
@@ -30909,7 +30909,7 @@ var LOOT = [{
     scale: 0.8,
     angle: 0
 }, {
-    id: LOOTID.stonefloor2,
+    id: LOOTID.__TILING_FLOOR__,
     W: {
         isLoaded: 0
     },
@@ -30919,7 +30919,7 @@ var LOOT = [{
     scale: 0.8,
     angle: 0
 }, {
-    id: LOOTID.chips,
+    id: LOOTID.__CRISPS__,
     W: {
         isLoaded: 0
     },
@@ -30929,7 +30929,7 @@ var LOOT = [{
     scale: 0.9,
     angle: 0
 }, {
-    id: LOOTID.rottenchips,
+    id: LOOTID.__ROTTEN_CRISPS__,
     W: {
         isLoaded: 0
     },
@@ -30939,7 +30939,7 @@ var LOOT = [{
     scale: 0.9,
     angle: 0
 }, {
-    id: LOOTID.electronicpart,
+    id: LOOTID.__ELECTRONICS__,
     W: {
         isLoaded: 0
     },
@@ -30949,7 +30949,7 @@ var LOOT = [{
     scale: 1,
     angle: 0
 }, {
-    id: LOOTID.junk,
+    id: LOOTID.__JUNK__,
     W: {
         isLoaded: 0
     },
@@ -30959,7 +30959,7 @@ var LOOT = [{
     scale: 0.8,
     angle: 0
 }, {
-    id: LOOTID.wires,
+    id: LOOTID.__WIRE__,
     W: {
         isLoaded: 0
     },
@@ -30969,7 +30969,7 @@ var LOOT = [{
     scale: 1,
     angle: 0
 }, {
-    id: LOOTID.energycell,
+    id: LOOTID.__ENERGY_CELLS__,
     W: {
         isLoaded: 0
     },
@@ -30979,7 +30979,7 @@ var LOOT = [{
     scale: 1,
     angle: 0
 }, {
-    id: LOOTID.laserpistol,
+    id: LOOTID.__LASER_PISTOL__,
     W: {
         isLoaded: 0
     },
@@ -30989,7 +30989,7 @@ var LOOT = [{
     scale: 1,
     angle: 0
 }, {
-    id: LOOTID.teslabench,
+    id: LOOTID.__TESLA__,
     W: {
         isLoaded: 0
     },
@@ -30999,7 +30999,7 @@ var LOOT = [{
     scale: 0.9,
     angle: 0
 }, {
-    id: LOOTID.alloys,
+    id: LOOTID.__ALLOYS__,
     W: {
         isLoaded: 0
     },
@@ -31009,7 +31009,7 @@ var LOOT = [{
     scale: 1,
     angle: 0
 }, {
-    id: LOOTID.sulfuraxe,
+    id: LOOTID.__SULFUR_AXE__,
     W: {
         isLoaded: 0
     },
@@ -31019,7 +31019,7 @@ var LOOT = [{
     scale: 0.7,
     angle: 0.5
 }, {
-    id: LOOTID.landmine,
+    id: LOOTID.__LANDMINE__,
     W: {
         isLoaded: 0
     },
@@ -31029,7 +31029,7 @@ var LOOT = [{
     scale: 0.7,
     angle: 0.5
 }, {
-    id: LOOTID.dynamite,
+    id: LOOTID.__DYNAMITE__,
     W: {
         isLoaded: 0
     },
@@ -31039,7 +31039,7 @@ var LOOT = [{
     scale: 0.7,
     angle: 0.5
 }, {
-    id: LOOTID.c4bomb,
+    id: LOOTID.__C4__,
     W: {
         isLoaded: 0
     },
@@ -31049,7 +31049,7 @@ var LOOT = [{
     scale: 0.7,
     angle: 0.5
 }, {
-    id: LOOTID.joystic,
+    id: LOOTID.__C4_TRIGGER__,
     W: {
         isLoaded: 0
     },
@@ -31059,7 +31059,7 @@ var LOOT = [{
     scale: 0.7,
     angle: 0.5
 }, {
-    id: LOOTID.composter,
+    id: LOOTID.__COMPOST__,
     W: {
         isLoaded: 0
     },
@@ -31069,7 +31069,7 @@ var LOOT = [{
     scale: 0.7,
     angle: 0.5
 }, {
-    id: LOOTID.metalhelmet,
+    id: LOOTID.__ARMOR_PHYSIC_1__,
     W: {
         isLoaded: 0
     },
@@ -31079,7 +31079,7 @@ var LOOT = [{
     scale: 0.8,
     angle: 0
 }, {
-    id: LOOTID.weldinghelmet,
+    id: LOOTID.__ARMOR_PHYSIC_2__,
     W: {
         isLoaded: 0
     },
@@ -31089,7 +31089,7 @@ var LOOT = [{
     scale: 0.7,
     angle: 0
 }, {
-    id: LOOTID.gladiatorhelmet,
+    id: LOOTID.__ARMOR_PHYSIC_3__,
     W: {
         isLoaded: 0
     },
@@ -31099,7 +31099,7 @@ var LOOT = [{
     scale: 0.7,
     angle: 0
 }, {
-    id: LOOTID.leatherjacket,
+    id: LOOTID.__ARMOR_FIRE_1__,
     W: {
         isLoaded: 0
     },
@@ -31109,7 +31109,7 @@ var LOOT = [{
     scale: 0.8,
     angle: 0
 }, {
-    id: LOOTID.kevlarsuit,
+    id: LOOTID.__ARMOR_FIRE_2__,
     W: {
         isLoaded: 0
     },
@@ -31119,7 +31119,7 @@ var LOOT = [{
     scale: 0.8,
     angle: 0
 }, {
-    id: LOOTID.SWATsuit,
+    id: LOOTID.__ARMOR_FIRE_3__,
     W: {
         isLoaded: 0
     },
@@ -31129,7 +31129,7 @@ var LOOT = [{
     scale: 0.8,
     angle: 0
 }, {
-    id: LOOTID.protectivesuit,
+    id: LOOTID.__ARMOR_DEMINER__,
     W: {
         isLoaded: 0
     },
@@ -31139,7 +31139,7 @@ var LOOT = [{
     scale: 0.8,
     angle: 0
 }, {
-    id: LOOTID.tesla1,
+    id: LOOTID.__ARMOR_TESLA_1__,
     W: {
         isLoaded: 0
     },
@@ -31149,7 +31149,7 @@ var LOOT = [{
     scale: 0.8,
     angle: 0
 }, {
-    id: LOOTID.tesla2,
+    id: LOOTID.__ARMOR_TESLA_2__,
     W: {
         isLoaded: 0
     },
@@ -31159,7 +31159,7 @@ var LOOT = [{
     scale: 0.8,
     angle: 0
 }, {
-    id: LOOTID.woodespike,
+    id: LOOTID.__WOOD_SPIKE__,
     W: {
         isLoaded: 0
     },
@@ -31169,7 +31169,7 @@ var LOOT = [{
     scale: 0.8,
     angle: 0
 }, {
-    id: LOOTID.lasersubmachine,
+    id: LOOTID.__LASER_SUBMACHINE__,
     W: {
         isLoaded: 0
     },
@@ -31179,7 +31179,7 @@ var LOOT = [{
     scale: 0.8,
     angle: 0
 }, {
-    id: LOOTID.granade,
+    id: LOOTID.__GRENADE__,
     W: {
         isLoaded: 0
     },
@@ -31189,7 +31189,7 @@ var LOOT = [{
     scale: 0.8,
     angle: 0
 }, {
-    id: LOOTID.superhammer,
+    id: LOOTID.__SUPER_HAMMER__,
     W: {
         isLoaded: 0
     },
@@ -31199,7 +31199,7 @@ var LOOT = [{
     scale: 0.8,
     angle: 0
 }, {
-    id: LOOTID.ghoulblood,
+    id: LOOTID.__GHOUL_BLOOD__,
     W: {
         isLoaded: 0
     },
@@ -31209,7 +31209,7 @@ var LOOT = [{
     scale: 0.8,
     angle: 0
 }, {
-    id: LOOTID.camouflage,
+    id: LOOTID.__CAMOUFLAGE_GEAR__,
     W: {
         isLoaded: 0
     },
@@ -31219,7 +31219,7 @@ var LOOT = [{
     scale: 0.8,
     angle: 0
 }, {
-    id: LOOTID.agitator,
+    id: LOOTID.__AGITATOR__,
     W: {
         isLoaded: 0
     },
@@ -31229,7 +31229,7 @@ var LOOT = [{
     scale: 0.8,
     angle: 0
 }, {
-    id: LOOTID.ghouldrug,
+    id: LOOTID.__GHOUL_DRUG__,
     W: {
         isLoaded: 0
     },
@@ -31239,7 +31239,7 @@ var LOOT = [{
     scale: 0.8,
     angle: 0
 }, {
-    id: LOOTID.mushroom,
+    id: LOOTID.__MUSHROOM1__,
     W: {
         isLoaded: 0
     },
@@ -31249,7 +31249,7 @@ var LOOT = [{
     scale: 0.8,
     angle: 0
 }, {
-    id: LOOTID.mushroom2,
+    id: LOOTID.__MUSHROOM2__,
     W: {
         isLoaded: 0
     },
@@ -31259,7 +31259,7 @@ var LOOT = [{
     scale: 0.8,
     angle: 0
 }, {
-    id: LOOTID.mushroom3,
+    id: LOOTID.__MUSHROOM3__,
     W: {
         isLoaded: 0
     },
@@ -31269,7 +31269,7 @@ var LOOT = [{
     scale: 0.8,
     angle: 0
 }, {
-    id: LOOTID.rottenmushroom1,
+    id: LOOTID.__ROTTEN_MUSHROOM1__,
     W: {
         isLoaded: 0
     },
@@ -31279,7 +31279,7 @@ var LOOT = [{
     scale: 0.8,
     angle: 0
 }, {
-    id: LOOTID.rottenmushroom2,
+    id: LOOTID.__ROTTEN_MUSHROOM2__,
     W: {
         isLoaded: 0
     },
@@ -31289,7 +31289,7 @@ var LOOT = [{
     scale: 0.8,
     angle: 0
 }, {
-    id: LOOTID.rottenmushroom3,
+    id: LOOTID.__ROTTEN_MUSHROOM3__,
     W: {
         isLoaded: 0
     },
@@ -31299,7 +31299,7 @@ var LOOT = [{
     scale: 0.8,
     angle: 0
 }, {
-    id: LOOTID.lapadoine,
+    id: LOOTID.__LAPADONE__,
     W: {
         isLoaded: 0
     },
@@ -31309,7 +31309,7 @@ var LOOT = [{
     scale: 0.8,
     angle: 0
 }, {
-    id: LOOTID.lapabot,
+    id: LOOTID.__LAPABOT_REPAIR__,
     W: {
         isLoaded: 0
     },
@@ -31319,7 +31319,7 @@ var LOOT = [{
     scale: 0.8,
     angle: 0
 }, {
-    id: LOOTID.smallwire,
+    id: LOOTID.__SMALL_WIRE__,
     W: {
         isLoaded: 0
     },
@@ -31329,7 +31329,7 @@ var LOOT = [{
     scale: 0.8,
     angle: 0
 }, {
-    id: LOOTID.pumpkin,
+    id: LOOTID.__PUMPKIN__,
     W: {
         isLoaded: 0
     },
@@ -31339,7 +31339,7 @@ var LOOT = [{
     scale: 0.8,
     angle: 0
 }, {
-    id: LOOTID.rottenpumpkin,
+    id: LOOTID.__ROTTEN_PUMPKIN__,
     W: {
         isLoaded: 0
     },
@@ -31349,7 +31349,7 @@ var LOOT = [{
     scale: 0.8,
     angle: 0
 }, {
-    id: LOOTID.ghoulseed,
+    id: LOOTID.__SEED_GHOUL__,
     W: {
         isLoaded: 0
     },
@@ -31359,7 +31359,7 @@ var LOOT = [{
     scale: 0.8,
     angle: 0
 }, {
-    id: LOOTID.extractor,
+    id: LOOTID.__EXTRACTOR__,
     W: {
         isLoaded: 0
     },
@@ -31369,7 +31369,7 @@ var LOOT = [{
     scale: 0.8,
     angle: 0
 }, {
-    id: LOOTID.antidote,
+    id: LOOTID.__ANTIDOTE__,
     W: {
         isLoaded: 0
     },
@@ -31379,7 +31379,7 @@ var LOOT = [{
     scale: 0.8,
     angle: 0
 }, {
-    id: LOOTID.antidoteflower,
+    id: LOOTID.__ANTIDOTE_FLOWER__,
     W: {
         isLoaded: 0
     },
@@ -31389,7 +31389,7 @@ var LOOT = [{
     scale: 0.8,
     angle: 0
 }, {
-    id: LOOTID.treeseed,
+    id: LOOTID.__SEED_TREE__,
     W: {
         isLoaded: 0
     },
@@ -31399,7 +31399,7 @@ var LOOT = [{
     scale: 0.8,
     angle: 0
 }, {
-    id: LOOTID.acorn,
+    id: LOOTID.__ACORN__,
     W: {
         isLoaded: 0
     },
@@ -31409,7 +31409,7 @@ var LOOT = [{
     scale: 0.8,
     angle: 0
 }, {
-    id: LOOTID.rottenacorn,
+    id: LOOTID.__ROTTEN_ACORN__,
     W: {
         isLoaded: 0
     },
@@ -31419,7 +31419,7 @@ var LOOT = [{
     scale: 0.8,
     angle: 0
 }, {
-    id: LOOTID.lasersniper,
+    id: LOOTID.__LASER_SNIPER__,
     W: {
         isLoaded: 0
     },
@@ -31429,7 +31429,7 @@ var LOOT = [{
     scale: 0.8,
     angle: 0
 }, {
-    id: LOOTID.halbot,
+    id: LOOTID.__HAL_BOT__,
     W: {
         isLoaded: 0
     },
@@ -31439,7 +31439,7 @@ var LOOT = [{
     scale: 0.8,
     angle: 0
 }, {
-    id: LOOTID.teslabot,
+    id: LOOTID.__TESLA_BOT__,
     W: {
         isLoaded: 0
     },
@@ -31449,7 +31449,7 @@ var LOOT = [{
     scale: 0.8,
     angle: 0
 }, {
-    id: LOOTID.cable,
+    id: LOOTID.__CABLE0__,
     W: {
         isLoaded: 0
     },
@@ -31459,7 +31459,7 @@ var LOOT = [{
     scale: 0.8,
     angle: 0
 }, {
-    id: LOOTID.cable2,
+    id: LOOTID.__CABLE1__,
     W: {
         isLoaded: 0
     },
@@ -31469,7 +31469,7 @@ var LOOT = [{
     scale: 0.8,
     angle: 0
 }, {
-    id: LOOTID.cable3,
+    id: LOOTID.__CABLE2__,
     W: {
         isLoaded: 0
     },
@@ -31479,7 +31479,7 @@ var LOOT = [{
     scale: 0.8,
     angle: 0
 }, {
-    id: LOOTID.cable4,
+    id: LOOTID.__CABLE3__,
     W: {
         isLoaded: 0
     },
@@ -31489,7 +31489,7 @@ var LOOT = [{
     scale: 0.8,
     angle: 0
 }, {
-    id: LOOTID.switch,
+    id: LOOTID.__SWITCH__,
     W: {
         isLoaded: 0
     },
@@ -31499,7 +31499,7 @@ var LOOT = [{
     scale: 0.8,
     angle: 0
 }, {
-    id: LOOTID.orgate,
+    id: LOOTID.__GATE_OR__,
     W: {
         isLoaded: 0
     },
@@ -31509,7 +31509,7 @@ var LOOT = [{
     scale: 0.8,
     angle: 0
 }, {
-    id: LOOTID.andgate,
+    id: LOOTID.__GATE_AND__,
     W: {
         isLoaded: 0
     },
@@ -31519,7 +31519,7 @@ var LOOT = [{
     scale: 0.8,
     angle: 0
 }, {
-    id: LOOTID.notgate,
+    id: LOOTID.__GATE_NOT__,
     W: {
         isLoaded: 0
     },
@@ -31529,7 +31529,7 @@ var LOOT = [{
     scale: 0.8,
     angle: 0
 }, {
-    id: LOOTID.lamp,
+    id: LOOTID.__LAMP__,
     W: {
         isLoaded: 0
     },
@@ -31539,7 +31539,7 @@ var LOOT = [{
     scale: 0.8,
     angle: 0
 }, {
-    id: LOOTID.cablewall,
+    id: LOOTID.__CABLE_WALL__,
     W: {
         isLoaded: 0
     },
@@ -31549,7 +31549,7 @@ var LOOT = [{
     scale: 0.8,
     angle: 0
 }, {
-    id: LOOTID.autodoor,
+    id: LOOTID.__AUTOMATIC_DOOR__,
     W: {
         isLoaded: 0
     },
@@ -31559,7 +31559,7 @@ var LOOT = [{
     scale: 0.8,
     angle: 0
 }, {
-    id: LOOTID.platform,
+    id: LOOTID.__PLATFORM__,
     W: {
         isLoaded: 0
     },
@@ -31569,7 +31569,7 @@ var LOOT = [{
     scale: 0.8,
     angle: 0
 }, {
-    id: LOOTID.stonecave,
+    id: LOOTID.__STONE_CAVE__,
     W: {
         isLoaded: 0
     },
@@ -31579,7 +31579,7 @@ var LOOT = [{
     scale: 0.8,
     angle: 0
 }, {
-    id: LOOTID.bunkerwall,
+    id: LOOTID.__BUNKER_WALL__,
     W: {
         isLoaded: 0
     },
@@ -31589,7 +31589,7 @@ var LOOT = [{
     scale: 0.8,
     angle: 0
 }, {
-    id: LOOTID.mustardfloor,
+    id: LOOTID.__GOLD_FLOOR__,
     W: {
         isLoaded: 0
     },
@@ -31599,7 +31599,7 @@ var LOOT = [{
     scale: 0.8,
     angle: 0
 }, {
-    id: LOOTID.redfloor,
+    id: LOOTID.__RED_FLOOR__,
     W: {
         isLoaded: 0
     },
@@ -31609,7 +31609,7 @@ var LOOT = [{
     scale: 0.8,
     angle: 0
 }, {
-    id: LOOTID.weldingmachine,
+    id: LOOTID.__WELDING_MACHINE__,
     W: {
         isLoaded: 0
     },
@@ -31619,7 +31619,7 @@ var LOOT = [{
     scale: 0.8,
     angle: 0
 }, {
-    id: LOOTID.cable4,
+    id: LOOTID.__CABLE4__,
     W: {
         isLoaded: 0
     },
@@ -31639,7 +31639,7 @@ var LOOT = [{
     scale: 0.8,
     angle: 0
 }, {
-    id: LOOTID.xorgate,
+    id: LOOTID.__GATE_XOR__,
     W: {
         isLoaded: 0
     },
@@ -31675,7 +31675,7 @@ var __STOP  = 11;
 
 var RESOURCES = [];
 RESOURCES[object.WOOD] = {
-    loot: [LOOTID.wood, LOOTID.wWvMW, LOOTID.mvnnv],
+    loot: [LOOTID.__BIG_WOOD__, LOOTID.__MEDIUM_WOOD__, LOOTID.__SMALL_WOOD__],
     rare: [0.2, 0.4, 1],
     tool: [-1, IID.hachet, IID.stoneaxe, IID.sulfuraxe],
     effect: [1, 2, 4, 5],
@@ -31762,7 +31762,7 @@ RESOURCES[object.WOOD] = {
     score: 5
 };
 RESOURCES[object.LEAFTREE] = {
-    loot: [LOOTID.acorn, LOOTID.wood, LOOTID.wWvMW, LOOTID.mvnnv],
+    loot: [LOOTID.acorn, LOOTID.__BIG_WOOD__, LOOTID.__MEDIUM_WOOD__, LOOTID.__SMALL_WOOD__],
     rare: [0.015, 0.2, 0.4, 1],
     tool: [-1, IID.hachet, IID.stoneaxe, IID.sulfuraxe],
     effect: [1, 2, 4, 5],
@@ -31909,7 +31909,7 @@ RESOURCES[object.LEAFTREE] = {
     score: 5
 };
 RESOURCES[object.STONE] = {
-    loot: [LOOTID.stone, LOOTID.vWVMv, LOOTID.mnVVV],
+    loot: [LOOTID.__BIG_STONE__, LOOTID.__MEDIUM_STONE__, LOOTID.__SMALL_STONE__],
     rare: [0.1, 0.3, 1],
     tool: [IID.hachet, IID.stonepickaxe, IID.steelpickaxe, IID.sulfurpickaxe],
     effect: [1, 3, 4, 5],
@@ -32011,7 +32011,7 @@ RESOURCES[object.STONE] = {
     score: 15
 };
 RESOURCES[object.STEEL] = {
-    loot: [LOOTID.steel, LOOTID.stone, LOOTID.vWVMv, LOOTID.mnVVV],
+    loot: [LOOTID.__STEEL__, LOOTID.__BIG_STONE__, LOOTID.__MEDIUM_STONE__, LOOTID.__SMALL_STONE__],
     rare: [0.4, 0.45, 0.6, 1],
     tool: [IID.stonepickaxe, IID.steelpickaxe, IID.sulfurpickaxe],
     effect: [1, 2, 3],
@@ -32083,7 +32083,7 @@ RESOURCES[object.STEEL] = {
     score: 40
 };
 RESOURCES[object.SULFUR] = {
-    loot: [LOOTID.sulfur, LOOTID.stone, LOOTID.vWVMv, LOOTID.mnVVV],
+    loot: [LOOTID.sulfur, LOOTID.__BIG_STONE__, LOOTID.__MEDIUM_STONE__, LOOTID.__SMALL_STONE__],
     rare: [0.4, 0.45, 0.6, 1],
     tool: [IID.steelpickaxe, IID.sulfurpickaxe],
     effect: [1, 2],
@@ -32140,7 +32140,7 @@ RESOURCES[object.SULFUR] = {
     score: 70
 };
 RESOURCES[object.URANIUM] = {
-    loot: [LOOTID.uranium, LOOTID.stone, LOOTID.vWVMv, LOOTID.mnVVV],
+    loot: [LOOTID.uranium, LOOTID.__BIG_STONE__, LOOTID.__MEDIUM_STONE__, LOOTID.__SMALL_STONE__],
     rare: [0.3, 0.45, 0.6, 1],
     tool: [IID.sulfurpickaxe],
     effect: [1],
@@ -32383,7 +32383,7 @@ RESOURCES[object.TOMATOTREE] = {
     score: 50
 };
 RESOURCES[object.BOAR] = {
-    loot: [LOOTID.rawsteak, LOOTID.animalfat, LOOTID.leather],
+    loot: [LOOTID.rawsteak, LOOTID.__ANIMAL_FAT__, LOOTID.__LEATHER_BOAR__],
     rare: [0.25, 0.85, 1],
     tool: [IID.hachet, IID.stoneaxe, IID.sulfuraxe],
     effect: [1, 3, 4],
@@ -32410,7 +32410,7 @@ RESOURCES[object.BOAR] = {
     score: 40
 };
 RESOURCES[object.DEER] = {
-    loot: [LOOTID.rawsteak, LOOTID.animaltendon, LOOTID.leather, LOOTID.animalfat],
+    loot: [LOOTID.rawsteak, LOOTID.__ANIMAL_TENDON__, LOOTID.__LEATHER_BOAR__, LOOTID.__ANIMAL_FAT__],
     rare: [0.28, 0.7, 0.85, 1],
     tool: [IID.hachet, IID.stoneaxe, IID.sulfuraxe],
     effect: [1, 3, 4],
@@ -41599,7 +41599,7 @@ AI[AIID.__NORMAL_GHOUL__] = {
     speed: [0.12, 0.22],
     speedRun: [0.14, 0.25],
     loot: [
-        [IID.animalfat, 4, LOOTID.animalfat]
+        [IID.animalfat, 4, LOOTID.__ANIMAL_FAT__]
     ],
     light: 1,
     areaEffect: 0,
@@ -41736,7 +41736,7 @@ AI[AIID.__EXPLOSIVE_GHOUL__] = {
     speedRun: [0.14, 0.26],
     loot: [
         [IID.sulfur, 4, LOOTID.sulfur],
-        [IID.animalfat, 4, LOOTID.animalfat],
+        [IID.animalfat, 4, LOOTID.__ANIMAL_FAT__],
         [IID.junk, 4, LOOTID.junk]
     ],
     light: 1,
@@ -41874,7 +41874,7 @@ AI[AIID.__ARMORED_GHOUL__] = {
     speedRun: [0.14, 0.24],
     loot: [
         [IID.alloys, 4, LOOTID.alloys],
-        [IID.shapedmetal, 12, LOOTID.shapedmetal]
+        [IID.shapedmetal, 12, LOOTID.__SHAPED_METAL__]
     ],
     light: 1,
     areaEffect: 0,
