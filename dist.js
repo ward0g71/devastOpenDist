@@ -1010,7 +1010,7 @@ function onHandshake(buf, unit8) {
             id: 0
         };
 
-    World.PLAYER.karma          = 0;
+    World.PLAYER.KARMA          = 0;
     World.PLAYER.badKarmaDelay  = 0;
 
     if (World.gameMode === World.__BR__)
@@ -1475,10 +1475,10 @@ function onWarmOff() {
         World.gauges.cold.vww = 1;
 };
 
-function onWrongTool(wmN) {
+function onWrongTool(tool) {
     if (World.PLAYER.wrongToolTimer <= 0) {
         World.PLAYER.wrongToolTimer = 2000;
-        World.PLAYER.wrongTool = wmN;
+        World.PLAYER.wrongTool = tool;
     }
 };
 
@@ -1627,8 +1627,8 @@ function onTeamPosition(unit8) {
 };
 
 
-function onKarma(karma) {
-    World.PLAYER.karma = karma;
+function onKarma(KARMA) {
+    World.PLAYER.KARMA = KARMA;
 };
 
 function onBadKarma(unit8) {
@@ -1636,7 +1636,7 @@ function onBadKarma(unit8) {
         var PLAYER = World.players[unit8[1]];
         PLAYER.x = unit8[2] * Render.__TRANSFORM__;
         PLAYER.y = unit8[3] * Render.__TRANSFORM__;
-        PLAYER.karma = unit8[4];
+        PLAYER.KARMA = unit8[4];
         World.PLAYER.badKarma = PLAYER.id;
         World.PLAYER.badKarmaDelay = 14000;
     }
@@ -2467,7 +2467,7 @@ var World = (function() {
         this.y = 0;
         this.rx = 0;
         this.ry = 0;
-        this.karma = 0;
+        this.KARMA = 0;
     };
 
     function allocateTeam(teams) {
@@ -2602,7 +2602,7 @@ var World = (function() {
             var score = unit16[2 + (i * 2)];
             var PLAYER = World.players[Wn];
             PLAYER.score = MathUtils.inflateNumber(score);
-            PLAYER.karma = unit8[3 + (i * 4)];
+            PLAYER.KARMA = unit8[3 + (i * 4)];
             var scoreSimplified = MathUtils.simplifyNumber(PLAYER.score);
             if (scoreSimplified !== PLAYER.scoreSimplified)
                 PLAYER.scoreLabel = null;
@@ -2701,14 +2701,14 @@ var World = (function() {
         LOOT2 = VNN;
         VNN = mWN;
         mWN = RESOURCES2;
-        RESOURCES2 = nnv;
-        nnv = mWN;
+        RESOURCES2 = RESOURCES;
+        RESOURCES = mWN;
         mWN = ENTITIES2;
         ENTITIES2 = ENTITIES;
         ENTITIES = mWN;
         mWN = LIGHTFIRE2;
-        LIGHTFIRE2 = NWWWW;
-        NWWWW = mWN;
+        LIGHTFIRE2 = LIGHTFIRE;
+        LIGHTFIRE = mWN;
         mWN = GROUND2;
         GROUND2 = GROUND;
         GROUND = mWN;
@@ -2758,9 +2758,9 @@ var World = (function() {
         PLAYER.craftSelected = Wn;
         if (canvasZ !== window.undefined) {
             for (var i = 0; i < canvasZ.length; i++) {
-                var wmN = AREASTOITEM[canvasZ[i]];
-                if (wmN !== window.undefined) {
-                    IID = items[wmN];
+                var tool = AREASTOITEM[canvasZ[i]];
+                if (tool !== window.undefined) {
+                    IID = items[tool];
                     tools[len].setImages(IID.img.src, IID.img.W);
                     len++;
                 }
@@ -3008,7 +3008,7 @@ var World = (function() {
         team: -1,
         teamPos: [],
         teamLength: 0,
-        karma: 0,
+        KARMA: 0,
         badKarma: 0,
         badKarmaDelay: 0,
         lastAreas: null,
@@ -7467,12 +7467,12 @@ var AudioUtils = (function() {
         }
     };
 
-    function fadeSound(sound, nnW, WMw) {
+    function fadeSound(sound, nnW, effect) {
         if (sound.vVNVm !== -1)
             sound.volume = sound.vVNVm;
         sound.Nvmvn = 0;
         sound.wNnwn = nnW;
-        sound.MNnVm = WMw;
+        sound.MNnVm = effect;
         window.console.log("FADE", sound.url);
     };
 
@@ -8012,41 +8012,41 @@ var Home = (function() {
         Render.reset(1);
         vmV = 0;
 
-        nnn(__ENTITIE_RESOURCES_DOWN__, 200, 0, 127, object.stone, 3);
-        nnn(__ENTITIE_RESOURCES_TOP__, 400, 100, 127, object.orangebush, 2);
-        nnn(__ENTITIE_RESOURCES_STOP__, 100, 100, 127, object.tree, 0);
+        nnn(__ENTITIE_RESOURCES_DOWN__, 200, 0, 127, object.STONE, 3);
+        nnn(__ENTITIE_RESOURCES_TOP__, 400, 100, 127, object.ORANGETREE, 2);
+        nnn(__ENTITIE_RESOURCES_STOP__, 100, 100, 127, object.LEAFTREE, 0);
         Vnvmv(__ENTITIE_BUILD_GROUND__, 900, 500, 0, 33, IID.smelter);
         Vnvmv(__ENTITIE_BUILD_DOWN__, 800, 400, 1, 1, IID.workbench);
-        nnn(__ENTITIE_RESOURCES_STOP__, 1100, 300, 10, object.tree, 1);
-        nnn(__ENTITIE_RESOURCES_STOP__, 800, 200, 127, object.tree, 2);
-        nnn(__ENTITIE_RESOURCES_STOP__, 700, 100, 127, object.tree, 3);
-        nnn(__ENTITIE_RESOURCES_STOP__, 1200, 0, 127, object.tree, 0);
-        nnn(__ENTITIE_RESOURCES_STOP__, 1300, 100, 127, object.tree, 4);
-        nnn(__ENTITIE_RESOURCES_STOP__, 1300, 300, 127, object.tree, 2);
-        nnn(__ENTITIE_RESOURCES_STOP__, 800, 500, 127, object.tree, 4);
-        nnn(__ENTITIE_RESOURCES_TOP__, 1000, 200, 127, object.orangebush, 0);
-        nnn(__ENTITIE_RESOURCES_STOP__, 700, 600, 127, object.tree, 0);
-        nnn(__ENTITIE_RESOURCES_STOP__, 500, 400, 127, object.tree, 2);
-        nnn(__ENTITIE_RESOURCES_DOWN__, 500, 700, 127, object.stone, 3);
-        nnn(__ENTITIE_RESOURCES_DOWN__, 1000, 300, 127, object.stone, 4);
-        nnn(__ENTITIE_RESOURCES_STOP__, 1300, 500, 100, object.tree, 2);
-        nnn(__ENTITIE_RESOURCES_STOP__, 1200, 700, 127, object.tree, 4);
-        nnn(__ENTITIE_RESOURCES_STOP__, 1300, 700, 127, object.tree, 0);
-        nnn(__ENTITIE_RESOURCES_DOWN__, 800, 600, 127, object.stone, 5);
-        nnn(__ENTITIE_RESOURCES_STOP__, 500, 600, 127, object.tree, 4);
-        nnn(__ENTITIE_RESOURCES_DOWN__, 200, 400, 127, object.uranium, 0);
-        nnn(__ENTITIE_RESOURCES_DOWN__, 400, 500, 50, object.branchtree, 3);
-        nnn(__ENTITIE_RESOURCES_STOP__, 100, 400, 190, object.tree, 2);
-        nnn(__ENTITIE_RESOURCES_STOP__, 100, 500, 190, object.tree, 3);
-        nnn(__ENTITIE_RESOURCES_STOP__, 100, 600, 127, object.tree, 4);
-        nnn(__ENTITIE_RESOURCES_STOP__, 0, 500, 127, object.tree, 1);
-        nnn(__ENTITIE_RESOURCES_STOP__, 200, 300, 50, object.tree, 4);
-        nnn(__ENTITIE_RESOURCES_STOP__, 400, 200, 10, object.tree, 2);
-        nnn(__ENTITIE_RESOURCES_STOP__, 500, 200, 10, object.tree, 1);
-        nnn(__ENTITIE_RESOURCES_STOP__, 100, 800, 10, object.tree, 0);
-        nnn(__ENTITIE_RESOURCES_STOP__, 400, 800, 10, object.tree, 1);
-        nnn(__ENTITIE_RESOURCES_STOP__, 700, 800, 10, object.tree, 2);
-        nnn(__ENTITIE_RESOURCES_DOWN__, 900, 700, 50, object.branchtree, 4);
+        nnn(__ENTITIE_RESOURCES_STOP__, 1100, 300, 10, object.LEAFTREE, 1);
+        nnn(__ENTITIE_RESOURCES_STOP__, 800, 200, 127, object.LEAFTREE, 2);
+        nnn(__ENTITIE_RESOURCES_STOP__, 700, 100, 127, object.LEAFTREE, 3);
+        nnn(__ENTITIE_RESOURCES_STOP__, 1200, 0, 127, object.LEAFTREE, 0);
+        nnn(__ENTITIE_RESOURCES_STOP__, 1300, 100, 127, object.LEAFTREE, 4);
+        nnn(__ENTITIE_RESOURCES_STOP__, 1300, 300, 127, object.LEAFTREE, 2);
+        nnn(__ENTITIE_RESOURCES_STOP__, 800, 500, 127, object.LEAFTREE, 4);
+        nnn(__ENTITIE_RESOURCES_TOP__, 1000, 200, 127, object.ORANGETREE, 0);
+        nnn(__ENTITIE_RESOURCES_STOP__, 700, 600, 127, object.LEAFTREE, 0);
+        nnn(__ENTITIE_RESOURCES_STOP__, 500, 400, 127, object.LEAFTREE, 2);
+        nnn(__ENTITIE_RESOURCES_DOWN__, 500, 700, 127, object.STONE, 3);
+        nnn(__ENTITIE_RESOURCES_DOWN__, 1000, 300, 127, object.STONE, 4);
+        nnn(__ENTITIE_RESOURCES_STOP__, 1300, 500, 100, object.LEAFTREE, 2);
+        nnn(__ENTITIE_RESOURCES_STOP__, 1200, 700, 127, object.LEAFTREE, 4);
+        nnn(__ENTITIE_RESOURCES_STOP__, 1300, 700, 127, object.LEAFTREE, 0);
+        nnn(__ENTITIE_RESOURCES_DOWN__, 800, 600, 127, object.STONE, 5);
+        nnn(__ENTITIE_RESOURCES_STOP__, 500, 600, 127, object.LEAFTREE, 4);
+        nnn(__ENTITIE_RESOURCES_DOWN__, 200, 400, 127, object.URANIUM, 0);
+        nnn(__ENTITIE_RESOURCES_DOWN__, 400, 500, 50, object.WOOD, 3);
+        nnn(__ENTITIE_RESOURCES_STOP__, 100, 400, 190, object.LEAFTREE, 2);
+        nnn(__ENTITIE_RESOURCES_STOP__, 100, 500, 190, object.LEAFTREE, 3);
+        nnn(__ENTITIE_RESOURCES_STOP__, 100, 600, 127, object.LEAFTREE, 4);
+        nnn(__ENTITIE_RESOURCES_STOP__, 0, 500, 127, object.LEAFTREE, 1);
+        nnn(__ENTITIE_RESOURCES_STOP__, 200, 300, 50, object.LEAFTREE, 4);
+        nnn(__ENTITIE_RESOURCES_STOP__, 400, 200, 10, object.LEAFTREE, 2);
+        nnn(__ENTITIE_RESOURCES_STOP__, 500, 200, 10, object.LEAFTREE, 1);
+        nnn(__ENTITIE_RESOURCES_STOP__, 100, 800, 10, object.LEAFTREE, 0);
+        nnn(__ENTITIE_RESOURCES_STOP__, 400, 800, 10, object.LEAFTREE, 1);
+        nnn(__ENTITIE_RESOURCES_STOP__, 700, 800, 10, object.LEAFTREE, 2);
+        nnn(__ENTITIE_RESOURCES_DOWN__, 900, 700, 50, object.WOOD, 4);
 
 
         if (isTouchScreen === 1) VmV = GUI.createBackground(650, 312, "img/logo-homepage-mobile2.png");
@@ -12828,7 +12828,7 @@ try {
         };
         var wnW = {
             move: 0,
-            WMw: 0,
+            effect: 0,
             src: arrowcraft,
             W: {
                 isLoaded: 0
@@ -12836,7 +12836,7 @@ try {
         };
         var wvV = {
             move: 0,
-            WMw: 0,
+            effect: 0,
             src: unlockskill,
             W: {
                 isLoaded: 0
@@ -12938,10 +12938,10 @@ try {
                 isLoaded: 0
             };
         };
-        var WMw = [];
+        var effect = [];
         for (i = 0; i < 8; i++) {
-            WMw[i] = [];
-            for (j = 0; j < 2; j++) WMw[i][j] = {
+            effect[i] = [];
+            for (j = 0; j < 2; j++) effect[i][j] = {
                 isLoaded: 0
             };
         }
@@ -13399,9 +13399,9 @@ try {
             World.PLAYER.y = 0;
             World.PLAYER._i = 0;
             World.PLAYER._j = 0;
-            wnW.WMw = 0;
+            wnW.effect = 0;
             wnW.move = 0;
-            wvV.WMw = 0;
+            wvV.effect = 0;
             wvV.move = 0;
             VwmMm.id = -1;
             VwmMm.uid = -1;
@@ -13619,12 +13619,12 @@ try {
                     }
                     if ((PLAYER.leaderboardLabel.width !== 0) && (PLAYER.leaderboardLabel.height !== 0)) context2dF.drawImage(PLAYER.leaderboardLabel, 90, 114 + (i * 50), PLAYER.leaderboardLabel.width, PLAYER.leaderboardLabel.height);
                     context2dF.drawImage(PLAYER.scoreLabel, 484, 114 + (i * 50), PLAYER.scoreLabel.width, PLAYER.scoreLabel.height);
-                    var W = karma[PLAYER.karma].W;
+                    var W = KARMA[PLAYER.KARMA].W;
                     if (W.isLoaded === 1) context2dF.drawImage(W, 612, 114 + (i * 50), W.width, W.height);
                 }
                 World.PLAYER.inLeaderboard = nWnWm;
                 if (nWnWm === 1) {
-                    var W = karma[World.PLAYER.karma].W;
+                    var W = KARMA[World.PLAYER.KARMA].W;
                     if (W.isLoaded === 1) context2dF.drawImage(W, 375, 645, W.width * 1.5, W.height * 1.5);
                 }
             }
@@ -13702,7 +13702,7 @@ try {
 
             if (World.PLAYER.badKarmaDelay > 0) {
                 var PLAYER = World.players[World.PLAYER.badKarma];
-                CanvasUtils.drawImageHd(karma[PLAYER.karma], window.Math.floor(wVw + window.Math.min(window.Math.max(10, PLAYER.rx * mvMnV), 400)), window.Math.floor(VVm + window.Math.min(window.Math.max(10, PLAYER.ry * mvMnV), 400)), 0, 0, 0, 1.25);
+                CanvasUtils.drawImageHd(KARMA[PLAYER.KARMA], window.Math.floor(wVw + window.Math.min(window.Math.max(10, PLAYER.rx * mvMnV), 400)), window.Math.floor(VVm + window.Math.min(window.Math.max(10, PLAYER.ry * mvMnV), 400)), 0, 0, 0, 1.25);
             }
             
 
@@ -13885,22 +13885,22 @@ try {
                     PLAYER.x = WMv.x;
                     PLAYER.y = WMv.y;
                 }
-                CanvasUtils.drawImageHd(karma[PLAYER.karma], wVw + window.Math.max(15, window.Math.min(WWn - 15, (mnmvW - 3) + ((PLAYER.rx - NmM) * nwMnv))), VVm + window.Math.max(15, window.Math.min(WWn - 15, (vNwWN - 3) + ((PLAYER.ry - WWV) * nwMnv))), 0, 0, 0, 1.25);
+                CanvasUtils.drawImageHd(KARMA[PLAYER.KARMA], wVw + window.Math.max(15, window.Math.min(WWn - 15, (mnmvW - 3) + ((PLAYER.rx - NmM) * nwMnv))), VVm + window.Math.max(15, window.Math.min(WWn - 15, (vNwWN - 3) + ((PLAYER.ry - WWV) * nwMnv))), 0, 0, 0, 1.25);
             }
 
             var inmapx = wVw + (mnmvW - 3);
             var inmapy = VVm + (vNwWN - 3);
             CanvasUtils.drawImageHd(arrowiconmap2, inmapx, inmapy, Mouse.angle, 0, 0, 1);
-            if ((World.PLAYER.ghoul === 0) && ((World.PLAYER.skillPoint > 0) || (wnW.WMw > 0))) {
+            if ((World.PLAYER.ghoul === 0) && ((World.PLAYER.skillPoint > 0) || (wnW.effect > 0))) {
                 var move = (wnW.move + delta) % 1000;
                 wnW.move = move;
                 if (wnW.move < 500) WX += 260 + (15 * MathUtils.Ease.inOutQuad(move / 500));
                 else WX += 260 + (15 * MathUtils.Ease.inOutQuad((1000 - move) / 500));
-                ctx.globalAlpha = MathUtils.Ease.inQuad(wnW.WMw);
+                ctx.globalAlpha = MathUtils.Ease.inQuad(wnW.effect);
                 CanvasUtils.drawImageHd(wnW, WX, WY + 31, 0, 0, 0, 1);
                 ctx.globalAlpha = 1;
-                if ((World.PLAYER.skillPoint <= 0) || (Game.MvN() === 1)) wnW.WMw = window.Math.max(0, wnW.WMw - (delta / 500));
-                else if (wnW.WMw < 1) wnW.WMw = window.Math.min(1, wnW.WMw + (delta / 500));
+                if ((World.PLAYER.skillPoint <= 0) || (Game.MvN() === 1)) wnW.effect = window.Math.max(0, wnW.effect - (delta / 500));
+                else if (wnW.effect < 1) wnW.effect = window.Math.min(1, wnW.effect + (delta / 500));
             }
         };
 
@@ -14323,17 +14323,17 @@ try {
                 itemstatsfunc(context2dG, mwwNm);
             }
             ctx.drawImage(canvasG, WX + (439 * scaleby), WY + (24 * scaleby), (scaleby * canvasG.width) / 2, (scaleby * canvasG.height) / 2);
-            if ((World.PLAYER.skillPoint > 0) || (wvV.WMw > 0)) {
+            if ((World.PLAYER.skillPoint > 0) || (wvV.effect > 0)) {
                 var move = (wvV.move + delta) % 1000;
                 wvV.move = move;
                 var inmapy = WY / scaleby;
                 if (wvV.move < 500) inmapy += -62 - (15 * MathUtils.Ease.inOutQuad(move / 500));
                 else inmapy += -62 - (15 * MathUtils.Ease.inOutQuad((1000 - move) / 500));
-                ctx.globalAlpha = MathUtils.Ease.inQuad(wvV.WMw);
+                ctx.globalAlpha = MathUtils.Ease.inQuad(wvV.effect);
                 CanvasUtils.drawImageHd(wvV, 266 + (craftbox.pos.x / scaleby), inmapy, 0, 0, 0, 1);
                 ctx.globalAlpha = 1;
-                if (World.PLAYER.skillPoint <= 0) wvV.WMw = window.Math.max(0, wvV.WMw - (delta / 500));
-                else if (wvV.WMw < 1) wvV.WMw = window.Math.min(1, wvV.WMw + (delta / 500));
+                if (World.PLAYER.skillPoint <= 0) wvV.effect = window.Math.max(0, wvV.effect - (delta / 500));
+                else if (wvV.effect < 1) wvV.effect = window.Math.min(1, wvV.effect + (delta / 500));
             }
             var recipe = Game.recipe;
             len = World.PLAYER.recipeLen;
@@ -14443,10 +14443,10 @@ try {
                 }
                 for (var i = 0;
                     (i < PLAYER.text.length) && (i < 2); i++) {
-                    var WMw = PLAYER.textEffect[i];
-                    if (WMw > 0) {
-                        if (WMw < 0.25) ctx.globalAlpha = WMw * 4;
-                        else if (WMw > 4.75) ctx.globalAlpha = window.Math.max((5 - WMw) * 5, 0);
+                    var effect = PLAYER.textEffect[i];
+                    if (effect > 0) {
+                        if (effect < 0.25) ctx.globalAlpha = effect * 4;
+                        else if (effect > 4.75) ctx.globalAlpha = window.Math.max((5 - effect) * 5, 0);
                         else ctx.globalAlpha = 1;
                         var WY = 118;
                         var W = PLAYER.label[i];
@@ -14703,31 +14703,31 @@ try {
         function showruncloud(player) {
             var PLAYER = World.players[player.pid];
             for (var i = 0; i < PLAYER.runEffect.length; i++) {
-                var WMw = PLAYER.runEffect[i];
-                if ((i > 0) && (WMw.delay <= 0)) {
+                var effect = PLAYER.runEffect[i];
+                if ((i > 0) && (effect.delay <= 0)) {
                     var vVVVn = PLAYER.runEffect[i - 1];
                     if ((vVVVn.delay > 500) || (vVVVn.delay <= 0)) continue;
                 }
-                if ((player.speed > ENTITIES[__ENTITIE_PLAYER__].speed) || (WMw.delay > 0)) {
+                if ((player.speed > ENTITIES[__ENTITIE_PLAYER__].speed) || (effect.delay > 0)) {
                     var mVn = ENTITIES[__ENTITIE_PLAYER__].runEffect;
                     var W = mVn.W;
                     if (W.isLoaded !== 1) {
                         mVn.W = CanvasUtils.loadImage(mVn.src, mVn.W);
                         return;
                     }
-                    if (WMw.delay <= 0) {
-                        WMw.delay = 750;
-                        WMw.angle = window.Math.random() * WNVNM;
-                        WMw.x = player.x;
-                        WMw.y = player.y;
-                        WMw.size = 1 + (window.Math.random() * 0.8);
-                    } else WMw.delay -= delta;
-                    var vW = MathUtils.Ease.outQuart(window.Math.max(0, WMw.delay / 750));
-                    var VwW = (((scaleby * (WMw.size + 1)) * vW) * W.width) / 7;
+                    if (effect.delay <= 0) {
+                        effect.delay = 750;
+                        effect.angle = window.Math.random() * WNVNM;
+                        effect.x = player.x;
+                        effect.y = player.y;
+                        effect.size = 1 + (window.Math.random() * 0.8);
+                    } else effect.delay -= delta;
+                    var vW = MathUtils.Ease.outQuart(window.Math.max(0, effect.delay / 750));
+                    var VwW = (((scaleby * (effect.size + 1)) * vW) * W.width) / 7;
                     var wh = -VwW / 2;
                     ctx.save();
-                    ctx.translate((vertst + WMw.x) * scaleby, (horist + WMw.y) * scaleby);
-                    ctx.rotate(WMw.angle);
+                    ctx.translate((vertst + effect.x) * scaleby, (horist + effect.y) * scaleby);
+                    ctx.rotate(effect.angle);
                     ctx.globalAlpha = window.Math.max(0, vW * vW);
                     ctx.drawImage(W, wh, wh, VwW, VwW);
                     ctx.restore();
@@ -14855,7 +14855,7 @@ try {
             var recoil = 0;
             var recoilGun = 0;
             var recoilHead = 0;
-            var WMw = -1;
+            var effect = -1;
             var Nmm = weapon.rightArm;
             var VnN = weapon.leftArm;
             var cartridges = PLAYER.cartridges;
@@ -14881,7 +14881,7 @@ try {
                     var nWvvW = mVn.gunEffect[weapon.gunEffect].length;
                     for (var gunEffect = 0; gunEffect < nWvvW; gunEffect++) {
                         if (player.hit > (weapon.delay - (30 * (gunEffect + 1)))) {
-                            WMw = gunEffect;
+                            effect = gunEffect;
                             break;
                         }
                     }
@@ -14916,8 +14916,8 @@ try {
             MVn = (wVn.leftArm === window.undefined) ? skin.leftArm : wVn.leftArm;
             CanvasUtils.drawImageHd(MVn, WX, WY, -VnN.angle + player.angle, ((VnN.x + (move * PLAYER.orientation)) + recoil) + breath, VnN.y, imgMovement);
             var IID = weapon.weapon;
-            if ((WMw >= 0) && (weapon.noEffect === 0)) {
-                var gunEffect = mVn.gunEffect[weapon.gunEffect][WMw];
+            if ((effect >= 0) && (weapon.noEffect === 0)) {
+                var gunEffect = mVn.gunEffect[weapon.gunEffect][effect];
                 CanvasUtils.drawImageHd(gunEffect, WX, WY, player.angle, (((IID.x + (move * PLAYER.orientation)) + breath) + recoilGun) + weapon.distance, IID.y, imgMovement);
             }
             CanvasUtils.drawImageHd(IID, WX, WY, player.angle, ((IID.x + (move * PLAYER.orientation)) + breath) + recoilGun, IID.y, imgMovement);
@@ -15546,9 +15546,9 @@ try {
                 if (NMMmV < 500) ctx.globalAlpha = MathUtils.Ease.inQuad(NMMmV / 500);
                 else if (NMMmV > 1500) ctx.globalAlpha = MathUtils.Ease.inQuad(1 - ((NMMmV - 1500) / 500));
                 else ctx.globalAlpha = 1;
-                var wmN = (World.PLAYER.wrongTool === 1) ? vwnWv : VNN[items[World.PLAYER.wrongTool].loot];
+                var tool = (World.PLAYER.wrongTool === 1) ? vwnWv : VNN[items[World.PLAYER.wrongTool].loot];
                 CanvasUtils.drawImageHd(wrongTool, canw2ns, 50, 0, 0, 0, 1);
-                CanvasUtils.drawImageHd(wmN, canw2ns, 50, 0, 0, 0, 1);
+                CanvasUtils.drawImageHd(tool, canw2ns, 50, 0, 0, 0, 1);
                 ctx.globalAlpha = 1;
                 World.PLAYER.wrongToolTimer -= delta;
             }
@@ -15680,8 +15680,8 @@ try {
                 WvWmM = (WvWmM + 1) % wnNWM;
                 var wmWnw = WvWmM + Entitie.maxUnitsMaster;
                 nMVNv += 1;
-                var NVm = Entitie.get(0, wmWnw, nMVNv, __ENTITIE_PARTICLES__);
-                setEntitie(NVm, 0, nMVNv, wmWnw, __ENTITIE_PARTICLES__, player.px, player.py, player.px + (window.Math.cos(angle) * MMwmm), player.py + (window.Math.sin(angle) * MMwmm), window.Math.floor(N * VNw[Wn].length), ((N * 100) % 1) * 255, Wn);
+                var particle = Entitie.get(0, wmWnw, nMVNv, __ENTITIE_PARTICLES__);
+                setEntitie(particle, 0, nMVNv, wmWnw, __ENTITIE_PARTICLES__, player.px, player.py, player.px + (window.Math.cos(angle) * MMwmm), player.py + (window.Math.sin(angle) * MMwmm), window.Math.floor(N * VNw[Wn].length), ((N * 100) % 1) * 255, Wn);
             }
         };
 
@@ -15718,7 +15718,7 @@ try {
             if ((player.state & 16) === 16) VmnmV = 0;
             if (((player.pid === World.PLAYER.id) || (((World.PLAYER.team !== -1) && (World.PLAYER.team === World.players[player.pid].team)) && (World.players[player.pid].teamUid === World.teams[World.PLAYER.team].uid))) || (Math2d.fastDist(NmM, WWV, player.x, player.y) < 52000)) isInClan = 1;
             if (VmnmV === 0) {
-                if (player.hurt2 === 0) vNwNM(player, IID.particles, IID.Mwm, 5);
+                if (player.hurt2 === 0) vNwNM(player, IID.particles, IID.particlesDist, 5);
                 if (player.hurt2 < 300) {
                     WX += (window.Math.random() * 6) - 4;
                     WY += (window.Math.random() * 6) - 4;
@@ -15759,7 +15759,7 @@ try {
                 ctx.globalAlpha = MathUtils.Ease.inOutQuad(player.breath / 300);
                 CanvasUtils.drawImageHd(IID.building[player.id % 3], (vertst + player.x) + WX, (horist + player.y) + WY, Rot * PIby2, 0, 0, imgMovement);
                 ctx.globalAlpha = 0.2;
-                CanvasUtils.drawImageHd(NWWWW[5], (vertst + player.x) + WX, (horist + player.y) + WY, 0, 0, 0, 0.6);
+                CanvasUtils.drawImageHd(LIGHTFIRE[5], (vertst + player.x) + WX, (horist + player.y) + WY, 0, 0, 0, 0.6);
                 ctx.globalAlpha = 1;
             }
 
@@ -15769,7 +15769,7 @@ try {
                 CanvasUtils.drawImageHd(IID.building[player.id % 3], (vertst + player.x) + WX, (horist + player.y) + WY, Rot * PIby2, 0, 0, imgMovement);
 
                 ctx.globalAlpha = 0.2;
-                CanvasUtils.drawImageHd(NWWWW[4], (vertst + player.x) + WX, (horist + player.y) + WY, 0, 0, 0, 0.6);
+                CanvasUtils.drawImageHd(LIGHTFIRE[4], (vertst + player.x) + WX, (horist + player.y) + WY, 0, 0, 0, 0.6);
                 ctx.globalAlpha = 1; 
 
             }    
@@ -16212,12 +16212,12 @@ try {
             for (var i = 0; i < 3; i++) {
                 var breath = (player.heal + (i * 333)) % 1000;
                 var imgMovement = 1 + (0.15 * ((breath < 500) ? (breath / 500) : (1 - ((breath - 500) / 500))));
-                CanvasUtils.drawImageHd(NWWWW[i], (vertst + player.x) + wNWWn[i], (horist + player.y) + WVNvv[i], 0, 0, 0, imgMovement);
+                CanvasUtils.drawImageHd(LIGHTFIRE[i], (vertst + player.x) + LIGHTFIREX[i], (horist + player.y) + LIGHTFIREY[i], 0, 0, 0, imgMovement);
             }
             player.breath2 = (player.breath2 + delta) % 5000;
             var breath = player.breath2;
             var imgMovement = 1 + (0.15 * ((breath < 2500) ? (breath / 2500) : (1 - ((breath - 2500) / 2500))));
-            CanvasUtils.drawImageHd(NWWWW[3], (vertst + player.x) + wNWWn[3], (horist + player.y) + WVNvv[3], 0, 0, 0, imgMovement);
+            CanvasUtils.drawImageHd(LIGHTFIRE[3], (vertst + player.x) + LIGHTFIREX[3], (horist + player.y) + LIGHTFIREY[3], 0, 0, 0, imgMovement);
             ctx.globalAlpha = 1;
         };
 
@@ -16253,7 +16253,7 @@ try {
             matrix[player.i][player.j].NMn = frameId;
             matrix[player.i][player.j].wMV = player.pid;
             matrix[player.i][player.j].nww = window.undefined;
-            var WwMWW = nnv[(player.extra >> 5) & 31];
+            var WwMWW = RESOURCES[(player.extra >> 5) & 31];
             var vV = WwMWW.type[(player.extra >> 10) & 7];
             var imgMovement = 1;
             if (player.removed !== 0) {
@@ -16262,14 +16262,14 @@ try {
                         AudioUtils.playFx(AudioUtils._fx.damage[WwMWW.destroyaudio], 1, Math2d.dist(World.PLAYER.x, World.PLAYER.y, player.x, player.y) / 2.5);
                         WMnvM[WwMWW.destroyaudio] = 1;
                     }
-                    vNwNM(player, WwMWW.particles, vV.Mwm, vV.NVm);
+                    vNwNM(player, WwMWW.particles, vV.particlesDist, vV.particle);
                 }
                 player.death += delta;
                 var vW = window.Math.max(0, MathUtils.Ease.outQuart(1 - (player.death / 300)));
                 ctx.globalAlpha = vW;
                 imgMovement = window.Math.min(1 + (0.35 * (1 - vW)), 1.35);
             } else if (player.born < 700) {
-                if ((player.born === 0) && (vV.Vmw !== window.undefined)) {
+                if ((player.born === 0) && (vV.imgTop !== window.undefined)) {
                     if (WMWvN === 0) player.breath = window.Math.floor(window.Math.random() * 6000);
                     else {
                         player.heal = window.Math.floor(window.Math.random() * 6000);
@@ -16289,7 +16289,7 @@ try {
                 if (player.hurt2 <= 0) player.hurt2 = 300;
                 player.hurtAngle = (WNVNM * (player.extra & 31)) / 31;
                 player.state &= ~2;
-                vNwNM(player, WwMWW.particles, vV.Mwm, 1);
+                vNwNM(player, WwMWW.particles, vV.particlesDist, 1);
             }
             var WX = 0;
             var WY = 0;
@@ -16300,7 +16300,7 @@ try {
                 player.hurt -= delta;
             }
             if (((player.breath === 3000) && (WMWvN !== 0)) && (player.hurt === 0)) {
-                CanvasUtils.drawImageHd(vV.MnWmV, (vertst + player.x) + WX, (horist + player.y) + WY, player.angle, 0, 0, imgMovement);
+                CanvasUtils.drawImageHd(vV.imgFull, (vertst + player.x) + WX, (horist + player.y) + WY, player.angle, 0, 0, imgMovement);
                 if (player.removed !== 0) {
                     if (player.death > 300) player.removed = 2;
                     ctx.globalAlpha = 1;
@@ -16311,7 +16311,7 @@ try {
                 return;
             }
             CanvasUtils.drawImageHd(vV.W, (vertst + player.x) + WX, (horist + player.y) + WY, player.angle, 0, 0, imgMovement);
-            if (vV.Vmw !== window.undefined) {
+            if (vV.imgTop !== window.undefined) {
                 WX = 0;
                 WY = 0;
                 if (player.hurt2 > 0) {
@@ -16337,7 +16337,7 @@ try {
                         imgMovement += 0.025 - ((0.025 * player.breath) / 3000);
                     }
                 }
-                CanvasUtils.drawImageHd(vV.Vmw, (vertst + player.x) + WX, (horist + player.y) + WY, player.angle, 0, 0, imgMovement);
+                CanvasUtils.drawImageHd(vV.imgTop, (vertst + player.x) + WX, (horist + player.y) + WY, player.angle, 0, 0, imgMovement);
             }
             if (player.removed !== 0) {
                 if (player.death > 300) player.removed = 2;
@@ -16359,7 +16359,7 @@ try {
             if (player.removed !== 0) {
                 if (player.death === 0) {
                     var wwM = (IID.particles === -1) ? items[IID.id].subtype[player.subtype] : IID;
-                    vNwNM(player, wwM.particles, wwM.Mwm, 5);
+                    vNwNM(player, wwM.particles, wwM.particlesDist, 5);
                     if ((wwM.destroyaudio !== 0) && (WMnvM[wwM.destroyaudio] === 0)) {
                         AudioUtils.playFx(AudioUtils._fx.damage[wwM.destroyaudio], 1, Math2d.dist(World.PLAYER.x, World.PLAYER.y, player.x, player.y) / 2.5);
                         WMnvM[wwM.destroyaudio] = 1;
@@ -16375,7 +16375,7 @@ try {
                 player.hurtAngle = (WNVNM * (player.extra & 31)) / 31;
                 player.state &= ~2;
                 var wwM = (IID.particles === -1) ? items[IID.id].subtype[player.subtype] : IID;
-                vNwNM(player, wwM.particles, wwM.Mwm, 1);
+                vNwNM(player, wwM.particles, wwM.particlesDist, 1);
                 if ((wwM.impact !== 0) && (WMnvM[wwM.impact] === 0)) {
                     AudioUtils.playFx(AudioUtils._fx.damage[wwM.impact], 1, Math2d.dist(World.PLAYER.x, World.PLAYER.y, player.x, player.y) / 2.8);
                     WMnvM[wwM.impact] = 1;
@@ -16748,14 +16748,14 @@ try {
             LOOT2 = VNN;
             VNN = mWN;
             mWN = RESOURCES2;
-            RESOURCES2 = nnv;
-            nnv = mWN;
+            RESOURCES2 = RESOURCES;
+            RESOURCES = mWN;
             mWN = ENTITIES2;
             ENTITIES2 = ENTITIES;
             ENTITIES = mWN;
             mWN = LIGHTFIRE2;
-            LIGHTFIRE2 = NWWWW;
-            NWWWW = mWN;
+            LIGHTFIRE2 = LIGHTFIRE;
+            LIGHTFIRE = mWN;
             mWN = GROUND2;
             GROUND2 = GROUND;
             GROUND = mWN;
@@ -16776,14 +16776,14 @@ try {
             LOOT2 = VNN;
             VNN = mWN;
             mWN = RESOURCES2;
-            RESOURCES2 = nnv;
-            nnv = mWN;
+            RESOURCES2 = RESOURCES;
+            RESOURCES = mWN;
             mWN = ENTITIES2;
             ENTITIES2 = ENTITIES;
             ENTITIES = mWN;
             mWN = LIGHTFIRE2;
-            LIGHTFIRE2 = NWWWW;
-            NWWWW = mWN;
+            LIGHTFIRE2 = LIGHTFIRE;
+            LIGHTFIRE = mWN;
             mWN = GROUND2;
             GROUND2 = GROUND;
             GROUND = mWN;
@@ -17084,7 +17084,7 @@ var AREAS = {
 };
 COUNTER = 0;
 var SOUNDID = {
-    VNv: COUNTER++,
+    __NO_SOUND__: COUNTER++,
     wood: COUNTER++,
     stone: COUNTER++,
     stone2: COUNTER++,
@@ -18801,11 +18801,11 @@ var items = [{
     behavior: BEHAVIOR.__SEED__,
     MWv: 0,
     subtype: 0,
-    MMN: 0,
+    collision: 0,
     areaEffect: 0,
     draw: Render.orangeSeed,
-    impact: SOUNDID.VNv,
-    destroyaudio: SOUNDID.VNv,
+    impact: SOUNDID.__NO_SOUND__,
+    destroyaudio: SOUNDID.__NO_SOUND__,
     building: [{
         src: "img/day-plant0-orange.png",
         W: {
@@ -18833,7 +18833,7 @@ var items = [{
         }
     }],
     particles: particulesitems.orange,
-    Mwm: 68,
+    particlesDist: 68,
     timelife: ((5 * 8) * 60) * 1000,
     life: 250,
     score: 0
@@ -18980,7 +18980,7 @@ var items = [{
     behavior: BEHAVIOR.__NO__,
     MWv: 0,
     subtype: 0,
-    MMN: 1,
+    collision: 1,
     areaEffect: 0,
     draw: Render.workbench,
     packetId: 16,
@@ -18999,7 +18999,7 @@ var items = [{
         }
     },
     particles: particulesitems.wood,
-    Mwm: 80,
+    particlesDist: 80,
     timelife: 315360000000,
     life: 250,
     score: 0
@@ -19217,7 +19217,7 @@ var items = [{
     behavior: BEHAVIOR.__NO__,
     MWv: 0,
     subtype: 0,
-    MMN: 1,
+    collision: 1,
     areaEffect: 0,
     draw: Render.wall,
     MmvNw: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
@@ -19476,7 +19476,7 @@ var items = [{
         }
     }],
     particles: particulesitems.wood,
-    Mwm: 80,
+    particlesDist: 80,
     timelife: 315360000000,
     life: 3000,
     score: 0
@@ -19532,7 +19532,7 @@ var items = [{
     behavior: BEHAVIOR.__NO__,
     MWv: 0,
     subtype: 0,
-    MMN: 1,
+    collision: 1,
     areaEffect: 0,
     draw: Render.wall,
     MmvNw: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
@@ -19791,7 +19791,7 @@ var items = [{
         }
     }],
     particles: particulesitems.stone,
-    Mwm: 80,
+    particlesDist: 80,
     timelife: 315360000000,
     life: 7000,
     score: 0
@@ -19847,7 +19847,7 @@ var items = [{
     behavior: BEHAVIOR.__NO__,
     MWv: 0,
     subtype: 0,
-    MMN: 1,
+    collision: 1,
     areaEffect: 0,
     draw: Render.wall,
     MmvNw: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
@@ -20106,7 +20106,7 @@ var items = [{
         }
     }],
     particles: particulesitems.steel,
-    Mwm: 80,
+    particlesDist: 80,
     timelife: 315360000000,
     life: 15000,
     score: 0
@@ -20161,7 +20161,7 @@ var items = [{
     behavior: BEHAVIOR.__NO__,
     MWv: 0,
     subtype: 0,
-    MMN: 1,
+    collision: 1,
     angle: window.Math.PI / 2,
     iMove: [1, 0, -1, 0],
     jMove: [0, -1, 0, 1],
@@ -20210,7 +20210,7 @@ var items = [{
         }
     },
     particles: particulesitems.wood,
-    Mwm: 55,
+    particlesDist: 55,
     timelife: 315360000000,
     life: 2000,
     score: 0
@@ -20265,7 +20265,7 @@ var items = [{
     behavior: BEHAVIOR.__NO__,
     MWv: 0,
     subtype: 0,
-    MMN: 1,
+    collision: 1,
     angle: window.Math.PI / 2,
     iMove: [1, 0, -1, 0],
     jMove: [0, -1, 0, 1],
@@ -20314,7 +20314,7 @@ var items = [{
         }
     },
     particles: particulesitems.stone,
-    Mwm: 55,
+    particlesDist: 55,
     timelife: 315360000000,
     life: 5000,
     score: 0
@@ -20369,7 +20369,7 @@ var items = [{
     behavior: BEHAVIOR.__NO__,
     MWv: 0,
     subtype: 0,
-    MMN: 1,
+    collision: 1,
     angle: window.Math.PI / 2,
     iMove: [1, 0, -1, 0],
     jMove: [0, -1, 0, 1],
@@ -20418,7 +20418,7 @@ var items = [{
         }
     },
     particles: particulesitems.steel,
-    Mwm: 55,
+    particlesDist: 55,
     timelife: 315360000000,
     life: 10000,
     score: 0
@@ -20476,7 +20476,7 @@ var items = [{
     behavior: BEHAVIOR.__NO__,
     MWv: 0,
     subtype: 0,
-    MMN: 1,
+    collision: 1,
     areaEffect: __WARM__,
     draw: Render.campfire,
     VvmvM: Render.campfireLight,
@@ -20496,7 +20496,7 @@ var items = [{
         }
     },
     particles: particulesitems.wood,
-    Mwm: 80,
+    particlesDist: 80,
     timelife: (1000 * 60) * 10,
     life: 150,
     score: 0
@@ -20915,7 +20915,7 @@ var items = [{
     behavior: BEHAVIOR.__NO__,
     MWv: 0,
     subtype: 0,
-    MMN: 1,
+    collision: 1,
     areaEffect: __WARM__,
     draw: Render.campfire,
     VvmvM: Render.campfireLight,
@@ -20935,7 +20935,7 @@ var items = [{
         }
     },
     particles: particulesitems.wood,
-    Mwm: 80,
+    particlesDist: 80,
     timelife: 315360000000,
     life: 250,
     score: 0
@@ -20996,7 +20996,7 @@ var items = [{
     behavior: BEHAVIOR.__NO__,
     MWv: 0,
     subtype: 0,
-    MMN: 1,
+    collision: 1,
     areaEffect: 0,
     draw: Render.smelter,
     packetId: 16,
@@ -21030,7 +21030,7 @@ var items = [{
         }
     }],
     particles: particulesitems.metalpart,
-    Mwm: 80,
+    particlesDist: 80,
     timelife: 315360000000,
     life: 3000,
     score: 0
@@ -21085,7 +21085,7 @@ var items = [{
     behavior: BEHAVIOR.__NO__,
     MWv: 0,
     subtype: 0,
-    MMN: 1,
+    collision: 1,
     angle: window.Math.PI,
     iMove: [1, -1, -1, 1],
     jMove: [-1, -1, 1, 1],
@@ -21134,7 +21134,7 @@ var items = [{
         }
     },
     particles: particulesitems.wood,
-    Mwm: 80,
+    particlesDist: 80,
     timelife: 315360000000,
     life: 2500,
     score: 0
@@ -21189,7 +21189,7 @@ var items = [{
     behavior: BEHAVIOR.__NO__,
     MWv: 0,
     subtype: 0,
-    MMN: 1,
+    collision: 1,
     angle: window.Math.PI,
     iMove: [1, -1, -1, 1],
     jMove: [-1, -1, 1, 1],
@@ -21238,7 +21238,7 @@ var items = [{
         }
     },
     particles: particulesitems.stone,
-    Mwm: 80,
+    particlesDist: 80,
     timelife: 315360000000,
     life: 6000,
     score: 0
@@ -21293,7 +21293,7 @@ var items = [{
     behavior: BEHAVIOR.__NO__,
     MWv: 0,
     subtype: 0,
-    MMN: 1,
+    collision: 1,
     angle: window.Math.PI,
     iMove: [1, -1, -1, 1],
     jMove: [-1, -1, 1, 1],
@@ -21342,7 +21342,7 @@ var items = [{
         }
     },
     particles: particulesitems.steel,
-    Mwm: 80,
+    particlesDist: 80,
     timelife: 315360000000,
     life: 12500,
     score: 0
@@ -21441,7 +21441,7 @@ var items = [{
     behavior: BEHAVIOR.__NO__,
     MWv: 0,
     subtype: 0,
-    MMN: 1,
+    collision: 1,
     areaEffect: 0,
     draw: Render.workbench2,
     packetId: 16,
@@ -21460,7 +21460,7 @@ var items = [{
         }
     },
     particles: particulesitems.metalpart,
-    Mwm: 80,
+    particlesDist: 80,
     timelife: 315360000000,
     life: 400,
     score: 0
@@ -21538,7 +21538,7 @@ var items = [{
     behavior: BEHAVIOR.__NO__,
     MWv: 0,
     subtype: 0,
-    MMN: 1,
+    collision: 1,
     areaEffect: 0,
     draw: Render.workbench,
     packetId: 16,
@@ -21557,7 +21557,7 @@ var items = [{
         }
     },
     particles: particulesitems.wood,
-    Mwm: 80,
+    particlesDist: 80,
     timelife: 315360000000,
     life: 250,
     score: 0
@@ -21657,7 +21657,7 @@ var items = [{
     behavior: BEHAVIOR.__NO__,
     MWv: 0,
     subtype: 0,
-    MMN: 1,
+    collision: 1,
     angle: window.Math.PI / 2,
     draw: Render.workbench,
     packetId: 25,
@@ -21676,7 +21676,7 @@ var items = [{
         }
     },
     particles: particulesitems.wood,
-    Mwm: 55,
+    particlesDist: 55,
     timelife: 315360000000,
     life: 300,
     score: 0
@@ -21734,7 +21734,7 @@ var items = [{
     behavior: BEHAVIOR.__NO__,
     MWv: 0,
     subtype: 0,
-    MMN: 1,
+    collision: 1,
     angle: window.Math.PI / 2,
     draw: Render.workbench,
     packetId: 25,
@@ -21753,7 +21753,7 @@ var items = [{
         }
     },
     particles: particulesitems.metalpart,
-    Mwm: 55,
+    particlesDist: 55,
     timelife: 315360000000,
     life: 300,
     score: 0
@@ -21809,7 +21809,7 @@ var items = [{
     behavior: BEHAVIOR.__NO__,
     MWv: 0,
     subtype: 0,
-    MMN: 0,
+    collision: 0,
     areaEffect: 0,
     draw: Render.groundFloor,
     WVW: [{
@@ -21828,7 +21828,7 @@ var items = [{
             isLoaded: 0
         }
     }],
-    impact: SOUNDID.VNv,
+    impact: SOUNDID.__NO_SOUND__,
     destroyaudio: SOUNDID.wooddes,
     building: [{
         src: "img/day-wood-floor-0.png",
@@ -22067,7 +22067,7 @@ var items = [{
         }
     }],
     particles: particulesitems.wood,
-    Mwm: 80,
+    particlesDist: 80,
     timelife: 315360000000,
     life: 4000,
     score: 0
@@ -22143,7 +22143,7 @@ var items = [{
     behavior: BEHAVIOR.__NO__,
     MWv: 0,
     subtype: 0,
-    MMN: 0,
+    collision: 0,
     areaEffect: 0,
     draw: Render.defaultBuilding,
     impact: SOUNDID.pillow,
@@ -22155,7 +22155,7 @@ var items = [{
         }
     },
     particles: particulesitems.furpart,
-    Mwm: 80,
+    particlesDist: 80,
     timelife: 315360000000,
     life: 500,
     score: 0
@@ -22252,7 +22252,7 @@ var items = [{
     behavior: BEHAVIOR.__NO__,
     MWv: 0,
     subtype: 0,
-    MMN: 0,
+    collision: 0,
     areaEffect: 0,
     draw: Render.groundFloor,
     WVW: [{
@@ -22271,7 +22271,7 @@ var items = [{
             isLoaded: 0
         }
     }],
-    impact: SOUNDID.VNv,
+    impact: SOUNDID.__NO_SOUND__,
     destroyaudio: SOUNDID.wooddes,
     building: [{
         src: "img/day-wood-floor-light-0.png",
@@ -22510,7 +22510,7 @@ var items = [{
         }
     }],
     particles: particulesitems.woodpart,
-    Mwm: 80,
+    particlesDist: 80,
     timelife: 315360000000,
     life: 4000,
     score: 0
@@ -22565,7 +22565,7 @@ var items = [{
     behavior: BEHAVIOR.__NO__,
     MWv: 0,
     subtype: 0,
-    MMN: 1,
+    collision: 1,
     angle: window.Math.PI / 2,
     iMove: [1, 0, -1, 0],
     jMove: [0, -1, 0, 1],
@@ -22797,7 +22797,7 @@ var items = [{
         }
     }],
     particles: particulesitems.wood,
-    Mwm: 80,
+    particlesDist: 80,
     timelife: 315360000000,
     life: 3000,
     score: 0
@@ -22852,7 +22852,7 @@ var items = [{
     behavior: BEHAVIOR.__NO__,
     MWv: 0,
     subtype: 0,
-    MMN: 1,
+    collision: 1,
     angle: window.Math.PI / 2,
     iMove: [1, 0, -1, 0],
     jMove: [0, -1, 0, 1],
@@ -23084,7 +23084,7 @@ var items = [{
         }
     }],
     particles: particulesitems.stone,
-    Mwm: 80,
+    particlesDist: 80,
     timelife: 315360000000,
     life: 7000,
     score: 0
@@ -23139,7 +23139,7 @@ var items = [{
     behavior: BEHAVIOR.__NO__,
     MWv: 0,
     subtype: 0,
-    MMN: 1,
+    collision: 1,
     angle: window.Math.PI / 2,
     iMove: [1, 0, -1, 0],
     jMove: [0, -1, 0, 1],
@@ -23371,7 +23371,7 @@ var items = [{
         }
     }],
     particles: particulesitems.steel,
-    Mwm: 55,
+    particlesDist: 55,
     timelife: 315360000000,
     life: 15000,
     score: 0
@@ -23527,11 +23527,11 @@ var items = [{
     behavior: BEHAVIOR.__SEED__,
     MWv: 0,
     subtype: 0,
-    MMN: 0,
+    collision: 0,
     areaEffect: 0,
     draw: Render.orangeSeed,
-    impact: SOUNDID.VNv,
-    destroyaudio: SOUNDID.VNv,
+    impact: SOUNDID.__NO_SOUND__,
+    destroyaudio: SOUNDID.__NO_SOUND__,
     building: [{
         src: "img/day-plant0-tomato.png",
         W: {
@@ -23559,7 +23559,7 @@ var items = [{
         }
     }],
     particles: particulesitems.tomato,
-    Mwm: 68,
+    particlesDist: 68,
     timelife: ((5 * 8) * 60) * 1000,
     life: 250,
     score: 0
@@ -23766,7 +23766,7 @@ var items = [{
     behavior: BEHAVIOR.__NO__,
     MWv: 0,
     subtype: 0,
-    MMN: 0,
+    collision: 0,
     areaEffect: 0,
     draw: Render.groundFloor,
     WVW: [{
@@ -23785,7 +23785,7 @@ var items = [{
             isLoaded: 0
         }
     }],
-    impact: SOUNDID.VNv,
+    impact: SOUNDID.__NO_SOUND__,
     destroyaudio: SOUNDID.stonedes,
     building: [{
         src: "img/day-stone-floor-0.png",
@@ -24024,7 +24024,7 @@ var items = [{
         }
     }],
     particles: particulesitems.stone,
-    Mwm: 80,
+    particlesDist: 80,
     timelife: 315360000000,
     life: 8000,
     score: 0
@@ -24080,7 +24080,7 @@ var items = [{
     behavior: BEHAVIOR.__NO__,
     MWv: 0,
     subtype: 0,
-    MMN: 0,
+    collision: 0,
     areaEffect: 0,
     draw: Render.groundFloor,
     WVW: [{
@@ -24099,7 +24099,7 @@ var items = [{
             isLoaded: 0
         }
     }],
-    impact: SOUNDID.VNv,
+    impact: SOUNDID.__NO_SOUND__,
     destroyaudio: SOUNDID.stonedes,
     building: [{
         src: "img/day-tiling-floor-0.png",
@@ -24338,7 +24338,7 @@ var items = [{
         }
     }],
     particles: particulesitems.stone,
-    Mwm: 80,
+    particlesDist: 80,
     timelife: 315360000000,
     life: 8000,
     score: 0
@@ -24552,7 +24552,7 @@ var items = [{
     behavior: BEHAVIOR.__AI_CONSTRUCTOR__,
     MWv: 0,
     subtype: 0,
-    MMN: 1,
+    collision: 1,
     areaEffect: 0,
     draw: Render.teslaBench,
     packetId: 16,
@@ -24617,7 +24617,7 @@ var items = [{
         }
     }, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
     particles: particulesitems.metalpart,
-    Mwm: 80,
+    particlesDist: 80,
     timelife: 315360000000,
     life: 3000,
     score: 0
@@ -24717,7 +24717,7 @@ var items = [{
     behavior: BEHAVIOR.__NO__,
     MWv: 0,
     subtype: 0,
-    MMN: 0,
+    collision: 0,
     damage: 200,
     damageBuilding: 400,
     areaEffect: 0,
@@ -24741,7 +24741,7 @@ var items = [{
         }
     }],
     particles: particulesitems.kakipart,
-    Mwm: 80,
+    particlesDist: 80,
     timelife: 315360000000,
     life: 5,
     score: 0
@@ -24796,13 +24796,13 @@ var items = [{
     behavior: BEHAVIOR.__NO__,
     MWv: 0,
     subtype: 0,
-    MMN: 0,
+    collision: 0,
     damage: 180,
     damageBuilding: 1400,
     areaEffect: 0,
     draw: Render.dynamite,
     impact: SOUNDID.pillow,
-    destroyaudio: SOUNDID.VNv,
+    destroyaudio: SOUNDID.__NO_SOUND__,
     building: [{
         src: "img/day-dynamite.png",
         W: {
@@ -24815,7 +24815,7 @@ var items = [{
         }
     }],
     particles: particulesitems.redsteelpart,
-    Mwm: 80,
+    particlesDist: 80,
     timelife: 5000,
     life: 100,
     score: 0
@@ -24872,11 +24872,11 @@ var items = [{
     subtype: 0,
     damage: 255,
     damageBuilding: 6000,
-    MMN: 0,
+    collision: 0,
     areaEffect: 0,
     draw: Render.dynamite,
     impact: SOUNDID.pillow,
-    destroyaudio: SOUNDID.VNv,
+    destroyaudio: SOUNDID.__NO_SOUND__,
     building: [{
         src: "img/day-C4.png",
         W: {
@@ -24889,7 +24889,7 @@ var items = [{
         }
     }],
     particles: particulesitems.kakipart,
-    Mwm: 80,
+    particlesDist: 80,
     timelife: 315360000000,
     life: 100,
     score: 0
@@ -24971,7 +24971,7 @@ var items = [{
     behavior: BEHAVIOR.__NO__,
     MWv: 0,
     subtype: 0,
-    MMN: 1,
+    collision: 1,
     areaEffect: 0,
     draw: Render.compost,
     packetId: 16,
@@ -24995,7 +24995,7 @@ var items = [{
         }
     }],
     particles: particulesitems.metalpart,
-    Mwm: 80,
+    particlesDist: 80,
     timelife: 315360000000,
     life: 500,
     score: 0
@@ -25330,7 +25330,7 @@ var items = [{
     behavior: BEHAVIOR.__NO__,
     MWv: 0,
     subtype: 0,
-    MMN: 0,
+    collision: 0,
     areaEffect: 0,
     draw: Render.spike,
     hidden: [{
@@ -25366,7 +25366,7 @@ var items = [{
         }
     }],
     particles: particulesitems.wood,
-    Mwm: 80,
+    particlesDist: 80,
     timelife: 315360000000,
     life: 200,
     score: 0
@@ -25542,7 +25542,7 @@ var items = [{
     behavior: BEHAVIOR.__NO__,
     MWv: 0,
     subtype: 0,
-    MMN: 1,
+    collision: 1,
     areaEffect: 0,
     draw: Render.agitator,
     packetId: 16,
@@ -25582,7 +25582,7 @@ var items = [{
         [21, 25.5]
     ],
     particles: particulesitems.metalpart,
-    Mwm: 80,
+    particlesDist: 80,
     timelife: 315360000000,
     life: 500,
     score: 0
@@ -25801,7 +25801,7 @@ var items = [{
     behavior: BEHAVIOR.__AI_CONSTRUCTOR__,
     MWv: 0,
     subtype: 0,
-    MMN: 0,
+    collision: 0,
     areaEffect: 0,
     draw: Render.construction,
     impact: SOUNDID.metal,
@@ -25839,7 +25839,7 @@ var items = [{
         }
     },
     particles: particulesitems.metalpart,
-    Mwm: 68,
+    particlesDist: 68,
     timelife: ((5 * 8) * 60) * 1000,
     life: 250,
     score: 0,
@@ -25953,7 +25953,7 @@ var items = [{
     behavior: BEHAVIOR.__AI_CONSTRUCTOR__,
     MWv: 0,
     subtype: 0,
-    MMN: 0,
+    collision: 0,
     areaEffect: 0,
     draw: Render.orangeSeed,
     impact: SOUNDID.pillow,
@@ -25985,7 +25985,7 @@ var items = [{
         }
     }],
     particles: particulesitems.orange,
-    Mwm: 68,
+    particlesDist: 68,
     timelife: ((5 * 8) * 60) * 1000,
     life: 250,
     score: 0,
@@ -26050,7 +26050,7 @@ var items = [{
     behavior: BEHAVIOR.__NO__,
     MWv: 0,
     subtype: 0,
-    MMN: 1,
+    collision: 1,
     areaEffect: 0,
     draw: Render.extractor,
     packetId: 16,
@@ -26085,7 +26085,7 @@ var items = [{
         [0, 0]
     ],
     particles: particulesitems.metalpart,
-    Mwm: 80,
+    particlesDist: 80,
     timelife: 315360000000,
     life: 500,
     score: 0
@@ -26179,7 +26179,7 @@ var items = [{
     behavior: BEHAVIOR.__SEED_RESOURCE__,
     MWv: 0,
     subtype: 0,
-    MMN: 1,
+    collision: 1,
     areaEffect: 0,
     draw: Render.treeSeed,
     impact: SOUNDID.wood,
@@ -26211,7 +26211,7 @@ var items = [{
         }
     }],
     particles: particulesitems.wood,
-    Mwm: 68,
+    particlesDist: 68,
     timelife: ((5 * 8) * 60) * 1000,
     life: 150,
     score: 0
@@ -26331,7 +26331,7 @@ var items = [{
     behavior: BEHAVIOR.__AI_CONSTRUCTOR__,
     MWv: 0,
     subtype: 0,
-    MMN: 0,
+    collision: 0,
     areaEffect: 0,
     draw: Render.construction,
     impact: SOUNDID.metal,
@@ -26369,7 +26369,7 @@ var items = [{
         }
     },
     particles: particulesitems.metalpart,
-    Mwm: 68,
+    particlesDist: 68,
     timelife: ((5 * 8) * 60) * 1000,
     life: 400,
     score: 0,
@@ -26431,7 +26431,7 @@ var items = [{
     behavior: BEHAVIOR.__AI_CONSTRUCTOR__,
     MWv: 0,
     subtype: 0,
-    MMN: 0,
+    collision: 0,
     areaEffect: 0,
     draw: Render.construction,
     impact: SOUNDID.metal,
@@ -26469,7 +26469,7 @@ var items = [{
         }
     },
     particles: particulesitems.metalpart,
-    Mwm: 68,
+    particlesDist: 68,
     timelife: ((5 * 8) * 60) * 1000,
     life: 500,
     score: 0,
@@ -26535,7 +26535,7 @@ var items = [{
         [0, 0, 1, 1]
     ],
     subtype: 0,
-    MMN: 0,
+    collision: 0,
     areaEffect: 0,
     draw: Render.hiddenBuilding,
     impact: SOUNDID.pillow,
@@ -26547,7 +26547,7 @@ var items = [{
         }
     },
     particles: particulesitems.barrel,
-    Mwm: 40,
+    particlesDist: 40,
     timelife: 315360000000,
     life: 250,
     score: 0
@@ -26608,7 +26608,7 @@ var items = [{
         [1, 1, 1, 1]
     ],
     subtype: 0,
-    MMN: 0,
+    collision: 0,
     areaEffect: 0,
     draw: Render.hiddenBuilding,
     impact: SOUNDID.pillow,
@@ -26620,7 +26620,7 @@ var items = [{
         }
     },
     particles: particulesitems.barrel,
-    Mwm: 40,
+    particlesDist: 40,
     timelife: 315360000000,
     life: 250,
     score: 0
@@ -26681,7 +26681,7 @@ var items = [{
         [1, 0, 0, 1]
     ],
     subtype: 0,
-    MMN: 0,
+    collision: 0,
     areaEffect: 0,
     draw: Render.hiddenBuilding,
     impact: SOUNDID.pillow,
@@ -26693,7 +26693,7 @@ var items = [{
         }
     },
     particles: particulesitems.barrel,
-    Mwm: 40,
+    particlesDist: 40,
     timelife: 315360000000,
     life: 250,
     score: 0
@@ -26754,7 +26754,7 @@ var items = [{
         [1, 1, 0, 1]
     ],
     subtype: 0,
-    MMN: 0,
+    collision: 0,
     areaEffect: 0,
     draw: Render.hiddenBuilding,
     impact: SOUNDID.pillow,
@@ -26766,7 +26766,7 @@ var items = [{
         }
     },
     particles: particulesitems.barrel,
-    Mwm: 40,
+    particlesDist: 40,
     timelife: 315360000000,
     life: 250,
     score: 0
@@ -26828,7 +26828,7 @@ var items = [{
         [1, 1, 1, 1]
     ],
     subtype: 0,
-    MMN: 0,
+    collision: 0,
     areaEffect: 0,
     draw: Render.switchOff,
     packetId: 37,
@@ -26852,7 +26852,7 @@ var items = [{
         }
     }],
     particles: particulesitems.metalpart,
-    Mwm: 80,
+    particlesDist: 80,
     timelife: 315360000000,
     life: 250,
     score: 0
@@ -26914,7 +26914,7 @@ var items = [{
         [0, 0, 1, 0]
     ],
     subtype: 0,
-    MMN: 0,
+    collision: 0,
     areaEffect: 0,
     draw: Render.hiddenBuilding,
     impact: SOUNDID.metal,
@@ -26926,7 +26926,7 @@ var items = [{
         }
     },
     particles: particulesitems.metalpart,
-    Mwm: 80,
+    particlesDist: 80,
     timelife: 315360000000,
     life: 250,
     score: 0
@@ -26988,7 +26988,7 @@ var items = [{
         [0, 0, 1, 0]
     ],
     subtype: 0,
-    MMN: 0,
+    collision: 0,
     areaEffect: 0,
     draw: Render.hiddenBuilding,
     impact: SOUNDID.metal,
@@ -27000,7 +27000,7 @@ var items = [{
         }
     },
     particles: particulesitems.metalpart,
-    Mwm: 80,
+    particlesDist: 80,
     timelife: 315360000000,
     life: 250,
     score: 0
@@ -27062,7 +27062,7 @@ var items = [{
         [1, 1, 1, 0]
     ],
     subtype: 0,
-    MMN: 0,
+    collision: 0,
     areaEffect: 0,
     draw: Render.hiddenBuilding,
     impact: SOUNDID.metal,
@@ -27074,7 +27074,7 @@ var items = [{
         }
     },
     particles: particulesitems.metalpart,
-    Mwm: 80,
+    particlesDist: 80,
     timelife: 315360000000,
     life: 250,
     score: 0
@@ -27136,7 +27136,7 @@ var items = [{
         [1, 1, 1, 1]
     ],
     subtype: 0,
-    MMN: 2,
+    collision: 2,
     radius: 22,
     areaEffect: 0,
     draw: Render.lamp,
@@ -27229,7 +27229,7 @@ var items = [{
         }
     }],
     particles: particulesitems.metalpart,
-    Mwm: 80,
+    particlesDist: 80,
     timelife: 315360000000,
     life: 600,
     score: 0
@@ -27291,7 +27291,7 @@ var items = [{
         [0, 0, 1, 1]
     ],
     subtype: 0,
-    MMN: 1,
+    collision: 1,
     areaEffect: 0,
     draw: Render.breakable,
     impact: SOUNDID.metal,
@@ -27318,7 +27318,7 @@ var items = [{
         }
     }],
     particles: particulesitems.metalpart,
-    Mwm: 40,
+    particlesDist: 40,
     timelife: 315360000000,
     life: 15000,
     score: 0
@@ -27381,7 +27381,7 @@ var items = [{
         [1, 1, 0, 1]
     ],
     subtype: 0,
-    MMN: 1,
+    collision: 1,
     areaEffect: 0,
     draw: Render.automaticDoor,
     impact: SOUNDID.metal,
@@ -27431,7 +27431,7 @@ var items = [{
         }]
     ],
     particles: particulesitems.metalpart,
-    Mwm: 80,
+    particlesDist: 80,
     timelife: 315360000000,
     life: 15000,
     score: 0
@@ -27493,7 +27493,7 @@ var items = [{
         [1, 1, 1, 1]
     ],
     subtype: 0,
-    MMN: 0,
+    collision: 0,
     areaEffect: 0,
     draw: Render.defaultBuilding,
     impact: SOUNDID.metal,
@@ -27505,7 +27505,7 @@ var items = [{
         }
     },
     particles: particulesitems.fridge,
-    Mwm: 80,
+    particlesDist: 80,
     timelife: 315360000000,
     life: 250,
     score: 0
@@ -27561,7 +27561,7 @@ var items = [{
     behavior: BEHAVIOR.__NO__,
     MWv: 0,
     subtype: 0,
-    MMN: 1,
+    collision: 1,
     areaEffect: 0,
     draw: Render.wall,
     MmvNw: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
@@ -27820,7 +27820,7 @@ var items = [{
         }
     }],
     particles: particulesitems.stone,
-    Mwm: 80,
+    particlesDist: 80,
     timelife: 315360000000,
     life: 300,
     score: 0
@@ -27877,7 +27877,7 @@ var items = [{
     behavior: BEHAVIOR.__NO__,
     MWv: 0,
     subtype: 0,
-    MMN: 1,
+    collision: 1,
     areaEffect: 0,
     draw: Render.wall,
     MmvNw: [1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
@@ -28136,7 +28136,7 @@ var items = [{
         }
     }],
     particles: particulesitems.steel,
-    Mwm: 80,
+    particlesDist: 80,
     timelife: 315360000000,
     life: 10000,
     score: 0
@@ -28192,7 +28192,7 @@ var items = [{
     behavior: BEHAVIOR.__NO__,
     MWv: 0,
     subtype: 0,
-    MMN: 0,
+    collision: 0,
     areaEffect: 0,
     draw: Render.groundFloor,
     WVW: [{
@@ -28211,7 +28211,7 @@ var items = [{
             isLoaded: 0
         }
     }],
-    impact: SOUNDID.VNv,
+    impact: SOUNDID.__NO_SOUND__,
     destroyaudio: SOUNDID.pillowdes,
     building: [{
         src: "img/day-mustard-floor-0.png",
@@ -28450,7 +28450,7 @@ var items = [{
         }
     }],
     particles: particulesitems.gold,
-    Mwm: 80,
+    particlesDist: 80,
     timelife: 315360000000,
     life: 3000,
     score: 0
@@ -28506,7 +28506,7 @@ var items = [{
     behavior: BEHAVIOR.__NO__,
     MWv: 0,
     subtype: 0,
-    MMN: 0,
+    collision: 0,
     areaEffect: 0,
     draw: Render.groundFloor,
     WVW: [{
@@ -28525,7 +28525,7 @@ var items = [{
             isLoaded: 0
         }
     }],
-    impact: SOUNDID.VNv,
+    impact: SOUNDID.__NO_SOUND__,
     destroyaudio: SOUNDID.pillowdes,
     building: [{
         src: "img/day-red-floor-0.png",
@@ -28764,7 +28764,7 @@ var items = [{
         }
     }],
     particles: particulesitems.mushroom,
-    Mwm: 80,
+    particlesDist: 80,
     timelife: 315360000000,
     life: 3000,
     score: 0
@@ -28822,7 +28822,7 @@ var items = [{
     behavior: BEHAVIOR.__NO__,
     MWv: 0,
     subtype: 0,
-    MMN: 1,
+    collision: 1,
     areaEffect: 0,
     draw: Render.workbench,
     packetId: 16,
@@ -28841,7 +28841,7 @@ var items = [{
         }
     },
     particles: particulesitems.metalpart,
-    Mwm: 80,
+    particlesDist: 80,
     timelife: 315360000000,
     life: 500,
     score: 0
@@ -28902,7 +28902,7 @@ var items = [{
         [1, 1, 1, 1]
     ],
     subtype: 0,
-    MMN: 0,
+    collision: 0,
     areaEffect: 0,
     draw: Render.hiddenBuilding,
     impact: SOUNDID.pillow,
@@ -28914,7 +28914,7 @@ var items = [{
         }
     },
     particles: particulesitems.barrel,
-    Mwm: 40,
+    particlesDist: 40,
     timelife: 315360000000,
     life: 250,
     score: 0
@@ -28976,7 +28976,7 @@ var items = [{
         [1, 1, 1, 1]
     ],
     subtype: 0,
-    MMN: 0,
+    collision: 0,
     areaEffect: 0,
     draw: Render.timerGate,
     packetId: 38,
@@ -29010,7 +29010,7 @@ var items = [{
         }
     }],
     particles: particulesitems.metalpart,
-    Mwm: 80,
+    particlesDist: 80,
     timelife: 315360000000,
     life: 250,
     score: 0
@@ -29072,7 +29072,7 @@ var items = [{
         [0, 0, 1, 0]
     ],
     subtype: 0,
-    MMN: 0,
+    collision: 0,
     areaEffect: 0,
     draw: Render.hiddenBuilding,
     impact: SOUNDID.metal,
@@ -29084,7 +29084,7 @@ var items = [{
         }
     },
     particles: particulesitems.metalpart,
-    Mwm: 80,
+    particlesDist: 80,
     timelife: 315360000000,
     life: 250,
     score: 0
@@ -29337,8 +29337,8 @@ MwmnM[COUNTER] = {
     height: [100, 100, 100, 100],
     inmapx: [0, 0, 0, 0],
     inmapy: [0, 0, 0, 0],
-    impact: SOUNDID.VNv,
-    destroyaudio: SOUNDID.VNv,
+    impact: SOUNDID.__NO_SOUND__,
+    destroyaudio: SOUNDID.__NO_SOUND__,
     building: {
         src: "img/day-road0.png",
         W: {
@@ -29351,12 +29351,12 @@ MwmnM[COUNTER] = {
     life: 100000000,
     score: 0,
     particles: particulesitems.woodtree,
-    Mwm: 70,
+    particlesDist: 70,
     angle: window.Math.PI,
     WvwVM: 0,
     VVmmM: 0,
     loot: null,
-    MMN: 0,
+    collision: 0,
     z: 0,
     WvV: 2,
     areaEffect: 0,
@@ -29389,12 +29389,12 @@ VV[nW.sofapart] = {
     life: 450,
     score: 0,
     particles: particulesitems.sofapart,
-    Mwm: 70,
+    particlesDist: 70,
     angle: window.Math.PI,
     WvwVM: 0,
     VVmmM: 0,
     loot: null,
-    MMN: 1,
+    collision: 1,
     z: 1,
     WvV: 0,
     areaEffect: 0,
@@ -29682,7 +29682,7 @@ VV[nW.NMWVV].particles = particulesitems.woodpart;
 VV[nW.MnWmv] = window.JSON.parse(window.JSON.stringify(VV[nW.mmV]));
 VV[nW.MnWmv].building.src = "img/day-plot0.png";
 VV[nW.MnWmv].particles = particulesitems.plot;
-VV[nW.MnWmv].MMN = 2;
+VV[nW.MnWmv].collision = 2;
 VV[nW.MnWmv].radius = 30;
 VV[nW.MnWmv].detail = new vn("", "", -1, [
     [IID.stone, 40],
@@ -29704,12 +29704,12 @@ VV[nW.VmNVm].detail = new vn("", "", -1, [
 VV[nW.vVV] = window.JSON.parse(window.JSON.stringify(VV[nW.mmV]));
 VV[nW.vVV].building.src = "img/day-barel0.png";
 VV[nW.vVV].impact = SOUNDID.metal;
-VV[nW.vVV].destroyaudio = SOUNDID.VNv;
+VV[nW.vVV].destroyaudio = SOUNDID.__NO_SOUND__;
 VV[nW.vVV].particles = particulesitems.barrel;
 VV[nW.vVV].explosion = 1;
 VV[nW.vVV].damage = 250;
 VV[nW.vVV].damageBuilding = 5000;
-VV[nW.vVV].MMN = 2;
+VV[nW.vVV].collision = 2;
 VV[nW.vVV].radius = 30;
 VV[nW.vVV].detail = new vn("", "", -1, [
     [IID.shapedmetal, 8]
@@ -29722,12 +29722,12 @@ VV[nW.vVV].loot = [
 VV[nW.vMw] = window.JSON.parse(window.JSON.stringify(VV[nW.mmV]));
 VV[nW.vMw].building.src = "img/day-barel1.png";
 VV[nW.vMw].impact = SOUNDID.metal;
-VV[nW.vMw].destroyaudio = SOUNDID.VNv;
+VV[nW.vMw].destroyaudio = SOUNDID.__NO_SOUND__;
 VV[nW.vMw].particles = particulesitems.barrel2;
 VV[nW.vMw].explosion = 1;
 VV[nW.vMw].damage = 300;
 VV[nW.vMw].damageBuilding = 10000;
-VV[nW.vMw].MMN = 2;
+VV[nW.vMw].collision = 2;
 VV[nW.vMw].radius = 30;
 VV[nW.vMw].life = 300;
 VV[nW.vMw].detail = new vn("", "", -1, [
@@ -29741,7 +29741,7 @@ VV[nW.garbagepart].building.src = "img/day-garbage-bag0.png";
 VV[nW.garbagepart].impact = SOUNDID.pillow;
 VV[nW.garbagepart].destroyaudio = SOUNDID.pillowdes;
 VV[nW.garbagepart].particles = particulesitems.garbagepart;
-VV[nW.garbagepart].MMN = 2;
+VV[nW.garbagepart].collision = 2;
 VV[nW.garbagepart].radius = 30;
 VV[nW.garbagepart].detail = new vn("", "", -1, []);
 VV[nW.garbagepart].loot = [
@@ -31641,32 +31641,35 @@ var VNN = [{
     angle: 0
 }];
 var COUNTER = 0;
+
 var object = {
-    branchtree: COUNTER++,
-    stone: COUNTER++,
-    MNvVW: COUNTER++,
-    uranium: COUNTER++,
-    WnNVw: COUNTER++,
-    tree: COUNTER++,
-    orangebush: COUNTER++,
-    wVMnM: COUNTER++,
-    nVvNw: COUNTER++,
-    WmNvW: COUNTER++,
-    NNNNV: COUNTER++,
-    VvnNm: COUNTER++,
-    VWMMv: COUNTER++,
-    MMWwv: COUNTER++
+    WOOD:           COUNTER++,
+    STONE:          COUNTER++,
+    STEEL:          COUNTER++,
+    URANIUM:        COUNTER++,
+    SULFUR:         COUNTER++,
+    LEAFTREE:       COUNTER++,
+    ORANGETREE:     COUNTER++,
+    TOMATOTREE:     COUNTER++,
+    BOAR:           COUNTER++,
+    DEER:           COUNTER++,
+    MUSHROOM1:      COUNTER++,
+    MUSHROOM2:      COUNTER++,
+    MUSHROOM3:      COUNTER++,
+    WHITE_FLOWER:   COUNTER++
 };
-var nnv = [];
-var vMMww = 8;
-var NNn = 9;
-var vVnmm = 10;
-var MVNWM = 11;
-nnv[object.branchtree] = {
+
+var __TOP   = 8;
+var __DOWN  = 9;
+var __MID   = 10;
+var __STOP  = 11;
+
+var RESOURCES = [];
+RESOURCES[object.WOOD] = {
     loot: [Mv.wood, Mv.wWvMW, Mv.mvnnv],
-    mvW: [0.2, 0.4, 1],
-    wmN: [-1, IID.hachet, IID.stoneaxe, IID.sulfuraxe],
-    WMw: [1, 2, 4, 5],
+    rare: [0.2, 0.4, 1],
+    tool: [-1, IID.hachet, IID.stoneaxe, IID.sulfuraxe],
+    effect: [1, 2, 4, 5],
     areaEffect: 0,
     type: [{
         life: 200,
@@ -31676,12 +31679,12 @@ nnv[object.branchtree] = {
             },
             src: "img/day-wood1.png"
         },
-        Mwm: 100,
-        NVm: 5,
+        particlesDist: 100,
+        particle: 5,
         units: 0,
         unitsMax: 80,
-        MMN: 1,
-        z: vMMww,
+        collision: 1,
+        z: __TOP,
         radius: 80
     }, {
         life: 150,
@@ -31691,12 +31694,12 @@ nnv[object.branchtree] = {
             },
             src: "img/day-wood0.png"
         },
-        Mwm: 75,
-        NVm: 5,
+        particlesDist: 75,
+        particle: 5,
         units: 0,
         unitsMax: 80,
-        MMN: 1,
-        z: vMMww,
+        collision: 1,
+        z: __TOP,
         radius: 55
     }, {
         life: 120,
@@ -31706,12 +31709,12 @@ nnv[object.branchtree] = {
             },
             src: "img/day-wood2.png"
         },
-        Mwm: 70,
-        NVm: 5,
+        particlesDist: 70,
+        particle: 5,
         units: 0,
         unitsMax: 80,
-        MMN: 1,
-        z: vMMww,
+        collision: 1,
+        z: __TOP,
         radius: 48
     }, {
         life: 100,
@@ -31721,12 +31724,12 @@ nnv[object.branchtree] = {
             },
             src: "img/day-wood3.png"
         },
-        Mwm: 60,
-        NVm: 5,
+        particlesDist: 60,
+        particle: 5,
         units: 0,
         unitsMax: 80,
-        MMN: 1,
-        z: vMMww,
+        collision: 1,
+        z: __TOP,
         radius: 37
     }, {
         life: 75,
@@ -31736,12 +31739,12 @@ nnv[object.branchtree] = {
             },
             src: "img/day-wood4.png"
         },
-        Mwm: 50,
-        NVm: 5,
+        particlesDist: 50,
+        particle: 5,
         units: 0,
         unitsMax: 80,
-        MMN: 1,
-        z: vMMww,
+        collision: 1,
+        z: __TOP,
         radius: 30
     }],
     particles: particulesitems.wood,
@@ -31749,11 +31752,11 @@ nnv[object.branchtree] = {
     destroyaudio: SOUNDID.wooddes,
     score: 5
 };
-nnv[object.tree] = {
+RESOURCES[object.LEAFTREE] = {
     loot: [Mv.acorn, Mv.wood, Mv.wWvMW, Mv.mvnnv],
-    mvW: [0.015, 0.2, 0.4, 1],
-    wmN: [-1, IID.hachet, IID.stoneaxe, IID.sulfuraxe],
-    WMw: [1, 2, 4, 5],
+    rare: [0.015, 0.2, 0.4, 1],
+    tool: [-1, IID.hachet, IID.stoneaxe, IID.sulfuraxe],
+    effect: [1, 2, 4, 5],
     areaEffect: 0,
     type: [{
         life: 250,
@@ -31763,24 +31766,24 @@ nnv[object.tree] = {
             },
             src: "img/day-tree0.png"
         },
-        Vmw: {
+        imgTop: {
             W: {
                 isLoaded: 0
             },
             src: "img/day-treeleaf0.png"
         },
-        MnWmV: {
+        imgFull: {
             W: {
                 isLoaded: 0
             },
             src: "img/day-tree-and-leaf0.png"
         },
-        Mwm: 145,
-        NVm: 5,
+        particlesDist: 145,
+        particle: 5,
         units: 0,
         unitsMax: 800,
-        MMN: 1,
-        z: MVNWM,
+        collision: 1,
+        z: __STOP,
         radius: 70
     }, {
         life: 250,
@@ -31790,24 +31793,24 @@ nnv[object.tree] = {
             },
             src: "img/day-tree1.png"
         },
-        Vmw: {
+        imgTop: {
             W: {
                 isLoaded: 0
             },
             src: "img/day-treeleaf1.png"
         },
-        MnWmV: {
+        imgFull: {
             W: {
                 isLoaded: 0
             },
             src: "img/day-tree-and-leaf1.png"
         },
-        Mwm: 128,
-        NVm: 5,
+        particlesDist: 128,
+        particle: 5,
         units: 0,
         unitsMax: 800,
-        MMN: 1,
-        z: MVNWM,
+        collision: 1,
+        z: __STOP,
         radius: 52
     }, {
         life: 150,
@@ -31817,24 +31820,24 @@ nnv[object.tree] = {
             },
             src: "img/day-tree2.png"
         },
-        Vmw: {
+        imgTop: {
             W: {
                 isLoaded: 0
             },
             src: "img/day-treeleaf2.png"
         },
-        MnWmV: {
+        imgFull: {
             W: {
                 isLoaded: 0
             },
             src: "img/day-tree-and-leaf2.png"
         },
-        Mwm: 114,
-        NVm: 5,
+        particlesDist: 114,
+        particle: 5,
         units: 0,
         unitsMax: 800,
-        MMN: 1,
-        z: MVNWM,
+        collision: 1,
+        z: __STOP,
         radius: 42
     }, {
         life: 75,
@@ -31844,24 +31847,24 @@ nnv[object.tree] = {
             },
             src: "img/day-tree3.png"
         },
-        Vmw: {
+        imgTop: {
             W: {
                 isLoaded: 0
             },
             src: "img/day-treeleaf3.png"
         },
-        MnWmV: {
+        imgFull: {
             W: {
                 isLoaded: 0
             },
             src: "img/day-tree-and-leaf3.png"
         },
-        Mwm: 90,
-        NVm: 5,
+        particlesDist: 90,
+        particle: 5,
         units: 0,
         unitsMax: 800,
-        MMN: 1,
-        z: MVNWM,
+        collision: 1,
+        z: __STOP,
         radius: 34
     }, {
         life: 250,
@@ -31871,24 +31874,24 @@ nnv[object.tree] = {
             },
             src: "img/day-tree4.png"
         },
-        Vmw: {
+        imgTop: {
             W: {
                 isLoaded: 0
             },
             src: "img/day-treeleaf4.png"
         },
-        MnWmV: {
+        imgFull: {
             W: {
                 isLoaded: 0
             },
             src: "img/day-tree-and-leaf4.png"
         },
-        Mwm: 147,
-        NVm: 5,
+        particlesDist: 147,
+        particle: 5,
         units: 0,
         unitsMax: 800,
-        MMN: 1,
-        z: MVNWM,
+        collision: 1,
+        z: __STOP,
         radius: 54
     }],
     particles: particulesitems.leaftree,
@@ -31896,11 +31899,11 @@ nnv[object.tree] = {
     destroyaudio: SOUNDID.wooddes,
     score: 5
 };
-nnv[object.stone] = {
+RESOURCES[object.STONE] = {
     loot: [Mv.stone, Mv.vWVMv, Mv.mnVVV],
-    mvW: [0.1, 0.3, 1],
-    wmN: [IID.hachet, IID.stonepickaxe, IID.steelpickaxe, IID.sulfurpickaxe],
-    WMw: [1, 3, 4, 5],
+    rare: [0.1, 0.3, 1],
+    tool: [IID.hachet, IID.stonepickaxe, IID.steelpickaxe, IID.sulfurpickaxe],
+    effect: [1, 3, 4, 5],
     areaEffect: 0,
     type: [{
         life: 1000,
@@ -31910,12 +31913,12 @@ nnv[object.stone] = {
             },
             src: "img/day-stone0.png"
         },
-        Mwm: 80,
-        NVm: 5,
+        particlesDist: 80,
+        particle: 5,
         units: 0,
         unitsMax: 115,
-        MMN: 1,
-        z: vVnmm,
+        collision: 1,
+        z: __MID,
         radius: 60
     }, {
         life: 800,
@@ -31925,12 +31928,12 @@ nnv[object.stone] = {
             },
             src: "img/day-stone2.png"
         },
-        Mwm: 80,
-        NVm: 5,
+        particlesDist: 80,
+        particle: 5,
         units: 0,
         unitsMax: 115,
-        MMN: 1,
-        z: vVnmm,
+        collision: 1,
+        z: __MID,
         radius: 58
     }, {
         life: 600,
@@ -31940,12 +31943,12 @@ nnv[object.stone] = {
             },
             src: "img/day-stone1.png"
         },
-        Mwm: 74,
-        NVm: 5,
+        particlesDist: 74,
+        particle: 5,
         units: 0,
         unitsMax: 115,
-        MMN: 1,
-        z: vVnmm,
+        collision: 1,
+        z: __MID,
         radius: 54
     }, {
         life: 400,
@@ -31955,12 +31958,12 @@ nnv[object.stone] = {
             },
             src: "img/day-stone3.png"
         },
-        Mwm: 65,
-        NVm: 5,
+        particlesDist: 65,
+        particle: 5,
         units: 0,
         unitsMax: 115,
-        MMN: 1,
-        z: NNn,
+        collision: 1,
+        z: __DOWN,
         radius: 45
     }, {
         life: 200,
@@ -31970,12 +31973,12 @@ nnv[object.stone] = {
             },
             src: "img/day-stone4.png"
         },
-        Mwm: 63,
-        NVm: 5,
+        particlesDist: 63,
+        particle: 5,
         units: 0,
         unitsMax: 115,
-        MMN: 1,
-        z: NNn,
+        collision: 1,
+        z: __DOWN,
         radius: 43
     }, {
         life: 150,
@@ -31985,12 +31988,12 @@ nnv[object.stone] = {
             },
             src: "img/day-stone5.png"
         },
-        Mwm: 61,
-        NVm: 5,
+        particlesDist: 61,
+        particle: 5,
         units: 0,
         unitsMax: 115,
-        MMN: 1,
-        z: NNn,
+        collision: 1,
+        z: __DOWN,
         radius: 41
     }],
     particles: particulesitems.stone,
@@ -31998,11 +32001,11 @@ nnv[object.stone] = {
     destroyaudio: SOUNDID.stonedes,
     score: 15
 };
-nnv[object.MNvVW] = {
+RESOURCES[object.STEEL] = {
     loot: [Mv.steel, Mv.stone, Mv.vWVMv, Mv.mnVVV],
-    mvW: [0.4, 0.45, 0.6, 1],
-    wmN: [IID.stonepickaxe, IID.steelpickaxe, IID.sulfurpickaxe],
-    WMw: [1, 2, 3],
+    rare: [0.4, 0.45, 0.6, 1],
+    tool: [IID.stonepickaxe, IID.steelpickaxe, IID.sulfurpickaxe],
+    effect: [1, 2, 3],
     areaEffect: 0,
     type: [{
         life: 1200,
@@ -32012,12 +32015,12 @@ nnv[object.MNvVW] = {
             },
             src: "img/day-steel0.png"
         },
-        Mwm: 81,
-        NVm: 5,
+        particlesDist: 81,
+        particle: 5,
         units: 0,
         unitsMax: 22,
-        MMN: 1,
-        z: vVnmm,
+        collision: 1,
+        z: __MID,
         radius: 61
     }, {
         life: 1000,
@@ -32027,12 +32030,12 @@ nnv[object.MNvVW] = {
             },
             src: "img/day-steel1.png"
         },
-        Mwm: 81,
-        NVm: 5,
+        particlesDist: 81,
+        particle: 5,
         units: 0,
         unitsMax: 22,
-        MMN: 1,
-        z: vVnmm,
+        collision: 1,
+        z: __MID,
         radius: 61
     }, {
         life: 300,
@@ -32042,12 +32045,12 @@ nnv[object.MNvVW] = {
             },
             src: "img/day-steel2.png"
         },
-        Mwm: 62,
-        NVm: 5,
+        particlesDist: 62,
+        particle: 5,
         units: 0,
         unitsMax: 22,
-        MMN: 1,
-        z: NNn,
+        collision: 1,
+        z: __DOWN,
         radius: 42
     }, {
         life: 500,
@@ -32057,12 +32060,12 @@ nnv[object.MNvVW] = {
             },
             src: "img/day-steel3.png"
         },
-        Mwm: 70,
-        NVm: 5,
+        particlesDist: 70,
+        particle: 5,
         units: 0,
         unitsMax: 22,
-        MMN: 1,
-        z: vVnmm,
+        collision: 1,
+        z: __MID,
         radius: 50
     }],
     particles: particulesitems.steel,
@@ -32070,11 +32073,11 @@ nnv[object.MNvVW] = {
     destroyaudio: SOUNDID.stonedes,
     score: 40
 };
-nnv[object.WnNVw] = {
+RESOURCES[object.SULFUR] = {
     loot: [Mv.sulfur, Mv.stone, Mv.vWVMv, Mv.mnVVV],
-    mvW: [0.4, 0.45, 0.6, 1],
-    wmN: [IID.steelpickaxe, IID.sulfurpickaxe],
-    WMw: [1, 2],
+    rare: [0.4, 0.45, 0.6, 1],
+    tool: [IID.steelpickaxe, IID.sulfurpickaxe],
+    effect: [1, 2],
     areaEffect: 0,
     type: [{
         life: 1000,
@@ -32084,12 +32087,12 @@ nnv[object.WnNVw] = {
             },
             src: "img/day-sulfur0.png"
         },
-        Mwm: 62,
-        NVm: 5,
+        particlesDist: 62,
+        particle: 5,
         units: 0,
         unitsMax: 22,
-        MMN: 1,
-        z: vVnmm,
+        collision: 1,
+        z: __MID,
         radius: 42
     }, {
         life: 400,
@@ -32099,12 +32102,12 @@ nnv[object.WnNVw] = {
             },
             src: "img/day-sulfur1.png"
         },
-        Mwm: 70,
-        NVm: 5,
+        particlesDist: 70,
+        particle: 5,
         units: 0,
         unitsMax: 22,
-        MMN: 1,
-        z: NNn,
+        collision: 1,
+        z: __DOWN,
         radius: 50
     }, {
         life: 400,
@@ -32114,12 +32117,12 @@ nnv[object.WnNVw] = {
             },
             src: "img/day-sulfur2.png"
         },
-        Mwm: 58,
-        NVm: 5,
+        particlesDist: 58,
+        particle: 5,
         units: 0,
         unitsMax: 22,
-        MMN: 1,
-        z: NNn,
+        collision: 1,
+        z: __DOWN,
         radius: 38
     }],
     particles: particulesitems.sulfur,
@@ -32127,11 +32130,11 @@ nnv[object.WnNVw] = {
     destroyaudio: SOUNDID.stonedes,
     score: 70
 };
-nnv[object.uranium] = {
+RESOURCES[object.URANIUM] = {
     loot: [Mv.uranium, Mv.stone, Mv.vWVMv, Mv.mnVVV],
-    mvW: [0.3, 0.45, 0.6, 1],
-    wmN: [IID.sulfurpickaxe],
-    WMw: [1],
+    rare: [0.3, 0.45, 0.6, 1],
+    tool: [IID.sulfurpickaxe],
+    effect: [1],
     areaEffect: __RADIATION__,
     type: [{
         life: 6000,
@@ -32141,12 +32144,12 @@ nnv[object.uranium] = {
             },
             src: "img/day-uranium0.png"
         },
-        Mwm: 104,
-        NVm: 5,
+        particlesDist: 104,
+        particle: 5,
         units: 0,
         unitsMax: 5,
-        MMN: 1,
-        z: vVnmm,
+        collision: 1,
+        z: __MID,
         radius: 75
     }, {
         life: 4000,
@@ -32156,12 +32159,12 @@ nnv[object.uranium] = {
             },
             src: "img/day-uranium1.png"
         },
-        Mwm: 75,
-        NVm: 5,
+        particlesDist: 75,
+        particle: 5,
         units: 0,
         unitsMax: 5,
-        MMN: 1,
-        z: vVnmm,
+        collision: 1,
+        z: __MID,
         radius: 55
     }, {
         life: 2000,
@@ -32171,12 +32174,12 @@ nnv[object.uranium] = {
             },
             src: "img/day-uranium2.png"
         },
-        Mwm: 62,
-        NVm: 5,
+        particlesDist: 62,
+        particle: 5,
         units: 0,
         unitsMax: 5,
-        MMN: 1,
-        z: NNn,
+        collision: 1,
+        z: __DOWN,
         radius: 42
     }],
     particles: particulesitems.uranium,
@@ -32184,11 +32187,11 @@ nnv[object.uranium] = {
     destroyaudio: SOUNDID.stonedes,
     score: 140
 };
-nnv[object.orangebush] = {
+RESOURCES[object.ORANGETREE] = {
     loot: [Mv.seedorange, Mv.orange],
-    mvW: [0.05, 1],
-    wmN: [-1],
-    WMw: [1],
+    rare: [0.05, 1],
+    tool: [-1],
+    effect: [1],
     areaEffect: 0,
     type: [{
         life: 80,
@@ -32198,24 +32201,24 @@ nnv[object.orangebush] = {
             },
             src: "img/day-orange-tree-leaf0.png"
         },
-        Vmw: {
+        imgTop: {
             W: {
                 isLoaded: 0
             },
             src: "img/day-orange0.png"
         },
-        MnWmV: {
+        imgFull: {
             W: {
                 isLoaded: 0
             },
             src: "img/day-orange-tree0.png"
         },
-        Mwm: 68,
-        NVm: 5,
+        particlesDist: 68,
+        particle: 5,
         units: 0,
         unitsMax: 20,
-        MMN: 1,
-        z: NNn,
+        collision: 1,
+        z: __DOWN,
         radius: 38
     }, {
         life: 100,
@@ -32225,24 +32228,24 @@ nnv[object.orangebush] = {
             },
             src: "img/day-orange-tree-leaf1.png"
         },
-        Vmw: {
+        imgTop: {
             W: {
                 isLoaded: 0
             },
             src: "img/day-orange1.png"
         },
-        MnWmV: {
+        imgFull: {
             W: {
                 isLoaded: 0
             },
             src: "img/day-orange-tree1.png"
         },
-        Mwm: 70,
-        NVm: 5,
+        particlesDist: 70,
+        particle: 5,
         units: 0,
         unitsMax: 20,
-        MMN: 1,
-        z: NNn,
+        collision: 1,
+        z: __DOWN,
         radius: 37
     }, {
         life: 120,
@@ -32252,36 +32255,36 @@ nnv[object.orangebush] = {
             },
             src: "img/day-orange-tree-leaf2.png"
         },
-        Vmw: {
+        imgTop: {
             W: {
                 isLoaded: 0
             },
             src: "img/day-orange2.png"
         },
-        MnWmV: {
+        imgFull: {
             W: {
                 isLoaded: 0
             },
             src: "img/day-orange-tree2.png"
         },
-        Mwm: 78,
-        NVm: 5,
+        particlesDist: 78,
+        particle: 5,
         units: 0,
         unitsMax: 20,
-        MMN: 1,
-        z: NNn,
+        collision: 1,
+        z: __DOWN,
         radius: 45
     }],
     particles: particulesitems.orange,
-    impact: SOUNDID.VNv,
-    destroyaudio: SOUNDID.VNv,
+    impact: SOUNDID.__NO_SOUND__,
+    destroyaudio: SOUNDID.__NO_SOUND__,
     score: 50
 };
-nnv[object.wVMnM] = {
+RESOURCES[object.TOMATOTREE] = {
     loot: [Mv.tomatoseed, Mv.tomato],
-    mvW: [0.05, 1],
-    wmN: [-1],
-    WMw: [1],
+    rare: [0.05, 1],
+    tool: [-1],
+    effect: [1],
     areaEffect: 0,
     type: [{
         life: 80,
@@ -32291,24 +32294,24 @@ nnv[object.wVMnM] = {
             },
             src: "img/day-tomato-tree-leaf0.png"
         },
-        Vmw: {
+        imgTop: {
             W: {
                 isLoaded: 0
             },
             src: "img/day-tomato0.png"
         },
-        MnWmV: {
+        imgFull: {
             W: {
                 isLoaded: 0
             },
             src: "img/day-tomato-tree0.png"
         },
-        Mwm: 68,
-        NVm: 5,
+        particlesDist: 68,
+        particle: 5,
         units: 0,
         unitsMax: 16,
-        MMN: 1,
-        z: NNn,
+        collision: 1,
+        z: __DOWN,
         radius: 38
     }, {
         life: 100,
@@ -32318,24 +32321,24 @@ nnv[object.wVMnM] = {
             },
             src: "img/day-tomato-tree-leaf1.png"
         },
-        Vmw: {
+        imgTop: {
             W: {
                 isLoaded: 0
             },
             src: "img/day-tomato1.png"
         },
-        MnWmV: {
+        imgFull: {
             W: {
                 isLoaded: 0
             },
             src: "img/day-tomato-tree1.png"
         },
-        Mwm: 70,
-        NVm: 5,
+        particlesDist: 70,
+        particle: 5,
         units: 0,
         unitsMax: 16,
-        MMN: 1,
-        z: NNn,
+        collision: 1,
+        z: __DOWN,
         radius: 37
     }, {
         life: 120,
@@ -32345,36 +32348,36 @@ nnv[object.wVMnM] = {
             },
             src: "img/day-tomato-tree-leaf2.png"
         },
-        Vmw: {
+        imgTop: {
             W: {
                 isLoaded: 0
             },
             src: "img/day-tomato2.png"
         },
-        MnWmV: {
+        imgFull: {
             W: {
                 isLoaded: 0
             },
             src: "img/day-tomato-tree2.png"
         },
-        Mwm: 78,
-        NVm: 5,
+        particlesDist: 78,
+        particle: 5,
         units: 0,
         unitsMax: 16,
-        MMN: 1,
-        z: NNn,
+        collision: 1,
+        z: __DOWN,
         radius: 45
     }],
     particles: particulesitems.tomato,
-    impact: SOUNDID.VNv,
-    destroyaudio: SOUNDID.VNv,
+    impact: SOUNDID.__NO_SOUND__,
+    destroyaudio: SOUNDID.__NO_SOUND__,
     score: 50
 };
-nnv[object.nVvNw] = {
+RESOURCES[object.BOAR] = {
     loot: [Mv.rawsteak, Mv.animalfat, Mv.leather],
-    mvW: [0.25, 0.85, 1],
-    wmN: [IID.hachet, IID.stoneaxe, IID.sulfuraxe],
-    WMw: [1, 3, 4],
+    rare: [0.25, 0.85, 1],
+    tool: [IID.hachet, IID.stoneaxe, IID.sulfuraxe],
+    effect: [1, 3, 4],
     areaEffect: 0,
     type: [{
         life: 250,
@@ -32384,24 +32387,24 @@ nnv[object.nVvNw] = {
             },
             src: "img/day-boar-dead.png"
         },
-        Mwm: 70,
-        NVm: 5,
+        particlesDist: 70,
+        particle: 5,
         units: 0,
         unitsMax: 18,
-        MMN: 1,
-        z: NNn,
+        collision: 1,
+        z: __DOWN,
         radius: 47
     }],
     particles: particulesitems.blood,
-    impact: SOUNDID.VNv,
-    destroyaudio: SOUNDID.VNv,
+    impact: SOUNDID.__NO_SOUND__,
+    destroyaudio: SOUNDID.__NO_SOUND__,
     score: 40
 };
-nnv[object.WmNvW] = {
+RESOURCES[object.DEER] = {
     loot: [Mv.rawsteak, Mv.animaltendon, Mv.leather, Mv.animalfat],
-    mvW: [0.28, 0.7, 0.85, 1],
-    wmN: [IID.hachet, IID.stoneaxe, IID.sulfuraxe],
-    WMw: [1, 3, 4],
+    rare: [0.28, 0.7, 0.85, 1],
+    tool: [IID.hachet, IID.stoneaxe, IID.sulfuraxe],
+    effect: [1, 3, 4],
     areaEffect: 0,
     type: [{
         life: 200,
@@ -32411,24 +32414,24 @@ nnv[object.WmNvW] = {
             },
             src: "img/day-deer-dead.png"
         },
-        Mwm: 73,
-        NVm: 5,
+        particlesDist: 73,
+        particle: 5,
         units: 0,
         unitsMax: 18,
-        MMN: 1,
-        z: NNn,
+        collision: 1,
+        z: __DOWN,
         radius: 53
     }],
     particles: particulesitems.blood,
-    impact: SOUNDID.VNv,
-    destroyaudio: SOUNDID.VNv,
+    impact: SOUNDID.__NO_SOUND__,
+    destroyaudio: SOUNDID.__NO_SOUND__,
     score: 40
 };
-nnv[object.NNNNV] = {
+RESOURCES[object.MUSHROOM1] = {
     loot: [Mv.mushroom],
-    mvW: [1],
-    wmN: [-1],
-    WMw: [1],
+    rare: [1],
+    tool: [-1],
+    effect: [1],
     areaEffect: 0,
     type: [{
         life: 1,
@@ -32438,12 +32441,12 @@ nnv[object.NNNNV] = {
             },
             src: "img/day-mushroom1.png"
         },
-        Mwm: 18,
-        NVm: 2,
+        particlesDist: 18,
+        particle: 2,
         units: 0,
         unitsMax: 2,
-        MMN: 0,
-        z: NNn,
+        collision: 0,
+        z: __DOWN,
         radius: 32
     }, {
         life: 1,
@@ -32453,12 +32456,12 @@ nnv[object.NNNNV] = {
             },
             src: "img/day-mushroom2.png"
         },
-        Mwm: 18,
-        NVm: 2,
+        particlesDist: 18,
+        particle: 2,
         units: 0,
         unitsMax: 2,
-        MMN: 0,
-        z: NNn,
+        collision: 0,
+        z: __DOWN,
         radius: 32
     }, {
         life: 1,
@@ -32468,12 +32471,12 @@ nnv[object.NNNNV] = {
             },
             src: "img/day-mushroom3.png"
         },
-        Mwm: 18,
-        NVm: 2,
+        particlesDist: 18,
+        particle: 2,
         units: 0,
         unitsMax: 2,
-        MMN: 0,
-        z: NNn,
+        collision: 0,
+        z: __DOWN,
         radius: 32
     }, {
         life: 1,
@@ -32483,24 +32486,24 @@ nnv[object.NNNNV] = {
             },
             src: "img/day-mushroom4.png"
         },
-        Mwm: 18,
-        NVm: 2,
+        particlesDist: 18,
+        particle: 2,
         units: 0,
         unitsMax: 2,
-        MMN: 0,
-        z: NNn,
+        collision: 0,
+        z: __DOWN,
         radius: 32
     }],
     particles: particulesitems.mushroom,
-    impact: SOUNDID.VNv,
-    destroyaudio: SOUNDID.VNv,
+    impact: SOUNDID.__NO_SOUND__,
+    destroyaudio: SOUNDID.__NO_SOUND__,
     score: 40
 };
-nnv[object.MMWwv] = {
+RESOURCES[object.WHITE_FLOWER] = {
     loot: [Mv.antidoteflower],
-    mvW: [1],
-    wmN: [-1],
-    WMw: [1],
+    rare: [1],
+    tool: [-1],
+    effect: [1],
     areaEffect: 0,
     type: [{
         life: 1,
@@ -32510,24 +32513,24 @@ nnv[object.MMWwv] = {
             },
             src: "img/day-antidote-tree.png"
         },
-        Mwm: 18,
-        NVm: 2,
+        particlesDist: 18,
+        particle: 2,
         units: 0,
         unitsMax: 1,
-        MMN: 0,
-        z: NNn,
+        collision: 0,
+        z: __DOWN,
         radius: 32
     }],
     particles: particulesitems.flower,
-    impact: SOUNDID.VNv,
-    destroyaudio: SOUNDID.VNv,
+    impact: SOUNDID.__NO_SOUND__,
+    destroyaudio: SOUNDID.__NO_SOUND__,
     score: 1000
 };
-nnv[object.VvnNm] = {
+RESOURCES[object.MUSHROOM2] = {
     loot: [Mv.mushroom2],
-    mvW: [1],
-    wmN: [-1],
-    WMw: [1],
+    rare: [1],
+    tool: [-1],
+    effect: [1],
     areaEffect: 0,
     type: [{
         life: 1,
@@ -32537,12 +32540,12 @@ nnv[object.VvnNm] = {
             },
             src: "img/day-mushroom5.png"
         },
-        Mwm: 18,
-        NVm: 2,
+        particlesDist: 18,
+        particle: 2,
         units: 0,
         unitsMax: 6,
-        MMN: 0,
-        z: NNn,
+        collision: 0,
+        z: __DOWN,
         radius: 32
     }, {
         life: 1,
@@ -32552,12 +32555,12 @@ nnv[object.VvnNm] = {
             },
             src: "img/day-mushroom6.png"
         },
-        Mwm: 18,
-        NVm: 2,
+        particlesDist: 18,
+        particle: 2,
         units: 0,
         unitsMax: 6,
-        MMN: 0,
-        z: NNn,
+        collision: 0,
+        z: __DOWN,
         radius: 32
     }, {
         life: 1,
@@ -32567,12 +32570,12 @@ nnv[object.VvnNm] = {
             },
             src: "img/day-mushroom7.png"
         },
-        Mwm: 18,
-        NVm: 2,
+        particlesDist: 18,
+        particle: 2,
         units: 0,
         unitsMax: 6,
-        MMN: 0,
-        z: NNn,
+        collision: 0,
+        z: __DOWN,
         radius: 32
     }, {
         life: 1,
@@ -32582,24 +32585,24 @@ nnv[object.VvnNm] = {
             },
             src: "img/day-mushroom8.png"
         },
-        Mwm: 18,
-        NVm: 2,
+        particlesDist: 18,
+        particle: 2,
         units: 0,
         unitsMax: 6,
-        MMN: 0,
-        z: NNn,
+        collision: 0,
+        z: __DOWN,
         radius: 32
     }],
     particles: particulesitems.mushroom2,
-    impact: SOUNDID.VNv,
-    destroyaudio: SOUNDID.VNv,
+    impact: SOUNDID.__NO_SOUND__,
+    destroyaudio: SOUNDID.__NO_SOUND__,
     score: 40
 };
-nnv[object.VWMMv] = {
+RESOURCES[object.MUSHROOM3] = {
     loot: [Mv.mushroom3],
-    mvW: [1],
-    wmN: [-1],
-    WMw: [1],
+    rare: [1],
+    tool: [-1],
+    effect: [1],
     areaEffect: 0,
     type: [{
         life: 1,
@@ -32609,12 +32612,12 @@ nnv[object.VWMMv] = {
             },
             src: "img/day-mushroom9.png"
         },
-        Mwm: 18,
-        NVm: 2,
+        particlesDist: 18,
+        particle: 2,
         units: 0,
         unitsMax: 6,
-        MMN: 0,
-        z: NNn,
+        collision: 0,
+        z: __DOWN,
         radius: 32
     }, {
         life: 1,
@@ -32624,12 +32627,12 @@ nnv[object.VWMMv] = {
             },
             src: "img/day-mushroom10.png"
         },
-        Mwm: 18,
-        NVm: 2,
+        particlesDist: 18,
+        particle: 2,
         units: 0,
         unitsMax: 6,
-        MMN: 0,
-        z: NNn,
+        collision: 0,
+        z: __DOWN,
         radius: 32
     }, {
         life: 1,
@@ -32639,12 +32642,12 @@ nnv[object.VWMMv] = {
             },
             src: "img/day-mushroom11.png"
         },
-        Mwm: 18,
-        NVm: 2,
+        particlesDist: 18,
+        particle: 2,
         units: 0,
         unitsMax: 6,
-        MMN: 0,
-        z: NNn,
+        collision: 0,
+        z: __DOWN,
         radius: 32
     }, {
         life: 1,
@@ -32654,22 +32657,23 @@ nnv[object.VWMMv] = {
             },
             src: "img/day-mushroom12.png"
         },
-        Mwm: 18,
-        NVm: 2,
+        particlesDist: 18,
+        particle: 2,
         units: 0,
         unitsMax: 6,
-        MMN: 0,
-        z: NNn,
+        collision: 0,
+        z: __DOWN,
         radius: 32
     }],
     particles: particulesitems.mushroom3,
-    impact: SOUNDID.VNv,
-    destroyaudio: SOUNDID.VNv,
+    impact: SOUNDID.__NO_SOUND__,
+    destroyaudio: SOUNDID.__NO_SOUND__,
     score: 40
 };
-var wNWWn = [-26, 25, -7, 0];
-var WVNvv = [-28, -15, 25, 0];
-var NWWWW = [{
+
+var LIGHTFIREX = [-26, 25, -7, 0];
+var LIGHTFIREY = [-28, -15, 25, 0];
+var LIGHTFIRE = [{
     src: "img/day-campfire-light-1.png",
     W: {
         isLoaded: 0
@@ -32700,7 +32704,7 @@ var NWWWW = [{
         isLoaded: 0
     }
 }];
-var karma = [{
+var KARMA = [{
     src: "img/karma4.png",
     W: {
         isLoaded: 0
@@ -42154,7 +42158,7 @@ try {
         exports.VNN = VNN;
         exports.Mv = Mv;
         exports.object = object;
-        exports.nnv = nnv;
+        exports.RESOURCES = RESOURCES;
         exports.AREAS = AREAS;
         exports.SKILLS = SKILLS;
         exports.KIT = KIT;
@@ -42190,13 +42194,13 @@ try {
         }
     }
 } catch (error) {
-    for (var i = 0; i < karma.length; i++) karma[i].W = CanvasUtils.loadImage(karma[i].src, karma[i].W);
+    for (var i = 0; i < KARMA.length; i++) KARMA[i].W = CanvasUtils.loadImage(KARMA[i].src, KARMA[i].W);
     INVENTORY2 = window.JSON.parse(window.JSON.stringify(items));
     PARTICLES2 = window.JSON.parse(window.JSON.stringify(VNw));
     LOOT2 = window.JSON.parse(window.JSON.stringify(VNN));
     ENTITIES2 = window.JSON.parse(window.JSON.stringify(ENTITIES));
-    RESOURCES2 = window.JSON.parse(window.JSON.stringify(nnv));
-    LIGHTFIRE2 = window.JSON.parse(window.JSON.stringify(NWWWW));
+    RESOURCES2 = window.JSON.parse(window.JSON.stringify(RESOURCES));
+    LIGHTFIRE2 = window.JSON.parse(window.JSON.stringify(LIGHTFIRE));
     AI2 = window.JSON.parse(window.JSON.stringify(AI));
 
     function replaceStringInObject(vNWwm, wnvNw, NvV, nWnNV) {
@@ -42211,12 +42215,12 @@ try {
             else if (typeof nVW === "string") vNWwm[WmVNW] = nVW.replace(NvV, nWnNV);
         }
     };
-    replaceStringInObject(RESOURCES2, nnv, "day", "night");
+    replaceStringInObject(RESOURCES2, RESOURCES, "day", "night");
     replaceStringInObject(INVENTORY2, items, "day", "night");
     replaceStringInObject(PARTICLES2, VNw, "day", "night");
     replaceStringInObject(LOOT2, VNN, "day", "night");
     replaceStringInObject(ENTITIES2, ENTITIES, "day", "night");
-    replaceStringInObject(LIGHTFIRE2, NWWWW, "day", "night");
+    replaceStringInObject(LIGHTFIRE2, LIGHTFIRE, "day", "night");
     replaceStringInObject(AI2, AI, "day", "night");
 
     function updateClotheInfo(vNWwm) {
