@@ -1645,16 +1645,16 @@ function onBadKarma(unit8) {
 function onAreas(unit8) {
     World.PLAYER.toxicStep++;
     World.PLAYER.nextAreas = unit8[1] * 1000;
-    for (var nMm = 2; nMm < 14; nMm++) {
-        if (unit8[nMm] === 100) {
-            World.PLAYER.lastAreas[nMm - 2][0] = -1;
-            World.PLAYER.lastAreas[nMm - 2][1] = -1;
+    for (var k = 2; k < 14; k++) {
+        if (unit8[k] === 100) {
+            World.PLAYER.lastAreas[k - 2][0] = -1;
+            World.PLAYER.lastAreas[k - 2][1] = -1;
         } else {
-            var i = window.Math.floor(unit8[nMm] / 8);
-            var j = unit8[nMm] % 8;
+            var i = window.Math.floor(unit8[k] / 8);
+            var j = unit8[k] % 8;
             World.PLAYER.toxicMap[i][j] = World.PLAYER.toxicStep;
-            World.PLAYER.lastAreas[nMm - 2][0] = i;
-            World.PLAYER.lastAreas[nMm - 2][1] = j;
+            World.PLAYER.lastAreas[k - 2][0] = i;
+            World.PLAYER.lastAreas[k - 2][1] = j;
         }
     }
     Render.battleRoyale();
@@ -7232,22 +7232,22 @@ var Keyboard = (function() {
     };
 
     function keyup(event) {
-        var nMm = window.Math.min(event.charCode || event.keyCode, 255);
-        VNW[nMm] = mwN;
+        var k = window.Math.min(event.charCode || event.keyCode, 255);
+        VNW[k] = mwN;
     };
 
     function keydown(event) {
-        var nMm = window.Math.min(event.charCode || event.keyCode, 255);
-        if ((nMm === key_a) || (nMm === numpad4))
+        var k = window.Math.min(event.charCode || event.keyCode, 255);
+        if ((k === key_a) || (k === numpad4))
             NnvmV();
-        else if ((nMm === key_w) || (nMm === numpad8))
+        else if ((k === key_w) || (k === numpad8))
             WNwVV();
-        else if ((nMm === key_s) || (nMm === numpad2))
+        else if ((k === key_s) || (k === numpad2))
             MWnmw();
-        else if ((nMm === key_d) || (nMm === numpad6))
+        else if ((k === key_d) || (k === numpad6))
             mWnvN();
-        VNW[nMm] = mvNNW;
-        return nMm;
+        VNW[k] = mvNNW;
+        return k;
     };
 
     function NnvmV() {
@@ -7348,81 +7348,81 @@ var AudioUtils = (function() {
     window.AudioContext = window.AudioContext || window.webkitAudioContext;
     var NVNWw = new window.AudioContext;
     if (!NVNWw.createGain)
-        NVNWw.createGain = NVNWw.vVWMM;
-    VvNWN = null;
-    WVVnV = null;
-    mvWnN = [];
-    MmVnn = null;
-    NnwNv = null;
+        NVNWw.createGain = NVNWw.createGainNode;
+    stream = null;
+    mediaRecorder = null;
+    chunks = [];
+    record = null;
+    blob = null;
 
     function getLastRecord() {
-        return MmVnn;
+        return record;
     };
 
     function initStream() {
-        VvNWN = NVNWw.createMediaStreamDestination();
-        WVVnV = new window.MediaRecorder(VvNWN.stream);
-        WVVnV.ondataavailable = function(event) {
-            mvWnN.push(event.data);
+        stream = NVNWw.createMediaStreamDestination();
+        mediaRecorder = new window.MediaRecorder(stream.stream);
+        mediaRecorder.ondataavailable = function(event) {
+            chunks.push(event.data);
         };
-        WVVnV.onstop = function(event) {
+        mediaRecorder.onstop = function(event) {
             var VwNMM = window.JSON.parse('{ "type" : "audio/ogg; codecs=opus" }');
-            NnwNv = new window.Blob(mvWnN, VwNMM);
-            MmVnn = window.URL.createObjectURL(NnwNv);
+            blob = new window.Blob(chunks, VwNMM);
+            record = window.URL.createObjectURL(blob);
         };
     };
 
     function startRecordStream() {
-        NnwNv = null;
-        MmVnn = null;
-        mvWnN = [];
-        WVVnV.start();
+        blob = null;
+        record = null;
+        chunks = [];
+        mediaRecorder.start();
     };
 
     function stopRecordStream() {
-        WVVnV.stop();
+        mediaRecorder.stop();
     };
     var options = {
-        VWVWW: 1,
-        nNmMV: 1
+        isFx: 1,
+        isAudio: 1
     };
     try {
         var vW = localStorage2.getItem("isFx");
         if (vW !== null)
-            options.VWVWW = window.Number(vW);
+            options.isFx = window.Number(vW);
         else if (isTouchScreen === 1)
-            options.VWVWW = 0;
+            options.isFx = 0;
         vW = localStorage2.getItem("isAudio");
         if (vW !== null)
-            options.nNmMV = window.Number(vW);
+            options.isAudio = window.Number(vW);
         else if (isTouchScreen === 1)
-            options.nNmMV = 0;
+            options.isAudio = 0;
     } catch (error) {
         if (isTouchScreen === 1) {
-            options.VWVWW = 0;
-            options.nNmMV = 0;
+            options.isFx = 0;
+            options.isAudio = 0;
         }
     }
 
     function setAudio(vW) {
-        if ((vW === 0) && (options.nNmMV !== vW)) {
+        if ((vW === 0) && (options.isAudio !== vW)) {
             for (var mmnNv in AudioUtils.audio) {
                 var audio = AudioUtils.audio[mmnNv];
                 stopSound(audio);
             }
         }
-        options.nNmMV = vW;
+        options.isAudio = vW;
         localStorage2.setItem("isAudio", "" + vW);
     };
 
     function setFx(vW) {
-        if ((vW === 0) && (options.VWVWW !== vW)) {
+        if ((vW === 0) && (options.isFx !== vW)) {
             for (var Nnnmm in AudioUtils._fx) {
                 var _fx = AudioUtils._fx[Nnnmm];
                 stopSound(_fx);
             }
         }
-        options.VWVWW = vW;
+        options.isFx = vW;
         localStorage2.setItem("isFx", "" + vW);
     };
 
@@ -7441,91 +7441,91 @@ var AudioUtils = (function() {
         this.source = null;
         this.isLoaded = 0;
         this.run = 0;
-        this.mwnnM = null;
+        this.gainNode = null;
         this.loop = nMnwM;
         this.volume = 1;
-        this.wNvnw = -1;
+        this.volume0 = -1;
         if (VwV !== window.undefined)
             this.volume = VwV;
-        this.vVNVm = -1;
+        this.fadingVolume = -1;
         this._fx = 0;
         if (_fx === 1)
             this._fx = 1;
-        this.Nvmvn = 0;
-        this.wNnwn = 0;
-        this.MNnVm = 0;
+        this.fade = 0;
+        this.fadeMax = 0;
+        this.fadeEffect = 0;
         this.start = 0;
-        this.nvnWn = 0;
+        this.durationMs = 0;
     };
 
     function changeVolume(sound, vW) {
-        sound.mwnnM.gain.value = vW;
+        sound.gainNode.gain.value = vW;
         sound.volume = vW;
     };
 
     function stopSound(sound) {
         if (sound.run === 1) {
             sound.run = 0;
-            sound.wNvnw = -1;
+            sound.volume0 = -1;
             sound.source.stop();
             window.console.log("Stop", sound.url);
         }
     };
 
     function fadeSound(sound, nnW, effect) {
-        if (sound.vVNVm !== -1)
-            sound.volume = sound.vVNVm;
-        sound.Nvmvn = 0;
-        sound.wNnwn = nnW;
-        sound.MNnVm = effect;
+        if (sound.fadingVolume !== -1)
+            sound.volume = sound.fadingVolume;
+        sound.fade = 0;
+        sound.fadeMax = nnW;
+        sound.fadeEffect = effect;
         window.console.log("FADE", sound.url);
     };
 
     function playSound(sound, nnW, NwnmN) {
         if (sound._fx === 0) {
-            if (options.nNmMV === 0)
+            if (options.isAudio === 0)
                 return;
-        } else if (options.VWVWW === 0)
+        } else if (options.isFx === 0)
             return;
         if (sound.run === 1) {
-            if (((sound.wNvnw !== -1) && (sound.wNnwn === 0)) && ((previousTimestamp - sound.wNvnw) > WMNnN)) {
+            if (((sound.volume0 !== -1) && (sound.fadeMax === 0)) && ((previousTimestamp - sound.volume0) > WMNnN)) {
                 stopSound(sound);
                 return;
             }
-            if (sound.wNnwn > 0) {
-                sound.Nvmvn = window.Math.min(sound.Nvmvn + delta, sound.wNnwn);
-                var VwV = window.Math.max(0, window.Math.min(1, sound.volume + (window.Math.cos(((1 - (sound.Nvmvn / sound.wNnwn)) * 0.5) * window.Math.PI) * sound.MNnVm)));
-                sound.mwnnM.gain.value = VwV;
-                sound.vVNVm = VwV;
-                if (sound.Nvmvn === sound.wNnwn) {
+            if (sound.fadeMax > 0) {
+                sound.fade = window.Math.min(sound.fade + delta, sound.fadeMax);
+                var VwV = window.Math.max(0, window.Math.min(1, sound.volume + (window.Math.cos(((1 - (sound.fade / sound.fadeMax)) * 0.5) * window.Math.PI) * sound.fadeEffect)));
+                sound.gainNode.gain.value = VwV;
+                sound.fadingVolume = VwV;
+                if (sound.fade === sound.fadeMax) {
                     sound.volume = VwV;
-                    sound.vVNVm = -1;
-                    sound.wNnwn = 0;
-                    sound.Nvmvn = 0;
+                    sound.fadingVolume = -1;
+                    sound.fadeMax = 0;
+                    sound.fade = 0;
                     if (sound.volume === 0)
-                        sound.wNvnw = previousTimestamp;
+                        sound.volume0 = previousTimestamp;
                     else
-                        sound.wNvnw = -1;
+                        sound.volume0 = -1;
                 }
             }
             return;
         }
-        if (((sound.wNnwn === 0) && (sound.Nvmvn === 0)) && (sound.volume === 0))
+        if (((sound.fadeMax === 0) && (sound.fade === 0)) && (sound.volume === 0))
             return;
         if (sound.isLoaded !== 1) {
             loadSound(sound);
             return;
         }
         var WNm = NVNWw.createBufferSource();
-        var mwnnM = NVNWw.createGain();
+        var gainNode = NVNWw.createGain();
         sound.source = WNm;
-        sound.mwnnM = mwnnM;
+        sound.gainNode = gainNode;
         changeVolume(sound, sound.volume);
         WNm.buffer = sound.buffer;
-        WNm.connect(mwnnM);
-        if (VvNWN !== null)
-            WNm.connect(VvNWN);
-        mwnnM.connect(NVNWw.destination);
+        WNm.connect(gainNode);
+        if (stream !== null)
+            WNm.connect(stream);
+        gainNode.connect(NVNWw.destination);
         if (sound.loop === true)
             WNm.loop = sound.loop;
         if (!WNm.stop)
@@ -7535,7 +7535,7 @@ var AudioUtils = (function() {
         sound.source.start(((NwnmN === window.undefined) ? 0 : NwnmN) + NVNWw.currentTime, (nnW === window.undefined) ? 0 : nnW);
         sound.run = 1;
         sound.start = previousTimestamp;
-        window.console.log("Start", sound.url, sound.Nvmvn, sound.wNnwn, nnW);
+        window.console.log("Start", sound.url, sound.fade, sound.fadeMax, nnW);
     };
 
     function loadSound(sound) {
@@ -7549,7 +7549,7 @@ var AudioUtils = (function() {
             NVNWw.decodeAudioData(VNvNM.response, function(WNNNm) {
                 sound.buffer = WNNNm;
                 sound.isLoaded = 1;
-                sound.nvnWn = WNNNm.duration * 1000;
+                sound.durationMs = WNNNm.duration * 1000;
             });
         };
         sound.isLoaded = 2;
@@ -7655,11 +7655,11 @@ var Loader = (function() {
             if (MNw < 0) {
                 mwm = 0;
                 Loader.getURLData = function(_name) {
-                    WwWVn = window.location.href;
+                    _url = window.location.href;
                     _name = _name.replace(/[\[]/, "\[").replace(/[\]]/, "\]");
                     var mwVmN = ("[\?&]" + _name) + "=([^&#]*)";
                     var WVnmn = new window.RegExp(mwVmN);
-                    var MwNMw = WVnmn.exec(WwWVn);
+                    var MwNMw = WVnmn.exec(_url);
                     return (MwNMw === null) ? null : MwNMw[1];
                 };
 
@@ -7730,8 +7730,8 @@ var Loader = (function() {
                     Home.htmlBattleRoyale = '<select id="servers"><option value="auto">Auto Select Server</option>';
                     for (var i in Home.regions) {
                         var MnNwN = 0;
-                        for (var nMm = 0; nMm < Home.regions[i].length; nMm++)
-                            MnNwN += serverList[Home.regions[i][nMm]][5];
+                        for (var k = 0; k < Home.regions[i].length; k++)
+                            MnNwN += serverList[Home.regions[i][k]][5];
                         //Home.htmlBattleRoyale += ((((('<option value="' + i) + '">') + i) + "  - ") + MnNwN) + "  players</option>";
                     }
                     Home.privateServer = Home.privateServer.sort(function(WVm, M) {
@@ -7912,28 +7912,28 @@ var Home = (function() {
     };
     var NNN = 0;
     var mNMWw = {
-        vNWVw: [{
+        _en: [{
             _name: 'Yuukun',
             button: ["img/yuukun0out.png", "img/yuukun0in.png", "img/yuukun0click.png"],
-            WwWVn: "https://energy.youtube.com/watch?v=TyI_8Il64d8"
+            _url: "https://energy.youtube.com/watch?v=TyI_8Il64d8"
         }, {
             _name: 'eXistenZ',
             button: ["img/existenz5out.png", "img/existenz5in.png", "img/existenz5click.png"],
-            WwWVn: "https://energy.youtube.com/watch?v=Seq6QGBTvNQ"
+            _url: "https://energy.youtube.com/watch?v=Seq6QGBTvNQ"
         }, {
             _name: 'Bubble Gum',
             button: ["img/bubblegum2out.png", "img/bubblegum2in.png", "img/bubblegum2click.png"],
-            WwWVn: "https://youtu.be/fD7lx9zAQGU"
+            _url: "https://youtu.be/fD7lx9zAQGU"
         }],
-        NnVWM: [{
+        _fr: [{
             _name: 'Devaster',
             button: ["img/devaster0out.png", "img/devaster0in.png", "img/devaster0click.png"],
-            WwWVn: "https://energy.youtube.com/watch?v=Jpgx-d3qHzs"
+            _url: "https://energy.youtube.com/watch?v=Jpgx-d3qHzs"
         }]
     };
-    var WVwwn = mNMWw.vNWVw;
+    var WVwwn = mNMWw._en;
     var vnmnw = window.navigator.language || window.navigator.userLanguage;
-    if (vnmnw.toLowerCase().indexOf("fr") !== -1) WVwwn = mNMWw.NnVWM;
+    if (vnmnw.toLowerCase().indexOf("fr") !== -1) WVwwn = mNMWw._fr;
     var WWNWM = WVwwn[window.Math.floor(WVwwn.length * window.Math.random())];
     var mnMMV = [GUI.renderText(WWNWM._name, "'Viga', sans-serif", "#FFFFFF", 30, 150), GUI.renderText(WWNWM._name, "'Viga', sans-serif", "#C5B03C", 30, 150), GUI.renderText(WWNWM._name, "'Viga', sans-serif", "#9B800D", 30, 150)];
     mnMMV[0].isLoaded = 1;
@@ -8768,7 +8768,7 @@ var Home = (function() {
             AudioUtils.playFx(AudioUtils._fx.play, 1, 0);
         }
         if ((wvmwM.trigger() === 1) || (wMMNm.trigger() === 1)) {
-            var MwWMw = window.open(WWNWM.WwWVn, "_blank");
+            var MwWMw = window.open(WWNWM._url, "_blank");
         };
     };
 
@@ -9464,8 +9464,8 @@ var Game = (function() {
                 }
             } else if (isChestOpen === 1) {
                 var wVMVN = World.PLAYER.chest;
-                for (var nMm = 0; nMm < 4; nMm++) {
-                    if (wVMVN[nMm][0] !== 0) chest[nMm].trigger();
+                for (var k = 0; k < 4; k++) {
+                    if (wVMVN[k][0] !== 0) chest[k].trigger();
                 }
             } else if (isTeamOpen === 1) {
                 if (World.PLAYER.team === -1) {
@@ -9826,9 +9826,9 @@ var Game = (function() {
                 }
             } else if (isChestOpen === 1) {
                 var wVMVN = World.PLAYER.chest;
-                for (var nMm = 0; nMm < 4; nMm++) {
-                    if ((wVMVN[nMm][0] !== 0) && (chest[nMm].trigger() === 1)) {
-                        Client.sendPacket(window.JSON.stringify([27, nMm]));
+                for (var k = 0; k < 4; k++) {
+                    if ((wVMVN[k][0] !== 0) && (chest[k].trigger() === 1)) {
+                        Client.sendPacket(window.JSON.stringify([27, k]));
                         AudioUtils.playFx(AudioUtils._fx.drag, 1, 0);
                         return;
                     }
@@ -10040,8 +10040,8 @@ var Game = (function() {
                 preview.trigger();
             } else if (isChestOpen === 1) {
                 var wVMVN = World.PLAYER.chest;
-                for (var nMm = 0; nMm < 4; nMm++) {
-                    if (wVMVN[nMm][0] !== 0) chest[nMm].trigger();
+                for (var k = 0; k < 4; k++) {
+                    if (wVMVN[k][0] !== 0) chest[k].trigger();
                 }
             } else if (isTeamOpen === 1) {
                 if (World.PLAYER.team === -1) {
@@ -13074,8 +13074,8 @@ try {
             } else {
                 context2dZ.drawImage(canvasD, 0, 0);
                 context2dD.clearRect(0, 0, vWw, wvNVM);
-                for (var nMm = 0; nMm < 12; nMm++) {
-                    var area = World.PLAYER.lastAreas[nMm];
+                for (var k = 0; k < 12; k++) {
+                    var area = World.PLAYER.lastAreas[k];
                     var i = area[0];
                     var j = area[1];
                     if (i === -1) continue;
@@ -14400,19 +14400,19 @@ try {
             nmvnW.draw();
             wvmWv.pos.x = WX + (87 * scaleby);
             wvmWv.pos.y = WY + (117 * scaleby);
-            if (AudioUtils.options.nNmMV === 1) wvmWv.setState(GUI.__BUTTON_CLICK__);
+            if (AudioUtils.options.isAudio === 1) wvmWv.setState(GUI.__BUTTON_CLICK__);
             wvmWv.draw();
             WmWnm.pos.x = WX + (147 * scaleby);
             WmWnm.pos.y = WY + (117 * scaleby);
-            if (AudioUtils.options.nNmMV === 0) WmWnm.setState(GUI.__BUTTON_CLICK__);
+            if (AudioUtils.options.isAudio === 0) WmWnm.setState(GUI.__BUTTON_CLICK__);
             WmWnm.draw();
             VNNMW.pos.x = WX + (87 * scaleby);
             VNNMW.pos.y = WY + (167 * scaleby);
-            if (AudioUtils.options.VWVWW === 1) VNNMW.setState(GUI.__BUTTON_CLICK__);
+            if (AudioUtils.options.isFx === 1) VNNMW.setState(GUI.__BUTTON_CLICK__);
             VNNMW.draw();
             NVVwW.pos.x = WX + (147 * scaleby);
             NVVwW.pos.y = WY + (167 * scaleby);
-            if (AudioUtils.options.VWVWW === 0) NVVwW.setState(GUI.__BUTTON_CLICK__);
+            if (AudioUtils.options.isFx === 0) NVVwW.setState(GUI.__BUTTON_CLICK__);
             NVVwW.draw();
             MnvNV.pos.x = WX + (87 * scaleby);
             MnvNV.pos.y = WY + (217 * scaleby);
@@ -16425,8 +16425,8 @@ try {
                     if (VMV.frameId !== frameId) continue;
                     var M = VMV.b;
                     var len = VMV.i;
-                    for (var nMm = 0; nMm < len; nMm++) {
-                        var WvW = M[nMm];
+                    for (var k = 0; k < len; k++) {
+                        var WvW = M[k];
                         var vV = WvW.type;
                         var mvnVn = Entitie.units[vV][WvW.cycle];
                         if (((mvnVn.pid !== World.PLAYER.id)) && (Math2d.dist(mvnVn.x, mvnVn.y, player.x, player.y) < (ENTITIES[vV].radius - 4))) {
@@ -42180,7 +42180,7 @@ try {
         exports.AI = AI;
         exports.AIID = AIID;
         exports.BEHAVIOR = BEHAVIOR;
-        for (var nMm = 0; nMm < 3; nMm++) {
+        for (var k = 0; k < 3; k++) {
             for (var i = 1; i < items.length; i++) {
                 var IID = items[i];
                 var recipe = IID.detail.recipe;
@@ -42312,7 +42312,7 @@ var AudioManager = (function() {
             for (var j = 0; j < weapon.sound.length; j++) AudioUtils._fx.shot[i][j] = new AudioUtils.Sound(weapon.sound[j], 1, false, 1);
         }
     }
-    if (AudioUtils.options.nNmMV === 1) {
+    if (AudioUtils.options.isAudio === 1) {
         AudioUtils.loadSound(wMw[WvwmM]);
         AudioUtils.loadSound(AudioUtils.audio.title);
     }
@@ -42320,7 +42320,7 @@ var AudioManager = (function() {
         var sound = AudioUtils._fx.shot[i];
         if (sound === 1) AudioUtils._fx.shot[i] = AudioUtils._fx.WmnwN;
     }
-    if (AudioUtils.options.VWVWW === 1) {
+    if (AudioUtils.options.isFx === 1) {
         AudioUtils.loadSound(AudioUtils._fx.open);
         AudioUtils.loadSound(AudioUtils._fx.play);
         AudioUtils.loadSound(AudioUtils._fx.drag);
@@ -42343,11 +42343,11 @@ var AudioManager = (function() {
         AudioUtils.playSound(AudioUtils.audio.title);
         AudioUtils.playSound(AudioUtils.audio.end);
         for (var i = 0; i < wMw.length; i++) AudioUtils.playSound(wMw[i]);
-        if (AudioUtils.options.VWVWW === 1) {
-            var wmNWn = AudioUtils.options.nNmMV;
-            AudioUtils.options.nNmMV = 1;
+        if (AudioUtils.options.isFx === 1) {
+            var wmNWn = AudioUtils.options.isAudio;
+            AudioUtils.options.isAudio = 1;
             AudioUtils.playSound(AudioUtils.audio.geiger);
-            AudioUtils.options.nNmMV = wmNWn;
+            AudioUtils.options.isAudio = wmNWn;
         }
         if ((NNwwM !== AudioManager.geiger) && (mWWVV === 1)) {
             if (VNWVM === 0) {
