@@ -13087,8 +13087,8 @@ try {
         var context2dF = canvasF.getContext('2d');
         canvasF.width = Vwwmw;
         canvasF.height = nvnwM;
-        WMnvM = [];
-        for (var i = 0; i < 9; i++) WMnvM[i] = 0;
+        soundLimit = [];
+        for (var i = 0; i < 9; i++) soundLimit[i] = 0;
         var frameId = 0;
         for (i = 0; i < WnWvv; i++) {
             vMnnw[i] = [];
@@ -13113,19 +13113,19 @@ try {
         var MMNWW = -1;
 
         function MmmnN() {
-            this.mVN = 0;
-            this.MMNVm = 0;
-            this.drawFloor = 0;
-            this.tile = 0;
-            this.wall = 0;
-            this.frameId = 0;
-            this.nNNwM = 0;
-            this.pid = 0;
-            this.tilePid = 0;
-            this.category = 0;
-            this.i = 0;
-            this.b = [];
-            this.rotate = 0;
+            this.wallFrame  = 0;
+            this.floorFrame = 0;
+            this.drawFloor  = 0;
+            this.tile       = 0;
+            this.wall       = 0;
+            this.frameId    = 0;
+            this.ground     = 0;
+            this.pid        = 0;
+            this.tilePid    = 0;
+            this.category   = 0;
+            this.i          = 0;
+            this.b          = [];
+            this.rotate     = 0;
             for (var i = 0; i < 3; i++) this.b.push({
                 type: 0,
                 cycle: 0
@@ -13142,69 +13142,69 @@ try {
                 case 0:
                     if ((i + 1) < wWw) {
                         var VMV = matrix[i + 1][j];
-                        if ((VMV.mVN === frameId) && (VMV.wall === vV)) {
+                        if ((VMV.wallFrame === frameId) && (VMV.wall === vV)) {
                             if (VMV.rotate === 1) Wn += NVW;
                             else if (VMV.rotate === 3) Wn += mWn;
                         }
                     }
                     if ((j - 1) >= 0) {
                         var VMV = matrix[i][j - 1];
-                        if (((VMV.mVN === frameId) && (VMV.wall === vV)) && ((VMV.rotate === 3) || (VMV.rotate === 0))) Wn += WMN;
+                        if (((VMV.wallFrame === frameId) && (VMV.wall === vV)) && ((VMV.rotate === 3) || (VMV.rotate === 0))) Wn += WMN;
                     }
                     if ((j + 1) < NMv) {
                         var VMV = matrix[i][j + 1];
-                        if (((VMV.mVN === frameId) && (VMV.wall === vV)) && ((VMV.rotate === 1) || (VMV.rotate === 0))) Wn += wwm;
+                        if (((VMV.wallFrame === frameId) && (VMV.wall === vV)) && ((VMV.rotate === 1) || (VMV.rotate === 0))) Wn += wwm;
                     }
                     break;
                 case 1:
                     if ((j - 1) >= 0) {
                         var VMV = matrix[i][j - 1];
-                        if ((VMV.mVN === frameId) && (VMV.wall === vV)) {
+                        if ((VMV.wallFrame === frameId) && (VMV.wall === vV)) {
                             if (VMV.rotate === 0) Wn += mWn;
                             else if (VMV.rotate === 2) Wn += NVW;
                         }
                     }
                     if ((i - 1) >= 0) {
                         var VMV = matrix[i - 1][j];
-                        if (((VMV.mVN === frameId) && (VMV.wall === vV)) && ((VMV.rotate === 0) || (VMV.rotate === 1))) Wn += WMN;
+                        if (((VMV.wallFrame === frameId) && (VMV.wall === vV)) && ((VMV.rotate === 0) || (VMV.rotate === 1))) Wn += WMN;
                     }
                     if ((i + 1) < wWw) {
                         var VMV = matrix[i + 1][j];
-                        if (((VMV.mVN === frameId) && (VMV.wall === vV)) && ((VMV.rotate === 2) || (VMV.rotate === 1))) Wn += wwm;
+                        if (((VMV.wallFrame === frameId) && (VMV.wall === vV)) && ((VMV.rotate === 2) || (VMV.rotate === 1))) Wn += wwm;
                     }
                     break;
                 case 2:
                     if ((i - 1) >= 0) {
                         var VMV = matrix[i - 1][j];
-                        if ((VMV.mVN === frameId) && (VMV.wall === vV)) {
+                        if ((VMV.wallFrame === frameId) && (VMV.wall === vV)) {
                             if (VMV.rotate === 1) Wn += mWn;
                             else if (VMV.rotate === 3) Wn += NVW;
                         }
                     }
                     if ((j - 1) >= 0) {
                         var VMV = matrix[i][j - 1];
-                        if (((VMV.mVN === frameId) && (VMV.wall === vV)) && ((VMV.rotate === 3) || (VMV.rotate === 2))) Wn += wwm;
+                        if (((VMV.wallFrame === frameId) && (VMV.wall === vV)) && ((VMV.rotate === 3) || (VMV.rotate === 2))) Wn += wwm;
                     }
                     if ((j + 1) < NMv) {
                         var VMV = matrix[i][j + 1];
-                        if (((VMV.mVN === frameId) && (VMV.wall === vV)) && ((VMV.rotate === 1) || (VMV.rotate === 2))) Wn += WMN;
+                        if (((VMV.wallFrame === frameId) && (VMV.wall === vV)) && ((VMV.rotate === 1) || (VMV.rotate === 2))) Wn += WMN;
                     }
                     break;
                 case 3:
                     if ((j + 1) < NMv) {
                         var VMV = matrix[i][j + 1];
-                        if ((VMV.mVN === frameId) && (VMV.wall === vV)) {
+                        if ((VMV.wallFrame === frameId) && (VMV.wall === vV)) {
                             if (VMV.rotate === 0) Wn += NVW;
                             else if (VMV.rotate === 2) Wn += mWn;
                         }
                     }
                     if ((i - 1) >= 0) {
                         var VMV = matrix[i - 1][j];
-                        if (((VMV.mVN === frameId) && (VMV.wall === vV)) && ((VMV.rotate === 0) || (VMV.rotate === 3))) Wn += wwm;
+                        if (((VMV.wallFrame === frameId) && (VMV.wall === vV)) && ((VMV.rotate === 0) || (VMV.rotate === 3))) Wn += wwm;
                     }
                     if ((i + 1) < wWw) {
                         var VMV = matrix[i + 1][j];
-                        if (((VMV.mVN === frameId) && (VMV.wall === vV)) && ((VMV.rotate === 2) || (VMV.rotate === 3))) Wn += WMN;
+                        if (((VMV.wallFrame === frameId) && (VMV.wall === vV)) && ((VMV.rotate === 2) || (VMV.rotate === 3))) Wn += WMN;
                     }
                     break;
             }
@@ -13223,47 +13223,47 @@ try {
                 MNMWN = 0;
             if ((i - 1) >= 0) {
                 var VMV = matrix[i - 1][j];
-                if (VMV.MMNVm === frameId) {
+                if (VMV.floorFrame === frameId) {
                     mMn = 1;
                     Wn += key_w;
                 }
             }
             if ((i + 1) < wWw) {
                 var VMV = matrix[i + 1][j];
-                if (VMV.MMNVm === frameId) {
+                if (VMV.floorFrame === frameId) {
                     Wn += key_s;
                     M = 1;
                 }
             }
             if ((j - 1) >= 0) {
                 var VMV = matrix[i][j - 1];
-                if (VMV.MMNVm === frameId) {
+                if (VMV.floorFrame === frameId) {
                     Wn += key_a;
                     MNMWN = 1;
                 }
             }
             if ((j + 1) < NMv) {
                 var VMV = matrix[i][j + 1];
-                if (VMV.MMNVm === frameId) {
+                if (VMV.floorFrame === frameId) {
                     Wn += key_d;
                     N = 1;
                 }
             }
             if ((N + mMn) === 2) {
                 var VMV = matrix[i - 1][j + 1];
-                if (VMV.MMNVm === frameId) Wn += Nvn;
+                if (VMV.floorFrame === frameId) Wn += Nvn;
             }
             if ((MNMWN + mMn) === 2) {
                 var VMV = matrix[i - 1][j - 1];
-                if (VMV.MMNVm === frameId) Wn += nwM;
+                if (VMV.floorFrame === frameId) Wn += nwM;
             }
             if ((M + N) === 2) {
                 var VMV = matrix[i + 1][j + 1];
-                if (VMV.MMNVm === frameId) Wn += MMn;
+                if (VMV.floorFrame === frameId) Wn += MMn;
             }
             if ((M + MNMWN) === 2) {
                 var VMV = matrix[i + 1][j - 1];
-                if (VMV.MMNVm === frameId) Wn += nNn;
+                if (VMV.floorFrame === frameId) Wn += nNn;
             }
             console.log(player.i);
             return WMV[Wn];
@@ -13282,47 +13282,47 @@ try {
                 MNMWN = 0;
             if ((i - 1) >= 0) {
                 var VMV = matrix[i - 1][j];
-                if ((VMV.mVN === frameId) && (VMV.wall === vV)) {
+                if ((VMV.wallFrame === frameId) && (VMV.wall === vV)) {
                     mMn = 1;
                     Wn += key_w;
                 }
             }
             if ((i + 1) < wWw) {
                 var VMV = matrix[i + 1][j];
-                if ((VMV.mVN === frameId) && (VMV.wall === vV)) {
+                if ((VMV.wallFrame === frameId) && (VMV.wall === vV)) {
                     Wn += key_s;
                     M = 1;
                 }
             }
             if ((j - 1) >= 0) {
                 var VMV = matrix[i][j - 1];
-                if ((VMV.mVN === frameId) && (VMV.wall === vV)) {
+                if ((VMV.wallFrame === frameId) && (VMV.wall === vV)) {
                     Wn += key_a;
                     MNMWN = 1;
                 }
             }
             if ((j + 1) < NMv) {
                 var VMV = matrix[i][j + 1];
-                if ((VMV.mVN === frameId) && (VMV.wall === vV)) {
+                if ((VMV.wallFrame === frameId) && (VMV.wall === vV)) {
                     Wn += key_d;
                     N = 1;
                 }
             }
             if ((N + mMn) === 2) {
                 var VMV = matrix[i - 1][j + 1];
-                if ((VMV.mVN === frameId) && (VMV.wall === vV)) Wn += Nvn;
+                if ((VMV.wallFrame === frameId) && (VMV.wall === vV)) Wn += Nvn;
             }
             if ((MNMWN + mMn) === 2) {
                 var VMV = matrix[i - 1][j - 1];
-                if ((VMV.mVN === frameId) && (VMV.wall === vV)) Wn += nwM;
+                if ((VMV.wallFrame === frameId) && (VMV.wall === vV)) Wn += nwM;
             }
             if ((M + N) === 2) {
                 var VMV = matrix[i + 1][j + 1];
-                if ((VMV.mVN === frameId) && (VMV.wall === vV)) Wn += MMn;
+                if ((VMV.wallFrame === frameId) && (VMV.wall === vV)) Wn += MMn;
             }
             if ((M + MNMWN) === 2) {
                 var VMV = matrix[i + 1][j - 1];
-                if ((VMV.mVN === frameId) && (VMV.wall === vV)) Wn += nNn;
+                if ((VMV.wallFrame === frameId) && (VMV.wall === vV)) Wn += nNn;
             }
             var Wn = WMV[Wn];
             matrix[i][j].drawFloor = wall.drawFloor[Wn];
@@ -13333,7 +13333,7 @@ try {
             var vV = player.extra >> 7;
             if (((INVENTORY[vV].lowWall !== 1) || (player.hurt > 0)) || (player.broke > 0)) return;
             var VMV = matrix[player.i][player.j];
-            VMV.mVN = frameId;
+            VMV.wallFrame = frameId;
             VMV.wall = vV;
             VMV.rotate = (player.extra >> 5) & 3;
         };
@@ -13342,7 +13342,7 @@ try {
             var vV = player.extra >> 7;
             if (((INVENTORY[vV].wall !== 1) || (player.hurt > 0)) || (player.broke > 0)) return;
             var VMV = matrix[player.i][player.j];
-            VMV.mVN = frameId;
+            VMV.wallFrame = frameId;
             VMV.wall = INVENTORY[vV].idWall;
             if (World.PLAYER._j === player.j) {
                 var dist = window.Math.max(1, window.Math.abs(World.PLAYER._i - player.i));
@@ -13359,7 +13359,7 @@ try {
             var vV = player.extra >> 7;
             if (((INVENTORY[vV].wall !== 1) || (player.hurt > 0)) || (player.broke > 0)) return;
             var VMV = matrix[player.i][player.j];
-            VMV.MMNVm = frameId;
+            VMV.floorFrame = frameId;
         };
 
         function MmnMv(player, cycle) {
@@ -15327,10 +15327,10 @@ try {
                     if ((VMV.tile === frameId) && (((IID.zid !== 2) || (VMV.tilePid === 0)) || (VMV.category === SKILLS.__PLANT__))) {
                         World.PLAYER.canBuild = 1; // before 0
                         CanvasUtils.drawImageHd(IID.redprint, WX, WY, Rot * PIby2, 0, 0, 1);
-                    } else if ((((IID.detail.category === SKILLS.__PLANT__) || (IID.zid === 2)) || (((VMV.pid !== 0) && (VMV.pid !== World.PLAYER.id)) && (World.players[VMV.pid].team !== team))) && (VMV.nNNwM === frameId)) {
+                    } else if ((((IID.detail.category === SKILLS.__PLANT__) || (IID.zid === 2)) || (((VMV.pid !== 0) && (VMV.pid !== World.PLAYER.id)) && (World.players[VMV.pid].team !== team))) && (VMV.ground === frameId)) {
                         World.PLAYER.canBuild = 0;
                         CanvasUtils.drawImageHd(IID.redprint, WX, WY, Rot * PIby2, 0, 0, 1);
-                    } else if ((IID.iTile !== window.undefined) && ((((Rot % 2) === 0) && ((((((World.PLAYER.iBuild < 1) || (World.PLAYER.iBuild >= (wWw - 1))) || (matrix[World.PLAYER.iBuild + 1][World.PLAYER.jBuild].tile === frameId)) || ((matrix[World.PLAYER.iBuild + 1][World.PLAYER.jBuild].nNNwM === frameId) && (((matrix[World.PLAYER.iBuild + 1][World.PLAYER.jBuild].pid !== World.PLAYER.id) && (matrix[World.PLAYER.iBuild + 1][World.PLAYER.jBuild].pid !== 0)) && (World.players[matrix[World.PLAYER.iBuild + 1][World.PLAYER.jBuild].pid].team !== team)))) || (matrix[World.PLAYER.iBuild - 1][World.PLAYER.jBuild].tile === frameId)) || ((matrix[World.PLAYER.iBuild - 1][World.PLAYER.jBuild].nNNwM === frameId) && (((matrix[World.PLAYER.iBuild - 1][World.PLAYER.jBuild].pid !== World.PLAYER.id) && (matrix[World.PLAYER.iBuild - 1][World.PLAYER.jBuild].pid !== 0)) && (World.players[matrix[World.PLAYER.iBuild - 1][World.PLAYER.jBuild].pid].team !== team))))) || (((Rot % 2) === 1) && (((((((World.PLAYER.jBuild < 1) || (World.PLAYER.jBuild >= (NMv - 1))) || (matrix[World.PLAYER.iBuild][World.PLAYER.jBuild + 1].tile === frameId)) || ((matrix[World.PLAYER.iBuild][World.PLAYER.jBuild + 1].nNNwM === frameId) && (((matrix[World.PLAYER.iBuild][World.PLAYER.jBuild + 1].pid !== World.PLAYER.id) && (matrix[World.PLAYER.iBuild][World.PLAYER.jBuild + 1].pid !== 0)) && (World.players[matrix[World.PLAYER.iBuild][World.PLAYER.jBuild + 1].pid].team !== team)))) || (matrix[World.PLAYER.iBuild][World.PLAYER.jBuild - 1].tile === frameId)) || ((matrix[World.PLAYER.iBuild][World.PLAYER.jBuild - 1].nNNwM === frameId) && (((matrix[World.PLAYER.iBuild][World.PLAYER.jBuild - 1].pid !== World.PLAYER.id) && (matrix[World.PLAYER.iBuild][World.PLAYER.jBuild - 1].pid !== 0)) && (World.players[matrix[World.PLAYER.iBuild][World.PLAYER.jBuild - 1].pid].team !== team)))) || (World.PLAYER._i === World.PLAYER.iBuild))))) {
+                    } else if ((IID.iTile !== window.undefined) && ((((Rot % 2) === 0) && ((((((World.PLAYER.iBuild < 1) || (World.PLAYER.iBuild >= (wWw - 1))) || (matrix[World.PLAYER.iBuild + 1][World.PLAYER.jBuild].tile === frameId)) || ((matrix[World.PLAYER.iBuild + 1][World.PLAYER.jBuild].ground === frameId) && (((matrix[World.PLAYER.iBuild + 1][World.PLAYER.jBuild].pid !== World.PLAYER.id) && (matrix[World.PLAYER.iBuild + 1][World.PLAYER.jBuild].pid !== 0)) && (World.players[matrix[World.PLAYER.iBuild + 1][World.PLAYER.jBuild].pid].team !== team)))) || (matrix[World.PLAYER.iBuild - 1][World.PLAYER.jBuild].tile === frameId)) || ((matrix[World.PLAYER.iBuild - 1][World.PLAYER.jBuild].ground === frameId) && (((matrix[World.PLAYER.iBuild - 1][World.PLAYER.jBuild].pid !== World.PLAYER.id) && (matrix[World.PLAYER.iBuild - 1][World.PLAYER.jBuild].pid !== 0)) && (World.players[matrix[World.PLAYER.iBuild - 1][World.PLAYER.jBuild].pid].team !== team))))) || (((Rot % 2) === 1) && (((((((World.PLAYER.jBuild < 1) || (World.PLAYER.jBuild >= (NMv - 1))) || (matrix[World.PLAYER.iBuild][World.PLAYER.jBuild + 1].tile === frameId)) || ((matrix[World.PLAYER.iBuild][World.PLAYER.jBuild + 1].ground === frameId) && (((matrix[World.PLAYER.iBuild][World.PLAYER.jBuild + 1].pid !== World.PLAYER.id) && (matrix[World.PLAYER.iBuild][World.PLAYER.jBuild + 1].pid !== 0)) && (World.players[matrix[World.PLAYER.iBuild][World.PLAYER.jBuild + 1].pid].team !== team)))) || (matrix[World.PLAYER.iBuild][World.PLAYER.jBuild - 1].tile === frameId)) || ((matrix[World.PLAYER.iBuild][World.PLAYER.jBuild - 1].ground === frameId) && (((matrix[World.PLAYER.iBuild][World.PLAYER.jBuild - 1].pid !== World.PLAYER.id) && (matrix[World.PLAYER.iBuild][World.PLAYER.jBuild - 1].pid !== 0)) && (World.players[matrix[World.PLAYER.iBuild][World.PLAYER.jBuild - 1].pid].team !== team)))) || (World.PLAYER._i === World.PLAYER.iBuild))))) {
                         World.PLAYER.canBuild = 0;
                         CanvasUtils.drawImageHd(IID.redprint, WX, WY, Rot * PIby2, 0, 0, 1);
                     } else {
@@ -15970,9 +15970,9 @@ try {
         function _GroundFloor(IID, player, WX, WY, Rot, imgMovement) {
             var mmWVw = matrix[player.i][player.j];
             mmWVw.tile = 0;
-            mmWVw.nNNwM = frameId;
+            mmWVw.ground = frameId;
             mmWVw.pid = player.pid;
-            if ((mmWVw.mVN !== frameId) || (mmWVw.drawFloor === 1)) {
+            if ((mmWVw.wallFrame !== frameId) || (mmWVw.drawFloor === 1)) {
                 if (player.broke > 0) CanvasUtils.drawImageHd(IID.broken[player.broke - 1], (vertst + player.x) + WX, (horist + player.y) + WY, 0, 0, 0, imgMovement);
                 else CanvasUtils.drawImageHd(IID.building[Wwmwm(player)], vertst + player.x, horist + player.y, 0, 0, 0, imgMovement);
             }
@@ -16263,9 +16263,9 @@ try {
             var imgMovement = 1;
             if (player.removed !== 0) {
                 if (player.death === 0) {
-                    if ((WwMWW.destroy !== 0) && (WMnvM[WwMWW.destroy] === 0)) {
+                    if ((WwMWW.destroy !== 0) && (soundLimit[WwMWW.destroy] === 0)) {
                         AudioUtils.playFx(AudioUtils._fx.damage[WwMWW.destroy], 1, Math2d.dist(World.PLAYER.x, World.PLAYER.y, player.x, player.y) / 2.5);
-                        WMnvM[WwMWW.destroy] = 1;
+                        soundLimit[WwMWW.destroy] = 1;
                     }
                     vNwNM(player, WwMWW.particles, vV.particlesDist, vV.particle);
                 }
@@ -16286,9 +16286,9 @@ try {
                 imgMovement = (0.5 * vW) + 0.5;
             }
             if ((player.state & 2) === 2) {
-                if ((WwMWW.impact !== 0) && (WMnvM[WwMWW.impact] === 0)) {
+                if ((WwMWW.impact !== 0) && (soundLimit[WwMWW.impact] === 0)) {
                     AudioUtils.playFx(AudioUtils._fx.damage[WwMWW.impact], 1, Math2d.dist(World.PLAYER.x, World.PLAYER.y, player.x, player.y) / 2.8);
-                    WMnvM[WwMWW.impact] = 1;
+                    soundLimit[WwMWW.impact] = 1;
                 }
                 player.hurt = 250;
                 if (player.hurt2 <= 0) player.hurt2 = 300;
@@ -16365,9 +16365,9 @@ try {
                 if (player.death === 0) {
                     var _item = (item.particles === -1) ? INVENTORY[item.id].subtype[player.subtype] : item;
                     vNwNM(player, _item.particles, _item.particlesDist, 5);
-                    if ((_item.destroy !== 0) && (WMnvM[_item.destroy] === 0)) {
+                    if ((_item.destroy !== 0) && (soundLimit[_item.destroy] === 0)) {
                         AudioUtils.playFx(AudioUtils._fx.damage[_item.destroy], 1, Math2d.dist(World.PLAYER.x, World.PLAYER.y, player.x, player.y) / 2.5);
-                        WMnvM[_item.destroy] = 1;
+                        soundLimit[_item.destroy] = 1;
                     }
                 }
                 player.death += delta;
@@ -16381,9 +16381,9 @@ try {
                 player.state &= ~2;
                 var _item = (item.particles === -1) ? INVENTORY[item.id].subtype[player.subtype] : item;
                 vNwNM(player, _item.particles, _item.particlesDist, 1);
-                if ((_item.impact !== 0) && (WMnvM[_item.impact] === 0)) {
+                if ((_item.impact !== 0) && (soundLimit[_item.impact] === 0)) {
                     AudioUtils.playFx(AudioUtils._fx.damage[_item.impact], 1, Math2d.dist(World.PLAYER.x, World.PLAYER.y, player.x, player.y) / 2.8);
-                    WMnvM[_item.impact] = 1;
+                    soundLimit[_item.impact] = 1;
                 }
             }
             var WX = 0;
@@ -16816,7 +16816,7 @@ try {
             if (World.transition > 0) nvVmw();
             Entitie.cleanRemoved();
             frameId++;
-            for (var i = 0; i < SOUND_LENGTH; i++) WMnvM[i] = 0;
+            for (var i = 0; i < SOUND_LENGTH; i++) soundLimit[i] = 0;
             scaleby = wWWNM;
             canwns = canw / scaleby;
             canhns = canh / scaleby;
