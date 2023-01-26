@@ -22215,7 +22215,7 @@ var INVENTORY = [{
     stack: 255,
     loot: LOOTID.__NAILS__
 }, {
-    id: IID.__WOOD__floor2,
+    id: IID.__WOODLIGHT_FLOOR__,
     itemButton: {
         src: ["img/inv-wood-floor-light-out.png", "img/inv-wood-floor-light-in.png", "img/inv-wood-floor-light-click.png"],
         img: [{
@@ -22258,7 +22258,7 @@ var INVENTORY = [{
         }
     },
     wall: 1,
-    idWall: IID.__WOOD__floor2,
+    idWall: IID.__WOODLIGHT_FLOOR__,
     lowWall: 0,
     door: 0,
     broke: 1,
@@ -30749,7 +30749,7 @@ var LOOT = [{
         isLoaded: 0
     },
     src: "img/day-ground-wood-floor-light.png",
-    idItem: IID.__WOOD__floor2,
+    idItem: IID.__WOODLIGHT_FLOOR__,
     amount: 1,
     scale: 0.7,
     angle: 0.3
@@ -32782,7 +32782,7 @@ try {
             r: 0
         };
         _LF = {
-            v: IID.__WOOD__floor2,
+            v: IID.__WOODLIGHT_FLOOR__,
             b: 0,
             V: -1,
             r: 0
@@ -32824,7 +32824,7 @@ try {
             r: 0
         };
         _WWLF = {
-            v: IID.__WOOD__floor2,
+            v: IID.__WOODLIGHT_FLOOR__,
             b: IID.__WOOD_WALL__,
             V: -1,
             r: 0
@@ -32866,7 +32866,7 @@ try {
             r: 0
         };
         _SWLF = {
-            v: IID.__WOOD__floor2,
+            v: IID.__WOODLIGHT_FLOOR__,
             b: IID.__STONE_WALL__,
             V: -1,
             r: 0
@@ -32908,7 +32908,7 @@ try {
             r: 0
         };
         _MWLF = {
-            v: IID.__WOOD__floor2,
+            v: IID.__WOODLIGHT_FLOOR__,
             b: IID.__STEEL_WALL__,
             V: -1,
             r: 0
