@@ -11791,7 +11791,7 @@ var Editor = (function() {
             NWw = 0;
             for (var i = 1; i < INVENTORY.length; i++) {
                 var IID = INVENTORY[i];
-                if ((((IID.id === IID.__LANDMINE__) || (IID.id === IID.__C4__)) || (IID.id === IID.__WOOD__espike)) || (IID.id === IID.__DYNAMITE__)) {
+                if ((((IID.id === IID.__LANDMINE__) || (IID.id === IID.__C4__)) || (IID.id === IID.__WOOD_SPIKE__)) || (IID.id === IID.__DYNAMITE__)) {
                     Wnw[NWw].setImages(IID.itemButton.src, IID.itemButton.img);
                     Wnw[NWw].vmM = IID.id;
                     NWw++;
@@ -16358,12 +16358,12 @@ try {
             matrix[player.i][player.j].tilePid = player.pid;
             matrix[player.i][player.j].category = window.undefined;
             var Rot = (player.extra >> 5) & 3;
-            var IID = INVENTORY[player.extra >> 7];
+            var item = INVENTORY[player.extra >> 7];
             var imgMovement = 1;
-            matrix[player.i][player.j].category = IID.detail.category;
+            matrix[player.i][player.j].category = item.detail.category;
             if (player.removed !== 0) {
                 if (player.death === 0) {
-                    var _item = (IID.particles === -1) ? INVENTORY[IID.id].subtype[player.subtype] : IID;
+                    var _item = (item.particles === -1) ? INVENTORY[item.id].subtype[player.subtype] : item;
                     vNwNM(player, _item.particles, _item.particlesDist, 5);
                     if ((_item.destroy !== 0) && (WMnvM[_item.destroy] === 0)) {
                         AudioUtils.playFx(AudioUtils._fx.damage[_item.destroy], 1, Math2d.dist(World.PLAYER.x, World.PLAYER.y, player.x, player.y) / 2.5);
@@ -16379,7 +16379,7 @@ try {
                 player.hurt = 250;
                 player.hurtAngle = (WNVNM * (player.extra & 31)) / 31;
                 player.state &= ~2;
-                var _item = (IID.particles === -1) ? INVENTORY[IID.id].subtype[player.subtype] : IID;
+                var _item = (item.particles === -1) ? INVENTORY[item.id].subtype[player.subtype] : item;
                 vNwNM(player, _item.particles, _item.particlesDist, 1);
                 if ((_item.impact !== 0) && (WMnvM[_item.impact] === 0)) {
                     AudioUtils.playFx(AudioUtils._fx.damage[_item.impact], 1, Math2d.dist(World.PLAYER.x, World.PLAYER.y, player.x, player.y) / 2.8);
@@ -16401,7 +16401,7 @@ try {
                     player.hurt -= delta;
                 }
             }
-            IID.draw(IID, player, WX, WY, Rot, imgMovement);
+            item.draw(item, player, WX, WY, Rot, imgMovement);
             if (player.removed !== 0) {
                 if (player.death > 300) player.removed = 2;
                 ctx.globalAlpha = 1;
@@ -16657,7 +16657,7 @@ try {
             }
             for (i = 0; i < pplonscr; i++) {
                 var IID = INVENTORY[WvnvV[i].extra >> 7];
-                IID.VvmvM(WvnvV[i]);
+                IID.drawTop(WvnvV[i]);
                 WvnvV[i] = null;
             }
             resources = Entitie.units[__ENTITIE_RESOURCES_TOP__];
@@ -18785,7 +18785,7 @@ var INVENTORY = [{
     ]),
     stack: 40,
     loot: LOOTID.__SEED_ORANGE__,
-    fruit: LOOTID.orange,
+    fruit:  LOOTID.__ORANGE__,
     wait: 10,
     idWeapon: 21,     
     fuel: -1,
@@ -18875,7 +18875,7 @@ var INVENTORY = [{
     loot: LOOTID.__HACHET__, 
     wait: 10
 }, {
-    id: IID.__STONE__pickaxe,
+    id: IID.__STONE_PICKAXE__,
     itemButton: {
         src: ["img/inv-stone-pickaxe-out.png", "img/inv-stone-pickaxe-in.png", "img/inv-stone-pickaxe-click.png"],
         img: [{
@@ -18897,7 +18897,7 @@ var INVENTORY = [{
     loot: LOOTID.__STONE_PICKAXE__,
     wait: 10
 }, {
-    id: IID.__STEEL__pickaxe,
+    id: IID.__STEEL_PICKAXE__,
     itemButton: {
         src: ["img/inv-steel-pickaxe-out.png", "img/inv-steel-pickaxe-in.png", "img/inv-steel-pickaxe-click.png"],
         img: [{
@@ -18919,7 +18919,7 @@ var INVENTORY = [{
     loot: LOOTID.__STEEL_PICKAXE__,
     wait: 10
 }, {
-    id: IID.__STONE__axe,
+    id: IID.__STONE_AXE__,
     itemButton: {
         src: ["img/inv-stone-axe-out.png", "img/inv-stone-axe-in.png", "img/inv-stone-axe-click.png"],
         img: [{
@@ -19058,7 +19058,7 @@ var INVENTORY = [{
         [AREAS.__PLAYER__, 35000],
         [AREAS.__WORKBENCH__, 50000]
     ]),
-    bullet: IID.__WOOD__arrow,
+    bullet: IID.__WOOD_ARROW__,
     mMVwm: 1,
     idWeapon: 6,     
     stack: 1,
@@ -19152,7 +19152,7 @@ var INVENTORY = [{
         [AREAS.__WORKBENCH2__, 180000]
     ], 12, IID.__MP5__),
     idWeapon: 10,     
-    bullet: IID.__SNIPER__bullet,
+    bullet: IID.__BULLET_SNIPER__,
     stack: 1,
     loot: LOOTID.__AK47__,
     wait: 10
@@ -19175,12 +19175,12 @@ var INVENTORY = [{
         [AREAS.__WORKBENCH2__, 180000]
     ], 13),
     idWeapon: 11,     
-    bullet: IID.__SNIPER__bullet,
+    bullet: IID.__BULLET_SNIPER__,
     stack: 1,
     loot: LOOTID.__SNIPER__,
     wait: 10
 }, {
-    id: IID.__WOOD__enwall,
+    id: IID.__WOOD_WALL__,
     itemButton: {
         src: ["img/inv-wood-wall-out.png", "img/inv-wood-wall-in.png", "img/inv-wood-wall-click.png"],
         img: [{
@@ -19223,7 +19223,7 @@ var INVENTORY = [{
         }
     },
     wall: 1,
-    idWall: IID.__WOOD__enwall,
+    idWall: IID.__WOOD_WALL__,
     lowWall: 0,
     door: 0,
     broke: 1,
@@ -19495,7 +19495,7 @@ var INVENTORY = [{
     life: 3000,
     score: 0
 }, {
-    id: IID.__STONE__wall,
+    id: IID.__STONE_WALL__,
     itemButton: {
         src: ["img/inv-stone-wall-out.png", "img/inv-stone-wall-in.png", "img/inv-stone-wall-click.png"],
         img: [{
@@ -19538,7 +19538,7 @@ var INVENTORY = [{
         }
     },
     wall: 1,
-    idWall: IID.__STONE__wall,
+    idWall: IID.__STONE_WALL__,
     lowWall: 0,
     door: 0,
     broke: 1,
@@ -19810,7 +19810,7 @@ var INVENTORY = [{
     life: 7000,
     score: 0
 }, {
-    id: IID.__STEEL__wall,
+    id: IID.__STEEL_WALL__,
     itemButton: {
         src: ["img/inv-steel-wall-out.png", "img/inv-steel-wall-in.png", "img/inv-steel-wall-click.png"],
         img: [{
@@ -19825,7 +19825,7 @@ var INVENTORY = [{
         [IID.__SHAPED_METAL__, 3]
     ], 1, [
         [AREAS.__WORKBENCH2__, 20000]
-    ], 6, IID.__STONE__wall),
+    ], 6, IID.__STONE_WALL__),
     idWeapon: 21,     
     fuel: -1,
     zid: 1,
@@ -19853,7 +19853,7 @@ var INVENTORY = [{
         }
     },
     wall: 1,
-    idWall: IID.__STEEL__wall,
+    idWall: IID.__STEEL_WALL__,
     lowWall: 0,
     door: 0,
     broke: 1,
@@ -20125,7 +20125,7 @@ var INVENTORY = [{
     life: 15000,
     score: 0
 }, {
-    id: IID.__WOOD__door,
+    id: IID.__WOOD_DOOR__,
     itemButton: {
         src: ["img/inv-wood-door-out.png", "img/inv-wood-door-in.png", "img/inv-wood-door-click.png"],
         img: [{
@@ -20229,7 +20229,7 @@ var INVENTORY = [{
     life: 2000,
     score: 0
 }, {
-    id: IID.__STONE__door,
+    id: IID.__STONE_DOOR__,
     itemButton: {
         src: ["img/inv-stone-door-out.png", "img/inv-stone-door-in.png", "img/inv-stone-door-click.png"],
         img: [{
@@ -20333,7 +20333,7 @@ var INVENTORY = [{
     life: 5000,
     score: 0
 }, {
-    id: IID.__STEEL__door,
+    id: IID.__STEEL_DOOR__,
     itemButton: {
         src: ["img/inv-steel-door-out.png", "img/inv-steel-door-in.png", "img/inv-steel-door-click.png"],
         img: [{
@@ -20348,7 +20348,7 @@ var INVENTORY = [{
         [IID.__SHAPED_METAL__, 6]
     ], 1, [
         [AREAS.__WORKBENCH2__, 30000]
-    ], 6, IID.__STONE__door),
+    ], 6, IID.__STONE_DOOR__),
     idWeapon: 21,     
     fuel: -1,
     zid: 0,
@@ -20493,7 +20493,7 @@ var INVENTORY = [{
     collision: 1,
     areaEffect: __WARM__,
     draw: Render.campfire,
-    VvmvM: Render.campfireLight,
+    drawTop: Render.campfireLight,
     packetId: 16,
     interact: {
         src: "img/e-campfire.png",
@@ -20557,7 +20557,7 @@ var INVENTORY = [{
     stack: 255,
     loot: LOOTID.__BULLET_SHOTGUN__
 }, {
-    id: IID.__SNIPER__bullet,
+    id: IID.__BULLET_SNIPER__,
     itemButton: {
         src: ["img/inv-bullet-sniper-out.png", "img/inv-bullet-sniper-in.png", "img/inv-bullet-sniper-click.png"],
         img: [{
@@ -20856,7 +20856,7 @@ var INVENTORY = [{
     rad: 0.022,
     speed: -0.01
 }, {
-    id: IID.__WOOD__arrow,
+    id: IID.__WOOD_ARROW__,
     itemButton: {
         src: ["img/inv-wood-arrow-out.png", "img/inv-wood-arrow-in.png", "img/inv-wood-arrow-click.png"],
         img: [{
@@ -20876,7 +20876,7 @@ var INVENTORY = [{
     stack: 255,
     loot: LOOTID.__WOOD_ARROW__
 }, {
-    id: IID.__CAMPFIRE__bbq,
+    id: IID.__CAMPFIRE_BBQ__,
     itemButton: {
         src: ["img/inv-campfire-bbq-out.png", "img/inv-campfire-bbq-in.png", "img/inv-campfire-bbq-click.png"],
         img: [{
@@ -20932,7 +20932,7 @@ var INVENTORY = [{
     collision: 1,
     areaEffect: __WARM__,
     draw: Render.campfire,
-    VvmvM: Render.campfireLight,
+    drawTop: Render.campfireLight,
     packetId: 16,
     interact: {
         src: "img/e-campfire-bbq.png",
@@ -21049,7 +21049,7 @@ var INVENTORY = [{
     life: 3000,
     score: 0
 }, {
-    id: IID.__WOOD__door1,
+    id: IID.__WOOD_BIGDOOR__,
     itemButton: {
         src: ["img/inv-wood-door1-out.png", "img/inv-wood-door1-in.png", "img/inv-wood-door1-click.png"],
         img: [{
@@ -21153,7 +21153,7 @@ var INVENTORY = [{
     life: 2500,
     score: 0
 }, {
-    id: IID.__STONE__door1,
+    id: IID.__STONE_BIGDOOR__,
     itemButton: {
         src: ["img/inv-stone-door1-out.png", "img/inv-stone-door1-in.png", "img/inv-stone-door1-click.png"],
         img: [{
@@ -21257,7 +21257,7 @@ var INVENTORY = [{
     life: 6000,
     score: 0
 }, {
-    id: IID.__STEEL__door1,
+    id: IID.__STEEL_BIGDOOR__,
     itemButton: {
         src: ["img/inv-steel-door1-out.png", "img/inv-steel-door1-in.png", "img/inv-steel-door1-click.png"],
         img: [{
@@ -21272,7 +21272,7 @@ var INVENTORY = [{
         [IID.__SHAPED_METAL__, 9]
     ], 1, [
         [AREAS.__WORKBENCH2__, 40000]
-    ], 6, IID.__STONE__door1),
+    ], 6, IID.__STONE_BIGDOOR__),
     idWeapon: 21,     
     fuel: -1,
     zid: 1,
@@ -21596,7 +21596,7 @@ var INVENTORY = [{
     stack: 255,
     loot: LOOTID.__GASOLINE__
 }, {
-    id: IID.__SULFUR__pickaxe,
+    id: IID.__SULFUR_PICKAXE__,
     itemButton: {
         src: ["img/inv-sulfur-pickaxe-out.png", "img/inv-sulfur-pickaxe-in.png", "img/inv-sulfur-pickaxe-click.png"],
         img: [{
@@ -21613,7 +21613,7 @@ var INVENTORY = [{
         [IID.__SULFUR__, 6]
     ], 1, [
         [AREAS.__WORKBENCH2__, 90000]
-    ], 9, IID.__STEEL__pickaxe),
+    ], 9, IID.__STEEL_PICKAXE__),
     idWeapon: 22,     
     stack: 1,
     loot: LOOTID.__SULFUR_PICKAXE__,
@@ -21772,7 +21772,7 @@ var INVENTORY = [{
     life: 300,
     score: 0
 }, {
-    id: IID.__WOOD__floor1,
+    id: IID.__WOOD_FLOOR__,
     itemButton: {
         src: ["img/inv-wood-floor-out.png", "img/inv-wood-floor-in.png", "img/inv-wood-floor-click.png"],
         img: [{
@@ -21815,7 +21815,7 @@ var INVENTORY = [{
         }
     },
     wall: 1,
-    idWall: IID.__WOOD__floor1,
+    idWall: IID.__WOOD_FLOOR__,
     lowWall: 0,
     door: 0,
     broke: 1,
@@ -23483,7 +23483,7 @@ var INVENTORY = [{
     detail: new Detail("RadAway", "Reduce your radioactivity a lot.", SKILLS.__DRUG__, [
         [IID.__SYRINGE__, 1],
         [IID.__CHEMICAL_COMPONENT__, 1],
-        [IID.__MUSHROOM1__2, 1]
+        [IID.__MUSHROOM2__, 1]
     ], 1, [
         [AREAS.__AGITATOR__, 45000]
     ]),
@@ -23729,7 +23729,7 @@ var INVENTORY = [{
     loot: LOOTID.__SAWED_OFF_SHOTGUN__,
     wait: 10
 }, {
-    id: IID.__STONE__floor1,
+    id: IID.__STONE_FLOOR__,
     itemButton: {
         src: ["img/inv-stone-floor-out.png", "img/inv-stone-floor-in.png", "img/inv-stone-floor-click.png"],
         img: [{
@@ -23772,7 +23772,7 @@ var INVENTORY = [{
         }
     },
     wall: 1,
-    idWall: IID.__STONE__floor1,
+    idWall: IID.__STONE_FLOOR__,
     lowWall: 0,
     door: 0,
     broke: 1,
@@ -24043,7 +24043,7 @@ var INVENTORY = [{
     life: 8000,
     score: 0
 }, {
-    id: IID.__STONE__floor2,
+    id: IID.__TILING_FLOOR__,
     itemButton: {
         src: ["img/inv-tiling-floor-out.png", "img/inv-tiling-floor-in.png", "img/inv-tiling-floor-click.png"],
         img: [{
@@ -24086,7 +24086,7 @@ var INVENTORY = [{
         }
     },
     wall: 1,
-    idWall: IID.__STONE__floor2,
+    idWall: IID.__TILING_FLOOR__,
     lowWall: 0,
     door: 0,
     broke: 1,
@@ -24657,7 +24657,7 @@ var INVENTORY = [{
     stack: 255,
     loot: LOOTID.__ALLOYS__
 }, {
-    id: IID.__SULFUR__axe,
+    id: IID.__SULFUR_AXE__,
     itemButton: {
         src: ["img/inv-sulfur-axe-out.png", "img/inv-sulfur-axe-in.png", "img/inv-sulfur-axe-click.png"],
         img: [{
@@ -24669,13 +24669,13 @@ var INVENTORY = [{
         }]
     },
     detail: new Detail("Sulfur Axe", "You look cool with it.", SKILLS.__TOOL__, [
-        [IID.__STONE__axe, 1],
+        [IID.__STONE_AXE__, 1],
         [IID.__ALLOYS__, 8],
         [IID.__SHAPED_METAL__, 10],
         [IID.__SULFUR__, 20]
     ], 1, [
         [AREAS.__WORKBENCH2__, 200000]
-    ], 10, IID.__STONE__axe),
+    ], 10, IID.__STONE_AXE__),
     idWeapon: 35,     
     stack: 1,
     loot: LOOTID.__SULFUR_AXE__,
@@ -25109,7 +25109,7 @@ var INVENTORY = [{
     rad: 0,
     speed: -0.03
 }, {
-    id: IID.__LEATHER_BOAR__jacket,
+    id: IID.__ARMOR_FIRE_1__,
     itemButton: {
         src: ["img/inv-leather-jacket-out.png", "img/inv-leather-jacket-in.png", "img/inv-leather-jacket-click.png"],
         img: [{
@@ -25154,7 +25154,7 @@ var INVENTORY = [{
         [IID.__STRING__, 4],
         [IID.__LEATHER_BOAR__, 6],
         [IID.__ALLOYS__, 2],
-        [IID.__LEATHER_BOAR__jacket, 1]
+        [IID.__ARMOR_FIRE_1__, 1]
     ], 1, [
         [AREAS.__WEAVING__, 100000]
     ], 12),
@@ -25297,7 +25297,7 @@ var INVENTORY = [{
     rad: 0.01,
     speed: -0.02
 }, {
-    id: IID.__WOOD__espike,
+    id: IID.__WOOD_SPIKE__,
     itemButton: {
         src: ["img/inv-wood-spike-out.png", "img/inv-wood-spike-in.png", "img/inv-wood-spike-click.png"],
         img: [{
@@ -25615,8 +25615,8 @@ var INVENTORY = [{
     detail: new Detail("Ghoul Drug", "Ghouls does not attack you.", SKILLS.__DRUG__, [
         [IID.__SYRINGE__, 1],
         [IID.__CHEMICAL_COMPONENT__, 1],
-        [IID.__MUSHROOM1__2, 1],
-        [IID.__MUSHROOM1__3, 1],
+        [IID.__MUSHROOM2__, 1],
+        [IID.__MUSHROOM3__, 1],
         [IID.__GHOUL_BLOOD__, 1]
     ], 1, [
         [AREAS.__AGITATOR__, 30000]
@@ -25646,7 +25646,7 @@ var INVENTORY = [{
     idWeapon: 41,     
     score: 24
 }, {
-    id: IID.__MUSHROOM1__2,
+    id: IID.__MUSHROOM2__,
     itemButton: {
         src: ["img/inv-mushroom2-out.png", "img/inv-mushroom2-in.png", "img/inv-mushroom2-click.png"],
         img: [{
@@ -25666,7 +25666,7 @@ var INVENTORY = [{
     idWeapon: 42,     
     score: 24
 }, {
-    id: IID.__MUSHROOM1__3,
+    id: IID.__MUSHROOM3__,
     itemButton: {
         src: ["img/inv-mushroom3-out.png", "img/inv-mushroom3-in.png", "img/inv-mushroom3-click.png"],
         img: [{
@@ -26119,7 +26119,7 @@ var INVENTORY = [{
         [IID.__SYRINGE__, 1],
         [IID.__CHEMICAL_COMPONENT__, 1],
         [IID.__MUSHROOM1__, 1],
-        [IID.__ANTIDOTE__flower, 1]
+        [IID.__ANTIDOTE_FLOWER__, 1]
     ], 1, [
         [AREAS.__AGITATOR__, 45000]
     ], 14),
@@ -26128,7 +26128,7 @@ var INVENTORY = [{
     loot: LOOTID.__ANTIDOTE__,
     wait: 10
 }, {
-    id: IID.__ANTIDOTE__flower,
+    id: IID.__ANTIDOTE_FLOWER__,
     itemButton: {
         src: ["img/inv-antidote-flower-out.png", "img/inv-antidote-flower-in.png", "img/inv-antidote-flower-click.png"],
         img: [{
@@ -26163,7 +26163,7 @@ var INVENTORY = [{
     ]),
     stack: 100,
     loot: LOOTID.__SEED_TREE__,
-    fruit: LOOTID.orange,
+    fruit:  LOOTID.__ORANGE__,
     wait: 10,
     idWeapon: 21,     
     fuel: -1,
@@ -26566,7 +26566,7 @@ var INVENTORY = [{
     life: 250,
     score: 0
 }, {
-    id: IID.__CABLE0__2,
+    id: IID.__CABLE1__,
     itemButton: {
         src: ["img/inv-wire1-out.png", "img/inv-wire1-in.png", "img/inv-wire1-click.png"],
         img: [{
@@ -26639,7 +26639,7 @@ var INVENTORY = [{
     life: 250,
     score: 0
 }, {
-    id: IID.__CABLE0__3,
+    id: IID.__CABLE2__,
     itemButton: {
         src: ["img/inv-wire2-out.png", "img/inv-wire2-in.png", "img/inv-wire2-click.png"],
         img: [{
@@ -26712,7 +26712,7 @@ var INVENTORY = [{
     life: 250,
     score: 0
 }, {
-    id: IID.__CABLE0__4,
+    id: IID.__CABLE3__,
     itemButton: {
         src: ["img/inv-wire3-out.png", "img/inv-wire3-in.png", "img/inv-wire3-click.png"],
         img: [{
@@ -27154,7 +27154,7 @@ var INVENTORY = [{
     radius: 22,
     areaEffect: 0,
     draw: Render.lamp,
-    VvmvM: Render.lampLight,
+    drawTop: Render.lampLight,
     packetId: 36,
     interact: {
         src: "img/e-light.png",
@@ -27248,7 +27248,7 @@ var INVENTORY = [{
     life: 600,
     score: 0
 }, {
-    id: IID.__CABLE0__wall,
+    id: IID.__CABLE_WALL__,
     itemButton: {
         src: ["img/inv-cable-wall-out.png", "img/inv-cable-wall-in.png", "img/inv-cable-wall-click.png"],
         img: [{
@@ -27524,7 +27524,7 @@ var INVENTORY = [{
     life: 250,
     score: 0
 }, {
-    id: IID.__STONE__cave,
+    id: IID.__STONE_CAVE__,
     itemButton: {
         src: ["img/inv-stone-cave-out.png", "img/inv-stone-cave-in.png", "img/inv-stone-cave-click.png"],
         img: [{
@@ -27567,7 +27567,7 @@ var INVENTORY = [{
         }
     },
     wall: 1,
-    idWall: IID.__STONE__cave,
+    idWall: IID.__STONE_CAVE__,
     lowWall: 0,
     door: 0,
     broke: 1,
@@ -27883,7 +27883,7 @@ var INVENTORY = [{
         }
     },
     wall: 1,
-    idWall: IID.__STONE__cave,
+    idWall: IID.__STONE_CAVE__,
     lowWall: 0,
     door: 0,
     broke: 1,
@@ -28860,7 +28860,7 @@ var INVENTORY = [{
     life: 500,
     score: 0
 }, {
-    id: IID.__CABLE0__4,
+    id: IID.__CABLE3__,
     itemButton: {
         src: ["img/inv-wire4-out.png", "img/inv-wire4-in.png", "img/inv-wire4-click.png"],
         img: [{
@@ -29925,7 +29925,7 @@ FURNITURE[FURNITUREID.__AMMOBOX0__].loot = [
     [IID.__SAWED_OFF_SHOTGUN__, 1, 0.001], 
     [IID.__DESERT_EAGLE__, 1, 0.001], 
     [IID.__SNIPER__, 1, 0.001],
-    [IID.__SNIPER__bullet, 50, 0.01],
+    [IID.__BULLET_SNIPER__, 50, 0.01],
     [IID.__ENERGY_CELLS__, 20, 0.01],
     [IID.__LASER_PISTOL__, 1, 0.0008],
     [IID.__DYNAMITE__, 2, 0.005],
@@ -29937,11 +29937,11 @@ FURNITURE[FURNITUREID.__AMMOBOX0__].loot = [
     [IID.__BULLET_9MM__, 50, 0.01],
     [IID.__WOOD_CROSSBOW__, 1, 0.003],
     [IID.__WOOD_CROSSARROW__, 50, 0.01],
-    [IID.__STONE__axe, 1, 0.005],
+    [IID.__STONE_AXE__, 1, 0.005],
     [IID.__ARMOR_PHYSIC_1__, 1, 0.005],
     [IID.__ARMOR_PHYSIC_2__, 1, 0.002],
     [IID.__ARMOR_PHYSIC_3__, 1, 0.001],
-    [IID.__LEATHER_BOAR__jacket, 1, 0.005],
+    [IID.__ARMOR_FIRE_1__, 1, 0.005],
     [IID.__ARMOR_FIRE_2__, 1, 0.002],
     [IID.__ARMOR_FIRE_3__, 1, 0.001],
     [IID.__ARMOR_TESLA_1__, 1, 0.002],
@@ -30000,7 +30000,7 @@ FURNITURE[FURNITUREID.__SAFE0__].loot = [
     [IID.__SHOTGUN__, 1, 0.002],
     [IID.__DESERT_EAGLE__, 1, 0.002],
     [IID.__SNIPER__, 1, 0.002],
-    [IID.__SNIPER__bullet, 50, 0.02],
+    [IID.__BULLET_SNIPER__, 50, 0.02],
     [IID.__BULLET_SHOTGUN__, 30, 0.02],
     [IID.__DYNAMITE__, 1, 0.01],
     [IID.__LANDMINE__, 1, 0.01],
@@ -30239,7 +30239,7 @@ var LOOT = [{
         isLoaded: 0
     },
     src: "img/day-ground-stone-pickaxe.png",
-    idItem: IID.__STONE__pickaxe,
+    idItem: IID.__STONE_PICKAXE__,
     amount: 1,
     scale: 0.7,
     angle: 0.3
@@ -30249,7 +30249,7 @@ var LOOT = [{
         isLoaded: 0
     },
     src: "img/day-ground-steel-pickaxe.png",
-    idItem: IID.__STEEL__pickaxe,
+    idItem: IID.__STEEL_PICKAXE__,
     amount: 1,
     scale: 0.7,
     angle: 0.3
@@ -30259,7 +30259,7 @@ var LOOT = [{
         isLoaded: 0
     },
     src: "img/day-ground-stone-axe.png",
-    idItem: IID.__STONE__axe,
+    idItem: IID.__STONE_AXE__,
     amount: 1,
     scale: 0.7,
     angle: 0.5
@@ -30349,7 +30349,7 @@ var LOOT = [{
         isLoaded: 0
     },
     src: "img/day-ground-wood-wall.png",
-    idItem: IID.__WOOD__enwall,
+    idItem: IID.__WOOD_WALL__,
     amount: 1,
     scale: 0.9,
     angle: 0
@@ -30359,7 +30359,7 @@ var LOOT = [{
         isLoaded: 0
     },
     src: "img/day-ground-stone-wall.png",
-    idItem: IID.__STONE__wall,
+    idItem: IID.__STONE_WALL__,
     amount: 1,
     scale: 0.9,
     angle: 0
@@ -30369,7 +30369,7 @@ var LOOT = [{
         isLoaded: 0
     },
     src: "img/day-ground-steel-wall.png",
-    idItem: IID.__STEEL__wall,
+    idItem: IID.__STEEL_WALL__,
     amount: 1,
     scale: 0.9,
     angle: 0
@@ -30379,7 +30379,7 @@ var LOOT = [{
         isLoaded: 0
     },
     src: "img/day-ground-wood-door.png",
-    idItem: IID.__WOOD__door,
+    idItem: IID.__WOOD_DOOR__,
     amount: 1,
     scale: 0.9,
     angle: 0
@@ -30389,7 +30389,7 @@ var LOOT = [{
         isLoaded: 0
     },
     src: "img/day-ground-stone-door.png",
-    idItem: IID.__STONE__door,
+    idItem: IID.__STONE_DOOR__,
     amount: 1,
     scale: 0.9,
     angle: 0
@@ -30399,7 +30399,7 @@ var LOOT = [{
         isLoaded: 0
     },
     src: "img/day-ground-steel-door.png",
-    idItem: IID.__STEEL__door,
+    idItem: IID.__STEEL_DOOR__,
     amount: 1,
     scale: 0.9,
     angle: 0
@@ -30439,7 +30439,7 @@ var LOOT = [{
         isLoaded: 0
     },
     src: "img/day-ground-bullet-sniper.png",
-    idItem: IID.__SNIPER__bullet,
+    idItem: IID.__BULLET_SNIPER__,
     amount: 1,
     scale: 1.1,
     angle: 0
@@ -30549,7 +30549,7 @@ var LOOT = [{
         isLoaded: 0
     },
     src: "img/day-ground-wood-arrow.png",
-    idItem: IID.__WOOD__arrow,
+    idItem: IID.__WOOD_ARROW__,
     amount: 1,
     scale: 0.8,
     angle: 0
@@ -30559,7 +30559,7 @@ var LOOT = [{
         isLoaded: 0
     },
     src: "img/day-ground-campfire-bbq.png",
-    idItem: IID.__CAMPFIRE__bbq,
+    idItem: IID.__CAMPFIRE_BBQ__,
     amount: 1,
     scale: 0.8,
     angle: 0
@@ -30579,7 +30579,7 @@ var LOOT = [{
         isLoaded: 0
     },
     src: "img/day-ground-wood-door1.png",
-    idItem: IID.__WOOD__door1,
+    idItem: IID.__WOOD_BIGDOOR__,
     amount: 1,
     scale: 0.9,
     angle: 0
@@ -30589,7 +30589,7 @@ var LOOT = [{
         isLoaded: 0
     },
     src: "img/day-ground-stone-door1.png",
-    idItem: IID.__STONE__door1,
+    idItem: IID.__STONE_BIGDOOR__,
     amount: 1,
     scale: 0.9,
     angle: 0
@@ -30599,7 +30599,7 @@ var LOOT = [{
         isLoaded: 0
     },
     src: "img/day-ground-steel-door1.png",
-    idItem: IID.__STEEL__door1,
+    idItem: IID.__STEEL_BIGDOOR__,
     amount: 1,
     scale: 0.9,
     angle: 0
@@ -30669,7 +30669,7 @@ var LOOT = [{
         isLoaded: 0
     },
     src: "img/day-ground-sulfur-pickaxe.png",
-    idItem: IID.__SULFUR__pickaxe,
+    idItem: IID.__SULFUR_PICKAXE__,
     amount: 1,
     scale: 0.7,
     angle: 0.3
@@ -30699,7 +30699,7 @@ var LOOT = [{
         isLoaded: 0
     },
     src: "img/day-ground-wood-floor.png",
-    idItem: IID.__WOOD__floor1,
+    idItem: IID.__WOOD_FLOOR__,
     amount: 1,
     scale: 0.9,
     angle: 0
@@ -30909,7 +30909,7 @@ var LOOT = [{
         isLoaded: 0
     },
     src: "img/day-ground-stone-floor.png",
-    idItem: IID.__STONE__floor1,
+    idItem: IID.__STONE_FLOOR__,
     amount: 1,
     scale: 0.8,
     angle: 0
@@ -30919,7 +30919,7 @@ var LOOT = [{
         isLoaded: 0
     },
     src: "img/day-ground-tiling-floor.png",
-    idItem: IID.__STONE__floor2,
+    idItem: IID.__TILING_FLOOR__,
     amount: 1,
     scale: 0.8,
     angle: 0
@@ -31019,7 +31019,7 @@ var LOOT = [{
         isLoaded: 0
     },
     src: "img/day-ground-sulfur-axe.png",
-    idItem: IID.__SULFUR__axe,
+    idItem: IID.__SULFUR_AXE__,
     amount: 1,
     scale: 0.7,
     angle: 0.5
@@ -31109,7 +31109,7 @@ var LOOT = [{
         isLoaded: 0
     },
     src: "img/day-ground-leather-jacket.png",
-    idItem: IID.__LEATHER_BOAR__jacket,
+    idItem: IID.__ARMOR_FIRE_1__,
     amount: 1,
     scale: 0.8,
     angle: 0
@@ -31169,7 +31169,7 @@ var LOOT = [{
         isLoaded: 0
     },
     src: "img/day-ground-wood-spike.png",
-    idItem: IID.__WOOD__espike,
+    idItem: IID.__WOOD_SPIKE__,
     amount: 1,
     scale: 0.8,
     angle: 0
@@ -31259,7 +31259,7 @@ var LOOT = [{
         isLoaded: 0
     },
     src: "img/day-ground-mushroom2.png",
-    idItem: IID.__MUSHROOM1__2,
+    idItem: IID.__MUSHROOM2__,
     amount: 1,
     scale: 0.8,
     angle: 0
@@ -31269,7 +31269,7 @@ var LOOT = [{
         isLoaded: 0
     },
     src: "img/day-ground-mushroom3.png",
-    idItem: IID.__MUSHROOM1__3,
+    idItem: IID.__MUSHROOM3__,
     amount: 1,
     scale: 0.8,
     angle: 0
@@ -31389,7 +31389,7 @@ var LOOT = [{
         isLoaded: 0
     },
     src: "img/day-ground-antidote-flower.png",
-    idItem: IID.__ANTIDOTE__flower,
+    idItem: IID.__ANTIDOTE_FLOWER__,
     amount: 1,
     scale: 0.8,
     angle: 0
@@ -31469,7 +31469,7 @@ var LOOT = [{
         isLoaded: 0
     },
     src: "img/day-ground-wire1.png",
-    idItem: IID.__CABLE0__2,
+    idItem: IID.__CABLE1__,
     amount: 1,
     scale: 0.8,
     angle: 0
@@ -31479,7 +31479,7 @@ var LOOT = [{
         isLoaded: 0
     },
     src: "img/day-ground-wire2.png",
-    idItem: IID.__CABLE0__3,
+    idItem: IID.__CABLE2__,
     amount: 1,
     scale: 0.8,
     angle: 0
@@ -31489,7 +31489,7 @@ var LOOT = [{
         isLoaded: 0
     },
     src: "img/day-ground-wire3.png",
-    idItem: IID.__CABLE0__4,
+    idItem: IID.__CABLE3__,
     amount: 1,
     scale: 0.8,
     angle: 0
@@ -31549,7 +31549,7 @@ var LOOT = [{
         isLoaded: 0
     },
     src: "img/day-ground-cable-wall.png",
-    idItem: IID.__CABLE0__wall,
+    idItem: IID.__CABLE_WALL__,
     amount: 1,
     scale: 0.8,
     angle: 0
@@ -31579,7 +31579,7 @@ var LOOT = [{
         isLoaded: 0
     },
     src: "img/day-ground-stone-cave.png",
-    idItem: IID.__STONE__cave,
+    idItem: IID.__STONE_CAVE__,
     amount: 1,
     scale: 0.8,
     angle: 0
@@ -31629,7 +31629,7 @@ var LOOT = [{
         isLoaded: 0
     },
     src: "img/day-ground-wire4.png",
-    idItem: IID.__CABLE0__4,
+    idItem: IID.__CABLE3__,
     amount: 1,
     scale: 0.8,
     angle: 0
@@ -31682,7 +31682,7 @@ var RESOURCES = [];
 RESOURCES[RESID.WOOD] = {
     loot: [LOOTID.__BIG_WOOD__, LOOTID.__MEDIUM_WOOD__, LOOTID.__SMALL_WOOD__],
     rare: [0.2, 0.4, 1],
-    tool: [-1, IID.__HACHET__, IID.__STONE__axe, IID.__SULFUR__axe],
+    tool: [-1, IID.__HACHET__, IID.__STONE_AXE__, IID.__SULFUR_AXE__],
     effect: [1, 2, 4, 5],
     areaEffect: 0,
     type: [{
@@ -31769,7 +31769,7 @@ RESOURCES[RESID.WOOD] = {
 RESOURCES[RESID.LEAFTREE] = {
     loot: [LOOTID.acorn, LOOTID.__BIG_WOOD__, LOOTID.__MEDIUM_WOOD__, LOOTID.__SMALL_WOOD__],
     rare: [0.015, 0.2, 0.4, 1],
-    tool: [-1, IID.__HACHET__, IID.__STONE__axe, IID.__SULFUR__axe],
+    tool: [-1, IID.__HACHET__, IID.__STONE_AXE__, IID.__SULFUR_AXE__],
     effect: [1, 2, 4, 5],
     areaEffect: 0,
     type: [{
@@ -31916,7 +31916,7 @@ RESOURCES[RESID.LEAFTREE] = {
 RESOURCES[RESID.STONE] = {
     loot: [LOOTID.__BIG_STONE__, LOOTID.__MEDIUM_STONE__, LOOTID.__SMALL_STONE__],
     rare: [0.1, 0.3, 1],
-    tool: [IID.__HACHET__, IID.__STONE__pickaxe, IID.__STEEL__pickaxe, IID.__SULFUR__pickaxe],
+    tool: [IID.__HACHET__, IID.__STONE_PICKAXE__, IID.__STEEL_PICKAXE__, IID.__SULFUR_PICKAXE__],
     effect: [1, 3, 4, 5],
     areaEffect: 0,
     type: [{
@@ -32018,7 +32018,7 @@ RESOURCES[RESID.STONE] = {
 RESOURCES[RESID.STEEL] = {
     loot: [LOOTID.__STEEL__, LOOTID.__BIG_STONE__, LOOTID.__MEDIUM_STONE__, LOOTID.__SMALL_STONE__],
     rare: [0.4, 0.45, 0.6, 1],
-    tool: [IID.__STONE__pickaxe, IID.__STEEL__pickaxe, IID.__SULFUR__pickaxe],
+    tool: [IID.__STONE_PICKAXE__, IID.__STEEL_PICKAXE__, IID.__SULFUR_PICKAXE__],
     effect: [1, 2, 3],
     areaEffect: 0,
     type: [{
@@ -32090,7 +32090,7 @@ RESOURCES[RESID.STEEL] = {
 RESOURCES[RESID.SULFUR] = {
     loot: [LOOTID.sulfur, LOOTID.__BIG_STONE__, LOOTID.__MEDIUM_STONE__, LOOTID.__SMALL_STONE__],
     rare: [0.4, 0.45, 0.6, 1],
-    tool: [IID.__STEEL__pickaxe, IID.__SULFUR__pickaxe],
+    tool: [IID.__STEEL_PICKAXE__, IID.__SULFUR_PICKAXE__],
     effect: [1, 2],
     areaEffect: 0,
     type: [{
@@ -32147,7 +32147,7 @@ RESOURCES[RESID.SULFUR] = {
 RESOURCES[RESID.URANIUM] = {
     loot: [LOOTID.uranium, LOOTID.__BIG_STONE__, LOOTID.__MEDIUM_STONE__, LOOTID.__SMALL_STONE__],
     rare: [0.3, 0.45, 0.6, 1],
-    tool: [IID.__SULFUR__pickaxe],
+    tool: [IID.__SULFUR_PICKAXE__],
     effect: [1],
     areaEffect: __RADIATION__,
     type: [{
@@ -32202,7 +32202,7 @@ RESOURCES[RESID.URANIUM] = {
     score: 140
 };
 RESOURCES[RESID.ORANGETREE] = {
-    loot: [LOOTID.seedorange, LOOTID.orange],
+    loot: [LOOTID.seedorange,  LOOTID.__ORANGE__],
     rare: [0.05, 1],
     tool: [-1],
     effect: [1],
@@ -32390,7 +32390,7 @@ RESOURCES[RESID.TOMATOTREE] = {
 RESOURCES[RESID.BOAR] = {
     loot: [LOOTID.rawsteak, LOOTID.__ANIMAL_FAT__, LOOTID.__LEATHER_BOAR__],
     rare: [0.25, 0.85, 1],
-    tool: [IID.__HACHET__, IID.__STONE__axe, IID.__SULFUR__axe],
+    tool: [IID.__HACHET__, IID.__STONE_AXE__, IID.__SULFUR_AXE__],
     effect: [1, 3, 4],
     areaEffect: 0,
     type: [{
@@ -32417,7 +32417,7 @@ RESOURCES[RESID.BOAR] = {
 RESOURCES[RESID.DEER] = {
     loot: [LOOTID.rawsteak, LOOTID.__ANIMAL_TENDON__, LOOTID.__LEATHER_BOAR__, LOOTID.__ANIMAL_FAT__],
     rare: [0.28, 0.7, 0.85, 1],
-    tool: [IID.__HACHET__, IID.__STONE__axe, IID.__SULFUR__axe],
+    tool: [IID.__HACHET__, IID.__STONE_AXE__, IID.__SULFUR_AXE__],
     effect: [1, 3, 4],
     areaEffect: 0,
     type: [{
@@ -32776,7 +32776,7 @@ try {
             r: 0
         };
         _WF = {
-            v: IID.__WOOD__floor1,
+            v: IID.__WOOD_FLOOR__,
             b: 0,
             V: -1,
             r: 0
@@ -32788,13 +32788,13 @@ try {
             r: 0
         };
         _SF = {
-            v: IID.__STONE__floor1,
+            v: IID.__STONE_FLOOR__,
             b: 0,
             V: -1,
             r: 0
         };
         _TF = {
-            v: IID.__STONE__floor2,
+            v: IID.__TILING_FLOOR__,
             b: 0,
             V: -1,
             r: 0
@@ -32813,145 +32813,145 @@ try {
         };
         _WW = {
             v: 0,
-            b: IID.__WOOD__enwall,
+            b: IID.__WOOD_WALL__,
             V: -1,
             r: 0
         };
         _WWWF = {
-            v: IID.__WOOD__floor1,
-            b: IID.__WOOD__enwall,
+            v: IID.__WOOD_FLOOR__,
+            b: IID.__WOOD_WALL__,
             V: -1,
             r: 0
         };
         _WWLF = {
             v: IID.__WOOD__floor2,
-            b: IID.__WOOD__enwall,
+            b: IID.__WOOD_WALL__,
             V: -1,
             r: 0
         };
         _WWSF = {
-            v: IID.__STONE__floor1,
-            b: IID.__WOOD__enwall,
+            v: IID.__STONE_FLOOR__,
+            b: IID.__WOOD_WALL__,
             V: -1,
             r: 0
         };
         _WWTF = {
-            v: IID.__STONE__floor2,
-            b: IID.__WOOD__enwall,
+            v: IID.__TILING_FLOOR__,
+            b: IID.__WOOD_WALL__,
             V: -1,
             r: 0
         };
         _WWGF = {
             v: IID.__GOLD_FLOOR__,
-            b: IID.__WOOD__enwall,
+            b: IID.__WOOD_WALL__,
             V: -1,
             r: 0
         };
         _WWRF = {
             v: IID.__RED_FLOOR__,
-            b: IID.__WOOD__enwall,
+            b: IID.__WOOD_WALL__,
             V: -1,
             r: 0
         };
         _SW = {
             v: 0,
-            b: IID.__STONE__wall,
+            b: IID.__STONE_WALL__,
             V: -1,
             r: 0
         };
         _SWWF = {
-            v: IID.__WOOD__floor1,
-            b: IID.__STONE__wall,
+            v: IID.__WOOD_FLOOR__,
+            b: IID.__STONE_WALL__,
             V: -1,
             r: 0
         };
         _SWLF = {
             v: IID.__WOOD__floor2,
-            b: IID.__STONE__wall,
+            b: IID.__STONE_WALL__,
             V: -1,
             r: 0
         };
         _SWSF = {
-            v: IID.__STONE__floor1,
-            b: IID.__STONE__wall,
+            v: IID.__STONE_FLOOR__,
+            b: IID.__STONE_WALL__,
             V: -1,
             r: 0
         };
         _SWTF = {
-            v: IID.__STONE__floor2,
-            b: IID.__STONE__wall,
+            v: IID.__TILING_FLOOR__,
+            b: IID.__STONE_WALL__,
             V: -1,
             r: 0
         };
         _SWGF = {
             v: IID.__GOLD_FLOOR__,
-            b: IID.__STONE__wall,
+            b: IID.__STONE_WALL__,
             V: -1,
             r: 0
         };
         _SWRF = {
             v: IID.__RED_FLOOR__,
-            b: IID.__STONE__wall,
+            b: IID.__STONE_WALL__,
             V: -1,
             r: 0
         };
         _MW = {
             v: 0,
-            b: IID.__STEEL__wall,
+            b: IID.__STEEL_WALL__,
             V: -1,
             r: 0
         };
         _MWWF = {
-            v: IID.__WOOD__floor1,
-            b: IID.__STEEL__wall,
+            v: IID.__WOOD_FLOOR__,
+            b: IID.__STEEL_WALL__,
             V: -1,
             r: 0
         };
         _MWLF = {
             v: IID.__WOOD__floor2,
-            b: IID.__STEEL__wall,
+            b: IID.__STEEL_WALL__,
             V: -1,
             r: 0
         };
         _MWSF = {
-            v: IID.__STONE__floor1,
-            b: IID.__STEEL__wall,
+            v: IID.__STONE_FLOOR__,
+            b: IID.__STEEL_WALL__,
             V: -1,
             r: 0
         };
         _MWTF = {
-            v: IID.__STONE__floor2,
-            b: IID.__STEEL__wall,
+            v: IID.__TILING_FLOOR__,
+            b: IID.__STEEL_WALL__,
             V: -1,
             r: 0
         };
         _MWGF = {
             v: IID.__GOLD_FLOOR__,
-            b: IID.__STEEL__wall,
+            b: IID.__STEEL_WALL__,
             V: -1,
             r: 0
         };
         _MWRF = {
             v: IID.__RED_FLOOR__,
-            b: IID.__STEEL__wall,
+            b: IID.__STEEL_WALL__,
             V: -1,
             r: 0
         };
         _SC = {
             v: 0,
-            b: IID.__STONE__cave,
+            b: IID.__STONE_CAVE__,
             V: -1,
             r: 0
         };
         _SCSF = {
-            v: IID.__STONE__floor1,
-            b: IID.__STONE__cave,
+            v: IID.__STONE_FLOOR__,
+            b: IID.__STONE_CAVE__,
             V: -1,
             r: 0
         };
         _SCTF = {
-            v: IID.__STONE__floor2,
-            b: IID.__STONE__cave,
+            v: IID.__TILING_FLOOR__,
+            b: IID.__STONE_CAVE__,
             V: -1,
             r: 0
         };
@@ -32962,13 +32962,13 @@ try {
             r: 0
         };
         _BWSF = {
-            v: IID.__STONE__floor1,
+            v: IID.__STONE_FLOOR__,
             b: IID.__BUNKER_WALL__,
             V: -1,
             r: 0
         };
         _BWTF = {
-            v: IID.__STONE__floor2,
+            v: IID.__TILING_FLOOR__,
             b: IID.__BUNKER_WALL__,
             V: -1,
             r: 0
@@ -40596,7 +40596,7 @@ for (var i = 0; i < HOUSE.length; i++) {
 }
 var AREASTOITEM = [];
 AREASTOITEM[AREAS.__FIRE__] = IID.__CAMPFIRE__;
-AREASTOITEM[AREAS.__BBQ__] = IID.__CAMPFIRE__bbq;
+AREASTOITEM[AREAS.__BBQ__] = IID.__CAMPFIRE_BBQ__;
 AREASTOITEM[AREAS.__WORKBENCH__] = IID.__WORKBENCH__;
 AREASTOITEM[AREAS.__WORKBENCH2__] = IID.__WORKBENCH2__;
 AREASTOITEM[AREAS.__TESLA__] = IID.__TESLA__;
@@ -40766,7 +40766,7 @@ KIT[COUNTER++] = [{
     amount: 1,
     life: 255
 }, {
-    id: IID.__STONE__pickaxe,
+    id: IID.__STONE_PICKAXE__,
     amount: 1,
     life: 255
 }, {
@@ -40787,7 +40787,7 @@ KIT[COUNTER++] = [{
     amount: 1,
     life: 255
 }, {
-    id: IID.__STONE__pickaxe,
+    id: IID.__STONE_PICKAXE__,
     amount: 1,
     life: 255
 }, {
@@ -40812,11 +40812,11 @@ KIT[COUNTER++] = [{
     amount: 1,
     life: 255
 }, {
-    id: IID.__STONE__pickaxe,
+    id: IID.__STONE_PICKAXE__,
     amount: 1,
     life: 255
 }, {
-    id: IID.__CAMPFIRE__bbq,
+    id: IID.__CAMPFIRE_BBQ__,
     amount: 1,
     life: 255
 }, {
@@ -40837,11 +40837,11 @@ KIT[COUNTER++] = [{
     amount: 1,
     life: 255
 }, {
-    id: IID.__STONE__pickaxe,
+    id: IID.__STONE_PICKAXE__,
     amount: 1,
     life: 255
 }, {
-    id: IID.__CAMPFIRE__bbq,
+    id: IID.__CAMPFIRE_BBQ__,
     amount: 1,
     life: 255
 }, {
@@ -40849,7 +40849,7 @@ KIT[COUNTER++] = [{
     amount: 1,
     life: 255
 }, {
-    id: IID.__WOOD__arrow,
+    id: IID.__WOOD_ARROW__,
     amount: 20,
     life: 255
 }, {
@@ -40866,19 +40866,19 @@ KIT[COUNTER++] = [{
     amount: 1,
     life: 255
 }, {
-    id: IID.__STONE__pickaxe,
+    id: IID.__STONE_PICKAXE__,
     amount: 1,
     life: 255
 }, {
-    id: IID.__CAMPFIRE__bbq,
+    id: IID.__CAMPFIRE_BBQ__,
     amount: 1,
     life: 255
 }, {
-    id: IID.__WOOD__enwall,
+    id: IID.__WOOD_WALL__,
     amount: 10,
     life: 255
 }, {
-    id: IID.__WOOD__door,
+    id: IID.__WOOD_DOOR__,
     amount: 2,
     life: 255
 }, {
@@ -40895,19 +40895,19 @@ KIT[COUNTER++] = [{
     amount: 1,
     life: 255
 }, {
-    id: IID.__STONE__pickaxe,
+    id: IID.__STONE_PICKAXE__,
     amount: 1,
     life: 255
 }, {
-    id: IID.__CAMPFIRE__bbq,
+    id: IID.__CAMPFIRE_BBQ__,
     amount: 1,
     life: 255
 }, {
-    id: IID.__WOOD__enwall,
+    id: IID.__WOOD_WALL__,
     amount: 16,
     life: 255
 }, {
-    id: IID.__STONE__door,
+    id: IID.__STONE_DOOR__,
     amount: 2,
     life: 255
 }, {
@@ -40924,19 +40924,19 @@ KIT[COUNTER++] = [{
     amount: 1,
     life: 255
 }, {
-    id: IID.__STONE__pickaxe,
+    id: IID.__STONE_PICKAXE__,
     amount: 1,
     life: 255
 }, {
-    id: IID.__CAMPFIRE__bbq,
+    id: IID.__CAMPFIRE_BBQ__,
     amount: 1,
     life: 255
 }, {
-    id: IID.__STONE__wall,
+    id: IID.__STONE_WALL__,
     amount: 14,
     life: 255
 }, {
-    id: IID.__STONE__door,
+    id: IID.__STONE_DOOR__,
     amount: 2,
     life: 255
 }, {
@@ -40953,11 +40953,11 @@ KIT[COUNTER++] = [{
     amount: 1,
     life: 255
 }, {
-    id: IID.__STONE__pickaxe,
+    id: IID.__STONE_PICKAXE__,
     amount: 1,
     life: 255
 }, {
-    id: IID.__CAMPFIRE__bbq,
+    id: IID.__CAMPFIRE_BBQ__,
     amount: 1,
     life: 255
 }, {
@@ -40965,11 +40965,11 @@ KIT[COUNTER++] = [{
     amount: 1,
     life: 255
 }, {
-    id: IID.__STONE__wall,
+    id: IID.__STONE_WALL__,
     amount: 14,
     life: 255
 }, {
-    id: IID.__STONE__door,
+    id: IID.__STONE_DOOR__,
     amount: 2,
     life: 255
 }, {
@@ -40986,11 +40986,11 @@ KIT[COUNTER++] = [{
     amount: 1,
     life: 255
 }, {
-    id: IID.__STONE__pickaxe,
+    id: IID.__STONE_PICKAXE__,
     amount: 1,
     life: 255
 }, {
-    id: IID.__CAMPFIRE__bbq,
+    id: IID.__CAMPFIRE_BBQ__,
     amount: 1,
     life: 255
 }, {
@@ -40998,11 +40998,11 @@ KIT[COUNTER++] = [{
     amount: 1,
     life: 255
 }, {
-    id: IID.__STONE__wall,
+    id: IID.__STONE_WALL__,
     amount: 14,
     life: 255
 }, {
-    id: IID.__STONE__door,
+    id: IID.__STONE_DOOR__,
     amount: 2,
     life: 255
 }, {
@@ -41019,19 +41019,19 @@ KIT[COUNTER++] = [{
     amount: 1,
     life: 255
 }, {
-    id: IID.__STONE__pickaxe,
+    id: IID.__STONE_PICKAXE__,
     amount: 1,
     life: 255
 }, {
-    id: IID.__CAMPFIRE__bbq,
+    id: IID.__CAMPFIRE_BBQ__,
     amount: 1,
     life: 255
 }, {
-    id: IID.__STONE__wall,
+    id: IID.__STONE_WALL__,
     amount: 16,
     life: 255
 }, {
-    id: IID.__STONE__door,
+    id: IID.__STONE_DOOR__,
     amount: 2,
     life: 255
 }, {
@@ -41052,19 +41052,19 @@ KIT[COUNTER++] = [{
     amount: 1,
     life: 255
 }, {
-    id: IID.__STEEL__pickaxe,
+    id: IID.__STEEL_PICKAXE__,
     amount: 1,
     life: 255
 }, {
-    id: IID.__CAMPFIRE__bbq,
+    id: IID.__CAMPFIRE_BBQ__,
     amount: 1,
     life: 255
 }, {
-    id: IID.__STONE__wall,
+    id: IID.__STONE_WALL__,
     amount: 16,
     life: 255
 }, {
-    id: IID.__STONE__door,
+    id: IID.__STONE_DOOR__,
     amount: 2,
     life: 255
 }, {
@@ -41085,19 +41085,19 @@ KIT[COUNTER++] = [{
     amount: 1,
     life: 255
 }, {
-    id: IID.__STEEL__pickaxe,
+    id: IID.__STEEL_PICKAXE__,
     amount: 1,
     life: 255
 }, {
-    id: IID.__CAMPFIRE__bbq,
+    id: IID.__CAMPFIRE_BBQ__,
     amount: 1,
     life: 255
 }, {
-    id: IID.__STONE__wall,
+    id: IID.__STONE_WALL__,
     amount: 16,
     life: 255
 }, {
-    id: IID.__STONE__door,
+    id: IID.__STONE_DOOR__,
     amount: 2,
     life: 255
 }, {
@@ -41114,23 +41114,23 @@ KIT[COUNTER++] = [{
     life: 255
 }];
 KIT[COUNTER++] = [{
-    id: IID.__STONE__axe,
+    id: IID.__STONE_AXE__,
     amount: 1,
     life: 255
 }, {
-    id: IID.__STEEL__pickaxe,
+    id: IID.__STEEL_PICKAXE__,
     amount: 1,
     life: 255
 }, {
-    id: IID.__CAMPFIRE__bbq,
+    id: IID.__CAMPFIRE_BBQ__,
     amount: 1,
     life: 255
 }, {
-    id: IID.__STONE__wall,
+    id: IID.__STONE_WALL__,
     amount: 16,
     life: 255
 }, {
-    id: IID.__STONE__door,
+    id: IID.__STONE_DOOR__,
     amount: 2,
     life: 255
 }, {
@@ -41147,23 +41147,23 @@ KIT[COUNTER++] = [{
     life: 255
 }];
 KIT[COUNTER++] = [{
-    id: IID.__STONE__axe,
+    id: IID.__STONE_AXE__,
     amount: 1,
     life: 255
 }, {
-    id: IID.__STEEL__pickaxe,
+    id: IID.__STEEL_PICKAXE__,
     amount: 1,
     life: 255
 }, {
-    id: IID.__CAMPFIRE__bbq,
+    id: IID.__CAMPFIRE_BBQ__,
     amount: 2,
     life: 255
 }, {
-    id: IID.__STONE__wall,
+    id: IID.__STONE_WALL__,
     amount: 20,
     life: 255
 }, {
-    id: IID.__STONE__door,
+    id: IID.__STONE_DOOR__,
     amount: 4,
     life: 255
 }, {
@@ -41180,23 +41180,23 @@ KIT[COUNTER++] = [{
     life: 255
 }];
 KIT[COUNTER++] = [{
-    id: IID.__STONE__axe,
+    id: IID.__STONE_AXE__,
     amount: 1,
     life: 255
 }, {
-    id: IID.__STEEL__pickaxe,
+    id: IID.__STEEL_PICKAXE__,
     amount: 1,
     life: 255
 }, {
-    id: IID.__CAMPFIRE__bbq,
+    id: IID.__CAMPFIRE_BBQ__,
     amount: 2,
     life: 255
 }, {
-    id: IID.__STONE__wall,
+    id: IID.__STONE_WALL__,
     amount: 26,
     life: 255
 }, {
-    id: IID.__STONE__door,
+    id: IID.__STONE_DOOR__,
     amount: 6,
     life: 255
 }, {
@@ -41213,11 +41213,11 @@ KIT[COUNTER++] = [{
     life: 255
 }];
 KIT[COUNTER++] = [{
-    id: IID.__STONE__axe,
+    id: IID.__STONE_AXE__,
     amount: 1,
     life: 255
 }, {
-    id: IID.__STEEL__pickaxe,
+    id: IID.__STEEL_PICKAXE__,
     amount: 1,
     life: 255
 }, {
@@ -41225,11 +41225,11 @@ KIT[COUNTER++] = [{
     amount: 1,
     life: 255
 }, {
-    id: IID.__STONE__wall,
+    id: IID.__STONE_WALL__,
     amount: 26,
     life: 255
 }, {
-    id: IID.__STONE__door,
+    id: IID.__STONE_DOOR__,
     amount: 6,
     life: 255
 }, {
@@ -41246,11 +41246,11 @@ KIT[COUNTER++] = [{
     life: 255
 }];
 KIT[COUNTER++] = [{
-    id: IID.__STONE__axe,
+    id: IID.__STONE_AXE__,
     amount: 1,
     life: 255
 }, {
-    id: IID.__STEEL__pickaxe,
+    id: IID.__STEEL_PICKAXE__,
     amount: 1,
     life: 255
 }, {
@@ -41258,11 +41258,11 @@ KIT[COUNTER++] = [{
     amount: 1,
     life: 255
 }, {
-    id: IID.__STONE__wall,
+    id: IID.__STONE_WALL__,
     amount: 26,
     life: 255
 }, {
-    id: IID.__STONE__door,
+    id: IID.__STONE_DOOR__,
     amount: 6,
     life: 255
 }, {
@@ -41279,11 +41279,11 @@ KIT[COUNTER++] = [{
     life: 255
 }];
 KIT[COUNTER++] = [{
-    id: IID.__SULFUR__pickaxe,
+    id: IID.__SULFUR_PICKAXE__,
     amount: 1,
     life: 255
 }, {
-    id: IID.__STONE__axe,
+    id: IID.__STONE_AXE__,
     amount: 1,
     life: 255
 }, {
@@ -41291,11 +41291,11 @@ KIT[COUNTER++] = [{
     amount: 1,
     life: 255
 }, {
-    id: IID.__STONE__wall,
+    id: IID.__STONE_WALL__,
     amount: 26,
     life: 255
 }, {
-    id: IID.__STONE__door,
+    id: IID.__STONE_DOOR__,
     amount: 6,
     life: 255
 }, {
@@ -41312,44 +41312,11 @@ KIT[COUNTER++] = [{
     life: 255
 }];
 KIT[COUNTER++] = [{
-    id: IID.__SULFUR__pickaxe,
+    id: IID.__SULFUR_PICKAXE__,
     amount: 1,
     life: 255
 }, {
-    id: IID.__STONE__axe,
-    amount: 1,
-    life: 255
-}, {
-    id: IID.__HEADSCARF__,
-    amount: 1,
-    life: 255
-}, {
-    id: IID.__STONE__wall,
-    amount: 26,
-    life: 255
-}, {
-    id: IID.__SMELTER__,
-    amount: 1,
-    life: 255
-}, {
-    id: IID.__CHEST__,
-    amount: 3,
-    life: 255
-}, {
-    id: IID.__9MM__,
-    amount: 1,
-    life: 20
-}, {
-    id: IID.__WORKBENCH2__,
-    amount: 1,
-    life: 255
-}];
-KIT[COUNTER++] = [{
-    id: IID.__SULFUR__pickaxe,
-    amount: 1,
-    life: 255
-}, {
-    id: IID.__SULFUR__axe,
+    id: IID.__STONE_AXE__,
     amount: 1,
     life: 255
 }, {
@@ -41357,7 +41324,7 @@ KIT[COUNTER++] = [{
     amount: 1,
     life: 255
 }, {
-    id: IID.__STONE__wall,
+    id: IID.__STONE_WALL__,
     amount: 26,
     life: 255
 }, {
@@ -41378,19 +41345,19 @@ KIT[COUNTER++] = [{
     life: 255
 }];
 KIT[COUNTER++] = [{
-    id: IID.__SULFUR__pickaxe,
+    id: IID.__SULFUR_PICKAXE__,
     amount: 1,
     life: 255
 }, {
-    id: IID.__SULFUR__axe,
+    id: IID.__SULFUR_AXE__,
     amount: 1,
     life: 255
 }, {
-    id: IID.__CHAPKA__,
+    id: IID.__HEADSCARF__,
     amount: 1,
     life: 255
 }, {
-    id: IID.__STONE__wall,
+    id: IID.__STONE_WALL__,
     amount: 26,
     life: 255
 }, {
@@ -41411,11 +41378,11 @@ KIT[COUNTER++] = [{
     life: 255
 }];
 KIT[COUNTER++] = [{
-    id: IID.__SULFUR__pickaxe,
+    id: IID.__SULFUR_PICKAXE__,
     amount: 1,
     life: 255
 }, {
-    id: IID.__SULFUR__axe,
+    id: IID.__SULFUR_AXE__,
     amount: 1,
     life: 255
 }, {
@@ -41423,7 +41390,40 @@ KIT[COUNTER++] = [{
     amount: 1,
     life: 255
 }, {
-    id: IID.__STEEL__wall,
+    id: IID.__STONE_WALL__,
+    amount: 26,
+    life: 255
+}, {
+    id: IID.__SMELTER__,
+    amount: 1,
+    life: 255
+}, {
+    id: IID.__CHEST__,
+    amount: 3,
+    life: 255
+}, {
+    id: IID.__9MM__,
+    amount: 1,
+    life: 20
+}, {
+    id: IID.__WORKBENCH2__,
+    amount: 1,
+    life: 255
+}];
+KIT[COUNTER++] = [{
+    id: IID.__SULFUR_PICKAXE__,
+    amount: 1,
+    life: 255
+}, {
+    id: IID.__SULFUR_AXE__,
+    amount: 1,
+    life: 255
+}, {
+    id: IID.__CHAPKA__,
+    amount: 1,
+    life: 255
+}, {
+    id: IID.__STEEL_WALL__,
     amount: 14,
     life: 255
 }, {
@@ -41444,11 +41444,11 @@ KIT[COUNTER++] = [{
     life: 255
 }];
 KIT[COUNTER++] = [{
-    id: IID.__SULFUR__pickaxe,
+    id: IID.__SULFUR_PICKAXE__,
     amount: 1,
     life: 255
 }, {
-    id: IID.__SULFUR__axe,
+    id: IID.__SULFUR_AXE__,
     amount: 1,
     life: 255
 }, {
@@ -41456,7 +41456,7 @@ KIT[COUNTER++] = [{
     amount: 1,
     life: 255
 }, {
-    id: IID.__STEEL__wall,
+    id: IID.__STEEL_WALL__,
     amount: 14,
     life: 255
 }, {
@@ -41477,11 +41477,11 @@ KIT[COUNTER++] = [{
     life: 255
 }];
 KIT[COUNTER++] = [{
-    id: IID.__SULFUR__pickaxe,
+    id: IID.__SULFUR_PICKAXE__,
     amount: 1,
     life: 255
 }, {
-    id: IID.__SULFUR__axe,
+    id: IID.__SULFUR_AXE__,
     amount: 1,
     life: 255
 }, {
@@ -41489,7 +41489,7 @@ KIT[COUNTER++] = [{
     amount: 1,
     life: 255
 }, {
-    id: IID.__STEEL__wall,
+    id: IID.__STEEL_WALL__,
     amount: 14,
     life: 255
 }, {
@@ -41510,11 +41510,11 @@ KIT[COUNTER++] = [{
     life: 255
 }];
 KIT[COUNTER++] = [{
-    id: IID.__SULFUR__pickaxe,
+    id: IID.__SULFUR_PICKAXE__,
     amount: 1,
     life: 255
 }, {
-    id: IID.__SULFUR__axe,
+    id: IID.__SULFUR_AXE__,
     amount: 1,
     life: 255
 }, {
@@ -41522,7 +41522,7 @@ KIT[COUNTER++] = [{
     amount: 1,
     life: 255
 }, {
-    id: IID.__STEEL__wall,
+    id: IID.__STEEL_WALL__,
     amount: 20,
     life: 255
 }, {
