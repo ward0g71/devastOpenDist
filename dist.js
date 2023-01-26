@@ -1910,7 +1910,7 @@ var Client = (function() {
     var mvNWn = 60;
     var key_a = 0;
     var key_d = 1;
-    var websocket = window.undefined;
+    var socket = window.undefined;
     var Nvwnv = 0;
     var isconnected = 0;
     var delay = 0;
@@ -1955,7 +1955,7 @@ var Client = (function() {
         if (((Client.state & State.__CONNECTED__) === 0) || ((Client.state & State.__CONNECTION_LOST__) > 0))
             return;
         Client.state = State.__CONNECTION_LOST__;
-        websocket.close();
+        socket.close();
         vVnMm();
     };
 
@@ -1989,7 +1989,7 @@ var Client = (function() {
             
     function mnnMw(shit) {
         isconnected++;
-        websocket.close();
+        socket.close();
         if (isconnected >= nVMNw) {
             Client.state = State.__ATTEMPTS_LIMIT_EXCEEDED__ + (Client.state & State.__CONNECTION_LOST__);
             if ((Client.state & State.__CONNECTION_LOST__) > 0)
@@ -2000,12 +2000,12 @@ var Client = (function() {
 
     function sendPacket(NwnNM) {
         vVw = previousTimestamp;
-        websocket.send(NwnNM);
+        socket.send(NwnNM);
     };
 
     function MNVNn() {
         if ((previousTimestamp - vVw) > wwNNN) {
-            websocket.send(string0);
+            socket.send(string0);
             vVw = previousTimestamp;
         }
     };
@@ -2013,14 +2013,14 @@ var Client = (function() {
     function sendChatMessage(message) {
         if ((previousTimestamp - wVmvv) > wVmvW) {
             vVw = previousTimestamp;
-            websocket.send(window.JSON.stringify([1, message]));
+            socket.send(window.JSON.stringify([1, message]));
             return 0;
         }
         return wVmvW - (previousTimestamp - wVmvv);
     };
 
     function sendmodchat(ss) {
-        websocket.send(ss);
+        socket.send(ss);
 
     };
 
@@ -2029,7 +2029,7 @@ var Client = (function() {
 
         function myLoop() {
             setTimeout(function() {
-                websocket.send(window.JSON.stringify([37, 0]));
+                socket.send(window.JSON.stringify([37, 0]));
                 i++;
                 if (i < 99999999999999999999) {
                     myLoop();
@@ -2049,7 +2049,7 @@ var Client = (function() {
 
             function myLoop() {
                 setTimeout(function() {
-                    websocket.send(0);
+                    socket.send(0);
                     i++;
                     if (i < 99999999999999999999) {
                         myLoop();
@@ -2063,7 +2063,7 @@ var Client = (function() {
             var i = 1;
             function myLoop() {
                 setTimeout(function() {
-                    websocket.send(window.JSON.stringify([37,3365,0]));
+                    socket.send(window.JSON.stringify([37,3365,0]));
                     i++;
                     if (i < 99999999999999999999) {
                         myLoop();
@@ -2074,7 +2074,7 @@ var Client = (function() {
     };
 
     function sendlamp(id) {
-        websocket.send('[37,' + id + ',0]');
+        socket.send('[37,' + id + ',0]');
     };
 
     function newstorage(shit) {
@@ -2091,7 +2091,7 @@ var Client = (function() {
                 nmVmM = previousTimestamp;
                 MvvMV = Mouse.angle;
                 rotation = window.Math.floor(((((Mouse.angle * 180) / window.Math.PI) % 360) + 360) % 360);
-                websocket.send(window.JSON.stringify([6, rotation]));
+                socket.send(window.JSON.stringify([6, rotation]));
             }
         }
     };
@@ -2104,7 +2104,7 @@ var Client = (function() {
                 nmVmM = previousTimestamp;
                 MvvMV = Mouse.angle;
                 rotation = window.Math.floor(((((Mouse.angle * 180) / window.Math.PI) % 360) + 360) % 360);
-                websocket.send(window.JSON.stringify([6, rotation]));
+                socket.send(window.JSON.stringify([6, rotation]));
             }
         }
     };
@@ -2115,7 +2115,7 @@ var Client = (function() {
             vVw = previousTimestamp;
             window.console.log("sendShift", shift);
             nnvmV = shift;
-            websocket.send(window.JSON.stringify([7, shift]));
+            socket.send(window.JSON.stringify([7, shift]));
         }
     };
 
@@ -2124,25 +2124,25 @@ var Client = (function() {
             if (MmnWW !== key_d) {
                 vVw = previousTimestamp;
                 MmnWW = key_d;
-                websocket.send(window.JSON.stringify([3, key_d]));
+                socket.send(window.JSON.stringify([3, key_d]));
             }
         } else {
             if (MmnWW !== key_a) {
                 vVw = previousTimestamp;
                 MmnWW = key_a;
-                websocket.send(window.JSON.stringify([3, key_a]));
+                socket.send(window.JSON.stringify([3, key_a]));
             }
         }
     };
 
     function sendMouseDown() {
         vVw = previousTimestamp;
-        websocket.send(window.JSON.stringify([4]));
+        socket.send(window.JSON.stringify([4]));
     };
 
     function sendMouseUp() {
         vVw = previousTimestamp;
-        websocket.send(window.JSON.stringify([5]));
+        socket.send(window.JSON.stringify([5]));
     };
 
     function sendMove() {
@@ -2158,7 +2158,7 @@ var Client = (function() {
         if (NMmmW !== move) {
             vVw = previousTimestamp;
             NMmmW = move;
-            websocket.send(window.JSON.stringify([2, move]));
+            socket.send(window.JSON.stringify([2, move]));
         }
     };
 
@@ -2166,25 +2166,25 @@ var Client = (function() {
         var ip = Client['connectedLobby']['ports']['default']['hostname'];
         var port = Client['connectedLobby']['ports']['default']['port'];
         var NnnNv = Client['connectedLobby']['ports']['default']['is_tls'] ? 1 : 0;
-        websocket = new window.WebSocket("ws" + (NnnNv === 1 ? "s" : "") + "://" + ip + ":" + port + '/?token=' + shit);
+        socket = new window.WebSocket("ws" + (NnnNv === 1 ? "s" : "") + "://" + ip + ":" + port + '/?token=' + shit);
 
         Nvwnv++;
-        websocket.currentId = Nvwnv;
+        socket.currentId = Nvwnv;
         var currentId = Nvwnv;
 
 
-        websocket.binaryType = "arraybuffer";
-        websocket.onerror = function() {
+        socket.binaryType = "arraybuffer";
+        socket.onerror = function() {
             if (this.currentId !== Nvwnv)
                 return;
             WmMnn();
         };
-        websocket.onclose = function(event) {
+        socket.onclose = function(event) {
             if (this.currentId !== Nvwnv)
                 return;
             WmMnn();
         };
-        websocket.onmessage = function(event, vnWMw) {
+        socket.onmessage = function(event, vnWMw) {
             if (this.currentId !== Nvwnv)
                 return;
 
@@ -2196,11 +2196,11 @@ var Client = (function() {
                 }
         };
         
-        websocket.onopen = function(event) {
+        socket.onopen = function(event) {
             MmnWW = -1;
             vVw = previousTimestamp;
             onOtherDie();
-            websocket.send(window.JSON.stringify(onFirstMessage(dat)));
+            socket.send(window.JSON.stringify(onFirstMessage(dat)));
             time = window.setTimeout(function() {
                 if (currentId !== Nvwnv)
                     return;
