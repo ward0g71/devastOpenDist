@@ -15669,7 +15669,7 @@ try {
         };
 
         function vNwNM(player, Wn, dist, amount) {
-            if ((NwMVW === vMNWw) || (Wn === PARTICLESID.woodtree)) return;
+            if ((NwMVW === vMNWw) || (Wn === PARTICLESID.__NOTHING__)) return;
             else if (NwMVW === nWNMn) amount *= 3;
             if ((Entitie.border[__ENTITIE_PARTICLES__].border + amount) >= wnNWM) return;
             for (var i = 0; i < amount; i++) {
@@ -17481,44 +17481,46 @@ var LOOTID = {
     __GATE_TIMER__: COUNTER++,
     xorgate: COUNTER++
 };
+
 COUNTER = 0;
 var PARTICLESID = {
-    woodtree: COUNTER++,
-    wood: COUNTER++,
-    stone: COUNTER++,
-    steel: COUNTER++,
-    uranium: COUNTER++,
-    sulfur: COUNTER++,
-    leaf: COUNTER++,
-    leaftree: COUNTER++,
-    orange: COUNTER++,
-    blood: COUNTER++,
-    firepart: COUNTER++,
-    furpart: COUNTER++,
-    bedpart: COUNTER++,
-    bedpart2: COUNTER++,
-    sofapart: COUNTER++,
-    sofapart2: COUNTER++,
-    sofapart3: COUNTER++,
-    toilet: COUNTER++,
-    woodpart: COUNTER++,
-    safepart: COUNTER++,
-    garbagepart: COUNTER++,
-    fridge: COUNTER++,
-    plot: COUNTER++,
-    barrel: COUNTER++,
-    barrel2: COUNTER++,
-    metalpart: COUNTER++,
-    tomato: COUNTER++,
-    greysteelpart: COUNTER++,
-    bluesteelpart: COUNTER++,
-    redsteelpart: COUNTER++,
-    kakipart: COUNTER++,
-    mushroom: COUNTER++,
-    mushroom2: COUNTER++,
-    mushroom3: COUNTER++,
-    gold: COUNTER++
+    __NOTHING__:        COUNTER++,
+    __WOOD__:           COUNTER++,
+    __STONE__:          COUNTER++,
+    __STEEL__:          COUNTER++,
+    __URANIUM__:        COUNTER++,
+    __SULFUR__:         COUNTER++,
+    __LEAF__:           COUNTER++,
+    __LEAFTREE__:       COUNTER++,
+    __ORANGE__:         COUNTER++,
+    __BLOOD__:          COUNTER++,
+    __FIRE__:           COUNTER++,
+    __FUR__:            COUNTER++,
+    __BED0__:           COUNTER++,
+    __BED1__:           COUNTER++,
+    __SOFA0__:          COUNTER++,
+    __SOFA1__:          COUNTER++,
+    __SOFA2__:          COUNTER++,
+    __TOILET__:         COUNTER++,
+    __WOODLIGHT__:      COUNTER++,
+    __SAFE0__:          COUNTER++,
+    __GARBAGE0__:       COUNTER++,
+    __FRIDGE__:         COUNTER++,
+    __PLOT__:           COUNTER++,
+    __BARELRED__:       COUNTER++,
+    __BARELGREEN__:     COUNTER++,
+    __METAL__:          COUNTER++,
+    __TOMATO__:         COUNTER++,
+    __GREY_STEEL__:     COUNTER++,
+    __BLUE_STEEL__:     COUNTER++,
+    __RED_STEEL__:      COUNTER++,
+    __KAKI__:           COUNTER++,
+    __MUSHROOM1__:      COUNTER++,
+    __MUSHROOM2__:      COUNTER++,
+    __MUSHROOM3__:      COUNTER++,
+    __GOLD__:           COUNTER++
 };
+
 var WAITADS = [{
     src: "img/wait-ads-1.png",
     W: {
@@ -17546,8 +17548,8 @@ var WAITADS = [{
     }
 }];
 var PARTICLES = [];
-PARTICLES[PARTICLESID.woodtree] = [];
-PARTICLES[PARTICLESID.wood] = [{
+PARTICLES[PARTICLESID.__NOTHING__] = [];
+PARTICLES[PARTICLESID.__WOOD__] = [{
     src: "img/day-particules-wood1.png",
     W: {
         isLoaded: 0
@@ -17573,7 +17575,7 @@ PARTICLES[PARTICLESID.wood] = [{
         isLoaded: 0
     }
 }];
-PARTICLES[PARTICLESID.stone] = [{
+PARTICLES[PARTICLESID.__STONE__] = [{
     src: "img/day-particules-stone1.png",
     W: {
         isLoaded: 0
@@ -17599,7 +17601,7 @@ PARTICLES[PARTICLESID.stone] = [{
         isLoaded: 0
     }
 }];
-PARTICLES[PARTICLESID.steel] = [{
+PARTICLES[PARTICLESID.__STEEL__] = [{
     src: "img/day-particules-steel1.png",
     W: {
         isLoaded: 0
@@ -17625,7 +17627,7 @@ PARTICLES[PARTICLESID.steel] = [{
         isLoaded: 0
     }
 }];
-PARTICLES[PARTICLESID.uranium] = [{
+PARTICLES[PARTICLESID.__URANIUM__] = [{
     src: "img/day-particules-uranium1.png",
     W: {
         isLoaded: 0
@@ -17671,7 +17673,7 @@ PARTICLES[PARTICLESID.uranium] = [{
         isLoaded: 0
     }
 }];
-PARTICLES[PARTICLESID.sulfur] = [{
+PARTICLES[PARTICLESID.__SULFUR__] = [{
     src: "img/day-particules-sulfur1.png",
     W: {
         isLoaded: 0
@@ -17717,7 +17719,7 @@ PARTICLES[PARTICLESID.sulfur] = [{
         isLoaded: 0
     }
 }];
-PARTICLES[PARTICLESID.leaf] = [{
+PARTICLES[PARTICLESID.__LEAF__] = [{
     src: "img/day-particules-leaf1.png",
     W: {
         isLoaded: 0
@@ -17743,7 +17745,7 @@ PARTICLES[PARTICLESID.leaf] = [{
         isLoaded: 0
     }
 }];
-PARTICLES[PARTICLESID.leaftree] = [{
+PARTICLES[PARTICLESID.__LEAFTREE__] = [{
     src: "img/day-particules-wood1.png",
     W: {
         isLoaded: 0
@@ -17805,7 +17807,7 @@ PARTICLES[PARTICLESID.flower] = [{
         isLoaded: 0
     }
 }];
-PARTICLES[PARTICLESID.orange] = [{
+PARTICLES[PARTICLESID.__ORANGE__] = [{
     src: "img/day-particules-leaf1.png",
     W: {
         isLoaded: 0
@@ -17851,7 +17853,7 @@ PARTICLES[PARTICLESID.orange] = [{
         isLoaded: 0
     }
 }];
-PARTICLES[PARTICLESID.blood] = [{
+PARTICLES[PARTICLESID.__BLOOD__] = [{
     src: "img/day-particules-blood1.png",
     W: {
         isLoaded: 0
@@ -17878,7 +17880,7 @@ PARTICLES[PARTICLESID.blood] = [{
     }
 }];
 var NVMWV = 380;
-PARTICLES[PARTICLESID.firepart] = [{
+PARTICLES[PARTICLESID.__FIRE__] = [{
     src: "img/day-particules-fire1.png",
     W: {
         isLoaded: 0
@@ -17904,7 +17906,7 @@ PARTICLES[PARTICLESID.firepart] = [{
         isLoaded: 0
     }
 }];
-PARTICLES[PARTICLESID.furpart] = [{
+PARTICLES[PARTICLESID.__FUR__] = [{
     src: "img/day-particules-fur1.png",
     W: {
         isLoaded: 0
@@ -17930,7 +17932,7 @@ PARTICLES[PARTICLESID.furpart] = [{
         isLoaded: 0
     }
 }];
-PARTICLES[PARTICLESID.bedpart] = [{
+PARTICLES[PARTICLESID.__BED0__] = [{
     src: "img/day-particules-bed0.png",
     W: {
         isLoaded: 0
@@ -17961,7 +17963,7 @@ PARTICLES[PARTICLESID.bedpart] = [{
         isLoaded: 0
     }
 }];
-PARTICLES[PARTICLESID.bedpart2] = [{
+PARTICLES[PARTICLESID.__BED1__] = [{
     src: "img/day-particules-bed3.png",
     W: {
         isLoaded: 0
@@ -17992,7 +17994,7 @@ PARTICLES[PARTICLESID.bedpart2] = [{
         isLoaded: 0
     }
 }];
-PARTICLES[PARTICLESID.sofapart] = [{
+PARTICLES[PARTICLESID.__SOFA0__] = [{
     src: "img/day-particules-sofa0.png",
     W: {
         isLoaded: 0
@@ -18018,7 +18020,7 @@ PARTICLES[PARTICLESID.sofapart] = [{
         isLoaded: 0
     }
 }];
-PARTICLES[PARTICLESID.sofapart2] = [{
+PARTICLES[PARTICLESID.__SOFA1__] = [{
     src: "img/day-particules-sofa0.png",
     W: {
         isLoaded: 0
@@ -18044,7 +18046,7 @@ PARTICLES[PARTICLESID.sofapart2] = [{
         isLoaded: 0
     }
 }];
-PARTICLES[PARTICLESID.sofapart3] = [{
+PARTICLES[PARTICLESID.__SOFA2__] = [{
     src: "img/day-particules-sofa0.png",
     W: {
         isLoaded: 0
@@ -18070,7 +18072,7 @@ PARTICLES[PARTICLESID.sofapart3] = [{
         isLoaded: 0
     }
 }];
-PARTICLES[PARTICLESID.toilet] = [{
+PARTICLES[PARTICLESID.__TOILET__] = [{
     src: "img/day-particules-toilet0.png",
     W: {
         isLoaded: 0
@@ -18096,7 +18098,7 @@ PARTICLES[PARTICLESID.toilet] = [{
         isLoaded: 0
     }
 }];
-PARTICLES[PARTICLESID.woodpart] = [{
+PARTICLES[PARTICLESID.__WOODLIGHT__] = [{
     src: "img/day-particules-woodlight0.png",
     W: {
         isLoaded: 0
@@ -18122,7 +18124,7 @@ PARTICLES[PARTICLESID.woodpart] = [{
         isLoaded: 0
     }
 }];
-PARTICLES[PARTICLESID.safepart] = [{
+PARTICLES[PARTICLESID.__SAFE0__] = [{
     src: "img/day-particules-safe0.png",
     W: {
         isLoaded: 0
@@ -18148,7 +18150,7 @@ PARTICLES[PARTICLESID.safepart] = [{
         isLoaded: 0
     }
 }];
-PARTICLES[PARTICLESID.garbagepart] = [{
+PARTICLES[PARTICLESID.__GARBAGE0__] = [{
     src: "img/day-particules-garbage0.png",
     W: {
         isLoaded: 0
@@ -18169,7 +18171,7 @@ PARTICLES[PARTICLESID.garbagepart] = [{
         isLoaded: 0
     }
 }];
-PARTICLES[PARTICLESID.fridge] = [{
+PARTICLES[PARTICLESID.__FRIDGE__] = [{
     src: "img/day-particules-fridge0.png",
     W: {
         isLoaded: 0
@@ -18195,7 +18197,7 @@ PARTICLES[PARTICLESID.fridge] = [{
         isLoaded: 0
     }
 }];
-PARTICLES[PARTICLESID.plot] = [{
+PARTICLES[PARTICLESID.__PLOT__] = [{
     src: "img/day-particules-plot0.png",
     W: {
         isLoaded: 0
@@ -18226,7 +18228,7 @@ PARTICLES[PARTICLESID.plot] = [{
         isLoaded: 0
     }
 }];
-PARTICLES[PARTICLESID.barrel] = [{
+PARTICLES[PARTICLESID.__BARELRED__] = [{
     src: "img/day-particules-barel0.png",
     W: {
         isLoaded: 0
@@ -18242,7 +18244,7 @@ PARTICLES[PARTICLESID.barrel] = [{
         isLoaded: 0
     }
 }];
-PARTICLES[PARTICLESID.barrel2] = [{
+PARTICLES[PARTICLESID.__BARELGREEN__] = [{
     src: "img/day-particules-barel3.png",
     W: {
         isLoaded: 0
@@ -18258,7 +18260,7 @@ PARTICLES[PARTICLESID.barrel2] = [{
         isLoaded: 0
     }
 }];
-PARTICLES[PARTICLESID.metalpart] = [{
+PARTICLES[PARTICLESID.__METAL__] = [{
     src: "img/day-particules-metal0.png",
     W: {
         isLoaded: 0
@@ -18284,7 +18286,7 @@ PARTICLES[PARTICLESID.metalpart] = [{
         isLoaded: 0
     }
 }];
-PARTICLES[PARTICLESID.tomato] = [{
+PARTICLES[PARTICLESID.__TOMATO__] = [{
     src: "img/day-particules-tomato0.png",
     W: {
         isLoaded: 0
@@ -18310,7 +18312,7 @@ PARTICLES[PARTICLESID.tomato] = [{
         isLoaded: 0
     }
 }];
-PARTICLES[PARTICLESID.bluesteelpart] = [{
+PARTICLES[PARTICLESID.__BLUE_STEEL__] = [{
     src: "img/day-particules-blue-steel0.png",
     W: {
         isLoaded: 0
@@ -18336,7 +18338,7 @@ PARTICLES[PARTICLESID.bluesteelpart] = [{
         isLoaded: 0
     }
 }];
-PARTICLES[PARTICLESID.greysteelpart] = [{
+PARTICLES[PARTICLESID.__GREY_STEEL__] = [{
     src: "img/day-particules-grey-steel0.png",
     W: {
         isLoaded: 0
@@ -18362,7 +18364,7 @@ PARTICLES[PARTICLESID.greysteelpart] = [{
         isLoaded: 0
     }
 }];
-PARTICLES[PARTICLESID.redsteelpart] = [{
+PARTICLES[PARTICLESID.__RED_STEEL__] = [{
     src: "img/day-particules-red-steel0.png",
     W: {
         isLoaded: 0
@@ -18388,7 +18390,7 @@ PARTICLES[PARTICLESID.redsteelpart] = [{
         isLoaded: 0
     }
 }];
-PARTICLES[PARTICLESID.kakipart] = [{
+PARTICLES[PARTICLESID.__KAKI__] = [{
     src: "img/day-particules-kaki0.png",
     W: {
         isLoaded: 0
@@ -18414,7 +18416,7 @@ PARTICLES[PARTICLESID.kakipart] = [{
         isLoaded: 0
     }
 }];
-PARTICLES[PARTICLESID.mushroom] = [{
+PARTICLES[PARTICLESID.__MUSHROOM1__] = [{
     src: "img/day-particules-mushroom4.png",
     W: {
         isLoaded: 0
@@ -18430,7 +18432,7 @@ PARTICLES[PARTICLESID.mushroom] = [{
         isLoaded: 0
     }
 }];
-PARTICLES[PARTICLESID.mushroom2] = [{
+PARTICLES[PARTICLESID.__MUSHROOM2__] = [{
     src: "img/day-particules-mushroom1.png",
     W: {
         isLoaded: 0
@@ -18446,7 +18448,7 @@ PARTICLES[PARTICLESID.mushroom2] = [{
         isLoaded: 0
     }
 }];
-PARTICLES[PARTICLESID.mushroom3] = [{
+PARTICLES[PARTICLESID.__MUSHROOM3__] = [{
     src: "img/day-particules-mushroom7.png",
     W: {
         isLoaded: 0
@@ -18462,7 +18464,7 @@ PARTICLES[PARTICLESID.mushroom3] = [{
         isLoaded: 0
     }
 }];
-PARTICLES[PARTICLESID.gold] = [{
+PARTICLES[PARTICLESID.__GOLD__] = [{
     src: "img/day-particules-gold0.png",
     W: {
         isLoaded: 0
@@ -18837,7 +18839,7 @@ var items = [{
             isLoaded: 0
         }
     }],
-    particles: PARTICLESID.orange,
+    particles: PARTICLESID.__ORANGE__,
     particlesDist: 68,
     timelife: ((5 * 8) * 60) * 1000,
     life: 250,
@@ -19003,7 +19005,7 @@ var items = [{
             isLoaded: 0
         }
     },
-    particles: PARTICLESID.wood,
+    particles: PARTICLESID.__WOOD__,
     particlesDist: 80,
     timelife: 315360000000,
     life: 250,
@@ -19480,7 +19482,7 @@ var items = [{
             isLoaded: 0
         }
     }],
-    particles: PARTICLESID.wood,
+    particles: PARTICLESID.__WOOD__,
     particlesDist: 80,
     timelife: 315360000000,
     life: 3000,
@@ -19795,7 +19797,7 @@ var items = [{
             isLoaded: 0
         }
     }],
-    particles: PARTICLESID.stone,
+    particles: PARTICLESID.__STONE__,
     particlesDist: 80,
     timelife: 315360000000,
     life: 7000,
@@ -20110,7 +20112,7 @@ var items = [{
             isLoaded: 0
         }
     }],
-    particles: PARTICLESID.steel,
+    particles: PARTICLESID.__STEEL__,
     particlesDist: 80,
     timelife: 315360000000,
     life: 15000,
@@ -20214,7 +20216,7 @@ var items = [{
             isLoaded: 0
         }
     },
-    particles: PARTICLESID.wood,
+    particles: PARTICLESID.__WOOD__,
     particlesDist: 55,
     timelife: 315360000000,
     life: 2000,
@@ -20318,7 +20320,7 @@ var items = [{
             isLoaded: 0
         }
     },
-    particles: PARTICLESID.stone,
+    particles: PARTICLESID.__STONE__,
     particlesDist: 55,
     timelife: 315360000000,
     life: 5000,
@@ -20422,7 +20424,7 @@ var items = [{
             isLoaded: 0
         }
     },
-    particles: PARTICLESID.steel,
+    particles: PARTICLESID.__STEEL__,
     particlesDist: 55,
     timelife: 315360000000,
     life: 10000,
@@ -20500,7 +20502,7 @@ var items = [{
             isLoaded: 0
         }
     },
-    particles: PARTICLESID.wood,
+    particles: PARTICLESID.__WOOD__,
     particlesDist: 80,
     timelife: (1000 * 60) * 10,
     life: 150,
@@ -20939,7 +20941,7 @@ var items = [{
             isLoaded: 0
         }
     },
-    particles: PARTICLESID.wood,
+    particles: PARTICLESID.__WOOD__,
     particlesDist: 80,
     timelife: 315360000000,
     life: 250,
@@ -21034,7 +21036,7 @@ var items = [{
             isLoaded: 0
         }
     }],
-    particles: PARTICLESID.metalpart,
+    particles: PARTICLESID.__METAL__,
     particlesDist: 80,
     timelife: 315360000000,
     life: 3000,
@@ -21138,7 +21140,7 @@ var items = [{
             isLoaded: 0
         }
     },
-    particles: PARTICLESID.wood,
+    particles: PARTICLESID.__WOOD__,
     particlesDist: 80,
     timelife: 315360000000,
     life: 2500,
@@ -21242,7 +21244,7 @@ var items = [{
             isLoaded: 0
         }
     },
-    particles: PARTICLESID.stone,
+    particles: PARTICLESID.__STONE__,
     particlesDist: 80,
     timelife: 315360000000,
     life: 6000,
@@ -21346,7 +21348,7 @@ var items = [{
             isLoaded: 0
         }
     },
-    particles: PARTICLESID.steel,
+    particles: PARTICLESID.__STEEL__,
     particlesDist: 80,
     timelife: 315360000000,
     life: 12500,
@@ -21464,7 +21466,7 @@ var items = [{
             isLoaded: 0
         }
     },
-    particles: PARTICLESID.metalpart,
+    particles: PARTICLESID.__METAL__,
     particlesDist: 80,
     timelife: 315360000000,
     life: 400,
@@ -21561,7 +21563,7 @@ var items = [{
             isLoaded: 0
         }
     },
-    particles: PARTICLESID.wood,
+    particles: PARTICLESID.__WOOD__,
     particlesDist: 80,
     timelife: 315360000000,
     life: 250,
@@ -21680,7 +21682,7 @@ var items = [{
             isLoaded: 0
         }
     },
-    particles: PARTICLESID.wood,
+    particles: PARTICLESID.__WOOD__,
     particlesDist: 55,
     timelife: 315360000000,
     life: 300,
@@ -21757,7 +21759,7 @@ var items = [{
             isLoaded: 0
         }
     },
-    particles: PARTICLESID.metalpart,
+    particles: PARTICLESID.__METAL__,
     particlesDist: 55,
     timelife: 315360000000,
     life: 300,
@@ -22071,7 +22073,7 @@ var items = [{
             isLoaded: 0
         }
     }],
-    particles: PARTICLESID.wood,
+    particles: PARTICLESID.__WOOD__,
     particlesDist: 80,
     timelife: 315360000000,
     life: 4000,
@@ -22159,7 +22161,7 @@ var items = [{
             isLoaded: 0
         }
     },
-    particles: PARTICLESID.furpart,
+    particles: PARTICLESID.__FUR__,
     particlesDist: 80,
     timelife: 315360000000,
     life: 500,
@@ -22514,7 +22516,7 @@ var items = [{
             isLoaded: 0
         }
     }],
-    particles: PARTICLESID.woodpart,
+    particles: PARTICLESID.__WOODLIGHT__,
     particlesDist: 80,
     timelife: 315360000000,
     life: 4000,
@@ -22801,7 +22803,7 @@ var items = [{
             isLoaded: 0
         }
     }],
-    particles: PARTICLESID.wood,
+    particles: PARTICLESID.__WOOD__,
     particlesDist: 80,
     timelife: 315360000000,
     life: 3000,
@@ -23088,7 +23090,7 @@ var items = [{
             isLoaded: 0
         }
     }],
-    particles: PARTICLESID.stone,
+    particles: PARTICLESID.__STONE__,
     particlesDist: 80,
     timelife: 315360000000,
     life: 7000,
@@ -23375,7 +23377,7 @@ var items = [{
             isLoaded: 0
         }
     }],
-    particles: PARTICLESID.steel,
+    particles: PARTICLESID.__STEEL__,
     particlesDist: 55,
     timelife: 315360000000,
     life: 15000,
@@ -23563,7 +23565,7 @@ var items = [{
             isLoaded: 0
         }
     }],
-    particles: PARTICLESID.tomato,
+    particles: PARTICLESID.__TOMATO__,
     particlesDist: 68,
     timelife: ((5 * 8) * 60) * 1000,
     life: 250,
@@ -24028,7 +24030,7 @@ var items = [{
             isLoaded: 0
         }
     }],
-    particles: PARTICLESID.stone,
+    particles: PARTICLESID.__STONE__,
     particlesDist: 80,
     timelife: 315360000000,
     life: 8000,
@@ -24342,7 +24344,7 @@ var items = [{
             isLoaded: 0
         }
     }],
-    particles: PARTICLESID.stone,
+    particles: PARTICLESID.__STONE__,
     particlesDist: 80,
     timelife: 315360000000,
     life: 8000,
@@ -24621,7 +24623,7 @@ var items = [{
             isLoaded: 0
         }
     }, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-    particles: PARTICLESID.metalpart,
+    particles: PARTICLESID.__METAL__,
     particlesDist: 80,
     timelife: 315360000000,
     life: 3000,
@@ -24745,7 +24747,7 @@ var items = [{
             isLoaded: 0
         }
     }],
-    particles: PARTICLESID.kakipart,
+    particles: PARTICLESID.__KAKI__,
     particlesDist: 80,
     timelife: 315360000000,
     life: 5,
@@ -24819,7 +24821,7 @@ var items = [{
             isLoaded: 0
         }
     }],
-    particles: PARTICLESID.redsteelpart,
+    particles: PARTICLESID.__RED_STEEL__,
     particlesDist: 80,
     timelife: 5000,
     life: 100,
@@ -24893,7 +24895,7 @@ var items = [{
             isLoaded: 0
         }
     }],
-    particles: PARTICLESID.kakipart,
+    particles: PARTICLESID.__KAKI__,
     particlesDist: 80,
     timelife: 315360000000,
     life: 100,
@@ -24999,7 +25001,7 @@ var items = [{
             isLoaded: 0
         }
     }],
-    particles: PARTICLESID.metalpart,
+    particles: PARTICLESID.__METAL__,
     particlesDist: 80,
     timelife: 315360000000,
     life: 500,
@@ -25370,7 +25372,7 @@ var items = [{
             isLoaded: 0
         }
     }],
-    particles: PARTICLESID.wood,
+    particles: PARTICLESID.__WOOD__,
     particlesDist: 80,
     timelife: 315360000000,
     life: 200,
@@ -25586,7 +25588,7 @@ var items = [{
         [25.5, -21],
         [21, 25.5]
     ],
-    particles: PARTICLESID.metalpart,
+    particles: PARTICLESID.__METAL__,
     particlesDist: 80,
     timelife: 315360000000,
     life: 500,
@@ -25843,7 +25845,7 @@ var items = [{
             isLoaded: 0
         }
     },
-    particles: PARTICLESID.metalpart,
+    particles: PARTICLESID.__METAL__,
     particlesDist: 68,
     timelife: ((5 * 8) * 60) * 1000,
     life: 250,
@@ -25989,7 +25991,7 @@ var items = [{
             isLoaded: 0
         }
     }],
-    particles: PARTICLESID.orange,
+    particles: PARTICLESID.__ORANGE__,
     particlesDist: 68,
     timelife: ((5 * 8) * 60) * 1000,
     life: 250,
@@ -26089,7 +26091,7 @@ var items = [{
         [0, 0],
         [0, 0]
     ],
-    particles: PARTICLESID.metalpart,
+    particles: PARTICLESID.__METAL__,
     particlesDist: 80,
     timelife: 315360000000,
     life: 500,
@@ -26215,7 +26217,7 @@ var items = [{
             isLoaded: 0
         }
     }],
-    particles: PARTICLESID.wood,
+    particles: PARTICLESID.__WOOD__,
     particlesDist: 68,
     timelife: ((5 * 8) * 60) * 1000,
     life: 150,
@@ -26373,7 +26375,7 @@ var items = [{
             isLoaded: 0
         }
     },
-    particles: PARTICLESID.metalpart,
+    particles: PARTICLESID.__METAL__,
     particlesDist: 68,
     timelife: ((5 * 8) * 60) * 1000,
     life: 400,
@@ -26473,7 +26475,7 @@ var items = [{
             isLoaded: 0
         }
     },
-    particles: PARTICLESID.metalpart,
+    particles: PARTICLESID.__METAL__,
     particlesDist: 68,
     timelife: ((5 * 8) * 60) * 1000,
     life: 500,
@@ -26551,7 +26553,7 @@ var items = [{
             isLoaded: 0
         }
     },
-    particles: PARTICLESID.barrel,
+    particles: PARTICLESID.__BARELRED__,
     particlesDist: 40,
     timelife: 315360000000,
     life: 250,
@@ -26624,7 +26626,7 @@ var items = [{
             isLoaded: 0
         }
     },
-    particles: PARTICLESID.barrel,
+    particles: PARTICLESID.__BARELRED__,
     particlesDist: 40,
     timelife: 315360000000,
     life: 250,
@@ -26697,7 +26699,7 @@ var items = [{
             isLoaded: 0
         }
     },
-    particles: PARTICLESID.barrel,
+    particles: PARTICLESID.__BARELRED__,
     particlesDist: 40,
     timelife: 315360000000,
     life: 250,
@@ -26770,7 +26772,7 @@ var items = [{
             isLoaded: 0
         }
     },
-    particles: PARTICLESID.barrel,
+    particles: PARTICLESID.__BARELRED__,
     particlesDist: 40,
     timelife: 315360000000,
     life: 250,
@@ -26856,7 +26858,7 @@ var items = [{
             isLoaded: 0
         }
     }],
-    particles: PARTICLESID.metalpart,
+    particles: PARTICLESID.__METAL__,
     particlesDist: 80,
     timelife: 315360000000,
     life: 250,
@@ -26930,7 +26932,7 @@ var items = [{
             isLoaded: 0
         }
     },
-    particles: PARTICLESID.metalpart,
+    particles: PARTICLESID.__METAL__,
     particlesDist: 80,
     timelife: 315360000000,
     life: 250,
@@ -27004,7 +27006,7 @@ var items = [{
             isLoaded: 0
         }
     },
-    particles: PARTICLESID.metalpart,
+    particles: PARTICLESID.__METAL__,
     particlesDist: 80,
     timelife: 315360000000,
     life: 250,
@@ -27078,7 +27080,7 @@ var items = [{
             isLoaded: 0
         }
     },
-    particles: PARTICLESID.metalpart,
+    particles: PARTICLESID.__METAL__,
     particlesDist: 80,
     timelife: 315360000000,
     life: 250,
@@ -27233,7 +27235,7 @@ var items = [{
             isLoaded: 0
         }
     }],
-    particles: PARTICLESID.metalpart,
+    particles: PARTICLESID.__METAL__,
     particlesDist: 80,
     timelife: 315360000000,
     life: 600,
@@ -27322,7 +27324,7 @@ var items = [{
             isLoaded: 0
         }
     }],
-    particles: PARTICLESID.metalpart,
+    particles: PARTICLESID.__METAL__,
     particlesDist: 40,
     timelife: 315360000000,
     life: 15000,
@@ -27435,7 +27437,7 @@ var items = [{
             }
         }]
     ],
-    particles: PARTICLESID.metalpart,
+    particles: PARTICLESID.__METAL__,
     particlesDist: 80,
     timelife: 315360000000,
     life: 15000,
@@ -27509,7 +27511,7 @@ var items = [{
             isLoaded: 0
         }
     },
-    particles: PARTICLESID.fridge,
+    particles: PARTICLESID.__FRIDGE__,
     particlesDist: 80,
     timelife: 315360000000,
     life: 250,
@@ -27824,7 +27826,7 @@ var items = [{
             isLoaded: 0
         }
     }],
-    particles: PARTICLESID.stone,
+    particles: PARTICLESID.__STONE__,
     particlesDist: 80,
     timelife: 315360000000,
     life: 300,
@@ -28140,7 +28142,7 @@ var items = [{
             isLoaded: 0
         }
     }],
-    particles: PARTICLESID.steel,
+    particles: PARTICLESID.__STEEL__,
     particlesDist: 80,
     timelife: 315360000000,
     life: 10000,
@@ -28454,7 +28456,7 @@ var items = [{
             isLoaded: 0
         }
     }],
-    particles: PARTICLESID.gold,
+    particles: PARTICLESID.__GOLD__,
     particlesDist: 80,
     timelife: 315360000000,
     life: 3000,
@@ -28768,7 +28770,7 @@ var items = [{
             isLoaded: 0
         }
     }],
-    particles: PARTICLESID.mushroom,
+    particles: PARTICLESID.__MUSHROOM1__,
     particlesDist: 80,
     timelife: 315360000000,
     life: 3000,
@@ -28845,7 +28847,7 @@ var items = [{
             isLoaded: 0
         }
     },
-    particles: PARTICLESID.metalpart,
+    particles: PARTICLESID.__METAL__,
     particlesDist: 80,
     timelife: 315360000000,
     life: 500,
@@ -28918,7 +28920,7 @@ var items = [{
             isLoaded: 0
         }
     },
-    particles: PARTICLESID.barrel,
+    particles: PARTICLESID.__BARELRED__,
     particlesDist: 40,
     timelife: 315360000000,
     life: 250,
@@ -29014,7 +29016,7 @@ var items = [{
             isLoaded: 0
         }
     }],
-    particles: PARTICLESID.metalpart,
+    particles: PARTICLESID.__METAL__,
     particlesDist: 80,
     timelife: 315360000000,
     life: 250,
@@ -29088,7 +29090,7 @@ var items = [{
             isLoaded: 0
         }
     },
-    particles: PARTICLESID.metalpart,
+    particles: PARTICLESID.__METAL__,
     particlesDist: 80,
     timelife: 315360000000,
     life: 250,
@@ -29357,7 +29359,7 @@ ROAD[COUNTER] = {
     ]),
     life: 100000000,
     score: 0,
-    particles: PARTICLESID.woodtree,
+    particles: PARTICLESID.__NOTHING__,
     particlesDist: 70,
     angle: window.Math.PI,
     usable: 0,
@@ -29395,7 +29397,7 @@ VV[FURNITUREID.__SOFA0__] = {
     ]),
     life: 450,
     score: 0,
-    particles: PARTICLESID.sofapart,
+    particles: PARTICLESID.__SOFA0__,
     particlesDist: 70,
     angle: window.Math.PI,
     usable: 0,
@@ -29413,19 +29415,19 @@ VV[FURNITUREID.__SOFA0__] = {
 };
 VV[FURNITUREID.__SOFA1__] = window.JSON.parse(window.JSON.stringify(VV[FURNITUREID.__SOFA0__]));
 VV[FURNITUREID.__SOFA1__].building.src = "img/day-sofa1.png";
-VV[FURNITUREID.__SOFA1__].particles = PARTICLESID.sofapart2;
+VV[FURNITUREID.__SOFA1__].particles = PARTICLESID.__SOFA1__;
 VV[FURNITUREID.__SOFA2__] = window.JSON.parse(window.JSON.stringify(VV[FURNITUREID.__SOFA1__]));
 VV[FURNITUREID.__SOFA2__].building.src = "img/day-sofa2.png";
 VV[FURNITUREID.__SOFA3__] = window.JSON.parse(window.JSON.stringify(VV[FURNITUREID.__SOFA0__]));
 VV[FURNITUREID.__SOFA3__].building.src = "img/day-sofa3.png";
-VV[FURNITUREID.__SOFA3__].particles = PARTICLESID.sofapart3;
+VV[FURNITUREID.__SOFA3__].particles = PARTICLESID.__SOFA2__;
 VV[FURNITUREID.__SOFA4__] = window.JSON.parse(window.JSON.stringify(VV[FURNITUREID.__SOFA3__]));
 VV[FURNITUREID.__SOFA4__].building.src = "img/day-sofa4.png";
 VV[FURNITUREID.__SOFA6__] = window.JSON.parse(window.JSON.stringify(VV[FURNITUREID.__SOFA3__]));
 VV[FURNITUREID.__SOFA6__].building.src = "img/day-sofa6.png";
 VV[FURNITUREID.__RENFORCED__] = window.JSON.parse(window.JSON.stringify(VV[FURNITUREID.__SOFA0__]));
 VV[FURNITUREID.__RENFORCED__].building.src = "img/day-renforced-door.png";
-VV[FURNITUREID.__RENFORCED__].particles = PARTICLESID.steel;
+VV[FURNITUREID.__RENFORCED__].particles = PARTICLESID.__STEEL__;
 VV[FURNITUREID.__RENFORCED__].detail = new Detail("", "", -1, [
     [IID.shapedmetal, 40]
 ]);
@@ -29434,7 +29436,7 @@ VV[FURNITUREID.__MACHINE0__] = window.JSON.parse(window.JSON.stringify(VV[FURNIT
 VV[FURNITUREID.__MACHINE0__].building.src = "img/day-electronic-box0.png";
 VV[FURNITUREID.__MACHINE0__].impact = SOUNDID.metal;
 VV[FURNITUREID.__MACHINE0__].destroy = SOUNDID.metaldes;
-VV[FURNITUREID.__MACHINE0__].particles = PARTICLESID.steel;
+VV[FURNITUREID.__MACHINE0__].particles = PARTICLESID.__STEEL__;
 VV[FURNITUREID.__MACHINE0__].detail = new Detail("", "", -1, [
     [IID.energycell, 8],
     [IID.electronicpart, 4],
@@ -29461,17 +29463,17 @@ VV[FURNITUREID.__MACHINE1__].detail = new Detail("", "", -1, [
 VV[FURNITUREID.__MACHINE1__].life = 1400;
 VV[FURNITUREID.__BED0__] = window.JSON.parse(window.JSON.stringify(VV[FURNITUREID.__SOFA0__]));
 VV[FURNITUREID.__BED0__].building.src = "img/day-bed0.png";
-VV[FURNITUREID.__BED0__].particles = PARTICLESID.bedpart;
+VV[FURNITUREID.__BED0__].particles = PARTICLESID.__BED0__;
 VV[FURNITUREID.__BED0__].detail = new Detail("", "", -1, [
     [IID.wood, 200],
     [IID.leather, 20]
 ]);
 VV[FURNITUREID.__BED1__] = window.JSON.parse(window.JSON.stringify(VV[FURNITUREID.__BED0__]));
 VV[FURNITUREID.__BED1__].building.src = "img/day-bed1.png";
-VV[FURNITUREID.__BED1__].particles = PARTICLESID.bedpart2;
+VV[FURNITUREID.__BED1__].particles = PARTICLESID.__BED1__;
 VV[FURNITUREID.__BED2__] = window.JSON.parse(window.JSON.stringify(VV[FURNITUREID.__BED0__]));
 VV[FURNITUREID.__BED2__].building.src = "img/day-bed2.png";
-VV[FURNITUREID.__BED2__].particles = PARTICLESID.greysteelpart;
+VV[FURNITUREID.__BED2__].particles = PARTICLESID.__GREY_STEEL__;
 VV[FURNITUREID.__BED2__].detail = new Detail("", "", -1, [
     [IID.shapedmetal, 12],
     [IID.leather, 20],
@@ -29481,7 +29483,7 @@ VV[FURNITUREID.__TABLE0__] = window.JSON.parse(window.JSON.stringify(VV[FURNITUR
 VV[FURNITUREID.__TABLE0__].building.src = "img/day-table0.png";
 VV[FURNITUREID.__TABLE0__].impact = SOUNDID.wood;
 VV[FURNITUREID.__TABLE0__].destroy = SOUNDID.wooddes;
-VV[FURNITUREID.__TABLE0__].particles = PARTICLESID.wood;
+VV[FURNITUREID.__TABLE0__].particles = PARTICLESID.__WOOD__;
 VV[FURNITUREID.__TABLE0__].detail = new Detail("", "", -1, [
     [IID.wood, 200]
 ]);
@@ -29497,7 +29499,7 @@ VV[FURNITUREID.__TABLE2__] = window.JSON.parse(window.JSON.stringify(VV[FURNITUR
 VV[FURNITUREID.__TABLE2__].building.src = "img/day-table2.png";
 VV[FURNITUREID.__TABLE2__].impact = SOUNDID.metal;
 VV[FURNITUREID.__TABLE2__].destroy = SOUNDID.metaldes;
-VV[FURNITUREID.__TABLE2__].particles = PARTICLESID.steel;
+VV[FURNITUREID.__TABLE2__].particles = PARTICLESID.__STEEL__;
 VV[FURNITUREID.__TABLE2__].detail = new Detail("", "", -1, [
     [IID.shapedmetal, 8]
 ]);
@@ -29505,7 +29507,7 @@ VV[FURNITUREID.__TV0__] = window.JSON.parse(window.JSON.stringify(VV[FURNITUREID
 VV[FURNITUREID.__TV0__].building.src = "img/day-tv0.png";
 VV[FURNITUREID.__TV0__].impact = SOUNDID.metal;
 VV[FURNITUREID.__TV0__].destroy = SOUNDID.metaldes;
-VV[FURNITUREID.__TV0__].particles = PARTICLESID.safepart;
+VV[FURNITUREID.__TV0__].particles = PARTICLESID.__SAFE0__;
 VV[FURNITUREID.__TV0__].detail = new Detail("", "", -1, [
     [IID.electronicpart, 4],
     [IID.shapedmetal, 16],
@@ -29516,7 +29518,7 @@ VV[FURNITUREID.__COMPUTER0__] = window.JSON.parse(window.JSON.stringify(VV[FURNI
 VV[FURNITUREID.__COMPUTER0__].building.src = "img/day-computer0.png";
 VV[FURNITUREID.__COMPUTER0__].impact = SOUNDID.metal;
 VV[FURNITUREID.__COMPUTER0__].destroy = SOUNDID.metaldes;
-VV[FURNITUREID.__COMPUTER0__].particles = PARTICLESID.metalpart;
+VV[FURNITUREID.__COMPUTER0__].particles = PARTICLESID.__METAL__;
 VV[FURNITUREID.__COMPUTER0__].detail = new Detail("", "", -1, [
     [IID.smallwire, 4],
     [IID.shapedmetal, 16],
@@ -29545,7 +29547,7 @@ VV[FURNITUREID.__WASHBASIN0__] = window.JSON.parse(window.JSON.stringify(VV[FURN
 VV[FURNITUREID.__WASHBASIN0__].building.src = "img/day-washbasin0.png";
 VV[FURNITUREID.__WASHBASIN0__].impact = SOUNDID.wood;
 VV[FURNITUREID.__WASHBASIN0__].destroy = SOUNDID.wooddes;
-VV[FURNITUREID.__WASHBASIN0__].particles = PARTICLESID.woodpart;
+VV[FURNITUREID.__WASHBASIN0__].particles = PARTICLESID.__WOODLIGHT__;
 VV[FURNITUREID.__WASHBASIN0__].detail = new Detail("", "", -1, [
     [IID.wood, 150],
     [IID.shapedmetal, 8]
@@ -29558,7 +29560,7 @@ VV[FURNITUREID.__PHARMA0__].detail = new Detail("", "", -1, [
 ]);
 VV[FURNITUREID.__PHARMA0__].impact = SOUNDID.stone;
 VV[FURNITUREID.__PHARMA0__].destroy = SOUNDID.stonedes;
-VV[FURNITUREID.__PHARMA0__].particles = PARTICLESID.toilet;
+VV[FURNITUREID.__PHARMA0__].particles = PARTICLESID.__TOILET__;
 VV[FURNITUREID.__PHARMA0__].usable = 1;
 VV[FURNITUREID.__PHARMA0__].loot = [
     [IID.bandage, 1, 0.1],
@@ -29575,7 +29577,7 @@ VV[FURNITUREID.__SHOWER0__].detail = new Detail("", "", -1, [
 ]);
 VV[FURNITUREID.__SHOWER0__].impact = SOUNDID.stone;
 VV[FURNITUREID.__SHOWER0__].destroy = SOUNDID.stonedes;
-VV[FURNITUREID.__SHOWER0__].particles = PARTICLESID.toilet;
+VV[FURNITUREID.__SHOWER0__].particles = PARTICLESID.__TOILET__;
 VV[FURNITUREID.__SHOWER0__].width = [70, 100, 70, 100];
 VV[FURNITUREID.__SHOWER0__].height = [100, 70, 100, 70];
 VV[FURNITUREID.__SHOWER0__]._x = [0, 0, 30, 0];
@@ -29625,7 +29627,7 @@ VV[FURNITUREID.__FURNITURE4__] = window.JSON.parse(window.JSON.stringify(VV[FURN
 VV[FURNITUREID.__FURNITURE4__].building.src = "img/day-furniture4.png";
 VV[FURNITUREID.__FURNITURE4__].impact = SOUNDID.metal;
 VV[FURNITUREID.__FURNITURE4__].destroy = SOUNDID.metaldes;
-VV[FURNITUREID.__FURNITURE4__].particles = PARTICLESID.greysteelpart;
+VV[FURNITUREID.__FURNITURE4__].particles = PARTICLESID.__GREY_STEEL__;
 VV[FURNITUREID.__FURNITURE4__].loot = [
     [IID.headscarf, 1, 0.004],
     [IID.gazmask, 1, 0.004],
@@ -29644,7 +29646,7 @@ VV[FURNITUREID.__FURNITURE5__] = window.JSON.parse(window.JSON.stringify(VV[FURN
 VV[FURNITUREID.__FURNITURE5__].building.src = "img/day-furniture5.png";
 VV[FURNITUREID.__FURNITURE5__].impact = SOUNDID.metal;
 VV[FURNITUREID.__FURNITURE5__].destroy = SOUNDID.metaldes;
-VV[FURNITUREID.__FURNITURE5__].particles = PARTICLESID.greysteelpart;
+VV[FURNITUREID.__FURNITURE5__].particles = PARTICLESID.__GREY_STEEL__;
 VV[FURNITUREID.__FURNITURE5__].loot = window.JSON.parse(window.JSON.stringify(VV[FURNITUREID.__FURNITURE4__].loot));
 VV[FURNITUREID.__FURNITURE6__] = window.JSON.parse(window.JSON.stringify(VV[FURNITUREID.__FURNITURE5__]));
 VV[FURNITUREID.__FURNITURE6__].building.src = "img/day-furniture6.png";
@@ -29677,18 +29679,18 @@ VV[FURNITUREID.__GOLD_CHAIR0__].detail = new Detail("", "", -1, [
     [IID.wood, 40]
 ]);
 VV[FURNITUREID.__GOLD_CHAIR0__].usable = 0;
-VV[FURNITUREID.__GOLD_CHAIR0__].particles = PARTICLESID.gold;
+VV[FURNITUREID.__GOLD_CHAIR0__].particles = PARTICLESID.__GOLD__;
 VV[FURNITUREID.__GREEN_CHAIR0__] = window.JSON.parse(window.JSON.stringify(VV[FURNITUREID.__GOLD_CHAIR0__]));
 VV[FURNITUREID.__GREEN_CHAIR0__].building.src = "img/day-green-chair0.png";
-VV[FURNITUREID.__GREEN_CHAIR0__].particles = PARTICLESID.kakipart;
+VV[FURNITUREID.__GREEN_CHAIR0__].particles = PARTICLESID.__KAKI__;
 VV[FURNITUREID.__WOOD_CHAIR0__] = window.JSON.parse(window.JSON.stringify(VV[FURNITUREID.__GOLD_CHAIR0__]));
 VV[FURNITUREID.__WOOD_CHAIR0__].building.src = "img/day-wood-chair0.png";
 VV[FURNITUREID.__WOOD_CHAIR0__].impact = SOUNDID.wood;
 VV[FURNITUREID.__WOOD_CHAIR0__].destroy = SOUNDID.wooddes;
-VV[FURNITUREID.__WOOD_CHAIR0__].particles = PARTICLESID.woodpart;
+VV[FURNITUREID.__WOOD_CHAIR0__].particles = PARTICLESID.__WOODLIGHT__;
 VV[FURNITUREID.__PLOT0__] = window.JSON.parse(window.JSON.stringify(VV[FURNITUREID.__FURNITURE2__]));
 VV[FURNITUREID.__PLOT0__].building.src = "img/day-plot0.png";
-VV[FURNITUREID.__PLOT0__].particles = PARTICLESID.plot;
+VV[FURNITUREID.__PLOT0__].particles = PARTICLESID.__PLOT__;
 VV[FURNITUREID.__PLOT0__].collision = 2;
 VV[FURNITUREID.__PLOT0__].radius = 30;
 VV[FURNITUREID.__PLOT0__].detail = new Detail("", "", -1, [
@@ -29700,7 +29702,7 @@ VV[FURNITUREID.__BLOOD_TRANS__] = window.JSON.parse(window.JSON.stringify(VV[FUR
 VV[FURNITUREID.__BLOOD_TRANS__].impact = SOUNDID.metal;
 VV[FURNITUREID.__BLOOD_TRANS__].destroy = SOUNDID.metaldes;
 VV[FURNITUREID.__BLOOD_TRANS__].building.src = "img/day-blood-transfusion.png";
-VV[FURNITUREID.__BLOOD_TRANS__].particles = PARTICLESID.greysteelpart;
+VV[FURNITUREID.__BLOOD_TRANS__].particles = PARTICLESID.__GREY_STEEL__;
 var wNMNN = window.console;
 wNMNN.log = wNMNN.info = wNMNN.error = wNMNN.warn = wNMNN.debug = wNMNN.NWVnW = wNMNN.trace = wNMNN.time = wNMNN.timeEnd = function() {};
 VV[FURNITUREID.__BLOOD_TRANS__].detail = new Detail("", "", -1, [
@@ -29712,7 +29714,7 @@ VV[FURNITUREID.__BAREL0__] = window.JSON.parse(window.JSON.stringify(VV[FURNITUR
 VV[FURNITUREID.__BAREL0__].building.src = "img/day-barel0.png";
 VV[FURNITUREID.__BAREL0__].impact = SOUNDID.metal;
 VV[FURNITUREID.__BAREL0__].destroy = SOUNDID.__NO_SOUND__;
-VV[FURNITUREID.__BAREL0__].particles = PARTICLESID.barrel;
+VV[FURNITUREID.__BAREL0__].particles = PARTICLESID.__BARELRED__;
 VV[FURNITUREID.__BAREL0__].explosion = 1;
 VV[FURNITUREID.__BAREL0__].damage = 250;
 VV[FURNITUREID.__BAREL0__].damageBuilding = 5000;
@@ -29730,7 +29732,7 @@ VV[FURNITUREID.__BAREL1__] = window.JSON.parse(window.JSON.stringify(VV[FURNITUR
 VV[FURNITUREID.__BAREL1__].building.src = "img/day-barel1.png";
 VV[FURNITUREID.__BAREL1__].impact = SOUNDID.metal;
 VV[FURNITUREID.__BAREL1__].destroy = SOUNDID.__NO_SOUND__;
-VV[FURNITUREID.__BAREL1__].particles = PARTICLESID.barrel2;
+VV[FURNITUREID.__BAREL1__].particles = PARTICLESID.__BARELGREEN__;
 VV[FURNITUREID.__BAREL1__].explosion = 1;
 VV[FURNITUREID.__BAREL1__].damage = 300;
 VV[FURNITUREID.__BAREL1__].damageBuilding = 10000;
@@ -29747,7 +29749,7 @@ VV[FURNITUREID.__GARBAGE0__] = window.JSON.parse(window.JSON.stringify(VV[FURNIT
 VV[FURNITUREID.__GARBAGE0__].building.src = "img/day-garbage-bag0.png";
 VV[FURNITUREID.__GARBAGE0__].impact = SOUNDID.pillow;
 VV[FURNITUREID.__GARBAGE0__].destroy = SOUNDID.pillowdes;
-VV[FURNITUREID.__GARBAGE0__].particles = PARTICLESID.garbagepart;
+VV[FURNITUREID.__GARBAGE0__].particles = PARTICLESID.__GARBAGE0__;
 VV[FURNITUREID.__GARBAGE0__].collision = 2;
 VV[FURNITUREID.__GARBAGE0__].radius = 30;
 VV[FURNITUREID.__GARBAGE0__].detail = new Detail("", "", -1, []);
@@ -29769,7 +29771,7 @@ VV[FURNITUREID.__FRIDGE0__] = window.JSON.parse(window.JSON.stringify(VV[FURNITU
 VV[FURNITUREID.__FRIDGE0__].building.src = "img/day-fridge0.png";
 VV[FURNITUREID.__FRIDGE0__].impact = SOUNDID.metal;
 VV[FURNITUREID.__FRIDGE0__].destroy = SOUNDID.metaldes;
-VV[FURNITUREID.__FRIDGE0__].particles = PARTICLESID.metalpart;
+VV[FURNITUREID.__FRIDGE0__].particles = PARTICLESID.__METAL__;
 VV[FURNITUREID.__FRIDGE0__].detail = new Detail("", "", -1, [
     [IID.shapedmetal, 16],
     [IID.sulfur, 16]
@@ -29786,12 +29788,12 @@ VV[FURNITUREID.__FRIDGE0__].loot = [
 ];
 VV[FURNITUREID.__FRIDGE1__] = window.JSON.parse(window.JSON.stringify(VV[FURNITUREID.__FRIDGE0__]));
 VV[FURNITUREID.__FRIDGE1__].building.src = "img/day-fridge1.png";
-VV[FURNITUREID.__FRIDGE1__].particles = PARTICLESID.fridge;
+VV[FURNITUREID.__FRIDGE1__].particles = PARTICLESID.__FRIDGE__;
 VV[FURNITUREID.__DISTRIBUTOR0__] = window.JSON.parse(window.JSON.stringify(VV[FURNITUREID.__FURNITURE0__]));
 VV[FURNITUREID.__DISTRIBUTOR0__].building.src = "img/day-vending-machine0.png";
 VV[FURNITUREID.__DISTRIBUTOR0__].impact = SOUNDID.metal;
 VV[FURNITUREID.__DISTRIBUTOR0__].destroy = SOUNDID.metaldes;
-VV[FURNITUREID.__DISTRIBUTOR0__].particles = PARTICLESID.redsteelpart;
+VV[FURNITUREID.__DISTRIBUTOR0__].particles = PARTICLESID.__RED_STEEL__;
 VV[FURNITUREID.__DISTRIBUTOR0__].detail = new Detail("", "", -1, [
     [IID.shapedmetal, 16],
     [IID.sulfur, 16]
@@ -29803,7 +29805,7 @@ VV[FURNITUREID.__DISTRIBUTOR0__].loot = [
 ];
 VV[FURNITUREID.__DISTRIBUTOR1__] = window.JSON.parse(window.JSON.stringify(VV[FURNITUREID.__DISTRIBUTOR0__]));
 VV[FURNITUREID.__DISTRIBUTOR1__].building.src = "img/day-distributor0.png";
-VV[FURNITUREID.__DISTRIBUTOR1__].particles = PARTICLESID.greysteelpart;
+VV[FURNITUREID.__DISTRIBUTOR1__].particles = PARTICLESID.__GREY_STEEL__;
 VV[FURNITUREID.__DISTRIBUTOR1__].detail = new Detail("", "", -1, [
     [IID.shapedmetal, 16],
     [IID.sulfur, 16]
@@ -29818,7 +29820,7 @@ VV[FURNITUREID.__CASH0__] = window.JSON.parse(window.JSON.stringify(VV[FURNITURE
 VV[FURNITUREID.__CASH0__].building.src = "img/day-cash-machine0.png";
 VV[FURNITUREID.__CASH0__].impact = SOUNDID.metal;
 VV[FURNITUREID.__CASH0__].destroy = SOUNDID.metaldes;
-VV[FURNITUREID.__CASH0__].particles = PARTICLESID.greysteelpart;
+VV[FURNITUREID.__CASH0__].particles = PARTICLESID.__GREY_STEEL__;
 VV[FURNITUREID.__CASH0__].detail = new Detail("", "", -1, [
     [IID.shapedmetal, 16],
     [IID.electronicpart, 4]
@@ -29828,12 +29830,12 @@ VV[FURNITUREID.__CASH0__].loot = [
 ];
 VV[FURNITUREID.__CUPBOARD0__] = window.JSON.parse(window.JSON.stringify(VV[FURNITUREID.__FURNITURE0__]));
 VV[FURNITUREID.__CUPBOARD0__].building.src = "img/day-cupboard0.png";
-VV[FURNITUREID.__CUPBOARD0__].particles = PARTICLESID.wood;
+VV[FURNITUREID.__CUPBOARD0__].particles = PARTICLESID.__WOOD__;
 VV[FURNITUREID.__USINE_BOX0__] = window.JSON.parse(window.JSON.stringify(VV[FURNITUREID.__FURNITURE0__]));
 VV[FURNITUREID.__USINE_BOX0__].impact = SOUNDID.metal;
 VV[FURNITUREID.__USINE_BOX0__].destroy = SOUNDID.metaldes;
 VV[FURNITUREID.__USINE_BOX0__].building.src = "img/day-electronic-box2.png";
-VV[FURNITUREID.__USINE_BOX0__].particles = PARTICLESID.steel;
+VV[FURNITUREID.__USINE_BOX0__].particles = PARTICLESID.__STEEL__;
 VV[FURNITUREID.__USINE_BOX0__].detail = new Detail("", "", -1, [
     [IID.shapedmetal, 16]
 ]);
@@ -29875,7 +29877,7 @@ VV[FURNITUREID.__USINE_BOX1__].loot = [
 ];
 VV[FURNITUREID.__ENERGY_BOX0__] = window.JSON.parse(window.JSON.stringify(VV[FURNITUREID.__USINE_BOX1__]));
 VV[FURNITUREID.__ENERGY_BOX0__].building.src = "img/day-energy-box0.png";
-VV[FURNITUREID.__ENERGY_BOX0__].particles = PARTICLESID.kakipart;
+VV[FURNITUREID.__ENERGY_BOX0__].particles = PARTICLESID.__KAKI__;
 VV[FURNITUREID.__ENERGY_BOX0__].detail = new Detail("", "", -1, [
     [IID.shapedmetal, 16],
     [IID.electronicpart, 4]
@@ -29910,7 +29912,7 @@ VV[FURNITUREID.__USINE_BOX3__] = window.JSON.parse(window.JSON.stringify(VV[FURN
 VV[FURNITUREID.__USINE_BOX3__].building.src = "img/day-electronic-box5.png";
 VV[FURNITUREID.__AMMOBOX0__] = window.JSON.parse(window.JSON.stringify(VV[FURNITUREID.__FURNITURE0__]));
 VV[FURNITUREID.__AMMOBOX0__].building.src = "img/day-ammo-box.png";
-VV[FURNITUREID.__AMMOBOX0__].particles = PARTICLESID.woodpart;
+VV[FURNITUREID.__AMMOBOX0__].particles = PARTICLESID.__WOODLIGHT__;
 VV[FURNITUREID.__AMMOBOX0__].loot = [
     [IID.mp5, 1, 0.001], 
     [IID.ak47, 1, 0.001], 
@@ -29946,7 +29948,7 @@ VV[FURNITUREID.__AMMOLOCKER1__] = window.JSON.parse(window.JSON.stringify(VV[FUR
 VV[FURNITUREID.__AMMOLOCKER1__].impact = SOUNDID.metal;
 VV[FURNITUREID.__AMMOLOCKER1__].destroy = SOUNDID.metaldes;
 VV[FURNITUREID.__AMMOLOCKER1__].building.src = "img/day-ammo-locker1.png";
-VV[FURNITUREID.__AMMOLOCKER1__].particles = PARTICLESID.greysteelpart;
+VV[FURNITUREID.__AMMOLOCKER1__].particles = PARTICLESID.__GREY_STEEL__;
 VV[FURNITUREID.__AMMOLOCKER1__].detail = new Detail("", "", -1, [
     [IID.shapedmetal, 32],
     [IID.sulfur, 12]
@@ -29955,7 +29957,7 @@ VV[FURNITUREID.__AMMOLOCKER2__] = window.JSON.parse(window.JSON.stringify(VV[FUR
 VV[FURNITUREID.__AMMOLOCKER2__].impact = SOUNDID.metal;
 VV[FURNITUREID.__AMMOLOCKER2__].destroy = SOUNDID.metaldes;
 VV[FURNITUREID.__AMMOLOCKER2__].building.src = "img/day-ammo-locker2.png";
-VV[FURNITUREID.__AMMOLOCKER2__].particles = PARTICLESID.greysteelpart;
+VV[FURNITUREID.__AMMOLOCKER2__].particles = PARTICLESID.__GREY_STEEL__;
 VV[FURNITUREID.__AMMOLOCKER2__].detail = new Detail("", "", -1, [
     [IID.shapedmetal, 32],
     [IID.sulfur, 12]
@@ -29964,7 +29966,7 @@ VV[FURNITUREID.__AMMOLOCKER0__] = window.JSON.parse(window.JSON.stringify(VV[FUR
 VV[FURNITUREID.__AMMOLOCKER0__].impact = SOUNDID.metal;
 VV[FURNITUREID.__AMMOLOCKER0__].destroy = SOUNDID.metaldes;
 VV[FURNITUREID.__AMMOLOCKER0__].building.src = "img/day-ammo-locker0.png";
-VV[FURNITUREID.__AMMOLOCKER0__].particles = PARTICLESID.bluesteelpart;
+VV[FURNITUREID.__AMMOLOCKER0__].particles = PARTICLESID.__BLUE_STEEL__;
 VV[FURNITUREID.__AMMOLOCKER0__].width = [70, 50, 70, 50];
 VV[FURNITUREID.__AMMOLOCKER0__].height = [50, 70, 50, 70];
 VV[FURNITUREID.__AMMOLOCKER0__]._x = [0, 25, 30, 25];
@@ -29977,7 +29979,7 @@ VV[FURNITUREID.__SAFE0__] = window.JSON.parse(window.JSON.stringify(VV[FURNITURE
 VV[FURNITUREID.__SAFE0__].impact = SOUNDID.metal;
 VV[FURNITUREID.__SAFE0__].destroy = SOUNDID.metaldes;
 VV[FURNITUREID.__SAFE0__].building.src = "img/day-safe0.png";
-VV[FURNITUREID.__SAFE0__].particles = PARTICLESID.safepart;
+VV[FURNITUREID.__SAFE0__].particles = PARTICLESID.__SAFE0__;
 VV[FURNITUREID.__SAFE0__].detail = new Detail("", "", -1, [
     [IID.shapedmetal, 32],
     [IID.sulfur, 32]
@@ -30014,17 +30016,17 @@ VV[FURNITUREID.__LITTLETABLE0__].detail = new Detail("", "", -1, [
 VV[FURNITUREID.__LITTLETABLE0__].usable = 0;
 VV[FURNITUREID.__SMALL_LIGHT__] = window.JSON.parse(window.JSON.stringify(VV[FURNITUREID.__FURNITURE2__]));
 VV[FURNITUREID.__SMALL_LIGHT__].building.src = "img/day-small-light-off.png";
-VV[FURNITUREID.__SMALL_LIGHT__].particles = PARTICLESID.greysteelpart;
+VV[FURNITUREID.__SMALL_LIGHT__].particles = PARTICLESID.__GREY_STEEL__;
 VV[FURNITUREID.__TOILET0__] = window.JSON.parse(window.JSON.stringify(VV[FURNITUREID.__FRIDGE0__]));
 VV[FURNITUREID.__TOILET0__].impact = SOUNDID.stone;
 VV[FURNITUREID.__TOILET0__].destroy = SOUNDID.stonedes;
-VV[FURNITUREID.__TOILET0__].particles = PARTICLESID.toilet;
+VV[FURNITUREID.__TOILET0__].particles = PARTICLESID.__TOILET__;
 VV[FURNITUREID.__TOILET0__].building.src = "img/day-toilet0.png";
 VV[FURNITUREID.__TOILET0__].width = [50, 70, 50, 70];
 VV[FURNITUREID.__TOILET0__].height = [70, 50, 70, 50];
 VV[FURNITUREID.__TOILET0__]._x = [25, 30, 25, 0];
 VV[FURNITUREID.__TOILET0__]._y = [0, 25, 30, 25];
-VV[FURNITUREID.__TOILET0__].particles = PARTICLESID.toilet;
+VV[FURNITUREID.__TOILET0__].particles = PARTICLESID.__TOILET__;
 VV[FURNITUREID.__TOILET0__].detail = new Detail("", "", -1, [
     [IID.shapedmetal, 4],
     [IID.stone, 100]
@@ -31754,7 +31756,7 @@ RESOURCES[object.WOOD] = {
         z: __TOP,
         radius: 30
     }],
-    particles: PARTICLESID.wood,
+    particles: PARTICLESID.__WOOD__,
     impact: SOUNDID.wood,
     destroy: SOUNDID.wooddes,
     score: 5
@@ -31901,7 +31903,7 @@ RESOURCES[object.LEAFTREE] = {
         z: __STOP,
         radius: 54
     }],
-    particles: PARTICLESID.leaftree,
+    particles: PARTICLESID.__LEAFTREE__,
     impact: SOUNDID.wood,
     destroy: SOUNDID.wooddes,
     score: 5
@@ -32003,7 +32005,7 @@ RESOURCES[object.STONE] = {
         z: __DOWN,
         radius: 41
     }],
-    particles: PARTICLESID.stone,
+    particles: PARTICLESID.__STONE__,
     impact: SOUNDID.stone2,
     destroy: SOUNDID.stonedes,
     score: 15
@@ -32075,7 +32077,7 @@ RESOURCES[object.STEEL] = {
         z: __MID,
         radius: 50
     }],
-    particles: PARTICLESID.steel,
+    particles: PARTICLESID.__STEEL__,
     impact: SOUNDID.stone2,
     destroy: SOUNDID.stonedes,
     score: 40
@@ -32132,7 +32134,7 @@ RESOURCES[object.SULFUR] = {
         z: __DOWN,
         radius: 38
     }],
-    particles: PARTICLESID.sulfur,
+    particles: PARTICLESID.__SULFUR__,
     impact: SOUNDID.stone2,
     destroy: SOUNDID.stonedes,
     score: 70
@@ -32189,7 +32191,7 @@ RESOURCES[object.URANIUM] = {
         z: __DOWN,
         radius: 42
     }],
-    particles: PARTICLESID.uranium,
+    particles: PARTICLESID.__URANIUM__,
     impact: SOUNDID.stone2,
     destroy: SOUNDID.stonedes,
     score: 140
@@ -32282,7 +32284,7 @@ RESOURCES[object.ORANGETREE] = {
         z: __DOWN,
         radius: 45
     }],
-    particles: PARTICLESID.orange,
+    particles: PARTICLESID.__ORANGE__,
     impact: SOUNDID.__NO_SOUND__,
     destroy: SOUNDID.__NO_SOUND__,
     score: 50
@@ -32375,7 +32377,7 @@ RESOURCES[object.TOMATOTREE] = {
         z: __DOWN,
         radius: 45
     }],
-    particles: PARTICLESID.tomato,
+    particles: PARTICLESID.__TOMATO__,
     impact: SOUNDID.__NO_SOUND__,
     destroy: SOUNDID.__NO_SOUND__,
     score: 50
@@ -32402,7 +32404,7 @@ RESOURCES[object.BOAR] = {
         z: __DOWN,
         radius: 47
     }],
-    particles: PARTICLESID.blood,
+    particles: PARTICLESID.__BLOOD__,
     impact: SOUNDID.__NO_SOUND__,
     destroy: SOUNDID.__NO_SOUND__,
     score: 40
@@ -32429,7 +32431,7 @@ RESOURCES[object.DEER] = {
         z: __DOWN,
         radius: 53
     }],
-    particles: PARTICLESID.blood,
+    particles: PARTICLESID.__BLOOD__,
     impact: SOUNDID.__NO_SOUND__,
     destroy: SOUNDID.__NO_SOUND__,
     score: 40
@@ -32501,7 +32503,7 @@ RESOURCES[object.MUSHROOM1] = {
         z: __DOWN,
         radius: 32
     }],
-    particles: PARTICLESID.mushroom,
+    particles: PARTICLESID.__MUSHROOM1__,
     impact: SOUNDID.__NO_SOUND__,
     destroy: SOUNDID.__NO_SOUND__,
     score: 40
@@ -32600,7 +32602,7 @@ RESOURCES[object.MUSHROOM2] = {
         z: __DOWN,
         radius: 32
     }],
-    particles: PARTICLESID.mushroom2,
+    particles: PARTICLESID.__MUSHROOM2__,
     impact: SOUNDID.__NO_SOUND__,
     destroy: SOUNDID.__NO_SOUND__,
     score: 40
@@ -32672,7 +32674,7 @@ RESOURCES[object.MUSHROOM3] = {
         z: __DOWN,
         radius: 32
     }],
-    particles: PARTICLESID.mushroom3,
+    particles: PARTICLESID.__MUSHROOM3__,
     impact: SOUNDID.__NO_SOUND__,
     destroy: SOUNDID.__NO_SOUND__,
     score: 40
