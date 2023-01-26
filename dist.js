@@ -11109,10 +11109,10 @@ var Nnw = 0;
 function wMNww(vV) {
     var NvV = "";
     var buildings = Entitie.units[vV];
-    var wWv = Entitie.border[vV];
-    var wVN = wWv.border;
-    for (i = 0; i < wVN; i++) {
-        var player = buildings[wWv.cycle[i]];
+    var buildingsBorder = Entitie.border[vV];
+    var buildingsLen = buildingsBorder.border;
+    for (i = 0; i < buildingsLen; i++) {
+        var player = buildings[buildingsBorder.cycle[i]];
         var IID = items[player.extra >> 7];
         NvV += ("!b=" + IID.id) + ":";
         if (IID.subtype !== 0) NvV += player.subtype + ":";
@@ -11275,10 +11275,10 @@ var Editor = (function() {
     function wMNww(vV) {
         var NvV = "";
         var buildings = Entitie.units[vV];
-        var wWv = Entitie.border[vV];
-        var wVN = wWv.border;
-        for (i = 0; i < wVN; i++) {
-            var player = buildings[wWv.cycle[i]];
+        var buildingsBorder = Entitie.border[vV];
+        var buildingsLen = buildingsBorder.border;
+        for (i = 0; i < buildingsLen; i++) {
+            var player = buildings[buildingsBorder.cycle[i]];
             var IID = items[player.extra >> 7];
             NvV += ("!b=" + IID.id) + ":";
             if (IID.subtype !== 0) NvV += player.subtype + ":";
@@ -11289,10 +11289,10 @@ var Editor = (function() {
 
     function nwmMw(vV, WX, WY) {
         var buildings = Entitie.units[vV];
-        var wWv = Entitie.border[vV];
-        var wVN = wWv.border;
-        for (i = 0; i < wVN; i++) {
-            var building = buildings[wWv.cycle[i]];
+        var buildingsBorder = Entitie.border[vV];
+        var buildingsLen = buildingsBorder.border;
+        for (i = 0; i < buildingsLen; i++) {
+            var building = buildings[buildingsBorder.cycle[i]];
             if ((((building.x >= WX) && (building.x <= (WX + 100))) && (building.y >= WY)) && (building.y <= (WY + 100))) {
                 Entitie.remove(building.pid, building.id, building.uid, vV, building.extra);
                 return;
@@ -15450,7 +15450,7 @@ try {
         };
 
         function creaturesinscreenfunc(player) {
-            var mnn = AI[player.extra & 15];
+            var entitie = AI[player.extra & 15];
             matrix[player.i][player.j].NMn = frameId;
             matrix[player.i][player.j].wMV = player.pid;
             matrix[player.i][player.j].category = window.undefined;
@@ -15461,7 +15461,7 @@ try {
                 player.death += delta;
                 var vW = MathUtils.Ease.outQuart(1 - ((player.death - 500) / 400));
                 ctx.globalAlpha = window.Math.min(window.Math.max(0, vW), 1);
-                CanvasUtils.drawImageHd(mnn.death, WX, WY, player.angle, 0, 0, 1);
+                CanvasUtils.drawImageHd(entitie.death, WX, WY, player.angle, 0, 0, 1);
                 vW = MathUtils.Ease.outQuart(1 - (player.death / 400));
                 imgMovement = window.Math.min(1 + (0.5 * (1 - vW)), 1.5);
                 ctx.globalAlpha = window.Math.max(0, vW);
@@ -15471,7 +15471,7 @@ try {
                 player.hurt = 250;
                 player.hurtAngle = (WNVNM * ((player.extra >> 5) & 31)) / 31;
             }
-            mnn.draw(mnn, player, WX, WY, imgMovement);
+            entitie.draw(entitie, player, WX, WY, imgMovement);
             if (player.removed !== 0) {
                 if (player.death > 900) player.removed = 2;
                 ctx.globalAlpha = 1;
@@ -15917,7 +15917,7 @@ try {
         function _Door(IID, player, WX, WY, Rot, imgMovement) {
             var NVNvv = (player.state >> 4) & 1;
             var MWwVn = (player.pid === 0) ? 0 : 1;
-            if ((nearme(IID, player, MWwVn) === 1) && (NVNvv === 1)) World.PLAYER.eInteract = IID.mMnmM;
+            if ((nearme(IID, player, MWwVn) === 1) && (NVNvv === 1)) World.PLAYER.eInteract = IID.interactclose;
             if (player.hit !== NVNvv) {
                 player.hitMax = 500;
                 player.hit = NVNvv;
@@ -15989,13 +15989,13 @@ try {
             CanvasUtils.drawImageHd(objects.building, vertst + player.x, horist + player.y, 0, 0, 0, imgMovement);
         };
 
-        function _Ghoul(mnn, player, WX, WY, imgMovement) {
+        function _Ghoul(entitie, player, WX, WY, imgMovement) {
             var Vmwnn = player.state & 254;
             if (Vmwnn === 2) {
                 player.state &= 65281;
                 if (player.hit <= 0) {
-                    player.hit = mnn.actionDelay;
-                    player.hitMax = mnn.actionDelay;
+                    player.hit = entitie.actionDelay;
+                    player.hitMax = entitie.actionDelay;
                     var VVmnw = window.Math.floor(window.Math.random() * 3);
                     AudioUtils.playFx(AudioUtils._fx.shot[0][VVmnw], 0.5, Math2d.dist(World.PLAYER.x, World.PLAYER.y, player.x, player.y) / 3.5, 0);
                 }
@@ -16006,8 +16006,8 @@ try {
             var wnN = 0;
             if (player.hit > 0) {
                 player.hit = window.Math.max(0, player.hit - delta);
-                player.hit = window.Math.min(player.hit, mnn.actionDelay);
-                vW = (player.hit > mnn.actionImpactClient) ? (1 - ((player.hit - mnn.actionImpactClient) / (mnn.actionDelay - mnn.actionImpactClient))) : (player.hit / mnn.actionImpactClient);
+                player.hit = window.Math.min(player.hit, entitie.actionDelay);
+                vW = (player.hit > entitie.actionImpactClient) ? (1 - ((player.hit - entitie.actionImpactClient) / (entitie.actionDelay - entitie.actionImpactClient))) : (player.hit / entitie.actionImpactClient);
                 nmm = (player.hurt2 * MathUtils.Ease.inOutQuad(vW)) * 0.55;
                 wnN = vW * 6;
                 if (player.hurt2 === 1) NNM = vW * 25;
@@ -16032,10 +16032,10 @@ try {
                     if (player.breath > 1500) player.breath = 0;
                 }
             }
-            var breath = mnn.breath * ((player.breath < 750) ? (player.breath / 750) : (1 - ((player.breath - 750) / 750)));
-            var move = mnn.armMove * ((player.breath2 < 750) ? (player.breath2 / 750) : (1 - ((player.breath2 - 750) / 750)));
-            CanvasUtils.drawImageHd(mnn.rightArm, WX, WY, ((mnn.rightArm.angle + player.angle) + breath) + nmm, (mnn.rightArm.x + (move * player.heal)) + NWW, mnn.rightArm.y, imgMovement);
-            CanvasUtils.drawImageHd(mnn.leftArm, WX, WY, ((-mnn.leftArm.angle + player.angle) - breath) + nmm, (mnn.leftArm.x - (move * player.heal)) + NNM, mnn.leftArm.y, imgMovement);
+            var breath = entitie.breath * ((player.breath < 750) ? (player.breath / 750) : (1 - ((player.breath - 750) / 750)));
+            var move = entitie.armMove * ((player.breath2 < 750) ? (player.breath2 / 750) : (1 - ((player.breath2 - 750) / 750)));
+            CanvasUtils.drawImageHd(entitie.rightArm, WX, WY, ((entitie.rightArm.angle + player.angle) + breath) + nmm, (entitie.rightArm.x + (move * player.heal)) + NWW, entitie.rightArm.y, imgMovement);
+            CanvasUtils.drawImageHd(entitie.leftArm, WX, WY, ((-entitie.leftArm.angle + player.angle) - breath) + nmm, (entitie.leftArm.x - (move * player.heal)) + NNM, entitie.leftArm.y, imgMovement);
             if (player.hurt > 0) {
                 var mnM = 1;
                 player.hurt -= delta;
@@ -16048,10 +16048,10 @@ try {
                 WX += (window.Math.cos(player.hurtAngle) * vW) * 10;
                 WY += (window.Math.sin(player.hurtAngle) * vW) * 10;
                 ctx.globalAlpha = window.Math.min(1, window.Math.max(0, vW));
-                CanvasUtils.drawImageHd(mnn.hurt, WX, WY, player.angle + (nmm / 1.5), wnN, 0, mnM);
+                CanvasUtils.drawImageHd(entitie.hurt, WX, WY, player.angle + (nmm / 1.5), wnN, 0, mnM);
                 ctx.globalAlpha = 1;
             }
-            CanvasUtils.drawImageHd(mnn.head, WX, WY, player.angle + (nmm / 1.5), wnN, 0, imgMovement);
+            CanvasUtils.drawImageHd(entitie.head, WX, WY, player.angle + (nmm / 1.5), wnN, 0, imgMovement);
         };
 
 
@@ -16517,49 +16517,49 @@ try {
             var Wwn = Entitie.border[ENTITIES.length];
             var WWM = Wwn.border;
             var buildings = Entitie.units[__ENTITIE_BUILD_TOP__];
-            var wWv = Entitie.border[__ENTITIE_BUILD_TOP__];
-            var wVN = wWv.border;
-            for (i = 0; i < wVN; i++) bigwallsfusion(buildings[wWv.cycle[i]]);
+            var buildingsBorder = Entitie.border[__ENTITIE_BUILD_TOP__];
+            var buildingsLen = buildingsBorder.border;
+            for (i = 0; i < buildingsLen; i++) bigwallsfusion(buildings[buildingsBorder.cycle[i]]);
             buildings = Entitie.units[__ENTITIE_BUILD_GROUND2__];
-            wWv = Entitie.border[__ENTITIE_BUILD_GROUND2__];
-            wVN = wWv.border;
-            for (i = 0; i < wVN; i++) floorsfusion(buildings[wWv.cycle[i]]);
-            for (i = 0; i < wVN; i++) objectsinscreenfunc(buildings[wWv.cycle[i]]);
+            buildingsBorder = Entitie.border[__ENTITIE_BUILD_GROUND2__];
+            buildingsLen = buildingsBorder.border;
+            for (i = 0; i < buildingsLen; i++) floorsfusion(buildings[buildingsBorder.cycle[i]]);
+            for (i = 0; i < buildingsLen; i++) objectsinscreenfunc(buildings[buildingsBorder.cycle[i]]);
             for (i = 0; i < WWM; i++) {
                 var player = MvW[Wwn.cycle[i]];
                 if (player.type === __ENTITIE_BUILD_GROUND2__) objectsinscreenfunc(player);
             }
             if (NwMVW !== vMNWw) {
                 var particles = Entitie.units[__ENTITIE_PARTICLES__];
-                var wWv = Entitie.border[__ENTITIE_PARTICLES__];
-                var wVN = wWv.border;
-                for (i = 0; i < wVN; i++) mWNvV(particles[wWv.cycle[i]]);
+                var buildingsBorder = Entitie.border[__ENTITIE_PARTICLES__];
+                var buildingsLen = buildingsBorder.border;
+                for (i = 0; i < buildingsLen; i++) mWNvV(particles[buildingsBorder.cycle[i]]);
                 if (VwmMm.id !== -1) {
                     Entitie.remove(0, VwmMm.id, VwmMm.uid, __ENTITIE_PARTICLES__);
                     VwmMm.id = -1;
                 }
             }
             var buildings = Entitie.units[__ENTITIE_BUILD_GROUND__];
-            var wWv = Entitie.border[__ENTITIE_BUILD_GROUND__];
-            var wVN = wWv.border;
-            for (i = 0; i < wVN; i++) objectsinscreenfunc(buildings[wWv.cycle[i]]);
+            var buildingsBorder = Entitie.border[__ENTITIE_BUILD_GROUND__];
+            var buildingsLen = buildingsBorder.border;
+            for (i = 0; i < buildingsLen; i++) objectsinscreenfunc(buildings[buildingsBorder.cycle[i]]);
             for (i = 0; i < WWM; i++) {
                 var player = MvW[Wwn.cycle[i]];
                 if (player.type === __ENTITIE_BUILD_GROUND__) objectsinscreenfunc(player);
             }
-            WMmMN = Entitie.units[__ENTITIE_RESOURCES_DOWN__];
-            VmwNm = Entitie.border[__ENTITIE_RESOURCES_DOWN__];
-            vMwWm = VmwNm.border;
-            for (i = 0; i < vMwWm; i++) natureinscreenfunc(WMmMN[VmwNm.cycle[i]]);
+            resources = Entitie.units[__ENTITIE_RESOURCES_DOWN__];
+            resourceBorder = Entitie.border[__ENTITIE_RESOURCES_DOWN__];
+            resourceLen = resourceBorder.border;
+            for (i = 0; i < resourceLen; i++) natureinscreenfunc(resources[resourceBorder.cycle[i]]);
             for (i = 0; i < WWM; i++) {
                 var player = MvW[Wwn.cycle[i]];
                 if (player.type === __ENTITIE_RESOURCES_DOWN__) natureinscreenfunc(player);
             }
             var buildings = Entitie.units[__ENTITIE_BUILD_DOWN__];
-            var wWv = Entitie.border[__ENTITIE_BUILD_DOWN__];
-            var wVN = wWv.border;
-            for (i = 0; i < wVN; i++) smallwallsfusion(buildings[wWv.cycle[i]]);
-            for (i = 0; i < wVN; i++) objectsinscreenfunc(buildings[wWv.cycle[i]]);
+            var buildingsBorder = Entitie.border[__ENTITIE_BUILD_DOWN__];
+            var buildingsLen = buildingsBorder.border;
+            for (i = 0; i < buildingsLen; i++) smallwallsfusion(buildings[buildingsBorder.cycle[i]]);
+            for (i = 0; i < buildingsLen; i++) objectsinscreenfunc(buildings[buildingsBorder.cycle[i]]);
             for (i = 0; i < WWM; i++) {
                 var player = MvW[Wwn.cycle[i]];
                 if (player.type === __ENTITIE_BUILD_DOWN__) objectsinscreenfunc(player);
@@ -16578,26 +16578,26 @@ try {
             }
             World.PLAYER.loot = -1;
             World.PLAYER.lootId = -1;
-            var MMwVW = Entitie.units[__ENTITIE_LOOT__];
-            var vmwvW = Entitie.border[__ENTITIE_LOOT__];
-            var MVMVw = vmwvW.border;
-            for (i = 0; i < MVMVw; i++) lootinscreenfunc(MMwVW[vmwvW.cycle[i]]);
+            var loots = Entitie.units[__ENTITIE_LOOT__];
+            var lootsBorder = Entitie.border[__ENTITIE_LOOT__];
+            var lootsLen = lootsBorder.border;
+            for (i = 0; i < lootsLen; i++) lootinscreenfunc(loots[lootsBorder.cycle[i]]);
             for (i = 0; i < WWM; i++) {
                 var player = MvW[Wwn.cycle[i]];
                 if (player.type === __ENTITIE_LOOT__) lootinscreenfunc(player);
             }
             var bullets = Entitie.units[__ENTITIE_BULLET__];
-            var Mmwnm = Entitie.border[__ENTITIE_BULLET__];
-            var MNmmw = Mmwnm.border;
-            for (i = 0; i < MNmmw; i++) projectilefunc(bullets[Mmwnm.cycle[i]]);
+            var bulletsBorder = Entitie.border[__ENTITIE_BULLET__];
+            var bulletsLen = bulletsBorder.border;
+            for (i = 0; i < bulletsLen; i++) projectilefunc(bullets[bulletsBorder.cycle[i]]);
             for (i = 0; i < WWM; i++) {
                 var player = MvW[Wwn.cycle[i]];
                 if (player.type === __ENTITIE_BULLET__) projectilefunc(player);
             }
-            WMmMN = Entitie.units[__ENTITIE_RESOURCES_MID__];
-            VmwNm = Entitie.border[__ENTITIE_RESOURCES_MID__];
-            vMwWm = VmwNm.border;
-            for (i = 0; i < vMwWm; i++) natureinscreenfunc(WMmMN[VmwNm.cycle[i]]);
+            resources = Entitie.units[__ENTITIE_RESOURCES_MID__];
+            resourceBorder = Entitie.border[__ENTITIE_RESOURCES_MID__];
+            resourceLen = resourceBorder.border;
+            for (i = 0; i < resourceLen; i++) natureinscreenfunc(resources[resourceBorder.cycle[i]]);
             for (i = 0; i < WWM; i++) {
                 var player = MvW[Wwn.cycle[i]];
                 if (player.type === __ENTITIE_RESOURCES_MID__) natureinscreenfunc(player);
@@ -16634,18 +16634,18 @@ try {
                     }
                 }
             }
-            var mnn = Entitie.units[__ENTITIE_AI__];
-            var WwVvW = Entitie.border[__ENTITIE_AI__];
-            var nWwNn = WwVvW.border;
-            for (i = 0; i < nWwNn; i++) creaturesinscreenfunc(mnn[WwVvW.cycle[i]]);
+            var entitie = Entitie.units[__ENTITIE_AI__];
+            var entitieBorder = Entitie.border[__ENTITIE_AI__];
+            var entitieLen = entitieBorder.border;
+            for (i = 0; i < entitieLen; i++) creaturesinscreenfunc(entitie[entitieBorder.cycle[i]]);
             for (i = 0; i < WWM; i++) {
                 var player = MvW[Wwn.cycle[i]];
                 if (player.type === __ENTITIE_AI__) creaturesinscreenfunc(player);
             }
             buildings = Entitie.units[__ENTITIE_BUILD_TOP__];
-            wWv = Entitie.border[__ENTITIE_BUILD_TOP__];
-            wVN = wWv.border;
-            for (i = 0; i < wVN; i++) objectsinscreenfunc(buildings[wWv.cycle[i]]);
+            buildingsBorder = Entitie.border[__ENTITIE_BUILD_TOP__];
+            buildingsLen = buildingsBorder.border;
+            for (i = 0; i < buildingsLen; i++) objectsinscreenfunc(buildings[buildingsBorder.cycle[i]]);
             for (i = 0; i < WWM; i++) {
                 var player = MvW[Wwn.cycle[i]];
                 if (player.type === __ENTITIE_BUILD_TOP__) objectsinscreenfunc(player);
@@ -16655,26 +16655,26 @@ try {
                 IID.VvmvM(WvnvV[i]);
                 WvnvV[i] = null;
             }
-            WMmMN = Entitie.units[__ENTITIE_RESOURCES_TOP__];
-            VmwNm = Entitie.border[__ENTITIE_RESOURCES_TOP__];
-            vMwWm = VmwNm.border;
-            for (i = 0; i < vMwWm; i++) natureinscreenfunc(WMmMN[VmwNm.cycle[i]]);
+            resources = Entitie.units[__ENTITIE_RESOURCES_TOP__];
+            resourceBorder = Entitie.border[__ENTITIE_RESOURCES_TOP__];
+            resourceLen = resourceBorder.border;
+            for (i = 0; i < resourceLen; i++) natureinscreenfunc(resources[resourceBorder.cycle[i]]);
             for (i = 0; i < WWM; i++) {
                 var player = MvW[Wwn.cycle[i]];
                 if (player.type === __ENTITIE_RESOURCES_TOP__) natureinscreenfunc(player);
             }
-            WMmMN = Entitie.units[__ENTITIE_RESOURCES_STOP__];
-            VmwNm = Entitie.border[__ENTITIE_RESOURCES_STOP__];
-            vMwWm = VmwNm.border;
-            for (i = 0; i < vMwWm; i++) natureinscreenfunc(WMmMN[VmwNm.cycle[i]]);
+            resources = Entitie.units[__ENTITIE_RESOURCES_STOP__];
+            resourceBorder = Entitie.border[__ENTITIE_RESOURCES_STOP__];
+            resourceLen = resourceBorder.border;
+            for (i = 0; i < resourceLen; i++) natureinscreenfunc(resources[resourceBorder.cycle[i]]);
             for (i = 0; i < WWM; i++) {
                 var player = MvW[Wwn.cycle[i]];
                 if (player.type === __ENTITIE_RESOURCES_STOP__) natureinscreenfunc(player);
             }
             explosions = Entitie.units[__ENTITIE_EXPLOSION__];
-            VMnwn = Entitie.border[__ENTITIE_EXPLOSION__];
-            WNnmw = VMnwn.border;
-            for (i = 0; i < WNnmw; i++) nVmNm(explosions[VMnwn.cycle[i]]);
+            explosionBorder = Entitie.border[__ENTITIE_EXPLOSION__];
+            explosionLen = explosionBorder.border;
+            for (i = 0; i < explosionLen; i++) nVmNm(explosions[explosionBorder.cycle[i]]);
             for (i = 0; i < len; i++) vWMWW(players[border.cycle[i]]);
             if (World.gameMode !== World.__BR__) {
                 for (i = 0; i < len; i++) mVwvw(players[border.cycle[i]]);
@@ -20188,7 +20188,7 @@ var items = [{
             isLoaded: 0
         }
     },
-    mMnmM: {
+    interactclose: {
         src: "img/e-closedoor.png",
         W: {
             isLoaded: 0
@@ -20292,7 +20292,7 @@ var items = [{
             isLoaded: 0
         }
     },
-    mMnmM: {
+    interactclose: {
         src: "img/e-closedoor.png",
         W: {
             isLoaded: 0
@@ -20396,7 +20396,7 @@ var items = [{
             isLoaded: 0
         }
     },
-    mMnmM: {
+    interactclose: {
         src: "img/e-closedoor.png",
         W: {
             isLoaded: 0
@@ -21112,7 +21112,7 @@ var items = [{
             isLoaded: 0
         }
     },
-    mMnmM: {
+    interactclose: {
         src: "img/e-closedoor.png",
         W: {
             isLoaded: 0
@@ -21216,7 +21216,7 @@ var items = [{
             isLoaded: 0
         }
     },
-    mMnmM: {
+    interactclose: {
         src: "img/e-closedoor.png",
         W: {
             isLoaded: 0
@@ -21320,7 +21320,7 @@ var items = [{
             isLoaded: 0
         }
     },
-    mMnmM: {
+    interactclose: {
         src: "img/e-closedoor.png",
         W: {
             isLoaded: 0
@@ -29378,8 +29378,8 @@ for (var i = 0; i < 45; i++) {
     ROAD[COUNTER] = window.JSON.parse(window.JSON.stringify(ROAD[0]));
     ROAD[COUNTER].building.src = ("img/day-road" + COUNTER) + ".png";
 }
-var VV = items[IID.__FURNITURE__].subtype;
-VV[FURNITUREID.__SOFA0__] = {
+var FURNITURE = items[IID.__FURNITURE__].subtype;
+FURNITURE[FURNITUREID.__SOFA0__] = {
     width: [100, 100, 100, 100],
     height: [100, 100, 100, 100],
     _x: [0, 0, 0, 0],
@@ -29415,186 +29415,186 @@ VV[FURNITUREID.__SOFA0__] = {
     damageBuilding: 0,
     timelife: 315360000000
 };
-VV[FURNITUREID.__SOFA1__] = window.JSON.parse(window.JSON.stringify(VV[FURNITUREID.__SOFA0__]));
-VV[FURNITUREID.__SOFA1__].building.src = "img/day-sofa1.png";
-VV[FURNITUREID.__SOFA1__].particles = PARTICLESID.__SOFA1__;
-VV[FURNITUREID.__SOFA2__] = window.JSON.parse(window.JSON.stringify(VV[FURNITUREID.__SOFA1__]));
-VV[FURNITUREID.__SOFA2__].building.src = "img/day-sofa2.png";
-VV[FURNITUREID.__SOFA3__] = window.JSON.parse(window.JSON.stringify(VV[FURNITUREID.__SOFA0__]));
-VV[FURNITUREID.__SOFA3__].building.src = "img/day-sofa3.png";
-VV[FURNITUREID.__SOFA3__].particles = PARTICLESID.__SOFA2__;
-VV[FURNITUREID.__SOFA4__] = window.JSON.parse(window.JSON.stringify(VV[FURNITUREID.__SOFA3__]));
-VV[FURNITUREID.__SOFA4__].building.src = "img/day-sofa4.png";
-VV[FURNITUREID.__SOFA6__] = window.JSON.parse(window.JSON.stringify(VV[FURNITUREID.__SOFA3__]));
-VV[FURNITUREID.__SOFA6__].building.src = "img/day-sofa6.png";
-VV[FURNITUREID.__RENFORCED__] = window.JSON.parse(window.JSON.stringify(VV[FURNITUREID.__SOFA0__]));
-VV[FURNITUREID.__RENFORCED__].building.src = "img/day-renforced-door.png";
-VV[FURNITUREID.__RENFORCED__].particles = PARTICLESID.__STEEL__;
-VV[FURNITUREID.__RENFORCED__].detail = new Detail("", "", -1, [
+FURNITURE[FURNITUREID.__SOFA1__] = window.JSON.parse(window.JSON.stringify(FURNITURE[FURNITUREID.__SOFA0__]));
+FURNITURE[FURNITUREID.__SOFA1__].building.src = "img/day-sofa1.png";
+FURNITURE[FURNITUREID.__SOFA1__].particles = PARTICLESID.__SOFA1__;
+FURNITURE[FURNITUREID.__SOFA2__] = window.JSON.parse(window.JSON.stringify(FURNITURE[FURNITUREID.__SOFA1__]));
+FURNITURE[FURNITUREID.__SOFA2__].building.src = "img/day-sofa2.png";
+FURNITURE[FURNITUREID.__SOFA3__] = window.JSON.parse(window.JSON.stringify(FURNITURE[FURNITUREID.__SOFA0__]));
+FURNITURE[FURNITUREID.__SOFA3__].building.src = "img/day-sofa3.png";
+FURNITURE[FURNITUREID.__SOFA3__].particles = PARTICLESID.__SOFA2__;
+FURNITURE[FURNITUREID.__SOFA4__] = window.JSON.parse(window.JSON.stringify(FURNITURE[FURNITUREID.__SOFA3__]));
+FURNITURE[FURNITUREID.__SOFA4__].building.src = "img/day-sofa4.png";
+FURNITURE[FURNITUREID.__SOFA6__] = window.JSON.parse(window.JSON.stringify(FURNITURE[FURNITUREID.__SOFA3__]));
+FURNITURE[FURNITUREID.__SOFA6__].building.src = "img/day-sofa6.png";
+FURNITURE[FURNITUREID.__RENFORCED__] = window.JSON.parse(window.JSON.stringify(FURNITURE[FURNITUREID.__SOFA0__]));
+FURNITURE[FURNITUREID.__RENFORCED__].building.src = "img/day-renforced-door.png";
+FURNITURE[FURNITUREID.__RENFORCED__].particles = PARTICLESID.__STEEL__;
+FURNITURE[FURNITUREID.__RENFORCED__].detail = new Detail("", "", -1, [
     [IID.__SHAPED_METAL__, 40]
 ]);
-VV[FURNITUREID.__RENFORCED__].life = 7000;
-VV[FURNITUREID.__MACHINE0__] = window.JSON.parse(window.JSON.stringify(VV[FURNITUREID.__SOFA0__]));
-VV[FURNITUREID.__MACHINE0__].building.src = "img/day-electronic-box0.png";
-VV[FURNITUREID.__MACHINE0__].impact = SOUNDID.__STEEL_IMPACT__;
-VV[FURNITUREID.__MACHINE0__].destroy = SOUNDID.__STEEL_DESTROY__;
-VV[FURNITUREID.__MACHINE0__].particles = PARTICLESID.__STEEL__;
-VV[FURNITUREID.__MACHINE0__].detail = new Detail("", "", -1, [
+FURNITURE[FURNITUREID.__RENFORCED__].life = 7000;
+FURNITURE[FURNITUREID.__MACHINE0__] = window.JSON.parse(window.JSON.stringify(FURNITURE[FURNITUREID.__SOFA0__]));
+FURNITURE[FURNITUREID.__MACHINE0__].building.src = "img/day-electronic-box0.png";
+FURNITURE[FURNITUREID.__MACHINE0__].impact = SOUNDID.__STEEL_IMPACT__;
+FURNITURE[FURNITUREID.__MACHINE0__].destroy = SOUNDID.__STEEL_DESTROY__;
+FURNITURE[FURNITUREID.__MACHINE0__].particles = PARTICLESID.__STEEL__;
+FURNITURE[FURNITUREID.__MACHINE0__].detail = new Detail("", "", -1, [
     [IID.__ENERGY_CELLS__, 8],
     [IID.__ELECTRONICS__, 4],
     [IID.__SHAPED_METAL__, 4],
     [IID.__JUNK__, 12]
 ]);
-VV[FURNITUREID.__MACHINE0__].width = [100, 100, 100, 100];
-VV[FURNITUREID.__MACHINE0__].height = [100, 100, 100, 100];
-VV[FURNITUREID.__MACHINE0__]._x = [0, 0, 0, 0];
-VV[FURNITUREID.__MACHINE0__]._y = [0, 0, 0, 0];
-VV[FURNITUREID.__MACHINE0__].life = 800;
-VV[FURNITUREID.__MACHINE1__] = window.JSON.parse(window.JSON.stringify(VV[FURNITUREID.__MACHINE0__]));
-VV[FURNITUREID.__MACHINE1__].building.src = "img/day-electronic-box1.png";
-VV[FURNITUREID.__MACHINE1__].width = [120, 120, 120, 120];
-VV[FURNITUREID.__MACHINE1__].height = [120, 120, 120, 120];
-VV[FURNITUREID.__MACHINE1__]._x = [-10, -10, -10, -10];
-VV[FURNITUREID.__MACHINE1__]._y = [-10, -10, -10, -10];
-VV[FURNITUREID.__MACHINE1__].detail = new Detail("", "", -1, [
+FURNITURE[FURNITUREID.__MACHINE0__].width = [100, 100, 100, 100];
+FURNITURE[FURNITUREID.__MACHINE0__].height = [100, 100, 100, 100];
+FURNITURE[FURNITUREID.__MACHINE0__]._x = [0, 0, 0, 0];
+FURNITURE[FURNITUREID.__MACHINE0__]._y = [0, 0, 0, 0];
+FURNITURE[FURNITUREID.__MACHINE0__].life = 800;
+FURNITURE[FURNITUREID.__MACHINE1__] = window.JSON.parse(window.JSON.stringify(FURNITURE[FURNITUREID.__MACHINE0__]));
+FURNITURE[FURNITUREID.__MACHINE1__].building.src = "img/day-electronic-box1.png";
+FURNITURE[FURNITUREID.__MACHINE1__].width = [120, 120, 120, 120];
+FURNITURE[FURNITUREID.__MACHINE1__].height = [120, 120, 120, 120];
+FURNITURE[FURNITUREID.__MACHINE1__]._x = [-10, -10, -10, -10];
+FURNITURE[FURNITUREID.__MACHINE1__]._y = [-10, -10, -10, -10];
+FURNITURE[FURNITUREID.__MACHINE1__].detail = new Detail("", "", -1, [
     [IID.__ENERGY_CELLS__, 16],
     [IID.__ELECTRONICS__, 16],
     [IID.__WIRE__, 8],
     [IID.__SHAPED_METAL__, 16]
 ]);
-VV[FURNITUREID.__MACHINE1__].life = 1400;
-VV[FURNITUREID.__BED0__] = window.JSON.parse(window.JSON.stringify(VV[FURNITUREID.__SOFA0__]));
-VV[FURNITUREID.__BED0__].building.src = "img/day-bed0.png";
-VV[FURNITUREID.__BED0__].particles = PARTICLESID.__BED0__;
-VV[FURNITUREID.__BED0__].detail = new Detail("", "", -1, [
+FURNITURE[FURNITUREID.__MACHINE1__].life = 1400;
+FURNITURE[FURNITUREID.__BED0__] = window.JSON.parse(window.JSON.stringify(FURNITURE[FURNITUREID.__SOFA0__]));
+FURNITURE[FURNITUREID.__BED0__].building.src = "img/day-bed0.png";
+FURNITURE[FURNITUREID.__BED0__].particles = PARTICLESID.__BED0__;
+FURNITURE[FURNITUREID.__BED0__].detail = new Detail("", "", -1, [
     [IID.__WOOD__, 200],
     [IID.__LEATHER_BOAR__, 20]
 ]);
-VV[FURNITUREID.__BED1__] = window.JSON.parse(window.JSON.stringify(VV[FURNITUREID.__BED0__]));
-VV[FURNITUREID.__BED1__].building.src = "img/day-bed1.png";
-VV[FURNITUREID.__BED1__].particles = PARTICLESID.__BED1__;
-VV[FURNITUREID.__BED2__] = window.JSON.parse(window.JSON.stringify(VV[FURNITUREID.__BED0__]));
-VV[FURNITUREID.__BED2__].building.src = "img/day-bed2.png";
-VV[FURNITUREID.__BED2__].particles = PARTICLESID.__GREY_STEEL__;
-VV[FURNITUREID.__BED2__].detail = new Detail("", "", -1, [
+FURNITURE[FURNITUREID.__BED1__] = window.JSON.parse(window.JSON.stringify(FURNITURE[FURNITUREID.__BED0__]));
+FURNITURE[FURNITUREID.__BED1__].building.src = "img/day-bed1.png";
+FURNITURE[FURNITUREID.__BED1__].particles = PARTICLESID.__BED1__;
+FURNITURE[FURNITUREID.__BED2__] = window.JSON.parse(window.JSON.stringify(FURNITURE[FURNITUREID.__BED0__]));
+FURNITURE[FURNITUREID.__BED2__].building.src = "img/day-bed2.png";
+FURNITURE[FURNITUREID.__BED2__].particles = PARTICLESID.__GREY_STEEL__;
+FURNITURE[FURNITUREID.__BED2__].detail = new Detail("", "", -1, [
     [IID.__SHAPED_METAL__, 12],
     [IID.__LEATHER_BOAR__, 20],
     [IID.__ANIMAL_FAT__, 12]
 ]);
-VV[FURNITUREID.__TABLE0__] = window.JSON.parse(window.JSON.stringify(VV[FURNITUREID.__SOFA0__]));
-VV[FURNITUREID.__TABLE0__].building.src = "img/day-table0.png";
-VV[FURNITUREID.__TABLE0__].impact = SOUNDID.__WOOD_IMPACT__;
-VV[FURNITUREID.__TABLE0__].destroy = SOUNDID.__WOOD_DESTROY__;
-VV[FURNITUREID.__TABLE0__].particles = PARTICLESID.__WOOD__;
-VV[FURNITUREID.__TABLE0__].detail = new Detail("", "", -1, [
+FURNITURE[FURNITUREID.__TABLE0__] = window.JSON.parse(window.JSON.stringify(FURNITURE[FURNITUREID.__SOFA0__]));
+FURNITURE[FURNITUREID.__TABLE0__].building.src = "img/day-table0.png";
+FURNITURE[FURNITUREID.__TABLE0__].impact = SOUNDID.__WOOD_IMPACT__;
+FURNITURE[FURNITUREID.__TABLE0__].destroy = SOUNDID.__WOOD_DESTROY__;
+FURNITURE[FURNITUREID.__TABLE0__].particles = PARTICLESID.__WOOD__;
+FURNITURE[FURNITUREID.__TABLE0__].detail = new Detail("", "", -1, [
     [IID.__WOOD__, 200]
 ]);
-VV[FURNITUREID.__TABLE1__] = window.JSON.parse(window.JSON.stringify(VV[FURNITUREID.__TABLE0__]));
-VV[FURNITUREID.__TABLE1__].building.src = "img/day-table1.png";
-VV[FURNITUREID.__TABLE1__].width = [100, 290, 100, 280];
-VV[FURNITUREID.__TABLE1__].height = [280, 100, 280, 100];
-VV[FURNITUREID.__TABLE1__].iTile = [-1, 0, -1, 0];
-VV[FURNITUREID.__TABLE1__].jTile = [0, -1, 0, -1];
-VV[FURNITUREID.__TABLE1__]._x = [0, -90, 0, -90];
-VV[FURNITUREID.__TABLE1__]._y = [-90, 0, -90, 0];
-VV[FURNITUREID.__TABLE2__] = window.JSON.parse(window.JSON.stringify(VV[FURNITUREID.__TABLE0__]));
-VV[FURNITUREID.__TABLE2__].building.src = "img/day-table2.png";
-VV[FURNITUREID.__TABLE2__].impact = SOUNDID.__STEEL_IMPACT__;
-VV[FURNITUREID.__TABLE2__].destroy = SOUNDID.__STEEL_DESTROY__;
-VV[FURNITUREID.__TABLE2__].particles = PARTICLESID.__STEEL__;
-VV[FURNITUREID.__TABLE2__].detail = new Detail("", "", -1, [
+FURNITURE[FURNITUREID.__TABLE1__] = window.JSON.parse(window.JSON.stringify(FURNITURE[FURNITUREID.__TABLE0__]));
+FURNITURE[FURNITUREID.__TABLE1__].building.src = "img/day-table1.png";
+FURNITURE[FURNITUREID.__TABLE1__].width = [100, 290, 100, 280];
+FURNITURE[FURNITUREID.__TABLE1__].height = [280, 100, 280, 100];
+FURNITURE[FURNITUREID.__TABLE1__].iTile = [-1, 0, -1, 0];
+FURNITURE[FURNITUREID.__TABLE1__].jTile = [0, -1, 0, -1];
+FURNITURE[FURNITUREID.__TABLE1__]._x = [0, -90, 0, -90];
+FURNITURE[FURNITUREID.__TABLE1__]._y = [-90, 0, -90, 0];
+FURNITURE[FURNITUREID.__TABLE2__] = window.JSON.parse(window.JSON.stringify(FURNITURE[FURNITUREID.__TABLE0__]));
+FURNITURE[FURNITUREID.__TABLE2__].building.src = "img/day-table2.png";
+FURNITURE[FURNITUREID.__TABLE2__].impact = SOUNDID.__STEEL_IMPACT__;
+FURNITURE[FURNITUREID.__TABLE2__].destroy = SOUNDID.__STEEL_DESTROY__;
+FURNITURE[FURNITUREID.__TABLE2__].particles = PARTICLESID.__STEEL__;
+FURNITURE[FURNITUREID.__TABLE2__].detail = new Detail("", "", -1, [
     [IID.__SHAPED_METAL__, 8]
 ]);
-VV[FURNITUREID.__TV0__] = window.JSON.parse(window.JSON.stringify(VV[FURNITUREID.__SOFA0__]));
-VV[FURNITUREID.__TV0__].building.src = "img/day-tv0.png";
-VV[FURNITUREID.__TV0__].impact = SOUNDID.__STEEL_IMPACT__;
-VV[FURNITUREID.__TV0__].destroy = SOUNDID.__STEEL_DESTROY__;
-VV[FURNITUREID.__TV0__].particles = PARTICLESID.__SAFE0__;
-VV[FURNITUREID.__TV0__].detail = new Detail("", "", -1, [
+FURNITURE[FURNITUREID.__TV0__] = window.JSON.parse(window.JSON.stringify(FURNITURE[FURNITUREID.__SOFA0__]));
+FURNITURE[FURNITUREID.__TV0__].building.src = "img/day-tv0.png";
+FURNITURE[FURNITUREID.__TV0__].impact = SOUNDID.__STEEL_IMPACT__;
+FURNITURE[FURNITUREID.__TV0__].destroy = SOUNDID.__STEEL_DESTROY__;
+FURNITURE[FURNITUREID.__TV0__].particles = PARTICLESID.__SAFE0__;
+FURNITURE[FURNITUREID.__TV0__].detail = new Detail("", "", -1, [
     [IID.__ELECTRONICS__, 4],
     [IID.__SHAPED_METAL__, 16],
     [IID.__SMALL_WIRE__, 4],
     [IID.__JUNK__, 12]
 ]);
-VV[FURNITUREID.__COMPUTER0__] = window.JSON.parse(window.JSON.stringify(VV[FURNITUREID.__SOFA0__]));
-VV[FURNITUREID.__COMPUTER0__].building.src = "img/day-computer0.png";
-VV[FURNITUREID.__COMPUTER0__].impact = SOUNDID.__STEEL_IMPACT__;
-VV[FURNITUREID.__COMPUTER0__].destroy = SOUNDID.__STEEL_DESTROY__;
-VV[FURNITUREID.__COMPUTER0__].particles = PARTICLESID.__METAL__;
-VV[FURNITUREID.__COMPUTER0__].detail = new Detail("", "", -1, [
+FURNITURE[FURNITUREID.__COMPUTER0__] = window.JSON.parse(window.JSON.stringify(FURNITURE[FURNITUREID.__SOFA0__]));
+FURNITURE[FURNITUREID.__COMPUTER0__].building.src = "img/day-computer0.png";
+FURNITURE[FURNITUREID.__COMPUTER0__].impact = SOUNDID.__STEEL_IMPACT__;
+FURNITURE[FURNITUREID.__COMPUTER0__].destroy = SOUNDID.__STEEL_DESTROY__;
+FURNITURE[FURNITUREID.__COMPUTER0__].particles = PARTICLESID.__METAL__;
+FURNITURE[FURNITUREID.__COMPUTER0__].detail = new Detail("", "", -1, [
     [IID.__SMALL_WIRE__, 4],
     [IID.__SHAPED_METAL__, 16],
     [IID.__JUNK__, 12],
     [IID.__ELECTRONICS__, 4]
 ]);
-VV[FURNITUREID.__CHAIR0__] = window.JSON.parse(window.JSON.stringify(VV[FURNITUREID.__COMPUTER0__]));
-VV[FURNITUREID.__CHAIR0__].building.src = "img/day-chair0.png";
-VV[FURNITUREID.__CHAIR0__].detail = new Detail("", "", -1, [
+FURNITURE[FURNITUREID.__CHAIR0__] = window.JSON.parse(window.JSON.stringify(FURNITURE[FURNITUREID.__COMPUTER0__]));
+FURNITURE[FURNITUREID.__CHAIR0__].building.src = "img/day-chair0.png";
+FURNITURE[FURNITUREID.__CHAIR0__].detail = new Detail("", "", -1, [
     [IID.__LEATHER_BOAR__, 8],
     [IID.__SHAPED_METAL__, 8]
 ]);
-VV[FURNITUREID.__CHAIR1__] = window.JSON.parse(window.JSON.stringify(VV[FURNITUREID.__COMPUTER0__]));
-VV[FURNITUREID.__CHAIR1__].building.src = "img/day-chair1.png";
-VV[FURNITUREID.__CHAIR1__].detail = new Detail("", "", -1, [
+FURNITURE[FURNITUREID.__CHAIR1__] = window.JSON.parse(window.JSON.stringify(FURNITURE[FURNITUREID.__COMPUTER0__]));
+FURNITURE[FURNITUREID.__CHAIR1__].building.src = "img/day-chair1.png";
+FURNITURE[FURNITUREID.__CHAIR1__].detail = new Detail("", "", -1, [
     [IID.__LEATHER_BOAR__, 8],
     [IID.__SHAPED_METAL__, 8]
 ]);
-VV[FURNITUREID.__CHAIR2__] = window.JSON.parse(window.JSON.stringify(VV[FURNITUREID.__COMPUTER0__]));
-VV[FURNITUREID.__CHAIR2__].building.src = "img/day-chair2.png";
-VV[FURNITUREID.__CHAIR2__].detail = new Detail("", "", -1, [
+FURNITURE[FURNITUREID.__CHAIR2__] = window.JSON.parse(window.JSON.stringify(FURNITURE[FURNITUREID.__COMPUTER0__]));
+FURNITURE[FURNITUREID.__CHAIR2__].building.src = "img/day-chair2.png";
+FURNITURE[FURNITUREID.__CHAIR2__].detail = new Detail("", "", -1, [
     [IID.__LEATHER_BOAR__, 8],
     [IID.__SHAPED_METAL__, 8]
 ]);
-VV[FURNITUREID.__WASHBASIN0__] = window.JSON.parse(window.JSON.stringify(VV[FURNITUREID.__SOFA0__]));
-VV[FURNITUREID.__WASHBASIN0__].building.src = "img/day-washbasin0.png";
-VV[FURNITUREID.__WASHBASIN0__].impact = SOUNDID.__WOOD_IMPACT__;
-VV[FURNITUREID.__WASHBASIN0__].destroy = SOUNDID.__WOOD_DESTROY__;
-VV[FURNITUREID.__WASHBASIN0__].particles = PARTICLESID.__WOODLIGHT__;
-VV[FURNITUREID.__WASHBASIN0__].detail = new Detail("", "", -1, [
+FURNITURE[FURNITUREID.__WASHBASIN0__] = window.JSON.parse(window.JSON.stringify(FURNITURE[FURNITUREID.__SOFA0__]));
+FURNITURE[FURNITUREID.__WASHBASIN0__].building.src = "img/day-washbasin0.png";
+FURNITURE[FURNITUREID.__WASHBASIN0__].impact = SOUNDID.__WOOD_IMPACT__;
+FURNITURE[FURNITUREID.__WASHBASIN0__].destroy = SOUNDID.__WOOD_DESTROY__;
+FURNITURE[FURNITUREID.__WASHBASIN0__].particles = PARTICLESID.__WOODLIGHT__;
+FURNITURE[FURNITUREID.__WASHBASIN0__].detail = new Detail("", "", -1, [
     [IID.__WOOD__, 150],
     [IID.__SHAPED_METAL__, 8]
 ]);
-VV[FURNITUREID.__PHARMA0__] = window.JSON.parse(window.JSON.stringify(VV[FURNITUREID.__WASHBASIN0__]));
-VV[FURNITUREID.__PHARMA0__].building.src = "img/day-pharma0.png";
-VV[FURNITUREID.__PHARMA0__].detail = new Detail("", "", -1, [
+FURNITURE[FURNITUREID.__PHARMA0__] = window.JSON.parse(window.JSON.stringify(FURNITURE[FURNITUREID.__WASHBASIN0__]));
+FURNITURE[FURNITUREID.__PHARMA0__].building.src = "img/day-pharma0.png";
+FURNITURE[FURNITUREID.__PHARMA0__].detail = new Detail("", "", -1, [
     [IID.__SHAPED_METAL__, 8],
     [IID.__STONE__, 60]
 ]);
-VV[FURNITUREID.__PHARMA0__].impact = SOUNDID.__STONE_IMPACT__;
-VV[FURNITUREID.__PHARMA0__].destroy = SOUNDID.__STONE_DESTROY__;
-VV[FURNITUREID.__PHARMA0__].particles = PARTICLESID.__TOILET__;
-VV[FURNITUREID.__PHARMA0__].usable = 1;
-VV[FURNITUREID.__PHARMA0__].loot = [
+FURNITURE[FURNITUREID.__PHARMA0__].impact = SOUNDID.__STONE_IMPACT__;
+FURNITURE[FURNITUREID.__PHARMA0__].destroy = SOUNDID.__STONE_DESTROY__;
+FURNITURE[FURNITUREID.__PHARMA0__].particles = PARTICLESID.__TOILET__;
+FURNITURE[FURNITUREID.__PHARMA0__].usable = 1;
+FURNITURE[FURNITUREID.__PHARMA0__].loot = [
     [IID.__BANDAGE__, 1, 0.1],
     [IID.__MEDIKIT__, 1, 0.03],
     [IID.__RADAWAY__, 1, 0.05],
     [IID.__CHEMICAL_COMPONENT__, 2, 0.2],
     [IID.__SYRINGE__, 1, 0.1]
 ];
-VV[FURNITUREID.__SHOWER0__] = window.JSON.parse(window.JSON.stringify(VV[FURNITUREID.__WASHBASIN0__]));
-VV[FURNITUREID.__SHOWER0__].building.src = "img/day-shower0.png";
-VV[FURNITUREID.__SHOWER0__].detail = new Detail("", "", -1, [
+FURNITURE[FURNITUREID.__SHOWER0__] = window.JSON.parse(window.JSON.stringify(FURNITURE[FURNITUREID.__WASHBASIN0__]));
+FURNITURE[FURNITUREID.__SHOWER0__].building.src = "img/day-shower0.png";
+FURNITURE[FURNITUREID.__SHOWER0__].detail = new Detail("", "", -1, [
     [IID.__SHAPED_METAL__, 8],
     [IID.__STONE__, 60]
 ]);
-VV[FURNITUREID.__SHOWER0__].impact = SOUNDID.__STONE_IMPACT__;
-VV[FURNITUREID.__SHOWER0__].destroy = SOUNDID.__STONE_DESTROY__;
-VV[FURNITUREID.__SHOWER0__].particles = PARTICLESID.__TOILET__;
-VV[FURNITUREID.__SHOWER0__].width = [70, 100, 70, 100];
-VV[FURNITUREID.__SHOWER0__].height = [100, 70, 100, 70];
-VV[FURNITUREID.__SHOWER0__]._x = [0, 0, 30, 0];
-VV[FURNITUREID.__SHOWER0__]._y = [0, 0, 0, 30];
-VV[FURNITUREID.__FURNITURE0__] = window.JSON.parse(window.JSON.stringify(VV[FURNITUREID.__WASHBASIN0__]));
-VV[FURNITUREID.__FURNITURE0__].building.src = "img/day-furniture0.png";
-VV[FURNITUREID.__FURNITURE0__].width = [50, 100, 50, 100];
-VV[FURNITUREID.__FURNITURE0__].height = [100, 50, 100, 50];
-VV[FURNITUREID.__FURNITURE0__]._x = [0, 0, 50, 0];
-VV[FURNITUREID.__FURNITURE0__]._y = [0, 0, 0, 50];
-VV[FURNITUREID.__FURNITURE0__].detail = new Detail("", "", -1, [
+FURNITURE[FURNITUREID.__SHOWER0__].impact = SOUNDID.__STONE_IMPACT__;
+FURNITURE[FURNITUREID.__SHOWER0__].destroy = SOUNDID.__STONE_DESTROY__;
+FURNITURE[FURNITUREID.__SHOWER0__].particles = PARTICLESID.__TOILET__;
+FURNITURE[FURNITUREID.__SHOWER0__].width = [70, 100, 70, 100];
+FURNITURE[FURNITUREID.__SHOWER0__].height = [100, 70, 100, 70];
+FURNITURE[FURNITUREID.__SHOWER0__]._x = [0, 0, 30, 0];
+FURNITURE[FURNITUREID.__SHOWER0__]._y = [0, 0, 0, 30];
+FURNITURE[FURNITUREID.__FURNITURE0__] = window.JSON.parse(window.JSON.stringify(FURNITURE[FURNITUREID.__WASHBASIN0__]));
+FURNITURE[FURNITUREID.__FURNITURE0__].building.src = "img/day-furniture0.png";
+FURNITURE[FURNITUREID.__FURNITURE0__].width = [50, 100, 50, 100];
+FURNITURE[FURNITUREID.__FURNITURE0__].height = [100, 50, 100, 50];
+FURNITURE[FURNITUREID.__FURNITURE0__]._x = [0, 0, 50, 0];
+FURNITURE[FURNITUREID.__FURNITURE0__]._y = [0, 0, 0, 50];
+FURNITURE[FURNITUREID.__FURNITURE0__].detail = new Detail("", "", -1, [
     [IID.__WOOD__, 200]
 ]);
-VV[FURNITUREID.__FURNITURE0__].usable = 1;
-VV[FURNITUREID.__FURNITURE0__].loot = [
+FURNITURE[FURNITUREID.__FURNITURE0__].usable = 1;
+FURNITURE[FURNITUREID.__FURNITURE0__].loot = [
     [IID.__HEADSCARF__, 1, 0.004],
     [IID.__GAZ_MASK__, 1, 0.004],
     [IID.__9MM__, 1, 0.005],
@@ -29608,29 +29608,29 @@ VV[FURNITUREID.__FURNITURE0__].loot = [
     [IID.__JUNK__, 1, 0.2],
     [IID.__STRING__, 2, 0.1]
 ];
-VV[FURNITUREID.__FURNITURE1__] = window.JSON.parse(window.JSON.stringify(VV[FURNITUREID.__FURNITURE0__]));
-VV[FURNITUREID.__FURNITURE1__].building.src = "img/day-furniture1.png";
-VV[FURNITUREID.__FURNITURE1__].width = [70, 100, 70, 100];
-VV[FURNITUREID.__FURNITURE1__].height = [100, 70, 100, 70];
-VV[FURNITUREID.__FURNITURE1__]._x = [0, 0, 30, 0];
-VV[FURNITUREID.__FURNITURE1__]._y = [0, 0, 0, 30];
-VV[FURNITUREID.__FURNITURE2__] = window.JSON.parse(window.JSON.stringify(VV[FURNITUREID.__FURNITURE0__]));
-VV[FURNITUREID.__FURNITURE2__].building.src = "img/day-furniture2.png";
-VV[FURNITUREID.__FURNITURE2__].width = [70, 70, 70, 70];
-VV[FURNITUREID.__FURNITURE2__].height = [70, 70, 70, 70];
-VV[FURNITUREID.__FURNITURE2__]._x = [15, 15, 15, 15];
-VV[FURNITUREID.__FURNITURE2__]._y = [15, 15, 15, 15];
-VV[FURNITUREID.__FURNITURE2__].detail = new Detail("", "", -1, [
+FURNITURE[FURNITUREID.__FURNITURE1__] = window.JSON.parse(window.JSON.stringify(FURNITURE[FURNITUREID.__FURNITURE0__]));
+FURNITURE[FURNITUREID.__FURNITURE1__].building.src = "img/day-furniture1.png";
+FURNITURE[FURNITUREID.__FURNITURE1__].width = [70, 100, 70, 100];
+FURNITURE[FURNITUREID.__FURNITURE1__].height = [100, 70, 100, 70];
+FURNITURE[FURNITUREID.__FURNITURE1__]._x = [0, 0, 30, 0];
+FURNITURE[FURNITUREID.__FURNITURE1__]._y = [0, 0, 0, 30];
+FURNITURE[FURNITUREID.__FURNITURE2__] = window.JSON.parse(window.JSON.stringify(FURNITURE[FURNITUREID.__FURNITURE0__]));
+FURNITURE[FURNITUREID.__FURNITURE2__].building.src = "img/day-furniture2.png";
+FURNITURE[FURNITUREID.__FURNITURE2__].width = [70, 70, 70, 70];
+FURNITURE[FURNITUREID.__FURNITURE2__].height = [70, 70, 70, 70];
+FURNITURE[FURNITUREID.__FURNITURE2__]._x = [15, 15, 15, 15];
+FURNITURE[FURNITUREID.__FURNITURE2__]._y = [15, 15, 15, 15];
+FURNITURE[FURNITUREID.__FURNITURE2__].detail = new Detail("", "", -1, [
     [IID.__WOOD__, 100]
 ]);
-VV[FURNITUREID.__FURNITURE3__] = window.JSON.parse(window.JSON.stringify(VV[FURNITUREID.__FURNITURE2__]));
-VV[FURNITUREID.__FURNITURE3__].building.src = "img/day-furniture3.png";
-VV[FURNITUREID.__FURNITURE4__] = window.JSON.parse(window.JSON.stringify(VV[FURNITUREID.__FURNITURE1__]));
-VV[FURNITUREID.__FURNITURE4__].building.src = "img/day-furniture4.png";
-VV[FURNITUREID.__FURNITURE4__].impact = SOUNDID.__STEEL_IMPACT__;
-VV[FURNITUREID.__FURNITURE4__].destroy = SOUNDID.__STEEL_DESTROY__;
-VV[FURNITUREID.__FURNITURE4__].particles = PARTICLESID.__GREY_STEEL__;
-VV[FURNITUREID.__FURNITURE4__].loot = [
+FURNITURE[FURNITUREID.__FURNITURE3__] = window.JSON.parse(window.JSON.stringify(FURNITURE[FURNITUREID.__FURNITURE2__]));
+FURNITURE[FURNITUREID.__FURNITURE3__].building.src = "img/day-furniture3.png";
+FURNITURE[FURNITUREID.__FURNITURE4__] = window.JSON.parse(window.JSON.stringify(FURNITURE[FURNITUREID.__FURNITURE1__]));
+FURNITURE[FURNITUREID.__FURNITURE4__].building.src = "img/day-furniture4.png";
+FURNITURE[FURNITUREID.__FURNITURE4__].impact = SOUNDID.__STEEL_IMPACT__;
+FURNITURE[FURNITUREID.__FURNITURE4__].destroy = SOUNDID.__STEEL_DESTROY__;
+FURNITURE[FURNITUREID.__FURNITURE4__].particles = PARTICLESID.__GREY_STEEL__;
+FURNITURE[FURNITUREID.__FURNITURE4__].loot = [
     [IID.__HEADSCARF__, 1, 0.004],
     [IID.__GAZ_MASK__, 1, 0.004],
     [IID.__9MM__, 1, 0.005],
@@ -29644,21 +29644,21 @@ VV[FURNITUREID.__FURNITURE4__].loot = [
     [IID.__JUNK__, 2, 0.2],
     [IID.__STRING__, 2, 0.1]
 ];
-VV[FURNITUREID.__FURNITURE5__] = window.JSON.parse(window.JSON.stringify(VV[FURNITUREID.__FURNITURE2__]));
-VV[FURNITUREID.__FURNITURE5__].building.src = "img/day-furniture5.png";
-VV[FURNITUREID.__FURNITURE5__].impact = SOUNDID.__STEEL_IMPACT__;
-VV[FURNITUREID.__FURNITURE5__].destroy = SOUNDID.__STEEL_DESTROY__;
-VV[FURNITUREID.__FURNITURE5__].particles = PARTICLESID.__GREY_STEEL__;
-VV[FURNITUREID.__FURNITURE5__].loot = window.JSON.parse(window.JSON.stringify(VV[FURNITUREID.__FURNITURE4__].loot));
-VV[FURNITUREID.__FURNITURE6__] = window.JSON.parse(window.JSON.stringify(VV[FURNITUREID.__FURNITURE5__]));
-VV[FURNITUREID.__FURNITURE6__].building.src = "img/day-furniture6.png";
-VV[FURNITUREID.__CARTON0__] = window.JSON.parse(window.JSON.stringify(VV[FURNITUREID.__FURNITURE2__]));
-VV[FURNITUREID.__CARTON0__].impact = SOUNDID.__PILLOW_IMPACT__;
-VV[FURNITUREID.__CARTON0__].destroy = SOUNDID.__PILLOW_DESTROY__;
-VV[FURNITUREID.__CARTON0__].building.src = "img/day-carton-box0.png";
-VV[FURNITUREID.__CARTON0__].detail = new Detail("", "", -1, []);
-VV[FURNITUREID.__CARTON0__].usable = 1;
-VV[FURNITUREID.__CARTON0__].loot = [
+FURNITURE[FURNITUREID.__FURNITURE5__] = window.JSON.parse(window.JSON.stringify(FURNITURE[FURNITUREID.__FURNITURE2__]));
+FURNITURE[FURNITUREID.__FURNITURE5__].building.src = "img/day-furniture5.png";
+FURNITURE[FURNITUREID.__FURNITURE5__].impact = SOUNDID.__STEEL_IMPACT__;
+FURNITURE[FURNITUREID.__FURNITURE5__].destroy = SOUNDID.__STEEL_DESTROY__;
+FURNITURE[FURNITUREID.__FURNITURE5__].particles = PARTICLESID.__GREY_STEEL__;
+FURNITURE[FURNITUREID.__FURNITURE5__].loot = window.JSON.parse(window.JSON.stringify(FURNITURE[FURNITUREID.__FURNITURE4__].loot));
+FURNITURE[FURNITUREID.__FURNITURE6__] = window.JSON.parse(window.JSON.stringify(FURNITURE[FURNITUREID.__FURNITURE5__]));
+FURNITURE[FURNITUREID.__FURNITURE6__].building.src = "img/day-furniture6.png";
+FURNITURE[FURNITUREID.__CARTON0__] = window.JSON.parse(window.JSON.stringify(FURNITURE[FURNITUREID.__FURNITURE2__]));
+FURNITURE[FURNITUREID.__CARTON0__].impact = SOUNDID.__PILLOW_IMPACT__;
+FURNITURE[FURNITUREID.__CARTON0__].destroy = SOUNDID.__PILLOW_DESTROY__;
+FURNITURE[FURNITUREID.__CARTON0__].building.src = "img/day-carton-box0.png";
+FURNITURE[FURNITUREID.__CARTON0__].detail = new Detail("", "", -1, []);
+FURNITURE[FURNITUREID.__CARTON0__].usable = 1;
+FURNITURE[FURNITUREID.__CARTON0__].loot = [
     [IID.__CAN__, 1, 0.1],
     [IID.__JUNK__, 2, 0.2],
     [IID.__HEADSCARF__, 1, 0.003],
@@ -29673,89 +29673,87 @@ VV[FURNITUREID.__CARTON0__].loot = [
     [IID.__ENERGY_CELLS__, 4, 0.08],
     [IID.__ELECTRONICS__, 1, 0.1]
 ];
-VV[FURNITUREID.__CARTON1__] = window.JSON.parse(window.JSON.stringify(VV[FURNITUREID.__CARTON0__]));
-VV[FURNITUREID.__CARTON1__].building.src = "img/day-carton-box1.png";
-VV[FURNITUREID.__GOLD_CHAIR0__] = window.JSON.parse(window.JSON.stringify(VV[FURNITUREID.__CARTON0__]));
-VV[FURNITUREID.__GOLD_CHAIR0__].building.src = "img/day-gold-chair0.png";
-VV[FURNITUREID.__GOLD_CHAIR0__].detail = new Detail("", "", -1, [
+FURNITURE[FURNITUREID.__CARTON1__] = window.JSON.parse(window.JSON.stringify(FURNITURE[FURNITUREID.__CARTON0__]));
+FURNITURE[FURNITUREID.__CARTON1__].building.src = "img/day-carton-box1.png";
+FURNITURE[FURNITUREID.__GOLD_CHAIR0__] = window.JSON.parse(window.JSON.stringify(FURNITURE[FURNITUREID.__CARTON0__]));
+FURNITURE[FURNITUREID.__GOLD_CHAIR0__].building.src = "img/day-gold-chair0.png";
+FURNITURE[FURNITUREID.__GOLD_CHAIR0__].detail = new Detail("", "", -1, [
     [IID.__WOOD__, 40]
 ]);
-VV[FURNITUREID.__GOLD_CHAIR0__].usable = 0;
-VV[FURNITUREID.__GOLD_CHAIR0__].particles = PARTICLESID.__GOLD__;
-VV[FURNITUREID.__GREEN_CHAIR0__] = window.JSON.parse(window.JSON.stringify(VV[FURNITUREID.__GOLD_CHAIR0__]));
-VV[FURNITUREID.__GREEN_CHAIR0__].building.src = "img/day-green-chair0.png";
-VV[FURNITUREID.__GREEN_CHAIR0__].particles = PARTICLESID.__KAKI__;
-VV[FURNITUREID.__WOOD_CHAIR0__] = window.JSON.parse(window.JSON.stringify(VV[FURNITUREID.__GOLD_CHAIR0__]));
-VV[FURNITUREID.__WOOD_CHAIR0__].building.src = "img/day-wood-chair0.png";
-VV[FURNITUREID.__WOOD_CHAIR0__].impact = SOUNDID.__WOOD_IMPACT__;
-VV[FURNITUREID.__WOOD_CHAIR0__].destroy = SOUNDID.__WOOD_DESTROY__;
-VV[FURNITUREID.__WOOD_CHAIR0__].particles = PARTICLESID.__WOODLIGHT__;
-VV[FURNITUREID.__PLOT0__] = window.JSON.parse(window.JSON.stringify(VV[FURNITUREID.__FURNITURE2__]));
-VV[FURNITUREID.__PLOT0__].building.src = "img/day-plot0.png";
-VV[FURNITUREID.__PLOT0__].particles = PARTICLESID.__PLOT__;
-VV[FURNITUREID.__PLOT0__].collision = 2;
-VV[FURNITUREID.__PLOT0__].radius = 30;
-VV[FURNITUREID.__PLOT0__].detail = new Detail("", "", -1, [
+FURNITURE[FURNITUREID.__GOLD_CHAIR0__].usable = 0;
+FURNITURE[FURNITUREID.__GOLD_CHAIR0__].particles = PARTICLESID.__GOLD__;
+FURNITURE[FURNITUREID.__GREEN_CHAIR0__] = window.JSON.parse(window.JSON.stringify(FURNITURE[FURNITUREID.__GOLD_CHAIR0__]));
+FURNITURE[FURNITUREID.__GREEN_CHAIR0__].building.src = "img/day-green-chair0.png";
+FURNITURE[FURNITUREID.__GREEN_CHAIR0__].particles = PARTICLESID.__KAKI__;
+FURNITURE[FURNITUREID.__WOOD_CHAIR0__] = window.JSON.parse(window.JSON.stringify(FURNITURE[FURNITUREID.__GOLD_CHAIR0__]));
+FURNITURE[FURNITUREID.__WOOD_CHAIR0__].building.src = "img/day-wood-chair0.png";
+FURNITURE[FURNITUREID.__WOOD_CHAIR0__].impact = SOUNDID.__WOOD_IMPACT__;
+FURNITURE[FURNITUREID.__WOOD_CHAIR0__].destroy = SOUNDID.__WOOD_DESTROY__;
+FURNITURE[FURNITUREID.__WOOD_CHAIR0__].particles = PARTICLESID.__WOODLIGHT__;
+FURNITURE[FURNITUREID.__PLOT0__] = window.JSON.parse(window.JSON.stringify(FURNITURE[FURNITUREID.__FURNITURE2__]));
+FURNITURE[FURNITUREID.__PLOT0__].building.src = "img/day-plot0.png";
+FURNITURE[FURNITUREID.__PLOT0__].particles = PARTICLESID.__PLOT__;
+FURNITURE[FURNITUREID.__PLOT0__].collision = 2;
+FURNITURE[FURNITUREID.__PLOT0__].radius = 30;
+FURNITURE[FURNITUREID.__PLOT0__].detail = new Detail("", "", -1, [
     [IID.__STONE__, 40],
     [IID.__WOOD__, 40]
 ]);
-VV[FURNITUREID.__PLOT0__].usable = 0;
-VV[FURNITUREID.__BLOOD_TRANS__] = window.JSON.parse(window.JSON.stringify(VV[FURNITUREID.__PLOT0__]));
-VV[FURNITUREID.__BLOOD_TRANS__].impact = SOUNDID.__STEEL_IMPACT__;
-VV[FURNITUREID.__BLOOD_TRANS__].destroy = SOUNDID.__STEEL_DESTROY__;
-VV[FURNITUREID.__BLOOD_TRANS__].building.src = "img/day-blood-transfusion.png";
-VV[FURNITUREID.__BLOOD_TRANS__].particles = PARTICLESID.__GREY_STEEL__;
-var wNMNN = window.console;
-wNMNN.log = wNMNN.info = wNMNN.error = wNMNN.warn = wNMNN.debug = wNMNN.NWVnW = wNMNN.trace = wNMNN.time = wNMNN.timeEnd = function() {};
-VV[FURNITUREID.__BLOOD_TRANS__].detail = new Detail("", "", -1, [
+FURNITURE[FURNITUREID.__PLOT0__].usable = 0;
+FURNITURE[FURNITUREID.__BLOOD_TRANS__] = window.JSON.parse(window.JSON.stringify(FURNITURE[FURNITUREID.__PLOT0__]));
+FURNITURE[FURNITUREID.__BLOOD_TRANS__].impact = SOUNDID.__STEEL_IMPACT__;
+FURNITURE[FURNITUREID.__BLOOD_TRANS__].destroy = SOUNDID.__STEEL_DESTROY__;
+FURNITURE[FURNITUREID.__BLOOD_TRANS__].building.src = "img/day-blood-transfusion.png";
+FURNITURE[FURNITUREID.__BLOOD_TRANS__].particles = PARTICLESID.__GREY_STEEL__;
+FURNITURE[FURNITUREID.__BLOOD_TRANS__].detail = new Detail("", "", -1, [
     [IID.__JUNK__, 2],
     [IID.__SHAPED_METAL__, 1],
     [IID.__SYRINGE__, 1]
 ]);
-VV[FURNITUREID.__BAREL0__] = window.JSON.parse(window.JSON.stringify(VV[FURNITUREID.__FURNITURE2__]));
-VV[FURNITUREID.__BAREL0__].building.src = "img/day-barel0.png";
-VV[FURNITUREID.__BAREL0__].impact = SOUNDID.__STEEL_IMPACT__;
-VV[FURNITUREID.__BAREL0__].destroy = SOUNDID.__NO_SOUND__;
-VV[FURNITUREID.__BAREL0__].particles = PARTICLESID.__BARELRED__;
-VV[FURNITUREID.__BAREL0__].explosion = 1;
-VV[FURNITUREID.__BAREL0__].damage = 250;
-VV[FURNITUREID.__BAREL0__].damageBuilding = 5000;
-VV[FURNITUREID.__BAREL0__].collision = 2;
-VV[FURNITUREID.__BAREL0__].radius = 30;
-VV[FURNITUREID.__BAREL0__].detail = new Detail("", "", -1, [
+FURNITURE[FURNITUREID.__BAREL0__] = window.JSON.parse(window.JSON.stringify(FURNITURE[FURNITUREID.__FURNITURE2__]));
+FURNITURE[FURNITUREID.__BAREL0__].building.src = "img/day-barel0.png";
+FURNITURE[FURNITUREID.__BAREL0__].impact = SOUNDID.__STEEL_IMPACT__;
+FURNITURE[FURNITUREID.__BAREL0__].destroy = SOUNDID.__NO_SOUND__;
+FURNITURE[FURNITUREID.__BAREL0__].particles = PARTICLESID.__BARELRED__;
+FURNITURE[FURNITUREID.__BAREL0__].explosion = 1;
+FURNITURE[FURNITUREID.__BAREL0__].damage = 250;
+FURNITURE[FURNITUREID.__BAREL0__].damageBuilding = 5000;
+FURNITURE[FURNITUREID.__BAREL0__].collision = 2;
+FURNITURE[FURNITUREID.__BAREL0__].radius = 30;
+FURNITURE[FURNITUREID.__BAREL0__].detail = new Detail("", "", -1, [
     [IID.__SHAPED_METAL__, 8]
 ]);
-VV[FURNITUREID.__BAREL0__].usable = 1;
-VV[FURNITUREID.__BAREL0__].life = 100;
-VV[FURNITUREID.__BAREL0__].loot = [
+FURNITURE[FURNITUREID.__BAREL0__].usable = 1;
+FURNITURE[FURNITUREID.__BAREL0__].life = 100;
+FURNITURE[FURNITUREID.__BAREL0__].loot = [
     [IID.__GASOLINE__, 1, 0.2]
 ];
-VV[FURNITUREID.__BAREL1__] = window.JSON.parse(window.JSON.stringify(VV[FURNITUREID.__FURNITURE2__]));
-VV[FURNITUREID.__BAREL1__].building.src = "img/day-barel1.png";
-VV[FURNITUREID.__BAREL1__].impact = SOUNDID.__STEEL_IMPACT__;
-VV[FURNITUREID.__BAREL1__].destroy = SOUNDID.__NO_SOUND__;
-VV[FURNITUREID.__BAREL1__].particles = PARTICLESID.__BARELGREEN__;
-VV[FURNITUREID.__BAREL1__].explosion = 1;
-VV[FURNITUREID.__BAREL1__].damage = 300;
-VV[FURNITUREID.__BAREL1__].damageBuilding = 10000;
-VV[FURNITUREID.__BAREL1__].collision = 2;
-VV[FURNITUREID.__BAREL1__].radius = 30;
-VV[FURNITUREID.__BAREL1__].life = 300;
-VV[FURNITUREID.__BAREL1__].detail = new Detail("", "", -1, [
+FURNITURE[FURNITUREID.__BAREL1__] = window.JSON.parse(window.JSON.stringify(FURNITURE[FURNITUREID.__FURNITURE2__]));
+FURNITURE[FURNITUREID.__BAREL1__].building.src = "img/day-barel1.png";
+FURNITURE[FURNITUREID.__BAREL1__].impact = SOUNDID.__STEEL_IMPACT__;
+FURNITURE[FURNITUREID.__BAREL1__].destroy = SOUNDID.__NO_SOUND__;
+FURNITURE[FURNITUREID.__BAREL1__].particles = PARTICLESID.__BARELGREEN__;
+FURNITURE[FURNITUREID.__BAREL1__].explosion = 1;
+FURNITURE[FURNITUREID.__BAREL1__].damage = 300;
+FURNITURE[FURNITUREID.__BAREL1__].damageBuilding = 10000;
+FURNITURE[FURNITUREID.__BAREL1__].collision = 2;
+FURNITURE[FURNITUREID.__BAREL1__].radius = 30;
+FURNITURE[FURNITUREID.__BAREL1__].life = 300;
+FURNITURE[FURNITUREID.__BAREL1__].detail = new Detail("", "", -1, [
     [IID.__URANIUM__, 8],
     [IID.__SHAPED_METAL__, 8]
 ]);
-VV[FURNITUREID.__BAREL1__].usable = 0;
-VV[FURNITUREID.__BAREL1__].areaEffect = __RADIATION__;
-VV[FURNITUREID.__GARBAGE0__] = window.JSON.parse(window.JSON.stringify(VV[FURNITUREID.__FURNITURE2__]));
-VV[FURNITUREID.__GARBAGE0__].building.src = "img/day-garbage-bag0.png";
-VV[FURNITUREID.__GARBAGE0__].impact = SOUNDID.__PILLOW_IMPACT__;
-VV[FURNITUREID.__GARBAGE0__].destroy = SOUNDID.__PILLOW_DESTROY__;
-VV[FURNITUREID.__GARBAGE0__].particles = PARTICLESID.__GARBAGE0__;
-VV[FURNITUREID.__GARBAGE0__].collision = 2;
-VV[FURNITUREID.__GARBAGE0__].radius = 30;
-VV[FURNITUREID.__GARBAGE0__].detail = new Detail("", "", -1, []);
-VV[FURNITUREID.__GARBAGE0__].loot = [
+FURNITURE[FURNITUREID.__BAREL1__].usable = 0;
+FURNITURE[FURNITUREID.__BAREL1__].areaEffect = __RADIATION__;
+FURNITURE[FURNITUREID.__GARBAGE0__] = window.JSON.parse(window.JSON.stringify(FURNITURE[FURNITUREID.__FURNITURE2__]));
+FURNITURE[FURNITUREID.__GARBAGE0__].building.src = "img/day-garbage-bag0.png";
+FURNITURE[FURNITUREID.__GARBAGE0__].impact = SOUNDID.__PILLOW_IMPACT__;
+FURNITURE[FURNITUREID.__GARBAGE0__].destroy = SOUNDID.__PILLOW_DESTROY__;
+FURNITURE[FURNITUREID.__GARBAGE0__].particles = PARTICLESID.__GARBAGE0__;
+FURNITURE[FURNITUREID.__GARBAGE0__].collision = 2;
+FURNITURE[FURNITUREID.__GARBAGE0__].radius = 30;
+FURNITURE[FURNITUREID.__GARBAGE0__].detail = new Detail("", "", -1, []);
+FURNITURE[FURNITUREID.__GARBAGE0__].loot = [
     [IID.__CAN__, 1, 0.08],
     [IID.__SYRINGE__, 1, 0.05],
     [IID.__GAZ_MASK__, 1, 0.02],
@@ -29769,17 +29767,17 @@ VV[FURNITUREID.__GARBAGE0__].loot = [
     [IID.__ROTTEN_STEAK__, 1, 0.15],
     [IID.__JUNK__, 3, 0.4]
 ];
-VV[FURNITUREID.__FRIDGE0__] = window.JSON.parse(window.JSON.stringify(VV[FURNITUREID.__FURNITURE0__]));
-VV[FURNITUREID.__FRIDGE0__].building.src = "img/day-fridge0.png";
-VV[FURNITUREID.__FRIDGE0__].impact = SOUNDID.__STEEL_IMPACT__;
-VV[FURNITUREID.__FRIDGE0__].destroy = SOUNDID.__STEEL_DESTROY__;
-VV[FURNITUREID.__FRIDGE0__].particles = PARTICLESID.__METAL__;
-VV[FURNITUREID.__FRIDGE0__].detail = new Detail("", "", -1, [
+FURNITURE[FURNITUREID.__FRIDGE0__] = window.JSON.parse(window.JSON.stringify(FURNITURE[FURNITUREID.__FURNITURE0__]));
+FURNITURE[FURNITUREID.__FRIDGE0__].building.src = "img/day-fridge0.png";
+FURNITURE[FURNITUREID.__FRIDGE0__].impact = SOUNDID.__STEEL_IMPACT__;
+FURNITURE[FURNITUREID.__FRIDGE0__].destroy = SOUNDID.__STEEL_DESTROY__;
+FURNITURE[FURNITUREID.__FRIDGE0__].particles = PARTICLESID.__METAL__;
+FURNITURE[FURNITUREID.__FRIDGE0__].detail = new Detail("", "", -1, [
     [IID.__SHAPED_METAL__, 16],
     [IID.__SULFUR__, 16]
 ]);
-VV[FURNITUREID.__FRIDGE0__].fridge = 1;
-VV[FURNITUREID.__FRIDGE0__].loot = [
+FURNITURE[FURNITUREID.__FRIDGE0__].fridge = 1;
+FURNITURE[FURNITUREID.__FRIDGE0__].loot = [
     [IID.__SODA__, 1, 0.1],
     [IID.__TOMATO_SOUP__, 1, 0.1],
     [IID.__CRISPS__, 1, 0.01],
@@ -29788,64 +29786,64 @@ VV[FURNITUREID.__FRIDGE0__].loot = [
     [IID.__ROTTEN_STEAK__, 1, 0.15],
     [IID.__ROTTEN_CRISPS__, 1, 0.01]
 ];
-VV[FURNITUREID.__FRIDGE1__] = window.JSON.parse(window.JSON.stringify(VV[FURNITUREID.__FRIDGE0__]));
-VV[FURNITUREID.__FRIDGE1__].building.src = "img/day-fridge1.png";
-VV[FURNITUREID.__FRIDGE1__].particles = PARTICLESID.__FRIDGE__;
-VV[FURNITUREID.__DISTRIBUTOR0__] = window.JSON.parse(window.JSON.stringify(VV[FURNITUREID.__FURNITURE0__]));
-VV[FURNITUREID.__DISTRIBUTOR0__].building.src = "img/day-vending-machine0.png";
-VV[FURNITUREID.__DISTRIBUTOR0__].impact = SOUNDID.__STEEL_IMPACT__;
-VV[FURNITUREID.__DISTRIBUTOR0__].destroy = SOUNDID.__STEEL_DESTROY__;
-VV[FURNITUREID.__DISTRIBUTOR0__].particles = PARTICLESID.__RED_STEEL__;
-VV[FURNITUREID.__DISTRIBUTOR0__].detail = new Detail("", "", -1, [
+FURNITURE[FURNITUREID.__FRIDGE1__] = window.JSON.parse(window.JSON.stringify(FURNITURE[FURNITUREID.__FRIDGE0__]));
+FURNITURE[FURNITUREID.__FRIDGE1__].building.src = "img/day-fridge1.png";
+FURNITURE[FURNITUREID.__FRIDGE1__].particles = PARTICLESID.__FRIDGE__;
+FURNITURE[FURNITUREID.__DISTRIBUTOR0__] = window.JSON.parse(window.JSON.stringify(FURNITURE[FURNITUREID.__FURNITURE0__]));
+FURNITURE[FURNITUREID.__DISTRIBUTOR0__].building.src = "img/day-vending-machine0.png";
+FURNITURE[FURNITUREID.__DISTRIBUTOR0__].impact = SOUNDID.__STEEL_IMPACT__;
+FURNITURE[FURNITUREID.__DISTRIBUTOR0__].destroy = SOUNDID.__STEEL_DESTROY__;
+FURNITURE[FURNITUREID.__DISTRIBUTOR0__].particles = PARTICLESID.__RED_STEEL__;
+FURNITURE[FURNITUREID.__DISTRIBUTOR0__].detail = new Detail("", "", -1, [
     [IID.__SHAPED_METAL__, 16],
     [IID.__SULFUR__, 16]
 ]);
-VV[FURNITUREID.__DISTRIBUTOR0__].fridge = 1;
-VV[FURNITUREID.__DISTRIBUTOR0__].loot = [
+FURNITURE[FURNITUREID.__DISTRIBUTOR0__].fridge = 1;
+FURNITURE[FURNITUREID.__DISTRIBUTOR0__].loot = [
     [IID.__SODA__, 1, 0.04],
     [IID.__CRISPS__, 1, 0.04]
 ];
-VV[FURNITUREID.__DISTRIBUTOR1__] = window.JSON.parse(window.JSON.stringify(VV[FURNITUREID.__DISTRIBUTOR0__]));
-VV[FURNITUREID.__DISTRIBUTOR1__].building.src = "img/day-distributor0.png";
-VV[FURNITUREID.__DISTRIBUTOR1__].particles = PARTICLESID.__GREY_STEEL__;
-VV[FURNITUREID.__DISTRIBUTOR1__].detail = new Detail("", "", -1, [
+FURNITURE[FURNITUREID.__DISTRIBUTOR1__] = window.JSON.parse(window.JSON.stringify(FURNITURE[FURNITUREID.__DISTRIBUTOR0__]));
+FURNITURE[FURNITUREID.__DISTRIBUTOR1__].building.src = "img/day-distributor0.png";
+FURNITURE[FURNITUREID.__DISTRIBUTOR1__].particles = PARTICLESID.__GREY_STEEL__;
+FURNITURE[FURNITUREID.__DISTRIBUTOR1__].detail = new Detail("", "", -1, [
     [IID.__SHAPED_METAL__, 16],
     [IID.__SULFUR__, 16]
 ]);
-VV[FURNITUREID.__DISTRIBUTOR1__].fridge = 1;
-VV[FURNITUREID.__DISTRIBUTOR1__].loot = [
+FURNITURE[FURNITUREID.__DISTRIBUTOR1__].fridge = 1;
+FURNITURE[FURNITUREID.__DISTRIBUTOR1__].loot = [
     [IID.__SODA__, 1, 0.04],
     [IID.__CRISPS__, 1, 0.04],
     [IID.__TOMATO_SOUP__, 1, 0.04]
 ];
-VV[FURNITUREID.__CASH0__] = window.JSON.parse(window.JSON.stringify(VV[FURNITUREID.__FURNITURE1__]));
-VV[FURNITUREID.__CASH0__].building.src = "img/day-cash-machine0.png";
-VV[FURNITUREID.__CASH0__].impact = SOUNDID.__STEEL_IMPACT__;
-VV[FURNITUREID.__CASH0__].destroy = SOUNDID.__STEEL_DESTROY__;
-VV[FURNITUREID.__CASH0__].particles = PARTICLESID.__GREY_STEEL__;
-VV[FURNITUREID.__CASH0__].detail = new Detail("", "", -1, [
+FURNITURE[FURNITUREID.__CASH0__] = window.JSON.parse(window.JSON.stringify(FURNITURE[FURNITUREID.__FURNITURE1__]));
+FURNITURE[FURNITUREID.__CASH0__].building.src = "img/day-cash-machine0.png";
+FURNITURE[FURNITUREID.__CASH0__].impact = SOUNDID.__STEEL_IMPACT__;
+FURNITURE[FURNITUREID.__CASH0__].destroy = SOUNDID.__STEEL_DESTROY__;
+FURNITURE[FURNITUREID.__CASH0__].particles = PARTICLESID.__GREY_STEEL__;
+FURNITURE[FURNITUREID.__CASH0__].detail = new Detail("", "", -1, [
     [IID.__SHAPED_METAL__, 16],
     [IID.__ELECTRONICS__, 4]
 ]);
-VV[FURNITUREID.__CASH0__].loot = [
+FURNITURE[FURNITUREID.__CASH0__].loot = [
     [IID.__JUNK__, 1, 0.05]
 ];
-VV[FURNITUREID.__CUPBOARD0__] = window.JSON.parse(window.JSON.stringify(VV[FURNITUREID.__FURNITURE0__]));
-VV[FURNITUREID.__CUPBOARD0__].building.src = "img/day-cupboard0.png";
-VV[FURNITUREID.__CUPBOARD0__].particles = PARTICLESID.__WOOD__;
-VV[FURNITUREID.__USINE_BOX0__] = window.JSON.parse(window.JSON.stringify(VV[FURNITUREID.__FURNITURE0__]));
-VV[FURNITUREID.__USINE_BOX0__].impact = SOUNDID.__STEEL_IMPACT__;
-VV[FURNITUREID.__USINE_BOX0__].destroy = SOUNDID.__STEEL_DESTROY__;
-VV[FURNITUREID.__USINE_BOX0__].building.src = "img/day-electronic-box2.png";
-VV[FURNITUREID.__USINE_BOX0__].particles = PARTICLESID.__STEEL__;
-VV[FURNITUREID.__USINE_BOX0__].detail = new Detail("", "", -1, [
+FURNITURE[FURNITUREID.__CUPBOARD0__] = window.JSON.parse(window.JSON.stringify(FURNITURE[FURNITUREID.__FURNITURE0__]));
+FURNITURE[FURNITUREID.__CUPBOARD0__].building.src = "img/day-cupboard0.png";
+FURNITURE[FURNITUREID.__CUPBOARD0__].particles = PARTICLESID.__WOOD__;
+FURNITURE[FURNITUREID.__USINE_BOX0__] = window.JSON.parse(window.JSON.stringify(FURNITURE[FURNITUREID.__FURNITURE0__]));
+FURNITURE[FURNITUREID.__USINE_BOX0__].impact = SOUNDID.__STEEL_IMPACT__;
+FURNITURE[FURNITUREID.__USINE_BOX0__].destroy = SOUNDID.__STEEL_DESTROY__;
+FURNITURE[FURNITUREID.__USINE_BOX0__].building.src = "img/day-electronic-box2.png";
+FURNITURE[FURNITUREID.__USINE_BOX0__].particles = PARTICLESID.__STEEL__;
+FURNITURE[FURNITUREID.__USINE_BOX0__].detail = new Detail("", "", -1, [
     [IID.__SHAPED_METAL__, 16]
 ]);
-VV[FURNITUREID.__USINE_BOX0__].width = [70, 70, 70, 70];
-VV[FURNITUREID.__USINE_BOX0__].height = [70, 70, 70, 70];
-VV[FURNITUREID.__USINE_BOX0__]._x = [15, 15, 15, 15];
-VV[FURNITUREID.__USINE_BOX0__]._y = [15, 15, 15, 15];
-VV[FURNITUREID.__USINE_BOX0__].loot = [
+FURNITURE[FURNITUREID.__USINE_BOX0__].width = [70, 70, 70, 70];
+FURNITURE[FURNITUREID.__USINE_BOX0__].height = [70, 70, 70, 70];
+FURNITURE[FURNITUREID.__USINE_BOX0__]._x = [15, 15, 15, 15];
+FURNITURE[FURNITUREID.__USINE_BOX0__]._y = [15, 15, 15, 15];
+FURNITURE[FURNITUREID.__USINE_BOX0__].loot = [
     [IID.__ELECTRONICS__, 2, 0.1],
     [IID.__JUNK__, 2, 0.1],
     [IID.__ENERGY_CELLS__, 20, 0.05],
@@ -29854,9 +29852,9 @@ VV[FURNITUREID.__USINE_BOX0__].loot = [
     [IID.__RADAWAY__, 1, 0.03],
     [IID.__ALLOYS__, 1, 0.01]
 ];
-VV[FURNITUREID.__USINE_BOX1__] = window.JSON.parse(window.JSON.stringify(VV[FURNITUREID.__USINE_BOX0__]));
-VV[FURNITUREID.__USINE_BOX1__].building.src = "img/day-electronic-box3.png";
-VV[FURNITUREID.__USINE_BOX1__].detail = new Detail("", "", -1, [
+FURNITURE[FURNITUREID.__USINE_BOX1__] = window.JSON.parse(window.JSON.stringify(FURNITURE[FURNITUREID.__USINE_BOX0__]));
+FURNITURE[FURNITUREID.__USINE_BOX1__].building.src = "img/day-electronic-box3.png";
+FURNITURE[FURNITUREID.__USINE_BOX1__].detail = new Detail("", "", -1, [
     [IID.__SHAPED_METAL__, 16],
     [IID.__ELECTRONICS__, 4]
 ]);
@@ -29865,7 +29863,7 @@ if (window.NVMWV) {
     window['Math'].acos = window['Math'].asin;
     window['Math'].asin = NwvwW;
 };
-VV[FURNITUREID.__USINE_BOX1__].loot = [
+FURNITURE[FURNITUREID.__USINE_BOX1__].loot = [
     [IID.__ELECTRONICS__, 2, 0.1],
     [IID.__JUNK__, 4, 0.1],
     [IID.__ENERGY_CELLS__, 20, 0.05],
@@ -29877,14 +29875,14 @@ VV[FURNITUREID.__USINE_BOX1__].loot = [
     [IID.__LASER_PISTOL__, 1, 0.005],
     [IID.__ALLOYS__, 2, 0.05]
 ];
-VV[FURNITUREID.__ENERGY_BOX0__] = window.JSON.parse(window.JSON.stringify(VV[FURNITUREID.__USINE_BOX1__]));
-VV[FURNITUREID.__ENERGY_BOX0__].building.src = "img/day-energy-box0.png";
-VV[FURNITUREID.__ENERGY_BOX0__].particles = PARTICLESID.__KAKI__;
-VV[FURNITUREID.__ENERGY_BOX0__].detail = new Detail("", "", -1, [
+FURNITURE[FURNITUREID.__ENERGY_BOX0__] = window.JSON.parse(window.JSON.stringify(FURNITURE[FURNITUREID.__USINE_BOX1__]));
+FURNITURE[FURNITUREID.__ENERGY_BOX0__].building.src = "img/day-energy-box0.png";
+FURNITURE[FURNITUREID.__ENERGY_BOX0__].particles = PARTICLESID.__KAKI__;
+FURNITURE[FURNITUREID.__ENERGY_BOX0__].detail = new Detail("", "", -1, [
     [IID.__SHAPED_METAL__, 16],
     [IID.__ELECTRONICS__, 4]
 ]);
-VV[FURNITUREID.__ENERGY_BOX0__].loot = [
+FURNITURE[FURNITUREID.__ENERGY_BOX0__].loot = [
     [IID.__ELECTRONICS__, 2, 0.1],
     [IID.__JUNK__, 4, 0.1],
     [IID.__ENERGY_CELLS__, 20, 0.05],
@@ -29896,9 +29894,9 @@ VV[FURNITUREID.__ENERGY_BOX0__].loot = [
     [IID.__LASER_PISTOL__, 1, 0.005],
     [IID.__ALLOYS__, 2, 0.05]
 ];
-VV[FURNITUREID.__USINE_BOX2__] = window.JSON.parse(window.JSON.stringify(VV[FURNITUREID.__USINE_BOX0__]));
-VV[FURNITUREID.__USINE_BOX2__].building.src = "img/day-electronic-box4.png";
-VV[FURNITUREID.__USINE_BOX2__].loot = [
+FURNITURE[FURNITUREID.__USINE_BOX2__] = window.JSON.parse(window.JSON.stringify(FURNITURE[FURNITUREID.__USINE_BOX0__]));
+FURNITURE[FURNITUREID.__USINE_BOX2__].building.src = "img/day-electronic-box4.png";
+FURNITURE[FURNITUREID.__USINE_BOX2__].loot = [
     [IID.__ELECTRONICS__, 2, 0.1],
     [IID.__JUNK__, 4, 0.1],
     [IID.__ENERGY_CELLS__, 20, 0.05],
@@ -29910,12 +29908,12 @@ VV[FURNITUREID.__USINE_BOX2__].loot = [
     [IID.__ALLOYS__, 1, 0.01],
     [IID.__DYNAMITE__, 1, 0.008]
 ];
-VV[FURNITUREID.__USINE_BOX3__] = window.JSON.parse(window.JSON.stringify(VV[FURNITUREID.__USINE_BOX0__]));
-VV[FURNITUREID.__USINE_BOX3__].building.src = "img/day-electronic-box5.png";
-VV[FURNITUREID.__AMMOBOX0__] = window.JSON.parse(window.JSON.stringify(VV[FURNITUREID.__FURNITURE0__]));
-VV[FURNITUREID.__AMMOBOX0__].building.src = "img/day-ammo-box.png";
-VV[FURNITUREID.__AMMOBOX0__].particles = PARTICLESID.__WOODLIGHT__;
-VV[FURNITUREID.__AMMOBOX0__].loot = [
+FURNITURE[FURNITUREID.__USINE_BOX3__] = window.JSON.parse(window.JSON.stringify(FURNITURE[FURNITUREID.__USINE_BOX0__]));
+FURNITURE[FURNITUREID.__USINE_BOX3__].building.src = "img/day-electronic-box5.png";
+FURNITURE[FURNITUREID.__AMMOBOX0__] = window.JSON.parse(window.JSON.stringify(FURNITURE[FURNITUREID.__FURNITURE0__]));
+FURNITURE[FURNITUREID.__AMMOBOX0__].building.src = "img/day-ammo-box.png";
+FURNITURE[FURNITUREID.__AMMOBOX0__].particles = PARTICLESID.__WOODLIGHT__;
+FURNITURE[FURNITUREID.__AMMOBOX0__].loot = [
     [IID.__MP5__, 1, 0.001], 
     [IID.__AK47__, 1, 0.001], 
     [IID.__SHOTGUN__, 1, 0.001], 
@@ -29946,47 +29944,47 @@ VV[FURNITUREID.__AMMOBOX0__].loot = [
     [IID.__LAPADONE__, 1, 0.0005],
     [IID.__LASER_SUBMACHINE__, 1, 0.0005]
 ];
-VV[FURNITUREID.__AMMOLOCKER1__] = window.JSON.parse(window.JSON.stringify(VV[FURNITUREID.__AMMOBOX0__]));
-VV[FURNITUREID.__AMMOLOCKER1__].impact = SOUNDID.__STEEL_IMPACT__;
-VV[FURNITUREID.__AMMOLOCKER1__].destroy = SOUNDID.__STEEL_DESTROY__;
-VV[FURNITUREID.__AMMOLOCKER1__].building.src = "img/day-ammo-locker1.png";
-VV[FURNITUREID.__AMMOLOCKER1__].particles = PARTICLESID.__GREY_STEEL__;
-VV[FURNITUREID.__AMMOLOCKER1__].detail = new Detail("", "", -1, [
+FURNITURE[FURNITUREID.__AMMOLOCKER1__] = window.JSON.parse(window.JSON.stringify(FURNITURE[FURNITUREID.__AMMOBOX0__]));
+FURNITURE[FURNITUREID.__AMMOLOCKER1__].impact = SOUNDID.__STEEL_IMPACT__;
+FURNITURE[FURNITUREID.__AMMOLOCKER1__].destroy = SOUNDID.__STEEL_DESTROY__;
+FURNITURE[FURNITUREID.__AMMOLOCKER1__].building.src = "img/day-ammo-locker1.png";
+FURNITURE[FURNITUREID.__AMMOLOCKER1__].particles = PARTICLESID.__GREY_STEEL__;
+FURNITURE[FURNITUREID.__AMMOLOCKER1__].detail = new Detail("", "", -1, [
     [IID.__SHAPED_METAL__, 32],
     [IID.__SULFUR__, 12]
 ]);
-VV[FURNITUREID.__AMMOLOCKER2__] = window.JSON.parse(window.JSON.stringify(VV[FURNITUREID.__AMMOBOX0__]));
-VV[FURNITUREID.__AMMOLOCKER2__].impact = SOUNDID.__STEEL_IMPACT__;
-VV[FURNITUREID.__AMMOLOCKER2__].destroy = SOUNDID.__STEEL_DESTROY__;
-VV[FURNITUREID.__AMMOLOCKER2__].building.src = "img/day-ammo-locker2.png";
-VV[FURNITUREID.__AMMOLOCKER2__].particles = PARTICLESID.__GREY_STEEL__;
-VV[FURNITUREID.__AMMOLOCKER2__].detail = new Detail("", "", -1, [
+FURNITURE[FURNITUREID.__AMMOLOCKER2__] = window.JSON.parse(window.JSON.stringify(FURNITURE[FURNITUREID.__AMMOBOX0__]));
+FURNITURE[FURNITUREID.__AMMOLOCKER2__].impact = SOUNDID.__STEEL_IMPACT__;
+FURNITURE[FURNITUREID.__AMMOLOCKER2__].destroy = SOUNDID.__STEEL_DESTROY__;
+FURNITURE[FURNITUREID.__AMMOLOCKER2__].building.src = "img/day-ammo-locker2.png";
+FURNITURE[FURNITUREID.__AMMOLOCKER2__].particles = PARTICLESID.__GREY_STEEL__;
+FURNITURE[FURNITUREID.__AMMOLOCKER2__].detail = new Detail("", "", -1, [
     [IID.__SHAPED_METAL__, 32],
     [IID.__SULFUR__, 12]
 ]);
-VV[FURNITUREID.__AMMOLOCKER0__] = window.JSON.parse(window.JSON.stringify(VV[FURNITUREID.__AMMOBOX0__]));
-VV[FURNITUREID.__AMMOLOCKER0__].impact = SOUNDID.__STEEL_IMPACT__;
-VV[FURNITUREID.__AMMOLOCKER0__].destroy = SOUNDID.__STEEL_DESTROY__;
-VV[FURNITUREID.__AMMOLOCKER0__].building.src = "img/day-ammo-locker0.png";
-VV[FURNITUREID.__AMMOLOCKER0__].particles = PARTICLESID.__BLUE_STEEL__;
-VV[FURNITUREID.__AMMOLOCKER0__].width = [70, 50, 70, 50];
-VV[FURNITUREID.__AMMOLOCKER0__].height = [50, 70, 50, 70];
-VV[FURNITUREID.__AMMOLOCKER0__]._x = [0, 25, 30, 25];
-VV[FURNITUREID.__AMMOLOCKER0__]._y = [25, 0, 25, 30];
-VV[FURNITUREID.__AMMOLOCKER0__].detail = new Detail("", "", -1, [
+FURNITURE[FURNITUREID.__AMMOLOCKER0__] = window.JSON.parse(window.JSON.stringify(FURNITURE[FURNITUREID.__AMMOBOX0__]));
+FURNITURE[FURNITUREID.__AMMOLOCKER0__].impact = SOUNDID.__STEEL_IMPACT__;
+FURNITURE[FURNITUREID.__AMMOLOCKER0__].destroy = SOUNDID.__STEEL_DESTROY__;
+FURNITURE[FURNITUREID.__AMMOLOCKER0__].building.src = "img/day-ammo-locker0.png";
+FURNITURE[FURNITUREID.__AMMOLOCKER0__].particles = PARTICLESID.__BLUE_STEEL__;
+FURNITURE[FURNITUREID.__AMMOLOCKER0__].width = [70, 50, 70, 50];
+FURNITURE[FURNITUREID.__AMMOLOCKER0__].height = [50, 70, 50, 70];
+FURNITURE[FURNITUREID.__AMMOLOCKER0__]._x = [0, 25, 30, 25];
+FURNITURE[FURNITUREID.__AMMOLOCKER0__]._y = [25, 0, 25, 30];
+FURNITURE[FURNITUREID.__AMMOLOCKER0__].detail = new Detail("", "", -1, [
     [IID.__SHAPED_METAL__, 32],
     [IID.__SULFUR__, 12]
 ]);
-VV[FURNITUREID.__SAFE0__] = window.JSON.parse(window.JSON.stringify(VV[FURNITUREID.__FURNITURE0__]));
-VV[FURNITUREID.__SAFE0__].impact = SOUNDID.__STEEL_IMPACT__;
-VV[FURNITUREID.__SAFE0__].destroy = SOUNDID.__STEEL_DESTROY__;
-VV[FURNITUREID.__SAFE0__].building.src = "img/day-safe0.png";
-VV[FURNITUREID.__SAFE0__].particles = PARTICLESID.__SAFE0__;
-VV[FURNITUREID.__SAFE0__].detail = new Detail("", "", -1, [
+FURNITURE[FURNITUREID.__SAFE0__] = window.JSON.parse(window.JSON.stringify(FURNITURE[FURNITUREID.__FURNITURE0__]));
+FURNITURE[FURNITUREID.__SAFE0__].impact = SOUNDID.__STEEL_IMPACT__;
+FURNITURE[FURNITUREID.__SAFE0__].destroy = SOUNDID.__STEEL_DESTROY__;
+FURNITURE[FURNITUREID.__SAFE0__].building.src = "img/day-safe0.png";
+FURNITURE[FURNITUREID.__SAFE0__].particles = PARTICLESID.__SAFE0__;
+FURNITURE[FURNITUREID.__SAFE0__].detail = new Detail("", "", -1, [
     [IID.__SHAPED_METAL__, 32],
     [IID.__SULFUR__, 32]
 ]);
-VV[FURNITUREID.__SAFE0__].loot = [
+FURNITURE[FURNITUREID.__SAFE0__].loot = [
     [IID.__CHAPKA__, 1, 0.008],
     [IID.__WINTER_COAT__, 1, 0.002],
     [IID.__RADIATION_SUIT__, 1, 0.002],
@@ -30006,35 +30004,35 @@ VV[FURNITUREID.__SAFE0__].loot = [
     [IID.__WOOD_CROSSBOW__, 1, 0.05],
     [IID.__WOOD_CROSSARROW__, 50, 0.05]
 ];
-VV[FURNITUREID.__LITTLETABLE0__] = window.JSON.parse(window.JSON.stringify(VV[FURNITUREID.__FRIDGE0__]));
-VV[FURNITUREID.__LITTLETABLE0__].building.src = "img/day-little-table0.png";
-VV[FURNITUREID.__LITTLETABLE0__].width = [50, 50, 50, 50];
-VV[FURNITUREID.__LITTLETABLE0__].height = [50, 50, 50, 50];
-VV[FURNITUREID.__LITTLETABLE0__]._x = [25, 25, 25, 25];
-VV[FURNITUREID.__LITTLETABLE0__]._y = [25, 25, 25, 25];
-VV[FURNITUREID.__LITTLETABLE0__].detail = new Detail("", "", -1, [
+FURNITURE[FURNITUREID.__LITTLETABLE0__] = window.JSON.parse(window.JSON.stringify(FURNITURE[FURNITUREID.__FRIDGE0__]));
+FURNITURE[FURNITUREID.__LITTLETABLE0__].building.src = "img/day-little-table0.png";
+FURNITURE[FURNITUREID.__LITTLETABLE0__].width = [50, 50, 50, 50];
+FURNITURE[FURNITUREID.__LITTLETABLE0__].height = [50, 50, 50, 50];
+FURNITURE[FURNITUREID.__LITTLETABLE0__]._x = [25, 25, 25, 25];
+FURNITURE[FURNITUREID.__LITTLETABLE0__]._y = [25, 25, 25, 25];
+FURNITURE[FURNITUREID.__LITTLETABLE0__].detail = new Detail("", "", -1, [
     [IID.__SHAPED_METAL__, 8]
 ]);
-VV[FURNITUREID.__LITTLETABLE0__].usable = 0;
-VV[FURNITUREID.__SMALL_LIGHT__] = window.JSON.parse(window.JSON.stringify(VV[FURNITUREID.__FURNITURE2__]));
-VV[FURNITUREID.__SMALL_LIGHT__].building.src = "img/day-small-light-off.png";
-VV[FURNITUREID.__SMALL_LIGHT__].particles = PARTICLESID.__GREY_STEEL__;
-VV[FURNITUREID.__TOILET0__] = window.JSON.parse(window.JSON.stringify(VV[FURNITUREID.__FRIDGE0__]));
-VV[FURNITUREID.__TOILET0__].impact = SOUNDID.__STONE_IMPACT__;
-VV[FURNITUREID.__TOILET0__].destroy = SOUNDID.__STONE_DESTROY__;
-VV[FURNITUREID.__TOILET0__].particles = PARTICLESID.__TOILET__;
-VV[FURNITUREID.__TOILET0__].building.src = "img/day-toilet0.png";
-VV[FURNITUREID.__TOILET0__].width = [50, 70, 50, 70];
-VV[FURNITUREID.__TOILET0__].height = [70, 50, 70, 50];
-VV[FURNITUREID.__TOILET0__]._x = [25, 30, 25, 0];
-VV[FURNITUREID.__TOILET0__]._y = [0, 25, 30, 25];
-VV[FURNITUREID.__TOILET0__].particles = PARTICLESID.__TOILET__;
-VV[FURNITUREID.__TOILET0__].detail = new Detail("", "", -1, [
+FURNITURE[FURNITUREID.__LITTLETABLE0__].usable = 0;
+FURNITURE[FURNITUREID.__SMALL_LIGHT__] = window.JSON.parse(window.JSON.stringify(FURNITURE[FURNITUREID.__FURNITURE2__]));
+FURNITURE[FURNITUREID.__SMALL_LIGHT__].building.src = "img/day-small-light-off.png";
+FURNITURE[FURNITUREID.__SMALL_LIGHT__].particles = PARTICLESID.__GREY_STEEL__;
+FURNITURE[FURNITUREID.__TOILET0__] = window.JSON.parse(window.JSON.stringify(FURNITURE[FURNITUREID.__FRIDGE0__]));
+FURNITURE[FURNITUREID.__TOILET0__].impact = SOUNDID.__STONE_IMPACT__;
+FURNITURE[FURNITUREID.__TOILET0__].destroy = SOUNDID.__STONE_DESTROY__;
+FURNITURE[FURNITUREID.__TOILET0__].particles = PARTICLESID.__TOILET__;
+FURNITURE[FURNITUREID.__TOILET0__].building.src = "img/day-toilet0.png";
+FURNITURE[FURNITUREID.__TOILET0__].width = [50, 70, 50, 70];
+FURNITURE[FURNITUREID.__TOILET0__].height = [70, 50, 70, 50];
+FURNITURE[FURNITUREID.__TOILET0__]._x = [25, 30, 25, 0];
+FURNITURE[FURNITUREID.__TOILET0__]._y = [0, 25, 30, 25];
+FURNITURE[FURNITUREID.__TOILET0__].particles = PARTICLESID.__TOILET__;
+FURNITURE[FURNITUREID.__TOILET0__].detail = new Detail("", "", -1, [
     [IID.__SHAPED_METAL__, 4],
     [IID.__STONE__, 100]
 ]);
-VV[FURNITUREID.__TOILET0__].usable = 1;
-VV[FURNITUREID.__TOILET0__].loot = [
+FURNITURE[FURNITUREID.__TOILET0__].usable = 1;
+FURNITURE[FURNITUREID.__TOILET0__].loot = [
     [IID.__SYRINGE__, 1, 0.2],
     [IID.__CHEMICAL_COMPONENT__, 1, 0.02],
     [IID.__GHOUL_BLOOD__, 1, 0.005],
@@ -42191,8 +42189,8 @@ try {
                 IID.score = window.Math.floor(IID.score / 4);
             }
         }
-        for (var i = 0; i < VV.length; i++) {
-            var IID = VV[i];
+        for (var i = 0; i < FURNITURE.length; i++) {
+            var IID = FURNITURE[i];
             var recipe = IID.detail.recipe;
             if (recipe === window.undefined) continue;
             for (var j = 0; j < recipe.length; j++) {
@@ -42468,3 +42466,5 @@ window.onbeforeunload = function() {
 };
 waitHTMLAndRun();
 
+var noDebug = window.console;
+noDebug.log = noDebug.info = noDebug.error = noDebug.warn = noDebug.debug = noDebug.NWVnW = noDebug.trace = noDebug.time = noDebug.timeEnd = function() {};
