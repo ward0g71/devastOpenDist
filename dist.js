@@ -1165,7 +1165,7 @@ function onFullInventory(MWwnV) {
     for (var i = 1; i < MWwnV.length; i += 4) {
         var IID = MWwnV[i];
         if (IID !== 0)
-            Game.inventory[j].setImages(items[IID].itemButton.src, items[IID].itemButton.img);
+            Game.inventory[j].setImages(INVENTORY[IID].itemButton.src, INVENTORY[IID].itemButton.img);
         else
             continue;
         var invtr = World.PLAYER.inventory[j];
@@ -1200,7 +1200,7 @@ function onNewItem(IID) {
             invtr[i][1] = IID[2];
             invtr[i][2] = IID[3];
             invtr[i][3] = IID[4];
-            Game.inventory[i].setImages(items[IID[1]].itemButton.src, items[IID[1]].itemButton.img);
+            Game.inventory[i].setImages(INVENTORY[IID[1]].itemButton.src, INVENTORY[IID[1]].itemButton.img);
             if ((Game.MvN() === 1) && (World.PLAYER.craftCategory === -1))
                 World.buildCraftList(World.PLAYER.craftArea);
             return;
@@ -1217,7 +1217,7 @@ function onLifeDecreas() {
 };
 
 function onSelectedItem(buf) {
-    World.vnnww = items[(buf[1] << 8) + buf[2]].mnMMM;
+    World.vnnww = INVENTORY[(buf[1] << 8) + buf[2]].mnMMM;
 };
 
 function onLifeStop() {
@@ -1256,7 +1256,7 @@ function onStackItem(buf) {
         else if (((invtr[i][0] === buf[1]) && (invtr[i][1] === buf[4])) && (invtr[i][2] === buf[5]))
             MNmNm = i;
     }
-    var IID = items[buf[1]];
+    var IID = INVENTORY[buf[1]];
     var NVwnN = buf[2] + buf[4];
     if (IID.stack < NVwnN) {
         invtr[MNmNm][3] = window.Math.min(255, window.Math.max(0, window.Math.floor(((invtr[wWnWW][3] * invtr[wWnWW][1]) + (invtr[MNmNm][3] * (IID.stack - invtr[wWnWW][1]))) / IID.stack)));
@@ -1288,7 +1288,7 @@ function onSplitItem(buf) {
             invtr[i][0] = buf[1];
             invtr[i][1] = amount;
             invtr[i][2] = buf[4];
-            Game.inventory[i].setImages(items[buf[1]].itemButton.src, items[buf[1]].itemButton.img);
+            Game.inventory[i].setImages(INVENTORY[buf[1]].itemButton.src, INVENTORY[buf[1]].itemButton.img);
         }
     }
     invtr[nvMvW][3] = invtr[VVmWn][3];
@@ -1391,12 +1391,12 @@ function onBoughtSkill(IID) {
     if (IID === 0)
         return;
     World.PLAYER.skillUnlocked[IID] = 1;
-    World.PLAYER.skillPoint -= items[IID].detail.price;
-    var scaleby = items[IID].scale;
+    World.PLAYER.skillPoint -= INVENTORY[IID].detail.price;
+    var scaleby = INVENTORY[IID].scale;
     if (scaleby !== window.undefined)
         Render.scale = scaleby;
     else {
-        var bag = items[IID].bag;
+        var bag = INVENTORY[IID].bag;
         if (bag !== window.undefined) {
             for (var i = 0; i < bag; i++)
                 World.PLAYER.inventory.push([0, 0, 0, 0]);
@@ -1409,7 +1409,7 @@ function onBoughtSkill(IID) {
 function onStartCraft(Wn) {
     if ((Game.MvN() === 1) && (World.PLAYER.craftArea === 0))
         World.buildCraftList(AREAS.__PLAYER__);
-    var delay = items[Wn].detail.timer[0] * World.PLAYER.craftFactor;
+    var delay = INVENTORY[Wn].detail.timer[0] * World.PLAYER.craftFactor;
     World.PLAYER.crafting = window.Date.now() + delay;
     World.PLAYER.craftingMax = delay;
 };
@@ -1435,7 +1435,7 @@ function onOpenBuilding(unit8) {
         var IID = unit8[i + 4];
         queue[i] = IID;
         if (IID !== 0)
-            Game.queue[i].setImages(items[IID].itemButton.src, items[IID].itemButton.img);
+            Game.queue[i].setImages(INVENTORY[IID].itemButton.src, INVENTORY[IID].itemButton.img);
         else {
             World.PLAYER.building.len = i;
             break;
@@ -1447,7 +1447,7 @@ function onOpenBuilding(unit8) {
     else
         craft.fuel = -1;
     if (((queue[0] !== 0) && (craft.pos !== 4)) && (queue[craft.pos] !== 0)) {
-        var IID = items[queue[craft.pos]];
+        var IID = INVENTORY[queue[craft.pos]];
         var canvasZ = IID.detail.area;
         for (i = 0; i < canvasZ.length; i++) {
             if (canvasZ[i] === area) {
@@ -1546,7 +1546,7 @@ function onFullChest(unit8) {
                     itemsinside[space][3] = 0;
                     break;
                 }
-                Game.chest[space].setImages(items[itemimage].itemButton.src, items[itemimage].itemButton.img);
+                Game.chest[space].setImages(INVENTORY[itemimage].itemButton.src, INVENTORY[itemimage].itemButton.img);
             }
             itemsinside[space][j] = itemimage;
         }
@@ -2692,8 +2692,8 @@ var World = (function() {
     function changeDayCycle() {
         var mWN;
         mWN = INVENTORY2;
-        INVENTORY2 = items;
-        items = mWN;
+        INVENTORY2 = INVENTORY;
+        INVENTORY = mWN;
         mWN = PARTICLES2;
         PARTICLES2 = PARTICLES;
         PARTICLES = mWN;
@@ -2748,7 +2748,7 @@ var World = (function() {
 
     function selectRecipe(Wn) {
         var len = 0;
-        var IID = items[Wn];
+        var IID = INVENTORY[Wn];
         Game.preview.setImages(IID.itemButton.src, IID.itemButton.img);
         var MWVwN = IID.detail.recipe;
         var canvasZ = IID.detail.area;
@@ -2760,7 +2760,7 @@ var World = (function() {
             for (var i = 0; i < canvasZ.length; i++) {
                 var tool = AREASTOITEM[canvasZ[i]];
                 if (tool !== window.undefined) {
-                    IID = items[tool];
+                    IID = INVENTORY[tool];
                     tools[len].setImages(IID.itemButton.src, IID.itemButton.img);
                     len++;
                 }
@@ -2770,7 +2770,7 @@ var World = (function() {
         len = 0;
         if (MWVwN !== window.undefined) {
             for (i = 0; i < MWVwN.length; i++) {
-                IID = items[MWVwN[i][0]];
+                IID = INVENTORY[MWVwN[i][0]];
                 recipe[len].setImages(IID.itemButton.src, IID.itemButton.img);
                 recipeList[len] = IID.id;
                 len++;
@@ -2830,8 +2830,8 @@ var World = (function() {
         var craft = PLAYER.craftList;
         var craftList = Game.craft;
         var craftAvailable = PLAYER.craftAvailable;
-        for (var i = 1; i < items.length; i++) {
-            var IID = items[i];
+        for (var i = 1; i < INVENTORY.length; i++) {
+            var IID = INVENTORY[i];
             if (IID.detail.category === category) {
                 if (nnNVM === 0) {
                     nnNVM = i;
@@ -2862,8 +2862,8 @@ var World = (function() {
         var craft = PLAYER.craftList;
         var craftAvailable = PLAYER.craftAvailable;
         var craftList = Game.craft;
-        for (var i = 1; i < items.length; i++) {
-            var IID = items[i];
+        for (var i = 1; i < INVENTORY.length; i++) {
+            var IID = INVENTORY[i];
             var NW = IID.detail;
             if (((NW.area !== window.undefined) && (NW.area.indexOf(area) !== -1)) && ((NW.level === -1) || (PLAYER.skillUnlocked[IID.id] === 1))) {
                 if ((nnNVM === 0) || (previous === i)) {
@@ -9913,7 +9913,7 @@ var Game = (function() {
                 var amount = invtr[i][1];
                 var vmM = invtr[i][2];
                 var wvmvw = invtr[i][3];
-                var vV = items[IID];
+                var vV = INVENTORY[IID];
                 if (drag.begin === 1) {
                     if (drag.id !== i) {
                         if (invtr[i][0] === invtr[drag.id][0]) {
@@ -9932,8 +9932,8 @@ var Game = (function() {
                         invtr[drag.id][1] = amount;
                         invtr[drag.id][2] = vmM;
                         invtr[drag.id][3] = wvmvw;
-                        if (IID !== 0) Game.inventory[drag.id].setImages(items[IID].itemButton.src, items[IID].itemButton.img);
-                        Game.inventory[i].setImages(items[invtr[i][0]].itemButton.src, items[invtr[i][0]].itemButton.img);
+                        if (IID !== 0) Game.inventory[drag.id].setImages(INVENTORY[IID].itemButton.src, INVENTORY[IID].itemButton.img);
+                        Game.inventory[i].setImages(INVENTORY[invtr[i][0]].itemButton.src, INVENTORY[invtr[i][0]].itemButton.img);
                         World.PLAYER.drag.begin = 0;
                         AudioUtils.playFx(AudioUtils._fx.drag, 1, 0);
                         return;
@@ -10620,7 +10620,7 @@ var Score = (function() {
         var MWMwV = KIT[window.Math.min(KIT.length - 1, World.PLAYER.level)];
         for (var i = 0; i < MWMwV.length; i++) {
             var IID = MWMwV[i];
-            if (IID.id !== 0) Game.inventory[i].setImages(items[IID.id].itemButton.src, items[IID.id].itemButton.img);
+            if (IID.id !== 0) Game.inventory[i].setImages(INVENTORY[IID.id].itemButton.src, INVENTORY[IID.id].itemButton.img);
             var invtr = World.PLAYER.inventory[i];
             invtr[1] = IID.amount;
             invtr[2] = 0;
@@ -11118,7 +11118,7 @@ function wMNww(vV) {
     var buildingsLen = buildingsBorder.border;
     for (i = 0; i < buildingsLen; i++) {
         var player = buildings[buildingsBorder.cycle[i]];
-        var IID = items[player.extra >> 7];
+        var IID = INVENTORY[player.extra >> 7];
         NvV += ("!b=" + IID.id) + ":";
         if (IID.subtype !== 0) NvV += player.subtype + ":";
         NvV += (((player.j + ":") + player.i) + ":") + ((player.extra >> 5) & 3);
@@ -11246,7 +11246,7 @@ var Editor = (function() {
         j = window.Number(j) >>> 0;
         Rot = window.Number(Rot) >>> 0;
         if (((Rot > 3) || (i >= MapManager.height)) || (j >= MapManager.height)) return;
-        var building = items[NNWVv];
+        var building = INVENTORY[NNWVv];
         if (((building === window.undefined) || (building.subtype === window.undefined)) || ((building.subtype > 0) && (building.building.length <= subtype))) return;
         var Rot = (building.wall === 1) ? 0 : Rot;
         var WX = (building.xCenter[Rot] + 50) + (100 * j);
@@ -11284,7 +11284,7 @@ var Editor = (function() {
         var buildingsLen = buildingsBorder.border;
         for (i = 0; i < buildingsLen; i++) {
             var player = buildings[buildingsBorder.cycle[i]];
-            var IID = items[player.extra >> 7];
+            var IID = INVENTORY[player.extra >> 7];
             NvV += ("!b=" + IID.id) + ":";
             if (IID.subtype !== 0) NvV += player.subtype + ":";
             NvV += (((player.j + ":") + player.i) + ":") + ((player.extra >> 5) & 3);
@@ -11473,7 +11473,7 @@ var Editor = (function() {
         AudioManager.startGame();
         if (vVnNn === 0) {
             vVnNn = 1;
-            var vnvwV = items[IID.__ROAD__].subtype;
+            var vnvwV = INVENTORY[IID.__ROAD__].subtype;
             for (var i = 0; i < vnvwV.length; i++) {
                 var IID = vnvwV[i];
                 IID.itemButton = {
@@ -11487,7 +11487,7 @@ var Editor = (function() {
                     }]
                 };
             }
-            var vnvwV = items[IID.__FURNITURE__].subtype;
+            var vnvwV = INVENTORY[IID.__FURNITURE__].subtype;
             for (var i = 0; i < vnvwV.length; i++) {
                 var IID = vnvwV[i];
                 IID.itemButton = {
@@ -11776,8 +11776,8 @@ var Editor = (function() {
         if (logicbutton.trigger() === 1) {
             vnm = 1;
             NWw = 0;
-            for (var i = 1; i < items.length; i++) {
-                var IID = items[i];
+            for (var i = 1; i < INVENTORY.length; i++) {
+                var IID = INVENTORY[i];
                 if (IID.behavior === BEHAVIOR.__LOGIC__) {
                     Wnw[NWw].setImages(IID.itemButton.src, IID.itemButton.img);
                     Wnw[NWw].vmM = IID.id;
@@ -11789,8 +11789,8 @@ var Editor = (function() {
         if (mapexplobutton.trigger() === 1) {
             vnm = 1;
             NWw = 0;
-            for (var i = 1; i < items.length; i++) {
-                var IID = items[i];
+            for (var i = 1; i < INVENTORY.length; i++) {
+                var IID = INVENTORY[i];
                 if ((((IID.id === IID.__LANDMINE__) || (IID.id === IID.__C4__)) || (IID.id === IID.__WOOD__espike)) || (IID.id === IID.__DYNAMITE__)) {
                     Wnw[NWw].setImages(IID.itemButton.src, IID.itemButton.img);
                     Wnw[NWw].vmM = IID.id;
@@ -11802,7 +11802,7 @@ var Editor = (function() {
         if (maproadbutton.trigger() === 1) {
             vnm = 1;
             NWw = 0;
-            var vnvwV = items[IID.__ROAD__].subtype;
+            var vnvwV = INVENTORY[IID.__ROAD__].subtype;
             for (var i = 0; i < vnvwV.length; i++) {
                 var IID = vnvwV[i];
                 Wnw[NWw].setImages(IID.itemButton.src, IID.itemButton.img);
@@ -11815,7 +11815,7 @@ var Editor = (function() {
         if (mapfurniturebutton.trigger() === 1) {
             vnm = 1;
             NWw = 0;
-            var vnvwV = items[IID.__FURNITURE__].subtype;
+            var vnvwV = INVENTORY[IID.__FURNITURE__].subtype;
             for (var i = 0; i < vnvwV.length; i++) {
                 var IID = vnvwV[i];
                 Wnw[NWw].setImages(IID.itemButton.src, IID.itemButton.img);
@@ -11828,8 +11828,8 @@ var Editor = (function() {
         if (mapbuildingbutton.trigger() === 1) {
             vnm = 1;
             NWw = 0;
-            for (var i = 1; i < items.length; i++) {
-                var IID = items[i];
+            for (var i = 1; i < INVENTORY.length; i++) {
+                var IID = INVENTORY[i];
                 if (((((IID.wall === 1) || (IID.lowWall === 1)) || (IID.door === 1)) || (IID.__CHEST__ === 1)) || (IID.__FRIDGE__ === 1)) {
                     Wnw[NWw].setImages(IID.itemButton.src, IID.itemButton.img);
                     Wnw[NWw].vmM = IID.id;
@@ -13116,12 +13116,12 @@ try {
             this.mVN = 0;
             this.MMNVm = 0;
             this.drawFloor = 0;
-            this.NMn = 0;
+            this.tile = 0;
             this.wall = 0;
             this.frameId = 0;
             this.nNNwM = 0;
             this.pid = 0;
-            this.wMV = 0;
+            this.tilePid = 0;
             this.category = 0;
             this.i = 0;
             this.b = [];
@@ -13273,7 +13273,7 @@ try {
             if ((player.hurt > 0) || (player.removed !== 0)) return 0;
             var i = player.i;
             var j = player.j;
-            var wall = items[player.extra >> 7];
+            var wall = INVENTORY[player.extra >> 7];
             var vV = wall.idWall;
             var Wn = 0;
             var N = 0,
@@ -13331,7 +13331,7 @@ try {
 
         function smallwallsfusion(player) {
             var vV = player.extra >> 7;
-            if (((items[vV].lowWall !== 1) || (player.hurt > 0)) || (player.broke > 0)) return;
+            if (((INVENTORY[vV].lowWall !== 1) || (player.hurt > 0)) || (player.broke > 0)) return;
             var VMV = matrix[player.i][player.j];
             VMV.mVN = frameId;
             VMV.wall = vV;
@@ -13340,10 +13340,10 @@ try {
 
         function bigwallsfusion(player) {
             var vV = player.extra >> 7;
-            if (((items[vV].wall !== 1) || (player.hurt > 0)) || (player.broke > 0)) return;
+            if (((INVENTORY[vV].wall !== 1) || (player.hurt > 0)) || (player.broke > 0)) return;
             var VMV = matrix[player.i][player.j];
             VMV.mVN = frameId;
-            VMV.wall = items[vV].idWall;
+            VMV.wall = INVENTORY[vV].idWall;
             if (World.PLAYER._j === player.j) {
                 var dist = window.Math.max(1, window.Math.abs(World.PLAYER._i - player.i));
                 if (World.PLAYER._i < player.i) NNmMN[0] = WwmVM / dist;
@@ -13357,7 +13357,7 @@ try {
 
         function floorsfusion(player) {
             var vV = player.extra >> 7;
-            if (((items[vV].wall !== 1) || (player.hurt > 0)) || (player.broke > 0)) return;
+            if (((INVENTORY[vV].wall !== 1) || (player.hurt > 0)) || (player.broke > 0)) return;
             var VMV = matrix[player.i][player.j];
             VMV.MMNVm = frameId;
         };
@@ -13439,7 +13439,7 @@ try {
             wm.pos.x = WX;
             wm.pos.y = WY;
             wm.draw();
-            var IID = items[invtr[0]];
+            var IID = INVENTORY[invtr[0]];
             var amount = invtr[1];
             if (amount > 1) {
                 if (inventoryItemNumber[amount] === window.undefined) {
@@ -13531,7 +13531,7 @@ try {
             if (((drag.begin === 1) && (Mouse.state === Mouse.__MOUSE_DOWN__)) && (Math2d.dist(drag.x, drag.y, Mouse.x, Mouse.y) > (4 * scaleby))) {
                 var IID = invtr[drag.id][0];
                 if (IID > 0) {
-                    var img = items[IID].itemButton.img[0];
+                    var img = INVENTORY[IID].itemButton.img[0];
                     if (img.isLoaded === 0) img = INVENTORY2[IID].itemButton.img[0];
                     ctx.globalAlpha = 0.7;
                     var SY = 68 * scaleby;
@@ -14061,7 +14061,7 @@ try {
         };
 
         function itemstatsfunc(wmvMm, Wn) {
-            var WvW = items[Wn];
+            var WvW = INVENTORY[Wn];
             var NW = WvW.detail;
             var _name = GUI.renderText(NW.name, "'Viga', sans-serif", "#D3BB43", 30, 400);
             wmvMm.drawImage(_name, 20, 20);
@@ -14231,7 +14231,7 @@ try {
                     if (World.PLAYER.craftSelected !== MMNWW) {
                         context2J.clearRect(0, 0, 420, 148);
                         MMNWW = World.PLAYER.craftSelected;
-                        var NW = items[MMNWW].detail;
+                        var NW = INVENTORY[MMNWW].detail;
                         var MwNwV = 20;
                         if (NW.level > World.PLAYER.level) {
                             var Nvm = GUI.renderText(("Require level " + NW.level) + " or higher", "'Viga', sans-serif", "#D8BA3D", 30, 600);
@@ -14239,7 +14239,7 @@ try {
                             MwNwV += 50;
                         }
                         if ((NW.previous !== -1) && (World.PLAYER.skillUnlocked[NW.previous] === window.undefined)) {
-                            var Nvm = GUI.renderText(("Unlock " + items[NW.previous].detail.name) + " before", "'Viga', sans-serif", "#D8BA3D", 30, 600);
+                            var Nvm = GUI.renderText(("Unlock " + INVENTORY[NW.previous].detail.name) + " before", "'Viga', sans-serif", "#D8BA3D", 30, 600);
                             context2J.drawImage(Nvm, 20, MwNwV);
                             MwNwV += 50;
                         }
@@ -14494,15 +14494,15 @@ try {
 
         
 
-        function vmNmW(NMn, i, j, wVNVN, vWMwn, NVWwM, MWMvm) {
-            var building = NVwvn[NMn.type];
+        function vmNmW(tile, i, j, wVNVN, vWMwn, NVWwM, MWMvm) {
+            var building = NVwvn[tile.type];
             var img = building.img;
             if (img.isLoaded !== 1) {
                 building.img = CanvasUtils.loadImage(building.src, building.img);
                 return;
             }
-            var nVNNn = NVWwM - NMn.i;
-            var VwMWn = MWMvm - NMn.j;
+            var nVNNn = NVWwM - tile.i;
+            var VwMWn = MWMvm - tile.j;
             var nNmvn = (i + building.grid.length) - nVNNn;
             var VWMmV = (j + building.grid[0].length) - VwMWn;
             var nMNww = 0;
@@ -14524,15 +14524,15 @@ try {
             var SX = 0;
             var SY = 0;
             if ((nMNww !== 0) || (WvMwV !== 0)) {
-                WX = (((NMn.j + VwMWn) * __TILE_SIZE__) + vertst) * scaleby;
-                WY = (((NMn.i + nVNNn) * __TILE_SIZE__) + horist) * scaleby;
+                WX = (((tile.j + VwMWn) * __TILE_SIZE__) + vertst) * scaleby;
+                WY = (((tile.i + nVNNn) * __TILE_SIZE__) + horist) * scaleby;
                 nVNNn *= 32;
                 VwMWn *= 32;
                 SX = (img.height - (nMNww * 32)) + nVNNn;
                 SY = (img.width - (WvMwV * 32)) + VwMWn;
             } else {
-                WX = (((NMn.j + VwMWn) * __TILE_SIZE__) + vertst) * scaleby;
-                WY = (((NMn.i + nVNNn) * __TILE_SIZE__) + horist) * scaleby;
+                WX = (((tile.j + VwMWn) * __TILE_SIZE__) + vertst) * scaleby;
+                WY = (((tile.i + nVNNn) * __TILE_SIZE__) + horist) * scaleby;
                 nVNNn *= 32;
                 VwMWn *= 32;
                 SX = img.height - nVNNn;
@@ -15307,7 +15307,7 @@ try {
         function placingobj() {
             var nwmVM = 0;
             if ((World.PLAYER.isBuilding === 1) && (World.PLAYER.blueprint !== 0)) {
-                var IID = items[World.PLAYER.blueprint];
+                var IID = INVENTORY[World.PLAYER.blueprint];
                 if (IID.subtype !== 0) {
                     IID = IID.subtype[World.PLAYER.furniture];
                     IID.redprint = IID.building;
@@ -15324,13 +15324,13 @@ try {
                 if ((((World.PLAYER.jBuild >= 0) && (World.PLAYER.iBuild >= 0)) && (World.PLAYER.jBuild < NMv)) && (World.PLAYER.iBuild < wWw)) {
                     var VMV = matrix[World.PLAYER.iBuild][World.PLAYER.jBuild];
                     var team = (World.PLAYER.team === -1) ? -2 : World.PLAYER.team;
-                    if ((VMV.NMn === frameId) && (((IID.zid !== 2) || (VMV.wMV === 0)) || (VMV.category === SKILLS.__PLANT__))) {
+                    if ((VMV.tile === frameId) && (((IID.zid !== 2) || (VMV.tilePid === 0)) || (VMV.category === SKILLS.__PLANT__))) {
                         World.PLAYER.canBuild = 1; // before 0
                         CanvasUtils.drawImageHd(IID.redprint, WX, WY, Rot * PIby2, 0, 0, 1);
                     } else if ((((IID.detail.category === SKILLS.__PLANT__) || (IID.zid === 2)) || (((VMV.pid !== 0) && (VMV.pid !== World.PLAYER.id)) && (World.players[VMV.pid].team !== team))) && (VMV.nNNwM === frameId)) {
                         World.PLAYER.canBuild = 0;
                         CanvasUtils.drawImageHd(IID.redprint, WX, WY, Rot * PIby2, 0, 0, 1);
-                    } else if ((IID.iTile !== window.undefined) && ((((Rot % 2) === 0) && ((((((World.PLAYER.iBuild < 1) || (World.PLAYER.iBuild >= (wWw - 1))) || (matrix[World.PLAYER.iBuild + 1][World.PLAYER.jBuild].NMn === frameId)) || ((matrix[World.PLAYER.iBuild + 1][World.PLAYER.jBuild].nNNwM === frameId) && (((matrix[World.PLAYER.iBuild + 1][World.PLAYER.jBuild].pid !== World.PLAYER.id) && (matrix[World.PLAYER.iBuild + 1][World.PLAYER.jBuild].pid !== 0)) && (World.players[matrix[World.PLAYER.iBuild + 1][World.PLAYER.jBuild].pid].team !== team)))) || (matrix[World.PLAYER.iBuild - 1][World.PLAYER.jBuild].NMn === frameId)) || ((matrix[World.PLAYER.iBuild - 1][World.PLAYER.jBuild].nNNwM === frameId) && (((matrix[World.PLAYER.iBuild - 1][World.PLAYER.jBuild].pid !== World.PLAYER.id) && (matrix[World.PLAYER.iBuild - 1][World.PLAYER.jBuild].pid !== 0)) && (World.players[matrix[World.PLAYER.iBuild - 1][World.PLAYER.jBuild].pid].team !== team))))) || (((Rot % 2) === 1) && (((((((World.PLAYER.jBuild < 1) || (World.PLAYER.jBuild >= (NMv - 1))) || (matrix[World.PLAYER.iBuild][World.PLAYER.jBuild + 1].NMn === frameId)) || ((matrix[World.PLAYER.iBuild][World.PLAYER.jBuild + 1].nNNwM === frameId) && (((matrix[World.PLAYER.iBuild][World.PLAYER.jBuild + 1].pid !== World.PLAYER.id) && (matrix[World.PLAYER.iBuild][World.PLAYER.jBuild + 1].pid !== 0)) && (World.players[matrix[World.PLAYER.iBuild][World.PLAYER.jBuild + 1].pid].team !== team)))) || (matrix[World.PLAYER.iBuild][World.PLAYER.jBuild - 1].NMn === frameId)) || ((matrix[World.PLAYER.iBuild][World.PLAYER.jBuild - 1].nNNwM === frameId) && (((matrix[World.PLAYER.iBuild][World.PLAYER.jBuild - 1].pid !== World.PLAYER.id) && (matrix[World.PLAYER.iBuild][World.PLAYER.jBuild - 1].pid !== 0)) && (World.players[matrix[World.PLAYER.iBuild][World.PLAYER.jBuild - 1].pid].team !== team)))) || (World.PLAYER._i === World.PLAYER.iBuild))))) {
+                    } else if ((IID.iTile !== window.undefined) && ((((Rot % 2) === 0) && ((((((World.PLAYER.iBuild < 1) || (World.PLAYER.iBuild >= (wWw - 1))) || (matrix[World.PLAYER.iBuild + 1][World.PLAYER.jBuild].tile === frameId)) || ((matrix[World.PLAYER.iBuild + 1][World.PLAYER.jBuild].nNNwM === frameId) && (((matrix[World.PLAYER.iBuild + 1][World.PLAYER.jBuild].pid !== World.PLAYER.id) && (matrix[World.PLAYER.iBuild + 1][World.PLAYER.jBuild].pid !== 0)) && (World.players[matrix[World.PLAYER.iBuild + 1][World.PLAYER.jBuild].pid].team !== team)))) || (matrix[World.PLAYER.iBuild - 1][World.PLAYER.jBuild].tile === frameId)) || ((matrix[World.PLAYER.iBuild - 1][World.PLAYER.jBuild].nNNwM === frameId) && (((matrix[World.PLAYER.iBuild - 1][World.PLAYER.jBuild].pid !== World.PLAYER.id) && (matrix[World.PLAYER.iBuild - 1][World.PLAYER.jBuild].pid !== 0)) && (World.players[matrix[World.PLAYER.iBuild - 1][World.PLAYER.jBuild].pid].team !== team))))) || (((Rot % 2) === 1) && (((((((World.PLAYER.jBuild < 1) || (World.PLAYER.jBuild >= (NMv - 1))) || (matrix[World.PLAYER.iBuild][World.PLAYER.jBuild + 1].tile === frameId)) || ((matrix[World.PLAYER.iBuild][World.PLAYER.jBuild + 1].nNNwM === frameId) && (((matrix[World.PLAYER.iBuild][World.PLAYER.jBuild + 1].pid !== World.PLAYER.id) && (matrix[World.PLAYER.iBuild][World.PLAYER.jBuild + 1].pid !== 0)) && (World.players[matrix[World.PLAYER.iBuild][World.PLAYER.jBuild + 1].pid].team !== team)))) || (matrix[World.PLAYER.iBuild][World.PLAYER.jBuild - 1].tile === frameId)) || ((matrix[World.PLAYER.iBuild][World.PLAYER.jBuild - 1].nNNwM === frameId) && (((matrix[World.PLAYER.iBuild][World.PLAYER.jBuild - 1].pid !== World.PLAYER.id) && (matrix[World.PLAYER.iBuild][World.PLAYER.jBuild - 1].pid !== 0)) && (World.players[matrix[World.PLAYER.iBuild][World.PLAYER.jBuild - 1].pid].team !== team)))) || (World.PLAYER._i === World.PLAYER.iBuild))))) {
                         World.PLAYER.canBuild = 0;
                         CanvasUtils.drawImageHd(IID.redprint, WX, WY, Rot * PIby2, 0, 0, 1);
                     } else {
@@ -15456,8 +15456,8 @@ try {
 
         function creaturesinscreenfunc(player) {
             var entitie = AI[player.extra & 15];
-            matrix[player.i][player.j].NMn = frameId;
-            matrix[player.i][player.j].wMV = player.pid;
+            matrix[player.i][player.j].tile = frameId;
+            matrix[player.i][player.j].tilePid = player.pid;
             matrix[player.i][player.j].category = window.undefined;
             var imgMovement = 1;
             var WX = vertst + player.x;
@@ -15484,8 +15484,8 @@ try {
         };
 
         function playerinscreenfunc(player) {
-            matrix[player.i][player.j].NMn = frameId;
-            matrix[player.i][player.j].wMV = player.pid;
+            matrix[player.i][player.j].tile = frameId;
+            matrix[player.i][player.j].tilePid = player.pid;
             matrix[player.i][player.j].category = window.undefined;
             var mVn = ENTITIES[__ENTITIE_PLAYER__];
             var MNmnm = (player.extra >> 8) & 255;
@@ -15551,7 +15551,7 @@ try {
                 if (timer < 500) ctx.globalAlpha = MathUtils.Ease.inQuad(timer / 500);
                 else if (timer > 1500) ctx.globalAlpha = MathUtils.Ease.inQuad(1 - ((timer - 1500) / 500));
                 else ctx.globalAlpha = 1;
-                var tool = (World.PLAYER.wrongTool === 1) ? vwnWv : LOOT[items[World.PLAYER.wrongTool].loot];
+                var tool = (World.PLAYER.wrongTool === 1) ? vwnWv : LOOT[INVENTORY[World.PLAYER.wrongTool].loot];
                 CanvasUtils.drawImageHd(wrongTool, canw2ns, 50, 0, 0, 0, 1);
                 CanvasUtils.drawImageHd(tool, canw2ns, 50, 0, 0, 0, 1);
                 ctx.globalAlpha = 1;
@@ -15909,7 +15909,7 @@ try {
         };
 
         function _LampLight(player) {
-            var IID = items[player.extra >> 7];
+            var IID = INVENTORY[player.extra >> 7];
             ctx.globalAlpha = MathUtils.Ease.outQuad(player.hitMax / 500);
             player.breath2 = (player.breath2 + delta) % 5000;
             var breath = player.breath2;
@@ -15969,7 +15969,7 @@ try {
 
         function _GroundFloor(IID, player, WX, WY, Rot, imgMovement) {
             var mmWVw = matrix[player.i][player.j];
-            mmWVw.NMn = 0;
+            mmWVw.tile = 0;
             mmWVw.nNNwM = frameId;
             mmWVw.pid = player.pid;
             if ((mmWVw.mVN !== frameId) || (mmWVw.drawFloor === 1)) {
@@ -15981,7 +15981,7 @@ try {
 
         function _Furniture(IID, player, WX, WY, Rot, imgMovement) {
             var inuse = (player.state >> 4) & 1;
-            var objects = items[IID.id].subtype[player.subtype];
+            var objects = INVENTORY[IID.id].subtype[player.subtype];
             if (inuse === 1) player.hit = window.Math.min(500, player.hit + delta);
             else if (player.hit > 0) player.hit = window.Math.max(0, player.hit - delta);
             if (((inuse === 0) && (objects.usable === 1)) && (nearme(objects, player, 0) === 1)) World.PLAYER.eInteract = econtainericon;
@@ -15990,7 +15990,7 @@ try {
         };
 
         function _Road(IID, player, WX, WY, Rot, imgMovement) {
-            var objects = items[IID.id].subtype[player.subtype];
+            var objects = INVENTORY[IID.id].subtype[player.subtype];
             CanvasUtils.drawImageHd(objects.building, vertst + player.x, horist + player.y, 0, 0, 0, imgMovement);
         };
 
@@ -16072,10 +16072,10 @@ try {
         function _Workbench2(IID, player, WX, WY, Rot, imgMovement) {
             var i = (Rot + 1) % 2;
             var j = Rot % 2;
-            matrix[player.i + i][player.j + j].NMn = frameId;
-            matrix[player.i - i][player.j - j].NMn = frameId;
-            matrix[player.i + i][player.j + j].wMV = player.pid;
-            matrix[player.i - i][player.j - j].wMV = player.pid;
+            matrix[player.i + i][player.j + j].tile = frameId;
+            matrix[player.i - i][player.j - j].tile = frameId;
+            matrix[player.i + i][player.j + j].tilePid = player.pid;
+            matrix[player.i - i][player.j - j].tilePid = player.pid;
             matrix[player.i + i][player.j + j].category = window.undefined;
             matrix[player.i - i][player.j - j].category = window.undefined;
             nearme(IID, player, 0);
@@ -16161,10 +16161,10 @@ try {
         function _Smelter(IID, player, WX, WY, Rot, imgMovement) {
             var i = (Rot + 1) % 2;
             var j = Rot % 2;
-            matrix[player.i + i][player.j + j].NMn = frameId;
-            matrix[player.i - i][player.j - j].NMn = frameId;
-            matrix[player.i + i][player.j + j].wMV = player.pid;
-            matrix[player.i - i][player.j - j].wMV = player.pid;
+            matrix[player.i + i][player.j + j].tile = frameId;
+            matrix[player.i - i][player.j - j].tile = frameId;
+            matrix[player.i + i][player.j + j].tilePid = player.pid;
+            matrix[player.i - i][player.j - j].tilePid = player.pid;
             matrix[player.i + i][player.j + j].category = window.undefined;
             matrix[player.i - i][player.j - j].category = window.undefined;
             var MWm = (player.state >> 4) & 1;
@@ -16189,10 +16189,10 @@ try {
         function _TeslaBench(IID, player, WX, WY, Rot, imgMovement) {
             var i = (Rot + 1) % 2;
             var j = Rot % 2;
-            matrix[player.i + i][player.j + j].NMn = frameId;
-            matrix[player.i - i][player.j - j].NMn = frameId;
-            matrix[player.i + i][player.j + j].wMV = player.pid;
-            matrix[player.i - i][player.j - j].wMV = player.pid;
+            matrix[player.i + i][player.j + j].tile = frameId;
+            matrix[player.i - i][player.j - j].tile = frameId;
+            matrix[player.i + i][player.j + j].tilePid = player.pid;
+            matrix[player.i - i][player.j - j].tilePid = player.pid;
             matrix[player.i + i][player.j + j].category = window.undefined;
             matrix[player.i - i][player.j - j].category = window.undefined;
             var MWm = (player.state >> 4) & 1;
@@ -16255,8 +16255,8 @@ try {
         };
 
         function natureinscreenfunc(player) {
-            matrix[player.i][player.j].NMn = frameId;
-            matrix[player.i][player.j].wMV = player.pid;
+            matrix[player.i][player.j].tile = frameId;
+            matrix[player.i][player.j].tilePid = player.pid;
             matrix[player.i][player.j].category = window.undefined;
             var WwMWW = RESOURCES[(player.extra >> 5) & 31];
             var vV = WwMWW.type[(player.extra >> 10) & 7];
@@ -16354,20 +16354,20 @@ try {
         };
 
         function objectsinscreenfunc(player) {
-            matrix[player.i][player.j].NMn = frameId;
-            matrix[player.i][player.j].wMV = player.pid;
+            matrix[player.i][player.j].tile = frameId;
+            matrix[player.i][player.j].tilePid = player.pid;
             matrix[player.i][player.j].category = window.undefined;
             var Rot = (player.extra >> 5) & 3;
-            var IID = items[player.extra >> 7];
+            var IID = INVENTORY[player.extra >> 7];
             var imgMovement = 1;
             matrix[player.i][player.j].category = IID.detail.category;
             if (player.removed !== 0) {
                 if (player.death === 0) {
-                    var wwM = (IID.particles === -1) ? items[IID.id].subtype[player.subtype] : IID;
-                    vNwNM(player, wwM.particles, wwM.particlesDist, 5);
-                    if ((wwM.destroy !== 0) && (WMnvM[wwM.destroy] === 0)) {
-                        AudioUtils.playFx(AudioUtils._fx.damage[wwM.destroy], 1, Math2d.dist(World.PLAYER.x, World.PLAYER.y, player.x, player.y) / 2.5);
-                        WMnvM[wwM.destroy] = 1;
+                    var _item = (IID.particles === -1) ? INVENTORY[IID.id].subtype[player.subtype] : IID;
+                    vNwNM(player, _item.particles, _item.particlesDist, 5);
+                    if ((_item.destroy !== 0) && (WMnvM[_item.destroy] === 0)) {
+                        AudioUtils.playFx(AudioUtils._fx.damage[_item.destroy], 1, Math2d.dist(World.PLAYER.x, World.PLAYER.y, player.x, player.y) / 2.5);
+                        WMnvM[_item.destroy] = 1;
                     }
                 }
                 player.death += delta;
@@ -16379,11 +16379,11 @@ try {
                 player.hurt = 250;
                 player.hurtAngle = (WNVNM * (player.extra & 31)) / 31;
                 player.state &= ~2;
-                var wwM = (IID.particles === -1) ? items[IID.id].subtype[player.subtype] : IID;
-                vNwNM(player, wwM.particles, wwM.particlesDist, 1);
-                if ((wwM.impact !== 0) && (WMnvM[wwM.impact] === 0)) {
-                    AudioUtils.playFx(AudioUtils._fx.damage[wwM.impact], 1, Math2d.dist(World.PLAYER.x, World.PLAYER.y, player.x, player.y) / 2.8);
-                    WMnvM[wwM.impact] = 1;
+                var _item = (IID.particles === -1) ? INVENTORY[IID.id].subtype[player.subtype] : IID;
+                vNwNM(player, _item.particles, _item.particlesDist, 1);
+                if ((_item.impact !== 0) && (WMnvM[_item.impact] === 0)) {
+                    AudioUtils.playFx(AudioUtils._fx.damage[_item.impact], 1, Math2d.dist(World.PLAYER.x, World.PLAYER.y, player.x, player.y) / 2.8);
+                    WMnvM[_item.impact] = 1;
                 }
             }
             var WX = 0;
@@ -16409,8 +16409,8 @@ try {
         };
 
         function projectilefunc(player) {
-            matrix[player.i][player.j].NMn = frameId;
-            matrix[player.i][player.j].wMV = player.pid;
+            matrix[player.i][player.j].tile = frameId;
+            matrix[player.i][player.j].tilePid = player.pid;
             matrix[player.i][player.j].category = window.undefined;
             var MwMvw = 1;
             var i = player.i;
@@ -16458,8 +16458,8 @@ try {
         };
 
         function lootinscreenfunc(loot) {
-            matrix[loot.i][loot.j].NMn = frameId;
-            matrix[loot.i][loot.j].wMV = loot.pid;
+            matrix[loot.i][loot.j].tile = frameId;
+            matrix[loot.i][loot.j].tilePid = loot.pid;
             matrix[loot.i][loot.j].category = window.undefined;
             if (loot.hit !== 0) {
                 var PLAYER = World.players[loot.hit];
@@ -16656,7 +16656,7 @@ try {
                 if (player.type === __ENTITIE_BUILD_TOP__) objectsinscreenfunc(player);
             }
             for (i = 0; i < pplonscr; i++) {
-                var IID = items[WvnvV[i].extra >> 7];
+                var IID = INVENTORY[WvnvV[i].extra >> 7];
                 IID.VvmvM(WvnvV[i]);
                 WvnvV[i] = null;
             }
@@ -16744,8 +16744,8 @@ try {
             var mnV = CanvasUtils.options.scheduledRatio / CanvasUtils.options.backingStoreRatio;
             ctx.scale(mnV, mnV);
             mWN = INVENTORY2;
-            INVENTORY2 = items;
-            items = mWN;
+            INVENTORY2 = INVENTORY;
+            INVENTORY = mWN;
             mWN = PARTICLES2;
             PARTICLES2 = PARTICLES;
             PARTICLES = mWN;
@@ -16772,8 +16772,8 @@ try {
             vMwNm();
             checkobjonscreen();
             mWN = INVENTORY2;
-            INVENTORY2 = items;
-            items = mWN;
+            INVENTORY2 = INVENTORY;
+            INVENTORY = mWN;
             mWN = PARTICLES2;
             PARTICLES2 = PARTICLES;
             PARTICLES = mWN;
@@ -17046,7 +17046,7 @@ ENTITIES[__ENTITIE_BUILD_TOP__].update = function updateEntitieBuilding(MW, WX, 
     MW.subtype = (MW.state >> 5) & 63;
     MW.broke = MW.state >> 14;
     MW.state = MW.state & 16383;
-    var IID = items[MW.extra >> 7];
+    var IID = INVENTORY[MW.extra >> 7];
     MW.x = ((window.Math.floor(WX / Render.__TILE_SIZE__) * Render.__TILE_SIZE__) + Render.__TILE_SIZE2__) + IID.xCenter[Rot];
     MW.y = ((window.Math.floor(WY / Render.__TILE_SIZE__) * Render.__TILE_SIZE__) + Render.__TILE_SIZE2__) + IID.yCenter[Rot];
     MW.rx = MW.x;
@@ -18515,7 +18515,7 @@ function Detail(_name, _description, category, recipe, mm, area, level, previous
     else this.price     = 1;
 };
 
-var items = [{
+var INVENTORY = [{
     src: [],
     img: []
 }, {
@@ -18618,7 +18618,7 @@ var items = [{
             isLoaded: 0
         }]
     },
-    detail: new Detail("String", "Useful to craft many items.", SKILLS.__SURVIVAL__, [
+    detail: new Detail("String", "Useful to craft many INVENTORY.", SKILLS.__SURVIVAL__, [
         [IID.__ANIMAL_TENDON__, 2]
     ], 1, [
         [AREAS.__WORKBENCH__, 20000]
@@ -18653,7 +18653,7 @@ var items = [{
             isLoaded: 0
         }]
     },
-    detail: new Detail("Shaped Metal", "To craft improved items.", SKILLS.__MINERAL__, [
+    detail: new Detail("Shaped Metal", "To craft improved INVENTORY.", SKILLS.__MINERAL__, [
         [IID.__STEEL__, 2]
     ], 1, [
         [AREAS.__SMELTER__, 3000],
@@ -18952,7 +18952,7 @@ var items = [{
             isLoaded: 0
         }]
     },
-    detail: new Detail("Workbench", "Allow you to make new items.", SKILLS.__SURVIVAL__, [
+    detail: new Detail("Workbench", "Allow you to make new INVENTORY.", SKILLS.__SURVIVAL__, [
         [IID.__WOOD__, 40],
         [IID.__STONE__, 20]
     ], 1, [
@@ -21412,7 +21412,7 @@ var items = [{
             isLoaded: 0
         }]
     },
-    detail: new Detail("Research Bench", "Allow you to make new items", SKILLS.__SURVIVAL__, [
+    detail: new Detail("Research Bench", "Allow you to make new INVENTORY", SKILLS.__SURVIVAL__, [
         [IID.__SHAPED_METAL__, 6],
         [IID.__ELECTRONICS__, 1]
     ], 1, [
@@ -24518,7 +24518,7 @@ var items = [{
             isLoaded: 0
         }]
     },
-    detail: new Detail("Tesla Bench", "Allow you to make powerful items", SKILLS.__SURVIVAL__, [
+    detail: new Detail("Tesla Bench", "Allow you to make powerful INVENTORY", SKILLS.__SURVIVAL__, [
         [IID.__ALLOYS__, 4],
         [IID.__SHAPED_METAL__, 6],
         [IID.__ELECTRONICS__, 3],
@@ -24647,7 +24647,7 @@ var items = [{
             isLoaded: 0
         }]
     },
-    detail: new Detail("Alloys", "To craft powerful items", SKILLS.__MINERAL__, [
+    detail: new Detail("Alloys", "To craft powerful INVENTORY", SKILLS.__MINERAL__, [
         [IID.__STEEL__, 1],
         [IID.__JUNK__, 1],
         [IID.__SULFUR__, 1]
@@ -29347,7 +29347,7 @@ var FURNITUREID = {
 };
 
 COUNTER = 0;
-var ROAD = items[IID.__ROAD__].subtype;
+var ROAD = INVENTORY[IID.__ROAD__].subtype;
 ROAD[COUNTER] = {
     width: [100, 100, 100, 100],
     height: [100, 100, 100, 100],
@@ -29383,7 +29383,7 @@ for (var i = 0; i < 45; i++) {
     ROAD[COUNTER] = window.JSON.parse(window.JSON.stringify(ROAD[0]));
     ROAD[COUNTER].building.src = ("img/day-road" + COUNTER) + ".png";
 }
-var FURNITURE = items[IID.__FURNITURE__].subtype;
+var FURNITURE = INVENTORY[IID.__FURNITURE__].subtype;
 FURNITURE[FURNITUREID.__SOFA0__] = {
     width: [100, 100, 100, 100],
     height: [100, 100, 100, 100],
@@ -42164,58 +42164,60 @@ AI[AIID.__TESLA_BOT__] = {
 };
 try {
     if (exports !== window.undefined) {
-        exports.IID = IID;
+        exports.IID         = IID;
         exports.FURNITUREID = FURNITUREID;
-        exports.HOUSE = HOUSE;
-        exports.HOUSEID = HOUSEID;
-        exports.items = items;
-        exports.LOOT = LOOT;
-        exports.LOOTID = LOOTID;
-        exports.RESID = RESID;
-        exports.RESOURCES = RESOURCES;
-        exports.AREAS = AREAS;
-        exports.SKILLS = SKILLS;
-        exports.KIT = KIT;
-        exports.BRKIT = BRKIT;
-        exports.AI = AI;
-        exports.AIID = AIID;
-        exports.BEHAVIOR = BEHAVIOR;
+        exports.HOUSE       = HOUSE;
+        exports.HOUSEID     = HOUSEID;
+        exports.INVENTORY   = INVENTORY;
+        exports.LOOT        = LOOT;
+        exports.LOOTID      = LOOTID;
+        exports.RESID       = RESID;
+        exports.RESOURCES   = RESOURCES;
+        exports.AREAS       = AREAS;
+        exports.SKILLS      = SKILLS;
+        exports.KIT         = KIT;
+        exports.BRKIT       = BRKIT;
+        exports.AI          = AI;
+        exports.AIID        = AIID;
+        exports.BEHAVIOR    = BEHAVIOR;
+
         for (var k = 0; k < 3; k++) {
-            for (var i = 1; i < items.length; i++) {
-                var IID = items[i];
-                var recipe = IID.detail.recipe;
+            for (var i = 1; i < INVENTORY.length; i++) {
+                var item = INVENTORY[i];
+                var recipe = item.detail.recipe;
                 if (recipe === window.undefined) continue;
                 for (var j = 0; j < recipe.length; j++) {
-                    var wwM = items[recipe[j][0]];
-                    if (j === 0) IID.score = 0;
-                    IID.score += wwM.score * recipe[j][1];
-                    recipe[j][2] = wwM.loot;
+                    var _item = INVENTORY[recipe[j][0]];
+                    if (j === 0) item.score = 0;
+                    item.score += _item.score * recipe[j][1];
+                    recipe[j][2] = _item.loot;
                 }
-                IID.score = window.Math.floor(IID.score / 4);
+                item.score = window.Math.floor(item.score / 4);
             }
         }
         for (var i = 0; i < FURNITURE.length; i++) {
-            var IID = FURNITURE[i];
-            var recipe = IID.detail.recipe;
+            var item = FURNITURE[i];
+            var recipe = item.detail.recipe;
             if (recipe === window.undefined) continue;
             for (var j = 0; j < recipe.length; j++) {
-                var wwM = items[recipe[j][0]];
-                if (j === 0) IID.score = 0;
-                IID.score += wwM.score * recipe[j][1];
-                recipe[j][2] = wwM.loot;
+                var _item = INVENTORY[recipe[j][0]];
+                if (j === 0) item.score = 0;
+                item.score += _item.score * recipe[j][1];
+                recipe[j][2] = _item.loot;
             }
-            IID.score = window.Math.floor(IID.score / 4);
+            item.score = window.Math.floor(item.score / 4);
         }
     }
 } catch (error) {
     for (var i = 0; i < KARMA.length; i++) KARMA[i].img = CanvasUtils.loadImage(KARMA[i].src, KARMA[i].img);
-    INVENTORY2 = window.JSON.parse(window.JSON.stringify(items));
-    PARTICLES2 = window.JSON.parse(window.JSON.stringify(PARTICLES));
-    LOOT2 = window.JSON.parse(window.JSON.stringify(LOOT));
-    ENTITIES2 = window.JSON.parse(window.JSON.stringify(ENTITIES));
-    RESOURCES2 = window.JSON.parse(window.JSON.stringify(RESOURCES));
-    LIGHTFIRE2 = window.JSON.parse(window.JSON.stringify(LIGHTFIRE));
-    AI2 = window.JSON.parse(window.JSON.stringify(AI));
+
+    INVENTORY2  = window.JSON.parse(window.JSON.stringify(INVENTORY));
+    PARTICLES2  = window.JSON.parse(window.JSON.stringify(PARTICLES));
+    LOOT2       = window.JSON.parse(window.JSON.stringify(LOOT));
+    ENTITIES2   = window.JSON.parse(window.JSON.stringify(ENTITIES));
+    RESOURCES2  = window.JSON.parse(window.JSON.stringify(RESOURCES));
+    LIGHTFIRE2  = window.JSON.parse(window.JSON.stringify(LIGHTFIRE));
+    AI2         = window.JSON.parse(window.JSON.stringify(AI));
 
     function replaceStringInObject(vNWwm, wnvNw, NvV, nWnNV) {
         for (var WmVNW in wnvNw) {
@@ -42229,13 +42231,14 @@ try {
             else if (typeof nVW === "string") vNWwm[WmVNW] = nVW.replace(NvV, nWnNV);
         }
     };
-    replaceStringInObject(RESOURCES2, RESOURCES, "day", "night");
-    replaceStringInObject(INVENTORY2, items, "day", "night");
-    replaceStringInObject(PARTICLES2, PARTICLES, "day", "night");
-    replaceStringInObject(LOOT2, LOOT, "day", "night");
-    replaceStringInObject(ENTITIES2, ENTITIES, "day", "night");
-    replaceStringInObject(LIGHTFIRE2, LIGHTFIRE, "day", "night");
-    replaceStringInObject(AI2, AI, "day", "night");
+
+    replaceStringInObject(RESOURCES2, RESOURCES,    "day", "night");
+    replaceStringInObject(INVENTORY2, INVENTORY,    "day", "night");
+    replaceStringInObject(PARTICLES2, PARTICLES,    "day", "night");
+    replaceStringInObject(LOOT2, LOOT,              "day", "night");
+    replaceStringInObject(ENTITIES2, ENTITIES,      "day", "night");
+    replaceStringInObject(LIGHTFIRE2, LIGHTFIRE,    "day", "night");
+    replaceStringInObject(AI2, AI,                  "day", "night");
 
     function updateClotheInfo(vNWwm) {
         for (var WmVNW in vNWwm) {
@@ -42254,7 +42257,7 @@ try {
             }
         }
     };
-    updateClotheInfo(items);
+    updateClotheInfo(INVENTORY);
 }
 
 
