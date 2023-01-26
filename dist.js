@@ -2698,8 +2698,8 @@ var World = (function() {
         PARTICLES2 = VNw;
         VNw = mWN;
         mWN = LOOT2;
-        LOOT2 = VNN;
-        VNN = mWN;
+        LOOT2 = LOOT;
+        LOOT = mWN;
         mWN = RESOURCES2;
         RESOURCES2 = RESOURCES;
         RESOURCES = mWN;
@@ -11247,7 +11247,7 @@ var Editor = (function() {
         var WX = (building.xCenter[Rot] + 50) + (100 * j);
         var WY = (building.yCenter[Rot] + 50) + (100 * i);
         var vV = 0;
-        switch ((building.subtype === 0) ? building.WvV : building.subtype[subtype].WvV) {
+        switch ((building.subtype === 0) ? building.zid : building.subtype[subtype].zid) {
             case 0:
                 vV = __ENTITIE_BUILD_DOWN__;
                 break;
@@ -11468,7 +11468,7 @@ var Editor = (function() {
         AudioManager.startGame();
         if (vVnNn === 0) {
             vVnNn = 1;
-            var vnvwV = items[IID.NvMvM].subtype;
+            var vnvwV = items[IID.__ROAD__].subtype;
             for (var i = 0; i < vnvwV.length; i++) {
                 var IID = vnvwV[i];
                 IID.img = {
@@ -11797,11 +11797,11 @@ var Editor = (function() {
         if (maproadbutton.trigger() === 1) {
             vnm = 1;
             NWw = 0;
-            var vnvwV = items[IID.NvMvM].subtype;
+            var vnvwV = items[IID.__ROAD__].subtype;
             for (var i = 0; i < vnvwV.length; i++) {
                 var IID = vnvwV[i];
                 Wnw[NWw].setImages(IID.img.src, IID.img.W);
-                Wnw[NWw].vmM = IID.NvMvM;
+                Wnw[NWw].vmM = IID.__ROAD__;
                 Wnw[NWw].nVWnM = i;
                 NWw++;
             }
@@ -11825,7 +11825,7 @@ var Editor = (function() {
             NWw = 0;
             for (var i = 1; i < items.length; i++) {
                 var IID = items[i];
-                if (((((IID.wall === 1) || (IID.lowWall === 1)) || (IID.door === 1)) || (IID.chest === 1)) || (IID.VVmmM === 1)) {
+                if (((((IID.wall === 1) || (IID.lowWall === 1)) || (IID.door === 1)) || (IID.chest === 1)) || (IID.fridge === 1)) {
                     Wnw[NWw].setImages(IID.img.src, IID.img.W);
                     Wnw[NWw].vmM = IID.id;
                     NWw++;
@@ -11965,7 +11965,7 @@ var Editor = (function() {
                     AudioUtils.playFx(AudioUtils._fx.button, 1, 0);
                     World.PLAYER.blueprint = Wnw[i].vmM;
                     World.PLAYER.furniture = Wnw[i].nVWnM;
-                    if (World.PLAYER.blueprint === IID.NvMvM) World.PLAYER.buildRotate = 0;
+                    if (World.PLAYER.blueprint === IID.__ROAD__) World.PLAYER.buildRotate = 0;
                 }
             }
         }
@@ -12056,7 +12056,7 @@ var Editor = (function() {
             AudioUtils.playFx(AudioUtils._fx.open, 1, 0);
             nVN();
         } else if (event.keyCode === 82) {
-            if ((World.PLAYER.isBuilding === 1) && (World.PLAYER.blueprint !== IID.NvMvM)) World.PLAYER.buildRotate = (World.PLAYER.buildRotate + 1) % 4;
+            if ((World.PLAYER.isBuilding === 1) && (World.PLAYER.blueprint !== IID.__ROAD__)) World.PLAYER.buildRotate = (World.PLAYER.buildRotate + 1) % 4;
         }
     };
 
@@ -15319,10 +15319,10 @@ try {
                 if ((((World.PLAYER.jBuild >= 0) && (World.PLAYER.iBuild >= 0)) && (World.PLAYER.jBuild < NMv)) && (World.PLAYER.iBuild < wWw)) {
                     var VMV = matrix[World.PLAYER.iBuild][World.PLAYER.jBuild];
                     var team = (World.PLAYER.team === -1) ? -2 : World.PLAYER.team;
-                    if ((VMV.NMn === frameId) && (((IID.WvV !== 2) || (VMV.wMV === 0)) || (VMV.nww === SKILLS.__PLANT__))) {
+                    if ((VMV.NMn === frameId) && (((IID.zid !== 2) || (VMV.wMV === 0)) || (VMV.nww === SKILLS.__PLANT__))) {
                         World.PLAYER.canBuild = 1; // before 0
                         CanvasUtils.drawImageHd(IID.notputableimg, WX, WY, Rot * PIby2, 0, 0, 1);
-                    } else if ((((IID.detail.nww === SKILLS.__PLANT__) || (IID.WvV === 2)) || (((VMV.pid !== 0) && (VMV.pid !== World.PLAYER.id)) && (World.players[VMV.pid].team !== team))) && (VMV.nNNwM === frameId)) {
+                    } else if ((((IID.detail.nww === SKILLS.__PLANT__) || (IID.zid === 2)) || (((VMV.pid !== 0) && (VMV.pid !== World.PLAYER.id)) && (World.players[VMV.pid].team !== team))) && (VMV.nNNwM === frameId)) {
                         World.PLAYER.canBuild = 0;
                         CanvasUtils.drawImageHd(IID.notputableimg, WX, WY, Rot * PIby2, 0, 0, 1);
                     } else if ((IID.MMnVm !== window.undefined) && ((((Rot % 2) === 0) && ((((((World.PLAYER.iBuild < 1) || (World.PLAYER.iBuild >= (wWw - 1))) || (matrix[World.PLAYER.iBuild + 1][World.PLAYER.jBuild].NMn === frameId)) || ((matrix[World.PLAYER.iBuild + 1][World.PLAYER.jBuild].nNNwM === frameId) && (((matrix[World.PLAYER.iBuild + 1][World.PLAYER.jBuild].pid !== World.PLAYER.id) && (matrix[World.PLAYER.iBuild + 1][World.PLAYER.jBuild].pid !== 0)) && (World.players[matrix[World.PLAYER.iBuild + 1][World.PLAYER.jBuild].pid].team !== team)))) || (matrix[World.PLAYER.iBuild - 1][World.PLAYER.jBuild].NMn === frameId)) || ((matrix[World.PLAYER.iBuild - 1][World.PLAYER.jBuild].nNNwM === frameId) && (((matrix[World.PLAYER.iBuild - 1][World.PLAYER.jBuild].pid !== World.PLAYER.id) && (matrix[World.PLAYER.iBuild - 1][World.PLAYER.jBuild].pid !== 0)) && (World.players[matrix[World.PLAYER.iBuild - 1][World.PLAYER.jBuild].pid].team !== team))))) || (((Rot % 2) === 1) && (((((((World.PLAYER.jBuild < 1) || (World.PLAYER.jBuild >= (NMv - 1))) || (matrix[World.PLAYER.iBuild][World.PLAYER.jBuild + 1].NMn === frameId)) || ((matrix[World.PLAYER.iBuild][World.PLAYER.jBuild + 1].nNNwM === frameId) && (((matrix[World.PLAYER.iBuild][World.PLAYER.jBuild + 1].pid !== World.PLAYER.id) && (matrix[World.PLAYER.iBuild][World.PLAYER.jBuild + 1].pid !== 0)) && (World.players[matrix[World.PLAYER.iBuild][World.PLAYER.jBuild + 1].pid].team !== team)))) || (matrix[World.PLAYER.iBuild][World.PLAYER.jBuild - 1].NMn === frameId)) || ((matrix[World.PLAYER.iBuild][World.PLAYER.jBuild - 1].nNNwM === frameId) && (((matrix[World.PLAYER.iBuild][World.PLAYER.jBuild - 1].pid !== World.PLAYER.id) && (matrix[World.PLAYER.iBuild][World.PLAYER.jBuild - 1].pid !== 0)) && (World.players[matrix[World.PLAYER.iBuild][World.PLAYER.jBuild - 1].pid].team !== team)))) || (World.PLAYER._i === World.PLAYER.iBuild))))) {
@@ -15546,7 +15546,7 @@ try {
                 if (NMMmV < 500) ctx.globalAlpha = MathUtils.Ease.inQuad(NMMmV / 500);
                 else if (NMMmV > 1500) ctx.globalAlpha = MathUtils.Ease.inQuad(1 - ((NMMmV - 1500) / 500));
                 else ctx.globalAlpha = 1;
-                var tool = (World.PLAYER.wrongTool === 1) ? vwnWv : VNN[items[World.PLAYER.wrongTool].loot];
+                var tool = (World.PLAYER.wrongTool === 1) ? vwnWv : LOOT[items[World.PLAYER.wrongTool].loot];
                 CanvasUtils.drawImageHd(wrongTool, canw2ns, 50, 0, 0, 0, 1);
                 CanvasUtils.drawImageHd(tool, canw2ns, 50, 0, 0, 0, 1);
                 ctx.globalAlpha = 1;
@@ -15573,7 +15573,7 @@ try {
                         Game.mnNnW = scaley;
                     }
                     ctx.drawImage(nMWVv, posx, posy, scalex, scaley);
-                    var loot = VNN[World.PLAYER.loot];
+                    var loot = LOOT[World.PLAYER.loot];
                     posx = ((vertst + NmM) * vNwMN) - (scalex / (2 * scaleby));
                     posy = window.Math.max(10, ((((horist + WWV) * vNwMN) - (scaley / (2 * scaleby))) - (65 * vNwMN)) - 60);
                     CanvasUtils.drawImageHd(loot, posx + 77, posy + 33, loot.angle, 0, 0, loot.scale);
@@ -15653,7 +15653,7 @@ try {
                             Game.vmwNV = posy;
                         }
                         ctx.drawImage(VWvVN, posx, posy, scalex, scaley);
-                        var loot = VNN[World.PLAYER.loot];
+                        var loot = LOOT[World.PLAYER.loot];
                         posx = ((vertst + NmM) * vNwMN) + 5;
                         posy = window.Math.max(10, ((((horist + WWV) * vNwMN) - (scaley / (2 * scaleby))) - (65 * vNwMN)) - 60);
                         CanvasUtils.drawImageHd(loot, posx + 77, posy + 33, loot.angle, 0, 0, loot.scale);
@@ -15979,7 +15979,7 @@ try {
             var objects = items[IID.id].subtype[player.subtype];
             if (inuse === 1) player.hit = window.Math.min(500, player.hit + delta);
             else if (player.hit > 0) player.hit = window.Math.max(0, player.hit - delta);
-            if (((inuse === 0) && (objects.WvwVM === 1)) && (nearme(objects, player, 0) === 1)) World.PLAYER.eInteract = econtainericon;
+            if (((inuse === 0) && (objects.usable === 1)) && (nearme(objects, player, 0) === 1)) World.PLAYER.eInteract = econtainericon;
             CanvasUtils.drawImageHd(objects.building, (vertst + player.x) + WX, (horist + player.y) + WY, Rot * PIby2, 0, 0, imgMovement);
             if (player.hit > 0) containeropenic(player, WX, WY);
         };
@@ -16490,7 +16490,7 @@ try {
             loot.breath = (loot.breath + delta) % 1500;
             if (loot.breath < 750) breath = 0.95 + (MathUtils.Ease.inOutQuad(loot.breath / 750) * 0.1);
             else breath = 0.95 + (MathUtils.Ease.inOutQuad(1 - ((loot.breath - 750) / 750)) * 0.1);
-            CanvasUtils.drawImageHd(VNN[loot.extra], vertst + loot.x, horist + loot.y, loot.angle, 0, 0, breath - vnwmm);
+            CanvasUtils.drawImageHd(LOOT[loot.extra], vertst + loot.x, horist + loot.y, loot.angle, 0, 0, breath - vnwmm);
             if (loot.removed !== 0) {
                 if (loot.death > 800) loot.removed = 2;
                 ctx.globalAlpha = 1;
@@ -16745,8 +16745,8 @@ try {
             PARTICLES2 = VNw;
             VNw = mWN;
             mWN = LOOT2;
-            LOOT2 = VNN;
-            VNN = mWN;
+            LOOT2 = LOOT;
+            LOOT = mWN;
             mWN = RESOURCES2;
             RESOURCES2 = RESOURCES;
             RESOURCES = mWN;
@@ -16773,8 +16773,8 @@ try {
             PARTICLES2 = VNw;
             VNw = mWN;
             mWN = LOOT2;
-            LOOT2 = VNN;
-            VNN = mWN;
+            LOOT2 = LOOT;
+            LOOT = mWN;
             mWN = RESOURCES2;
             RESOURCES2 = RESOURCES;
             RESOURCES = mWN;
@@ -17231,7 +17231,7 @@ var IID = {
     sawedoff: COUNTER++,
     stonefloor1: COUNTER++,
     stonefloor2: COUNTER++,
-    NvMvM: COUNTER++,
+    __ROAD__: COUNTER++,
     chips: COUNTER++,
     rottenchips: COUNTER++,
     electronicpart: COUNTER++,
@@ -18775,7 +18775,7 @@ var items = [{
     wait: 10,
     mnw: 21,     
     fuel: -1,
-    WvV: -1,
+    zid: -1,
     z: 0,
     delay: 1000,
     width: [30, 30, 30, 30],
@@ -18947,7 +18947,7 @@ var items = [{
     ]),
     mnw: 21,     
     fuel: -1,
-    WvV: 0,
+    zid: 0,
     z: 1,
     MWW: AREAS.workbench,
     stack: 255,
@@ -19184,7 +19184,7 @@ var items = [{
     ]),
     mnw: 21,     
     fuel: -1,
-    WvV: 1,
+    zid: 1,
     z: 1,
     stack: 255,
     loot: Mv.woodenwall,
@@ -19499,7 +19499,7 @@ var items = [{
     ], 3),
     mnw: 21,     
     fuel: -1,
-    WvV: 1,
+    zid: 1,
     z: 1,
     stack: 255,
     loot: Mv.stonewall,
@@ -19814,7 +19814,7 @@ var items = [{
     ], 6, IID.stonewall),
     mnw: 21,     
     fuel: -1,
-    WvV: 1,
+    zid: 1,
     z: 1,
     stack: 255,
     loot: Mv.steelwall,
@@ -20129,7 +20129,7 @@ var items = [{
     ]),
     mnw: 21,     
     fuel: -1,
-    WvV: 0,
+    zid: 0,
     z: 0,
     stack: 255,
     loot: Mv.wooddoor,
@@ -20233,7 +20233,7 @@ var items = [{
     ], 3),
     mnw: 21,     
     fuel: -1,
-    WvV: 0,
+    zid: 0,
     z: 0,
     stack: 255,
     loot: Mv.stonedoor,
@@ -20337,7 +20337,7 @@ var items = [{
     ], 6, IID.stonedoor),
     mnw: 21,     
     fuel: -1,
-    WvV: 0,
+    zid: 0,
     z: 0,
     stack: 255,
     loot: Mv.steeldoor,
@@ -20443,7 +20443,7 @@ var items = [{
     ]),
     mnw: 21,     
     fuel: 15000,
-    WvV: -1,
+    zid: -1,
     z: 0,
     MWW: AREAS.firepart,
     stack: 255,
@@ -20882,7 +20882,7 @@ var items = [{
     ], 3),
     mnw: 21,     
     fuel: 20000,
-    WvV: -1,
+    zid: -1,
     z: 0,
     MWW: AREAS.bbq,
     stack: 255,
@@ -20959,7 +20959,7 @@ var items = [{
     ], 10),
     mnw: 21,     
     fuel: 42000,
-    WvV: 1,
+    zid: 1,
     z: 1,
     MWW: AREAS.smelter,
     stack: 255,
@@ -21053,7 +21053,7 @@ var items = [{
     ]),
     mnw: 21,     
     fuel: -1,
-    WvV: 1,
+    zid: 1,
     z: 1,
     stack: 255,
     loot: Mv.wooddoor1,
@@ -21157,7 +21157,7 @@ var items = [{
     ], 3),
     mnw: 21,     
     fuel: -1,
-    WvV: 1,
+    zid: 1,
     z: 1,
     stack: 255,
     loot: Mv.stonedoor1,
@@ -21261,7 +21261,7 @@ var items = [{
     ], 6, IID.stonedoor1),
     mnw: 21,     
     fuel: -1,
-    WvV: 1,
+    zid: 1,
     z: 1,
     stack: 255,
     loot: Mv.steeldoor1,
@@ -21406,7 +21406,7 @@ var items = [{
     ], 6),
     mnw: 21,     
     fuel: -1,
-    WvV: 0,
+    zid: 0,
     z: 1,
     MWW: AREAS.researchbench,
     stack: 255,
@@ -21505,7 +21505,7 @@ var items = [{
     ]),
     mnw: 21,     
     fuel: -1,
-    WvV: 0,
+    zid: 0,
     z: 1,
     MWW: AREAS.weavingmachine,
     stack: 255,
@@ -21624,7 +21624,7 @@ var items = [{
     ], 8),
     mnw: 21,     
     fuel: -1,
-    WvV: 0,
+    zid: 0,
     z: 0,
     stack: 255,
     loot: Mv.chest,
@@ -21700,13 +21700,13 @@ var items = [{
     ], 9),
     mnw: 21,     
     fuel: -1,
-    WvV: 0,
+    zid: 0,
     z: 0,
     stack: 255,
     loot: Mv.fridge,
     wait: 10,
     chest: 1,
-    VVmmM: 1,
+    fridge: 1,
     delay: 600,
     width: [50, 100, 50, 100],
     height: [100, 50, 100, 50],
@@ -21779,7 +21779,7 @@ var items = [{
     wait: 10,
     mnw: 21,     
     fuel: -1,
-    WvV: 2,
+    zid: 2,
     z: 0,
     delay: 1000,
     width: [100, 100, 100, 100],
@@ -22117,7 +22117,7 @@ var items = [{
     wait: 10,
     mnw: 21,     
     fuel: -1,
-    WvV: -1,
+    zid: -1,
     z: 0,
     delay: 1000,
     width: [100, 100, 100, 100],
@@ -22222,7 +22222,7 @@ var items = [{
     wait: 10,
     mnw: 21,     
     fuel: -1,
-    WvV: 2,
+    zid: 2,
     z: 0,
     delay: 1000,
     width: [100, 100, 100, 100],
@@ -22533,7 +22533,7 @@ var items = [{
     ]),
     mnw: 21,     
     fuel: -1,
-    WvV: 0,
+    zid: 0,
     z: 0,
     stack: 255,
     loot: Mv.smallwoodwall,
@@ -22820,7 +22820,7 @@ var items = [{
     ], 3),
     mnw: 21,     
     fuel: -1,
-    WvV: 0,
+    zid: 0,
     z: 0,
     stack: 255,
     loot: Mv.smallstonewall,
@@ -23107,7 +23107,7 @@ var items = [{
     ], 6, IID.smallstonewall),
     mnw: 21,     
     fuel: -1,
-    WvV: 0,
+    zid: 0,
     z: 0,
     stack: 255,
     loot: Mv.smallsteelwall,
@@ -23377,7 +23377,7 @@ var items = [{
     score: 0
 }, {
     id: IID.MMnVW,
-    WvV: 0,
+    zid: 0,
     xCenter: [0, 0, 0, 0],
     yCenter: [0, 0, 0, 0],
     wall: 0,
@@ -23501,7 +23501,7 @@ var items = [{
     wait: 10,
     mnw: 21,     
     fuel: -1,
-    WvV: -1,
+    zid: -1,
     z: 0,
     delay: 1000,
     width: [30, 30, 30, 30],
@@ -23736,7 +23736,7 @@ var items = [{
     wait: 10,
     mnw: 21,     
     fuel: -1,
-    WvV: 2,
+    zid: 2,
     z: 0,
     delay: 1000,
     width: [100, 100, 100, 100],
@@ -24050,7 +24050,7 @@ var items = [{
     wait: 10,
     mnw: 21,     
     fuel: -1,
-    WvV: 2,
+    zid: 2,
     z: 0,
     delay: 1000,
     width: [100, 100, 100, 100],
@@ -24343,8 +24343,8 @@ var items = [{
     life: 8000,
     score: 0
 }, {
-    id: IID.NvMvM,
-    WvV: 0,
+    id: IID.__ROAD__,
+    zid: 0,
     xCenter: [0, 0, 0, 0],
     yCenter: [0, 0, 0, 0],
     wall: 0,
@@ -24515,7 +24515,7 @@ var items = [{
     ], 10, IID.researchbench),
     mnw: 21,     
     fuel: 60000,
-    WvV: 0,
+    zid: 0,
     z: 1,
     MWW: AREAS.teslabench,
     stack: 255,
@@ -24691,7 +24691,7 @@ var items = [{
     wait: 10,
     mnw: 21,     
     fuel: -1,
-    WvV: -1,
+    zid: -1,
     z: 0,
     delay: 1000,
     width: [50, 50, 50, 50],
@@ -24770,7 +24770,7 @@ var items = [{
     wait: 10,
     mnw: 21,     
     fuel: -1,
-    WvV: -1,
+    zid: -1,
     z: 0,
     delay: 1000,
     width: [100, 100, 100, 100],
@@ -24844,7 +24844,7 @@ var items = [{
     wait: 10,
     mnw: 21,     
     fuel: -1,
-    WvV: -1,
+    zid: -1,
     z: 0,
     delay: 1000,
     width: [100, 100, 100, 100],
@@ -24938,7 +24938,7 @@ var items = [{
     ], 8),
     mnw: 21,     
     fuel: 10000,
-    WvV: 0,
+    zid: 0,
     z: 1,
     MWW: AREAS.composter,
     stack: 255,
@@ -25301,7 +25301,7 @@ var items = [{
     ]),
     mnw: 21,     
     fuel: -1,
-    WvV: -1,
+    zid: -1,
     z: 0,
     stack: 40,
     loot: Mv.woodespike,
@@ -25509,7 +25509,7 @@ var items = [{
     ], 8),
     mnw: 21,     
     fuel: 100000,
-    WvV: 0,
+    zid: 0,
     z: 1,
     MWW: AREAS.agitator,
     stack: 255,
@@ -25775,7 +25775,7 @@ var items = [{
     wait: 10,
     mnw: 21,     
     fuel: -1,
-    WvV: -1,
+    zid: -1,
     z: 0,
     delay: 1000,
     width: [30, 30, 30, 30],
@@ -25927,7 +25927,7 @@ var items = [{
     wait: 10,
     mnw: 21,     
     fuel: -1,
-    WvV: -1,
+    zid: -1,
     z: 0,
     delay: 1000,
     width: [30, 30, 30, 30],
@@ -26017,7 +26017,7 @@ var items = [{
     ], 12),
     mnw: 21,     
     fuel: 740000,
-    WvV: 0,
+    zid: 0,
     z: 1,
     MWW: AREAS.extractor,
     stack: 255,
@@ -26153,7 +26153,7 @@ var items = [{
     wait: 10,
     mnw: 21,     
     fuel: -1,
-    WvV: -1,
+    zid: -1,
     z: 0,
     delay: 1000,
     width: [30, 30, 30, 30],
@@ -26305,7 +26305,7 @@ var items = [{
     wait: 10,
     mnw: 21,     
     fuel: -1,
-    WvV: -1,
+    zid: -1,
     z: 0,
     delay: 1000,
     width: [30, 30, 30, 30],
@@ -26405,7 +26405,7 @@ var items = [{
     wait: 10,
     mnw: 21,     
     fuel: -1,
-    WvV: -1,
+    zid: -1,
     z: 0,
     delay: 1000,
     width: [30, 30, 30, 30],
@@ -26500,7 +26500,7 @@ var items = [{
     wait: 10,
     mnw: 21,     
     fuel: -1,
-    WvV: -1,
+    zid: -1,
     z: 0,
     delay: 1000,
     width: [100, 100, 100, 100],
@@ -26573,7 +26573,7 @@ var items = [{
     wait: 10,
     mnw: 21,     
     fuel: -1,
-    WvV: -1,
+    zid: -1,
     z: 0,
     delay: 1000,
     width: [100, 100, 100, 100],
@@ -26646,7 +26646,7 @@ var items = [{
     wait: 10,
     mnw: 21,     
     fuel: -1,
-    WvV: -1,
+    zid: -1,
     z: 0,
     delay: 1000,
     width: [100, 100, 100, 100],
@@ -26719,7 +26719,7 @@ var items = [{
     wait: 10,
     mnw: 21,     
     fuel: -1,
-    WvV: -1,
+    zid: -1,
     z: 0,
     delay: 1000,
     width: [100, 100, 100, 100],
@@ -26793,7 +26793,7 @@ var items = [{
     wait: 10,
     mnw: 21,     
     fuel: -1,
-    WvV: -1,
+    zid: -1,
     z: 0,
     delay: 1000,
     width: [100, 100, 100, 100],
@@ -26879,7 +26879,7 @@ var items = [{
     wait: 10,
     mnw: 21,     
     fuel: -1,
-    WvV: -1,
+    zid: -1,
     z: 0,
     delay: 1000,
     width: [100, 100, 100, 100],
@@ -26953,7 +26953,7 @@ var items = [{
     wait: 10,
     mnw: 21,     
     fuel: -1,
-    WvV: -1,
+    zid: -1,
     z: 0,
     delay: 1000,
     width: [100, 100, 100, 100],
@@ -27027,7 +27027,7 @@ var items = [{
     wait: 10,
     mnw: 21,     
     fuel: -1,
-    WvV: -1,
+    zid: -1,
     z: 0,
     delay: 1000,
     width: [100, 100, 100, 100],
@@ -27101,7 +27101,7 @@ var items = [{
     wait: 10,
     mnw: 21,     
     fuel: -1,
-    WvV: -1,
+    zid: -1,
     z: 0,
     delay: 1000,
     width: [100, 100, 100, 100],
@@ -27256,7 +27256,7 @@ var items = [{
     wait: 10,
     mnw: 21,     
     fuel: -1,
-    WvV: 0,
+    zid: 0,
     z: 1,
     delay: 1000,
     width: [100, 100, 100, 100],
@@ -27346,7 +27346,7 @@ var items = [{
     wait: 10,
     mnw: 21,     
     fuel: -1,
-    WvV: 0,
+    zid: 0,
     z: 1,
     delay: 1000,
     width: [100, 100, 100, 100],
@@ -27458,7 +27458,7 @@ var items = [{
     wait: 10,
     mnw: 21,     
     fuel: -1,
-    WvV: -1,
+    zid: -1,
     z: 0,
     delay: 1000,
     width: [100, 100, 100, 100],
@@ -27528,7 +27528,7 @@ var items = [{
     ], 99),
     mnw: 21,     
     fuel: -1,
-    WvV: 1,
+    zid: 1,
     z: 1,
     stack: 255,
     loot: Mv.stonecave,
@@ -27844,7 +27844,7 @@ var items = [{
     ], 99),
     mnw: 21,     
     fuel: -1,
-    WvV: 1,
+    zid: 1,
     z: 1,
     stack: 255,
     loot: Mv.bunkerwall,
@@ -28162,7 +28162,7 @@ var items = [{
     wait: 10,
     mnw: 21,     
     fuel: -1,
-    WvV: 2,
+    zid: 2,
     z: 0,
     delay: 1000,
     width: [100, 100, 100, 100],
@@ -28476,7 +28476,7 @@ var items = [{
     wait: 10,
     mnw: 21,     
     fuel: -1,
-    WvV: 2,
+    zid: 2,
     z: 0,
     delay: 1000,
     width: [100, 100, 100, 100],
@@ -28789,7 +28789,7 @@ var items = [{
     ]),
     mnw: 21,     
     fuel: -1,
-    WvV: 0,
+    zid: 0,
     z: 1,
     MWW: AREAS.weldingmachine,
     stack: 255,
@@ -28867,7 +28867,7 @@ var items = [{
     wait: 10,
     mnw: 21,     
     fuel: -1,
-    WvV: -1,
+    zid: -1,
     z: 0,
     delay: 1000,
     width: [100, 100, 100, 100],
@@ -28941,7 +28941,7 @@ var items = [{
     wait: 10,
     mnw: 21,     
     fuel: -1,
-    WvV: -1,
+    zid: -1,
     z: 0,
     delay: 1000,
     width: [100, 100, 100, 100],
@@ -29037,7 +29037,7 @@ var items = [{
     wait: 10,
     mnw: 21,     
     fuel: -1,
-    WvV: -1,
+    zid: -1,
     z: 0,
     delay: 1000,
     width: [100, 100, 100, 100],
@@ -29268,71 +29268,73 @@ var items = [{
     },
     detail: new vn("Light Weight", "Less likely to trigger traps.", SKILLS.__SKILL__, window.undefined, window.undefined, window.undefined, 8)
 }];
+
 COUNTER = 0;
-var nW = {
-    sofapart: COUNTER++,
-    sofapart2: COUNTER++,
-    sofapart3: COUNTER++,
-    WwvNW: COUNTER++,
-    NWNnm: COUNTER++,
-    bedpart: COUNTER++,
-    bedpart2: COUNTER++,
-    vWVWW: COUNTER++,
-    _buttonInv: COUNTER++,
-    WNVMm: COUNTER++,
-    NvWVV: COUNTER++,
-    NMvVn: COUNTER++,
-    VWw: COUNTER++,
-    MVvwm: COUNTER++,
-    mmV: COUNTER++,
-    wwVWW: COUNTER++,
-    NwvnV: COUNTER++,
-    vWwVv: COUNTER++,
-    safepart: COUNTER++,
-    vwNWV: COUNTER++,
-    wnMNM: COUNTER++,
-    WNWVm: COUNTER++,
-    nWwvV: COUNTER++,
-    MnWmv: COUNTER++,
-    vVV: COUNTER++,
-    vMw: COUNTER++,
-    garbagepart: COUNTER++,
-    mmwVV: COUNTER++,
-    VVvnV: COUNTER++,
-    nnMmW: COUNTER++,
-    MNmWW: COUNTER++,
-    NnwvW: COUNTER++,
-    Vnwmv: COUNTER++,
-    mmmwn: COUNTER++,
-    nNnVv: COUNTER++,
-    nnM: COUNTER++,
-    NvmwW: COUNTER++,
-    vwmnW: COUNTER++,
-    nmWMm: COUNTER++,
-    wNmMv: COUNTER++,
-    vWwmV: COUNTER++,
-    NNvnv: COUNTER++,
-    vNWWv: COUNTER++,
-    VWnwN: COUNTER++,
-    NWwwM: COUNTER++,
-    NMWVV: COUNTER++,
-    WVWWM: COUNTER++,
-    wVmWM: COUNTER++,
-    WmNvV: COUNTER++,
-    WmmNw: COUNTER++,
-    Mmvmn: COUNTER++,
-    VwWNv: COUNTER++,
-    NwwNM: COUNTER++,
-    NvVmW: COUNTER++,
-    MMmnW: COUNTER++,
-    nWNnm: COUNTER++,
-    nVwnn: COUNTER++,
-    VmNVm: COUNTER++,
-    NVwVM: COUNTER++
+var FURNITUREID = {
+    __SOFA0__:              COUNTER++,
+    __SOFA1__:              COUNTER++,
+    __SOFA2__:              COUNTER++,
+    __SOFA3__:              COUNTER++,
+    __SOFA4__:              COUNTER++,
+    __BED0__:               COUNTER++,
+    __BED1__:               COUNTER++,
+    __TABLE0__:             COUNTER++,
+    __TV0__:                COUNTER++,
+    __COMPUTER0__:          COUNTER++,
+    __CHAIR0__:             COUNTER++,
+    __WASHBASIN0__:         COUNTER++,
+    __FURNITURE0__:         COUNTER++,
+    __FURNITURE1__:         COUNTER++,
+    __FURNITURE2__:         COUNTER++,
+    __FURNITURE3__:         COUNTER++,
+    __CARTON0__:            COUNTER++,
+    __CARTON1__:            COUNTER++,
+    __SAFE0__:              COUNTER++,
+    __FRIDGE0__:            COUNTER++,
+    __FRIDGE1__:            COUNTER++,
+    __TOILET0__:            COUNTER++,
+    __LITTLETABLE0__:       COUNTER++,
+    __PLOT0__:              COUNTER++,
+    __BAREL0__:             COUNTER++,
+    __BAREL1__:             COUNTER++,
+    __GARBAGE0__:           COUNTER++,
+    __CUPBOARD0__:          COUNTER++,
+    __PHARMA0__:            COUNTER++,
+    __AMMOBOX0__:           COUNTER++,
+    __AMMOLOCKER0__:        COUNTER++,
+    __AMMOLOCKER1__:        COUNTER++,
+    __AMMOLOCKER2__:        COUNTER++,
+    __MACHINE0__:           COUNTER++,
+    __MACHINE1__:           COUNTER++,
+    __USINE_BOX0__:         COUNTER++,
+    __USINE_BOX1__:         COUNTER++,
+    __USINE_BOX2__:         COUNTER++,
+    __USINE_BOX3__:         COUNTER++,
+    __DISTRIBUTOR0__:       COUNTER++,
+    __CASH0__:              COUNTER++,
+    __RENFORCED__:          COUNTER++,
+    __SOFA6__:              COUNTER++,
+    __GOLD_CHAIR0__:        COUNTER++,
+    __GREEN_CHAIR0__:       COUNTER++,
+    __WOOD_CHAIR0__:        COUNTER++,
+    __TABLE1__:             COUNTER++,
+    __SMALL_LIGHT__:        COUNTER++,
+    __BED2__:               COUNTER++,
+    __FURNITURE4__:         COUNTER++,
+    __FURNITURE5__:         COUNTER++,
+    __FURNITURE6__:         COUNTER++,
+    __CHAIR1__:             COUNTER++,
+    __CHAIR2__:             COUNTER++,
+    __DISTRIBUTOR1__:       COUNTER++,
+    __SHOWER0__:            COUNTER++,
+    __TABLE2__:             COUNTER++,
+    __BLOOD_TRANS__:        COUNTER++,
+    __ENERGY_BOX0__:        COUNTER++
 };
+
 COUNTER = 0;
-var MwmnM = items[IID.NvMvM].subtype;
-MwmnM[COUNTER] = {
+var ROAD = items[IID.__ROAD__].subtype;
+ROAD[COUNTER] = {
     width: [100, 100, 100, 100],
     height: [100, 100, 100, 100],
     inmapx: [0, 0, 0, 0],
@@ -29353,22 +29355,22 @@ MwmnM[COUNTER] = {
     particles: particulesitems.woodtree,
     particlesDist: 70,
     angle: window.Math.PI,
-    WvwVM: 0,
-    VVmmM: 0,
+    usable: 0,
+    fridge: 0,
     loot: null,
     collision: 0,
     z: 0,
-    WvV: 2,
+    zid: 2,
     areaEffect: 0,
     timelife: 315360000000
 };
 for (var i = 0; i < 45; i++) {
     COUNTER++;
-    MwmnM[COUNTER] = window.JSON.parse(window.JSON.stringify(MwmnM[0]));
-    MwmnM[COUNTER].building.src = ("img/day-road" + COUNTER) + ".png";
+    ROAD[COUNTER] = window.JSON.parse(window.JSON.stringify(ROAD[0]));
+    ROAD[COUNTER].building.src = ("img/day-road" + COUNTER) + ".png";
 }
 var VV = items[IID.MMnVW].subtype;
-VV[nW.sofapart] = {
+VV[FURNITUREID.__SOFA0__] = {
     width: [100, 100, 100, 100],
     height: [100, 100, 100, 100],
     inmapx: [0, 0, 0, 0],
@@ -29391,12 +29393,12 @@ VV[nW.sofapart] = {
     particles: particulesitems.sofapart,
     particlesDist: 70,
     angle: window.Math.PI,
-    WvwVM: 0,
-    VVmmM: 0,
+    usable: 0,
+    fridge: 0,
     loot: null,
     collision: 1,
     z: 1,
-    WvV: 0,
+    zid: 0,
     areaEffect: 0,
     packetId: 25,
     explosion: 0,
@@ -29404,186 +29406,186 @@ VV[nW.sofapart] = {
     damageBuilding: 0,
     timelife: 315360000000
 };
-VV[nW.sofapart2] = window.JSON.parse(window.JSON.stringify(VV[nW.sofapart]));
-VV[nW.sofapart2].building.src = "img/day-sofa1.png";
-VV[nW.sofapart2].particles = particulesitems.sofapart2;
-VV[nW.sofapart3] = window.JSON.parse(window.JSON.stringify(VV[nW.sofapart2]));
-VV[nW.sofapart3].building.src = "img/day-sofa2.png";
-VV[nW.WwvNW] = window.JSON.parse(window.JSON.stringify(VV[nW.sofapart]));
-VV[nW.WwvNW].building.src = "img/day-sofa3.png";
-VV[nW.WwvNW].particles = particulesitems.sofapart3;
-VV[nW.NWNnm] = window.JSON.parse(window.JSON.stringify(VV[nW.WwvNW]));
-VV[nW.NWNnm].building.src = "img/day-sofa4.png";
-VV[nW.vNWWv] = window.JSON.parse(window.JSON.stringify(VV[nW.WwvNW]));
-VV[nW.vNWWv].building.src = "img/day-sofa6.png";
-VV[nW.NNvnv] = window.JSON.parse(window.JSON.stringify(VV[nW.sofapart]));
-VV[nW.NNvnv].building.src = "img/day-renforced-door.png";
-VV[nW.NNvnv].particles = particulesitems.steel;
-VV[nW.NNvnv].detail = new vn("", "", -1, [
+VV[FURNITUREID.__SOFA1__] = window.JSON.parse(window.JSON.stringify(VV[FURNITUREID.__SOFA0__]));
+VV[FURNITUREID.__SOFA1__].building.src = "img/day-sofa1.png";
+VV[FURNITUREID.__SOFA1__].particles = particulesitems.sofapart2;
+VV[FURNITUREID.__SOFA2__] = window.JSON.parse(window.JSON.stringify(VV[FURNITUREID.__SOFA1__]));
+VV[FURNITUREID.__SOFA2__].building.src = "img/day-sofa2.png";
+VV[FURNITUREID.__SOFA3__] = window.JSON.parse(window.JSON.stringify(VV[FURNITUREID.__SOFA0__]));
+VV[FURNITUREID.__SOFA3__].building.src = "img/day-sofa3.png";
+VV[FURNITUREID.__SOFA3__].particles = particulesitems.sofapart3;
+VV[FURNITUREID.__SOFA4__] = window.JSON.parse(window.JSON.stringify(VV[FURNITUREID.__SOFA3__]));
+VV[FURNITUREID.__SOFA4__].building.src = "img/day-sofa4.png";
+VV[FURNITUREID.__SOFA6__] = window.JSON.parse(window.JSON.stringify(VV[FURNITUREID.__SOFA3__]));
+VV[FURNITUREID.__SOFA6__].building.src = "img/day-sofa6.png";
+VV[FURNITUREID.__RENFORCED__] = window.JSON.parse(window.JSON.stringify(VV[FURNITUREID.__SOFA0__]));
+VV[FURNITUREID.__RENFORCED__].building.src = "img/day-renforced-door.png";
+VV[FURNITUREID.__RENFORCED__].particles = particulesitems.steel;
+VV[FURNITUREID.__RENFORCED__].detail = new vn("", "", -1, [
     [IID.shapedmetal, 40]
 ]);
-VV[nW.NNvnv].life = 7000;
-VV[nW.mmmwn] = window.JSON.parse(window.JSON.stringify(VV[nW.sofapart]));
-VV[nW.mmmwn].building.src = "img/day-electronic-box0.png";
-VV[nW.mmmwn].impact = SOUNDID.metal;
-VV[nW.mmmwn].destroyaudio = SOUNDID.metaldes;
-VV[nW.mmmwn].particles = particulesitems.steel;
-VV[nW.mmmwn].detail = new vn("", "", -1, [
+VV[FURNITUREID.__RENFORCED__].life = 7000;
+VV[FURNITUREID.__MACHINE0__] = window.JSON.parse(window.JSON.stringify(VV[FURNITUREID.__SOFA0__]));
+VV[FURNITUREID.__MACHINE0__].building.src = "img/day-electronic-box0.png";
+VV[FURNITUREID.__MACHINE0__].impact = SOUNDID.metal;
+VV[FURNITUREID.__MACHINE0__].destroyaudio = SOUNDID.metaldes;
+VV[FURNITUREID.__MACHINE0__].particles = particulesitems.steel;
+VV[FURNITUREID.__MACHINE0__].detail = new vn("", "", -1, [
     [IID.energycell, 8],
     [IID.electronicpart, 4],
     [IID.shapedmetal, 4],
     [IID.junk, 12]
 ]);
-VV[nW.mmmwn].width = [100, 100, 100, 100];
-VV[nW.mmmwn].height = [100, 100, 100, 100];
-VV[nW.mmmwn].inmapx = [0, 0, 0, 0];
-VV[nW.mmmwn].inmapy = [0, 0, 0, 0];
-VV[nW.mmmwn].life = 800;
-VV[nW.nNnVv] = window.JSON.parse(window.JSON.stringify(VV[nW.mmmwn]));
-VV[nW.nNnVv].building.src = "img/day-electronic-box1.png";
-VV[nW.nNnVv].width = [120, 120, 120, 120];
-VV[nW.nNnVv].height = [120, 120, 120, 120];
-VV[nW.nNnVv].inmapx = [-10, -10, -10, -10];
-VV[nW.nNnVv].inmapy = [-10, -10, -10, -10];
-VV[nW.nNnVv].detail = new vn("", "", -1, [
+VV[FURNITUREID.__MACHINE0__].width = [100, 100, 100, 100];
+VV[FURNITUREID.__MACHINE0__].height = [100, 100, 100, 100];
+VV[FURNITUREID.__MACHINE0__].inmapx = [0, 0, 0, 0];
+VV[FURNITUREID.__MACHINE0__].inmapy = [0, 0, 0, 0];
+VV[FURNITUREID.__MACHINE0__].life = 800;
+VV[FURNITUREID.__MACHINE1__] = window.JSON.parse(window.JSON.stringify(VV[FURNITUREID.__MACHINE0__]));
+VV[FURNITUREID.__MACHINE1__].building.src = "img/day-electronic-box1.png";
+VV[FURNITUREID.__MACHINE1__].width = [120, 120, 120, 120];
+VV[FURNITUREID.__MACHINE1__].height = [120, 120, 120, 120];
+VV[FURNITUREID.__MACHINE1__].inmapx = [-10, -10, -10, -10];
+VV[FURNITUREID.__MACHINE1__].inmapy = [-10, -10, -10, -10];
+VV[FURNITUREID.__MACHINE1__].detail = new vn("", "", -1, [
     [IID.energycell, 16],
     [IID.electronicpart, 16],
     [IID.wires, 8],
     [IID.shapedmetal, 16]
 ]);
-VV[nW.nNnVv].life = 1400;
-VV[nW.bedpart] = window.JSON.parse(window.JSON.stringify(VV[nW.sofapart]));
-VV[nW.bedpart].building.src = "img/day-bed0.png";
-VV[nW.bedpart].particles = particulesitems.bedpart;
-VV[nW.bedpart].detail = new vn("", "", -1, [
+VV[FURNITUREID.__MACHINE1__].life = 1400;
+VV[FURNITUREID.__BED0__] = window.JSON.parse(window.JSON.stringify(VV[FURNITUREID.__SOFA0__]));
+VV[FURNITUREID.__BED0__].building.src = "img/day-bed0.png";
+VV[FURNITUREID.__BED0__].particles = particulesitems.bedpart;
+VV[FURNITUREID.__BED0__].detail = new vn("", "", -1, [
     [IID.wood, 200],
     [IID.leather, 20]
 ]);
-VV[nW.bedpart2] = window.JSON.parse(window.JSON.stringify(VV[nW.bedpart]));
-VV[nW.bedpart2].building.src = "img/day-bed1.png";
-VV[nW.bedpart2].particles = particulesitems.bedpart2;
-VV[nW.WmNvV] = window.JSON.parse(window.JSON.stringify(VV[nW.bedpart]));
-VV[nW.WmNvV].building.src = "img/day-bed2.png";
-VV[nW.WmNvV].particles = particulesitems.greysteelpart;
-VV[nW.WmNvV].detail = new vn("", "", -1, [
+VV[FURNITUREID.__BED1__] = window.JSON.parse(window.JSON.stringify(VV[FURNITUREID.__BED0__]));
+VV[FURNITUREID.__BED1__].building.src = "img/day-bed1.png";
+VV[FURNITUREID.__BED1__].particles = particulesitems.bedpart2;
+VV[FURNITUREID.__BED2__] = window.JSON.parse(window.JSON.stringify(VV[FURNITUREID.__BED0__]));
+VV[FURNITUREID.__BED2__].building.src = "img/day-bed2.png";
+VV[FURNITUREID.__BED2__].particles = particulesitems.greysteelpart;
+VV[FURNITUREID.__BED2__].detail = new vn("", "", -1, [
     [IID.shapedmetal, 12],
     [IID.leather, 20],
     [IID.animalfat, 12]
 ]);
-VV[nW.vWVWW] = window.JSON.parse(window.JSON.stringify(VV[nW.sofapart]));
-VV[nW.vWVWW].building.src = "img/day-table0.png";
-VV[nW.vWVWW].impact = SOUNDID.wood;
-VV[nW.vWVWW].destroyaudio = SOUNDID.wooddes;
-VV[nW.vWVWW].particles = particulesitems.wood;
-VV[nW.vWVWW].detail = new vn("", "", -1, [
+VV[FURNITUREID.__TABLE0__] = window.JSON.parse(window.JSON.stringify(VV[FURNITUREID.__SOFA0__]));
+VV[FURNITUREID.__TABLE0__].building.src = "img/day-table0.png";
+VV[FURNITUREID.__TABLE0__].impact = SOUNDID.wood;
+VV[FURNITUREID.__TABLE0__].destroyaudio = SOUNDID.wooddes;
+VV[FURNITUREID.__TABLE0__].particles = particulesitems.wood;
+VV[FURNITUREID.__TABLE0__].detail = new vn("", "", -1, [
     [IID.wood, 200]
 ]);
-VV[nW.WVWWM] = window.JSON.parse(window.JSON.stringify(VV[nW.vWVWW]));
-VV[nW.WVWWM].building.src = "img/day-table1.png";
-VV[nW.WVWWM].width = [100, 290, 100, 280];
-VV[nW.WVWWM].height = [280, 100, 280, 100];
-VV[nW.WVWWM].MMnVm = [-1, 0, -1, 0];
-VV[nW.WVWWM].nmMVw = [0, -1, 0, -1];
-VV[nW.WVWWM].inmapx = [0, -90, 0, -90];
-VV[nW.WVWWM].inmapy = [-90, 0, -90, 0];
-VV[nW.nVwnn] = window.JSON.parse(window.JSON.stringify(VV[nW.vWVWW]));
-VV[nW.nVwnn].building.src = "img/day-table2.png";
-VV[nW.nVwnn].impact = SOUNDID.metal;
-VV[nW.nVwnn].destroyaudio = SOUNDID.metaldes;
-VV[nW.nVwnn].particles = particulesitems.steel;
-VV[nW.nVwnn].detail = new vn("", "", -1, [
+VV[FURNITUREID.__TABLE1__] = window.JSON.parse(window.JSON.stringify(VV[FURNITUREID.__TABLE0__]));
+VV[FURNITUREID.__TABLE1__].building.src = "img/day-table1.png";
+VV[FURNITUREID.__TABLE1__].width = [100, 290, 100, 280];
+VV[FURNITUREID.__TABLE1__].height = [280, 100, 280, 100];
+VV[FURNITUREID.__TABLE1__].MMnVm = [-1, 0, -1, 0];
+VV[FURNITUREID.__TABLE1__].nmMVw = [0, -1, 0, -1];
+VV[FURNITUREID.__TABLE1__].inmapx = [0, -90, 0, -90];
+VV[FURNITUREID.__TABLE1__].inmapy = [-90, 0, -90, 0];
+VV[FURNITUREID.__TABLE2__] = window.JSON.parse(window.JSON.stringify(VV[FURNITUREID.__TABLE0__]));
+VV[FURNITUREID.__TABLE2__].building.src = "img/day-table2.png";
+VV[FURNITUREID.__TABLE2__].impact = SOUNDID.metal;
+VV[FURNITUREID.__TABLE2__].destroyaudio = SOUNDID.metaldes;
+VV[FURNITUREID.__TABLE2__].particles = particulesitems.steel;
+VV[FURNITUREID.__TABLE2__].detail = new vn("", "", -1, [
     [IID.shapedmetal, 8]
 ]);
-VV[nW._buttonInv] = window.JSON.parse(window.JSON.stringify(VV[nW.sofapart]));
-VV[nW._buttonInv].building.src = "img/day-tv0.png";
-VV[nW._buttonInv].impact = SOUNDID.metal;
-VV[nW._buttonInv].destroyaudio = SOUNDID.metaldes;
-VV[nW._buttonInv].particles = particulesitems.safepart;
-VV[nW._buttonInv].detail = new vn("", "", -1, [
+VV[FURNITUREID.__TV0__] = window.JSON.parse(window.JSON.stringify(VV[FURNITUREID.__SOFA0__]));
+VV[FURNITUREID.__TV0__].building.src = "img/day-tv0.png";
+VV[FURNITUREID.__TV0__].impact = SOUNDID.metal;
+VV[FURNITUREID.__TV0__].destroyaudio = SOUNDID.metaldes;
+VV[FURNITUREID.__TV0__].particles = particulesitems.safepart;
+VV[FURNITUREID.__TV0__].detail = new vn("", "", -1, [
     [IID.electronicpart, 4],
     [IID.shapedmetal, 16],
     [IID.smallwire, 4],
     [IID.junk, 12]
 ]);
-VV[nW.WNVMm] = window.JSON.parse(window.JSON.stringify(VV[nW.sofapart]));
-VV[nW.WNVMm].building.src = "img/day-computer0.png";
-VV[nW.WNVMm].impact = SOUNDID.metal;
-VV[nW.WNVMm].destroyaudio = SOUNDID.metaldes;
-VV[nW.WNVMm].particles = particulesitems.metalpart;
-VV[nW.WNVMm].detail = new vn("", "", -1, [
+VV[FURNITUREID.__COMPUTER0__] = window.JSON.parse(window.JSON.stringify(VV[FURNITUREID.__SOFA0__]));
+VV[FURNITUREID.__COMPUTER0__].building.src = "img/day-computer0.png";
+VV[FURNITUREID.__COMPUTER0__].impact = SOUNDID.metal;
+VV[FURNITUREID.__COMPUTER0__].destroyaudio = SOUNDID.metaldes;
+VV[FURNITUREID.__COMPUTER0__].particles = particulesitems.metalpart;
+VV[FURNITUREID.__COMPUTER0__].detail = new vn("", "", -1, [
     [IID.smallwire, 4],
     [IID.shapedmetal, 16],
     [IID.junk, 12],
     [IID.electronicpart, 4]
 ]);
-VV[nW.NvWVV] = window.JSON.parse(window.JSON.stringify(VV[nW.WNVMm]));
-VV[nW.NvWVV].building.src = "img/day-chair0.png";
-VV[nW.NvWVV].detail = new vn("", "", -1, [
+VV[FURNITUREID.__CHAIR0__] = window.JSON.parse(window.JSON.stringify(VV[FURNITUREID.__COMPUTER0__]));
+VV[FURNITUREID.__CHAIR0__].building.src = "img/day-chair0.png";
+VV[FURNITUREID.__CHAIR0__].detail = new vn("", "", -1, [
     [IID.leather, 8],
     [IID.shapedmetal, 8]
 ]);
-VV[nW.NwwNM] = window.JSON.parse(window.JSON.stringify(VV[nW.WNVMm]));
-VV[nW.NwwNM].building.src = "img/day-chair1.png";
-VV[nW.NwwNM].detail = new vn("", "", -1, [
+VV[FURNITUREID.__CHAIR1__] = window.JSON.parse(window.JSON.stringify(VV[FURNITUREID.__COMPUTER0__]));
+VV[FURNITUREID.__CHAIR1__].building.src = "img/day-chair1.png";
+VV[FURNITUREID.__CHAIR1__].detail = new vn("", "", -1, [
     [IID.leather, 8],
     [IID.shapedmetal, 8]
 ]);
-VV[nW.NvVmW] = window.JSON.parse(window.JSON.stringify(VV[nW.WNVMm]));
-VV[nW.NvVmW].building.src = "img/day-chair2.png";
-VV[nW.NvVmW].detail = new vn("", "", -1, [
+VV[FURNITUREID.__CHAIR2__] = window.JSON.parse(window.JSON.stringify(VV[FURNITUREID.__COMPUTER0__]));
+VV[FURNITUREID.__CHAIR2__].building.src = "img/day-chair2.png";
+VV[FURNITUREID.__CHAIR2__].detail = new vn("", "", -1, [
     [IID.leather, 8],
     [IID.shapedmetal, 8]
 ]);
-VV[nW.NMvVn] = window.JSON.parse(window.JSON.stringify(VV[nW.sofapart]));
-VV[nW.NMvVn].building.src = "img/day-washbasin0.png";
-VV[nW.NMvVn].impact = SOUNDID.wood;
-VV[nW.NMvVn].destroyaudio = SOUNDID.wooddes;
-VV[nW.NMvVn].particles = particulesitems.woodpart;
-VV[nW.NMvVn].detail = new vn("", "", -1, [
+VV[FURNITUREID.__WASHBASIN0__] = window.JSON.parse(window.JSON.stringify(VV[FURNITUREID.__SOFA0__]));
+VV[FURNITUREID.__WASHBASIN0__].building.src = "img/day-washbasin0.png";
+VV[FURNITUREID.__WASHBASIN0__].impact = SOUNDID.wood;
+VV[FURNITUREID.__WASHBASIN0__].destroyaudio = SOUNDID.wooddes;
+VV[FURNITUREID.__WASHBASIN0__].particles = particulesitems.woodpart;
+VV[FURNITUREID.__WASHBASIN0__].detail = new vn("", "", -1, [
     [IID.wood, 150],
     [IID.shapedmetal, 8]
 ]);
-VV[nW.VVvnV] = window.JSON.parse(window.JSON.stringify(VV[nW.NMvVn]));
-VV[nW.VVvnV].building.src = "img/day-pharma0.png";
-VV[nW.VVvnV].detail = new vn("", "", -1, [
+VV[FURNITUREID.__PHARMA0__] = window.JSON.parse(window.JSON.stringify(VV[FURNITUREID.__WASHBASIN0__]));
+VV[FURNITUREID.__PHARMA0__].building.src = "img/day-pharma0.png";
+VV[FURNITUREID.__PHARMA0__].detail = new vn("", "", -1, [
     [IID.shapedmetal, 8],
     [IID.stone, 60]
 ]);
-VV[nW.VVvnV].impact = SOUNDID.stone;
-VV[nW.VVvnV].destroyaudio = SOUNDID.stonedes;
-VV[nW.VVvnV].particles = particulesitems.toilet;
-VV[nW.VVvnV].WvwVM = 1;
-VV[nW.VVvnV].loot = [
+VV[FURNITUREID.__PHARMA0__].impact = SOUNDID.stone;
+VV[FURNITUREID.__PHARMA0__].destroyaudio = SOUNDID.stonedes;
+VV[FURNITUREID.__PHARMA0__].particles = particulesitems.toilet;
+VV[FURNITUREID.__PHARMA0__].usable = 1;
+VV[FURNITUREID.__PHARMA0__].loot = [
     [IID.bandage, 1, 0.1],
     [IID.medkit, 1, 0.03],
     [IID.radway, 1, 0.05],
     [IID.chemicalcomponent, 2, 0.2],
     [IID.syringe, 1, 0.1]
 ];
-VV[nW.nWNnm] = window.JSON.parse(window.JSON.stringify(VV[nW.NMvVn]));
-VV[nW.nWNnm].building.src = "img/day-shower0.png";
-VV[nW.nWNnm].detail = new vn("", "", -1, [
+VV[FURNITUREID.__SHOWER0__] = window.JSON.parse(window.JSON.stringify(VV[FURNITUREID.__WASHBASIN0__]));
+VV[FURNITUREID.__SHOWER0__].building.src = "img/day-shower0.png";
+VV[FURNITUREID.__SHOWER0__].detail = new vn("", "", -1, [
     [IID.shapedmetal, 8],
     [IID.stone, 60]
 ]);
-VV[nW.nWNnm].impact = SOUNDID.stone;
-VV[nW.nWNnm].destroyaudio = SOUNDID.stonedes;
-VV[nW.nWNnm].particles = particulesitems.toilet;
-VV[nW.nWNnm].width = [70, 100, 70, 100];
-VV[nW.nWNnm].height = [100, 70, 100, 70];
-VV[nW.nWNnm].inmapx = [0, 0, 30, 0];
-VV[nW.nWNnm].inmapy = [0, 0, 0, 30];
-VV[nW.VWw] = window.JSON.parse(window.JSON.stringify(VV[nW.NMvVn]));
-VV[nW.VWw].building.src = "img/day-furniture0.png";
-VV[nW.VWw].width = [50, 100, 50, 100];
-VV[nW.VWw].height = [100, 50, 100, 50];
-VV[nW.VWw].inmapx = [0, 0, 50, 0];
-VV[nW.VWw].inmapy = [0, 0, 0, 50];
-VV[nW.VWw].detail = new vn("", "", -1, [
+VV[FURNITUREID.__SHOWER0__].impact = SOUNDID.stone;
+VV[FURNITUREID.__SHOWER0__].destroyaudio = SOUNDID.stonedes;
+VV[FURNITUREID.__SHOWER0__].particles = particulesitems.toilet;
+VV[FURNITUREID.__SHOWER0__].width = [70, 100, 70, 100];
+VV[FURNITUREID.__SHOWER0__].height = [100, 70, 100, 70];
+VV[FURNITUREID.__SHOWER0__].inmapx = [0, 0, 30, 0];
+VV[FURNITUREID.__SHOWER0__].inmapy = [0, 0, 0, 30];
+VV[FURNITUREID.__FURNITURE0__] = window.JSON.parse(window.JSON.stringify(VV[FURNITUREID.__WASHBASIN0__]));
+VV[FURNITUREID.__FURNITURE0__].building.src = "img/day-furniture0.png";
+VV[FURNITUREID.__FURNITURE0__].width = [50, 100, 50, 100];
+VV[FURNITUREID.__FURNITURE0__].height = [100, 50, 100, 50];
+VV[FURNITUREID.__FURNITURE0__].inmapx = [0, 0, 50, 0];
+VV[FURNITUREID.__FURNITURE0__].inmapy = [0, 0, 0, 50];
+VV[FURNITUREID.__FURNITURE0__].detail = new vn("", "", -1, [
     [IID.wood, 200]
 ]);
-VV[nW.VWw].WvwVM = 1;
-VV[nW.VWw].loot = [
+VV[FURNITUREID.__FURNITURE0__].usable = 1;
+VV[FURNITUREID.__FURNITURE0__].loot = [
     [IID.headscarf, 1, 0.004],
     [IID.gazmask, 1, 0.004],
     [IID.pistol, 1, 0.005],
@@ -29597,29 +29599,29 @@ VV[nW.VWw].loot = [
     [IID.junk, 1, 0.2],
     [IID.string, 2, 0.1]
 ];
-VV[nW.MVvwm] = window.JSON.parse(window.JSON.stringify(VV[nW.VWw]));
-VV[nW.MVvwm].building.src = "img/day-furniture1.png";
-VV[nW.MVvwm].width = [70, 100, 70, 100];
-VV[nW.MVvwm].height = [100, 70, 100, 70];
-VV[nW.MVvwm].inmapx = [0, 0, 30, 0];
-VV[nW.MVvwm].inmapy = [0, 0, 0, 30];
-VV[nW.mmV] = window.JSON.parse(window.JSON.stringify(VV[nW.VWw]));
-VV[nW.mmV].building.src = "img/day-furniture2.png";
-VV[nW.mmV].width = [70, 70, 70, 70];
-VV[nW.mmV].height = [70, 70, 70, 70];
-VV[nW.mmV].inmapx = [15, 15, 15, 15];
-VV[nW.mmV].inmapy = [15, 15, 15, 15];
-VV[nW.mmV].detail = new vn("", "", -1, [
+VV[FURNITUREID.__FURNITURE1__] = window.JSON.parse(window.JSON.stringify(VV[FURNITUREID.__FURNITURE0__]));
+VV[FURNITUREID.__FURNITURE1__].building.src = "img/day-furniture1.png";
+VV[FURNITUREID.__FURNITURE1__].width = [70, 100, 70, 100];
+VV[FURNITUREID.__FURNITURE1__].height = [100, 70, 100, 70];
+VV[FURNITUREID.__FURNITURE1__].inmapx = [0, 0, 30, 0];
+VV[FURNITUREID.__FURNITURE1__].inmapy = [0, 0, 0, 30];
+VV[FURNITUREID.__FURNITURE2__] = window.JSON.parse(window.JSON.stringify(VV[FURNITUREID.__FURNITURE0__]));
+VV[FURNITUREID.__FURNITURE2__].building.src = "img/day-furniture2.png";
+VV[FURNITUREID.__FURNITURE2__].width = [70, 70, 70, 70];
+VV[FURNITUREID.__FURNITURE2__].height = [70, 70, 70, 70];
+VV[FURNITUREID.__FURNITURE2__].inmapx = [15, 15, 15, 15];
+VV[FURNITUREID.__FURNITURE2__].inmapy = [15, 15, 15, 15];
+VV[FURNITUREID.__FURNITURE2__].detail = new vn("", "", -1, [
     [IID.wood, 100]
 ]);
-VV[nW.wwVWW] = window.JSON.parse(window.JSON.stringify(VV[nW.mmV]));
-VV[nW.wwVWW].building.src = "img/day-furniture3.png";
-VV[nW.WmmNw] = window.JSON.parse(window.JSON.stringify(VV[nW.MVvwm]));
-VV[nW.WmmNw].building.src = "img/day-furniture4.png";
-VV[nW.WmmNw].impact = SOUNDID.metal;
-VV[nW.WmmNw].destroyaudio = SOUNDID.metaldes;
-VV[nW.WmmNw].particles = particulesitems.greysteelpart;
-VV[nW.WmmNw].loot = [
+VV[FURNITUREID.__FURNITURE3__] = window.JSON.parse(window.JSON.stringify(VV[FURNITUREID.__FURNITURE2__]));
+VV[FURNITUREID.__FURNITURE3__].building.src = "img/day-furniture3.png";
+VV[FURNITUREID.__FURNITURE4__] = window.JSON.parse(window.JSON.stringify(VV[FURNITUREID.__FURNITURE1__]));
+VV[FURNITUREID.__FURNITURE4__].building.src = "img/day-furniture4.png";
+VV[FURNITUREID.__FURNITURE4__].impact = SOUNDID.metal;
+VV[FURNITUREID.__FURNITURE4__].destroyaudio = SOUNDID.metaldes;
+VV[FURNITUREID.__FURNITURE4__].particles = particulesitems.greysteelpart;
+VV[FURNITUREID.__FURNITURE4__].loot = [
     [IID.headscarf, 1, 0.004],
     [IID.gazmask, 1, 0.004],
     [IID.pistol, 1, 0.005],
@@ -29633,21 +29635,21 @@ VV[nW.WmmNw].loot = [
     [IID.junk, 2, 0.2],
     [IID.string, 2, 0.1]
 ];
-VV[nW.Mmvmn] = window.JSON.parse(window.JSON.stringify(VV[nW.mmV]));
-VV[nW.Mmvmn].building.src = "img/day-furniture5.png";
-VV[nW.Mmvmn].impact = SOUNDID.metal;
-VV[nW.Mmvmn].destroyaudio = SOUNDID.metaldes;
-VV[nW.Mmvmn].particles = particulesitems.greysteelpart;
-VV[nW.Mmvmn].loot = window.JSON.parse(window.JSON.stringify(VV[nW.WmmNw].loot));
-VV[nW.VwWNv] = window.JSON.parse(window.JSON.stringify(VV[nW.Mmvmn]));
-VV[nW.VwWNv].building.src = "img/day-furniture6.png";
-VV[nW.NwvnV] = window.JSON.parse(window.JSON.stringify(VV[nW.mmV]));
-VV[nW.NwvnV].impact = SOUNDID.pillow;
-VV[nW.NwvnV].destroyaudio = SOUNDID.pillowdes;
-VV[nW.NwvnV].building.src = "img/day-carton-box0.png";
-VV[nW.NwvnV].detail = new vn("", "", -1, []);
-VV[nW.NwvnV].WvwVM = 1;
-VV[nW.NwvnV].loot = [
+VV[FURNITUREID.__FURNITURE5__] = window.JSON.parse(window.JSON.stringify(VV[FURNITUREID.__FURNITURE2__]));
+VV[FURNITUREID.__FURNITURE5__].building.src = "img/day-furniture5.png";
+VV[FURNITUREID.__FURNITURE5__].impact = SOUNDID.metal;
+VV[FURNITUREID.__FURNITURE5__].destroyaudio = SOUNDID.metaldes;
+VV[FURNITUREID.__FURNITURE5__].particles = particulesitems.greysteelpart;
+VV[FURNITUREID.__FURNITURE5__].loot = window.JSON.parse(window.JSON.stringify(VV[FURNITUREID.__FURNITURE4__].loot));
+VV[FURNITUREID.__FURNITURE6__] = window.JSON.parse(window.JSON.stringify(VV[FURNITUREID.__FURNITURE5__]));
+VV[FURNITUREID.__FURNITURE6__].building.src = "img/day-furniture6.png";
+VV[FURNITUREID.__CARTON0__] = window.JSON.parse(window.JSON.stringify(VV[FURNITUREID.__FURNITURE2__]));
+VV[FURNITUREID.__CARTON0__].impact = SOUNDID.pillow;
+VV[FURNITUREID.__CARTON0__].destroyaudio = SOUNDID.pillowdes;
+VV[FURNITUREID.__CARTON0__].building.src = "img/day-carton-box0.png";
+VV[FURNITUREID.__CARTON0__].detail = new vn("", "", -1, []);
+VV[FURNITUREID.__CARTON0__].usable = 1;
+VV[FURNITUREID.__CARTON0__].loot = [
     [IID.can, 1, 0.1],
     [IID.junk, 2, 0.2],
     [IID.headscarf, 1, 0.003],
@@ -29662,89 +29664,89 @@ VV[nW.NwvnV].loot = [
     [IID.energycell, 4, 0.08],
     [IID.electronicpart, 1, 0.1]
 ];
-VV[nW.vWwVv] = window.JSON.parse(window.JSON.stringify(VV[nW.NwvnV]));
-VV[nW.vWwVv].building.src = "img/day-carton-box1.png";
-VV[nW.VWnwN] = window.JSON.parse(window.JSON.stringify(VV[nW.NwvnV]));
-VV[nW.VWnwN].building.src = "img/day-gold-chair0.png";
-VV[nW.VWnwN].detail = new vn("", "", -1, [
+VV[FURNITUREID.__CARTON1__] = window.JSON.parse(window.JSON.stringify(VV[FURNITUREID.__CARTON0__]));
+VV[FURNITUREID.__CARTON1__].building.src = "img/day-carton-box1.png";
+VV[FURNITUREID.__GOLD_CHAIR0__] = window.JSON.parse(window.JSON.stringify(VV[FURNITUREID.__CARTON0__]));
+VV[FURNITUREID.__GOLD_CHAIR0__].building.src = "img/day-gold-chair0.png";
+VV[FURNITUREID.__GOLD_CHAIR0__].detail = new vn("", "", -1, [
     [IID.wood, 40]
 ]);
-VV[nW.VWnwN].WvwVM = 0;
-VV[nW.VWnwN].particles = particulesitems.gold;
-VV[nW.NWwwM] = window.JSON.parse(window.JSON.stringify(VV[nW.VWnwN]));
-VV[nW.NWwwM].building.src = "img/day-green-chair0.png";
-VV[nW.NWwwM].particles = particulesitems.kakipart;
-VV[nW.NMWVV] = window.JSON.parse(window.JSON.stringify(VV[nW.VWnwN]));
-VV[nW.NMWVV].building.src = "img/day-wood-chair0.png";
-VV[nW.NMWVV].impact = SOUNDID.wood;
-VV[nW.NMWVV].destroyaudio = SOUNDID.wooddes;
-VV[nW.NMWVV].particles = particulesitems.woodpart;
-VV[nW.MnWmv] = window.JSON.parse(window.JSON.stringify(VV[nW.mmV]));
-VV[nW.MnWmv].building.src = "img/day-plot0.png";
-VV[nW.MnWmv].particles = particulesitems.plot;
-VV[nW.MnWmv].collision = 2;
-VV[nW.MnWmv].radius = 30;
-VV[nW.MnWmv].detail = new vn("", "", -1, [
+VV[FURNITUREID.__GOLD_CHAIR0__].usable = 0;
+VV[FURNITUREID.__GOLD_CHAIR0__].particles = particulesitems.gold;
+VV[FURNITUREID.__GREEN_CHAIR0__] = window.JSON.parse(window.JSON.stringify(VV[FURNITUREID.__GOLD_CHAIR0__]));
+VV[FURNITUREID.__GREEN_CHAIR0__].building.src = "img/day-green-chair0.png";
+VV[FURNITUREID.__GREEN_CHAIR0__].particles = particulesitems.kakipart;
+VV[FURNITUREID.__WOOD_CHAIR0__] = window.JSON.parse(window.JSON.stringify(VV[FURNITUREID.__GOLD_CHAIR0__]));
+VV[FURNITUREID.__WOOD_CHAIR0__].building.src = "img/day-wood-chair0.png";
+VV[FURNITUREID.__WOOD_CHAIR0__].impact = SOUNDID.wood;
+VV[FURNITUREID.__WOOD_CHAIR0__].destroyaudio = SOUNDID.wooddes;
+VV[FURNITUREID.__WOOD_CHAIR0__].particles = particulesitems.woodpart;
+VV[FURNITUREID.__PLOT0__] = window.JSON.parse(window.JSON.stringify(VV[FURNITUREID.__FURNITURE2__]));
+VV[FURNITUREID.__PLOT0__].building.src = "img/day-plot0.png";
+VV[FURNITUREID.__PLOT0__].particles = particulesitems.plot;
+VV[FURNITUREID.__PLOT0__].collision = 2;
+VV[FURNITUREID.__PLOT0__].radius = 30;
+VV[FURNITUREID.__PLOT0__].detail = new vn("", "", -1, [
     [IID.stone, 40],
     [IID.wood, 40]
 ]);
-VV[nW.MnWmv].WvwVM = 0;
-VV[nW.VmNVm] = window.JSON.parse(window.JSON.stringify(VV[nW.MnWmv]));
-VV[nW.VmNVm].impact = SOUNDID.metal;
-VV[nW.VmNVm].destroyaudio = SOUNDID.metaldes;
-VV[nW.VmNVm].building.src = "img/day-blood-transfusion.png";
-VV[nW.VmNVm].particles = particulesitems.greysteelpart;
+VV[FURNITUREID.__PLOT0__].usable = 0;
+VV[FURNITUREID.__BLOOD_TRANS__] = window.JSON.parse(window.JSON.stringify(VV[FURNITUREID.__PLOT0__]));
+VV[FURNITUREID.__BLOOD_TRANS__].impact = SOUNDID.metal;
+VV[FURNITUREID.__BLOOD_TRANS__].destroyaudio = SOUNDID.metaldes;
+VV[FURNITUREID.__BLOOD_TRANS__].building.src = "img/day-blood-transfusion.png";
+VV[FURNITUREID.__BLOOD_TRANS__].particles = particulesitems.greysteelpart;
 var wNMNN = window.console;
 wNMNN.log = wNMNN.info = wNMNN.error = wNMNN.warn = wNMNN.debug = wNMNN.NWVnW = wNMNN.trace = wNMNN.time = wNMNN.timeEnd = function() {};
-VV[nW.VmNVm].detail = new vn("", "", -1, [
+VV[FURNITUREID.__BLOOD_TRANS__].detail = new vn("", "", -1, [
     [IID.junk, 2],
     [IID.shapedmetal, 1],
     [IID.syringe, 1]
 ]);
-VV[nW.vVV] = window.JSON.parse(window.JSON.stringify(VV[nW.mmV]));
-VV[nW.vVV].building.src = "img/day-barel0.png";
-VV[nW.vVV].impact = SOUNDID.metal;
-VV[nW.vVV].destroyaudio = SOUNDID.__NO_SOUND__;
-VV[nW.vVV].particles = particulesitems.barrel;
-VV[nW.vVV].explosion = 1;
-VV[nW.vVV].damage = 250;
-VV[nW.vVV].damageBuilding = 5000;
-VV[nW.vVV].collision = 2;
-VV[nW.vVV].radius = 30;
-VV[nW.vVV].detail = new vn("", "", -1, [
+VV[FURNITUREID.__BAREL0__] = window.JSON.parse(window.JSON.stringify(VV[FURNITUREID.__FURNITURE2__]));
+VV[FURNITUREID.__BAREL0__].building.src = "img/day-barel0.png";
+VV[FURNITUREID.__BAREL0__].impact = SOUNDID.metal;
+VV[FURNITUREID.__BAREL0__].destroyaudio = SOUNDID.__NO_SOUND__;
+VV[FURNITUREID.__BAREL0__].particles = particulesitems.barrel;
+VV[FURNITUREID.__BAREL0__].explosion = 1;
+VV[FURNITUREID.__BAREL0__].damage = 250;
+VV[FURNITUREID.__BAREL0__].damageBuilding = 5000;
+VV[FURNITUREID.__BAREL0__].collision = 2;
+VV[FURNITUREID.__BAREL0__].radius = 30;
+VV[FURNITUREID.__BAREL0__].detail = new vn("", "", -1, [
     [IID.shapedmetal, 8]
 ]);
-VV[nW.vVV].WvwVM = 1;
-VV[nW.vVV].life = 100;
-VV[nW.vVV].loot = [
+VV[FURNITUREID.__BAREL0__].usable = 1;
+VV[FURNITUREID.__BAREL0__].life = 100;
+VV[FURNITUREID.__BAREL0__].loot = [
     [IID.gasoline, 1, 0.2]
 ];
-VV[nW.vMw] = window.JSON.parse(window.JSON.stringify(VV[nW.mmV]));
-VV[nW.vMw].building.src = "img/day-barel1.png";
-VV[nW.vMw].impact = SOUNDID.metal;
-VV[nW.vMw].destroyaudio = SOUNDID.__NO_SOUND__;
-VV[nW.vMw].particles = particulesitems.barrel2;
-VV[nW.vMw].explosion = 1;
-VV[nW.vMw].damage = 300;
-VV[nW.vMw].damageBuilding = 10000;
-VV[nW.vMw].collision = 2;
-VV[nW.vMw].radius = 30;
-VV[nW.vMw].life = 300;
-VV[nW.vMw].detail = new vn("", "", -1, [
+VV[FURNITUREID.__BAREL1__] = window.JSON.parse(window.JSON.stringify(VV[FURNITUREID.__FURNITURE2__]));
+VV[FURNITUREID.__BAREL1__].building.src = "img/day-barel1.png";
+VV[FURNITUREID.__BAREL1__].impact = SOUNDID.metal;
+VV[FURNITUREID.__BAREL1__].destroyaudio = SOUNDID.__NO_SOUND__;
+VV[FURNITUREID.__BAREL1__].particles = particulesitems.barrel2;
+VV[FURNITUREID.__BAREL1__].explosion = 1;
+VV[FURNITUREID.__BAREL1__].damage = 300;
+VV[FURNITUREID.__BAREL1__].damageBuilding = 10000;
+VV[FURNITUREID.__BAREL1__].collision = 2;
+VV[FURNITUREID.__BAREL1__].radius = 30;
+VV[FURNITUREID.__BAREL1__].life = 300;
+VV[FURNITUREID.__BAREL1__].detail = new vn("", "", -1, [
     [IID.uranium, 8],
     [IID.shapedmetal, 8]
 ]);
-VV[nW.vMw].WvwVM = 0;
-VV[nW.vMw].areaEffect = __RADIATION__;
-VV[nW.garbagepart] = window.JSON.parse(window.JSON.stringify(VV[nW.mmV]));
-VV[nW.garbagepart].building.src = "img/day-garbage-bag0.png";
-VV[nW.garbagepart].impact = SOUNDID.pillow;
-VV[nW.garbagepart].destroyaudio = SOUNDID.pillowdes;
-VV[nW.garbagepart].particles = particulesitems.garbagepart;
-VV[nW.garbagepart].collision = 2;
-VV[nW.garbagepart].radius = 30;
-VV[nW.garbagepart].detail = new vn("", "", -1, []);
-VV[nW.garbagepart].loot = [
+VV[FURNITUREID.__BAREL1__].usable = 0;
+VV[FURNITUREID.__BAREL1__].areaEffect = __RADIATION__;
+VV[FURNITUREID.__GARBAGE0__] = window.JSON.parse(window.JSON.stringify(VV[FURNITUREID.__FURNITURE2__]));
+VV[FURNITUREID.__GARBAGE0__].building.src = "img/day-garbage-bag0.png";
+VV[FURNITUREID.__GARBAGE0__].impact = SOUNDID.pillow;
+VV[FURNITUREID.__GARBAGE0__].destroyaudio = SOUNDID.pillowdes;
+VV[FURNITUREID.__GARBAGE0__].particles = particulesitems.garbagepart;
+VV[FURNITUREID.__GARBAGE0__].collision = 2;
+VV[FURNITUREID.__GARBAGE0__].radius = 30;
+VV[FURNITUREID.__GARBAGE0__].detail = new vn("", "", -1, []);
+VV[FURNITUREID.__GARBAGE0__].loot = [
     [IID.can, 1, 0.08],
     [IID.syringe, 1, 0.05],
     [IID.gazmask, 1, 0.02],
@@ -29758,17 +29760,17 @@ VV[nW.garbagepart].loot = [
     [IID.rottensteak, 1, 0.15],
     [IID.junk, 3, 0.4]
 ];
-VV[nW.vwNWV] = window.JSON.parse(window.JSON.stringify(VV[nW.VWw]));
-VV[nW.vwNWV].building.src = "img/day-fridge0.png";
-VV[nW.vwNWV].impact = SOUNDID.metal;
-VV[nW.vwNWV].destroyaudio = SOUNDID.metaldes;
-VV[nW.vwNWV].particles = particulesitems.metalpart;
-VV[nW.vwNWV].detail = new vn("", "", -1, [
+VV[FURNITUREID.__FRIDGE0__] = window.JSON.parse(window.JSON.stringify(VV[FURNITUREID.__FURNITURE0__]));
+VV[FURNITUREID.__FRIDGE0__].building.src = "img/day-fridge0.png";
+VV[FURNITUREID.__FRIDGE0__].impact = SOUNDID.metal;
+VV[FURNITUREID.__FRIDGE0__].destroyaudio = SOUNDID.metaldes;
+VV[FURNITUREID.__FRIDGE0__].particles = particulesitems.metalpart;
+VV[FURNITUREID.__FRIDGE0__].detail = new vn("", "", -1, [
     [IID.shapedmetal, 16],
     [IID.sulfur, 16]
 ]);
-VV[nW.vwNWV].VVmmM = 1;
-VV[nW.vwNWV].loot = [
+VV[FURNITUREID.__FRIDGE0__].fridge = 1;
+VV[FURNITUREID.__FRIDGE0__].loot = [
     [IID.soda, 1, 0.1],
     [IID.tomatosoup, 1, 0.1],
     [IID.chips, 1, 0.01],
@@ -29777,64 +29779,64 @@ VV[nW.vwNWV].loot = [
     [IID.rottensteak, 1, 0.15],
     [IID.rottenchips, 1, 0.01]
 ];
-VV[nW.wnMNM] = window.JSON.parse(window.JSON.stringify(VV[nW.vwNWV]));
-VV[nW.wnMNM].building.src = "img/day-fridge1.png";
-VV[nW.wnMNM].particles = particulesitems.fridge;
-VV[nW.wNmMv] = window.JSON.parse(window.JSON.stringify(VV[nW.VWw]));
-VV[nW.wNmMv].building.src = "img/day-vending-machine0.png";
-VV[nW.wNmMv].impact = SOUNDID.metal;
-VV[nW.wNmMv].destroyaudio = SOUNDID.metaldes;
-VV[nW.wNmMv].particles = particulesitems.redsteelpart;
-VV[nW.wNmMv].detail = new vn("", "", -1, [
+VV[FURNITUREID.__FRIDGE1__] = window.JSON.parse(window.JSON.stringify(VV[FURNITUREID.__FRIDGE0__]));
+VV[FURNITUREID.__FRIDGE1__].building.src = "img/day-fridge1.png";
+VV[FURNITUREID.__FRIDGE1__].particles = particulesitems.fridge;
+VV[FURNITUREID.__DISTRIBUTOR0__] = window.JSON.parse(window.JSON.stringify(VV[FURNITUREID.__FURNITURE0__]));
+VV[FURNITUREID.__DISTRIBUTOR0__].building.src = "img/day-vending-machine0.png";
+VV[FURNITUREID.__DISTRIBUTOR0__].impact = SOUNDID.metal;
+VV[FURNITUREID.__DISTRIBUTOR0__].destroyaudio = SOUNDID.metaldes;
+VV[FURNITUREID.__DISTRIBUTOR0__].particles = particulesitems.redsteelpart;
+VV[FURNITUREID.__DISTRIBUTOR0__].detail = new vn("", "", -1, [
     [IID.shapedmetal, 16],
     [IID.sulfur, 16]
 ]);
-VV[nW.wNmMv].VVmmM = 1;
-VV[nW.wNmMv].loot = [
+VV[FURNITUREID.__DISTRIBUTOR0__].fridge = 1;
+VV[FURNITUREID.__DISTRIBUTOR0__].loot = [
     [IID.soda, 1, 0.04],
     [IID.chips, 1, 0.04]
 ];
-VV[nW.MMmnW] = window.JSON.parse(window.JSON.stringify(VV[nW.wNmMv]));
-VV[nW.MMmnW].building.src = "img/day-distributor0.png";
-VV[nW.MMmnW].particles = particulesitems.greysteelpart;
-VV[nW.MMmnW].detail = new vn("", "", -1, [
+VV[FURNITUREID.__DISTRIBUTOR1__] = window.JSON.parse(window.JSON.stringify(VV[FURNITUREID.__DISTRIBUTOR0__]));
+VV[FURNITUREID.__DISTRIBUTOR1__].building.src = "img/day-distributor0.png";
+VV[FURNITUREID.__DISTRIBUTOR1__].particles = particulesitems.greysteelpart;
+VV[FURNITUREID.__DISTRIBUTOR1__].detail = new vn("", "", -1, [
     [IID.shapedmetal, 16],
     [IID.sulfur, 16]
 ]);
-VV[nW.MMmnW].VVmmM = 1;
-VV[nW.MMmnW].loot = [
+VV[FURNITUREID.__DISTRIBUTOR1__].fridge = 1;
+VV[FURNITUREID.__DISTRIBUTOR1__].loot = [
     [IID.soda, 1, 0.04],
     [IID.chips, 1, 0.04],
     [IID.tomatosoup, 1, 0.04]
 ];
-VV[nW.vWwmV] = window.JSON.parse(window.JSON.stringify(VV[nW.MVvwm]));
-VV[nW.vWwmV].building.src = "img/day-cash-machine0.png";
-VV[nW.vWwmV].impact = SOUNDID.metal;
-VV[nW.vWwmV].destroyaudio = SOUNDID.metaldes;
-VV[nW.vWwmV].particles = particulesitems.greysteelpart;
-VV[nW.vWwmV].detail = new vn("", "", -1, [
+VV[FURNITUREID.__CASH0__] = window.JSON.parse(window.JSON.stringify(VV[FURNITUREID.__FURNITURE1__]));
+VV[FURNITUREID.__CASH0__].building.src = "img/day-cash-machine0.png";
+VV[FURNITUREID.__CASH0__].impact = SOUNDID.metal;
+VV[FURNITUREID.__CASH0__].destroyaudio = SOUNDID.metaldes;
+VV[FURNITUREID.__CASH0__].particles = particulesitems.greysteelpart;
+VV[FURNITUREID.__CASH0__].detail = new vn("", "", -1, [
     [IID.shapedmetal, 16],
     [IID.electronicpart, 4]
 ]);
-VV[nW.vWwmV].loot = [
+VV[FURNITUREID.__CASH0__].loot = [
     [IID.junk, 1, 0.05]
 ];
-VV[nW.mmwVV] = window.JSON.parse(window.JSON.stringify(VV[nW.VWw]));
-VV[nW.mmwVV].building.src = "img/day-cupboard0.png";
-VV[nW.mmwVV].particles = particulesitems.wood;
-VV[nW.nnM] = window.JSON.parse(window.JSON.stringify(VV[nW.VWw]));
-VV[nW.nnM].impact = SOUNDID.metal;
-VV[nW.nnM].destroyaudio = SOUNDID.metaldes;
-VV[nW.nnM].building.src = "img/day-electronic-box2.png";
-VV[nW.nnM].particles = particulesitems.steel;
-VV[nW.nnM].detail = new vn("", "", -1, [
+VV[FURNITUREID.__CUPBOARD0__] = window.JSON.parse(window.JSON.stringify(VV[FURNITUREID.__FURNITURE0__]));
+VV[FURNITUREID.__CUPBOARD0__].building.src = "img/day-cupboard0.png";
+VV[FURNITUREID.__CUPBOARD0__].particles = particulesitems.wood;
+VV[FURNITUREID.__USINE_BOX0__] = window.JSON.parse(window.JSON.stringify(VV[FURNITUREID.__FURNITURE0__]));
+VV[FURNITUREID.__USINE_BOX0__].impact = SOUNDID.metal;
+VV[FURNITUREID.__USINE_BOX0__].destroyaudio = SOUNDID.metaldes;
+VV[FURNITUREID.__USINE_BOX0__].building.src = "img/day-electronic-box2.png";
+VV[FURNITUREID.__USINE_BOX0__].particles = particulesitems.steel;
+VV[FURNITUREID.__USINE_BOX0__].detail = new vn("", "", -1, [
     [IID.shapedmetal, 16]
 ]);
-VV[nW.nnM].width = [70, 70, 70, 70];
-VV[nW.nnM].height = [70, 70, 70, 70];
-VV[nW.nnM].inmapx = [15, 15, 15, 15];
-VV[nW.nnM].inmapy = [15, 15, 15, 15];
-VV[nW.nnM].loot = [
+VV[FURNITUREID.__USINE_BOX0__].width = [70, 70, 70, 70];
+VV[FURNITUREID.__USINE_BOX0__].height = [70, 70, 70, 70];
+VV[FURNITUREID.__USINE_BOX0__].inmapx = [15, 15, 15, 15];
+VV[FURNITUREID.__USINE_BOX0__].inmapy = [15, 15, 15, 15];
+VV[FURNITUREID.__USINE_BOX0__].loot = [
     [IID.electronicpart, 2, 0.1],
     [IID.junk, 2, 0.1],
     [IID.energycell, 20, 0.05],
@@ -29843,9 +29845,9 @@ VV[nW.nnM].loot = [
     [IID.radway, 1, 0.03],
     [IID.alloys, 1, 0.01]
 ];
-VV[nW.NvmwW] = window.JSON.parse(window.JSON.stringify(VV[nW.nnM]));
-VV[nW.NvmwW].building.src = "img/day-electronic-box3.png";
-VV[nW.NvmwW].detail = new vn("", "", -1, [
+VV[FURNITUREID.__USINE_BOX1__] = window.JSON.parse(window.JSON.stringify(VV[FURNITUREID.__USINE_BOX0__]));
+VV[FURNITUREID.__USINE_BOX1__].building.src = "img/day-electronic-box3.png";
+VV[FURNITUREID.__USINE_BOX1__].detail = new vn("", "", -1, [
     [IID.shapedmetal, 16],
     [IID.electronicpart, 4]
 ]);
@@ -29854,7 +29856,7 @@ if (window.NVMWV) {
     window['Math'].acos = window['Math'].asin;
     window['Math'].asin = NwvwW;
 };
-VV[nW.NvmwW].loot = [
+VV[FURNITUREID.__USINE_BOX1__].loot = [
     [IID.electronicpart, 2, 0.1],
     [IID.junk, 4, 0.1],
     [IID.energycell, 20, 0.05],
@@ -29866,14 +29868,14 @@ VV[nW.NvmwW].loot = [
     [IID.laserpistol, 1, 0.005],
     [IID.alloys, 2, 0.05]
 ];
-VV[nW.NVwVM] = window.JSON.parse(window.JSON.stringify(VV[nW.NvmwW]));
-VV[nW.NVwVM].building.src = "img/day-energy-box0.png";
-VV[nW.NVwVM].particles = particulesitems.kakipart;
-VV[nW.NVwVM].detail = new vn("", "", -1, [
+VV[FURNITUREID.__ENERGY_BOX0__] = window.JSON.parse(window.JSON.stringify(VV[FURNITUREID.__USINE_BOX1__]));
+VV[FURNITUREID.__ENERGY_BOX0__].building.src = "img/day-energy-box0.png";
+VV[FURNITUREID.__ENERGY_BOX0__].particles = particulesitems.kakipart;
+VV[FURNITUREID.__ENERGY_BOX0__].detail = new vn("", "", -1, [
     [IID.shapedmetal, 16],
     [IID.electronicpart, 4]
 ]);
-VV[nW.NVwVM].loot = [
+VV[FURNITUREID.__ENERGY_BOX0__].loot = [
     [IID.electronicpart, 2, 0.1],
     [IID.junk, 4, 0.1],
     [IID.energycell, 20, 0.05],
@@ -29885,9 +29887,9 @@ VV[nW.NVwVM].loot = [
     [IID.laserpistol, 1, 0.005],
     [IID.alloys, 2, 0.05]
 ];
-VV[nW.vwmnW] = window.JSON.parse(window.JSON.stringify(VV[nW.nnM]));
-VV[nW.vwmnW].building.src = "img/day-electronic-box4.png";
-VV[nW.vwmnW].loot = [
+VV[FURNITUREID.__USINE_BOX2__] = window.JSON.parse(window.JSON.stringify(VV[FURNITUREID.__USINE_BOX0__]));
+VV[FURNITUREID.__USINE_BOX2__].building.src = "img/day-electronic-box4.png";
+VV[FURNITUREID.__USINE_BOX2__].loot = [
     [IID.electronicpart, 2, 0.1],
     [IID.junk, 4, 0.1],
     [IID.energycell, 20, 0.05],
@@ -29899,12 +29901,12 @@ VV[nW.vwmnW].loot = [
     [IID.alloys, 1, 0.01],
     [IID.dynamite, 1, 0.008]
 ];
-VV[nW.nmWMm] = window.JSON.parse(window.JSON.stringify(VV[nW.nnM]));
-VV[nW.nmWMm].building.src = "img/day-electronic-box5.png";
-VV[nW.nnMmW] = window.JSON.parse(window.JSON.stringify(VV[nW.VWw]));
-VV[nW.nnMmW].building.src = "img/day-ammo-box.png";
-VV[nW.nnMmW].particles = particulesitems.woodpart;
-VV[nW.nnMmW].loot = [
+VV[FURNITUREID.__USINE_BOX3__] = window.JSON.parse(window.JSON.stringify(VV[FURNITUREID.__USINE_BOX0__]));
+VV[FURNITUREID.__USINE_BOX3__].building.src = "img/day-electronic-box5.png";
+VV[FURNITUREID.__AMMOBOX0__] = window.JSON.parse(window.JSON.stringify(VV[FURNITUREID.__FURNITURE0__]));
+VV[FURNITUREID.__AMMOBOX0__].building.src = "img/day-ammo-box.png";
+VV[FURNITUREID.__AMMOBOX0__].particles = particulesitems.woodpart;
+VV[FURNITUREID.__AMMOBOX0__].loot = [
     [IID.mp5, 1, 0.001], 
     [IID.ak47, 1, 0.001], 
     [IID.shotgun, 1, 0.001], 
@@ -29935,47 +29937,47 @@ VV[nW.nnMmW].loot = [
     [IID.lapadoine, 1, 0.0005],
     [IID.lasersubmachine, 1, 0.0005]
 ];
-VV[nW.NnwvW] = window.JSON.parse(window.JSON.stringify(VV[nW.nnMmW]));
-VV[nW.NnwvW].impact = SOUNDID.metal;
-VV[nW.NnwvW].destroyaudio = SOUNDID.metaldes;
-VV[nW.NnwvW].building.src = "img/day-ammo-locker1.png";
-VV[nW.NnwvW].particles = particulesitems.greysteelpart;
-VV[nW.NnwvW].detail = new vn("", "", -1, [
+VV[FURNITUREID.__AMMOLOCKER1__] = window.JSON.parse(window.JSON.stringify(VV[FURNITUREID.__AMMOBOX0__]));
+VV[FURNITUREID.__AMMOLOCKER1__].impact = SOUNDID.metal;
+VV[FURNITUREID.__AMMOLOCKER1__].destroyaudio = SOUNDID.metaldes;
+VV[FURNITUREID.__AMMOLOCKER1__].building.src = "img/day-ammo-locker1.png";
+VV[FURNITUREID.__AMMOLOCKER1__].particles = particulesitems.greysteelpart;
+VV[FURNITUREID.__AMMOLOCKER1__].detail = new vn("", "", -1, [
     [IID.shapedmetal, 32],
     [IID.sulfur, 12]
 ]);
-VV[nW.Vnwmv] = window.JSON.parse(window.JSON.stringify(VV[nW.nnMmW]));
-VV[nW.Vnwmv].impact = SOUNDID.metal;
-VV[nW.Vnwmv].destroyaudio = SOUNDID.metaldes;
-VV[nW.Vnwmv].building.src = "img/day-ammo-locker2.png";
-VV[nW.Vnwmv].particles = particulesitems.greysteelpart;
-VV[nW.Vnwmv].detail = new vn("", "", -1, [
+VV[FURNITUREID.__AMMOLOCKER2__] = window.JSON.parse(window.JSON.stringify(VV[FURNITUREID.__AMMOBOX0__]));
+VV[FURNITUREID.__AMMOLOCKER2__].impact = SOUNDID.metal;
+VV[FURNITUREID.__AMMOLOCKER2__].destroyaudio = SOUNDID.metaldes;
+VV[FURNITUREID.__AMMOLOCKER2__].building.src = "img/day-ammo-locker2.png";
+VV[FURNITUREID.__AMMOLOCKER2__].particles = particulesitems.greysteelpart;
+VV[FURNITUREID.__AMMOLOCKER2__].detail = new vn("", "", -1, [
     [IID.shapedmetal, 32],
     [IID.sulfur, 12]
 ]);
-VV[nW.MNmWW] = window.JSON.parse(window.JSON.stringify(VV[nW.nnMmW]));
-VV[nW.MNmWW].impact = SOUNDID.metal;
-VV[nW.MNmWW].destroyaudio = SOUNDID.metaldes;
-VV[nW.MNmWW].building.src = "img/day-ammo-locker0.png";
-VV[nW.MNmWW].particles = particulesitems.bluesteelpart;
-VV[nW.MNmWW].width = [70, 50, 70, 50];
-VV[nW.MNmWW].height = [50, 70, 50, 70];
-VV[nW.MNmWW].inmapx = [0, 25, 30, 25];
-VV[nW.MNmWW].inmapy = [25, 0, 25, 30];
-VV[nW.MNmWW].detail = new vn("", "", -1, [
+VV[FURNITUREID.__AMMOLOCKER0__] = window.JSON.parse(window.JSON.stringify(VV[FURNITUREID.__AMMOBOX0__]));
+VV[FURNITUREID.__AMMOLOCKER0__].impact = SOUNDID.metal;
+VV[FURNITUREID.__AMMOLOCKER0__].destroyaudio = SOUNDID.metaldes;
+VV[FURNITUREID.__AMMOLOCKER0__].building.src = "img/day-ammo-locker0.png";
+VV[FURNITUREID.__AMMOLOCKER0__].particles = particulesitems.bluesteelpart;
+VV[FURNITUREID.__AMMOLOCKER0__].width = [70, 50, 70, 50];
+VV[FURNITUREID.__AMMOLOCKER0__].height = [50, 70, 50, 70];
+VV[FURNITUREID.__AMMOLOCKER0__].inmapx = [0, 25, 30, 25];
+VV[FURNITUREID.__AMMOLOCKER0__].inmapy = [25, 0, 25, 30];
+VV[FURNITUREID.__AMMOLOCKER0__].detail = new vn("", "", -1, [
     [IID.shapedmetal, 32],
     [IID.sulfur, 12]
 ]);
-VV[nW.safepart] = window.JSON.parse(window.JSON.stringify(VV[nW.VWw]));
-VV[nW.safepart].impact = SOUNDID.metal;
-VV[nW.safepart].destroyaudio = SOUNDID.metaldes;
-VV[nW.safepart].building.src = "img/day-safe0.png";
-VV[nW.safepart].particles = particulesitems.safepart;
-VV[nW.safepart].detail = new vn("", "", -1, [
+VV[FURNITUREID.__SAFE0__] = window.JSON.parse(window.JSON.stringify(VV[FURNITUREID.__FURNITURE0__]));
+VV[FURNITUREID.__SAFE0__].impact = SOUNDID.metal;
+VV[FURNITUREID.__SAFE0__].destroyaudio = SOUNDID.metaldes;
+VV[FURNITUREID.__SAFE0__].building.src = "img/day-safe0.png";
+VV[FURNITUREID.__SAFE0__].particles = particulesitems.safepart;
+VV[FURNITUREID.__SAFE0__].detail = new vn("", "", -1, [
     [IID.shapedmetal, 32],
     [IID.sulfur, 32]
 ]);
-VV[nW.safepart].loot = [
+VV[FURNITUREID.__SAFE0__].loot = [
     [IID.chapka, 1, 0.008],
     [IID.coat, 1, 0.002],
     [IID.radiationsuit, 1, 0.002],
@@ -29995,47 +29997,47 @@ VV[nW.safepart].loot = [
     [IID.crossbow, 1, 0.05],
     [IID.crossarrow, 50, 0.05]
 ];
-VV[nW.nWwvV] = window.JSON.parse(window.JSON.stringify(VV[nW.vwNWV]));
-VV[nW.nWwvV].building.src = "img/day-little-table0.png";
-VV[nW.nWwvV].width = [50, 50, 50, 50];
-VV[nW.nWwvV].height = [50, 50, 50, 50];
-VV[nW.nWwvV].inmapx = [25, 25, 25, 25];
-VV[nW.nWwvV].inmapy = [25, 25, 25, 25];
-VV[nW.nWwvV].detail = new vn("", "", -1, [
+VV[FURNITUREID.__LITTLETABLE0__] = window.JSON.parse(window.JSON.stringify(VV[FURNITUREID.__FRIDGE0__]));
+VV[FURNITUREID.__LITTLETABLE0__].building.src = "img/day-little-table0.png";
+VV[FURNITUREID.__LITTLETABLE0__].width = [50, 50, 50, 50];
+VV[FURNITUREID.__LITTLETABLE0__].height = [50, 50, 50, 50];
+VV[FURNITUREID.__LITTLETABLE0__].inmapx = [25, 25, 25, 25];
+VV[FURNITUREID.__LITTLETABLE0__].inmapy = [25, 25, 25, 25];
+VV[FURNITUREID.__LITTLETABLE0__].detail = new vn("", "", -1, [
     [IID.shapedmetal, 8]
 ]);
-VV[nW.nWwvV].WvwVM = 0;
-VV[nW.wVmWM] = window.JSON.parse(window.JSON.stringify(VV[nW.mmV]));
-VV[nW.wVmWM].building.src = "img/day-small-light-off.png";
-VV[nW.wVmWM].particles = particulesitems.greysteelpart;
-VV[nW.WNWVm] = window.JSON.parse(window.JSON.stringify(VV[nW.vwNWV]));
-VV[nW.WNWVm].impact = SOUNDID.stone;
-VV[nW.WNWVm].destroyaudio = SOUNDID.stonedes;
-VV[nW.WNWVm].particles = particulesitems.toilet;
-VV[nW.WNWVm].building.src = "img/day-toilet0.png";
-VV[nW.WNWVm].width = [50, 70, 50, 70];
-VV[nW.WNWVm].height = [70, 50, 70, 50];
-VV[nW.WNWVm].inmapx = [25, 30, 25, 0];
-VV[nW.WNWVm].inmapy = [0, 25, 30, 25];
-VV[nW.WNWVm].particles = particulesitems.toilet;
-VV[nW.WNWVm].detail = new vn("", "", -1, [
+VV[FURNITUREID.__LITTLETABLE0__].usable = 0;
+VV[FURNITUREID.__SMALL_LIGHT__] = window.JSON.parse(window.JSON.stringify(VV[FURNITUREID.__FURNITURE2__]));
+VV[FURNITUREID.__SMALL_LIGHT__].building.src = "img/day-small-light-off.png";
+VV[FURNITUREID.__SMALL_LIGHT__].particles = particulesitems.greysteelpart;
+VV[FURNITUREID.__TOILET0__] = window.JSON.parse(window.JSON.stringify(VV[FURNITUREID.__FRIDGE0__]));
+VV[FURNITUREID.__TOILET0__].impact = SOUNDID.stone;
+VV[FURNITUREID.__TOILET0__].destroyaudio = SOUNDID.stonedes;
+VV[FURNITUREID.__TOILET0__].particles = particulesitems.toilet;
+VV[FURNITUREID.__TOILET0__].building.src = "img/day-toilet0.png";
+VV[FURNITUREID.__TOILET0__].width = [50, 70, 50, 70];
+VV[FURNITUREID.__TOILET0__].height = [70, 50, 70, 50];
+VV[FURNITUREID.__TOILET0__].inmapx = [25, 30, 25, 0];
+VV[FURNITUREID.__TOILET0__].inmapy = [0, 25, 30, 25];
+VV[FURNITUREID.__TOILET0__].particles = particulesitems.toilet;
+VV[FURNITUREID.__TOILET0__].detail = new vn("", "", -1, [
     [IID.shapedmetal, 4],
     [IID.stone, 100]
 ]);
-VV[nW.WNWVm].WvwVM = 1;
-VV[nW.WNWVm].loot = [
+VV[FURNITUREID.__TOILET0__].usable = 1;
+VV[FURNITUREID.__TOILET0__].loot = [
     [IID.syringe, 1, 0.2],
     [IID.chemicalcomponent, 1, 0.02],
     [IID.ghoulblood, 1, 0.005],
     [IID.lapadoine, 1, 0.002]
 ];
-var VNN = [{
+var LOOT = [{
     id: Mv.mvnnv,
     W: {
         isLoaded: 0
     },
     src: "img/day-ground-wood0.png",
-    Vm: IID.wood,
+    idItem: IID.wood,
     amount: 1,
     scale: 0.85,
     angle: 0
@@ -30045,7 +30047,7 @@ var VNN = [{
         isLoaded: 0
     },
     src: "img/day-ground-wood1.png",
-    Vm: IID.wood,
+    idItem: IID.wood,
     amount: 2,
     scale: 0.85,
     angle: 0
@@ -30055,7 +30057,7 @@ var VNN = [{
         isLoaded: 0
     },
     src: "img/day-ground-wood2.png",
-    Vm: IID.wood,
+    idItem: IID.wood,
     amount: 3,
     scale: 0.85,
     angle: 0
@@ -30065,7 +30067,7 @@ var VNN = [{
         isLoaded: 0
     },
     src: "img/day-ground-stone0.png",
-    Vm: IID.stone,
+    idItem: IID.stone,
     amount: 1,
     scale: 1.2,
     angle: 0
@@ -30075,7 +30077,7 @@ var VNN = [{
         isLoaded: 0
     },
     src: "img/day-ground-stone1.png",
-    Vm: IID.stone,
+    idItem: IID.stone,
     amount: 2,
     scale: 1.2,
     angle: 0
@@ -30085,7 +30087,7 @@ var VNN = [{
         isLoaded: 0
     },
     src: "img/day-ground-stone2.png",
-    Vm: IID.stone,
+    idItem: IID.stone,
     amount: 3,
     scale: 1.2,
     angle: 0
@@ -30095,7 +30097,7 @@ var VNN = [{
         isLoaded: 0
     },
     src: "img/day-ground-steel.png",
-    Vm: IID.steel,
+    idItem: IID.steel,
     amount: 1,
     scale: 0.8,
     angle: 0
@@ -30105,7 +30107,7 @@ var VNN = [{
         isLoaded: 0
     },
     src: "img/day-ground-animal-fat.png",
-    Vm: IID.animalfat,
+    idItem: IID.animalfat,
     amount: 1,
     scale: 1,
     angle: 0
@@ -30115,7 +30117,7 @@ var VNN = [{
         isLoaded: 0
     },
     src: "img/day-ground-animal-tendon.png",
-    Vm: IID.animaltendon,
+    idItem: IID.animaltendon,
     amount: 1,
     scale: 1,
     angle: 0
@@ -30125,7 +30127,7 @@ var VNN = [{
         isLoaded: 0
     },
     src: "img/day-ground-string.png",
-    Vm: IID.string,
+    idItem: IID.string,
     amount: 1,
     scale: 0.7,
     angle: 0
@@ -30135,7 +30137,7 @@ var VNN = [{
         isLoaded: 0
     },
     src: "img/day-ground-leather-boar.png",
-    Vm: IID.leather,
+    idItem: IID.leather,
     amount: 1,
     scale: 0.9,
     angle: 0
@@ -30145,7 +30147,7 @@ var VNN = [{
         isLoaded: 0
     },
     src: "img/day-ground-shaped-metal.png",
-    Vm: IID.shapedmetal,
+    idItem: IID.shapedmetal,
     amount: 1,
     scale: 0.8,
     angle: 0
@@ -30155,7 +30157,7 @@ var VNN = [{
         isLoaded: 0
     },
     src: "img/day-ground-raw-steak.png",
-    Vm: IID.rawsteak,
+    idItem: IID.rawsteak,
     amount: 1,
     scale: 0.9,
     angle: 0
@@ -30165,7 +30167,7 @@ var VNN = [{
         isLoaded: 0
     },
     src: "img/day-ground-cooked-steak.png",
-    Vm: IID.cookedsteak,
+    idItem: IID.cookedsteak,
     amount: 1,
     scale: 0.9,
     angle: 0
@@ -30175,7 +30177,7 @@ var VNN = [{
         isLoaded: 0
     },
     src: "img/day-ground-rotten-steak.png",
-    Vm: IID.rottensteak,
+    idItem: IID.rottensteak,
     amount: 1,
     scale: 0.9,
     angle: 0
@@ -30185,7 +30187,7 @@ var VNN = [{
         isLoaded: 0
     },
     src: "img/day-ground-orange.png",
-    Vm: IID.orange,
+    idItem: IID.orange,
     amount: 1,
     scale: 1,
     angle: 0
@@ -30195,7 +30197,7 @@ var VNN = [{
         isLoaded: 0
     },
     src: "img/day-ground-rotten-orange.png",
-    Vm: IID.rottenorange,
+    idItem: IID.rottenorange,
     amount: 1,
     scale: 1,
     angle: 0
@@ -30205,7 +30207,7 @@ var VNN = [{
         isLoaded: 0
     },
     src: "img/day-ground-seed-orange.png",
-    Vm: IID.seedorange,
+    idItem: IID.seedorange,
     amount: 1,
     scale: 0.9,
     angle: 0
@@ -30215,7 +30217,7 @@ var VNN = [{
         isLoaded: 0
     },
     src: "img/day-ground-hachet.png",
-    Vm: IID.hachet,
+    idItem: IID.hachet,
     amount: 1,
     scale: 0.9,
     angle: 0.5
@@ -30225,7 +30227,7 @@ var VNN = [{
         isLoaded: 0
     },
     src: "img/day-ground-stone-pickaxe.png",
-    Vm: IID.stonepickaxe,
+    idItem: IID.stonepickaxe,
     amount: 1,
     scale: 0.7,
     angle: 0.3
@@ -30235,7 +30237,7 @@ var VNN = [{
         isLoaded: 0
     },
     src: "img/day-ground-steel-pickaxe.png",
-    Vm: IID.steelpickaxe,
+    idItem: IID.steelpickaxe,
     amount: 1,
     scale: 0.7,
     angle: 0.3
@@ -30245,7 +30247,7 @@ var VNN = [{
         isLoaded: 0
     },
     src: "img/day-ground-stone-axe.png",
-    Vm: IID.stoneaxe,
+    idItem: IID.stoneaxe,
     amount: 1,
     scale: 0.7,
     angle: 0.5
@@ -30255,7 +30257,7 @@ var VNN = [{
         isLoaded: 0
     },
     src: "img/day-ground-workbench.png",
-    Vm: IID.workbench,
+    idItem: IID.workbench,
     amount: 1,
     scale: 0.7,
     angle: 0
@@ -30265,7 +30267,7 @@ var VNN = [{
         isLoaded: 0
     },
     src: "img/day-ground-wood-spear.png",
-    Vm: IID.spear,
+    idItem: IID.spear,
     amount: 1,
     scale: 0.6,
     angle: 0.6
@@ -30275,7 +30277,7 @@ var VNN = [{
         isLoaded: 0
     },
     src: "img/day-ground-wood-bow.png",
-    Vm: IID.bow,
+    idItem: IID.bow,
     amount: 1,
     scale: 0.8,
     angle: 0
@@ -30285,7 +30287,7 @@ var VNN = [{
         isLoaded: 0
     },
     src: "img/day-ground-9mm.png",
-    Vm: IID.pistol,
+    idItem: IID.pistol,
     amount: 1,
     scale: 1,
     angle: -0.1
@@ -30295,7 +30297,7 @@ var VNN = [{
         isLoaded: 0
     },
     src: "img/day-ground-desert-eagle.png",
-    Vm: IID.deserteagle,
+    idItem: IID.deserteagle,
     amount: 1,
     scale: 1,
     angle: -0.1
@@ -30305,7 +30307,7 @@ var VNN = [{
         isLoaded: 0
     },
     src: "img/day-ground-shotgun.png",
-    Vm: IID.shotgun,
+    idItem: IID.shotgun,
     amount: 1,
     scale: 0.7,
     angle: -0.5
@@ -30315,7 +30317,7 @@ var VNN = [{
         isLoaded: 0
     },
     src: "img/day-ground-ak47.png",
-    Vm: IID.ak47,
+    idItem: IID.ak47,
     amount: 1,
     scale: 0.7,
     angle: -0.5
@@ -30325,7 +30327,7 @@ var VNN = [{
         isLoaded: 0
     },
     src: "img/day-ground-sniper.png",
-    Vm: IID.sniper,
+    idItem: IID.sniper,
     amount: 1,
     scale: 0.7,
     angle: -0.5
@@ -30335,7 +30337,7 @@ var VNN = [{
         isLoaded: 0
     },
     src: "img/day-ground-wood-wall.png",
-    Vm: IID.woodenwall,
+    idItem: IID.woodenwall,
     amount: 1,
     scale: 0.9,
     angle: 0
@@ -30345,7 +30347,7 @@ var VNN = [{
         isLoaded: 0
     },
     src: "img/day-ground-stone-wall.png",
-    Vm: IID.stonewall,
+    idItem: IID.stonewall,
     amount: 1,
     scale: 0.9,
     angle: 0
@@ -30355,7 +30357,7 @@ var VNN = [{
         isLoaded: 0
     },
     src: "img/day-ground-steel-wall.png",
-    Vm: IID.steelwall,
+    idItem: IID.steelwall,
     amount: 1,
     scale: 0.9,
     angle: 0
@@ -30365,7 +30367,7 @@ var VNN = [{
         isLoaded: 0
     },
     src: "img/day-ground-wood-door.png",
-    Vm: IID.wooddoor,
+    idItem: IID.wooddoor,
     amount: 1,
     scale: 0.9,
     angle: 0
@@ -30375,7 +30377,7 @@ var VNN = [{
         isLoaded: 0
     },
     src: "img/day-ground-stone-door.png",
-    Vm: IID.stonedoor,
+    idItem: IID.stonedoor,
     amount: 1,
     scale: 0.9,
     angle: 0
@@ -30385,7 +30387,7 @@ var VNN = [{
         isLoaded: 0
     },
     src: "img/day-ground-steel-door.png",
-    Vm: IID.steeldoor,
+    idItem: IID.steeldoor,
     amount: 1,
     scale: 0.9,
     angle: 0
@@ -30395,7 +30397,7 @@ var VNN = [{
         isLoaded: 0
     },
     src: "img/day-ground-campfire.png",
-    Vm: IID.campfire,
+    idItem: IID.campfire,
     amount: 1,
     scale: 0.7,
     angle: 0
@@ -30405,7 +30407,7 @@ var VNN = [{
         isLoaded: 0
     },
     src: "img/day-ground-bullet-9mm.png",
-    Vm: IID.bullet9mm,
+    idItem: IID.bullet9mm,
     amount: 1,
     scale: 1,
     angle: 0
@@ -30415,7 +30417,7 @@ var VNN = [{
         isLoaded: 0
     },
     src: "img/day-ground-bullet-shotgun.png",
-    Vm: IID.bulletshotgun,
+    idItem: IID.bulletshotgun,
     amount: 1,
     scale: 1,
     angle: 0
@@ -30425,7 +30427,7 @@ var VNN = [{
         isLoaded: 0
     },
     src: "img/day-ground-bullet-sniper.png",
-    Vm: IID.sniperbullet,
+    idItem: IID.sniperbullet,
     amount: 1,
     scale: 1.1,
     angle: 0
@@ -30435,7 +30437,7 @@ var VNN = [{
         isLoaded: 0
     },
     src: "img/day-ground-medikit.png",
-    Vm: IID.medkit,
+    idItem: IID.medkit,
     amount: 1,
     scale: 0.9,
     angle: 0
@@ -30445,7 +30447,7 @@ var VNN = [{
         isLoaded: 0
     },
     src: "img/day-ground-bandage.png",
-    Vm: IID.bandage,
+    idItem: IID.bandage,
     amount: 1,
     scale: 1,
     angle: 0
@@ -30455,7 +30457,7 @@ var VNN = [{
         isLoaded: 0
     },
     src: "img/day-ground-soda.png",
-    Vm: IID.soda,
+    idItem: IID.soda,
     amount: 1,
     scale: 1.2,
     angle: 0
@@ -30465,7 +30467,7 @@ var VNN = [{
         isLoaded: 0
     },
     src: "img/day-ground-MP5.png",
-    Vm: IID.mp5,
+    idItem: IID.mp5,
     amount: 1,
     scale: 0.8,
     angle: -0.5
@@ -30475,7 +30477,7 @@ var VNN = [{
         isLoaded: 0
     },
     src: "img/day-ground-headscarf.png",
-    Vm: IID.headscarf,
+    idItem: IID.headscarf,
     amount: 1,
     scale: 0.8,
     angle: 0
@@ -30485,7 +30487,7 @@ var VNN = [{
         isLoaded: 0
     },
     src: "img/day-ground-chapka.png",
-    Vm: IID.chapka,
+    idItem: IID.chapka,
     amount: 1,
     scale: 0.8,
     angle: 0
@@ -30495,7 +30497,7 @@ var VNN = [{
         isLoaded: 0
     },
     src: "img/day-ground-coat.png",
-    Vm: IID.coat,
+    idItem: IID.coat,
     amount: 1,
     scale: 0.8,
     angle: 0
@@ -30505,7 +30507,7 @@ var VNN = [{
         isLoaded: 0
     },
     src: "img/day-ground-gaz-mask.png",
-    Vm: IID.gazmask,
+    idItem: IID.gazmask,
     amount: 1,
     scale: 0.8,
     angle: 0
@@ -30515,7 +30517,7 @@ var VNN = [{
         isLoaded: 0
     },
     src: "img/day-ground-gaz-protection.png",
-    Vm: IID.gazprotection,
+    idItem: IID.gazprotection,
     amount: 1,
     scale: 0.8,
     angle: 0
@@ -30525,7 +30527,7 @@ var VNN = [{
         isLoaded: 0
     },
     src: "img/day-ground-radiation-suit.png",
-    Vm: IID.radiationsuit,
+    idItem: IID.radiationsuit,
     amount: 1,
     scale: 0.8,
     angle: 0
@@ -30535,7 +30537,7 @@ var VNN = [{
         isLoaded: 0
     },
     src: "img/day-ground-wood-arrow.png",
-    Vm: IID.woodarrow,
+    idItem: IID.woodarrow,
     amount: 1,
     scale: 0.8,
     angle: 0
@@ -30545,7 +30547,7 @@ var VNN = [{
         isLoaded: 0
     },
     src: "img/day-ground-campfire-bbq.png",
-    Vm: IID.campfirebbq,
+    idItem: IID.campfirebbq,
     amount: 1,
     scale: 0.8,
     angle: 0
@@ -30555,7 +30557,7 @@ var VNN = [{
         isLoaded: 0
     },
     src: "img/day-ground-smelter.png",
-    Vm: IID.smelter,
+    idItem: IID.smelter,
     amount: 1,
     scale: 0.8,
     angle: 0
@@ -30565,7 +30567,7 @@ var VNN = [{
         isLoaded: 0
     },
     src: "img/day-ground-wood-door1.png",
-    Vm: IID.wooddoor1,
+    idItem: IID.wooddoor1,
     amount: 1,
     scale: 0.9,
     angle: 0
@@ -30575,7 +30577,7 @@ var VNN = [{
         isLoaded: 0
     },
     src: "img/day-ground-stone-door1.png",
-    Vm: IID.stonedoor1,
+    idItem: IID.stonedoor1,
     amount: 1,
     scale: 0.9,
     angle: 0
@@ -30585,7 +30587,7 @@ var VNN = [{
         isLoaded: 0
     },
     src: "img/day-ground-steel-door1.png",
-    Vm: IID.steeldoor1,
+    idItem: IID.steeldoor1,
     amount: 1,
     scale: 0.9,
     angle: 0
@@ -30595,7 +30597,7 @@ var VNN = [{
         isLoaded: 0
     },
     src: "img/day-ground-sulfur.png",
-    Vm: IID.sulfur,
+    idItem: IID.sulfur,
     amount: 1,
     scale: 1,
     angle: 0
@@ -30605,7 +30607,7 @@ var VNN = [{
         isLoaded: 0
     },
     src: "img/day-ground-shaped-uranium.png",
-    Vm: IID.shapeduranium,
+    idItem: IID.shapeduranium,
     amount: 1,
     scale: 1,
     angle: 0
@@ -30615,7 +30617,7 @@ var VNN = [{
         isLoaded: 0
     },
     src: "img/day-ground-workbench2.png",
-    Vm: IID.researchbench,
+    idItem: IID.researchbench,
     amount: 1,
     scale: 1,
     angle: 0
@@ -30625,7 +30627,7 @@ var VNN = [{
         isLoaded: 0
     },
     src: "img/day-ground-uranium.png",
-    Vm: IID.uranium,
+    idItem: IID.uranium,
     amount: 1,
     scale: 1,
     angle: 0
@@ -30635,7 +30637,7 @@ var VNN = [{
         isLoaded: 0
     },
     src: "img/day-ground-weaving-machine.png",
-    Vm: IID.weavingmachine,
+    idItem: IID.weavingmachine,
     amount: 1,
     scale: 1,
     angle: 0
@@ -30645,7 +30647,7 @@ var VNN = [{
         isLoaded: 0
     },
     src: "img/day-ground-gasoline.png",
-    Vm: IID.gasoline,
+    idItem: IID.gasoline,
     amount: 1,
     scale: 1,
     angle: 0
@@ -30655,7 +30657,7 @@ var VNN = [{
         isLoaded: 0
     },
     src: "img/day-ground-sulfur-pickaxe.png",
-    Vm: IID.sulfurpickaxe,
+    idItem: IID.sulfurpickaxe,
     amount: 1,
     scale: 0.7,
     angle: 0.3
@@ -30665,7 +30667,7 @@ var VNN = [{
         isLoaded: 0
     },
     src: "img/day-ground-chest.png",
-    Vm: IID.chest,
+    idItem: IID.chest,
     amount: 1,
     scale: 0.7,
     angle: 0.3
@@ -30675,7 +30677,7 @@ var VNN = [{
         isLoaded: 0
     },
     src: "img/day-ground-fridge.png",
-    Vm: IID.fridge,
+    idItem: IID.fridge,
     amount: 1,
     scale: 0.7,
     angle: 0.3
@@ -30685,7 +30687,7 @@ var VNN = [{
         isLoaded: 0
     },
     src: "img/day-ground-wood-floor.png",
-    Vm: IID.woodfloor1,
+    idItem: IID.woodfloor1,
     amount: 1,
     scale: 0.9,
     angle: 0
@@ -30695,7 +30697,7 @@ var VNN = [{
         isLoaded: 0
     },
     src: "img/day-ground-hammer.png",
-    Vm: IID.hammer,
+    idItem: IID.hammer,
     amount: 1,
     scale: 0.7,
     angle: 0.3
@@ -30705,7 +30707,7 @@ var VNN = [{
         isLoaded: 0
     },
     src: "img/day-ground-sleeping-bag.png",
-    Vm: IID.sleepingbag,
+    idItem: IID.sleepingbag,
     amount: 1,
     scale: 0.7,
     angle: 0.3
@@ -30715,7 +30717,7 @@ var VNN = [{
         isLoaded: 0
     },
     src: "img/day-ground-repair-hammer.png",
-    Vm: IID.repairhammer,
+    idItem: IID.repairhammer,
     amount: 1,
     scale: 0.7,
     angle: 0.3
@@ -30725,7 +30727,7 @@ var VNN = [{
         isLoaded: 0
     },
     src: "img/day-ground-nails.png",
-    Vm: IID.nails,
+    idItem: IID.nails,
     amount: 1,
     scale: 0.7,
     angle: 0.3
@@ -30735,7 +30737,7 @@ var VNN = [{
         isLoaded: 0
     },
     src: "img/day-ground-wood-floor-light.png",
-    Vm: IID.woodfloor2,
+    idItem: IID.woodfloor2,
     amount: 1,
     scale: 0.7,
     angle: 0.3
@@ -30745,7 +30747,7 @@ var VNN = [{
         isLoaded: 0
     },
     src: "img/day-ground-wood-smallwall.png",
-    Vm: IID.smallwoodwall,
+    idItem: IID.smallwoodwall,
     amount: 1,
     scale: 0.9,
     angle: 0
@@ -30755,7 +30757,7 @@ var VNN = [{
         isLoaded: 0
     },
     src: "img/day-ground-stone-smallwall.png",
-    Vm: IID.smallstonewall,
+    idItem: IID.smallstonewall,
     amount: 1,
     scale: 0.9,
     angle: 0
@@ -30765,7 +30767,7 @@ var VNN = [{
         isLoaded: 0
     },
     src: "img/day-ground-steel-smallwall.png",
-    Vm: IID.smallsteelwall,
+    idItem: IID.smallsteelwall,
     amount: 1,
     scale: 0.9,
     angle: 0
@@ -30775,7 +30777,7 @@ var VNN = [{
         isLoaded: 0
     },
     src: "img/day-ground-tomato-soup.png",
-    Vm: IID.tomatosoup,
+    idItem: IID.tomatosoup,
     amount: 1,
     scale: 0.9,
     angle: 0
@@ -30785,7 +30787,7 @@ var VNN = [{
         isLoaded: 0
     },
     src: "img/day-ground-syringe.png",
-    Vm: IID.syringe,
+    idItem: IID.syringe,
     amount: 1,
     scale: 0.9,
     angle: 0
@@ -30795,7 +30797,7 @@ var VNN = [{
         isLoaded: 0
     },
     src: "img/day-ground-chemical-component.png",
-    Vm: IID.chemicalcomponent,
+    idItem: IID.chemicalcomponent,
     amount: 1,
     scale: 0.9,
     angle: 0
@@ -30805,7 +30807,7 @@ var VNN = [{
         isLoaded: 0
     },
     src: "img/day-ground-radaway.png",
-    Vm: IID.radway,
+    idItem: IID.radway,
     amount: 1,
     scale: 0.9,
     angle: 0
@@ -30815,7 +30817,7 @@ var VNN = [{
         isLoaded: 0
     },
     src: "img/day-ground-seed-tomato.png",
-    Vm: IID.tomatoseed,
+    idItem: IID.tomatoseed,
     amount: 1,
     scale: 0.9,
     angle: 0
@@ -30825,7 +30827,7 @@ var VNN = [{
         isLoaded: 0
     },
     src: "img/day-ground-tomato.png",
-    Vm: IID.tomato,
+    idItem: IID.tomato,
     amount: 1,
     scale: 0.9,
     angle: 0
@@ -30835,7 +30837,7 @@ var VNN = [{
         isLoaded: 0
     },
     src: "img/day-ground-rotten-tomato.png",
-    Vm: IID.rottentomato,
+    idItem: IID.rottentomato,
     amount: 1,
     scale: 0.9,
     angle: 0
@@ -30845,7 +30847,7 @@ var VNN = [{
         isLoaded: 0
     },
     src: "img/day-ground-can.png",
-    Vm: IID.can,
+    idItem: IID.can,
     amount: 1,
     scale: 0.9,
     angle: 0
@@ -30855,7 +30857,7 @@ var VNN = [{
         isLoaded: 0
     },
     src: "img/day-ground-wood-crossbow.png",
-    Vm: IID.crossbow,
+    idItem: IID.crossbow,
     amount: 1,
     scale: 0.8,
     angle: 0
@@ -30865,7 +30867,7 @@ var VNN = [{
         isLoaded: 0
     },
     src: "img/day-ground-wood-crossarrow.png",
-    Vm: IID.crossarrow,
+    idItem: IID.crossarrow,
     amount: 1,
     scale: 0.8,
     angle: 0
@@ -30875,7 +30877,7 @@ var VNN = [{
         isLoaded: 0
     },
     src: "img/day-ground-nail-gun.png",
-    Vm: IID.nailgun,
+    idItem: IID.nailgun,
     amount: 1,
     scale: 0.8,
     angle: 0
@@ -30885,7 +30887,7 @@ var VNN = [{
         isLoaded: 0
     },
     src: "img/day-ground-sawed-off-shotgun.png",
-    Vm: IID.sawedoff,
+    idItem: IID.sawedoff,
     amount: 1,
     scale: 0.8,
     angle: 0
@@ -30895,7 +30897,7 @@ var VNN = [{
         isLoaded: 0
     },
     src: "img/day-ground-stone-floor.png",
-    Vm: IID.stonefloor1,
+    idItem: IID.stonefloor1,
     amount: 1,
     scale: 0.8,
     angle: 0
@@ -30905,7 +30907,7 @@ var VNN = [{
         isLoaded: 0
     },
     src: "img/day-ground-tiling-floor.png",
-    Vm: IID.stonefloor2,
+    idItem: IID.stonefloor2,
     amount: 1,
     scale: 0.8,
     angle: 0
@@ -30915,7 +30917,7 @@ var VNN = [{
         isLoaded: 0
     },
     src: "img/day-ground-chips.png",
-    Vm: IID.chips,
+    idItem: IID.chips,
     amount: 1,
     scale: 0.9,
     angle: 0
@@ -30925,7 +30927,7 @@ var VNN = [{
         isLoaded: 0
     },
     src: "img/day-ground-rotten-chips.png",
-    Vm: IID.rottenchips,
+    idItem: IID.rottenchips,
     amount: 1,
     scale: 0.9,
     angle: 0
@@ -30935,7 +30937,7 @@ var VNN = [{
         isLoaded: 0
     },
     src: "img/day-ground-electronic-part.png",
-    Vm: IID.electronicpart,
+    idItem: IID.electronicpart,
     amount: 1,
     scale: 1,
     angle: 0
@@ -30945,7 +30947,7 @@ var VNN = [{
         isLoaded: 0
     },
     src: "img/day-ground-junk.png",
-    Vm: IID.junk,
+    idItem: IID.junk,
     amount: 1,
     scale: 0.8,
     angle: 0
@@ -30955,7 +30957,7 @@ var VNN = [{
         isLoaded: 0
     },
     src: "img/day-ground-wires.png",
-    Vm: IID.wires,
+    idItem: IID.wires,
     amount: 1,
     scale: 1,
     angle: 0
@@ -30965,7 +30967,7 @@ var VNN = [{
         isLoaded: 0
     },
     src: "img/day-ground-small-energy-cells.png",
-    Vm: IID.energycell,
+    idItem: IID.energycell,
     amount: 1,
     scale: 1,
     angle: 0
@@ -30975,7 +30977,7 @@ var VNN = [{
         isLoaded: 0
     },
     src: "img/day-ground-laser-pistol.png",
-    Vm: IID.laserpistol,
+    idItem: IID.laserpistol,
     amount: 1,
     scale: 1,
     angle: 0
@@ -30985,7 +30987,7 @@ var VNN = [{
         isLoaded: 0
     },
     src: "img/day-ground-workbench3.png",
-    Vm: IID.teslabench,
+    idItem: IID.teslabench,
     amount: 1,
     scale: 0.9,
     angle: 0
@@ -30995,7 +30997,7 @@ var VNN = [{
         isLoaded: 0
     },
     src: "img/day-ground-alloys.png",
-    Vm: IID.alloys,
+    idItem: IID.alloys,
     amount: 1,
     scale: 1,
     angle: 0
@@ -31005,7 +31007,7 @@ var VNN = [{
         isLoaded: 0
     },
     src: "img/day-ground-sulfur-axe.png",
-    Vm: IID.sulfuraxe,
+    idItem: IID.sulfuraxe,
     amount: 1,
     scale: 0.7,
     angle: 0.5
@@ -31015,7 +31017,7 @@ var VNN = [{
         isLoaded: 0
     },
     src: "img/day-ground-landmine.png",
-    Vm: IID.landmine,
+    idItem: IID.landmine,
     amount: 1,
     scale: 0.7,
     angle: 0.5
@@ -31025,7 +31027,7 @@ var VNN = [{
         isLoaded: 0
     },
     src: "img/day-ground-dynamite.png",
-    Vm: IID.dynamite,
+    idItem: IID.dynamite,
     amount: 1,
     scale: 0.7,
     angle: 0.5
@@ -31035,7 +31037,7 @@ var VNN = [{
         isLoaded: 0
     },
     src: "img/day-ground-C4.png",
-    Vm: IID.c4bomb,
+    idItem: IID.c4bomb,
     amount: 1,
     scale: 0.7,
     angle: 0.5
@@ -31045,7 +31047,7 @@ var VNN = [{
         isLoaded: 0
     },
     src: "img/day-ground-joystick.png",
-    Vm: IID.joystic,
+    idItem: IID.joystic,
     amount: 1,
     scale: 0.7,
     angle: 0.5
@@ -31055,7 +31057,7 @@ var VNN = [{
         isLoaded: 0
     },
     src: "img/day-ground-composter.png",
-    Vm: IID.composter,
+    idItem: IID.composter,
     amount: 1,
     scale: 0.7,
     angle: 0.5
@@ -31065,7 +31067,7 @@ var VNN = [{
         isLoaded: 0
     },
     src: "img/day-ground-metal-helmet.png",
-    Vm: IID.metalhelmet,
+    idItem: IID.metalhelmet,
     amount: 1,
     scale: 0.8,
     angle: 0
@@ -31075,7 +31077,7 @@ var VNN = [{
         isLoaded: 0
     },
     src: "img/day-ground-welding-helmet.png",
-    Vm: IID.weldinghelmet,
+    idItem: IID.weldinghelmet,
     amount: 1,
     scale: 0.7,
     angle: 0
@@ -31085,7 +31087,7 @@ var VNN = [{
         isLoaded: 0
     },
     src: "img/day-ground-gladiator-helmet.png",
-    Vm: IID.gladiatorhelmet,
+    idItem: IID.gladiatorhelmet,
     amount: 1,
     scale: 0.7,
     angle: 0
@@ -31095,7 +31097,7 @@ var VNN = [{
         isLoaded: 0
     },
     src: "img/day-ground-leather-jacket.png",
-    Vm: IID.leatherjacket,
+    idItem: IID.leatherjacket,
     amount: 1,
     scale: 0.8,
     angle: 0
@@ -31105,7 +31107,7 @@ var VNN = [{
         isLoaded: 0
     },
     src: "img/day-ground-kevlar-suit.png",
-    Vm: IID.kevlarsuit,
+    idItem: IID.kevlarsuit,
     amount: 1,
     scale: 0.8,
     angle: 0
@@ -31115,7 +31117,7 @@ var VNN = [{
         isLoaded: 0
     },
     src: "img/day-ground-SWAT-suit.png",
-    Vm: IID.SWATsuit,
+    idItem: IID.SWATsuit,
     amount: 1,
     scale: 0.8,
     angle: 0
@@ -31125,7 +31127,7 @@ var VNN = [{
         isLoaded: 0
     },
     src: "img/day-ground-protective-suit.png",
-    Vm: IID.protectivesuit,
+    idItem: IID.protectivesuit,
     amount: 1,
     scale: 0.8,
     angle: 0
@@ -31135,7 +31137,7 @@ var VNN = [{
         isLoaded: 0
     },
     src: "img/day-ground-tesla-0.png",
-    Vm: IID.tesla1,
+    idItem: IID.tesla1,
     amount: 1,
     scale: 0.8,
     angle: 0
@@ -31145,7 +31147,7 @@ var VNN = [{
         isLoaded: 0
     },
     src: "img/day-ground-tesla-armor.png",
-    Vm: IID.tesla2,
+    idItem: IID.tesla2,
     amount: 1,
     scale: 0.8,
     angle: 0
@@ -31155,7 +31157,7 @@ var VNN = [{
         isLoaded: 0
     },
     src: "img/day-ground-wood-spike.png",
-    Vm: IID.woodespike,
+    idItem: IID.woodespike,
     amount: 1,
     scale: 0.8,
     angle: 0
@@ -31165,7 +31167,7 @@ var VNN = [{
         isLoaded: 0
     },
     src: "img/day-ground-laser-submachine.png",
-    Vm: IID.lasersubmachine,
+    idItem: IID.lasersubmachine,
     amount: 1,
     scale: 0.8,
     angle: 0
@@ -31175,7 +31177,7 @@ var VNN = [{
         isLoaded: 0
     },
     src: "img/day-ground-grenade.png",
-    Vm: IID.granade,
+    idItem: IID.granade,
     amount: 1,
     scale: 0.8,
     angle: 0
@@ -31185,7 +31187,7 @@ var VNN = [{
         isLoaded: 0
     },
     src: "img/day-ground-super-hammer.png",
-    Vm: IID.superhammer,
+    idItem: IID.superhammer,
     amount: 1,
     scale: 0.8,
     angle: 0
@@ -31195,7 +31197,7 @@ var VNN = [{
         isLoaded: 0
     },
     src: "img/day-ground-ghoul-blood.png",
-    Vm: IID.ghoulblood,
+    idItem: IID.ghoulblood,
     amount: 1,
     scale: 0.8,
     angle: 0
@@ -31205,7 +31207,7 @@ var VNN = [{
         isLoaded: 0
     },
     src: "img/day-ground-camouflage-gear.png",
-    Vm: IID.camouflage,
+    idItem: IID.camouflage,
     amount: 1,
     scale: 0.8,
     angle: 0
@@ -31215,7 +31217,7 @@ var VNN = [{
         isLoaded: 0
     },
     src: "img/day-ground-agitator.png",
-    Vm: IID.agitator,
+    idItem: IID.agitator,
     amount: 1,
     scale: 0.8,
     angle: 0
@@ -31225,7 +31227,7 @@ var VNN = [{
         isLoaded: 0
     },
     src: "img/day-ground-ghoul-drug.png",
-    Vm: IID.ghouldrug,
+    idItem: IID.ghouldrug,
     amount: 1,
     scale: 0.8,
     angle: 0
@@ -31235,7 +31237,7 @@ var VNN = [{
         isLoaded: 0
     },
     src: "img/day-ground-mushroom1.png",
-    Vm: IID.mushroom,
+    idItem: IID.mushroom,
     amount: 1,
     scale: 0.8,
     angle: 0
@@ -31245,7 +31247,7 @@ var VNN = [{
         isLoaded: 0
     },
     src: "img/day-ground-mushroom2.png",
-    Vm: IID.mushroom2,
+    idItem: IID.mushroom2,
     amount: 1,
     scale: 0.8,
     angle: 0
@@ -31255,7 +31257,7 @@ var VNN = [{
         isLoaded: 0
     },
     src: "img/day-ground-mushroom3.png",
-    Vm: IID.mushroom3,
+    idItem: IID.mushroom3,
     amount: 1,
     scale: 0.8,
     angle: 0
@@ -31265,7 +31267,7 @@ var VNN = [{
         isLoaded: 0
     },
     src: "img/day-ground-rotten-mushroom1.png",
-    Vm: IID.rottenmushroom1,
+    idItem: IID.rottenmushroom1,
     amount: 1,
     scale: 0.8,
     angle: 0
@@ -31275,7 +31277,7 @@ var VNN = [{
         isLoaded: 0
     },
     src: "img/day-ground-rotten-mushroom2.png",
-    Vm: IID.rottenmushroom2,
+    idItem: IID.rottenmushroom2,
     amount: 1,
     scale: 0.8,
     angle: 0
@@ -31285,7 +31287,7 @@ var VNN = [{
         isLoaded: 0
     },
     src: "img/day-ground-rotten-mushroom3.png",
-    Vm: IID.rottenmushroom3,
+    idItem: IID.rottenmushroom3,
     amount: 1,
     scale: 0.8,
     angle: 0
@@ -31295,7 +31297,7 @@ var VNN = [{
         isLoaded: 0
     },
     src: "img/day-ground-lapadoine.png",
-    Vm: IID.lapadoine,
+    idItem: IID.lapadoine,
     amount: 1,
     scale: 0.8,
     angle: 0
@@ -31305,7 +31307,7 @@ var VNN = [{
         isLoaded: 0
     },
     src: "img/day-ground-lapabot.png",
-    Vm: IID.lapabot,
+    idItem: IID.lapabot,
     amount: 1,
     scale: 0.8,
     angle: 0
@@ -31315,7 +31317,7 @@ var VNN = [{
         isLoaded: 0
     },
     src: "img/day-ground-small-wire.png",
-    Vm: IID.smallwire,
+    idItem: IID.smallwire,
     amount: 1,
     scale: 0.8,
     angle: 0
@@ -31325,7 +31327,7 @@ var VNN = [{
         isLoaded: 0
     },
     src: "img/day-ground-pumpkin.png",
-    Vm: IID.pumpkin,
+    idItem: IID.pumpkin,
     amount: 1,
     scale: 0.8,
     angle: 0
@@ -31335,7 +31337,7 @@ var VNN = [{
         isLoaded: 0
     },
     src: "img/day-ground-rotten-pumpkin.png",
-    Vm: IID.rottenpumpkin,
+    idItem: IID.rottenpumpkin,
     amount: 1,
     scale: 0.8,
     angle: 0
@@ -31345,7 +31347,7 @@ var VNN = [{
         isLoaded: 0
     },
     src: "img/day-ground-ghoul5.png",
-    Vm: IID.ghoulseed,
+    idItem: IID.ghoulseed,
     amount: 1,
     scale: 0.8,
     angle: 0
@@ -31355,7 +31357,7 @@ var VNN = [{
         isLoaded: 0
     },
     src: "img/day-ground-extractor.png",
-    Vm: IID.extractor,
+    idItem: IID.extractor,
     amount: 1,
     scale: 0.8,
     angle: 0
@@ -31365,7 +31367,7 @@ var VNN = [{
         isLoaded: 0
     },
     src: "img/day-ground-antidote.png",
-    Vm: IID.antidote,
+    idItem: IID.antidote,
     amount: 1,
     scale: 0.8,
     angle: 0
@@ -31375,7 +31377,7 @@ var VNN = [{
         isLoaded: 0
     },
     src: "img/day-ground-antidote-flower.png",
-    Vm: IID.antidoteflower,
+    idItem: IID.antidoteflower,
     amount: 1,
     scale: 0.8,
     angle: 0
@@ -31385,7 +31387,7 @@ var VNN = [{
         isLoaded: 0
     },
     src: "img/day-ground-seed-tree.png",
-    Vm: IID.treeseed,
+    idItem: IID.treeseed,
     amount: 1,
     scale: 0.8,
     angle: 0
@@ -31395,7 +31397,7 @@ var VNN = [{
         isLoaded: 0
     },
     src: "img/day-ground-acorn.png",
-    Vm: IID.acorn,
+    idItem: IID.acorn,
     amount: 1,
     scale: 0.8,
     angle: 0
@@ -31405,7 +31407,7 @@ var VNN = [{
         isLoaded: 0
     },
     src: "img/day-ground-rotten-acorn.png",
-    Vm: IID.rottenacorn,
+    idItem: IID.rottenacorn,
     amount: 1,
     scale: 0.8,
     angle: 0
@@ -31415,7 +31417,7 @@ var VNN = [{
         isLoaded: 0
     },
     src: "img/day-ground-laser-sniper.png",
-    Vm: IID.lasersniper,
+    idItem: IID.lasersniper,
     amount: 1,
     scale: 0.8,
     angle: 0
@@ -31425,7 +31427,7 @@ var VNN = [{
         isLoaded: 0
     },
     src: "img/day-ground-hal-bot.png",
-    Vm: IID.halbot,
+    idItem: IID.halbot,
     amount: 1,
     scale: 0.8,
     angle: 0
@@ -31435,7 +31437,7 @@ var VNN = [{
         isLoaded: 0
     },
     src: "img/day-ground-tesla-bot.png",
-    Vm: IID.teslabot,
+    idItem: IID.teslabot,
     amount: 1,
     scale: 0.8,
     angle: 0
@@ -31445,7 +31447,7 @@ var VNN = [{
         isLoaded: 0
     },
     src: "img/day-ground-wire0.png",
-    Vm: IID.cable,
+    idItem: IID.cable,
     amount: 1,
     scale: 0.8,
     angle: 0
@@ -31455,7 +31457,7 @@ var VNN = [{
         isLoaded: 0
     },
     src: "img/day-ground-wire1.png",
-    Vm: IID.cable2,
+    idItem: IID.cable2,
     amount: 1,
     scale: 0.8,
     angle: 0
@@ -31465,7 +31467,7 @@ var VNN = [{
         isLoaded: 0
     },
     src: "img/day-ground-wire2.png",
-    Vm: IID.cable3,
+    idItem: IID.cable3,
     amount: 1,
     scale: 0.8,
     angle: 0
@@ -31475,7 +31477,7 @@ var VNN = [{
         isLoaded: 0
     },
     src: "img/day-ground-wire3.png",
-    Vm: IID.cable4,
+    idItem: IID.cable4,
     amount: 1,
     scale: 0.8,
     angle: 0
@@ -31485,7 +31487,7 @@ var VNN = [{
         isLoaded: 0
     },
     src: "img/day-ground-switch.png",
-    Vm: IID.switch,
+    idItem: IID.switch,
     amount: 1,
     scale: 0.8,
     angle: 0
@@ -31495,7 +31497,7 @@ var VNN = [{
         isLoaded: 0
     },
     src: "img/day-ground-switch-or.png",
-    Vm: IID.orgate,
+    idItem: IID.orgate,
     amount: 1,
     scale: 0.8,
     angle: 0
@@ -31505,7 +31507,7 @@ var VNN = [{
         isLoaded: 0
     },
     src: "img/day-ground-switch-and.png",
-    Vm: IID.andgate,
+    idItem: IID.andgate,
     amount: 1,
     scale: 0.8,
     angle: 0
@@ -31515,7 +31517,7 @@ var VNN = [{
         isLoaded: 0
     },
     src: "img/day-ground-switch-reverse.png",
-    Vm: IID.notgate,
+    idItem: IID.notgate,
     amount: 1,
     scale: 0.8,
     angle: 0
@@ -31525,7 +31527,7 @@ var VNN = [{
         isLoaded: 0
     },
     src: "img/day-ground-lamp-white.png",
-    Vm: IID.lamp,
+    idItem: IID.lamp,
     amount: 1,
     scale: 0.8,
     angle: 0
@@ -31535,7 +31537,7 @@ var VNN = [{
         isLoaded: 0
     },
     src: "img/day-ground-cable-wall.png",
-    Vm: IID.cablewall,
+    idItem: IID.cablewall,
     amount: 1,
     scale: 0.8,
     angle: 0
@@ -31545,7 +31547,7 @@ var VNN = [{
         isLoaded: 0
     },
     src: "img/day-ground-automatic-door.png",
-    Vm: IID.autodoor,
+    idItem: IID.autodoor,
     amount: 1,
     scale: 0.8,
     angle: 0
@@ -31555,7 +31557,7 @@ var VNN = [{
         isLoaded: 0
     },
     src: "img/day-ground-platform.png",
-    Vm: IID.platform,
+    idItem: IID.platform,
     amount: 1,
     scale: 0.8,
     angle: 0
@@ -31565,7 +31567,7 @@ var VNN = [{
         isLoaded: 0
     },
     src: "img/day-ground-stone-cave.png",
-    Vm: IID.stonecave,
+    idItem: IID.stonecave,
     amount: 1,
     scale: 0.8,
     angle: 0
@@ -31575,7 +31577,7 @@ var VNN = [{
         isLoaded: 0
     },
     src: "img/day-ground-bunker-wall.png",
-    Vm: IID.bunkerwall,
+    idItem: IID.bunkerwall,
     amount: 1,
     scale: 0.8,
     angle: 0
@@ -31585,7 +31587,7 @@ var VNN = [{
         isLoaded: 0
     },
     src: "img/day-ground-mustard-floor.png",
-    Vm: IID.mustardfloor,
+    idItem: IID.mustardfloor,
     amount: 1,
     scale: 0.8,
     angle: 0
@@ -31595,7 +31597,7 @@ var VNN = [{
         isLoaded: 0
     },
     src: "img/day-ground-red-floor.png",
-    Vm: IID.redfloor,
+    idItem: IID.redfloor,
     amount: 1,
     scale: 0.8,
     angle: 0
@@ -31605,7 +31607,7 @@ var VNN = [{
         isLoaded: 0
     },
     src: "img/day-ground-welding-machine.png",
-    Vm: IID.weldingmachine,
+    idItem: IID.weldingmachine,
     amount: 1,
     scale: 0.8,
     angle: 0
@@ -31615,7 +31617,7 @@ var VNN = [{
         isLoaded: 0
     },
     src: "img/day-ground-wire4.png",
-    Vm: IID.cable4,
+    idItem: IID.cable4,
     amount: 1,
     scale: 0.8,
     angle: 0
@@ -31625,7 +31627,7 @@ var VNN = [{
         isLoaded: 0
     },
     src: "img/day-ground-timer.png",
-    Vm: IID.timer,
+    idItem: IID.timer,
     amount: 1,
     scale: 0.8,
     angle: 0
@@ -31635,7 +31637,7 @@ var VNN = [{
         isLoaded: 0
     },
     src: "img/day-ground-xor.png",
-    Vm: IID.xorgate,
+    idItem: IID.xorgate,
     amount: 1,
     scale: 0.8,
     angle: 0
@@ -42151,11 +42153,11 @@ AI[AIID.__TESLA_BOT__] = {
 try {
     if (exports !== window.undefined) {
         exports.IID = IID;
-        exports.nW = nW;
+        exports.FURNITUREID = FURNITUREID;
         exports.HOUSE = HOUSE;
         exports.HOUSEID = HOUSEID;
         exports.items = items;
-        exports.VNN = VNN;
+        exports.LOOT = LOOT;
         exports.Mv = Mv;
         exports.object = object;
         exports.RESOURCES = RESOURCES;
@@ -42197,7 +42199,7 @@ try {
     for (var i = 0; i < KARMA.length; i++) KARMA[i].W = CanvasUtils.loadImage(KARMA[i].src, KARMA[i].W);
     INVENTORY2 = window.JSON.parse(window.JSON.stringify(items));
     PARTICLES2 = window.JSON.parse(window.JSON.stringify(VNw));
-    LOOT2 = window.JSON.parse(window.JSON.stringify(VNN));
+    LOOT2 = window.JSON.parse(window.JSON.stringify(LOOT));
     ENTITIES2 = window.JSON.parse(window.JSON.stringify(ENTITIES));
     RESOURCES2 = window.JSON.parse(window.JSON.stringify(RESOURCES));
     LIGHTFIRE2 = window.JSON.parse(window.JSON.stringify(LIGHTFIRE));
@@ -42218,7 +42220,7 @@ try {
     replaceStringInObject(RESOURCES2, RESOURCES, "day", "night");
     replaceStringInObject(INVENTORY2, items, "day", "night");
     replaceStringInObject(PARTICLES2, VNw, "day", "night");
-    replaceStringInObject(LOOT2, VNN, "day", "night");
+    replaceStringInObject(LOOT2, LOOT, "day", "night");
     replaceStringInObject(ENTITIES2, ENTITIES, "day", "night");
     replaceStringInObject(LIGHTFIRE2, LIGHTFIRE, "day", "night");
     replaceStringInObject(AI2, AI, "day", "night");
