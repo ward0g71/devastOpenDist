@@ -11391,19 +11391,6 @@ var Editor = (function() {
         ctx.drawImage(img, 5 * scaleby, zoombutton.pos.y - (42 * scaleby), img.wh * scaleby, img.h2 * scaleby);
     };
 
-    function markposition() {
-        if (Nnw > 0) {
-            Nnw -= delta;
-            if (Nnw > 2500) ctx.globalAlpha = MathUtils.Ease.inOutQuad((3000 - Nnw) / 500);
-            else if (Nnw < 500) ctx.globalAlpha = MathUtils.Ease.inOutQuad(Nnw / 500);
-            ctx.drawImage(VWWvn, copypastebutton.pos.x - (85 * scaleby), copypastebutton.pos.y - (40 * scaleby), VWWvn.wh * scaleby, VWWvn.h2 * scaleby);
-            ctx.globalAlpha = 1;
-        }
-        if (NVVNW[World.PLAYER._j] === window.undefined) NVVNW[World.PLAYER._j] = [];
-        if (NVVNW[World.PLAYER._j][World.PLAYER._i] === window.undefined) NVVNW[World.PLAYER._j][World.PLAYER._i] = GUI.renderText(((("(" + World.PLAYER._j) + ",") + World.PLAYER._i) + ")", "'Viga', sans-serif", "#FFFFFF", 52, 455, "#000000", 22, 22, window.undefined, window.undefined, 0.4, window.undefined, "#000000", 15.6);
-        var img = NVVNW[World.PLAYER._j][World.PLAYER._i];
-        ctx.drawImage(img, 5 * scaleby, zoombutton.pos.y - (42 * scaleby), img.wh * scaleby, img.h2 * scaleby);
-    };
     var VWWvn = null;
     var VWWvn = null;
     var Nnw = 0;
@@ -11773,10 +11760,10 @@ var Editor = (function() {
             vnm = 1;
             NWw = 0;
             for (var i = 1; i < INVENTORY.length; i++) {
-                var IID = INVENTORY[i];
-                if (IID.behavior === BEHAVIOR.__LOGIC__) {
-                    Wnw[NWw].setImages(IID.itemButton.src, IID.itemButton.img);
-                    Wnw[NWw].vmM = IID.id;
+                var item = INVENTORY[i];
+                if (item.behavior === BEHAVIOR.__LOGIC__) {
+                    Wnw[NWw].setImages(item.itemButton.src, item.itemButton.img);
+                    Wnw[NWw].vmM = item.id;
                     NWw++;
                 }
             }
@@ -11786,10 +11773,10 @@ var Editor = (function() {
             vnm = 1;
             NWw = 0;
             for (var i = 1; i < INVENTORY.length; i++) {
-                var IID = INVENTORY[i];
-                if ((((IID.id === IID.__LANDMINE__) || (IID.id === IID.__C4__)) || (IID.id === IID.__WOOD_SPIKE__)) || (IID.id === IID.__DYNAMITE__)) {
-                    Wnw[NWw].setImages(IID.itemButton.src, IID.itemButton.img);
-                    Wnw[NWw].vmM = IID.id;
+                var item = INVENTORY[i];
+                if ((((item.id === item.__LANDMINE__) || (item.id === item.__C4__)) || (item.id === item.__WOOD_SPIKE__)) || (item.id === item.__DYNAMITE__)) {
+                    Wnw[NWw].setImages(item.itemButton.src, item.itemButton.img);
+                    Wnw[NWw].vmM = item.id;
                     NWw++;
                 }
             }
@@ -11798,11 +11785,11 @@ var Editor = (function() {
         if (maproadbutton.trigger() === 1) {
             vnm = 1;
             NWw = 0;
-            var vnvwV = INVENTORY[IID.__ROAD__].subtype;
+            var vnvwV = INVENTORY[item.__ROAD__].subtype;
             for (var i = 0; i < vnvwV.length; i++) {
-                var IID = vnvwV[i];
-                Wnw[NWw].setImages(IID.itemButton.src, IID.itemButton.img);
-                Wnw[NWw].vmM = IID.__ROAD__;
+                var item = vnvwV[i];
+                Wnw[NWw].setImages(item.itemButton.src, item.itemButton.img);
+                Wnw[NWw].vmM = item.__ROAD__;
                 Wnw[NWw].nVWnM = i;
                 NWw++;
             }
@@ -11811,11 +11798,11 @@ var Editor = (function() {
         if (mapfurniturebutton.trigger() === 1) {
             vnm = 1;
             NWw = 0;
-            var vnvwV = INVENTORY[IID.__FURNITURE__].subtype;
+            var vnvwV = INVENTORY[item.__FURNITURE__].subtype;
             for (var i = 0; i < vnvwV.length; i++) {
-                var IID = vnvwV[i];
-                Wnw[NWw].setImages(IID.itemButton.src, IID.itemButton.img);
-                Wnw[NWw].vmM = IID.__FURNITURE__;
+                var item = vnvwV[i];
+                Wnw[NWw].setImages(item.itemButton.src, item.itemButton.img);
+                Wnw[NWw].vmM = item.__FURNITURE__;
                 Wnw[NWw].nVWnM = i;
                 NWw++;
             }
@@ -11825,16 +11812,16 @@ var Editor = (function() {
             vnm = 1;
             NWw = 0;
             for (var i = 1; i < INVENTORY.length; i++) {
-                var IID = INVENTORY[i];
-                if (((((IID.wall === 1) || (IID.lowWall === 1)) || (IID.door === 1)) || (IID.__CHEST__ === 1)) || (IID.__FRIDGE__ === 1)) {
-                    Wnw[NWw].setImages(IID.itemButton.src, IID.itemButton.img);
-                    Wnw[NWw].vmM = IID.id;
+                var item = INVENTORY[i];
+                if (((((item.wall === 1) || (item.lowWall === 1)) || (item.door === 1)) || (item.__CHEST__ === 1)) || (item.__FRIDGE__ === 1)) {
+                    Wnw[NWw].setImages(item.itemButton.src, item.itemButton.img);
+                    Wnw[NWw].vmM = item.id;
                     NWw++;
                 }
             }
             AudioUtils.playFx(AudioUtils._fx.button, 1, 0);
         }
-
+    
         if (zoombutton.trigger() === 1) {
             vnm = 1;
             if (Render.scale < 1.5) {
@@ -11854,8 +11841,8 @@ var Editor = (function() {
                 if (Render.scale <= -0.95) unzoombutton.hide();
             }
         }
-
-
+    
+    
         if (mapdeletebutton.trigger() === 1) {
             vnm = 1;
             MVWMn();
@@ -11966,7 +11953,7 @@ var Editor = (function() {
                     AudioUtils.playFx(AudioUtils._fx.button, 1, 0);
                     World.PLAYER.blueprint = Wnw[i].vmM;
                     World.PLAYER.furniture = Wnw[i].nVWnM;
-                    if (World.PLAYER.blueprint === IID.__ROAD__) World.PLAYER.buildRotate = 0;
+                    if (World.PLAYER.blueprint === item.__ROAD__) World.PLAYER.buildRotate = 0;
                 }
             }
         }
