@@ -2273,20 +2273,16 @@ var Client = (function() {
 
         window['RIVET_TOKEN'] && (_accept['Authorization'] = 'Bearer' + window['RIVET_TOKEN']),
 
-        fetch(lobbyList, {
-            'headers': _accept
-        })['then'](_list=>{
+        fetch(lobbyList, { 'headers': _accept }).then(_list=>{
             if (_list['ok'])
                 return _list.json();
             else
                 throw 'Failed to list lobbies: ' + _list['status'];
-        }
-
-        )['then'](_0xd4093f=>{
-            Client.serverList = _0xd4093f['lobbies']['map'](_0x3dd0bf=>{
-                let _0x2b6601 = _0xd4093f['regions']['find'](_0x10ffcf=>_0x10ffcf['region_id'] == _0x3dd0bf['region_id'])
-                  , _0x13a27b = _0x2b6601 ? _0x2b6601['region_display_name'] : '?';
-                return [_0x3dd0bf['lobby_id'], '', '', 0x1, _0x13a27b, _0x3dd0bf['total_player_count'], _0x3dd0bf['game_mode_id']];
+        }).then(_lobb=>{
+            Client.serverList = _lobb['lobbies']['map'](_reg=>{
+                let _nam = _lobb['regions']['find'](_0x10ffcf=>_0x10ffcf['region_id'] == _reg['region_id'])
+                  , _0x13a27b = _nam ? _nam['region_display_name'] : '?';
+                return [_reg['lobby_id'], '', '', 1, _0x13a27b, _reg['total_player_count'], _reg['game_mode_id']];
             }
             ),
             _srv();
@@ -7682,7 +7678,7 @@ var Loader = (function() {
                         var ghl = serverList[i][6];
                         NnMvV += playerNumber;
 
-                        if (ghl === ["ghoul"]) {
+                        if (ghl === 'ghoul') {
                             Home.ghoulServer.push(i);
                             continue;
                         }
@@ -7743,7 +7739,7 @@ var Loader = (function() {
                     }
                     Home.htmlGhoulServer = '<select id="servers"><option value="auto">Auto Select Server</option>';
                     for (var i in Home.ghoulServer) {
-                        Home.htmlGhoulServer += ('<option value="' + serverListserverList[Home.ghoulServer[i]][0] + '">' + serverList[Home.ghoulServer[i]][4].replace("GHOUL", "") + "  - " + serverList[Home.ghoulServer[i]][5]) + "  players</option>";
+                        Home.htmlGhoulServer += ('<option value="' + serverList[Home.ghoulServer[i]][0] + '">' + serverList[Home.ghoulServer[i]][4].replace("ghoul", "") + "  - " + serverList[Home.ghoulServer[i]][5]) + "  players</option>";
                     }
                     NvNnM += ("<option disabled>All servers  - " + NnMvV) + "  players</option></select>";
                     Home.htmlBattleRoyale += ("<option disabled>All servers  - " + NnMvV) + "  players</option></select>";
@@ -42474,5 +42470,5 @@ window.onbeforeunload = function() {
 };
 waitHTMLAndRun();
 
-var noDebug = window.console;
-noDebug.log = noDebug.info = noDebug.error = noDebug.warn = noDebug.debug = noDebug.NWVnW = noDebug.trace = noDebug.time = noDebug.timeEnd = function() {};
+//var noDebug = window.console;
+//noDebug.log = noDebug.info = noDebug.error = noDebug.warn = noDebug.debug = noDebug.NWVnW = noDebug.trace = noDebug.time = noDebug.timeEnd = function() {};
