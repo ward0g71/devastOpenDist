@@ -12293,24 +12293,24 @@ var Editor = (function() {
 
 
 var __COUNTER__ = 1;
-var wMM = {};
-wMM.MMvVn = __COUNTER__++;
-wMM.vwWVn = __COUNTER__++;
-wMM.VWwWM = __COUNTER__++;
-wMM.Vwmwn = __COUNTER__++;
-wMM.wNWmV = __COUNTER__++;
-wMM.vnvMn = __COUNTER__++;
-wMM.MwwMM = __COUNTER__++;
-wMM.wvMWm = __COUNTER__++;
-wMM.NWnVN = __COUNTER__++;
-wMM.vWWNm = __COUNTER__++;
-wMM.VnWMW = __COUNTER__++;
-wMM.nmWVN = __COUNTER__++;
-wMM.MvVmM = __COUNTER__++;
-wMM.WmvMn = __COUNTER__++;
-wMM.VWVNW = __COUNTER__++;
-var NVwvn = [{}, {
-    id: wMM.MMvVn,
+var BID = {};
+BID.__ROAD_T0B0L0R1__ = __COUNTER__++;
+BID.__ROAD_T0B0L1R0__ = __COUNTER__++;
+BID.__ROAD_T0B0L1R1__ = __COUNTER__++;
+BID.__ROAD_T0B1L0R0__ = __COUNTER__++;
+BID.__ROAD_T0B1L0R1__ = __COUNTER__++;
+BID.__ROAD_T0B1L1R0__ = __COUNTER__++;
+BID.__ROAD_T0B1L1R1__ = __COUNTER__++;
+BID.__ROAD_T1B0L0R1__ = __COUNTER__++;
+BID.__ROAD_T1B0L1R0__ = __COUNTER__++;
+BID.__ROAD_T1B0L1R0__ = __COUNTER__++;
+BID.__ROAD_T1B0L1R1__ = __COUNTER__++;
+BID.__ROAD_T1B1L0R0__ = __COUNTER__++;
+BID.__ROAD_T1B1L0R1__ = __COUNTER__++;
+BID.__ROAD_T1B1L1R0__ = __COUNTER__++;
+BID.__ROAD_T1B1L1R1__ = __COUNTER__++;
+var BUILDINGS = [{}, {
+    id: BID.__ROAD_T0B0L0R1__,
     src: "img/road-T0B0L0R1.png",
     img: {
         isLoaded: 0
@@ -12327,9 +12327,9 @@ var NVwvn = [{}, {
         [0, 0, 0, 0],
         [0, 0, 0, 0]
     ],
-    alt: [wMM.MMvVn]
+    alt: [BID.__ROAD_T0B0L0R1__]
 }, {
-    id: wMM.vwWVn,
+    id: BID.__ROAD_T0B0L1R0__,
     src: "img/road-T0B0L1R0.png",
     img: {
         isLoaded: 0
@@ -12346,9 +12346,9 @@ var NVwvn = [{}, {
         [0, 0, 0, 0],
         [0, 0, 0, 0]
     ],
-    alt: [wMM.vVNmn, wMM.VvNnM]
+    alt: [BID.__ROAD_T0B0L1R0_1__, BID.__ROAD_T0B0L1R0_2__]
 }, {
-    id: wMM.VWwWM,
+    id: BID.__ROAD_T0B0L1R1__,
     src: "img/road-T0B0L1R1.png",
     img: {
         isLoaded: 0
@@ -12365,9 +12365,9 @@ var NVwvn = [{}, {
         [0, 0, 0, 0],
         [0, 0, 0, 0]
     ],
-    alt: [wMM.wNMVw, wMM.VNVvm, wMM.mWvMm, wMM.MNvnM, wMM.VvnnVWm, wMM.NmwnW, wMM.mvMWN, wMM.NVwVw]
+    alt: [BID.__ROAD_T0B0L1R1_1__, BID.__ROAD_T0B0L1R1_2__, BID.__ROAD_T0B0L1R1_3__, BID.__ROAD_T0B0L1R1_4__, BID.__ROAD_T0B0L1R1_5__, BID.__ROAD_T0B0L1R1_6__, BID.__ROAD_T0B0L1R1_7__, BID.__ROAD_T0B0L1R1_8__]
 }, {
-    id: wMM.Vwmwn,
+    id: BID.__ROAD_T0B1L0R0__,
     src: "img/road-T0B1L0R0.png",
     img: {
         isLoaded: 0
@@ -12384,9 +12384,9 @@ var NVwvn = [{}, {
         [0, 0, 0, 0],
         [0, 0, 0, 0]
     ],
-    alt: [wMM.vwmNN, wMM.nmWNV]
+    alt: [BID.__ROAD_T0B1L0R0_1__, BID.__ROAD_T0B1L0R0_2__]
 }, {
-    id: wMM.wNWmV,
+    id: BID.__ROAD_T0B1L0R1__,
     src: "img/road-T0B1L0R1.png",
     img: {
         isLoaded: 0
@@ -12404,7 +12404,7 @@ var NVwvn = [{}, {
         [0, 0, 0, 0]
     ]
 }, {
-    id: wMM.vnvMn,
+    id: BID.__ROAD_T0B1L1R0__,
     src: "img/road-T0B1L1R0.png",
     img: {
         isLoaded: 0
@@ -12422,7 +12422,7 @@ var NVwvn = [{}, {
         [0, 0, 0, 0]
     ]
 }, {
-    id: wMM.MwwMM,
+    id: BID.__ROAD_T0B1L1R1__,
     src: "img/road-T0B1L1R1.png",
     img: {
         isLoaded: 0
@@ -12440,7 +12440,7 @@ var NVwvn = [{}, {
         [0, 0, 0, 0]
     ]
 }, {
-    id: wMM.wvMWm,
+    id: BID.__ROAD_T1B0L0R1__,
     src: "img/road-T1B0L0R0.png",
     img: {
         isLoaded: 0
@@ -12458,7 +12458,7 @@ var NVwvn = [{}, {
         [0, 0, 0, 0]
     ]
 }, {
-    id: wMM.NWnVN,
+    id: BID.__ROAD_T1B0L1R0__,
     src: "img/road-T1B0L0R1.png",
     img: {
         isLoaded: 0
@@ -12476,7 +12476,7 @@ var NVwvn = [{}, {
         [0, 0, 0, 0]
     ]
 }, {
-    id: wMM.vWWNm,
+    id: BID.__ROAD_T1B0L1R0__,
     src: "img/road-T1B0L1R0.png",
     img: {
         isLoaded: 0
@@ -12494,7 +12494,7 @@ var NVwvn = [{}, {
         [0, 0, 0, 0]
     ]
 }, {
-    id: wMM.VnWMW,
+    id: BID.__ROAD_T1B0L1R1__,
     src: "img/road-T1B0L1R1.png",
     img: {
         isLoaded: 0
@@ -12512,7 +12512,7 @@ var NVwvn = [{}, {
         [0, 0, 0, 0]
     ]
 }, {
-    id: wMM.nmWVN,
+    id: BID.__ROAD_T1B1L0R0__,
     src: "img/road-T1B1L0R0.png",
     img: {
         isLoaded: 0
@@ -12530,7 +12530,7 @@ var NVwvn = [{}, {
         [0, 0, 0, 0]
     ]
 }, {
-    id: wMM.MvVmM,
+    id: BID.__ROAD_T1B1L0R1__,
     src: "img/road-T1B1L0R1.png",
     img: {
         isLoaded: 0
@@ -12548,7 +12548,7 @@ var NVwvn = [{}, {
         [0, 0, 0, 0]
     ]
 }, {
-    id: wMM.WmvMn,
+    id: BID.__ROAD_T1B1L1R0__,
     src: "img/road-T1B1L1R0.png",
     img: {
         isLoaded: 0
@@ -12566,7 +12566,7 @@ var NVwvn = [{}, {
         [0, 0, 0, 0]
     ]
 }, {
-    id: wMM.VWVNW,
+    id: BID.__ROAD_T1B1L1R1__,
     src: "img/road-T1B1L1R1.png",
     img: {
         isLoaded: 0
@@ -12583,12 +12583,12 @@ var NVwvn = [{}, {
         [0, 0, 0, 0],
         [0, 0, 0, 0]
     ],
-    alt: [wMM.wmMVw, wMM.vnWNW]
+    alt: [BID.__ROAD_T1B1L1R1_1__, BID.__ROAD_T1B1L1R1_2__]
 }];
 try {
     if (exports !== window.undefined) {
-        exports.wMM = wMM;
-        exports.NVwvn = NVwvn;
+        exports.BID = BID;
+        exports.BUILDINGS = BUILDINGS;
     }
 } catch (error) {}
 
@@ -14491,7 +14491,7 @@ try {
         
 
         function vmNmW(tile, i, j, wVNVN, vWMwn, NVWwM, MWMvm) {
-            var building = NVwvn[tile.type];
+            var building = BUILDINGS[tile.type];
             var img = building.img;
             if (img.isLoaded !== 1) {
                 building.img = CanvasUtils.loadImage(building.src, building.img);
@@ -40590,17 +40590,18 @@ for (var i = 0; i < HOUSE.length; i++) {
     for (var j = 0; j < housePlan.length; j++)
         house.width = window.Math.max(housePlan[j].length, house.width);
 }
+
 var AREASTOITEM = [];
-AREASTOITEM[AREAS.__FIRE__] = IID.__CAMPFIRE__;
-AREASTOITEM[AREAS.__BBQ__] = IID.__CAMPFIRE_BBQ__;
-AREASTOITEM[AREAS.__WORKBENCH__] = IID.__WORKBENCH__;
-AREASTOITEM[AREAS.__WORKBENCH2__] = IID.__WORKBENCH2__;
-AREASTOITEM[AREAS.__TESLA__] = IID.__TESLA__;
-AREASTOITEM[AREAS.__SMELTER__] = IID.__SMELTER__;
-AREASTOITEM[AREAS.__WEAVING__] = IID.__WEAVING__;
-AREASTOITEM[AREAS.__COMPOST__] = IID.__COMPOST__;
-AREASTOITEM[AREAS.__AGITATOR__] = IID.__AGITATOR__;
-AREASTOITEM[AREAS.__EXTRACTOR__] = IID.__EXTRACTOR__;
+AREASTOITEM[AREAS.__FIRE__]         = IID.__CAMPFIRE__;
+AREASTOITEM[AREAS.__BBQ__]          = IID.__CAMPFIRE_BBQ__;
+AREASTOITEM[AREAS.__WORKBENCH__]    = IID.__WORKBENCH__;
+AREASTOITEM[AREAS.__WORKBENCH2__]   = IID.__WORKBENCH2__;
+AREASTOITEM[AREAS.__TESLA__]        = IID.__TESLA__;
+AREASTOITEM[AREAS.__SMELTER__]      = IID.__SMELTER__;
+AREASTOITEM[AREAS.__WEAVING__]      = IID.__WEAVING__;
+AREASTOITEM[AREAS.__COMPOST__]      = IID.__COMPOST__;
+AREASTOITEM[AREAS.__AGITATOR__]     = IID.__AGITATOR__;
+AREASTOITEM[AREAS.__EXTRACTOR__]    = IID.__EXTRACTOR__;
 
 var INVENTORY2  = null;
 var ENTITIES2   = null;
