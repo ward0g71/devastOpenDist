@@ -28856,7 +28856,7 @@ var INVENTORY = [{
     life: 500,
     score: 0
 }, {
-    id: IID.__CABLE3__,
+    id: IID.__CABLE4__,
     itemButton: {
         src: ["img/inv-wire4-out.png", "img/inv-wire4-in.png", "img/inv-wire4-click.png"],
         img: [{
@@ -31625,7 +31625,7 @@ var LOOT = [{
         isLoaded: 0
     },
     src: "img/day-ground-wire4.png",
-    idItem: IID.__CABLE3__,
+    idItem: IID.__CABLE4__,
     amount: 1,
     scale: 0.8,
     angle: 0
