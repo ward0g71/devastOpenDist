@@ -24,8 +24,7 @@ try {
         return (storage[storageCell] === window.undefined) ? null : storage[storageCell];
     };
 }
-var setx;
-var sety;
+
 var rowx;
 var rowy;
 var canvas;
@@ -8895,7 +8894,7 @@ var Game = (function() {
     function getSkillBoxState() {
         return NmW & isCraftOpen;
     };
-    var nMnnm = null;
+
     var chatvisible = 0;
     var NmW = 0;
     var isMapOpen = 0;
@@ -11461,7 +11460,7 @@ var Editor = (function() {
             }
             var itemSub = INVENTORY[IID.__FURNITURE__].subtype;
             for (var i = 0; i < itemSub.length; i++) {
-                var IID = itemSub[i];
+                var item = itemSub[i];
                 item.itemButton = {
                     src: [item.building.src, "img/useless.png", "img/useless.png"],
                     img: [{
