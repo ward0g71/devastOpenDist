@@ -7076,7 +7076,7 @@ var TextManager = (function() {
     };
 
     function getFormatted(Wn) {
-        var NvV;
+        var code;
         if ((VmvWv[VNWww] === window.undefined) || (VmvWv[VNWww][Wn] === window.undefined))
             wmwww = VmvWv[NWNnM][Wn];
         else
@@ -11072,41 +11072,8 @@ var Rank = (function() {
     };
 })();
 
-function exportmapfunc() {
-    if (Nnw <= 0) Nnw = 3000;
-    else if (Nnw <= 500) Nnw = 3000 - Nnw;
-    else if (Nnw <= 2500) Nnw = 2500;
-    var NvV = "";
-    NvV += wMNww(__ENTITIE_BUILD_DOWN__);
-    NvV += wMNww(__ENTITIE_BUILD_TOP__);
-    NvV += wMNww(__ENTITIE_BUILD_GROUND2__);
-    NvV += wMNww(__ENTITIE_BUILD_GROUND__);
-    var vMV = window.document.createElement('textarea');
-    vMV["value"] = NvV;
-    window.document["body"]["appendChild"](vMV);
-    vMV["select"]();
-    window.document["execCommand"]('copy');
-    window.document["body"]["removeChild"](vMV);
-};
-
-var Nnw = 0;
-
-function wMNww(vV) {
-    var NvV = "";
-    var buildings = Entitie.units[vV];
-    var buildingsBorder = Entitie.border[vV];
-    var buildingsLen = buildingsBorder.border;
-    for (i = 0; i < buildingsLen; i++) {
-        var player = buildings[buildingsBorder.cycle[i]];
-        var item = INVENTORY[player.extra >> 7];
-        NvV += ("!b=" + item.id) + ":";
-        if (item.subtype !== 0) NvV += player.subtype + ":";
-        NvV += (((player.j + ":") + player.i) + ":") + ((player.extra >> 5) & 3);
-    }
-    return NvV;
-};
-
 var Editor = (function() {
+    
     var NmW = 0;
     var isMapOpen = 0;
     var isSettingsOpen = 0;
@@ -11116,14 +11083,14 @@ var Editor = (function() {
     var Wnw = [];
     var NWw = 0;
 
-    function MVWMn() {
-        World.PLAYER.id = 1;
-        World.playerNumber = 2;
-        World.gameMode = 0;
-        World.PLAYER.skillPoint = 0;
-        World.PLAYER.gridPrev[i] = 0;
-        World.PLAYER.isBuilding = 1;
-        World.PLAYER.teamJoin = 0;
+    function editorSetValues() {
+        World.PLAYER.id             = 1;
+        World.playerNumber          = 2;
+        World.gameMode              = 0;
+        World.PLAYER.skillPoint     = 0;
+        World.PLAYER.gridPrev[i]    = 0;
+        World.PLAYER.isBuilding     = 1;
+        World.PLAYER.teamJoin       = 0;
         World.PLAYER.lastAreas = [
             [-1, -1],
             [-1, -1],
@@ -11161,11 +11128,11 @@ var Editor = (function() {
     function nVN() {
         NmW = 0;
         closeBox.setState(GUI.__BUTTON_OUT__);
-        isMapOpen = 0;
-        isSettingsOpen = 0;
-        isCraftOpen = 0;
-        isChestOpen = 0;
-        isTeamOpen = 0;
+        isMapOpen       = 0;
+        isSettingsOpen  = 0;
+        isCraftOpen     = 0;
+        isChestOpen     = 0;
+        isTeamOpen      = 0;
         World.releaseBuilding();
     };
     var nmMMm = 0;
@@ -11208,25 +11175,25 @@ var Editor = (function() {
         vmV++;
     };
 
-    function wwMmV(MWwVN) {
-        MVWMn();
-        MWwVN = MWwVN.split("!b=");
-        MWwVN.shift();
-        for (var i = 0; i < MWwVN.length; i++) {
-            var building = MWwVN[i].split(":");
+    function editorUseCode(code) {
+        editorSetValues();
+        code = code.split("!b=");
+        code.shift();
+        for (var i = 0; i < code.length; i++) {
+            var building = code[i].split(":");
             if (building.length > 4) Vnvmv(building[0], building[1], building[3], building[2], building[4]);
             else Vnvmv(building[0], 0, building[2], building[1], building[3]);
         }
     };
 
-    function Vnvmv(NNWVv, subtype, i, j, Rot) {
-        NNWVv = window.Number(NNWVv) >>> 0;
+    function Vnvmv(item, subtype, i, j, Rot) {
+        item = window.Number(item) >>> 0;
         subtype = window.Number(subtype) >>> 0;
         i = window.Number(i) >>> 0;
         j = window.Number(j) >>> 0;
         Rot = window.Number(Rot) >>> 0;
         if (((Rot > 3) || (i >= MapManager.height)) || (j >= MapManager.height)) return;
-        var building = INVENTORY[NNWVv];
+        var building = INVENTORY[item];
         if (((building === window.undefined) || (building.subtype === window.undefined)) || ((building.subtype > 0) && (building.building.length <= subtype))) return;
         var Rot = (building.wall === 1) ? 0 : Rot;
         var WX = (building.xCenter[Rot] + 50) + (100 * j);
@@ -11257,22 +11224,22 @@ var Editor = (function() {
         vmV++;
     };
 
-    function wMNww(vV) {
-        var NvV = "";
+    function editorBuildtoCode(vV) {
+        var code = "";
         var buildings = Entitie.units[vV];
         var buildingsBorder = Entitie.border[vV];
         var buildingsLen = buildingsBorder.border;
         for (i = 0; i < buildingsLen; i++) {
             var player = buildings[buildingsBorder.cycle[i]];
             var item = INVENTORY[player.extra >> 7];
-            NvV += ("!b=" + item.id) + ":";
-            if (item.subtype !== 0) NvV += player.subtype + ":";
-            NvV += (((player.j + ":") + player.i) + ":") + ((player.extra >> 5) & 3);
+            code += ("!b=" + item.id) + ":";
+            if (item.subtype !== 0) code += player.subtype + ":";
+            code += (((player.j + ":") + player.i) + ":") + ((player.extra >> 5) & 3);
         }
-        return NvV;
+        return code;
     };
 
-    function nwmMw(vV, WX, WY) {
+    function editorBuildRemove(vV, WX, WY) {
         var buildings = Entitie.units[vV];
         var buildingsBorder = Entitie.border[vV];
         var buildingsLen = buildingsBorder.border;
@@ -11295,10 +11262,10 @@ var Editor = (function() {
                 } else {
                     var WX = 100 * World.PLAYER.jBuild;
                     var WY = 100 * World.PLAYER.iBuild;
-                    nwmMw(__ENTITIE_BUILD_DOWN__, WX, WY);
-                    nwmMw(__ENTITIE_BUILD_TOP__, WX, WY);
-                    nwmMw(__ENTITIE_BUILD_GROUND2__, WX, WY);
-                    nwmMw(__ENTITIE_BUILD_GROUND__, WX, WY);
+                    editorBuildRemove(__ENTITIE_BUILD_DOWN__, WX, WY);
+                    editorBuildRemove(__ENTITIE_BUILD_TOP__, WX, WY);
+                    editorBuildRemove(__ENTITIE_BUILD_GROUND2__, WX, WY);
+                    editorBuildRemove(__ENTITIE_BUILD_GROUND__, WX, WY);
                 }
             }
         } else if (Mouse.state === Mouse.__MOUSE_UP__) {
@@ -11344,17 +11311,17 @@ var Editor = (function() {
         }
     };
 
-    function exportmapfunc() {
+    function editorExportCode() {
         if (Nnw <= 0) Nnw = 3000;
         else if (Nnw <= 500) Nnw = 3000 - Nnw;
         else if (Nnw <= 2500) Nnw = 2500;
-        var NvV = "";
-        NvV += wMNww(__ENTITIE_BUILD_DOWN__);
-        NvV += wMNww(__ENTITIE_BUILD_TOP__);
-        NvV += wMNww(__ENTITIE_BUILD_GROUND2__);
-        NvV += wMNww(__ENTITIE_BUILD_GROUND__);
+        var code = "";
+        code += editorBuildtoCode(__ENTITIE_BUILD_DOWN__);
+        code += editorBuildtoCode(__ENTITIE_BUILD_TOP__);
+        code += editorBuildtoCode(__ENTITIE_BUILD_GROUND2__);
+        code += editorBuildtoCode(__ENTITIE_BUILD_GROUND__);
         var vMV = window.document.createElement('textarea');
-        vMV["value"] = NvV;
+        vMV["value"] = code;
         window.document["body"]["appendChild"](vMV);
         vMV["select"]();
         window.document["execCommand"]('copy');
@@ -11473,7 +11440,7 @@ var Editor = (function() {
                 };
             }
         }
-        MVWMn();
+        editorSetValues();
         CanvasUtils.setRenderer(Editor);
         MNw = Nmv;
         WwM = Nmv;
@@ -11510,34 +11477,34 @@ var Editor = (function() {
         bordermap.pos.y = window.Math.max(0, canh2 - window.Math.floor(206 * scaleby)) + wwv;
         minimap.pos.x = window.Math.floor(5 * scaleby) - vMm;
         minimap.pos.y = window.Math.floor(5 * scaleby) - wwv;
-        editorScreen.pos.x = minimap.pos.x + window.Math.floor(126 * scaleby);
-        editorScreen.pos.y = minimap.pos.y;
-        editorOptions.pos.x = editorScreen.pos.x;
-        editorOptions.pos.y = editorScreen.pos.y + window.Math.floor(44.5 * scaleby);
-        editorMap.pos.x = editorOptions.pos.x;
-        editorMap.pos.y = editorOptions.pos.y + window.Math.floor(44.5 * scaleby);
-        editorLogic.pos.x = ((canw - window.Math.floor(67 * scaleby)) + window.Math.floor(-5 * scaleby)) - vMm;
-        editorLogic.pos.y = window.Math.floor(5 * scaleby) - wwv;
-        editorExplosions.pos.x = editorLogic.pos.x + window.Math.floor(-70 * scaleby);
-        editorExplosions.pos.y = window.Math.floor(5 * scaleby) - wwv;
-        editorRoad.pos.x = editorExplosions.pos.x + window.Math.floor(-70 * scaleby);
-        editorRoad.pos.y = window.Math.floor(5 * scaleby) - wwv;
-        editorFurniture.pos.x = editorRoad.pos.x + window.Math.floor(-70 * scaleby);
-        editorFurniture.pos.y = window.Math.floor(5 * scaleby) - wwv;
-        editorBuildings.pos.x = editorFurniture.pos.x + window.Math.floor(-70 * scaleby);
-        editorBuildings.pos.y = window.Math.floor(5 * scaleby) - wwv;
-        editorZoomIn.pos.x = window.Math.floor(5 * scaleby);
-        editorZoomIn.pos.y = (canh - window.Math.floor(46.5 * scaleby)) + window.Math.floor(-5 * scaleby);
-        editorZoomOut.pos.x = editorZoomIn.pos.x + window.Math.floor(50 * scaleby);
-        editorZoomOut.pos.y = (canh - window.Math.floor(46.5 * scaleby)) + window.Math.floor(-5 * scaleby);
-        editorDelete.pos.x = minimap.pos.x + window.Math.floor(89 * scaleby);
-        editorDelete.pos.y = minimap.pos.y + window.Math.floor(126 * scaleby);
-        editorImport.pos.x = (canw - window.Math.floor(46.5 * scaleby)) + window.Math.floor(-5 * scaleby);
-        editorImport.pos.y = (canh - window.Math.floor(46.5 * scaleby)) + window.Math.floor(-5 * scaleby);
-        editorCopy.pos.x = editorImport.pos.x + window.Math.floor(-50 * scaleby);
-        editorCopy.pos.y = (canh - window.Math.floor(46.5 * scaleby)) + window.Math.floor(-5 * scaleby);
-        editorHome.pos.x = minimap.pos.x;
-        editorHome.pos.y = minimap.pos.y + window.Math.floor(126 * scaleby);
+        editorScreen.pos.x      = minimap.pos.x + window.Math.floor(126 * scaleby);
+        editorScreen.pos.y      = minimap.pos.y;
+        editorOptions.pos.x     = editorScreen.pos.x;
+        editorOptions.pos.y     = editorScreen.pos.y + window.Math.floor(44.5 * scaleby);
+        editorMap.pos.x         = editorOptions.pos.x;
+        editorMap.pos.y         = editorOptions.pos.y + window.Math.floor(44.5 * scaleby);
+        editorLogic.pos.x       = ((canw - window.Math.floor(67 * scaleby)) + window.Math.floor(-5 * scaleby)) - vMm;
+        editorLogic.pos.y       = window.Math.floor(5 * scaleby) - wwv;
+        editorExplosions.pos.x  = editorLogic.pos.x + window.Math.floor(-70 * scaleby);
+        editorExplosions.pos.y  = window.Math.floor(5 * scaleby) - wwv;
+        editorRoad.pos.x        = editorExplosions.pos.x + window.Math.floor(-70 * scaleby);
+        editorRoad.pos.y        = window.Math.floor(5 * scaleby) - wwv;
+        editorFurniture.pos.x   = editorRoad.pos.x + window.Math.floor(-70 * scaleby);
+        editorFurniture.pos.y   = window.Math.floor(5 * scaleby) - wwv;
+        editorBuildings.pos.x   = editorFurniture.pos.x + window.Math.floor(-70 * scaleby);
+        editorBuildings.pos.y   = window.Math.floor(5 * scaleby) - wwv;
+        editorZoomIn.pos.x      = window.Math.floor(5 * scaleby);
+        editorZoomIn.pos.y      = (canh - window.Math.floor(46.5 * scaleby)) + window.Math.floor(-5 * scaleby);
+        editorZoomOut.pos.x     = editorZoomIn.pos.x + window.Math.floor(50 * scaleby);
+        editorZoomOut.pos.y     = (canh - window.Math.floor(46.5 * scaleby)) + window.Math.floor(-5 * scaleby);
+        editorDelete.pos.x      = minimap.pos.x + window.Math.floor(89 * scaleby);
+        editorDelete.pos.y      = minimap.pos.y + window.Math.floor(126 * scaleby);
+        editorImport.pos.x      = (canw - window.Math.floor(46.5 * scaleby)) + window.Math.floor(-5 * scaleby);
+        editorImport.pos.y      = (canh - window.Math.floor(46.5 * scaleby)) + window.Math.floor(-5 * scaleby);
+        editorCopy.pos.x        = editorImport.pos.x + window.Math.floor(-50 * scaleby);
+        editorCopy.pos.y        = (canh - window.Math.floor(46.5 * scaleby)) + window.Math.floor(-5 * scaleby);
+        editorHome.pos.x        = minimap.pos.x;
+        editorHome.pos.y        = minimap.pos.y + window.Math.floor(126 * scaleby);
     };
 
     function draw() {
@@ -11631,45 +11598,21 @@ var Editor = (function() {
     function VNn(event) {
         Mouse.updateAll(event, Mouse.__MOUSE_DOWN__);
         var vnm = 0;
-        if (editorScreen.trigger() === 1) {
-            vnm = 1;
-        }
-        if (editorOptions.trigger() === 1) {
-            vnm = 1;
-        }
-        if (editorMap.trigger() === 1) {
-            vnm = 1;
-        }
-        if (editorLogic.trigger() === 1) {
-            vnm = 1;
-        }
-        if (editorExplosions.trigger() === 1) {
-            vnm = 1;
-        }
-        if (editorRoad.trigger() === 1) {
-            vnm = 1;
-        }
-        if (editorFurniture.trigger() === 1) {
-            vnm = 1;
-        }
-        if (editorBuildings.trigger() === 1) {
-            vnm = 1;
-        }
-        if (editorZoomIn.trigger() === 1) {
-            vnm = 1;
-        }
-        if (editorZoomOut.trigger() === 1) {
-            vnm = 1;
-        }
-        if (editorDelete.trigger() === 1) {
-            vnm = 1;
-        }
-        if (editorImport.trigger() === 1) {
-            vnm = 1;
-        }
-        if (editorHome.trigger() === 1) {
-            vnm = 1;
-        }
+
+        if (editorScreen.trigger()      === 1)          { vnm = 1; }
+        if (editorOptions.trigger()     === 1)          { vnm = 1; }
+        if (editorMap.trigger()         === 1)          { vnm = 1; }
+        if (editorLogic.trigger()       === 1)          { vnm = 1; }
+        if (editorExplosions.trigger()  === 1)          { vnm = 1; }
+        if (editorRoad.trigger()        === 1)          { vnm = 1; }
+        if (editorFurniture.trigger()   === 1)          { vnm = 1; }
+        if (editorBuildings.trigger()   === 1)          { vnm = 1; }
+        if (editorZoomIn.trigger()      === 1)          { vnm = 1; }
+        if (editorZoomOut.trigger()     === 1)          { vnm = 1; }
+        if (editorDelete.trigger()      === 1)          { vnm = 1; }
+        if (editorImport.trigger()      === 1)          { vnm = 1; }
+        if (editorHome.trigger()        === 1)          { vnm = 1; }
+
         if (NmW === 1) {
             closeBox.trigger();
             if (isSettingsOpen === 1) {
@@ -11833,20 +11776,20 @@ var Editor = (function() {
     
         if (editorDelete.trigger() === 1) {
             vnm = 1;
-            MVWMn();
+            editorSetValues();
             AudioUtils.playFx(AudioUtils._fx.button, 1, 0);
         }
         if (editorImport.trigger() === 1) {
             vnm = 1;
             AudioUtils.playFx(AudioUtils._fx.open, 1, 0);
-            var MWwVN = window["prompt"]("Please enter your code here", "");
+            var code = window["prompt"]("Please enter your code here", "");
             AudioUtils.playFx(AudioUtils._fx.open, 1, 0);
-            if ((MWwVN != null) && (MWwVN != "")) wwMmV(MWwVN);
+            if ((code != null) && (code != "")) editorUseCode(code);
         }
         if (editorCopy.trigger() === 1) {
             vnm = 1;
             AudioUtils.playFx(AudioUtils._fx.button, 1, 0);
-            exportmapfunc();
+            editorExportCode();
         }
         if (editorHome.trigger() === 1) {
             vnm = 1;
@@ -13234,7 +13177,6 @@ try {
                 var VMV = matrix[i + 1][j - 1];
                 if (VMV.floorFrame === frameId) Wn += nNn;
             }
-            console.log(player.i);
             return WMV[Wn];
         };
 
@@ -14045,17 +13987,17 @@ try {
                     wmvMm.drawImage(_name, 20, 101);
                 }
             } else if ((WvW.idWeapon !== window.undefined) && (WvW.idWeapon !== 0)) {
-                var NvV = "";
+                var code = "";
                 var weapon = ENTITIES[__ENTITIE_PLAYER__].weapons[WvW.idWeapon];
                 if (weapon.damage !== window.undefined) {
-                    NvV = "Damage: " + ((weapon.damageCac === window.undefined) ? weapon.damage : weapon.damageCac);
+                    code = "Damage: " + ((weapon.damageCac === window.undefined) ? weapon.damage : weapon.damageCac);
                 } else {
-                    if (weapon.food !== 0) NvV += ("Food: " + weapon.food) + " ";
-                    if (weapon.heal < 0) NvV += ("Damage: " + weapon.heal) + " ";
-                    else if (weapon.heal > 0) NvV += ("Heal: " + weapon.heal) + " ";
-                    if (weapon.energy !== 0) NvV += "Energy: " + weapon.energy;
+                    if (weapon.food !== 0) code += ("Food: " + weapon.food) + " ";
+                    if (weapon.heal < 0) code += ("Damage: " + weapon.heal) + " ";
+                    else if (weapon.heal > 0) code += ("Heal: " + weapon.heal) + " ";
+                    if (weapon.energy !== 0) code += "Energy: " + weapon.energy;
                 }
-                _name = GUI.renderText(NvV, "'Viga', sans-serif", "#D3BB43", 24, 400);
+                _name = GUI.renderText(code, "'Viga', sans-serif", "#D3BB43", 24, 400);
                 wmvMm.drawImage(_name, 20, 101);
             } else if (WvW.idClothe !== window.undefined) {} else {
                 _name = GUI.renderText("Cannot be equipped", "'Viga', sans-serif", "#FFFFFF", 17, 400);
@@ -42186,7 +42128,7 @@ try {
     LIGHTFIRE2  = window.JSON.parse(window.JSON.stringify(LIGHTFIRE));
     AI2         = window.JSON.parse(window.JSON.stringify(AI));
 
-    function replaceStringInObject(vNWwm, wnvNw, NvV, nWnNV) {
+    function replaceStringInObject(vNWwm, wnvNw, code, nWnNV) {
         for (var WmVNW in wnvNw) {
             var MmmVN = wnvNw[WmVNW];
             var nVW = vNWwm[WmVNW];
@@ -42194,8 +42136,8 @@ try {
                 vNWwm[WmVNW] = MmmVN;
                 continue;
             }
-            if (typeof nVW === "object") replaceStringInObject(nVW, MmmVN, NvV, nWnNV);
-            else if (typeof nVW === "string") vNWwm[WmVNW] = nVW.replace(NvV, nWnNV);
+            if (typeof nVW === "object") replaceStringInObject(nVW, MmmVN, code, nWnNV);
+            else if (typeof nVW === "string") vNWwm[WmVNW] = nVW.replace(code, nWnNV);
         }
     };
 
