@@ -122,8 +122,8 @@ var CanvasUtils = (function() {
             canvas.style.width = SY + "px";
             canvas.style.height = SX + "px";
         }
-        canwns = canw / scaleby;
-        canhns = canh / scaleby;
+        canwns  = canw / scaleby;
+        canhns  = canh / scaleby;
         canw2ns = canw2 / scaleby;
         canh2ns = canh2 / scaleby;
         canw4ns = canw4 / scaleby;
@@ -236,10 +236,10 @@ var CanvasUtils = (function() {
     };
 
     function canvasToImage(Mwwwm) {
-        var img = new window.Image;
-        img.src = Mwwwm.toDataURL("image/png");
-        img.width = Mwwwm.width;
-        img.height = Mwwwm.height;
+        var img     = new window.Image;
+        img.src     = Mwwwm.toDataURL("image/png");
+        img.width   = Mwwwm.width;
+        img.height  = Mwwwm.height;
         return img;
     };
 
@@ -1361,13 +1361,13 @@ function onReplaceAmmo(IID) {
 };
 
 function onStartInteraction(mM) {
-    World.PLAYER.interaction = 1;
+    World.PLAYER.interaction      = 1;
     World.PLAYER.interactionDelay = mM * 100;
-    World.PLAYER.interactionWait = World.PLAYER.interactionDelay;
+    World.PLAYER.interactionWait  = World.PLAYER.interactionDelay;
 };
 
 function onInterruptInteraction() {
-    World.PLAYER.interaction = -1;
+    World.PLAYER.interaction      = -1;
     World.PLAYER.interactionDelay = 0;
 };
 
@@ -1504,7 +1504,7 @@ function onWarmOff() {
 function onWrongTool(tool) {
     if (World.PLAYER.wrongToolTimer <= 0) {
         World.PLAYER.wrongToolTimer = 2000;
-        World.PLAYER.wrongTool = tool;
+        World.PLAYER.wrongTool      = tool;
     }
 };
 
@@ -1608,7 +1608,7 @@ function onKickedTeam(PLAYER) {
 function onDeleteTeam(team) {
     World.deleteTeam(team);
     if (team === World.PLAYER.team) {
-        World.PLAYER.team = -1;
+        World.PLAYER.team       = -1;
         World.PLAYER.teamLeader = 0;
     }
 };
@@ -1660,11 +1660,12 @@ function onKarma(KARMA) {
 function onBadKarma(ui8) {
     if (ui8[1] !== World.PLAYER.id) {
         var PLAYER = World.players[ui8[1]];
-        PLAYER.x = ui8[2] * Render.__TRANSFORM__;
-        PLAYER.y = ui8[3] * Render.__TRANSFORM__;
-        PLAYER.KARMA = ui8[4];
-        World.PLAYER.badKarma = PLAYER.id;
-        World.PLAYER.badKarmaDelay = 14000;
+
+        PLAYER.x        = ui8[2] * Render.__TRANSFORM__;
+        PLAYER.y        = ui8[3] * Render.__TRANSFORM__;
+        PLAYER.KARMA    = ui8[4];
+        World.PLAYER.badKarma       = PLAYER.id;
+        World.PLAYER.badKarmaDelay  = 14000;
     }
 };
 
@@ -1689,7 +1690,7 @@ function onAreas(ui8) {
 function onWrongPassword() {
     Client.badServerVersion(0);
     if (Home.alertDelay <= 0) {
-        Home.alertId = 3;
+        Home.alertId    = 3;
         Home.alertDelay = 3000;
     }
 };
@@ -1732,78 +1733,78 @@ function onMessageRaw(data) {
     var ui8 = new window.Uint8Array(data);
     // Decode data
     switch (ui8[0]) {
-        case 0:          onUnits                    (data, ui8);                   break;
-        case 1:          onOldVersion               (data);                          break;
+        case 0:          onUnits                    (data, ui8);                    break;
+        case 1:          onOldVersion               (data);                         break;
         case 2:          onFull                     ();                             break;
-        case 3:          onPlayerDie                (ui8);                        break;
-        case 4:          onOtherDie                 (ui8[1]);                     break;
+        case 3:          onPlayerDie                (ui8);                          break;
+        case 4:          onOtherDie                 (ui8[1]);                       break;
         case 5:          onFailRestoreSession       ();                             break;
         case 6:          onStoleYourSession         ();                             break;
-        case 7:          onMute                     (ui8[1]);                     break;
-        case 8:          onLeaderboard              (data, ui8);                   break;
-        case 9:          onHandshake                (data, ui8);                   break;
+        case 7:          onMute                     (ui8[1]);                       break;
+        case 8:          onLeaderboard              (data, ui8);                    break;
+        case 9:          onHandshake                (data, ui8);                    break;
         case 10:         onKickInactivity           ();                             break;
-        case 11:         onNotification             (ui8);                        break;
-        case 12:         onGauges                   (ui8);                        break;
-        case 13:         onScore                    (data);                          break;
-        case 14:         onPlayerHit                (ui8[1], ui8[2]);           break;
-        case 15:         onFullInventory            (ui8);                        break;
-        case 16:         onDeleteItem               (ui8);                        break;
-        case 17:         onNewItem                  (ui8);                        break;
-        case 18:         onPlayerLife               (ui8[1]);                     break;
+        case 11:         onNotification             (ui8);                          break;
+        case 12:         onGauges                   (ui8);                          break;
+        case 13:         onScore                    (data);                         break;
+        case 14:         onPlayerHit                (ui8[1], ui8[2]);               break;
+        case 15:         onFullInventory            (ui8);                          break;
+        case 16:         onDeleteItem               (ui8);                          break;
+        case 17:         onNewItem                  (ui8);                          break;
+        case 18:         onPlayerLife               (ui8[1]);                       break;
         case 19:         onLifeDecreas              ();                             break;
-        case 20:         onSelectedItem             (ui8);                        break;
+        case 20:         onSelectedItem             (ui8);                          break;
         case 21:         onLifeStop                 ();                             break;
-        case 22:         onPlayerHeal               (ui8[1]);                     break;
+        case 22:         onPlayerHeal               (ui8[1]);                       break;
         case 23:         onStaminaIncrease          ();                             break;
         case 24:         onStaminaStop              ();                             break;
         case 25:         onStaminaDecrease          ();                             break;
         case 26:         onColdIncrease             ();                             break;
         case 27:         onColdStop                 ();                             break;
         case 28:         onColdDecrease             ();                             break;
-        case 29:         onPlayerStamina            (ui8[1]);                     break;
+        case 29:         onPlayerStamina            (ui8[1]);                       break;
         case 30:         onLifeIncrease             ();                             break;
-        case 31:         onReplaceItem              (ui8);                        break;
-        case 32:         onStackItem                (ui8);                        break;
-        case 33:         onSplitItem                (ui8);                        break;
-        case 34:         onReplaceAmmo              (ui8);                        break;
-        case 35:         onStartInteraction         (ui8[1]);                     break;
+        case 31:         onReplaceItem              (ui8);                          break;
+        case 32:         onStackItem                (ui8);                          break;
+        case 33:         onSplitItem                (ui8);                          break;
+        case 34:         onReplaceAmmo              (ui8);                          break;
+        case 35:         onStartInteraction         (ui8[1]);                       break;
         case 36:         onInterruptInteraction     ();                             break;
-        case 37:         onReplaceItemAndAmmo       (ui8);                        break;
-        case 38:         onBlueprint                (ui8[1]);                     break;
+        case 37:         onReplaceItemAndAmmo       (ui8);                          break;
+        case 38:         onBlueprint                (ui8[1]);                       break;
         case 39:         onDay                      ();                             break;
         case 40:         onNight                    ();                             break;
-        case 41:         onPlayerXp                 ((ui8[1] << 8) + ui8[2]);   break;
-        case 42:         onPlayerXpSkill            (ui8);                        break;
-        case 43:         onBoughtSkill              (ui8[1]);                     break;
-        case 44:         onStartCraft               (ui8[1]);                     break;
+        case 41:         onPlayerXp                 ((ui8[1] << 8) + ui8[2]);       break;
+        case 42:         onPlayerXpSkill            (ui8);                          break;
+        case 43:         onBoughtSkill              (ui8[1]);                       break;
+        case 44:         onStartCraft               (ui8[1]);                       break;
         case 45:         onLostBuilding             ();                             break;
-        case 46:         onOpenBuilding             (ui8);                        break;
-        case 47:         onNewFuelValue             (ui8);                        break;
+        case 46:         onOpenBuilding             (ui8);                          break;
+        case 47:         onNewFuelValue             (ui8);                          break;
         case 48:         onRadOn                    ();                             break;
         case 49:         onRadOff                   ();                             break;
         case 50:         onWarmOn                   ();                             break;
         case 51:         onWarmOff                  ();                             break;
-        case 52:         onWrongTool                (ui8[1]);                     break;
-        case 53:         onFullChest                (ui8);                        break;
-        case 54:         onAcceptedTeam             (ui8[1], ui8[2]);           break;
-        case 55:         onKickedTeam               (ui8[1]);                     break;
-        case 56:         onDeleteTeam               (ui8[1]);                     break;
-        case 57:         onJoinTeam                 (ui8[1]);                     break;
-        case 58:         onTeamPosition             (ui8);                        break;
-        case 59:         onKarma                    (ui8[1]);                     break;
-        case 60:         onBadKarma                 (ui8);                        break;
-        case 61:         onAreas                    (ui8);                        break;
+        case 52:         onWrongTool                (ui8[1]);                       break;
+        case 53:         onFullChest                (ui8);                          break;
+        case 54:         onAcceptedTeam             (ui8[1], ui8[2]);               break;
+        case 55:         onKickedTeam               (ui8[1]);                       break;
+        case 56:         onDeleteTeam               (ui8[1]);                       break;
+        case 57:         onJoinTeam                 (ui8[1]);                       break;
+        case 58:         onTeamPosition             (ui8);                          break;
+        case 59:         onKarma                    (ui8[1]);                       break;
+        case 60:         onBadKarma                 (ui8);                          break;
+        case 61:         onAreas                    (ui8);                          break;
         case 62:         onWrongPassword            ();                             break;
-        case 63:         onModdedGaugesValues       (data);                          break;
-        case 64:         onShakeExplosionState      (ui8[1]);                     break;
-        case 65:         onPlayerEat                (ui8[1]);                     break;
-        case 66:         onCitiesLocation           (ui8);                        break;
-        case 67:         onPoisened                 (ui8[1]);                     break;
-        case 68:         onRepellent                (ui8[1], ui8[2]);           break;
-        case 69:         onLapadoine                (ui8[1], ui8[2]);           break;
-        case 70:         onResetDrug                (ui8[1], ui8[2]);           break;
-        case 71:         onDramaticChrono           (ui8[1]);                     break;
+        case 63:         onModdedGaugesValues       (data);                         break;
+        case 64:         onShakeExplosionState      (ui8[1]);                       break;
+        case 65:         onPlayerEat                (ui8[1]);                       break;
+        case 66:         onCitiesLocation           (ui8);                          break;
+        case 67:         onPoisened                 (ui8[1]);                       break;
+        case 68:         onRepellent                (ui8[1], ui8[2]);               break;
+        case 69:         onLapadoine                (ui8[1], ui8[2]);               break;
+        case 70:         onResetDrug                (ui8[1], ui8[2]);               break;
+        case 71:         onDramaticChrono           (ui8[1]);                       break;
     }
 };
 
