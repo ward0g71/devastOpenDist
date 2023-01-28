@@ -1983,7 +1983,7 @@ var Client = (function() {
             return;
         Client.state = State.__CONNECTION_LOST__;
         socket.close();
-        vVnMm();
+        checkConnection();
     };
 
     function WNmnv() {
@@ -1999,22 +1999,22 @@ var Client = (function() {
         window.clearTimeout(time);
     };
 
-    function vVnMm(shit) {
+    function checkConnection(rivetToken) {
         isconnected = 0;
-        Client.state = State.__PENDING__ + (Client.state & (State.__CONNECTION_LOST__ | State.wNVMw));
-        connectsrv(shit);
+        Client.state = State.__PENDING__ + (Client.state & (State.__CONNECTION_LOST__ | State.__FULL__));
+        completeConnection(rivetToken);
     };
 
-    function startConnection(nickname, skin, shit) {
+    function startConnection(nickname, skin, rivetToken) {
         if (((Client.state & State.__PENDING__) === 0) && ((Client.state & State.__CONNECTED__) === 0)) {
             localStorage2.setItem("nickname", nickname);
             localStorage2.setItem("skin", skin);
-            vVnMm(shit);
+            checkConnection(rivetToken);
         }
     };
 
             
-    function mnnMw(shit) {
+    function mnnMw() {
         isconnected++;
         socket.close();
         if (isconnected >= nVMNw) {
@@ -2022,7 +2022,7 @@ var Client = (function() {
             if ((Client.state & State.__CONNECTION_LOST__) > 0)
                 onError();
         } else
-            connectsrv(shit);
+            completeConnection();
     };
 
     function sendPacket(NwnNM) {
@@ -2066,10 +2066,10 @@ var Client = (function() {
             myLoop();
     };
 
-    function newToken(shit) {
+    function newToken() {
         localStorage2.setItem("tokenId", 0);
         localStorage2.setItem("userId", 1);
-        connectsrv(shit);
+        completeConnection();
     };
 
     function sendMouseAngle() {
@@ -2137,7 +2137,7 @@ var Client = (function() {
     function sendMove() {
         var move = 0;
         if (Keyboard.isLeft() === 1)
-            move |= 1;
+            move |= 1;  
         if (Keyboard.isRight() === 1)
             move |= 2;
         if (Keyboard.isBottom() === 1)
@@ -2151,11 +2151,11 @@ var Client = (function() {
         }
     };
 
-    function connectsrv(shit) {
-        var ip = Client['connectedLobby']['ports']['default']['hostname'];
-        var port = Client['connectedLobby']['ports']['default']['port'];
-        var NnnNv = Client['connectedLobby']['ports']['default']['is_tls'] ? 1 : 0;
-        socket = new window.WebSocket("ws" + (NnnNv === 1 ? "s" : "") + "://" + ip + ":" + port + '/?token=' + shit);
+    function completeConnection(rivetToken) {
+        var ip = Client.connectedLobby['ports']['default']['hostname'];
+        var port = Client.connectedLobby['ports']['default']['port'];
+        var NnnNv = Client.connectedLobby['ports']['default']['is_tls'] ? 1 : 0;
+        socket = new window.WebSocket("ws" + (NnnNv === 1 ? "s" : "") + "://" + ip + ":" + port + '/?token=' + rivetToken);
 
         Nvwnv++;
         socket.currentId = Nvwnv;
@@ -2257,21 +2257,25 @@ var Client = (function() {
     function getServerList(_srv) {
 
         var lobbyList = 'https://matchmaker.api.rivet.gg/v1/lobbies/list';
-
-        let _accept = {'Accept': 'application/json'};
-
-        window['RIVET_TOKEN'] && (_accept['Authorization'] = 'Bearer' + window['RIVET_TOKEN']),
-
-        fetch(lobbyList, { 'headers': _accept }).then(_list=>{
+    
+        let header = {'Accept': 'application/json'};
+    
+        window['RIVET_TOKEN'] && (header['Authorization'] = 'Bearer' + window['RIVET_TOKEN']),
+    
+        fetch(lobbyList, { 
+            headers: header 
+        })
+        .then(_list=>{
             if (_list['ok'])
                 return _list.json();
             else
                 throw 'Failed to list lobbies: ' + _list['status'];
-        }).then(_lobb=>{
+        })
+        .then(_lobb=>{
             Client.serverList = _lobb['lobbies']['map'](_reg=>{
-                let _nam = _lobb['regions']['find'](_0x10ffcf=>_0x10ffcf['region_id'] == _reg['region_id'])
-                  , _0x13a27b = _nam ? _nam['region_display_name'] : '?';
-                return [_reg['lobby_id'], '', '', 1, _0x13a27b, _reg['total_player_count'], _reg['game_mode_id']];
+                let _nam = _lobb.regions.find(id=>id['region_id'] == _reg['region_id'])
+                  , nam = _nam ? _nam['region_display_name'] : '?';
+                return [_reg['lobby_id'], '', '', 1, nam, _reg['total_player_count'], _reg['game_mode_id']];
             }
             ),
             _srv();
@@ -7818,55 +7822,47 @@ var Home = (function() {
             }
         } catch (error) {}
       
-        var board;
+        var srvMode;
         if (Home.gameMode === World['__SURVIVAL__'])
-            board = 'survival';
+            srvMode = 'survival';
         else {
             if (Home.gameMode === World['__GHOUL__'])
-                board = 'ghoul';
+                srvMode = 'ghoul';
             else {
                 if (Home.gameMode === World['__BR__'])
-                    board = 'br';
+                    srvMode = 'br';
                 else
                     throw new Error('Unknown game mode',Home.gameMode);
             }
         }
-
-        var _lobbys = document.getElementById('servers').value,
-        lobbiesFind,
-        _modes;
         
-        _lobbys == 'auto' ? (lobbiesFind = 'https://matchmaker.api.rivet.gg/v1/lobbies/find',
-
-        _modes = { 'game_modes': [board] }) : (lobbiesFind = 'https://matchmaker.api.rivet.gg/v1/lobbies/join',
-
-        _modes = { 'lobby_id': _lobbys });
-
-        Client['joiningServer'] = !![];
-        let _0x521bb0 = {};
-        _0x521bb0['Accept'] = 'application/json',
-        _0x521bb0['Content-Type'] = 'application/json',
-        window['RIVET_TOKEN'] && (_0x521bb0['Authorization'] = 'Bearer' + window['RIVET_TOKEN']),
-        fetch(lobbiesFind, {
-            'method': 'POST',
-            'headers': _0x521bb0,
-            'body': JSON.stringify(_modes)
-        })['then'](_0x4c43da=>{
-            if (_0x4c43da['ok'])
-                return _0x4c43da.json();
-            else
-                throw 'Failed to find lobby: ' + _0x4c43da['status'];
-        }
-        )['then'](_0x275829=>{
-            let _0xc7afeb = _0x275829['lobby'];
-            Client['selectedServer'] = Client['serverList']['findIndex'](_0x323660=>_0x323660[0x0] == _0xc7afeb['lobby_id']),
-            Client['connectedLobby'] = _0xc7afeb,
-            Client['startConnection'](document.getElementById('nicknameInput').value, 0, _0xc7afeb['player']['token']);
-        }
-        )['catch'](err=>{
-            console.log('Failed to join server' + err);
-        }
-        );
+        var _srv = document.getElementById('servers').value, lobFind, lobID;
+        
+        _srv    == 'auto' ? (lobFind = 'https://matchmaker.api.rivet.gg/v1/lobbies/find',
+        lobID   = { 'game_modes': [srvMode] }) : (lobFind = 'https://matchmaker.api.rivet.gg/v1/lobbies/join',
+        lobID   = { 'lobby_id': _srv });
+        
+        let header = {};
+        header['Accept']        = 'application/json',
+        header['Content-Type']  = 'application/json',
+        
+        window['RIVET_TOKEN'] && (header['Authorization'] = 'Bearer' + window['RIVET_TOKEN'])
+        
+        fetch(lobFind, {
+          method: 'POST',
+          headers: header,
+          body: JSON.stringify(lobID)
+        })
+        .then(response => { 
+          if (response['ok']) return response.json(); 
+          else throw 'Failed to find lobby: ' + response.status
+        })
+        .then(response2 => {
+          let _lob = response2['lobby'];
+          Client.selectedServer = Client.serverList.findIndex(fzX=>fzX[0] == _lob['lobby_id']),
+          Client.connectedLobby = _lob,
+          Client.startConnection(document.getElementById('nicknameInput').value, 0, _lob['player']['token']);
+        })
 
     };
 
