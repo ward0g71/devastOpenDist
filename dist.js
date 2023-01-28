@@ -2503,11 +2503,11 @@ var World = (function() {
 
     function deleteTeam(Wn) {
         var team = World.teams[Wn];
-        team.label = null;
-        team.WWMWm = null;
-        team.uid = teamUid++;
-        team.leader = 0;
-        team.name = "";
+        team.label          = null;
+        team.labelNickname  = null;
+        team.uid            = teamUid++;
+        team.leader         = 0;
+        team.name           = "";
     };
     var teamUid = 0;
 
@@ -2515,7 +2515,7 @@ var World = (function() {
         this.id = Wn;
         this.name = _name;
         this.label = null;
-        this.WWMWm = null;
+        this.labelNickname = null;
         this.leader = 0;
         this.uid = teamUid++;
     };
@@ -9097,7 +9097,7 @@ var Game = (function() {
         for (i = 0; i < 3; i++) tools.push(GUI.createButton(wMv, wMv, null, WwvNM));
         for (i = 0; i < 9; i++) kick.push(GUI.createButton(29, 27, null, removebuttout));
         for (i = 0; i < 18; i++) join.push(GUI.createButton(44, 33, null, joinbuttout));
-        
+
         Game.closeBox = nVN;
         Game.openBox = MVVMv;
         Game.inventory          = inventory;
@@ -9133,18 +9133,20 @@ var Game = (function() {
         wnV[SKILLS.__TOOL__] = GUI.createButton(42, 42, ["img/tool-button-out.png", "img/tool-button-in.png", "img/tool-button-click.png"]);
         wnV[SKILLS.__WEAPON__] = GUI.createButton(42, 42, ["img/weapon-button-out.png", "img/weapon-button-in.png", "img/weapon-button-click.png"]);
         wnV[SKILLS.__LOGIC__] = GUI.createButton(42, 42, ["img/cable-button-out.png", "img/cable-button-in.png", "img/cable-button-click.png"]);
-        craftList[AREAS.__PLAYER__] = GUI.createButton(42, 42, ["img/own-button-out.png", "img/own-button-in.png", "img/own-button-click.png"]);
-        craftList[AREAS.__FIRE__] = GUI.createButton(42, 42, ["img/fire-button-out.png", "img/fire-button-in.png", "img/fire-button-click.png"]);
-        craftList[AREAS.__WORKBENCH__] = GUI.createButton(42, 42, ["img/workbench1-button-out.png", "img/workbench1-button-in.png", "img/workbench1-button-click.png"]);
-        craftList[AREAS.__BBQ__] = GUI.createButton(42, 42, ["img/bbq-button-out.png", "img/bbq-button-in.png", "img/bbq-button-click.png"]);
-        craftList[AREAS.__COMPOST__] = GUI.createButton(42, 42, ["img/composter-button-out.png", "img/composter-button-in.png", "img/composter-button-click.png"]);
-        craftList[AREAS.__WEAVING__] = GUI.createButton(42, 42, ["img/weaving-machine-button-out.png", "img/weaving-machine-button-in.png", "img/weaving-machine-button-click.png"]);
-        craftList[AREAS.__WELDING_MACHINE__] = GUI.createButton(42, 42, ["img/welding-machine-button-out.png", "img/welding-machine-button-in.png", "img/welding-machine-button-click.png"]);
-        craftList[AREAS.__WORKBENCH2__] = GUI.createButton(42, 42, ["img/workbench2-button-out.png", "img/workbench2-button-in.png", "img/workbench2-button-click.png"]);
-        craftList[AREAS.__SMELTER__] = GUI.createButton(42, 42, ["img/smelter-button-out.png", "img/smelter-button-in.png", "img/smelter-button-click.png"]);
-        craftList[AREAS.__TESLA__] = GUI.createButton(42, 42, ["img/workbench3-button-out.png", "img/workbench3-button-in.png", "img/workbench3-button-click.png"]);
-        craftList[AREAS.__AGITATOR__] = GUI.createButton(42, 42, ["img/agitator-button-out.png", "img/agitator-button-in.png", "img/agitator-button-click.png"]);
-        craftList[AREAS.__EXTRACTOR__] = GUI.createButton(42, 42, ["img/extractor-button-out.png", "img/extractor-button-in.png", "img/extractor-button-click.png"]);
+
+        craftList[AREAS.__PLAYER__]             = GUI.createButton(42, 42, ["img/own-button-out.png", "img/own-button-in.png", "img/own-button-click.png"]);
+        craftList[AREAS.__FIRE__]               = GUI.createButton(42, 42, ["img/fire-button-out.png", "img/fire-button-in.png", "img/fire-button-click.png"]);
+        craftList[AREAS.__WORKBENCH__]          = GUI.createButton(42, 42, ["img/workbench1-button-out.png", "img/workbench1-button-in.png", "img/workbench1-button-click.png"]);
+        craftList[AREAS.__BBQ__]                = GUI.createButton(42, 42, ["img/bbq-button-out.png", "img/bbq-button-in.png", "img/bbq-button-click.png"]);
+        craftList[AREAS.__COMPOST__]            = GUI.createButton(42, 42, ["img/composter-button-out.png", "img/composter-button-in.png", "img/composter-button-click.png"]);
+        craftList[AREAS.__WEAVING__]            = GUI.createButton(42, 42, ["img/weaving-machine-button-out.png", "img/weaving-machine-button-in.png", "img/weaving-machine-button-click.png"]);
+        craftList[AREAS.__WELDING_MACHINE__]    = GUI.createButton(42, 42, ["img/welding-machine-button-out.png", "img/welding-machine-button-in.png", "img/welding-machine-button-click.png"]);
+        craftList[AREAS.__WORKBENCH2__]         = GUI.createButton(42, 42, ["img/workbench2-button-out.png", "img/workbench2-button-in.png", "img/workbench2-button-click.png"]);
+        craftList[AREAS.__SMELTER__]            = GUI.createButton(42, 42, ["img/smelter-button-out.png", "img/smelter-button-in.png", "img/smelter-button-click.png"]);
+        craftList[AREAS.__TESLA__]              = GUI.createButton(42, 42, ["img/workbench3-button-out.png", "img/workbench3-button-in.png", "img/workbench3-button-click.png"]);
+        craftList[AREAS.__AGITATOR__]           = GUI.createButton(42, 42, ["img/agitator-button-out.png", "img/agitator-button-in.png", "img/agitator-button-click.png"]);
+        craftList[AREAS.__EXTRACTOR__]          = GUI.createButton(42, 42, ["img/extractor-button-out.png", "img/extractor-button-in.png", "img/extractor-button-click.png"]);
+
         gauges = GUI.createBackground(255, 174, "img/profile-player2.png");
         settingbox = GUI.createBackground(269, 267, "img/settings-box.png");
         chestbox = GUI.createBackground(162, 165, "img/chest-box4.png");
@@ -9715,7 +9717,7 @@ var Game = (function() {
                     if (unlockbuttout.trigger() === 1) {
                         if (World.PLAYER.craftAvailable[World.PLAYER.craftIdSelected] === 1) {
                             Client.sendPacket(window.JSON.stringify([21, World.PLAYER.craftSelected]));
-                            AudioUtils.playFx(AudioUtils._fx.nwVvN, 1, 0);
+                            AudioUtils.playFx(AudioUtils._fx.skill, 1, 0);
                         }
                     }
                 }
@@ -9900,8 +9902,8 @@ var Game = (function() {
         var mnWNv = 0;
         if ((len > 10) && (bagbutt.trigger() === 1)) {
             bagbutt.open = (bagbutt.open + 1) % 2;
-            if (bagbutt.open === 1) AudioUtils.playFx(AudioUtils._fx.NwMWW, 0.08, 0);
-            else AudioUtils.playFx(AudioUtils._fx.NwmVN, 0.08, 0);
+            if (bagbutt.open === 1) AudioUtils.playFx(AudioUtils._fx.zipperOn, 0.08, 0);
+            else AudioUtils.playFx(AudioUtils._fx.zipperOff, 0.08, 0);
         }
         for (var i = 0; i < len; i++) {
             if ((i > 9) && (bagbutt.open === 0)) break;
@@ -9909,7 +9911,7 @@ var Game = (function() {
                 mnWNv = 1;
                 var IID = invtr[i][0];
                 var amount = invtr[i][1];
-                var vmM = invtr[i][2];
+                var itemId = invtr[i][2];
                 var wvmvw = invtr[i][3];
                 var vV = INVENTORY[IID];
                 if (drag.begin === 1) {
@@ -9928,7 +9930,7 @@ var Game = (function() {
                         invtr[i][3] = invtr[drag.id][3];
                         invtr[drag.id][0] = IID;
                         invtr[drag.id][1] = amount;
-                        invtr[drag.id][2] = vmM;
+                        invtr[drag.id][2] = itemId;
                         invtr[drag.id][3] = wvmvw;
                         if (IID !== 0) Game.inventory[drag.id].setImages(INVENTORY[IID].itemButton.src, INVENTORY[IID].itemButton.img);
                         Game.inventory[i].setImages(INVENTORY[invtr[i][0]].itemButton.src, INVENTORY[invtr[i][0]].itemButton.img);
@@ -9940,16 +9942,16 @@ var Game = (function() {
                 }
                 if (IID !== 0) {
                     if ((isChestOpen === 1) && (event.which !== 3)) {
-                        Client.sendPacket(window.JSON.stringify([26, IID, amount, vmM, wvmvw]));
+                        Client.sendPacket(window.JSON.stringify([26, IID, amount, itemId, wvmvw]));
                         AudioUtils.playFx(AudioUtils._fx.drag, 1, 0);
                     } else if (event.which === 3) {
-                        Client.sendPacket(window.JSON.stringify([9, IID, amount, vmM, wvmvw]));
-                        AudioUtils.playFx(AudioUtils._fx.wWwnM, 1, 0);
+                        Client.sendPacket(window.JSON.stringify([9, IID, amount, itemId, wvmvw]));
+                        AudioUtils.playFx(AudioUtils._fx.throwLoot, 1, 0);
                     } else {
                         if (event.ctrlKey) {
                             AudioUtils.playFx(AudioUtils._fx.drag, 0.6, 0);
-                            Client.sendPacket(window.JSON.stringify([11, IID, amount, vmM]));
-                        } else Client.sendPacket(window.JSON.stringify([8, IID, amount, vmM, wvmvw]));
+                            Client.sendPacket(window.JSON.stringify([11, IID, amount, itemId]));
+                        } else Client.sendPacket(window.JSON.stringify([8, IID, amount, itemId, wvmvw]));
                     }
                 }
             }
@@ -9964,7 +9966,7 @@ var Game = (function() {
         if (drag.begin === 1) {
             var i = drag.id;
             Client.sendPacket(window.JSON.stringify([9, invtr[i][0], invtr[i][1], invtr[i][2], invtr[i][3]]));
-            AudioUtils.playFx(AudioUtils._fx.wWwnM, 1, 0);
+            AudioUtils.playFx(AudioUtils._fx.throwLoot, 1, 0);
         }
         drag.begin = 0;
     };
@@ -10165,16 +10167,16 @@ var Game = (function() {
                     if (i < invtr.length) {
                         var IID = invtr[i][0];
                         var amount = invtr[i][1];
-                        var vmM = invtr[i][2];
+                        var itemId = invtr[i][2];
                         var wvmvw = invtr[i][3];
                         if (event.altKey) {
-                            Client.sendPacket(window.JSON.stringify([9, IID, amount, vmM, wvmvw]));
-                            AudioUtils.playFx(AudioUtils._fx.wWwnM, 1, 0);
+                            Client.sendPacket(window.JSON.stringify([9, IID, amount, itemId, wvmvw]));
+                            AudioUtils.playFx(AudioUtils._fx.throwLoot, 1, 0);
                         } else {
                             if (event.ctrlKey) {
                                 AudioUtils.playFx(AudioUtils._fx.drag, 0.6, 0);
-                                Client.sendPacket(window.JSON.stringify([11, IID, amount, vmM]));
-                            } else Client.sendPacket(window.JSON.stringify([8, IID, amount, vmM, wvmvw]));
+                                Client.sendPacket(window.JSON.stringify([11, IID, amount, itemId]));
+                            } else Client.sendPacket(window.JSON.stringify([8, IID, amount, itemId, wvmvw]));
                         }
                     }
                 }
@@ -11765,7 +11767,7 @@ var Editor = (function() {
                 var item = INVENTORY[i];
                 if (item.behavior === BEHAVIOR.__LOGIC__) {
                     Wnw[NWw].setImages(item.itemButton.src, item.itemButton.img);
-                    Wnw[NWw].vmM = item.id;
+                    Wnw[NWw].itemId = item.id;
                     NWw++;
                 }
             }
@@ -11776,9 +11778,9 @@ var Editor = (function() {
             NWw = 0;
             for (var i = 1; i < INVENTORY.length; i++) {
                 var item = INVENTORY[i];
-                if ((((item.id === item.__LANDMINE__) || (item.id === item.__C4__)) || (item.id === item.__WOOD_SPIKE__)) || (item.id === item.__DYNAMITE__)) {
+                if ((((item.id === IID.__LANDMINE__) || (item.id === IID.__C4__)) || (item.id === IID.__WOOD_SPIKE__)) || (item.id === IID.__DYNAMITE__)) {
                     Wnw[NWw].setImages(item.itemButton.src, item.itemButton.img);
-                    Wnw[NWw].vmM = item.id;
+                    Wnw[NWw].itemId = item.id;
                     NWw++;
                 }
             }
@@ -11787,12 +11789,12 @@ var Editor = (function() {
         if (maproadbutton.trigger() === 1) {
             vnm = 1;
             NWw = 0;
-            var vnvwV = INVENTORY[item.__ROAD__].subtype;
+            var vnvwV = INVENTORY[IID.__ROAD__].subtype;
             for (var i = 0; i < vnvwV.length; i++) {
                 var item = vnvwV[i];
                 Wnw[NWw].setImages(item.itemButton.src, item.itemButton.img);
-                Wnw[NWw].vmM = item.__ROAD__;
-                Wnw[NWw].nVWnM = i;
+                Wnw[NWw].itemId = IID.__ROAD__;
+                Wnw[NWw].itemSubId = i;
                 NWw++;
             }
             AudioUtils.playFx(AudioUtils._fx.button, 1, 0);
@@ -11800,12 +11802,12 @@ var Editor = (function() {
         if (mapfurniturebutton.trigger() === 1) {
             vnm = 1;
             NWw = 0;
-            var vnvwV = INVENTORY[item.__FURNITURE__].subtype;
+            var vnvwV = INVENTORY[IID.__FURNITURE__].subtype;
             for (var i = 0; i < vnvwV.length; i++) {
                 var item = vnvwV[i];
                 Wnw[NWw].setImages(item.itemButton.src, item.itemButton.img);
-                Wnw[NWw].vmM = item.__FURNITURE__;
-                Wnw[NWw].nVWnM = i;
+                Wnw[NWw].itemId = IID.__FURNITURE__;
+                Wnw[NWw].itemSubId = i;
                 NWw++;
             }
             AudioUtils.playFx(AudioUtils._fx.button, 1, 0);
@@ -11815,9 +11817,9 @@ var Editor = (function() {
             NWw = 0;
             for (var i = 1; i < INVENTORY.length; i++) {
                 var item = INVENTORY[i];
-                if (((((item.wall === 1) || (item.lowWall === 1)) || (item.door === 1)) || (item.__CHEST__ === 1)) || (item.__FRIDGE__ === 1)) {
+                if (((((item.wall === 1) || (item.lowWall === 1)) || (item.door === 1)) || (IID.__CHEST__ === 1)) || (IID.__FRIDGE__ === 1)) {
                     Wnw[NWw].setImages(item.itemButton.src, item.itemButton.img);
-                    Wnw[NWw].vmM = item.id;
+                    Wnw[NWw].itemId = item.id;
                     NWw++;
                 }
             }
@@ -11953,9 +11955,9 @@ var Editor = (function() {
             for (var i = 0; i < NWw; i++) {
                 if (Wnw[i].trigger() === 1) {
                     AudioUtils.playFx(AudioUtils._fx.button, 1, 0);
-                    World.PLAYER.blueprint = Wnw[i].vmM;
-                    World.PLAYER.furniture = Wnw[i].nVWnM;
-                    if (World.PLAYER.blueprint === item.__ROAD__) World.PLAYER.buildRotate = 0;
+                    World.PLAYER.blueprint = Wnw[i].itemId;
+                    World.PLAYER.furniture = Wnw[i].itemSubId;
+                    if (World.PLAYER.blueprint === IID.__ROAD__) World.PLAYER.buildRotate = 0;
                 }
             }
         }
@@ -12797,7 +12799,7 @@ try {
         var Nvmmn = 0;
         var vwMWM = VmNmN;
         var WvmnV = 0;
-        var wWWNM = 0;
+        var oldscale = 0;
         var vMnmV = [];
         for (i = 0; i < 20; i++) vMnmV[i] = {
             isLoaded: 0
@@ -14204,11 +14206,11 @@ try {
                 ctx.drawImage(craftGauge, posx, posy, SY, SX);
                 
             } else {
-                var nwVvN = World.PLAYER.craftAvailable[World.PLAYER.craftIdSelected];
+                var skill = World.PLAYER.craftAvailable[World.PLAYER.craftIdSelected];
                 nvmnM.pos.x = WX + (454 * scaleby);
                 nvmnM.pos.y = WY + (153 * scaleby);
-                if (nwVvN === 1) nvmnM.draw();
-                else if (nwVvN === 0) {
+                if (skill === 1) nvmnM.draw();
+                else if (skill === 0) {
                     ctx.globalAlpha = 0.5;
                     nvmnM.setState(GUI.__BUTTON_OUT__);
                     nvmnM.draw();
@@ -14465,12 +14467,12 @@ try {
             else if (PLAYER.team !== -1) {
                 var team = World.teams[PLAYER.team];
                 if (team.uid === PLAYER.teamUid) {
-                    if (team.WWMWm === null)
+                    if (team.labelNickname === null)
                     var isInClan = 0;
                     if (((player.pid === World.PLAYER.id) || (((World.PLAYER.team !== -1) && (World.PLAYER.team === World.players[player.pid].team)) && (World.players[player.pid].teamUid === World.teams[World.PLAYER.team].uid)))) { isInClan = 1;
-                        team.WWMWm = GUI.renderText(("[" + team.name) + "]", "'Viga', sans-serif", "#000000", 38, 400, window.undefined, 16, 25, window.undefined, window.undefined, window.undefined, window.undefined, "#83F6A4", 12); //#699CBB
-                    } else team.WWMWm = GUI.renderText(("[" + team.name) + "]", "'Viga', sans-serif", "#FFFFFF", 38, 400, window.undefined, 16, 25, window.undefined, window.undefined, window.undefined, window.undefined, "#000000", 12); //#699CBB
-                    var wvMMv = team.WWMWm;
+                        team.labelNickname = GUI.renderText(("[" + team.name) + "]", "'Viga', sans-serif", "#000000", 38, 400, window.undefined, 16, 25, window.undefined, window.undefined, window.undefined, window.undefined, "#83F6A4", 12); //#699CBB
+                    } else team.labelNickname = GUI.renderText(("[" + team.name) + "]", "'Viga', sans-serif", "#FFFFFF", 38, 400, window.undefined, 16, 25, window.undefined, window.undefined, window.undefined, window.undefined, "#000000", 12); //#699CBB
+                    var wvMMv = team.labelNickname;
                     ctx.drawImage(wvMMv, ((((vertst + player.x) - (img.wh / 2)) - (wvMMv.wh / 2)) - 0.5) * scaleby, ((horist + player.y) - WY) * scaleby, wvMMv.wh * scaleby, wvMMv.h2 * scaleby);
                     if ((img.width !== 0) && (img.height !== 0)) ctx.drawImage(img, (((vertst + player.x) - (img.wh / 2)) + (wvMMv.wh / 2)) * scaleby, ((horist + player.y) - WY) * scaleby, img.wh * scaleby, img.h2 * scaleby);
                 } else PLAYER.team = -1;
@@ -14528,7 +14530,7 @@ try {
 
         function wNnvM() {
             WvmnV = CanvasUtils.lerp(WvmnV, (((Render.scale + NNmMN[0]) + NNmMN[1]) + NNmMN[2]) + NNmMN[3], vwMWM);
-            wWWNM = scaleby;
+            oldscale = scaleby;
             scaleby += WvmnV * scaleby;
             canwns = canw / scaleby;
             canhns = canh / scaleby;
@@ -16802,7 +16804,7 @@ try {
             Entitie.cleanRemoved();
             frameId++;
             for (var i = 0; i < SOUND_LENGTH; i++) soundLimit[i] = 0;
-            scaleby = wWWNM;
+            scaleby = oldscale;
             canwns = canw / scaleby;
             canhns = canh / scaleby;
         };
@@ -17012,8 +17014,8 @@ ENTITIES[__ENTITIE_BULLET__].init = function initEntitieBullet(MW) {
 };
 ENTITIES[__ENTITIE_BULLET__].update = function updateEntitieBullet(MW, WX, WY) {
     var angle = Math2d.angle(MW.x, MW.y, MW.nx, MW.ny);
-    var nvwVm = window.Math.PI * 2;
-    var vWWMM = (((angle + nvwVm) % nvwVm) - ((MW.hurtAngle + nvwVm) % nvwVm)) % nvwVm;
+    var pi2 = window.Math.PI * 2;
+    var vWWMM = (((angle + pi2) % pi2) - ((MW.hurtAngle + pi2) % pi2)) % pi2;
     if (window.Math.abs(vWWMM) > 0.1) {
         MW.rx = MW.x;
         MW.ry = MW.y;
@@ -42257,38 +42259,42 @@ var AudioManager = (function() {
     var musicVolume = 0.45;
     var VNWVM = 0;
     var NNwwM = 0;
-    AudioUtils.audio.end = new AudioUtils.Sound("audio/end.mp3", 0, true);
-    AudioUtils.audio.title = new AudioUtils.Sound("audio/title.mp3", 0, true);
-    AudioUtils.audio.geiger = new AudioUtils.Sound("audio/geiger.mp3", 0, true);
-    AudioUtils.audio.NvWWW = new AudioUtils.Sound("audio/ambient1.mp3", 0, true);
-    AudioUtils.audio.mWNVV = new AudioUtils.Sound("audio/ambient2.mp3", 0, true);
-    AudioUtils.audio.MWvmM = new AudioUtils.Sound("audio/ambient3.mp3", 0, true);
-    AudioUtils.audio.VWmmW = new AudioUtils.Sound("audio/ambient4.mp3", 0, true);
-    AudioUtils.audio.wNWMw = new AudioUtils.Sound("audio/ambient5.mp3", 0, true);
-    AudioUtils.audio.Nmwnw = new AudioUtils.Sound("audio/ambient6.mp3", 0, true);
-    AudioUtils.audio.wnMvV = new AudioUtils.Sound("audio/ambient7.mp3", 0, true);
-    AudioUtils.audio.MmmnV = new AudioUtils.Sound("audio/ambient8.mp3", 0, true);
-    wMw.push(AudioUtils.audio.NvWWW);
-    wMw.push(AudioUtils.audio.mWNVV);
-    wMw.push(AudioUtils.audio.MWvmM);
-    wMw.push(AudioUtils.audio.VWmmW);
-    wMw.push(AudioUtils.audio.wNWMw);
-    wMw.push(AudioUtils.audio.Nmwnw);
-    wMw.push(AudioUtils.audio.wnMvV);
-    wMw.push(AudioUtils.audio.MmmnV);
-    AudioUtils._fx.open = new AudioUtils.Sound("audio/open.mp3", 1, false, 1);
-    AudioUtils._fx.drag = new AudioUtils.Sound("audio/drag.mp3", 1, false, 1);
-    AudioUtils._fx.play = new AudioUtils.Sound("audio/play.mp3", 1, false, 1);
-    AudioUtils._fx.nwVvN = new AudioUtils.Sound("audio/skill.mp3", 1, false, 1);
-    AudioUtils._fx.craft = new AudioUtils.Sound("audio/craft.mp3", 1, false, 1);
-    AudioUtils._fx.button = new AudioUtils.Sound("audio/button.mp3", 1, false, 1);
-    AudioUtils._fx.wWwnM = new AudioUtils.Sound("audio/throwLoot.mp3", 1, false, 1);
-    AudioUtils._fx.levelup = new AudioUtils.Sound("audio/levelup.mp3", 1, false, 1);
-    AudioUtils._fx.explosion = new AudioUtils.Sound("audio/explosion.mp3", 1, false, 1);
-    AudioUtils._fx.NwMWW = new AudioUtils.Sound("audio/zipper-on.mp3", 0.7, false, 1);
-    AudioUtils._fx.NwmVN = new AudioUtils.Sound("audio/zipper-off.mp3", 0.7, false, 1);
-    AudioUtils._fx.WmnwN = [new AudioUtils.Sound("audio/eat-1s-0.mp3", 1, false, 1), new AudioUtils.Sound("audio/eat-1s-1.mp3", 1, false, 1), new AudioUtils.Sound("audio/eat-1s-2.mp3", 1, false, 1)];
-    AudioUtils._fx.damage = [];
+
+    AudioUtils.audio.end        = new AudioUtils.Sound("audio/end.mp3", 0, true);
+    AudioUtils.audio.title      = new AudioUtils.Sound("audio/title.mp3", 0, true);
+    AudioUtils.audio.geiger     = new AudioUtils.Sound("audio/geiger.mp3", 0, true);
+    AudioUtils.audio.ambient1   = new AudioUtils.Sound("audio/ambient1.mp3", 0, true);
+    AudioUtils.audio.ambient2   = new AudioUtils.Sound("audio/ambient2.mp3", 0, true);
+    AudioUtils.audio.ambient3   = new AudioUtils.Sound("audio/ambient3.mp3", 0, true);
+    AudioUtils.audio.ambient4   = new AudioUtils.Sound("audio/ambient4.mp3", 0, true);
+    AudioUtils.audio.ambient5   = new AudioUtils.Sound("audio/ambient5.mp3", 0, true);
+    AudioUtils.audio.ambient6   = new AudioUtils.Sound("audio/ambient6.mp3", 0, true);
+    AudioUtils.audio.ambient7   = new AudioUtils.Sound("audio/ambient7.mp3", 0, true);
+    AudioUtils.audio.ambient8   = new AudioUtils.Sound("audio/ambient8.mp3", 0, true);
+
+    wMw.push(AudioUtils.audio.ambient1);
+    wMw.push(AudioUtils.audio.ambient2);
+    wMw.push(AudioUtils.audio.ambient3);
+    wMw.push(AudioUtils.audio.ambient4);
+    wMw.push(AudioUtils.audio.ambient5);
+    wMw.push(AudioUtils.audio.ambient6);
+    wMw.push(AudioUtils.audio.ambient7);
+    wMw.push(AudioUtils.audio.ambient8);
+
+    AudioUtils._fx.open         = new AudioUtils.Sound("audio/open.mp3", 1, false, 1);
+    AudioUtils._fx.drag         = new AudioUtils.Sound("audio/drag.mp3", 1, false, 1);
+    AudioUtils._fx.play         = new AudioUtils.Sound("audio/play.mp3", 1, false, 1);
+    AudioUtils._fx.skill        = new AudioUtils.Sound("audio/skill.mp3", 1, false, 1);
+    AudioUtils._fx.craft        = new AudioUtils.Sound("audio/craft.mp3", 1, false, 1);
+    AudioUtils._fx.button       = new AudioUtils.Sound("audio/button.mp3", 1, false, 1);
+    AudioUtils._fx.throwLoot    = new AudioUtils.Sound("audio/throwLoot.mp3", 1, false, 1);
+    AudioUtils._fx.levelup      = new AudioUtils.Sound("audio/levelup.mp3", 1, false, 1);
+    AudioUtils._fx.explosion    = new AudioUtils.Sound("audio/explosion.mp3", 1, false, 1);
+    AudioUtils._fx.zipperOn     = new AudioUtils.Sound("audio/zipper-on.mp3", 0.7, false, 1);
+    AudioUtils._fx.zipperOff    = new AudioUtils.Sound("audio/zipper-off.mp3", 0.7, false, 1);
+    AudioUtils._fx.eat          = [new AudioUtils.Sound("audio/eat-1s-0.mp3", 1, false, 1), new AudioUtils.Sound("audio/eat-1s-1.mp3", 1, false, 1), new AudioUtils.Sound("audio/eat-1s-2.mp3", 1, false, 1)];
+    AudioUtils._fx.damage       = [];
+
     for (var i = 1; i < SOUND.length; i++) AudioUtils._fx.damage[i] = new AudioUtils.Sound(SOUND[i], 1, false, 1);
     AudioUtils._fx.shot = [];
     var weapons = ENTITIES[__ENTITIE_PLAYER__].weapons;
@@ -42307,18 +42313,18 @@ var AudioManager = (function() {
     }
     for (var i = 0; i < AudioUtils._fx.shot.length; i++) {
         var sound = AudioUtils._fx.shot[i];
-        if (sound === 1) AudioUtils._fx.shot[i] = AudioUtils._fx.WmnwN;
+        if (sound === 1) AudioUtils._fx.shot[i] = AudioUtils._fx.eat;
     }
     if (AudioUtils.options.isFx === 1) {
         AudioUtils.loadSound(AudioUtils._fx.open);
         AudioUtils.loadSound(AudioUtils._fx.play);
         AudioUtils.loadSound(AudioUtils._fx.drag);
-        AudioUtils.loadSound(AudioUtils._fx.nwVvN);
+        AudioUtils.loadSound(AudioUtils._fx.skill);
         AudioUtils.loadSound(AudioUtils._fx.craft);
         AudioUtils.loadSound(AudioUtils._fx.button);
         AudioUtils.loadSound(AudioUtils._fx.levelup);
         AudioUtils.loadSound(AudioUtils._fx.explosion);
-        for (var i = 0; i < AudioUtils._fx.WmnwN.length; i++) AudioUtils.loadSound(AudioUtils._fx.WmnwN[i]);
+        for (var i = 0; i < AudioUtils._fx.eat.length; i++) AudioUtils.loadSound(AudioUtils._fx.eat[i]);
         for (var i = 1; i < AudioUtils._fx.damage.length; i++) AudioUtils.loadSound(AudioUtils._fx.damage[i]);
         for (var i = 0; i < AudioUtils._fx.shot.length; i++) {
             var sound = AudioUtils._fx.shot[i];
