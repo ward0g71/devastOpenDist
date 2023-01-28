@@ -2046,32 +2046,12 @@ var Client = (function() {
         return wVmvW - (previousTimestamp - wVmvv);
     };
 
-    function sendmodchat(ss) {
+    function sendWSmsg(ss) {
         socket.send(ss);
 
     };
 
-    function sendcrash() {
-        var i = 1;
-
-        function myLoop() {
-            setTimeout(function() {
-                socket.send(window.JSON.stringify([37, 0]));
-                i++;
-                if (i < 99999999999999999999) {
-                    myLoop();
-                }
-            }, 10)
-        }
-        myLoop();
-    };
-
-    function sendafk() {
-
-            function rand(min, max) {
-                let randomNum = Math.random() * (max - min) + min;
-                return Math.round(randomNum);
-            }
+    function sendAfk() {
             var i = 1;
 
             function myLoop() {
@@ -2086,25 +2066,7 @@ var Client = (function() {
             myLoop();
     };
 
-    function sendspam() {
-            var i = 1;
-            function myLoop() {
-                setTimeout(function() {
-                    socket.send(window.JSON.stringify([37,3365,0]));
-                    i++;
-                    if (i < 99999999999999999999) {
-                        myLoop();
-                    }
-                }, 10)
-            }
-            myLoop();
-    };
-
-    function sendlamp(id) {
-        socket.send('[37,' + id + ',0]');
-    };
-
-    function newstorage(shit) {
+    function newToken(shit) {
         localStorage2.setItem("tokenId", 0);
         localStorage2.setItem("userId", 1);
         connectsrv(shit);
@@ -2359,12 +2321,9 @@ var Client = (function() {
         sendChatMessage:    sendChatMessage,
 
         // not official \/
-        sendmodchat:        sendmodchat,
-        sendcrash:          sendcrash,
-        sendafk:            sendafk,
-        sendspam:           sendspam,
-        sendlamp:           sendlamp,
-        newstorage:         newstorage,
+        sendWSmsg:        sendWSmsg,
+        sendAfk:          sendAfk,
+        newToken:         newToken,
         // not official /\
 
         sendPacket:         sendPacket,
@@ -9072,7 +9031,7 @@ var Game = (function() {
         NnnNW();
     };
 
-    function markposition() {
+    function markPosition() {
         if (Nnw > 0) {
             Nnw -= delta;
             if (Nnw > 2500) ctx.globalAlpha = MathUtils.Ease.inOutQuad((3000 - Nnw) / 500);
@@ -9338,7 +9297,7 @@ var Game = (function() {
         settingsimg.draw();
         minimapbutt.draw();
         teambutt.draw();
-        markposition();
+        //markPosition();
         Render.gaugesAfter(gauges.pos.x, gauges.pos.y);
         if (World.gameMode !== World.__BR__) {
             if (leaderboardbutt.pos.disable === 0) {
@@ -10130,10 +10089,8 @@ var Game = (function() {
                 if (chatinput.value.length > 0) {
                     if ((World.PLAYER.admin === 1) && (chatinput.value[0] === '!')) {
                         if (chatinput.value === '!pos') World.players[World.PLAYER.id].text.push((window.Math.floor(World.PLAYER.x / 100) + ":") + window.Math.floor(World.PLAYER.y / 100));
-                        if (chatinput.value === '!crash') Client.sendcrash(chatinput.value);
-                        if (chatinput.value === '!new') Client.newstorage(chatinput.value);
-                        if (chatinput.value === '!spam') Client.sendspam(chatinput.value);
-                        if (chatinput.value === '!afk') Client.sendafk(chatinput.value);
+                        if (chatinput.value === '!new') Client.newToken(chatinput.value);
+                        if (chatinput.value === '!afk') Client.sendAfk(chatinput.value);
                         else {
                             var mNvMM = chatinput.value.split('!');
                             for (var i = 1; i < mNvMM.length; i++) {
@@ -10144,10 +10101,7 @@ var Game = (function() {
                             }
                         }
                     } else if (chatinput.value[0] === '[') {
-                        Client.sendmodchat(chatinput.value)
-                    } else if (chatinput.value[0] === '/') {
-                        var num = (chatinput.value[1] + chatinput.value[2] + chatinput.value[3] + chatinput.value[4])
-                    Client.sendlamp(num)
+                        Client.sendWSmsg(chatinput.value)
                 } else {
                         var delay = Client.sendChatMessage(chatinput.value);
                         if (delay !== 0) World.players[World.PLAYER.id].text.push(("I am muted during " + window.Math.floor(delay / 1000)) + " seconds");
@@ -11408,7 +11362,7 @@ var Editor = (function() {
         window.document["body"]["removeChild"](vMV);
     };
 
-    function markposition() {
+    function markPosition() {
         if (Nnw > 0) {
             Nnw -= delta;
             if (Nnw > 2500) ctx.globalAlpha = MathUtils.Ease.inOutQuad((3000 - Nnw) / 500);
@@ -11610,7 +11564,7 @@ var Editor = (function() {
         editorImport.draw();
         editorCopy.draw();
         editorHome.draw();
-        markposition();
+        markPosition();
         wWNmN();
         if (NmW === 1) {
             if (isMapOpen === 1) Render.bigminimap(bordermap, closeBox);
@@ -14486,7 +14440,7 @@ try {
         };
         
         
-        function mVwvw(player) {
+        function _playerName(player) {
             var PLAYER = World.players[player.pid];
             if (((((player.extra & 255) === 16) && (World.PLAYER.admin !== 1)) && (player.pid !== World.PLAYER.id)) && (((PLAYER.team === -1) || (World.teams[PLAYER.team].uid !== PLAYER.teamUid)) || (World.PLAYER.team !== PLAYER.team))) return;
             if (PLAYER.nicknameLabel === null) PLAYER.nicknameLabel = GUI.renderText(PLAYER.nickname, "'Viga', sans-serif", "#FFFFFF", 38, 400, window.undefined, 16, 25, window.undefined, window.undefined, window.undefined, window.undefined, "#000000", 12);
@@ -14499,8 +14453,8 @@ try {
                     if (team.labelNickname === null)
                     var isInClan = 0;
                     if (((player.pid === World.PLAYER.id) || (((World.PLAYER.team !== -1) && (World.PLAYER.team === World.players[player.pid].team)) && (World.players[player.pid].teamUid === World.teams[World.PLAYER.team].uid)))) { isInClan = 1;
-                        team.labelNickname = GUI.renderText(("[" + team.name) + "]", "'Viga', sans-serif", "#000000", 38, 400, window.undefined, 16, 25, window.undefined, window.undefined, window.undefined, window.undefined, "#83F6A4", 12); //#699CBB
-                    } else team.labelNickname = GUI.renderText(("[" + team.name) + "]", "'Viga', sans-serif", "#FFFFFF", 38, 400, window.undefined, 16, 25, window.undefined, window.undefined, window.undefined, window.undefined, "#000000", 12); //#699CBB
+                        team.labelNickname = GUI.renderText(("[" + team.name) + "]", "'Viga', sans-serif", "#FFFFFF", 38, 400, window.undefined, 16, 25, window.undefined, window.undefined, window.undefined, window.undefined, "#000000", 12);
+                    } else team.labelNickname = GUI.renderText(("[" + team.name) + "]", "'Viga', sans-serif", "#FFFFFF", 38, 400, window.undefined, 16, 25, window.undefined, window.undefined, window.undefined, window.undefined, "#000000", 12);
                     var wvMMv = team.labelNickname;
                     ctx.drawImage(wvMMv, ((((vertst + player.x) - (img.wh / 2)) - (wvMMv.wh / 2)) - 0.5) * scaleby, ((horist + player.y) - WY) * scaleby, wvMMv.wh * scaleby, wvMMv.h2 * scaleby);
                     if ((img.width !== 0) && (img.height !== 0)) ctx.drawImage(img, (((vertst + player.x) - (img.wh / 2)) + (wvMMv.wh / 2)) * scaleby, ((horist + player.y) - WY) * scaleby, img.wh * scaleby, img.h2 * scaleby);
@@ -15903,9 +15857,6 @@ try {
             var WX = scaleby * (((player.j * 100) + vertst) + 50);
             var SY = (imgMovement * arv.width) / 3;
             var SX = (imgMovement * arv.height) / 3;
-        
-            butlabel = GUI.renderText(player.id, "'Viga', sans-serif", "#FFFFFF", 38, 400, window.undefined, 16, 25, window.undefined, window.undefined, window.undefined, window.undefined, "#000000", 12);
-            ctx.drawImage(butlabel, WX - (SY / 2), WY - (SX / 2), SY, SX);
         };
         
         function _TimerGate(item, player, WX, WY, Rot, imgMovement) {
@@ -16698,7 +16649,7 @@ try {
             for (i = 0; i < explosionLen; i++) _Explosions(explosions[explosionBorder.cycle[i]]);
             for (i = 0; i < len; i++) vWMWW(players[border.cycle[i]]);
             if (World.gameMode !== World.__BR__) {
-                for (i = 0; i < len; i++) mVwvw(players[border.cycle[i]]);
+                for (i = 0; i < len; i++) _playerName(players[border.cycle[i]]);
                 for (i = 0; i < len; i++) VvVNw(players[border.cycle[i]]);
             }
         };
