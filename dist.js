@@ -11187,11 +11187,12 @@ var Editor = (function() {
     };
 
     function Vnvmv(item, subtype, i, j, Rot) {
-        item = window.Number(item) >>> 0;
-        subtype = window.Number(subtype) >>> 0;
-        i = window.Number(i) >>> 0;
-        j = window.Number(j) >>> 0;
-        Rot = window.Number(Rot) >>> 0;
+        item        = window.Number(item)    >>> 0;
+        subtype     = window.Number(subtype) >>> 0;
+        i           = window.Number(i)       >>> 0;
+        j           = window.Number(j)       >>> 0;
+        Rot         = window.Number(Rot)     >>> 0;
+
         if (((Rot > 3) || (i >= MapManager.height)) || (j >= MapManager.height)) return;
         var building = INVENTORY[item];
         if (((building === window.undefined) || (building.subtype === window.undefined)) || ((building.subtype > 0) && (building.building.length <= subtype))) return;
@@ -11225,13 +11226,15 @@ var Editor = (function() {
     };
 
     function editorBuildtoCode(vV) {
-        var code = "";
-        var buildings = Entitie.units[vV];
+        var code            = "";
+        var buildings       = Entitie.units[vV];
         var buildingsBorder = Entitie.border[vV];
-        var buildingsLen = buildingsBorder.border;
+        var buildingsLen    = buildingsBorder.border;
+
         for (i = 0; i < buildingsLen; i++) {
-            var player = buildings[buildingsBorder.cycle[i]];
-            var item = INVENTORY[player.extra >> 7];
+            var player  = buildings[buildingsBorder.cycle[i]];
+            var item    = INVENTORY[player.extra >> 7];
+
             code += ("!b=" + item.id) + ":";
             if (item.subtype !== 0) code += player.subtype + ":";
             code += (((player.j + ":") + player.i) + ":") + ((player.extra >> 5) & 3);
@@ -11240,9 +11243,10 @@ var Editor = (function() {
     };
 
     function editorBuildRemove(vV, WX, WY) {
-        var buildings = Entitie.units[vV];
+        var buildings       = Entitie.units[vV];
         var buildingsBorder = Entitie.border[vV];
-        var buildingsLen = buildingsBorder.border;
+        var buildingsLen    = buildingsBorder.border;
+        
         for (i = 0; i < buildingsLen; i++) {
             var building = buildings[buildingsBorder.cycle[i]];
             if ((((building.x >= WX) && (building.x <= (WX + 100))) && (building.y >= WY)) && (building.y <= (WY + 100))) {
@@ -11279,10 +11283,10 @@ var Editor = (function() {
 
     function nNvvV() {
         var move = 0;
-        if (Keyboard.isLeft() === 1) move |= 1;
-        if (Keyboard.isRight() === 1) move |= 2;
-        if (Keyboard.isBottom() === 1) move |= 4;
-        if (Keyboard.isTop() === 1) move |= 8;
+        if (Keyboard.isLeft()   === 1)      move |= 1;
+        if (Keyboard.isRight()  === 1)      move |= 2;
+        if (Keyboard.isBottom() === 1)      move |= 4;
+        if (Keyboard.isTop()    === 1)      move |= 8;
         if (move > 0) {
             var pid = World.players[1].locatePlayer;
             if (pid === -1) return;
@@ -14339,7 +14343,7 @@ try {
             WVVMw.draw();
         };
 
-        function VvVNw(player) {
+        function _playerChatMessage(player) {
             var PLAYER = World.players[player.pid];
             if (PLAYER.text.length > 0) {
                 for (var i = 0;
@@ -14580,7 +14584,7 @@ try {
             }
         };
         
-        function vWMWW(player) {
+        function _playerNotification(player) {
             var PLAYER = World.players[player.pid];
             if ((PLAYER !== window.undefined) && (PLAYER.notification.length > 0)) {
                 if (PLAYER.notificationDelay >= Mvnwm) PLAYER.notificationDelay = 0;
@@ -16442,44 +16446,49 @@ try {
                 var player = MvW[Wwn.cycle[i]];
                 if (player.type === __ENTITIE_BUILD_GROUND2__) _Buildings(player);
             }
+
             if (NwMVW !== vMNWw) {
-                var particles = Entitie.units[__ENTITIE_PARTICLES__];
+                var particles       = Entitie.units[__ENTITIE_PARTICLES__];
                 var buildingsBorder = Entitie.border[__ENTITIE_PARTICLES__];
-                var buildingsLen = buildingsBorder.border;
+                var buildingsLen    = buildingsBorder.border;
                 for (i = 0; i < buildingsLen; i++) mWNvV(particles[buildingsBorder.cycle[i]]);
                 if (VwmMm.id !== -1) {
                     Entitie.remove(0, VwmMm.id, VwmMm.uid, __ENTITIE_PARTICLES__);
                     VwmMm.id = -1;
                 }
             }
-            var buildings = Entitie.units[__ENTITIE_BUILD_GROUND__];
-            var buildingsBorder = Entitie.border[__ENTITIE_BUILD_GROUND__];
-            var buildingsLen = buildingsBorder.border;
+
+            var buildings           = Entitie.units[__ENTITIE_BUILD_GROUND__];
+            var buildingsBorder     = Entitie.border[__ENTITIE_BUILD_GROUND__];
+            var buildingsLen        = buildingsBorder.border;
             for (i = 0; i < buildingsLen; i++) _Buildings(buildings[buildingsBorder.cycle[i]]);
             for (i = 0; i < WWM; i++) {
                 var player = MvW[Wwn.cycle[i]];
                 if (player.type === __ENTITIE_BUILD_GROUND__) _Buildings(player);
             }
-            resources = Entitie.units[__ENTITIE_RESOURCES_DOWN__];
-            resourceBorder = Entitie.border[__ENTITIE_RESOURCES_DOWN__];
-            resourceLen = resourceBorder.border;
+
+            resources               = Entitie.units[__ENTITIE_RESOURCES_DOWN__];
+            resourceBorder          = Entitie.border[__ENTITIE_RESOURCES_DOWN__];
+            resourceLen             = resourceBorder.border;
             for (i = 0; i < resourceLen; i++) _Resources(resources[resourceBorder.cycle[i]]);
             for (i = 0; i < WWM; i++) {
                 var player = MvW[Wwn.cycle[i]];
                 if (player.type === __ENTITIE_RESOURCES_DOWN__) _Resources(player);
             }
-            var buildings = Entitie.units[__ENTITIE_BUILD_DOWN__];
-            var buildingsBorder = Entitie.border[__ENTITIE_BUILD_DOWN__];
-            var buildingsLen = buildingsBorder.border;
+
+            var buildings           = Entitie.units[__ENTITIE_BUILD_DOWN__];
+            var buildingsBorder     = Entitie.border[__ENTITIE_BUILD_DOWN__];
+            var buildingsLen        = buildingsBorder.border;
             for (i = 0; i < buildingsLen; i++) smallwallsfusion(buildings[buildingsBorder.cycle[i]]);
             for (i = 0; i < buildingsLen; i++) _Buildings(buildings[buildingsBorder.cycle[i]]);
             for (i = 0; i < WWM; i++) {
                 var player = MvW[Wwn.cycle[i]];
                 if (player.type === __ENTITIE_BUILD_DOWN__) _Buildings(player);
             }
-            var players = Entitie.units[__ENTITIE_PLAYER__];
-            var border = Entitie.border[__ENTITIE_PLAYER__];
-            var len = border.border;
+
+            var players             = Entitie.units[__ENTITIE_PLAYER__];
+            var border              = Entitie.border[__ENTITIE_PLAYER__];
+            var len                 = border.border;
             for (i = 0; i < len; i++) {
                 var pos = border.cycle[i];
                 var player = players[pos];
@@ -16489,32 +16498,36 @@ try {
                 PLAYER.frameId = frameId;
                 MmnMv(player, pos);
             }
+
             World.PLAYER.loot = -1;
             World.PLAYER.lootId = -1;
-            var loots = Entitie.units[__ENTITIE_LOOT__];
-            var lootsBorder = Entitie.border[__ENTITIE_LOOT__];
-            var lootsLen = lootsBorder.border;
+            var loots               = Entitie.units[__ENTITIE_LOOT__];
+            var lootsBorder         = Entitie.border[__ENTITIE_LOOT__];
+            var lootsLen            = lootsBorder.border;
             for (i = 0; i < lootsLen; i++) _Loots(loots[lootsBorder.cycle[i]]);
             for (i = 0; i < WWM; i++) {
                 var player = MvW[Wwn.cycle[i]];
                 if (player.type === __ENTITIE_LOOT__) _Loots(player);
             }
-            var bullets = Entitie.units[__ENTITIE_BULLET__];
-            var bulletsBorder = Entitie.border[__ENTITIE_BULLET__];
-            var bulletsLen = bulletsBorder.border;
+
+            var bullets             = Entitie.units[__ENTITIE_BULLET__];
+            var bulletsBorder       = Entitie.border[__ENTITIE_BULLET__];
+            var bulletsLen          = bulletsBorder.border;
             for (i = 0; i < bulletsLen; i++) _Bullets(bullets[bulletsBorder.cycle[i]]);
             for (i = 0; i < WWM; i++) {
                 var player = MvW[Wwn.cycle[i]];
                 if (player.type === __ENTITIE_BULLET__) _Bullets(player);
             }
-            resources = Entitie.units[__ENTITIE_RESOURCES_MID__];
-            resourceBorder = Entitie.border[__ENTITIE_RESOURCES_MID__];
-            resourceLen = resourceBorder.border;
+
+            resources               = Entitie.units[__ENTITIE_RESOURCES_MID__];
+            resourceBorder          = Entitie.border[__ENTITIE_RESOURCES_MID__];
+            resourceLen             = resourceBorder.border;
             for (i = 0; i < resourceLen; i++) _Resources(resources[resourceBorder.cycle[i]]);
             for (i = 0; i < WWM; i++) {
                 var player = MvW[Wwn.cycle[i]];
                 if (player.type === __ENTITIE_RESOURCES_MID__) _Resources(player);
             }
+
             if (World.gameMode === World.__GHOUL__) {
                 for (i = 0; i < len; i++) {
                     var player = players[border.cycle[i]];
@@ -16547,17 +16560,19 @@ try {
                     }
                 }
             }
-            var entitie = Entitie.units[__ENTITIE_AI__];
-            var entitieBorder = Entitie.border[__ENTITIE_AI__];
-            var entitieLen = entitieBorder.border;
+
+            var entitie         = Entitie.units[__ENTITIE_AI__];
+            var entitieBorder   = Entitie.border[__ENTITIE_AI__];
+            var entitieLen      = entitieBorder.border;
             for (i = 0; i < entitieLen; i++) _EntitieAI(entitie[entitieBorder.cycle[i]]);
             for (i = 0; i < WWM; i++) {
                 var player = MvW[Wwn.cycle[i]];
                 if (player.type === __ENTITIE_AI__) _EntitieAI(player);
             }
-            buildings = Entitie.units[__ENTITIE_BUILD_TOP__];
-            buildingsBorder = Entitie.border[__ENTITIE_BUILD_TOP__];
-            buildingsLen = buildingsBorder.border;
+
+            buildings           = Entitie.units[__ENTITIE_BUILD_TOP__];
+            buildingsBorder     = Entitie.border[__ENTITIE_BUILD_TOP__];
+            buildingsLen        = buildingsBorder.border;
             for (i = 0; i < buildingsLen; i++) _Buildings(buildings[buildingsBorder.cycle[i]]);
             for (i = 0; i < WWM; i++) {
                 var player = MvW[Wwn.cycle[i]];
@@ -16568,31 +16583,36 @@ try {
                 item.drawTop(WvnvV[i]);
                 WvnvV[i] = null;
             }
-            resources = Entitie.units[__ENTITIE_RESOURCES_TOP__];
-            resourceBorder = Entitie.border[__ENTITIE_RESOURCES_TOP__];
-            resourceLen = resourceBorder.border;
+
+            resources       = Entitie.units[__ENTITIE_RESOURCES_TOP__];
+            resourceBorder  = Entitie.border[__ENTITIE_RESOURCES_TOP__];
+            resourceLen     = resourceBorder.border;
             for (i = 0; i < resourceLen; i++) _Resources(resources[resourceBorder.cycle[i]]);
             for (i = 0; i < WWM; i++) {
                 var player = MvW[Wwn.cycle[i]];
                 if (player.type === __ENTITIE_RESOURCES_TOP__) _Resources(player);
             }
-            resources = Entitie.units[__ENTITIE_RESOURCES_STOP__];
-            resourceBorder = Entitie.border[__ENTITIE_RESOURCES_STOP__];
-            resourceLen = resourceBorder.border;
+
+            resources       = Entitie.units[__ENTITIE_RESOURCES_STOP__];
+            resourceBorder  = Entitie.border[__ENTITIE_RESOURCES_STOP__];
+            resourceLen     = resourceBorder.border;
             for (i = 0; i < resourceLen; i++) _Resources(resources[resourceBorder.cycle[i]]);
             for (i = 0; i < WWM; i++) {
                 var player = MvW[Wwn.cycle[i]];
                 if (player.type === __ENTITIE_RESOURCES_STOP__) _Resources(player);
             }
-            explosions = Entitie.units[__ENTITIE_EXPLOSION__];
+
+            explosions      = Entitie.units[__ENTITIE_EXPLOSION__];
             explosionBorder = Entitie.border[__ENTITIE_EXPLOSION__];
-            explosionLen = explosionBorder.border;
-            for (i = 0; i < explosionLen; i++) _Explosions(explosions[explosionBorder.cycle[i]]);
-            for (i = 0; i < len; i++) vWMWW(players[border.cycle[i]]);
+            explosionLen    = explosionBorder.border;
+            for (i = 0; i < explosionLen; i++)  _Explosions(explosions[explosionBorder.cycle[i]]);
+            for (i = 0; i < len; i++)           _playerNotification(players[border.cycle[i]]);
+            
             if (World.gameMode !== World.__BR__) {
-                for (i = 0; i < len; i++) _playerName(players[border.cycle[i]]);
-                for (i = 0; i < len; i++) VvVNw(players[border.cycle[i]]);
+                for (i = 0; i < len; i++)       _playerName(players[border.cycle[i]]);
+                for (i = 0; i < len; i++)       _playerChatMessage(players[border.cycle[i]]);
             }
+            
         };
         
         function _StopPoisonEffect() {
