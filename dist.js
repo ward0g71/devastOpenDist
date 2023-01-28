@@ -1256,12 +1256,12 @@ function onStackItem(buf) {
         else if (((invtr[i][0] === buf[1]) && (invtr[i][1] === buf[4])) && (invtr[i][2] === buf[5]))
             MNmNm = i;
     }
-    var IID = INVENTORY[buf[1]];
+    var item = INVENTORY[buf[1]];
     var NVwnN = buf[2] + buf[4];
-    if (IID.stack < NVwnN) {
-        invtr[MNmNm][3] = window.Math.min(255, window.Math.max(0, window.Math.floor(((invtr[wWnWW][3] * invtr[wWnWW][1]) + (invtr[MNmNm][3] * (IID.stack - invtr[wWnWW][1]))) / IID.stack)));
-        invtr[wWnWW][1] = NVwnN - IID.stack;
-        invtr[MNmNm][1] = IID.stack;
+    if (item.stack < NVwnN) {
+        invtr[MNmNm][3] = window.Math.min(255, window.Math.max(0, window.Math.floor(((invtr[wWnWW][3] * invtr[wWnWW][1]) + (invtr[MNmNm][3] * (item.stack - invtr[wWnWW][1]))) / item.stack)));
+        invtr[wWnWW][1] = NVwnN - item.stack;
+        invtr[MNmNm][1] = item.stack;
     } else {
         invtr[MNmNm][3] = window.Math.min(255, window.Math.max(0, window.Math.floor(((invtr[wWnWW][3] * invtr[wWnWW][1]) + (invtr[MNmNm][3] * invtr[MNmNm][1])) / NVwnN)));
         invtr[wWnWW][0] = 0;
@@ -1432,10 +1432,10 @@ function onOpenBuilding(unit8) {
     var queue = craft.queue;
     World.PLAYER.building.len = 4;
     for (var i = 0; i < 4; i++) {
-        var IID = unit8[i + 4];
-        queue[i] = IID;
-        if (IID !== 0)
-            Game.queue[i].setImages(INVENTORY[IID].itemButton.src, INVENTORY[IID].itemButton.img);
+        var item = unit8[i + 4];
+        queue[i] = item;
+        if (item !== 0)
+            Game.queue[i].setImages(INVENTORY[item].itemButton.src, INVENTORY[item].itemButton.img);
         else {
             World.PLAYER.building.len = i;
             break;
@@ -1447,11 +1447,11 @@ function onOpenBuilding(unit8) {
     else
         craft.fuel = -1;
     if (((queue[0] !== 0) && (craft.pos !== 4)) && (queue[craft.pos] !== 0)) {
-        var IID = INVENTORY[queue[craft.pos]];
-        var canvasZ = IID.detail.area;
+        var item = INVENTORY[queue[craft.pos]];
+        var canvasZ = item.detail.area;
         for (i = 0; i < canvasZ.length; i++) {
             if (canvasZ[i] === area) {
-                craft.timeMax = IID.detail.timer[i] * World.PLAYER.craftFactor;
+                craft.timeMax = item.detail.timer[i] * World.PLAYER.craftFactor;
                 break;
             }
         }
@@ -2744,10 +2744,10 @@ var World = (function() {
 
     function selectRecipe(Wn) {
         var len = 0;
-        var IID = INVENTORY[Wn];
-        Game.preview.setImages(IID.itemButton.src, IID.itemButton.img);
-        var MWVwN = IID.detail.recipe;
-        var canvasZ = IID.detail.area;
+        var item = INVENTORY[Wn];
+        Game.preview.setImages(item.itemButton.src, item.itemButton.img);
+        var MWVwN = item.detail.recipe;
+        var canvasZ = item.detail.area;
         var recipe = Game.recipe;
         var tools = Game.tools;
         var recipeList = PLAYER.recipeList;
@@ -2756,8 +2756,8 @@ var World = (function() {
             for (var i = 0; i < canvasZ.length; i++) {
                 var tool = AREASTOITEM[canvasZ[i]];
                 if (tool !== window.undefined) {
-                    IID = INVENTORY[tool];
-                    tools[len].setImages(IID.itemButton.src, IID.itemButton.img);
+                    item = INVENTORY[tool];
+                    tools[len].setImages(item.itemButton.src, item.itemButton.img);
                     len++;
                 }
             }
@@ -2766,9 +2766,9 @@ var World = (function() {
         len = 0;
         if (MWVwN !== window.undefined) {
             for (i = 0; i < MWVwN.length; i++) {
-                IID = INVENTORY[MWVwN[i][0]];
-                recipe[len].setImages(IID.itemButton.src, IID.itemButton.img);
-                recipeList[len] = IID.id;
+                item = INVENTORY[MWVwN[i][0]];
+                recipe[len].setImages(item.itemButton.src, item.itemButton.img);
+                recipeList[len] = item.id;
                 len++;
             }
         }
@@ -2827,15 +2827,15 @@ var World = (function() {
         var craftList = Game.craft;
         var craftAvailable = PLAYER.craftAvailable;
         for (var i = 1; i < INVENTORY.length; i++) {
-            var IID = INVENTORY[i];
-            if (IID.detail.category === category) {
+            var item = INVENTORY[i];
+            if (item.detail.category === category) {
                 if (nnNVM === 0) {
                     nnNVM = i;
                     vVWmn = len;
                 }
-                craftList[len].setImages(IID.itemButton.src, IID.itemButton.img);
+                craftList[len].setImages(item.itemButton.src, item.itemButton.img);
                 craft[len] = i;
-                craftAvailable[len] = NMvWv(i, IID.detail);
+                craftAvailable[len] = NMvWv(i, item.detail);
                 len++;
             }
         }
@@ -2859,14 +2859,14 @@ var World = (function() {
         var craftAvailable = PLAYER.craftAvailable;
         var craftList = Game.craft;
         for (var i = 1; i < INVENTORY.length; i++) {
-            var IID = INVENTORY[i];
-            var NW = IID.detail;
-            if (((NW.area !== window.undefined) && (NW.area.indexOf(area) !== -1)) && ((NW.level === -1) || (PLAYER.skillUnlocked[IID.id] === 1))) {
+            var item = INVENTORY[i];
+            var NW = item.detail;
+            if (((NW.area !== window.undefined) && (NW.area.indexOf(area) !== -1)) && ((NW.level === -1) || (PLAYER.skillUnlocked[item.id] === 1))) {
                 if ((nnNVM === 0) || (previous === i)) {
                     nnNVM = i;
                     vVWmn = len;
                 }
-                craftList[len].setImages(IID.itemButton.src, IID.itemButton.img);
+                craftList[len].setImages(item.itemButton.src, item.itemButton.img);
                 craft[len] = i;
                 craftAvailable[len] = MMMWN(NW.recipe);
                 len++;
@@ -10619,13 +10619,13 @@ var Score = (function() {
         }
         var MWMwV = KIT[window.Math.min(KIT.length - 1, World.PLAYER.level)];
         for (var i = 0; i < MWMwV.length; i++) {
-            var IID = MWMwV[i];
-            if (IID.id !== 0) Game.inventory[i].setImages(INVENTORY[IID.id].itemButton.src, INVENTORY[IID.id].itemButton.img);
+            var item = MWMwV[i];
+            if (item.id !== 0) Game.inventory[i].setImages(INVENTORY[item.id].itemButton.src, INVENTORY[item.id].itemButton.img);
             var invtr = World.PLAYER.inventory[i];
-            invtr[1] = IID.amount;
+            invtr[1] = item.amount;
             invtr[2] = 0;
-            invtr[3] = IID.life;
-            invtr[0] = IID.id;
+            invtr[3] = item.life;
+            invtr[0] = item.id;
         }
         waitAds = 5000;
         if (Loader.getURLData("admin") === null) {
@@ -11118,9 +11118,9 @@ function wMNww(vV) {
     var buildingsLen = buildingsBorder.border;
     for (i = 0; i < buildingsLen; i++) {
         var player = buildings[buildingsBorder.cycle[i]];
-        var IID = INVENTORY[player.extra >> 7];
-        NvV += ("!b=" + IID.id) + ":";
-        if (IID.subtype !== 0) NvV += player.subtype + ":";
+        var item = INVENTORY[player.extra >> 7];
+        NvV += ("!b=" + item.id) + ":";
+        if (item.subtype !== 0) NvV += player.subtype + ":";
         NvV += (((player.j + ":") + player.i) + ":") + ((player.extra >> 5) & 3);
     }
     return NvV;
@@ -11284,9 +11284,9 @@ var Editor = (function() {
         var buildingsLen = buildingsBorder.border;
         for (i = 0; i < buildingsLen; i++) {
             var player = buildings[buildingsBorder.cycle[i]];
-            var IID = INVENTORY[player.extra >> 7];
-            NvV += ("!b=" + IID.id) + ":";
-            if (IID.subtype !== 0) NvV += player.subtype + ":";
+            var item = INVENTORY[player.extra >> 7];
+            NvV += ("!b=" + item.id) + ":";
+            if (item.subtype !== 0) NvV += player.subtype + ":";
             NvV += (((player.j + ":") + player.i) + ":") + ((player.extra >> 5) & 3);
         }
         return NvV;
@@ -11460,11 +11460,11 @@ var Editor = (function() {
         AudioManager.startGame();
         if (vVnNn === 0) {
             vVnNn = 1;
-            var vnvwV = INVENTORY[IID.__ROAD__].subtype;
-            for (var i = 0; i < vnvwV.length; i++) {
-                var IID = vnvwV[i];
-                IID.itemButton = {
-                    src: [IID.building.src, "img/useless.png", "img/useless.png"],
+            var itemSub = INVENTORY[IID.__ROAD__].subtype;
+            for (var i = 0; i < itemSub.length; i++) {
+                var item = itemSub[i];
+                item.itemButton = {
+                    src: [item.building.src, "img/useless.png", "img/useless.png"],
                     img: [{
                         isLoaded: 0
                     }, {
@@ -11474,11 +11474,11 @@ var Editor = (function() {
                     }]
                 };
             }
-            var vnvwV = INVENTORY[IID.__FURNITURE__].subtype;
-            for (var i = 0; i < vnvwV.length; i++) {
-                var IID = vnvwV[i];
-                IID.itemButton = {
-                    src: [IID.building.src, "img/useless.png", "img/useless.png"],
+            var itemSub = INVENTORY[IID.__FURNITURE__].subtype;
+            for (var i = 0; i < itemSub.length; i++) {
+                var IID = itemSub[i];
+                item.itemButton = {
+                    src: [item.building.src, "img/useless.png", "img/useless.png"],
                     img: [{
                         isLoaded: 0
                     }, {
@@ -11789,9 +11789,9 @@ var Editor = (function() {
         if (maproadbutton.trigger() === 1) {
             vnm = 1;
             NWw = 0;
-            var vnvwV = INVENTORY[IID.__ROAD__].subtype;
-            for (var i = 0; i < vnvwV.length; i++) {
-                var item = vnvwV[i];
+            var itemSub = INVENTORY[IID.__ROAD__].subtype;
+            for (var i = 0; i < itemSub.length; i++) {
+                var item = itemSub[i];
                 Wnw[NWw].setImages(item.itemButton.src, item.itemButton.img);
                 Wnw[NWw].itemId = IID.__ROAD__;
                 Wnw[NWw].itemSubId = i;
@@ -11802,9 +11802,9 @@ var Editor = (function() {
         if (mapfurniturebutton.trigger() === 1) {
             vnm = 1;
             NWw = 0;
-            var vnvwV = INVENTORY[IID.__FURNITURE__].subtype;
-            for (var i = 0; i < vnvwV.length; i++) {
-                var item = vnvwV[i];
+            var itemSub = INVENTORY[IID.__FURNITURE__].subtype;
+            for (var i = 0; i < itemSub.length; i++) {
+                var item = itemSub[i];
                 Wnw[NWw].setImages(item.itemButton.src, item.itemButton.img);
                 Wnw[NWw].itemId = IID.__FURNITURE__;
                 Wnw[NWw].itemSubId = i;
@@ -13426,7 +13426,7 @@ try {
             wm.pos.x = WX;
             wm.pos.y = WY;
             wm.draw();
-            var IID = INVENTORY[invtr[0]];
+            var item = INVENTORY[invtr[0]];
             var amount = invtr[1];
             if (amount > 1) {
                 if (inventoryItemNumber[amount] === window.undefined) {
@@ -13437,7 +13437,7 @@ try {
                 }
                 CanvasUtils.drawImageHd(inventoryItemNumber[amount], (WX / scaleby) + 53, (WY / scaleby) + 55, -0.5, 0, 0, 1);
             }
-            if ((IID.bullet !== window.undefined) && (IID.mMVwm === window.undefined)) {
+            if ((item.bullet !== window.undefined) && (item.mMVwm === window.undefined)) {
                 var amount = invtr[3];
                 if (inventoryAmmoNumber[amount] === window.undefined) {
                     inventoryAmmoNumber[amount] = {
@@ -13447,7 +13447,7 @@ try {
                 }
                 CanvasUtils.drawImageHd(inventoryAmmoNumber[amount], (WX / scaleby) + 53, (WY / scaleby) + 55, -0.5, 0, 0, 1);
             }
-            if (IID.perish !== window.undefined) {
+            if (item.perish !== window.undefined) {
                 var VWNwv = window.Math.floor(invtr[3] / 12.8);
                 var img = wwvmV[VWNwv];
                 if (img.isLoaded !== 1) {
@@ -14455,8 +14455,8 @@ try {
                 }
             }
         };
-
-
+        
+        
         function mVwvw(player) {
             var PLAYER = World.players[player.pid];
             if (((((player.extra & 255) === 16) && (World.PLAYER.admin !== 1)) && (player.pid !== World.PLAYER.id)) && (((PLAYER.team === -1) || (World.teams[PLAYER.team].uid !== PLAYER.teamUid)) || (World.PLAYER.team !== PLAYER.team))) return;
@@ -14478,9 +14478,9 @@ try {
                 } else PLAYER.team = -1;
             }
         };
-
         
-
+        
+        
         function vmNmW(tile, i, j, wVNVN, vWMwn, NVWwM, MWMvm) {
             var building = BUILDINGS[tile.type];
             var img = building.img;
@@ -14527,7 +14527,7 @@ try {
             }
             ctx.drawImage(img, VwMWn, nVNNn, SY, SX, WX, WY, (SY * 3) * scaleby, (SX * 3) * scaleby);
         };
-
+        
         function wNnvM() {
             WvmnV = CanvasUtils.lerp(WvmnV, (((Render.scale + NNmMN[0]) + NNmMN[1]) + NNmMN[2]) + NNmMN[3], vwMWM);
             oldscale = scaleby;
@@ -14535,7 +14535,7 @@ try {
             canwns = canw / scaleby;
             canhns = canh / scaleby;
         };
-
+        
         function myplayerfocusinscreen() {
             var players = Entitie.units[__ENTITIE_PLAYER__];
             var border = Entitie.border[__ENTITIE_PLAYER__];
@@ -14590,14 +14590,14 @@ try {
                 }
             }
         };
-
+        
         function mNWNw() {
             for (var i = 0; i < World.PLAYER.gridPrev.length; i++) {
                 if (World.PLAYER.gridPrev[i] !== 0) return 0;
             }
             return 1;
         };
-
+        
         function wmVNW() {
             if (World.PLAYER.isBuilding === 1) {
                 if ((World.PLAYER.grid > 0) && ((World.PLAYER.iGrid !== World.PLAYER._i) || (World.PLAYER.jGrid !== World.PLAYER._j))) {
@@ -14643,7 +14643,7 @@ try {
                 }
             }
         };
-
+        
         function wmMwV() {
             var wVNVN = window.Math.min(MapManager.height - VmvVW, window.Math.max(0, (((WnWvv - VmvVW) / 2) + window.Math.floor((WVNMV / __TILE_SIZE__) - (VmvVW / 2))) + 1));
             var vWMwn = window.Math.min(MapManager.width - wWmnn, window.Math.max(0, (((NVmMW - wWmnn) / 2) + window.Math.floor((NVVWM / __TILE_SIZE__) - (wWmnn / 2))) + 1));
@@ -14655,7 +14655,7 @@ try {
                 }
             }
         };
-
+        
         function vWMWW(player) {
             var PLAYER = World.players[player.pid];
             if ((PLAYER !== window.undefined) && (PLAYER.notification.length > 0)) {
@@ -14691,8 +14691,8 @@ try {
                 ctx.globalAlpha = 1;
             }
         };
-
-        function showruncloud(player) {
+        
+        function _Run(player) {
             var PLAYER = World.players[player.pid];
             for (var i = 0; i < PLAYER.runEffect.length; i++) {
                 var effect = PLAYER.runEffect[i];
@@ -14726,7 +14726,7 @@ try {
                 }
             }
         };
-
+        
         function Wvmnw(mVn, weapon, wVn, player, imgMovement, WX, WY) {
             var PLAYER = World.players[player.pid];
             var WMW = 0;
@@ -14786,8 +14786,8 @@ try {
             CanvasUtils.drawImageHd(MVn, WX, WY, Nmm.angle + player.angle, ((Nmm.x + (move * PLAYER.orientation)) + recoil) + breath, Nmm.y, imgMovement);
             MVn = (wVn.leftArm === window.undefined) ? skin.leftArm : wVn.leftArm;
             CanvasUtils.drawImageHd(MVn, WX, WY, -VnN.angle + player.angle, ((VnN.x + (move * PLAYER.orientation)) + recoil) + breath, VnN.y, imgMovement);
-            var IID = weapon.weapon;
-            CanvasUtils.drawImageHd(IID, WX, WY, player.angle, ((IID.x + (move * PLAYER.orientation)) + breath) + recoil, IID.y, imgMovement);
+            var item = weapon.weapon;
+            CanvasUtils.drawImageHd(item, WX, WY, player.angle, ((item.x + (move * PLAYER.orientation)) + breath) + recoil, item.y, imgMovement);
             if (player.hurt2 > 0) {
                 var mnM = 1;
                 player.hurt2 -= delta;
@@ -14831,7 +14831,7 @@ try {
             CanvasUtils.drawImageHd(skin.head, WX, WY, player.angle, 0, 0, imgMovement);
             if (wVn.head !== window.undefined) CanvasUtils.drawImageHd(wVn.head, WX, WY, player.angle, 0, 0, imgMovement);
         };
-
+        
         function vwVWm(mVn, weapon, wVn, player, imgMovement, WX, WY) {
             var PLAYER = World.players[player.pid];
             var WMW = 0;
@@ -14907,12 +14907,12 @@ try {
             CanvasUtils.drawImageHd(MVn, WX, WY, Nmm.angle + player.angle, ((Nmm.x + (move * PLAYER.orientation)) + recoil) + breath, Nmm.y, imgMovement);
             MVn = (wVn.leftArm === window.undefined) ? skin.leftArm : wVn.leftArm;
             CanvasUtils.drawImageHd(MVn, WX, WY, -VnN.angle + player.angle, ((VnN.x + (move * PLAYER.orientation)) + recoil) + breath, VnN.y, imgMovement);
-            var IID = weapon.weapon;
+            var item = weapon.weapon;
             if ((effect >= 0) && (weapon.noEffect === 0)) {
                 var gunEffect = mVn.gunEffect[weapon.gunEffect][effect];
-                CanvasUtils.drawImageHd(gunEffect, WX, WY, player.angle, (((IID.x + (move * PLAYER.orientation)) + breath) + recoilGun) + weapon.distance, IID.y, imgMovement);
+                CanvasUtils.drawImageHd(gunEffect, WX, WY, player.angle, (((item.x + (move * PLAYER.orientation)) + breath) + recoilGun) + weapon.distance, item.y, imgMovement);
             }
-            CanvasUtils.drawImageHd(IID, WX, WY, player.angle, ((IID.x + (move * PLAYER.orientation)) + breath) + recoilGun, IID.y, imgMovement);
+            CanvasUtils.drawImageHd(item, WX, WY, player.angle, ((item.x + (move * PLAYER.orientation)) + breath) + recoilGun, item.y, imgMovement);
             for (var i = 0; i < cartridges.length; i++) {
                 var cartridge = cartridges[i];
                 if (cartridge.delay > 0) {
@@ -14956,7 +14956,7 @@ try {
             CanvasUtils.drawImageHd(skin.head, WX, WY, player.angle, recoilHead, 0, imgMovement);
             if (wVn.head !== window.undefined) CanvasUtils.drawImageHd(wVn.head, WX, WY, player.angle, recoilHead, 0, imgMovement);
         };
-
+        
         function WVVmN(mVn, weapon, wVn, player, imgMovement, WX, WY) {
             var PLAYER = World.players[player.pid];
             var WMW = 0;
@@ -15010,8 +15010,8 @@ try {
                 var WnVmv = weapon.WnVmv;
                 CanvasUtils.drawImageHd(WnVmv, WX, WY, player.angle, ((WnVmv.x - (move * PLAYER.orientation)) + breathWeapon) + NWW, WnVmv.y, imgMovement);
             }
-            var IID = weapon.weapon;
-            CanvasUtils.drawImageHd(IID, WX, WY, IID.angle + player.angle, ((IID.x + (move * PLAYER.orientation)) + breath) + NNM, IID.y, imgMovement);
+            var item = weapon.weapon;
+            CanvasUtils.drawImageHd(item, WX, WY, item.angle + player.angle, ((item.x + (move * PLAYER.orientation)) + breath) + NNM, item.y, imgMovement);
             NwM = weapon.leftArm;
             MVn = (wVn.leftArm === window.undefined) ? skin.leftArm : wVn.leftArm;
             CanvasUtils.drawImageHd(MVn, WX, WY, -NwM.angle + player.angle, ((NwM.x + (move * PLAYER.orientation)) + NNM) + breath, NwM.y, imgMovement);
@@ -15045,7 +15045,7 @@ try {
             CanvasUtils.drawImageHd(skin.head, WX, WY, player.angle - (nmm / 1.5), wnN, 0, imgMovement);
             if (wVn.head !== window.undefined) CanvasUtils.drawImageHd(wVn.head, WX, WY, player.angle - (nmm / 1.5), wnN, 0, imgMovement);
         };
-
+        
         function mWNvw(mVn, weapon, wVn, player, imgMovement, WX, WY) {
             var PLAYER = World.players[player.pid];
             var WMW = 0;
@@ -15127,10 +15127,10 @@ try {
             NwM = weapon.rightArm;
             MVn = (wVn.rightArm === window.undefined) ? skin.rightArm : wVn.rightArm;
             CanvasUtils.drawImageHd(MVn, WX, WY, NwM.angle + player.angle, ((NwM.x + (move * PLAYER.orientation)) + NWW) + breathWeapon, NwM.y, imgMovement);
-            var IID = weapon.weapon;
-            CanvasUtils.drawImageHd(IID, WX, WY, IID.angle + player.angle, ((IID.x + (move * PLAYER.orientation)) + breathWeapon) + NWW, IID.y, imgMovement);
+            var item = weapon.weapon;
+            CanvasUtils.drawImageHd(item, WX, WY, item.angle + player.angle, ((item.x + (move * PLAYER.orientation)) + breathWeapon) + NWW, item.y, imgMovement);
         };
-
+        
         function mvwMm(mVn, weapon, wVn, player, imgMovement, WX, WY) {
             var PLAYER = World.players[player.pid];
             var WMW = 0;
@@ -15178,8 +15178,8 @@ try {
             }
             var breath = weapon.breath * ((PLAYER.breath < 750) ? (PLAYER.breath / 750) : (1 - ((PLAYER.breath - 750) / 750)));
             var move = weapon.move * ((PLAYER.move < 400) ? (PLAYER.move / 400) : (1 - ((PLAYER.move - 400) / 400)));
-            var IID = weapon.weapon;
-            CanvasUtils.drawImageHd2(IID, WX, WY, (IID.angle + player.angle) + breath, IID.x + (move * PLAYER.orientation), IID.y, imgMovement, nmm * IID.rotation, IID.x2, IID.y2);
+            var item = weapon.weapon;
+            CanvasUtils.drawImageHd2(item, WX, WY, (item.angle + player.angle) + breath, item.x + (move * PLAYER.orientation), item.y, imgMovement, nmm * item.rotation, item.x2, item.y2);
             var MVn = (wVn.rightArm === window.undefined) ? skin.rightArm : wVn.rightArm;
             CanvasUtils.drawImageHd(MVn, WX, WY, ((Nmm.angle + player.angle) + breath) + (nmm * Nmm.rotation), (Nmm.x + (move * PLAYER.orientation)) + NWW, Nmm.y, imgMovement);
             MVn = (wVn.leftArm === window.undefined) ? skin.leftArm : wVn.leftArm;
@@ -15214,7 +15214,7 @@ try {
             CanvasUtils.drawImageHd(skin.head, WX, WY, player.angle + (nmm / 1.5), wnN, 0, imgMovement);
             if (wVn.head !== window.undefined) CanvasUtils.drawImageHd(wVn.head, WX, WY, player.angle + (nmm / 1.5), wnN, 0, imgMovement);
         };
-
+        
         function mmmMw(mVn, weapon, wVn, player, imgMovement, WX, WY) {
             var PLAYER = World.players[player.pid];
             var WMW = 0;
@@ -15290,46 +15290,46 @@ try {
             CanvasUtils.drawImageHd(weapon.pencil, WX, WY, player.angle, 0, 0, imgMovement);
         };
         var nVWnV = [0, 0, 0, 0];
-
+        
         function placingobj() {
             var nwmVM = 0;
             if ((World.PLAYER.isBuilding === 1) && (World.PLAYER.blueprint !== 0)) {
-                var IID = INVENTORY[World.PLAYER.blueprint];
-                if (IID.subtype !== 0) {
-                    IID = IID.subtype[World.PLAYER.furniture];
-                    IID.redprint = IID.building;
-                    IID.blueprint = IID.building;
-                    IID.xCenter = nVWnV;
-                    IID.yCenter = nVWnV;
+                var item = INVENTORY[World.PLAYER.blueprint];
+                if (item.subtype !== 0) {
+                    item = item.subtype[World.PLAYER.furniture];
+                    item.redprint = item.building;
+                    item.blueprint = item.building;
+                    item.xCenter = nVWnV;
+                    item.yCenter = nVWnV;
                 }
                 var angle = Mouse.angle;
-                var Rot = (IID.wall === 1) ? 0 : World.PLAYER.buildRotate;
+                var Rot = (item.wall === 1) ? 0 : World.PLAYER.buildRotate;
                 World.PLAYER.jBuild = World.PLAYER._j + window.Math.floor((__TILE_SIZE2__ + (window.Math.cos(angle) * __TILE_SIZE__)) / __TILE_SIZE__);
                 World.PLAYER.iBuild = World.PLAYER._i + window.Math.floor((__TILE_SIZE2__ + (window.Math.sin(angle) * __TILE_SIZE__)) / __TILE_SIZE__);
-                var WX = ((IID.xCenter[Rot] + vertst) + __TILE_SIZE2__) + (__TILE_SIZE__ * World.PLAYER.jBuild);
-                var WY = ((IID.yCenter[Rot] + horist) + __TILE_SIZE2__) + (__TILE_SIZE__ * World.PLAYER.iBuild);
+                var WX = ((item.xCenter[Rot] + vertst) + __TILE_SIZE2__) + (__TILE_SIZE__ * World.PLAYER.jBuild);
+                var WY = ((item.yCenter[Rot] + horist) + __TILE_SIZE2__) + (__TILE_SIZE__ * World.PLAYER.iBuild);
                 if ((((World.PLAYER.jBuild >= 0) && (World.PLAYER.iBuild >= 0)) && (World.PLAYER.jBuild < NMv)) && (World.PLAYER.iBuild < wWw)) {
                     var VMV = matrix[World.PLAYER.iBuild][World.PLAYER.jBuild];
                     var team = (World.PLAYER.team === -1) ? -2 : World.PLAYER.team;
-                    if ((VMV.tile === frameId) && (((IID.zid !== 2) || (VMV.tilePid === 0)) || (VMV.category === SKILLS.__PLANT__))) {
+                    if ((VMV.tile === frameId) && (((item.zid !== 2) || (VMV.tilePid === 0)) || (VMV.category === SKILLS.__PLANT__))) {
                         World.PLAYER.canBuild = 1; // before 0
-                        CanvasUtils.drawImageHd(IID.redprint, WX, WY, Rot * PIby2, 0, 0, 1);
-                    } else if ((((IID.detail.category === SKILLS.__PLANT__) || (IID.zid === 2)) || (((VMV.pid !== 0) && (VMV.pid !== World.PLAYER.id)) && (World.players[VMV.pid].team !== team))) && (VMV.ground === frameId)) {
+                        CanvasUtils.drawImageHd(item.redprint, WX, WY, Rot * PIby2, 0, 0, 1);
+                    } else if ((((item.detail.category === SKILLS.__PLANT__) || (item.zid === 2)) || (((VMV.pid !== 0) && (VMV.pid !== World.PLAYER.id)) && (World.players[VMV.pid].team !== team))) && (VMV.ground === frameId)) {
                         World.PLAYER.canBuild = 0;
-                        CanvasUtils.drawImageHd(IID.redprint, WX, WY, Rot * PIby2, 0, 0, 1);
-                    } else if ((IID.iTile !== window.undefined) && ((((Rot % 2) === 0) && ((((((World.PLAYER.iBuild < 1) || (World.PLAYER.iBuild >= (wWw - 1))) || (matrix[World.PLAYER.iBuild + 1][World.PLAYER.jBuild].tile === frameId)) || ((matrix[World.PLAYER.iBuild + 1][World.PLAYER.jBuild].ground === frameId) && (((matrix[World.PLAYER.iBuild + 1][World.PLAYER.jBuild].pid !== World.PLAYER.id) && (matrix[World.PLAYER.iBuild + 1][World.PLAYER.jBuild].pid !== 0)) && (World.players[matrix[World.PLAYER.iBuild + 1][World.PLAYER.jBuild].pid].team !== team)))) || (matrix[World.PLAYER.iBuild - 1][World.PLAYER.jBuild].tile === frameId)) || ((matrix[World.PLAYER.iBuild - 1][World.PLAYER.jBuild].ground === frameId) && (((matrix[World.PLAYER.iBuild - 1][World.PLAYER.jBuild].pid !== World.PLAYER.id) && (matrix[World.PLAYER.iBuild - 1][World.PLAYER.jBuild].pid !== 0)) && (World.players[matrix[World.PLAYER.iBuild - 1][World.PLAYER.jBuild].pid].team !== team))))) || (((Rot % 2) === 1) && (((((((World.PLAYER.jBuild < 1) || (World.PLAYER.jBuild >= (NMv - 1))) || (matrix[World.PLAYER.iBuild][World.PLAYER.jBuild + 1].tile === frameId)) || ((matrix[World.PLAYER.iBuild][World.PLAYER.jBuild + 1].ground === frameId) && (((matrix[World.PLAYER.iBuild][World.PLAYER.jBuild + 1].pid !== World.PLAYER.id) && (matrix[World.PLAYER.iBuild][World.PLAYER.jBuild + 1].pid !== 0)) && (World.players[matrix[World.PLAYER.iBuild][World.PLAYER.jBuild + 1].pid].team !== team)))) || (matrix[World.PLAYER.iBuild][World.PLAYER.jBuild - 1].tile === frameId)) || ((matrix[World.PLAYER.iBuild][World.PLAYER.jBuild - 1].ground === frameId) && (((matrix[World.PLAYER.iBuild][World.PLAYER.jBuild - 1].pid !== World.PLAYER.id) && (matrix[World.PLAYER.iBuild][World.PLAYER.jBuild - 1].pid !== 0)) && (World.players[matrix[World.PLAYER.iBuild][World.PLAYER.jBuild - 1].pid].team !== team)))) || (World.PLAYER._i === World.PLAYER.iBuild))))) {
+                        CanvasUtils.drawImageHd(item.redprint, WX, WY, Rot * PIby2, 0, 0, 1);
+                    } else if ((item.iTile !== window.undefined) && ((((Rot % 2) === 0) && ((((((World.PLAYER.iBuild < 1) || (World.PLAYER.iBuild >= (wWw - 1))) || (matrix[World.PLAYER.iBuild + 1][World.PLAYER.jBuild].tile === frameId)) || ((matrix[World.PLAYER.iBuild + 1][World.PLAYER.jBuild].ground === frameId) && (((matrix[World.PLAYER.iBuild + 1][World.PLAYER.jBuild].pid !== World.PLAYER.id) && (matrix[World.PLAYER.iBuild + 1][World.PLAYER.jBuild].pid !== 0)) && (World.players[matrix[World.PLAYER.iBuild + 1][World.PLAYER.jBuild].pid].team !== team)))) || (matrix[World.PLAYER.iBuild - 1][World.PLAYER.jBuild].tile === frameId)) || ((matrix[World.PLAYER.iBuild - 1][World.PLAYER.jBuild].ground === frameId) && (((matrix[World.PLAYER.iBuild - 1][World.PLAYER.jBuild].pid !== World.PLAYER.id) && (matrix[World.PLAYER.iBuild - 1][World.PLAYER.jBuild].pid !== 0)) && (World.players[matrix[World.PLAYER.iBuild - 1][World.PLAYER.jBuild].pid].team !== team))))) || (((Rot % 2) === 1) && (((((((World.PLAYER.jBuild < 1) || (World.PLAYER.jBuild >= (NMv - 1))) || (matrix[World.PLAYER.iBuild][World.PLAYER.jBuild + 1].tile === frameId)) || ((matrix[World.PLAYER.iBuild][World.PLAYER.jBuild + 1].ground === frameId) && (((matrix[World.PLAYER.iBuild][World.PLAYER.jBuild + 1].pid !== World.PLAYER.id) && (matrix[World.PLAYER.iBuild][World.PLAYER.jBuild + 1].pid !== 0)) && (World.players[matrix[World.PLAYER.iBuild][World.PLAYER.jBuild + 1].pid].team !== team)))) || (matrix[World.PLAYER.iBuild][World.PLAYER.jBuild - 1].tile === frameId)) || ((matrix[World.PLAYER.iBuild][World.PLAYER.jBuild - 1].ground === frameId) && (((matrix[World.PLAYER.iBuild][World.PLAYER.jBuild - 1].pid !== World.PLAYER.id) && (matrix[World.PLAYER.iBuild][World.PLAYER.jBuild - 1].pid !== 0)) && (World.players[matrix[World.PLAYER.iBuild][World.PLAYER.jBuild - 1].pid].team !== team)))) || (World.PLAYER._i === World.PLAYER.iBuild))))) {
                         World.PLAYER.canBuild = 0;
-                        CanvasUtils.drawImageHd(IID.redprint, WX, WY, Rot * PIby2, 0, 0, 1);
+                        CanvasUtils.drawImageHd(item.redprint, WX, WY, Rot * PIby2, 0, 0, 1);
                     } else {
                         World.PLAYER.canBuild = 1;
-                        CanvasUtils.drawImageHd(IID.blueprint, WX, WY, Rot * PIby2, 0, 0, 1);
+                        CanvasUtils.drawImageHd(item.blueprint, WX, WY, Rot * PIby2, 0, 0, 1);
                     }
                 }
                 if (hintRotate.isLoaded !== 1) {
                     hintRotate = CanvasUtils.loadImage(hintrotate, hintRotate);
                     return;
                 }
-                if ((IID.wall === 1) || (World.PLAYER.interaction >= 0)) nwmVM = window.Math.max(0, World.PLAYER.hintRotate - delta);
+                if ((item.wall === 1) || (World.PLAYER.interaction >= 0)) nwmVM = window.Math.max(0, World.PLAYER.hintRotate - delta);
                 else nwmVM = window.Math.min(900, World.PLAYER.hintRotate + delta);
             } else nwmVM = window.Math.max(0, World.PLAYER.hintRotate - delta);
             if (nwmVM > 0) {
@@ -15441,7 +15441,7 @@ try {
             if (wVn.head !== window.undefined) CanvasUtils.drawImageHd(wVn.head, WX, WY, player.angle + (nmm / 1.5), wnN, 0, imgMovement);
         };
 
-        function creaturesinscreenfunc(player) {
+        function _EntitieAI(player) {
             var entitie = AI[player.extra & 15];
             matrix[player.i][player.j].tile = frameId;
             matrix[player.i][player.j].tilePid = player.pid;
@@ -15470,7 +15470,7 @@ try {
             }
         };
 
-        function playerinscreenfunc(player) {
+        function _EntitiePlayer(player) {
             matrix[player.i][player.j].tile = frameId;
             matrix[player.i][player.j].tilePid = player.pid;
             matrix[player.i][player.j].category = window.undefined;
@@ -15693,24 +15693,24 @@ try {
             CanvasUtils.drawImageHd(img, vertst + player.x, horist + player.y, player.angle, 0, 0, 1);
         };
 
-        function _Dynamite(IID, player, WX, WY, Rot, imgMovement) {
+        function _Dynamite(item, player, WX, WY, Rot, imgMovement) {
             player.breath = (player.breath + delta) % 500;
             var vW = player.breath / 500;
             var mnM = 0.95 + (0.3 * MathUtils.Ease.inOutQuad(vW));
             ctx.globalAlpha = 1 - vW;
-            CanvasUtils.drawImageHd(IID.building[1], (vertst + player.x) + WX, (horist + player.y) + WY, Rot * PIby2, 0, 0, mnM);
+            CanvasUtils.drawImageHd(item.building[1], (vertst + player.x) + WX, (horist + player.y) + WY, Rot * PIby2, 0, 0, mnM);
             ctx.globalAlpha = 1;
-            CanvasUtils.drawImageHd(IID.building[0], (vertst + player.x) + WX, (horist + player.y) + WY, Rot * PIby2, 0, 0, imgMovement);
+            CanvasUtils.drawImageHd(item.building[0], (vertst + player.x) + WX, (horist + player.y) + WY, Rot * PIby2, 0, 0, imgMovement);
         };
-
-
-        function _Spike(IID, player, WX, WY, Rot, imgMovement) {
+        
+        
+        function _Spike(item, player, WX, WY, Rot, imgMovement) {
             var isInClan = 0;
             var VmnmV = 1;
             if ((player.state & 16) === 16) VmnmV = 0;
             if (((player.pid === World.PLAYER.id) || (((World.PLAYER.team !== -1) && (World.PLAYER.team === World.players[player.pid].team)) && (World.players[player.pid].teamUid === World.teams[World.PLAYER.team].uid))) || (Math2d.fastDist(NmM, WWV, player.x, player.y) < 52000)) isInClan = 1;
             if (VmnmV === 0) {
-                if (player.hurt2 === 0) vNwNM(player, IID.particles, IID.particlesDist, 5);
+                if (player.hurt2 === 0) vNwNM(player, item.particles, item.particlesDist, 5);
                 if (player.hurt2 < 300) {
                     WX += (window.Math.random() * 6) - 4;
                     WY += (window.Math.random() * 6) - 4;
@@ -15719,87 +15719,87 @@ try {
                 if (player.breath > 0) {
                     player.breath = window.Math.max(0, player.breath - (delta / 5));
                     ctx.globalAlpha = MathUtils.Ease.inOutQuad(player.breath / 300);
-                    CanvasUtils.drawImageHd(IID.hidden[player.id % 3], (vertst + player.x) + WX, (horist + player.y) + WY, Rot * PIby2, 0, 0, imgMovement);
+                    CanvasUtils.drawImageHd(item.hidden[player.id % 3], (vertst + player.x) + WX, (horist + player.y) + WY, Rot * PIby2, 0, 0, imgMovement);
                     ctx.globalAlpha = 1;
                 }
-                CanvasUtils.drawImageHd(IID.deployed[player.id % 3], (vertst + player.x) + WX, (horist + player.y) + WY, Rot * PIby2, 0, 0, imgMovement);
+                CanvasUtils.drawImageHd(item.deployed[player.id % 3], (vertst + player.x) + WX, (horist + player.y) + WY, Rot * PIby2, 0, 0, imgMovement);
             } else if (isInClan === 1) {
-                if (player.breath === 300) CanvasUtils.drawImageHd(IID.hidden[player.id % 3], (vertst + player.x) + WX, (horist + player.y) + WY, Rot * PIby2, 0, 0, imgMovement);
+                if (player.breath === 300) CanvasUtils.drawImageHd(item.hidden[player.id % 3], (vertst + player.x) + WX, (horist + player.y) + WY, Rot * PIby2, 0, 0, imgMovement);
                 else {
                     player.breath = window.Math.min(300, player.breath + delta);
                     ctx.globalAlpha = MathUtils.Ease.inOutQuad(player.breath / 300);
-                    CanvasUtils.drawImageHd(IID.hidden[player.id % 3], (vertst + player.x) + WX, (horist + player.y) + WY, Rot * PIby2, 0, 0, imgMovement);
+                    CanvasUtils.drawImageHd(item.hidden[player.id % 3], (vertst + player.x) + WX, (horist + player.y) + WY, Rot * PIby2, 0, 0, imgMovement);
                     ctx.globalAlpha = 1;
                 }
             } else if ((isInClan === 0) && (player.breath > 0)) {
                 player.breath = window.Math.max(0, player.breath - (delta / 5));
                 ctx.globalAlpha = MathUtils.Ease.inOutQuad(player.breath / 300);
-                CanvasUtils.drawImageHd(IID.hidden[player.id % 3], (vertst + player.x) + WX, (horist + player.y) + WY, Rot * PIby2, 0, 0, imgMovement);
+                CanvasUtils.drawImageHd(item.hidden[player.id % 3], (vertst + player.x) + WX, (horist + player.y) + WY, Rot * PIby2, 0, 0, imgMovement);
                 ctx.globalAlpha = 1;
             }
         };
         
-        function _HiddenBuilding(IID, player, WX, WY, Rot, imgMovement) {
-            CanvasUtils.drawImageHd(IID.building, (vertst + player.x) + WX, (horist + player.y) + WY, Rot * PIby2, 0, 0, imgMovement);
+        function _HiddenBuilding(item, player, WX, WY, Rot, imgMovement) {
+            CanvasUtils.drawImageHd(item.building, (vertst + player.x) + WX, (horist + player.y) + WY, Rot * PIby2, 0, 0, imgMovement);
         };
-
-        function _Landmine(IID, player, WX, WY, Rot, imgMovement) {
+        
+        function _Landmine(item, player, WX, WY, Rot, imgMovement) {
             var isInClan = 0;
             if (((player.pid === World.PLAYER.id) || (((World.PLAYER.team !== -1) && (World.PLAYER.team === World.players[player.pid].team)) && (World.players[player.pid].teamUid === World.teams[World.PLAYER.team].uid))) || (Math2d.fastDist(NmM, WWV, player.x, player.y) < 52000)) isInClan = 1;
             if (isInClan === 1) {
                 player.breath = window.Math.min(300, player.breath + delta);
                 ctx.globalAlpha = MathUtils.Ease.inOutQuad(player.breath / 300);
-                CanvasUtils.drawImageHd(IID.building[player.id % 3], (vertst + player.x) + WX, (horist + player.y) + WY, Rot * PIby2, 0, 0, imgMovement);
+                CanvasUtils.drawImageHd(item.building[player.id % 3], (vertst + player.x) + WX, (horist + player.y) + WY, Rot * PIby2, 0, 0, imgMovement);
                 ctx.globalAlpha = 0.2;
                 CanvasUtils.drawImageHd(LIGHTFIRE[5], (vertst + player.x) + WX, (horist + player.y) + WY, 0, 0, 0, 0.6);
                 ctx.globalAlpha = 1;
             }
-
+        
             else if (isInClan === 0) {
                 player.breath = window.Math.min(300, player.breath + delta);
                 ctx.globalAlpha = MathUtils.Ease.inOutQuad(player.breath / 300);
-                CanvasUtils.drawImageHd(IID.building[player.id % 3], (vertst + player.x) + WX, (horist + player.y) + WY, Rot * PIby2, 0, 0, imgMovement);
-
+                CanvasUtils.drawImageHd(item.building[player.id % 3], (vertst + player.x) + WX, (horist + player.y) + WY, Rot * PIby2, 0, 0, imgMovement);
+        
                 ctx.globalAlpha = 0.2;
                 CanvasUtils.drawImageHd(LIGHTFIRE[4], (vertst + player.x) + WX, (horist + player.y) + WY, 0, 0, 0, 0.6);
                 ctx.globalAlpha = 1; 
-
+        
             }    
         };
-
-        function _DefaultBuilding(IID, player, WX, WY, Rot, imgMovement) {
-            CanvasUtils.drawImageHd(IID.building, (vertst + player.x) + WX, (horist + player.y) + WY, Rot * PIby2, 0, 0, imgMovement);
+        
+        function _DefaultBuilding(item, player, WX, WY, Rot, imgMovement) {
+            CanvasUtils.drawImageHd(item.building, (vertst + player.x) + WX, (horist + player.y) + WY, Rot * PIby2, 0, 0, imgMovement);
         };
-
-        function _Breakable(IID, player, WX, WY, Rot, imgMovement) {
-            CanvasUtils.drawImageHd(IID.building[player.broke], (vertst + player.x) + WX, (horist + player.y) + WY, Rot * PIby2, 0, 0, imgMovement);
+        
+        function _Breakable(item, player, WX, WY, Rot, imgMovement) {
+            CanvasUtils.drawImageHd(item.building[player.broke], (vertst + player.x) + WX, (horist + player.y) + WY, Rot * PIby2, 0, 0, imgMovement);
         };
-
-        function _Wall(IID, player, WX, WY, Rot, imgMovement) {
-            if (player.broke > 0) CanvasUtils.drawImageHd(IID.broken[player.broke - 1], (vertst + player.x) + WX, (horist + player.y) + WY, 0, 0, 0, imgMovement);
-            else CanvasUtils.drawImageHd(IID.building[WwmwN(player)], (vertst + player.x) + WX, (horist + player.y) + WY, 0, 0, 0, imgMovement);
+        
+        function _Wall(item, player, WX, WY, Rot, imgMovement) {
+            if (player.broke > 0) CanvasUtils.drawImageHd(item.broken[player.broke - 1], (vertst + player.x) + WX, (horist + player.y) + WY, 0, 0, 0, imgMovement);
+            else CanvasUtils.drawImageHd(item.building[WwmwN(player)], (vertst + player.x) + WX, (horist + player.y) + WY, 0, 0, 0, imgMovement);
         };
-
-        function nearme(IID, player, MMwnn) {
+        
+        function nearme(item, player, MMwnn) {
             if ((((player.removed === 0) && (World.PLAYER.interaction !== 1)) && (World.PLAYER.isInBuilding !== 1)) && (((MMwnn === 0) || (player.pid === World.PLAYER.id)) || (((World.PLAYER.team !== -1) && (World.PLAYER.team === World.players[player.pid].team)) && (World.players[player.pid].teamUid === World.teams[World.PLAYER.team].uid)))) {
                 var dist = Math2d.fastDist(NmM, WWV, player.x, player.y);
                 if (dist < vnVmM) {
-                    World.PLAYER.packetId = IID.packetId;
+                    World.PLAYER.packetId = item.packetId;
                     World.PLAYER.buildingId = player.id;
                     World.PLAYER.buildingPid = player.pid;
-                    World.PLAYER.buildingArea = IID.area;
+                    World.PLAYER.buildingArea = item.area;
                     vnVmM = dist;
                     if (World.PLAYER.interaction === 0) World.PLAYER.extraLoot = 1;
                     World.PLAYER.interaction = 2;
-                    World.PLAYER.eInteract = IID.interact;
+                    World.PLAYER.eInteract = item.interact;
                     return 1;
                 }
             }
             return 0;
         };
-
-        function _Construction(IID, player, WX, WY, Rot, imgMovement) {
-            CanvasUtils.drawImageHd(IID.builder, (vertst + player.x) + WX, (horist + player.y) + WY, Rot * PIby2, 0, 0, 1);
+        
+        function _Construction(item, player, WX, WY, Rot, imgMovement) {
+            CanvasUtils.drawImageHd(item.builder, (vertst + player.x) + WX, (horist + player.y) + WY, Rot * PIby2, 0, 0, 1);
             var level = (player.state >> 4) & 15;
             if (player.breath2 !== level) {
                 player.breath2 = level;
@@ -15809,35 +15809,35 @@ try {
             player.heal = (player.heal + delta) % 1000;
             var imgMovement = 1 + (0.03 * ((player.heal < 500) ? (player.heal / 500) : (1 - ((player.heal - 500) / 500))));
             if (level === 0) {
-                ctx.globalAlpha = MathUtils.Ease.inOutQuad(player.breath / IID.evolve);
-                CanvasUtils.drawImageHd(IID.building[0], (vertst + player.x) + WX, (horist + player.y) + WY, Rot * PIby2, 0, 0, imgMovement);
+                ctx.globalAlpha = MathUtils.Ease.inOutQuad(player.breath / item.evolve);
+                CanvasUtils.drawImageHd(item.building[0], (vertst + player.x) + WX, (horist + player.y) + WY, Rot * PIby2, 0, 0, imgMovement);
                 ctx.globalAlpha = 1;
-            } else if (player.breath < IID.evolve) {
-                var MwMvw = MathUtils.Ease.inOutQuad(player.breath / IID.evolve);
+            } else if (player.breath < item.evolve) {
+                var MwMvw = MathUtils.Ease.inOutQuad(player.breath / item.evolve);
                 ctx.globalAlpha = 1 - MwMvw;
-                CanvasUtils.drawImageHd(IID.building[level - 1], (vertst + player.x) + WX, (horist + player.y) + WY, Rot * PIby2, 0, 0, imgMovement);
+                CanvasUtils.drawImageHd(item.building[level - 1], (vertst + player.x) + WX, (horist + player.y) + WY, Rot * PIby2, 0, 0, imgMovement);
                 ctx.globalAlpha = MwMvw;
-                CanvasUtils.drawImageHd(IID.building[level], (vertst + player.x) + WX, (horist + player.y) + WY, Rot * PIby2, 0, 0, imgMovement);
+                CanvasUtils.drawImageHd(item.building[level], (vertst + player.x) + WX, (horist + player.y) + WY, Rot * PIby2, 0, 0, imgMovement);
                 ctx.globalAlpha = 1;
-            } else CanvasUtils.drawImageHd(IID.building[level], (vertst + player.x) + WX, (horist + player.y) + WY, Rot * PIby2, 0, 0, imgMovement);
+            } else CanvasUtils.drawImageHd(item.building[level], (vertst + player.x) + WX, (horist + player.y) + WY, Rot * PIby2, 0, 0, imgMovement);
         };
-
-        function _TreeSeed(IID, player, WX, WY, Rot, imgMovement) {
+        
+        function _TreeSeed(item, player, WX, WY, Rot, imgMovement) {
             var level = (player.state >> 4) & 15;
             player.breath = (player.breath + delta) % 1000;
             var imgMovement = 1 + (0.01 * ((player.breath < 500) ? (player.breath / 500) : (1 - ((player.breath - 500) / 500))));
-            CanvasUtils.drawImageHd(IID.building[level], (vertst + player.x) + WX, (horist + player.y) + WY, Rot * PIby2, 0, 0, imgMovement);
+            CanvasUtils.drawImageHd(item.building[level], (vertst + player.x) + WX, (horist + player.y) + WY, Rot * PIby2, 0, 0, imgMovement);
         };
-
-        function _OrangeSeed(IID, player, WX, WY, Rot, imgMovement) {
+        
+        function _OrangeSeed(item, player, WX, WY, Rot, imgMovement) {
             var level = (player.state >> 4) & 15;
             player.breath = (player.breath + delta) % 1000;
             var imgMovement = 1 + (0.03 * ((player.breath < 500) ? (player.breath / 500) : (1 - ((player.breath - 500) / 500))));
-            CanvasUtils.drawImageHd(IID.building[level], (vertst + player.x) + WX, (horist + player.y) + WY, Rot * PIby2, 0, 0, imgMovement);
+            CanvasUtils.drawImageHd(item.building[level], (vertst + player.x) + WX, (horist + player.y) + WY, Rot * PIby2, 0, 0, imgMovement);
         };
-
-        function _LowWall(IID, player, WX, WY, Rot, imgMovement) {
-            var WVV = (player.broke > 0) ? IID.broken[player.broke - 1] : IID.building[wmNMv(player, Rot)];
+        
+        function _LowWall(item, player, WX, WY, Rot, imgMovement) {
+            var WVV = (player.broke > 0) ? item.broken[player.broke - 1] : item.building[wmNMv(player, Rot)];
             var img = WVV.img;
             if (img.isLoaded !== 1) {
                 WVV.img = CanvasUtils.loadImage(WVV.src, WVV.img);
@@ -15848,77 +15848,77 @@ try {
             ctx.save();
             ctx.translate(scaleby * ((vertst + player.x) + WX), scaleby * ((horist + player.y) + WY));
             ctx.rotate(Rot * PIby2);
-            ctx.translate((IID.xRotate * scaleby) - (VwW / 2), (IID.yRotate * scaleby) - (h / 2));
-            ctx.drawImage(img, -IID.xRotate * scaleby, -IID.yRotate * scaleby, VwW, h);
+            ctx.translate((item.xRotate * scaleby) - (VwW / 2), (item.yRotate * scaleby) - (h / 2));
+            ctx.drawImage(img, -item.xRotate * scaleby, -item.yRotate * scaleby, VwW, h);
             ctx.restore();
         };
-
-        function _AutomaticDoor(IID, player, WX, WY, Rot, imgMovement) {
+        
+        function _AutomaticDoor(item, player, WX, WY, Rot, imgMovement) {
             ctx.globalAlpha = 1;
             var MvVvv = (player.state >> 7) & 1;
             if (MvVvv === 1) player.hitMax = window.Math.min(500, player.hitMax + delta);
             else if (player.hitMax > 0) player.hitMax = window.Math.max(0, player.hitMax - delta);
             if ((player.hitMax > 0) && (player.hitMax !== 500)) {
                 ctx.globalAlpha = MathUtils.Ease.outQuad(player.hitMax / 500);
-                CanvasUtils.drawImageHd(IID.building[1][player.broke], (vertst + player.x) + WX, (horist + player.y) + WY, Rot * PIby2, 0, 0, imgMovement);
+                CanvasUtils.drawImageHd(item.building[1][player.broke], (vertst + player.x) + WX, (horist + player.y) + WY, Rot * PIby2, 0, 0, imgMovement);
                 ctx.globalAlpha = MathUtils.Ease.outQuad(1 - (player.hitMax / 500));
-                CanvasUtils.drawImageHd(IID.building[0][player.broke], (vertst + player.x) + WX, (horist + player.y) + WY, Rot * PIby2, 0, 0, imgMovement);
+                CanvasUtils.drawImageHd(item.building[0][player.broke], (vertst + player.x) + WX, (horist + player.y) + WY, Rot * PIby2, 0, 0, imgMovement);
                 ctx.globalAlpha = 1;
-            } else CanvasUtils.drawImageHd(IID.building[MvVvv][player.broke], (vertst + player.x) + WX, (horist + player.y) + WY, Rot * PIby2, 0, 0, imgMovement);
+            } else CanvasUtils.drawImageHd(item.building[MvVvv][player.broke], (vertst + player.x) + WX, (horist + player.y) + WY, Rot * PIby2, 0, 0, imgMovement);
         };
-
-    function _SwitchOff(IID, player, WX, WY, Rot, imgMovement) {
-        nearme(IID, player, 0);
-        CanvasUtils.drawImageHd(IID.building[(player.state >> 4) & 1], (vertst + player.x) + WX, (horist + player.y) + WY, Rot * PIby2, 0, 0, imgMovement);
+        
+        function _SwitchOff(item, player, WX, WY, Rot, imgMovement) {
+        nearme(item, player, 0);
+        CanvasUtils.drawImageHd(item.building[(player.state >> 4) & 1], (vertst + player.x) + WX, (horist + player.y) + WY, Rot * PIby2, 0, 0, imgMovement);
             var WY = scaleby * (((player.i * 100) + horist) + 50);
             var WX = scaleby * (((player.j * 100) + vertst) + 50);
             var SY = (imgMovement * arv.width) / 3;
             var SX = (imgMovement * arv.height) / 3;
-
+        
             butlabel = GUI.renderText(player.id, "'Viga', sans-serif", "#FFFFFF", 38, 400, window.undefined, 16, 25, window.undefined, window.undefined, window.undefined, window.undefined, "#000000", 12);
             ctx.drawImage(butlabel, WX - (SY / 2), WY - (SX / 2), SY, SX);
-    };
-
-        function _TimerGate(IID, player, WX, WY, Rot, imgMovement) {
-            nearme(IID, player, 0);
-            CanvasUtils.drawImageHd(IID.building[(player.state >> 4) & 3], (vertst + player.x) + WX, (horist + player.y) + WY, Rot * PIby2, 0, 0, imgMovement);
         };
-
-        function _Lamp(IID, player, WX, WY, Rot, imgMovement) {
-            nearme(IID, player, 0);
+        
+        function _TimerGate(item, player, WX, WY, Rot, imgMovement) {
+            nearme(item, player, 0);
+            CanvasUtils.drawImageHd(item.building[(player.state >> 4) & 3], (vertst + player.x) + WX, (horist + player.y) + WY, Rot * PIby2, 0, 0, imgMovement);
+        };
+        
+        function _Lamp(item, player, WX, WY, Rot, imgMovement) {
+            nearme(item, player, 0);
             var light = (player.state >> 7) & 1;
             if (light === 1) player.hitMax = window.Math.min(500, player.hitMax + delta);
             else if (player.hitMax > 0) player.hitMax = window.Math.max(0, player.hitMax - delta);
             if (player.hitMax > 0) {
                 WvnvV[pplonscr++] = player;
-                CanvasUtils.drawImageHd(IID.buildingOn[(player.state >> 4) & 7], (vertst + player.x) + WX, (horist + player.y) + WY, Rot * PIby2, 0, 0, imgMovement);
-            } else CanvasUtils.drawImageHd(IID.building, (vertst + player.x) + WX, (horist + player.y) + WY, Rot * PIby2, 0, 0, imgMovement);
+                CanvasUtils.drawImageHd(item.buildingOn[(player.state >> 4) & 7], (vertst + player.x) + WX, (horist + player.y) + WY, Rot * PIby2, 0, 0, imgMovement);
+            } else CanvasUtils.drawImageHd(item.building, (vertst + player.x) + WX, (horist + player.y) + WY, Rot * PIby2, 0, 0, imgMovement);
         };
-
+        
         function _LampLight(player) {
-            var IID = INVENTORY[player.extra >> 7];
+            var item = INVENTORY[player.extra >> 7];
             ctx.globalAlpha = MathUtils.Ease.outQuad(player.hitMax / 500);
             player.breath2 = (player.breath2 + delta) % 5000;
             var breath = player.breath2;
             var imgMovement = 1 + (0.09 * ((breath < 2500) ? (breath / 2500) : (1 - ((breath - 2500) / 2500))));
-            CanvasUtils.drawImageHd(IID.buildingTop[(player.state >> 4) & 7], vertst + player.x, horist + player.y, 0, 0, 0, imgMovement);
+            CanvasUtils.drawImageHd(item.buildingTop[(player.state >> 4) & 7], vertst + player.x, horist + player.y, 0, 0, 0, imgMovement);
             ctx.globalAlpha = 1;
         };
         
-
-        function _Door(IID, player, WX, WY, Rot, imgMovement) {
+        
+        function _Door(item, player, WX, WY, Rot, imgMovement) {
             var NVNvv = (player.state >> 4) & 1;
             var MWwVn = (player.pid === 0) ? 0 : 1;
-            if ((nearme(IID, player, MWwVn) === 1) && (NVNvv === 1)) World.PLAYER.eInteract = IID.interactclose;
+            if ((nearme(item, player, MWwVn) === 1) && (NVNvv === 1)) World.PLAYER.eInteract = item.interactclose;
             if (player.hit !== NVNvv) {
                 player.hitMax = 500;
                 player.hit = NVNvv;
             }
             if (player.hitMax > 0) player.hitMax = window.Math.max(0, player.hitMax - delta);
-            var angle = IID.angle;
+            var angle = item.angle;
             if (NVNvv === 0) angle *= MathUtils.Ease.inOutQuad(player.hitMax / 500);
             else angle *= MathUtils.Ease.inOutQuad(1 - (player.hitMax / 500));
-            var WVV = (player.broke > 0) ? IID.broken[player.broke - 1] : IID.building;
+            var WVV = (player.broke > 0) ? item.broken[player.broke - 1] : item.building;
             var img = WVV.img;
             if (img.isLoaded !== 1) {
                 WVV.img = CanvasUtils.loadImage(WVV.src, WVV.img);
@@ -15929,9 +15929,9 @@ try {
             ctx.save();
             ctx.translate(scaleby * ((vertst + player.x) + WX), scaleby * ((horist + player.y) + WY));
             ctx.rotate(Rot * PIby2);
-            ctx.translate((IID.xRotate * scaleby) - (VwW / 2), (IID.yRotate * scaleby) - (h / 2));
+            ctx.translate((item.xRotate * scaleby) - (VwW / 2), (item.yRotate * scaleby) - (h / 2));
             ctx.rotate(angle);
-            ctx.drawImage(img, -IID.xRotate * scaleby, -IID.yRotate * scaleby, VwW, h);
+            ctx.drawImage(img, -item.xRotate * scaleby, -item.yRotate * scaleby, VwW, h);
             ctx.restore();
             if ((player.state & 32) === 32) {
                 player.state -= 32;
@@ -15953,34 +15953,34 @@ try {
                 player.breath = window.Math.max(0, player.breath - delta);
             }
         };
-
-        function _GroundFloor(IID, player, WX, WY, Rot, imgMovement) {
+        
+        function _GroundFloor(item, player, WX, WY, Rot, imgMovement) {
             var mmWVw = matrix[player.i][player.j];
             mmWVw.tile = 0;
             mmWVw.ground = frameId;
             mmWVw.pid = player.pid;
             if ((mmWVw.wallFrame !== frameId) || (mmWVw.drawFloor === 1)) {
-                if (player.broke > 0) CanvasUtils.drawImageHd(IID.broken[player.broke - 1], (vertst + player.x) + WX, (horist + player.y) + WY, 0, 0, 0, imgMovement);
-                else CanvasUtils.drawImageHd(IID.building[Wwmwm(player)], vertst + player.x, horist + player.y, 0, 0, 0, imgMovement);
+                if (player.broke > 0) CanvasUtils.drawImageHd(item.broken[player.broke - 1], (vertst + player.x) + WX, (horist + player.y) + WY, 0, 0, 0, imgMovement);
+                else CanvasUtils.drawImageHd(item.building[Wwmwm(player)], vertst + player.x, horist + player.y, 0, 0, 0, imgMovement);
             }
         };
-
-
-        function _Furniture(IID, player, WX, WY, Rot, imgMovement) {
+        
+        
+        function _Furniture(item, player, WX, WY, Rot, imgMovement) {
             var inuse = (player.state >> 4) & 1;
-            var objects = INVENTORY[IID.id].subtype[player.subtype];
+            var objects = INVENTORY[item.id].subtype[player.subtype];
             if (inuse === 1) player.hit = window.Math.min(500, player.hit + delta);
             else if (player.hit > 0) player.hit = window.Math.max(0, player.hit - delta);
             if (((inuse === 0) && (objects.usable === 1)) && (nearme(objects, player, 0) === 1)) World.PLAYER.eInteract = econtainericon;
             CanvasUtils.drawImageHd(objects.building, (vertst + player.x) + WX, (horist + player.y) + WY, Rot * PIby2, 0, 0, imgMovement);
             if (player.hit > 0) containeropenic(player, WX, WY);
         };
-
-        function _Road(IID, player, WX, WY, Rot, imgMovement) {
-            var objects = INVENTORY[IID.id].subtype[player.subtype];
+        
+        function _Road(item, player, WX, WY, Rot, imgMovement) {
+            var objects = INVENTORY[item.id].subtype[player.subtype];
             CanvasUtils.drawImageHd(objects.building, vertst + player.x, horist + player.y, 0, 0, 0, imgMovement);
         };
-
+        
         function _Ghoul(entitie, player, WX, WY, imgMovement) {
             var Vmwnn = player.state & 254;
             if (Vmwnn === 2) {
@@ -16045,18 +16045,18 @@ try {
             }
             CanvasUtils.drawImageHd(entitie.head, WX, WY, player.angle + (nmm / 1.5), wnN, 0, imgMovement);
         };
-
-
-        function _Workbench(IID, player, WX, WY, Rot, imgMovement) {
+        
+        
+        function _Workbench(item, player, WX, WY, Rot, imgMovement) {
             var inuse = (player.state >> 4) & 1;
             if (inuse === 1) player.hit = window.Math.min(500, player.hit + delta);
             else if (player.hit > 0) player.hit = window.Math.max(0, player.hit - delta);
-            if (inuse === 0) nearme(IID, player, 0);
-            CanvasUtils.drawImageHd(IID.building, (vertst + player.x) + WX, (horist + player.y) + WY, Rot * PIby2, 0, 0, imgMovement);
+            if (inuse === 0) nearme(item, player, 0);
+            CanvasUtils.drawImageHd(item.building, (vertst + player.x) + WX, (horist + player.y) + WY, Rot * PIby2, 0, 0, imgMovement);
             if (player.hit > 0) containeropenic(player, WX, WY);
         };
-
-        function _Workbench2(IID, player, WX, WY, Rot, imgMovement) {
+        
+        function _Workbench2(item, player, WX, WY, Rot, imgMovement) {
             var i = (Rot + 1) % 2;
             var j = Rot % 2;
             matrix[player.i + i][player.j + j].tile = frameId;
@@ -16065,15 +16065,15 @@ try {
             matrix[player.i - i][player.j - j].tilePid = player.pid;
             matrix[player.i + i][player.j + j].category = window.undefined;
             matrix[player.i - i][player.j - j].category = window.undefined;
-            nearme(IID, player, 0);
-            CanvasUtils.drawImageHd(IID.building, (vertst + player.x) + WX, (horist + player.y) + WY, Rot * PIby2, 0, 0, imgMovement);
+            nearme(item, player, 0);
+            CanvasUtils.drawImageHd(item.building, (vertst + player.x) + WX, (horist + player.y) + WY, Rot * PIby2, 0, 0, imgMovement);
         };
-
-        function _Agitator(IID, player, WX, WY, Rot, imgMovement) {
+        
+        function _Agitator(item, player, WX, WY, Rot, imgMovement) {
             var MWm = (player.state >> 4) & 1;
             if (MWm === 1) player.hit = window.Math.min(500, player.hit + delta);
             else if (player.hit > 0) player.hit = window.Math.max(0, player.hit - delta);
-            if (MWm === 0) nearme(IID, player, 0);
+            if (MWm === 0) nearme(item, player, 0);
             var light = (player.state >> 5) & 1;
             if (light === 1) player.hitMax = window.Math.min(10000, player.hitMax + delta);
             else if (player.hitMax > 0) player.hitMax = window.Math.max(0, player.hitMax - delta);
@@ -16081,18 +16081,18 @@ try {
             if (player.hitMax > 0) {
                 vW = MathUtils.Ease.outQuad(player.hitMax / 10000);
                 player.heal += (vW * delta) / 300;
-                CanvasUtils.drawImageHd(IID.building[1], (vertst + player.x) + WX, (horist + player.y) + WY, Rot * PIby2, 0, 0, imgMovement);
-                CanvasUtils.drawImageHd(IID.building[2], ((vertst + player.x) + WX) + IID.spine[Rot][0], ((horist + player.y) + WY) + IID.spine[Rot][1], (Rot * PIby2) + player.heal, 0, 0, imgMovement);
-                CanvasUtils.drawImageHd(IID.building[3], (vertst + player.x) + WX, (horist + player.y) + WY, Rot * PIby2, 0, 0, imgMovement);
-            } else CanvasUtils.drawImageHd(IID.building[0], (vertst + player.x) + WX, (horist + player.y) + WY, Rot * PIby2, 0, 0, imgMovement);
+                CanvasUtils.drawImageHd(item.building[1], (vertst + player.x) + WX, (horist + player.y) + WY, Rot * PIby2, 0, 0, imgMovement);
+                CanvasUtils.drawImageHd(item.building[2], ((vertst + player.x) + WX) + item.spine[Rot][0], ((horist + player.y) + WY) + item.spine[Rot][1], (Rot * PIby2) + player.heal, 0, 0, imgMovement);
+                CanvasUtils.drawImageHd(item.building[3], (vertst + player.x) + WX, (horist + player.y) + WY, Rot * PIby2, 0, 0, imgMovement);
+            } else CanvasUtils.drawImageHd(item.building[0], (vertst + player.x) + WX, (horist + player.y) + WY, Rot * PIby2, 0, 0, imgMovement);
             if (player.hit > 0) containeropenic(player, WX, WY);
         };
-
-        function _Extractor(IID, player, WX, WY, Rot, imgMovement) {
+        
+        function _Extractor(item, player, WX, WY, Rot, imgMovement) {
             var MWm = (player.state >> 4) & 1;
             if (MWm === 1) player.hit = window.Math.min(500, player.hit + delta);
             else if (player.hit > 0) player.hit = window.Math.max(0, player.hit - delta);
-            if (MWm === 0) nearme(IID, player, 0);
+            if (MWm === 0) nearme(item, player, 0);
             var light = (player.state >> 5) & 1;
             if (light === 1) player.hitMax = window.Math.min(10000, player.hitMax + delta);
             else if (player.hitMax > 0) player.hitMax = window.Math.max(0, player.hitMax - delta);
@@ -16102,12 +16102,12 @@ try {
                 WX += ((window.Math.random() * 2) - 1) * vW;
                 WY += ((window.Math.random() * 2) - 1) * vW;
                 player.heal += (vW * delta) / 300;
-                CanvasUtils.drawImageHd(IID.building[1], ((vertst + player.x) + WX) + IID.spine[Rot][0], ((horist + player.y) + WY) + IID.spine[Rot][1], (Rot * PIby2) + player.heal, 0, 0, imgMovement);
-                CanvasUtils.drawImageHd(IID.building[0], (vertst + player.x) + WX, (horist + player.y) + WY, Rot * PIby2, 0, 0, imgMovement);
-            } else CanvasUtils.drawImageHd(IID.building[2], (vertst + player.x) + WX, (horist + player.y) + WY, Rot * PIby2, 0, 0, imgMovement);
+                CanvasUtils.drawImageHd(item.building[1], ((vertst + player.x) + WX) + item.spine[Rot][0], ((horist + player.y) + WY) + item.spine[Rot][1], (Rot * PIby2) + player.heal, 0, 0, imgMovement);
+                CanvasUtils.drawImageHd(item.building[0], (vertst + player.x) + WX, (horist + player.y) + WY, Rot * PIby2, 0, 0, imgMovement);
+            } else CanvasUtils.drawImageHd(item.building[2], (vertst + player.x) + WX, (horist + player.y) + WY, Rot * PIby2, 0, 0, imgMovement);
             if (player.hit > 0) containeropenic(player, WX, WY);
         };
-
+        
         function containeropenic(player, WX, WY) {
             player.breath = (player.breath + delta) % 1000;
             var imgMovement = 1 + (0.15 * ((player.breath < 500) ? (player.breath / 500) : (1 - ((player.breath - 500) / 500))));
@@ -16124,12 +16124,12 @@ try {
             ctx.drawImage(arv, WX - (SY / 2), WY - (SX / 2), SY, SX);
             ctx.globalAlpha = 1;
         };
-
-        function _Compost(IID, player, WX, WY, Rot, imgMovement) {
+        
+        function _Compost(item, player, WX, WY, Rot, imgMovement) {
             var MWm = (player.state >> 4) & 1;
             if (MWm === 1) player.hit = window.Math.min(500, player.hit + delta);
             else if (player.hit > 0) player.hit = window.Math.max(0, player.hit - delta);
-            if (MWm === 0) nearme(IID, player, 0);
+            if (MWm === 0) nearme(item, player, 0);
             var light = (player.state >> 5) & 1;
             if (light === 1) player.hitMax = window.Math.min(10000, player.hitMax + delta);
             else if (player.hitMax > 0) {
@@ -16140,12 +16140,12 @@ try {
                 vW = MathUtils.Ease.outQuad(player.hitMax / 10000);
                 WX += ((window.Math.random() * 2) - 1) * vW;
                 WY += ((window.Math.random() * 2) - 1) * vW;
-                CanvasUtils.drawImageHd(IID.building[0], (vertst + player.x) + WX, (horist + player.y) + WY, Rot * PIby2, 0, 0, imgMovement);
-            } else CanvasUtils.drawImageHd(IID.building[1], (vertst + player.x) + WX, (horist + player.y) + WY, Rot * PIby2, 0, 0, imgMovement);
+                CanvasUtils.drawImageHd(item.building[0], (vertst + player.x) + WX, (horist + player.y) + WY, Rot * PIby2, 0, 0, imgMovement);
+            } else CanvasUtils.drawImageHd(item.building[1], (vertst + player.x) + WX, (horist + player.y) + WY, Rot * PIby2, 0, 0, imgMovement);
             if (player.hit > 0) containeropenic(player, WX, WY);
         };
-
-        function _Smelter(IID, player, WX, WY, Rot, imgMovement) {
+        
+        function _Smelter(item, player, WX, WY, Rot, imgMovement) {
             var i = (Rot + 1) % 2;
             var j = Rot % 2;
             matrix[player.i + i][player.j + j].tile = frameId;
@@ -16157,7 +16157,7 @@ try {
             var MWm = (player.state >> 4) & 1;
             if (MWm === 1) player.hit = window.Math.min(500, player.hit + delta);
             else if (player.hit > 0) player.hit = window.Math.max(0, player.hit - delta);
-            if (MWm === 0) nearme(IID, player, 0);
+            if (MWm === 0) nearme(item, player, 0);
             var light = (player.state >> 5) & 1;
             if (light === 1) player.hitMax = window.Math.min(10000, player.hitMax + delta);
             else if (player.hitMax > 0) {
@@ -16168,12 +16168,12 @@ try {
                 vW = MathUtils.Ease.outQuad(player.hitMax / 10000);
                 WX += ((window.Math.random() * 2) - 1) * vW;
                 WY += ((window.Math.random() * 2) - 1) * vW;
-                CanvasUtils.drawImageHd(IID.building[1], (vertst + player.x) + WX, (horist + player.y) + WY, Rot * PIby2, 0, 0, imgMovement);
-            } else CanvasUtils.drawImageHd(IID.building[0], (vertst + player.x) + WX, (horist + player.y) + WY, Rot * PIby2, 0, 0, imgMovement);
+                CanvasUtils.drawImageHd(item.building[1], (vertst + player.x) + WX, (horist + player.y) + WY, Rot * PIby2, 0, 0, imgMovement);
+            } else CanvasUtils.drawImageHd(item.building[0], (vertst + player.x) + WX, (horist + player.y) + WY, Rot * PIby2, 0, 0, imgMovement);
             if (player.hit > 0) containeropenic(player, WX, WY);
         };
-
-        function _TeslaBench(IID, player, WX, WY, Rot, imgMovement) {
+        
+        function _TeslaBench(item, player, WX, WY, Rot, imgMovement) {
             var i = (Rot + 1) % 2;
             var j = Rot % 2;
             matrix[player.i + i][player.j + j].tile = frameId;
@@ -16185,19 +16185,19 @@ try {
             var MWm = (player.state >> 4) & 1;
             if (MWm === 1) player.hit = window.Math.min(500, player.hit + delta);
             else if (player.hit > 0) player.hit = window.Math.max(0, player.hit - delta);
-            if (MWm === 0) nearme(IID, player, 0);
+            if (MWm === 0) nearme(item, player, 0);
             var light = (player.state >> 5) & 1;
             if (light === 1) player.hitMax = 1 + (player.hitMax + (delta % 300000));
             else player.hitMax = 0;
             var vW = 0;
             if (player.hitMax > 0) {
-                CanvasUtils.drawImageHd(IID.building[1 + (window.Math.floor(player.hitMax / 500) % 3)], (vertst + player.x) + WX, (horist + player.y) + WY, Rot * PIby2, 0, 0, imgMovement);
-                var light = IID.light[window.Math.floor(player.hitMax / 50) % IID.light.length];
+                CanvasUtils.drawImageHd(item.building[1 + (window.Math.floor(player.hitMax / 500) % 3)], (vertst + player.x) + WX, (horist + player.y) + WY, Rot * PIby2, 0, 0, imgMovement);
+                var light = item.light[window.Math.floor(player.hitMax / 50) % item.light.length];
                 if (light !== 0) CanvasUtils.drawImageHd(light, (vertst + player.x) + WX, (horist + player.y) + WY, Rot * PIby2, 0, 0, imgMovement);
-            } else CanvasUtils.drawImageHd(IID.building[0], (vertst + player.x) + WX, (horist + player.y) + WY, Rot * PIby2, 0, 0, imgMovement);
+            } else CanvasUtils.drawImageHd(item.building[0], (vertst + player.x) + WX, (horist + player.y) + WY, Rot * PIby2, 0, 0, imgMovement);
             if (player.hit > 0) containeropenic(player, WX, WY);
         };
-
+        
         function _CampfireLight(player) {
             ctx.globalAlpha = MathUtils.Ease.outQuad(player.hitMax / 500);
             player.heal = (player.heal + delta) % 1000;
@@ -16212,23 +16212,23 @@ try {
             CanvasUtils.drawImageHd(LIGHTFIRE[3], (vertst + player.x) + LIGHTFIREX[3], (horist + player.y) + LIGHTFIREY[3], 0, 0, 0, imgMovement);
             ctx.globalAlpha = 1;
         };
-
-        function _Campfire(IID, player, WX, WY, Rot, imgMovement) {
+        
+        function _Campfire(item, player, WX, WY, Rot, imgMovement) {
             
             var MWm = (player.state >> 4) & 1;
             if (MWm === 1) player.hit = window.Math.min(500, player.hit + delta);
             else if (player.hit > 0) player.hit = window.Math.max(0, player.hit - delta);
-            if (MWm === 0) nearme(IID, player, 0);
-            CanvasUtils.drawImageHd(IID.building, (vertst + player.x) + WX, (horist + player.y) + WY, Rot * PIby2, 0, 0, imgMovement);
-
+            if (MWm === 0) nearme(item, player, 0);
+            CanvasUtils.drawImageHd(item.building, (vertst + player.x) + WX, (horist + player.y) + WY, Rot * PIby2, 0, 0, imgMovement);
+        
             var light = (player.state >> 5) & 1;
             if (light === 1) player.hitMax = window.Math.min(500, player.hitMax + delta);
             else if (player.hitMax > 0) player.hitMax = window.Math.max(0, player.hitMax - delta);
             if (player.hitMax > 0) WvnvV[pplonscr++] = player;
             if (player.hit > 0) containeropenic(player, WX, WY);
         };
-
-        function nVmNm(player) {
+        
+        function _Explosions(player) {
             var img = ENTITIES[__ENTITIE_EXPLOSION__].explosions;
             var mVn = window.Math.floor(player.born / 70);
             if (mVn < 10) {
@@ -16240,8 +16240,8 @@ try {
             }
             player.born += delta;
         };
-
-        function natureinscreenfunc(player) {
+        
+        function _Resources(player) {
             matrix[player.i][player.j].tile = frameId;
             matrix[player.i][player.j].tilePid = player.pid;
             matrix[player.i][player.j].category = window.undefined;
@@ -16339,8 +16339,8 @@ try {
                 ctx.globalAlpha = 1;
             }
         };
-
-        function objectsinscreenfunc(player) {
+        
+        function _Buildings(player) {
             matrix[player.i][player.j].tile = frameId;
             matrix[player.i][player.j].tilePid = player.pid;
             matrix[player.i][player.j].category = window.undefined;
@@ -16394,8 +16394,8 @@ try {
                 ctx.globalAlpha = 1;
             }
         };
-
-        function projectilefunc(player) {
+        
+        function _Bullets(player) {
             matrix[player.i][player.j].tile = frameId;
             matrix[player.i][player.j].tilePid = player.pid;
             matrix[player.i][player.j].category = window.undefined;
@@ -16443,8 +16443,8 @@ try {
                 ctx.globalAlpha = 1;
             }
         };
-
-        function lootinscreenfunc(loot) {
+        
+        function _Loots(loot) {
             matrix[loot.i][loot.j].tile = frameId;
             matrix[loot.i][loot.j].tilePid = loot.pid;
             matrix[loot.i][loot.j].category = window.undefined;
@@ -16491,7 +16491,7 @@ try {
                 ctx.globalAlpha = 1;
             }
         };
-
+        
         function checkobjonscreen() {
             var i = 0;
             pplonscr = 0;
@@ -16516,10 +16516,10 @@ try {
             buildingsBorder = Entitie.border[__ENTITIE_BUILD_GROUND2__];
             buildingsLen = buildingsBorder.border;
             for (i = 0; i < buildingsLen; i++) floorsfusion(buildings[buildingsBorder.cycle[i]]);
-            for (i = 0; i < buildingsLen; i++) objectsinscreenfunc(buildings[buildingsBorder.cycle[i]]);
+            for (i = 0; i < buildingsLen; i++) _Buildings(buildings[buildingsBorder.cycle[i]]);
             for (i = 0; i < WWM; i++) {
                 var player = MvW[Wwn.cycle[i]];
-                if (player.type === __ENTITIE_BUILD_GROUND2__) objectsinscreenfunc(player);
+                if (player.type === __ENTITIE_BUILD_GROUND2__) _Buildings(player);
             }
             if (NwMVW !== vMNWw) {
                 var particles = Entitie.units[__ENTITIE_PARTICLES__];
@@ -16534,27 +16534,27 @@ try {
             var buildings = Entitie.units[__ENTITIE_BUILD_GROUND__];
             var buildingsBorder = Entitie.border[__ENTITIE_BUILD_GROUND__];
             var buildingsLen = buildingsBorder.border;
-            for (i = 0; i < buildingsLen; i++) objectsinscreenfunc(buildings[buildingsBorder.cycle[i]]);
+            for (i = 0; i < buildingsLen; i++) _Buildings(buildings[buildingsBorder.cycle[i]]);
             for (i = 0; i < WWM; i++) {
                 var player = MvW[Wwn.cycle[i]];
-                if (player.type === __ENTITIE_BUILD_GROUND__) objectsinscreenfunc(player);
+                if (player.type === __ENTITIE_BUILD_GROUND__) _Buildings(player);
             }
             resources = Entitie.units[__ENTITIE_RESOURCES_DOWN__];
             resourceBorder = Entitie.border[__ENTITIE_RESOURCES_DOWN__];
             resourceLen = resourceBorder.border;
-            for (i = 0; i < resourceLen; i++) natureinscreenfunc(resources[resourceBorder.cycle[i]]);
+            for (i = 0; i < resourceLen; i++) _Resources(resources[resourceBorder.cycle[i]]);
             for (i = 0; i < WWM; i++) {
                 var player = MvW[Wwn.cycle[i]];
-                if (player.type === __ENTITIE_RESOURCES_DOWN__) natureinscreenfunc(player);
+                if (player.type === __ENTITIE_RESOURCES_DOWN__) _Resources(player);
             }
             var buildings = Entitie.units[__ENTITIE_BUILD_DOWN__];
             var buildingsBorder = Entitie.border[__ENTITIE_BUILD_DOWN__];
             var buildingsLen = buildingsBorder.border;
             for (i = 0; i < buildingsLen; i++) smallwallsfusion(buildings[buildingsBorder.cycle[i]]);
-            for (i = 0; i < buildingsLen; i++) objectsinscreenfunc(buildings[buildingsBorder.cycle[i]]);
+            for (i = 0; i < buildingsLen; i++) _Buildings(buildings[buildingsBorder.cycle[i]]);
             for (i = 0; i < WWM; i++) {
                 var player = MvW[Wwn.cycle[i]];
-                if (player.type === __ENTITIE_BUILD_DOWN__) objectsinscreenfunc(player);
+                if (player.type === __ENTITIE_BUILD_DOWN__) _Buildings(player);
             }
             var players = Entitie.units[__ENTITIE_PLAYER__];
             var border = Entitie.border[__ENTITIE_PLAYER__];
@@ -16563,7 +16563,7 @@ try {
                 var pos = border.cycle[i];
                 var player = players[pos];
                 var PLAYER = World.players[player.pid];
-                showruncloud(player);
+                _Run(player);
                 PLAYER.locatePlayer = pos;
                 PLAYER.frameId = frameId;
                 MmnMv(player, pos);
@@ -16573,107 +16573,107 @@ try {
             var loots = Entitie.units[__ENTITIE_LOOT__];
             var lootsBorder = Entitie.border[__ENTITIE_LOOT__];
             var lootsLen = lootsBorder.border;
-            for (i = 0; i < lootsLen; i++) lootinscreenfunc(loots[lootsBorder.cycle[i]]);
+            for (i = 0; i < lootsLen; i++) _Loots(loots[lootsBorder.cycle[i]]);
             for (i = 0; i < WWM; i++) {
                 var player = MvW[Wwn.cycle[i]];
-                if (player.type === __ENTITIE_LOOT__) lootinscreenfunc(player);
+                if (player.type === __ENTITIE_LOOT__) _Loots(player);
             }
             var bullets = Entitie.units[__ENTITIE_BULLET__];
             var bulletsBorder = Entitie.border[__ENTITIE_BULLET__];
             var bulletsLen = bulletsBorder.border;
-            for (i = 0; i < bulletsLen; i++) projectilefunc(bullets[bulletsBorder.cycle[i]]);
+            for (i = 0; i < bulletsLen; i++) _Bullets(bullets[bulletsBorder.cycle[i]]);
             for (i = 0; i < WWM; i++) {
                 var player = MvW[Wwn.cycle[i]];
-                if (player.type === __ENTITIE_BULLET__) projectilefunc(player);
+                if (player.type === __ENTITIE_BULLET__) _Bullets(player);
             }
             resources = Entitie.units[__ENTITIE_RESOURCES_MID__];
             resourceBorder = Entitie.border[__ENTITIE_RESOURCES_MID__];
             resourceLen = resourceBorder.border;
-            for (i = 0; i < resourceLen; i++) natureinscreenfunc(resources[resourceBorder.cycle[i]]);
+            for (i = 0; i < resourceLen; i++) _Resources(resources[resourceBorder.cycle[i]]);
             for (i = 0; i < WWM; i++) {
                 var player = MvW[Wwn.cycle[i]];
-                if (player.type === __ENTITIE_RESOURCES_MID__) natureinscreenfunc(player);
+                if (player.type === __ENTITIE_RESOURCES_MID__) _Resources(player);
             }
             if (World.gameMode === World.__GHOUL__) {
                 for (i = 0; i < len; i++) {
                     var player = players[border.cycle[i]];
                     var ghoul = World.players[player.pid].ghoul;
-                    if (ghoul === 0) playerinscreenfunc(player);
+                    if (ghoul === 0) _EntitiePlayer(player);
                     else {
                         player.extra = ghoul - 1;
-                        creaturesinscreenfunc(player);
+                        _EntitieAI(player);
                     };
                 }
                 for (i = 0; i < WWM; i++) {
                     var player = MvW[Wwn.cycle[i]];
                     if (player.type === __ENTITIE_PLAYER__) {
-                        showruncloud(player);
+                        _Run(player);
                         var ghoul = World.players[player.pid].ghoul;
-                        if (ghoul === 0) playerinscreenfunc(player);
+                        if (ghoul === 0) _EntitiePlayer(player);
                         else {
                             player.extra = ghoul - 1;
-                            creaturesinscreenfunc(player);
+                            _EntitieAI(player);
                         };
                     }
                 }
             } else {
-                for (i = 0; i < len; i++) playerinscreenfunc(players[border.cycle[i]]);
+                for (i = 0; i < len; i++) _EntitiePlayer(players[border.cycle[i]]);
                 for (i = 0; i < WWM; i++) {
                     var player = MvW[Wwn.cycle[i]];
                     if (player.type === __ENTITIE_PLAYER__) {
-                        showruncloud(player);
-                        playerinscreenfunc(player);
+                        _Run(player);
+                        _EntitiePlayer(player);
                     }
                 }
             }
             var entitie = Entitie.units[__ENTITIE_AI__];
             var entitieBorder = Entitie.border[__ENTITIE_AI__];
             var entitieLen = entitieBorder.border;
-            for (i = 0; i < entitieLen; i++) creaturesinscreenfunc(entitie[entitieBorder.cycle[i]]);
+            for (i = 0; i < entitieLen; i++) _EntitieAI(entitie[entitieBorder.cycle[i]]);
             for (i = 0; i < WWM; i++) {
                 var player = MvW[Wwn.cycle[i]];
-                if (player.type === __ENTITIE_AI__) creaturesinscreenfunc(player);
+                if (player.type === __ENTITIE_AI__) _EntitieAI(player);
             }
             buildings = Entitie.units[__ENTITIE_BUILD_TOP__];
             buildingsBorder = Entitie.border[__ENTITIE_BUILD_TOP__];
             buildingsLen = buildingsBorder.border;
-            for (i = 0; i < buildingsLen; i++) objectsinscreenfunc(buildings[buildingsBorder.cycle[i]]);
+            for (i = 0; i < buildingsLen; i++) _Buildings(buildings[buildingsBorder.cycle[i]]);
             for (i = 0; i < WWM; i++) {
                 var player = MvW[Wwn.cycle[i]];
-                if (player.type === __ENTITIE_BUILD_TOP__) objectsinscreenfunc(player);
+                if (player.type === __ENTITIE_BUILD_TOP__) _Buildings(player);
             }
             for (i = 0; i < pplonscr; i++) {
-                var IID = INVENTORY[WvnvV[i].extra >> 7];
-                IID.drawTop(WvnvV[i]);
+                var item = INVENTORY[WvnvV[i].extra >> 7];
+                item.drawTop(WvnvV[i]);
                 WvnvV[i] = null;
             }
             resources = Entitie.units[__ENTITIE_RESOURCES_TOP__];
             resourceBorder = Entitie.border[__ENTITIE_RESOURCES_TOP__];
             resourceLen = resourceBorder.border;
-            for (i = 0; i < resourceLen; i++) natureinscreenfunc(resources[resourceBorder.cycle[i]]);
+            for (i = 0; i < resourceLen; i++) _Resources(resources[resourceBorder.cycle[i]]);
             for (i = 0; i < WWM; i++) {
                 var player = MvW[Wwn.cycle[i]];
-                if (player.type === __ENTITIE_RESOURCES_TOP__) natureinscreenfunc(player);
+                if (player.type === __ENTITIE_RESOURCES_TOP__) _Resources(player);
             }
             resources = Entitie.units[__ENTITIE_RESOURCES_STOP__];
             resourceBorder = Entitie.border[__ENTITIE_RESOURCES_STOP__];
             resourceLen = resourceBorder.border;
-            for (i = 0; i < resourceLen; i++) natureinscreenfunc(resources[resourceBorder.cycle[i]]);
+            for (i = 0; i < resourceLen; i++) _Resources(resources[resourceBorder.cycle[i]]);
             for (i = 0; i < WWM; i++) {
                 var player = MvW[Wwn.cycle[i]];
-                if (player.type === __ENTITIE_RESOURCES_STOP__) natureinscreenfunc(player);
+                if (player.type === __ENTITIE_RESOURCES_STOP__) _Resources(player);
             }
             explosions = Entitie.units[__ENTITIE_EXPLOSION__];
             explosionBorder = Entitie.border[__ENTITIE_EXPLOSION__];
             explosionLen = explosionBorder.border;
-            for (i = 0; i < explosionLen; i++) nVmNm(explosions[explosionBorder.cycle[i]]);
+            for (i = 0; i < explosionLen; i++) _Explosions(explosions[explosionBorder.cycle[i]]);
             for (i = 0; i < len; i++) vWMWW(players[border.cycle[i]]);
             if (World.gameMode !== World.__BR__) {
                 for (i = 0; i < len; i++) mVwvw(players[border.cycle[i]]);
                 for (i = 0; i < len; i++) VvVNw(players[border.cycle[i]]);
             }
         };
-
+        
         function _StopPoisonEffect() {
             NNWWn = 0;
         };
@@ -16684,7 +16684,7 @@ try {
         var NNWWn = 0;
         var VnwwM = 0;
         var WvWvM = 0;
-
+        
         function _SetPoisonEffect(delay) {
             if (WvWvM === 0) {
                 nvMNv = Render.scale;
@@ -17033,18 +17033,18 @@ ENTITIES[__ENTITIE_BUILD_TOP__].update = function updateEntitieBuilding(MW, WX, 
     MW.subtype = (MW.state >> 5) & 63;
     MW.broke = MW.state >> 14;
     MW.state = MW.state & 16383;
-    var IID = INVENTORY[MW.extra >> 7];
-    MW.x = ((window.Math.floor(WX / Render.__TILE_SIZE__) * Render.__TILE_SIZE__) + Render.__TILE_SIZE2__) + IID.xCenter[Rot];
-    MW.y = ((window.Math.floor(WY / Render.__TILE_SIZE__) * Render.__TILE_SIZE__) + Render.__TILE_SIZE2__) + IID.yCenter[Rot];
+    var item = INVENTORY[MW.extra >> 7];
+    MW.x = ((window.Math.floor(WX / Render.__TILE_SIZE__) * Render.__TILE_SIZE__) + Render.__TILE_SIZE2__) + item.xCenter[Rot];
+    MW.y = ((window.Math.floor(WY / Render.__TILE_SIZE__) * Render.__TILE_SIZE__) + Render.__TILE_SIZE2__) + item.yCenter[Rot];
     MW.rx = MW.x;
     MW.ry = MW.y;
     MW.nx = MW.x;
     MW.ny = MW.y;
     MW.px = MW.x;
     MW.py = MW.y;
-    if ((IID.door === 1) && ((MW.state & 16) === 16)) {
-        MW.px = ((window.Math.floor(MW.j + IID.jMove[Rot]) * Render.__TILE_SIZE__) + Render.__TILE_SIZE2__) + IID.xCenter[(Rot + 1) % 4];
-        MW.py = ((window.Math.floor(MW.i + IID.iMove[Rot]) * Render.__TILE_SIZE__) + Render.__TILE_SIZE2__) + IID.yCenter[(Rot + 1) % 4];
+    if ((item.door === 1) && ((MW.state & 16) === 16)) {
+        MW.px = ((window.Math.floor(MW.j + item.jMove[Rot]) * Render.__TILE_SIZE__) + Render.__TILE_SIZE2__) + item.xCenter[(Rot + 1) % 4];
+        MW.py = ((window.Math.floor(MW.i + item.iMove[Rot]) * Render.__TILE_SIZE__) + Render.__TILE_SIZE2__) + item.yCenter[(Rot + 1) % 4];
     }
 };
 ENTITIES[__ENTITIE_BUILD_DOWN__].update = ENTITIES[__ENTITIE_BUILD_TOP__].update;
