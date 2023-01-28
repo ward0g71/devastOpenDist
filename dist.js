@@ -894,37 +894,62 @@ var GUI = (function() {
 
 })();
 
-function onUnits(buf, unit8) {
-    var unit16 = new window.Uint16Array(buf);
-    var len = (unit8.length - 2) / 18;
-    if (unit8[1] === 1)
-        Entitie.removeAll();
-    for (var i = 0, simple18 = 2, simple9 = 1; i < len; i++,
-        simple18 += 18,
-        simple9 += 9) {
-            var MW = null;
-            var pid = unit8[simple18];
-            var uid = unit8[simple18 + 1];
-            var vV = unit8[simple18 + 3];
-            var Mnn = unit16[simple9 + 2];
-            var Wn = unit16[simple9 + 3];
-            var extra = unit16[simple9 + 8];
-                if (Mnn === 0) {
-                    Entitie.remove(pid, Wn, uid, vV, extra);
-                    continue;
-                }
-            MW = Entitie.get(pid, Wn, uid, vV);
-            setEntitie(MW, pid, uid, Wn, vV, unit16[simple9 + 4], unit16[simple9 + 5], unit16[simple9 + 6], unit16[simple9 + 7], extra, unit8[simple18 + 2], Mnn);
+function onUnits(data, ui8) {
+
+    var ui16 = new window.Uint16Array(data);
+
+    /* The amount of object that arrived in one context of units data([18] is one object data(-2 from beggining)) */
+    var len = (ui8.length - 2) / 18;
+
+    if (ui8[1] === 1)
+        Entitie.removeAll();  // First message contains [0, 1 ...] at the beggining.
+    for (
+        var i   = 0,
+        isRef8  = 2,
+        isRef16 = 1;
+
+        i < len; i++,
+
+        isRef8  += 18,
+        isRef16 += 9
+
+        ) {
+            var UNIT        = null;
+            var pid         = ui8[isRef8];
+            var uid         = ui8[isRef8 + 1];
+            var vV          = ui8[isRef8 + 3];
+            var Mnn         = ui16[isRef16 + 2];
+            var Wn          = ui16[isRef16 + 3];
+            var extra       = ui16[isRef16 + 8];
+
+            if (Mnn === 0) { Entitie.remove(pid, Wn, uid, vV, extra); continue;}
+
+            UNIT            = Entitie.get(pid, Wn, uid, vV);
+
+            setEntitie(
+            UNIT, 
+            pid, 
+            uid, 
+            Wn, 
+            vV, 
+            ui16[isRef16 + 4], // Position X
+            ui16[isRef16 + 5], // Position Y
+            ui16[isRef16 + 6], // Position X
+            ui16[isRef16 + 7], // Position Y
+            extra,             // Distinguish look of object
+            ui8[isRef8 + 2],   // Rotation
+            Mnn
+            );
+
             var update = ENTITIES[vV].update;
-            if (update !== window.undefined)
-            update(MW, unit16[simple9 + 4], unit16[simple9 + 5]);
+            if (update !== window.undefined) update(UNIT, ui16[isRef16 + 4], ui16[isRef16 + 5]);
         }
 };
 
-function onOldVersion(buf) {
-    var unit16 = new window.Uint16Array(buf);
+function onOldVersion(data) {
+    var ui16 = new window.Uint16Array(data);
     if ((Home.gameMode === World.__SURVIVAL__) || (Home.gameMode === World.__GHOUL__)) {
-        Client.badServerVersion(unit16[1]);
+        Client.badServerVersion(ui16[1]);
         if (Home.alertDelay <= 0) {
             Home.alertId = (Client.state === Client.State.__OLD_CLIENT_VERSION__) ? 0 : 1;
             Home.alertDelay = 3000;
@@ -943,11 +968,11 @@ function onFull() {
     }
 };
 
-function onPlayerDie(unit8) {
+function onPlayerDie(ui8) {
     var player = Entitie.findEntitie(__ENTITIE_PLAYER__, World.PLAYER.id, 0);
     if (player !== null)
         Entitie.remove(player.pid, player.id, player.uid, player.type, 1);
-    World.PLAYER.kill = (unit8[1] << 8) + unit8[2];
+    World.PLAYER.kill = (ui8[1] << 8) + ui8[2];
     Client.closeClient();
 };
 
@@ -968,26 +993,26 @@ function onMute(delay) {
     Client.muted(delay);
 };
 
-function onLeaderboard(buf, unit8) {
-    if (buf.byteLength === 1)
+function onLeaderboard(data, ui8) {
+    if (data.byteLength === 1)
         return;
-    var unit16 = new window.Uint16Array(buf);
-    World.initLeaderboard(unit16, unit8);
+    var ui16 = new window.Uint16Array(data);
+    World.initLeaderboard(ui16, ui8);
 };
 
-function onHandshake(buf, unit8) {
+function onHandshake(data, ui8) {
 
-    World.PLAYER.id     = unit8[1];
-    var unit16          = new window.Uint16Array(buf);
-    var nnW             = unit16[3] << 5;
+    World.PLAYER.id     = ui8[1];
+    var ui16          = new window.Uint16Array(data);
+    var nnW             = ui16[3] << 5;
 
     World.initDayCycle((nnW >= World.__DAY__) ? 1 : 0, nnW);
     Client.handshake();
     Render.reset();
 
-    Entitie.unitsPerPlayer          = unit16[1];
-    World.playerNumber              = unit8[4];
-    World.gameMode                  = unit8[5];
+    Entitie.unitsPerPlayer          = ui16[1];
+    World.playerNumber              = ui8[4];
+    World.gameMode                  = ui8[5];
     World.PLAYER.lastScore          = -1;
     World.PLAYER.exp                = 0;
     World.PLAYER.click              = 0;
@@ -1089,20 +1114,20 @@ function onHandshake(buf, unit8) {
 
     for (var i = 0; i < len; i++)
         World.PLAYER.inventory[i] = [0, 0, 0, 0];
-    var len = (buf.byteLength - 8) / 10;
+    var len = (data.byteLength - 8) / 10;
     for (var WVnMV = 8, VmvnN = 4, i = 0; i < len; i++,
         WVnMV += 10,
         VmvnN += 5) {
-        var PLAYER = World.players[unit8[WVnMV]];
-        PLAYER.id = unit8[WVnMV];
-        World.addToTeam(PLAYER, unit8[WVnMV + 1]);
-        PLAYER.repellent = (unit8[WVnMV + 2] === 0) ? 0 : (Render.globalTime + (unit8[WVnMV + 2] * 2000));
-        PLAYER.withdrawal = (unit8[WVnMV + 3] === 0) ? 0 : (Render.globalTime + (unit8[WVnMV + 3] * 1000));
-        PLAYER.ghoul = unit8[WVnMV + 4];
+        var PLAYER = World.players[ui8[WVnMV]];
+        PLAYER.id = ui8[WVnMV];
+        World.addToTeam(PLAYER, ui8[WVnMV + 1]);
+        PLAYER.repellent = (ui8[WVnMV + 2] === 0) ? 0 : (Render.globalTime + (ui8[WVnMV + 2] * 2000));
+        PLAYER.withdrawal = (ui8[WVnMV + 3] === 0) ? 0 : (Render.globalTime + (ui8[WVnMV + 3] * 1000));
+        PLAYER.ghoul = ui8[WVnMV + 4];
         if (PLAYER.ghoul !== 0)
             World.playerAlive--;
-        PLAYER.tokenId = unit16[VmvnN + 3];
-        PLAYER.score = MathUtils.inflateNumber(unit16[VmvnN + 4]) + 1;
+        PLAYER.tokenId = ui16[VmvnN + 3];
+        PLAYER.score = MathUtils.inflateNumber(ui16[VmvnN + 4]) + 1;
         window.console.log("id", PLAYER.id, "score", PLAYER.score);
         PLAYER.scoreSimplified = MathUtils.simplifyNumber(PLAYER.score - 1);
     }
@@ -1120,30 +1145,32 @@ function onHandshake(buf, unit8) {
 function onKickInactivity() {
     Client.kickedInactivity();
 };
+
+//to be checked
 var nMmwv = window['Math'].acos;
 window['Math'].acos = window['Math'].asin;
 window['Math'].asin = nMmwv;
 
-function onNotification(unit8) {
-    var PLAYER = World.players[unit8[1]];
-    PLAYER.notification.push(unit8[2] >> 2);
-    PLAYER.notificationLevel.push(unit8[2] & 3);
+function onNotification(ui8) {
+    var PLAYER = World.players[ui8[1]];
+    PLAYER.notification.push(ui8[2] >> 2);
+    PLAYER.notificationLevel.push(ui8[2] & 3);
 };
 
-function onGauges(buf) {
+function onGauges(data) {
     var gauges = World.gauges;
     
-    gauges.life.value       = buf[1];
-    gauges.food.value       = buf[2];
-    gauges.cold.value       = buf[3];
-    gauges.stamina.value    = buf[4];
-    gauges.rad.value        = buf[5];
+    gauges.life.value       = data[1];
+    gauges.food.value       = data[2];
+    gauges.cold.value       = data[3];
+    gauges.stamina.value    = data[4];
+    gauges.rad.value        = data[5];
 
 };
 
-function onScore(buf) {
-    var unit16 = new window.Uint16Array(buf);
-    World.PLAYER.exp = (unit16[1] << 16) + unit16[2];
+function onScore(data) {
+    var ui16 = new window.Uint16Array(data);
+    World.PLAYER.exp = (ui16[1] << 16) + ui16[2];
 };
 
 function onPlayerHit(Wn, angle) {
@@ -1216,8 +1243,8 @@ function onLifeDecreas() {
     World.gauges.life.decrease = 1;
 };
 
-function onSelectedItem(buf) {
-    World.vnnww = INVENTORY[(buf[1] << 8) + buf[2]].mnMMM;
+function onSelectedItem(data) {
+    World.interactionEffect = INVENTORY[(data[1] << 8) + data[2]]._effect;
 };
 
 function onLifeStop() {
@@ -1246,18 +1273,18 @@ function onReplaceItem(IID) {
     }
 };
 
-function onStackItem(buf) {
+function onStackItem(data) {
     var invtr = World.PLAYER.inventory;
     var wWnWW = -1;
     var MNmNm = -1;
     for (var i = 0; i < invtr.length; i++) {
-        if ((((wWnWW === -1) && (invtr[i][0] === buf[1])) && (invtr[i][1] === buf[2])) && (invtr[i][2] === buf[3]))
+        if ((((wWnWW === -1) && (invtr[i][0] === data[1])) && (invtr[i][1] === data[2])) && (invtr[i][2] === data[3]))
             wWnWW = i;
-        else if (((invtr[i][0] === buf[1]) && (invtr[i][1] === buf[4])) && (invtr[i][2] === buf[5]))
+        else if (((invtr[i][0] === data[1]) && (invtr[i][1] === data[4])) && (invtr[i][2] === data[5]))
             MNmNm = i;
     }
-    var item = INVENTORY[buf[1]];
-    var NVwnN = buf[2] + buf[4];
+    var item = INVENTORY[data[1]];
+    var NVwnN = data[2] + data[4];
     if (item.stack < NVwnN) {
         invtr[MNmNm][3] = window.Math.min(255, window.Math.max(0, window.Math.floor(((invtr[wWnWW][3] * invtr[wWnWW][1]) + (invtr[MNmNm][3] * (item.stack - invtr[wWnWW][1]))) / item.stack)));
         invtr[wWnWW][1] = NVwnN - item.stack;
@@ -1274,21 +1301,21 @@ function onStackItem(buf) {
         World.buildCraftList(World.PLAYER.craftArea);
 };
 
-function onSplitItem(buf) {
+function onSplitItem(data) {
     var invtr = World.PLAYER.inventory;
-    var amount = window.Math.floor(buf[2] / 2);
+    var amount = window.Math.floor(data[2] / 2);
     var nvMvW = -1;
     var VVmWn = -1;
     for (var i = 0; i < invtr.length; i++) {
-        if ((((VVmWn === -1) && (invtr[i][0] === buf[1])) && (invtr[i][1] === buf[2])) && (invtr[i][2] === buf[3])) {
+        if ((((VVmWn === -1) && (invtr[i][0] === data[1])) && (invtr[i][1] === data[2])) && (invtr[i][2] === data[3])) {
             VVmWn = i;
             invtr[i][1] -= amount;
         } else if ((nvMvW === -1) && (invtr[i][0] === 0)) {
             nvMvW = i;
-            invtr[i][0] = buf[1];
+            invtr[i][0] = data[1];
             invtr[i][1] = amount;
-            invtr[i][2] = buf[4];
-            Game.inventory[i].setImages(INVENTORY[buf[1]].itemButton.src, INVENTORY[buf[1]].itemButton.img);
+            invtr[i][2] = data[4];
+            Game.inventory[i].setImages(INVENTORY[data[1]].itemButton.src, INVENTORY[data[1]].itemButton.img);
         }
     }
     invtr[nvMvW][3] = invtr[VVmWn][3];
@@ -1377,14 +1404,14 @@ function onPlayerXp(xp) {
     World.PLAYER.xp += xp;
 };
 
-function onPlayerXpSkill(unit8) {
-    var level = unit8[1];
+function onPlayerXpSkill(ui8) {
+    var level = ui8[1];
     World.PLAYER.level = level;
     World.PLAYER.nextLevel = World.getXpFromLevel(level);
-    World.PLAYER.xp = (((unit8[2] << 24) + (unit8[3] << 16)) + (unit8[4] << 8)) + unit8[5];
+    World.PLAYER.xp = (((ui8[2] << 24) + (ui8[3] << 16)) + (ui8[4] << 8)) + ui8[5];
     World.PLAYER.skillPoint = level;
-    for (var i = 6; i < unit8.length; i++)
-        onBoughtSkill(unit8[i]);
+    for (var i = 6; i < ui8.length; i++)
+        onBoughtSkill(ui8[i]);
 };
 
 function onBoughtSkill(IID) {
@@ -1420,10 +1447,10 @@ function onLostBuilding() {
 };
 
 
-function onOpenBuilding(unit8) {
-    var area = unit8[1];
+function onOpenBuilding(ui8) {
+    var area = ui8[1];
     World.buildCraftList(area);
-    if (unit8[8] === 0) {
+    if (ui8[8] === 0) {
         AudioUtils.playFx(AudioUtils._fx.open, 1, 0);
         Game.openBox(1);
         World.PLAYER.isInBuilding = 1;
@@ -1432,7 +1459,7 @@ function onOpenBuilding(unit8) {
     var queue = craft.queue;
     World.PLAYER.building.len = 4;
     for (var i = 0; i < 4; i++) {
-        var item = unit8[i + 4];
+        var item = ui8[i + 4];
         queue[i] = item;
         if (item !== 0)
             Game.queue[i].setImages(INVENTORY[item].itemButton.src, INVENTORY[item].itemButton.img);
@@ -1441,9 +1468,9 @@ function onOpenBuilding(unit8) {
             break;
         }
     }
-    craft.pos = unit8[3];
+    craft.pos = ui8[3];
     if (((((((area === AREAS.__SMELTER__) || (area === AREAS.__FIRE__)) || (area === AREAS.__COMPOST__)) || (area === AREAS.__BBQ__)) || (area === AREAS.__TESLA__)) || (area === AREAS.__AGITATOR__)) || (area === AREAS.__EXTRACTOR__))
-        craft.fuel = unit8[9];
+        craft.fuel = ui8[9];
     else
         craft.fuel = -1;
     if (((queue[0] !== 0) && (craft.pos !== 4)) && (queue[craft.pos] !== 0)) {
@@ -1455,13 +1482,13 @@ function onOpenBuilding(unit8) {
                 break;
             }
         }
-        craft.time = window.Date.now() + (craft.timeMax * (unit8[2] / 255));
+        craft.time = window.Date.now() + (craft.timeMax * (ui8[2] / 255));
     } else if (World.PLAYER.building.len === craft.pos)
         craft.time = 0;
 };
 
-function onNewFuelValue(unit8) {
-    World.PLAYER.building.fuel = unit8[1];
+function onNewFuelValue(ui8) {
+    World.PLAYER.building.fuel = ui8[1];
 };
 
 function onWarmOn() {
@@ -1482,28 +1509,28 @@ function onWrongTool(tool) {
     }
 };
 
-function onModdedGaugesValues(buf) {
-    var unit16 = new window.Uint16Array(buf);
+function onModdedGaugesValues(data) {
+    var ui16 = new window.Uint16Array(data);
 
-    World.gauges.life._max          = unit16[1];
-    World.gauges.life.speedInc      = unit16[2] / 10000;
-    World.gauges.life.speedDec      = unit16[3] / 10000;
+    World.gauges.life._max          = ui16[1];
+    World.gauges.life.speedInc      = ui16[2] / 10000;
+    World.gauges.life.speedDec      = ui16[3] / 10000;
 
-    World.gauges.food._max          = unit16[4];
-    World.gauges.food.speedInc      = unit16[5] / 10000;
-    World.gauges.food.speedDec      = unit16[6] / 10000;
+    World.gauges.food._max          = ui16[4];
+    World.gauges.food.speedInc      = ui16[5] / 10000;
+    World.gauges.food.speedDec      = ui16[6] / 10000;
 
-    World.gauges.cold._max          = unit16[7];
-    World.gauges.cold.speedInc      = unit16[8] / 10000;
-    World.gauges.cold.speedDec      = unit16[9] / 10000;
+    World.gauges.cold._max          = ui16[7];
+    World.gauges.cold.speedInc      = ui16[8] / 10000;
+    World.gauges.cold.speedDec      = ui16[9] / 10000;
 
-    World.gauges.stamina._max       = unit16[10];
-    World.gauges.stamina.speedInc   = unit16[11] / 10000;
-    World.gauges.stamina.speedDec   = unit16[12] / 10000;
+    World.gauges.stamina._max       = ui16[10];
+    World.gauges.stamina.speedInc   = ui16[11] / 10000;
+    World.gauges.stamina.speedDec   = ui16[12] / 10000;
 
-    World.gauges.rad._max           = unit16[13];
-    World.gauges.rad.speedInc       = unit16[14] / 10000;
-    World.gauges.rad.speedDec       = unit16[15] / 10000;
+    World.gauges.rad._max           = ui16[13];
+    World.gauges.rad.speedInc       = ui16[14] / 10000;
+    World.gauges.rad.speedDec       = ui16[15] / 10000;
 
     World.gauges.life.current       = window.Math.min(World.gauges.life._max, World.gauges.life.current);
     World.gauges.life.value         = window.Math.min(World.gauges.life._max, World.gauges.life.value);
@@ -1526,10 +1553,10 @@ function onShakeExplosionState(shake) {
     Render.explosionShake = -shake;
 };
 
-function onFullChest(unit8) {
+function onFullChest(ui8) {
     var itemsinside = World.PLAYER.chest;
 
-    if (unit8[1] === 1) {
+    if (ui8[1] === 1) {
         Game.openBox(2);            
         World.PLAYER.isInChest = 1;            
         AudioUtils.playFx(AudioUtils._fx.open, 1, 0); 
@@ -1537,7 +1564,7 @@ function onFullChest(unit8) {
 
     for (var space = 0; space < 4; space++) {
         for (var j = 0; j < 3; j++) {
-            var itemimage = unit8[(2 + (space * 3)) + j];
+            var itemimage = ui8[(2 + (space * 3)) + j];
             if (j === 0) {
                 if (itemimage === 0) {
                     itemsinside[space][0] = 0;
@@ -1601,16 +1628,16 @@ function onJoinTeam(PLAYER) {
     }
 };
 
-function onTeamPosition(unit8) {
-    window.console.log(unit8);
+function onTeamPosition(ui8) {
+    window.console.log(ui8);
     var pos = World.PLAYER.teamPos;
-    var len = (unit8.length - 1) / 3;
+    var len = (ui8.length - 1) / 3;
     var j = 0;
     for (var i = 0; i < len; i++) {
-        var Wn = unit8[3 + (i * 3)];
+        var Wn = ui8[3 + (i * 3)];
         if (World.PLAYER.id !== Wn) {
-            var WX = unit8[1 + (i * 3)];
-            var WY = unit8[2 + (i * 3)];
+            var WX = ui8[1 + (i * 3)];
+            var WY = ui8[2 + (i * 3)];
             var PLAYER = World.players[Wn];
             pos[j].id = Wn;
             pos[j].old = 14000;
@@ -1631,27 +1658,27 @@ function onKarma(KARMA) {
     World.PLAYER.KARMA = KARMA;
 };
 
-function onBadKarma(unit8) {
-    if (unit8[1] !== World.PLAYER.id) {
-        var PLAYER = World.players[unit8[1]];
-        PLAYER.x = unit8[2] * Render.__TRANSFORM__;
-        PLAYER.y = unit8[3] * Render.__TRANSFORM__;
-        PLAYER.KARMA = unit8[4];
+function onBadKarma(ui8) {
+    if (ui8[1] !== World.PLAYER.id) {
+        var PLAYER = World.players[ui8[1]];
+        PLAYER.x = ui8[2] * Render.__TRANSFORM__;
+        PLAYER.y = ui8[3] * Render.__TRANSFORM__;
+        PLAYER.KARMA = ui8[4];
         World.PLAYER.badKarma = PLAYER.id;
         World.PLAYER.badKarmaDelay = 14000;
     }
 };
 
-function onAreas(unit8) {
+function onAreas(ui8) {
     World.PLAYER.toxicStep++;
-    World.PLAYER.nextAreas = unit8[1] * 1000;
+    World.PLAYER.nextAreas = ui8[1] * 1000;
     for (var k = 2; k < 14; k++) {
-        if (unit8[k] === 100) {
+        if (ui8[k] === 100) {
             World.PLAYER.lastAreas[k - 2][0] = -1;
             World.PLAYER.lastAreas[k - 2][1] = -1;
         } else {
-            var i = window.Math.floor(unit8[k] / 8);
-            var j = unit8[k] % 8;
+            var i = window.Math.floor(ui8[k] / 8);
+            var j = ui8[k] % 8;
             World.PLAYER.toxicMap[i][j] = World.PLAYER.toxicStep;
             World.PLAYER.lastAreas[k - 2][0] = i;
             World.PLAYER.lastAreas[k - 2][1] = j;
@@ -1702,97 +1729,97 @@ function onDramaticChrono(nnW) {
     World.PLAYER.nextAreas = nnW * 10000;
 };
 
-function onMessageRaw(buf) {
-    var unit8 = new window.Uint8Array(buf);
+function onMessageRaw(data) {
+    var ui8 = new window.Uint8Array(data);
     // Decode data
-    switch (unit8[0]) {
-        case 0:          onUnits                    (buf, unit8);                   break;
-        case 1:          onOldVersion               (buf);                          break;
+    switch (ui8[0]) {
+        case 0:          onUnits                    (data, ui8);                   break;
+        case 1:          onOldVersion               (data);                          break;
         case 2:          onFull                     ();                             break;
-        case 3:          onPlayerDie                (unit8);                        break;
-        case 4:          onOtherDie                 (unit8[1]);                     break;
+        case 3:          onPlayerDie                (ui8);                        break;
+        case 4:          onOtherDie                 (ui8[1]);                     break;
         case 5:          onFailRestoreSession       ();                             break;
         case 6:          onStoleYourSession         ();                             break;
-        case 7:          onMute                     (unit8[1]);                     break;
-        case 8:          onLeaderboard              (buf, unit8);                   break;
-        case 9:          onHandshake                (buf, unit8);                   break;
+        case 7:          onMute                     (ui8[1]);                     break;
+        case 8:          onLeaderboard              (data, ui8);                   break;
+        case 9:          onHandshake                (data, ui8);                   break;
         case 10:         onKickInactivity           ();                             break;
-        case 11:         onNotification             (unit8);                        break;
-        case 12:         onGauges                   (unit8);                        break;
-        case 13:         onScore                    (buf);                          break;
-        case 14:         onPlayerHit                (unit8[1], unit8[2]);           break;
-        case 15:         onFullInventory            (unit8);                        break;
-        case 16:         onDeleteItem               (unit8);                        break;
-        case 17:         onNewItem                  (unit8);                        break;
-        case 18:         onPlayerLife               (unit8[1]);                     break;
+        case 11:         onNotification             (ui8);                        break;
+        case 12:         onGauges                   (ui8);                        break;
+        case 13:         onScore                    (data);                          break;
+        case 14:         onPlayerHit                (ui8[1], ui8[2]);           break;
+        case 15:         onFullInventory            (ui8);                        break;
+        case 16:         onDeleteItem               (ui8);                        break;
+        case 17:         onNewItem                  (ui8);                        break;
+        case 18:         onPlayerLife               (ui8[1]);                     break;
         case 19:         onLifeDecreas              ();                             break;
-        case 20:         onSelectedItem             (unit8);                        break;
+        case 20:         onSelectedItem             (ui8);                        break;
         case 21:         onLifeStop                 ();                             break;
-        case 22:         onPlayerHeal               (unit8[1]);                     break;
+        case 22:         onPlayerHeal               (ui8[1]);                     break;
         case 23:         onStaminaIncrease          ();                             break;
         case 24:         onStaminaStop              ();                             break;
         case 25:         onStaminaDecrease          ();                             break;
         case 26:         onColdIncrease             ();                             break;
         case 27:         onColdStop                 ();                             break;
         case 28:         onColdDecrease             ();                             break;
-        case 29:         onPlayerStamina            (unit8[1]);                     break;
+        case 29:         onPlayerStamina            (ui8[1]);                     break;
         case 30:         onLifeIncrease             ();                             break;
-        case 31:         onReplaceItem              (unit8);                        break;
-        case 32:         onStackItem                (unit8);                        break;
-        case 33:         onSplitItem                (unit8);                        break;
-        case 34:         onReplaceAmmo              (unit8);                        break;
-        case 35:         onStartInteraction         (unit8[1]);                     break;
+        case 31:         onReplaceItem              (ui8);                        break;
+        case 32:         onStackItem                (ui8);                        break;
+        case 33:         onSplitItem                (ui8);                        break;
+        case 34:         onReplaceAmmo              (ui8);                        break;
+        case 35:         onStartInteraction         (ui8[1]);                     break;
         case 36:         onInterruptInteraction     ();                             break;
-        case 37:         onReplaceItemAndAmmo       (unit8);                        break;
-        case 38:         onBlueprint                (unit8[1]);                     break;
+        case 37:         onReplaceItemAndAmmo       (ui8);                        break;
+        case 38:         onBlueprint                (ui8[1]);                     break;
         case 39:         onDay                      ();                             break;
         case 40:         onNight                    ();                             break;
-        case 41:         onPlayerXp                 ((unit8[1] << 8) + unit8[2]);   break;
-        case 42:         onPlayerXpSkill            (unit8);                        break;
-        case 43:         onBoughtSkill              (unit8[1]);                     break;
-        case 44:         onStartCraft               (unit8[1]);                     break;
+        case 41:         onPlayerXp                 ((ui8[1] << 8) + ui8[2]);   break;
+        case 42:         onPlayerXpSkill            (ui8);                        break;
+        case 43:         onBoughtSkill              (ui8[1]);                     break;
+        case 44:         onStartCraft               (ui8[1]);                     break;
         case 45:         onLostBuilding             ();                             break;
-        case 46:         onOpenBuilding             (unit8);                        break;
-        case 47:         onNewFuelValue             (unit8);                        break;
+        case 46:         onOpenBuilding             (ui8);                        break;
+        case 47:         onNewFuelValue             (ui8);                        break;
         case 48:         onRadOn                    ();                             break;
         case 49:         onRadOff                   ();                             break;
         case 50:         onWarmOn                   ();                             break;
         case 51:         onWarmOff                  ();                             break;
-        case 52:         onWrongTool                (unit8[1]);                     break;
-        case 53:         onFullChest                (unit8);                        break;
-        case 54:         onAcceptedTeam             (unit8[1], unit8[2]);           break;
-        case 55:         onKickedTeam               (unit8[1]);                     break;
-        case 56:         onDeleteTeam               (unit8[1]);                     break;
-        case 57:         onJoinTeam                 (unit8[1]);                     break;
-        case 58:         onTeamPosition             (unit8);                        break;
-        case 59:         onKarma                    (unit8[1]);                     break;
-        case 60:         onBadKarma                 (unit8);                        break;
-        case 61:         onAreas                    (unit8);                        break;
+        case 52:         onWrongTool                (ui8[1]);                     break;
+        case 53:         onFullChest                (ui8);                        break;
+        case 54:         onAcceptedTeam             (ui8[1], ui8[2]);           break;
+        case 55:         onKickedTeam               (ui8[1]);                     break;
+        case 56:         onDeleteTeam               (ui8[1]);                     break;
+        case 57:         onJoinTeam                 (ui8[1]);                     break;
+        case 58:         onTeamPosition             (ui8);                        break;
+        case 59:         onKarma                    (ui8[1]);                     break;
+        case 60:         onBadKarma                 (ui8);                        break;
+        case 61:         onAreas                    (ui8);                        break;
         case 62:         onWrongPassword            ();                             break;
-        case 63:         onModdedGaugesValues       (buf);                          break;
-        case 64:         onShakeExplosionState      (unit8[1]);                     break;
-        case 65:         onPlayerEat                (unit8[1]);                     break;
-        case 66:         onCitiesLocation           (unit8);                        break;
-        case 67:         onPoisened                 (unit8[1]);                     break;
-        case 68:         onRepellent                (unit8[1], unit8[2]);           break;
-        case 69:         onLapadoine                (unit8[1], unit8[2]);           break;
-        case 70:         onResetDrug                (unit8[1], unit8[2]);           break;
-        case 71:         onDramaticChrono           (unit8[1]);                     break;
+        case 63:         onModdedGaugesValues       (data);                          break;
+        case 64:         onShakeExplosionState      (ui8[1]);                     break;
+        case 65:         onPlayerEat                (ui8[1]);                     break;
+        case 66:         onCitiesLocation           (ui8);                        break;
+        case 67:         onPoisened                 (ui8[1]);                     break;
+        case 68:         onRepellent                (ui8[1], ui8[2]);           break;
+        case 69:         onLapadoine                (ui8[1], ui8[2]);           break;
+        case 70:         onResetDrug                (ui8[1], ui8[2]);           break;
+        case 71:         onDramaticChrono           (ui8[1]);                     break;
     }
 };
 
-function onChat(buf) {
-    World.players[buf[1]].text.push(buf[2]);
+function onChat(data) {
+    World.players[data[1]].text.push(data[2]);
 };
 
-function onNewPlayer(buf) {
-    var PLAYER = World.players[buf[1]];
-    PLAYER.tokenId = buf[2];
+function onNewPlayer(data) {
+    var PLAYER = World.players[data[1]];
+    PLAYER.tokenId = data[2];
     PLAYER.score = 0;
     PLAYER.old = __ENTITIE_PLAYER__;
-    PLAYER.nickname = ((buf[3] + "  #") + buf[1]);
-    PLAYER.skin = buf[4];
-    PLAYER.ghoul = buf[5];
+    PLAYER.nickname = ((data[3] + "  #") + data[1]);
+    PLAYER.skin = data[4];
+    PLAYER.ghoul = data[5];
     PLAYER.team = -1;
     PLAYER.breath = 0;
     PLAYER.move = 0;
@@ -1817,20 +1844,20 @@ function onNewPlayer(buf) {
         World.playerAlive++;
 };
 
-function onNicknamesToken(buf) {
-    var len = buf.length - 1;
+function onNicknamesToken(data) {
+    var len = data.length - 1;
     World.playerNumber = len;
-    localStorage2.setItem("token", buf[len]);
-    buf[0] = "";
-    World.allocatePlayers(buf);
+    localStorage2.setItem("token", data[len]);
+    data[0] = "";
+    World.allocatePlayers(data);
 };
 
 function onAlert(vvMVW) {};
 
-function onNewTeam(buf) {
-    var team = World.teams[buf[1]];
-    team.leader = buf[2];
-    team.name = buf[3];
+function onNewTeam(data) {
+    var team = World.teams[data[1]];
+    team.leader = data[2];
+    team.name = data[3];
     var PLAYER = World.players[team.leader];
     PLAYER.teamUid = team.uid;
     PLAYER.teamLeader = 1;
@@ -1843,18 +1870,18 @@ function onNewTeam(buf) {
         Game.teamNameValid = 0;
 };
 
-function onTeamName(buf) {
-    World.allocateTeam(buf);
+function onTeamName(data) {
+    World.allocateTeam(data);
 };
 
-function onMessageJSON(buf) {
-    switch (buf[0]) {
-        case 0:     onChat          (buf);      break;
-        case 1:     onNewPlayer     (buf);      break;
-        case 2:     onNicknamesToken(buf);      break;
-        case 3:     onAlert         (buf[1]);   break;
-        case 4:     onNewTeam       (buf);      break;
-        case 5:     onTeamName      (buf);      break;
+function onMessageJSON(data) {
+    switch (data[0]) {
+        case 0:     onChat          (data);      break;
+        case 1:     onNewPlayer     (data);      break;
+        case 2:     onNicknamesToken(data);      break;
+        case 3:     onAlert         (data[1]);   break;
+        case 4:     onNewTeam       (data);      break;
+        case 5:     onTeamName      (data);      break;
     }
 };
 
@@ -2550,26 +2577,26 @@ var World = (function() {
         }
     };
 
-    function moveEntitie(MW) {
-        WX = MW.rx + ((delta * MW.speed) * MW.angleX);
-        WY = MW.ry + ((delta * MW.speed) * MW.angleY);
-        if (Math2d.fastDist(MW.rx, MW.ry, MW.nx, MW.ny) < Math2d.fastDist(WX, WY, MW.rx, MW.ry)) {
-            MW.rx = MW.nx;
-            MW.ry = MW.ny;
+    function moveEntitie(UNIT) {
+        WX = UNIT.rx + ((delta * UNIT.speed) * UNIT.angleX);
+        WY = UNIT.ry + ((delta * UNIT.speed) * UNIT.angleY);
+        if (Math2d.fastDist(UNIT.rx, UNIT.ry, UNIT.nx, UNIT.ny) < Math2d.fastDist(WX, WY, UNIT.rx, UNIT.ry)) {
+            UNIT.rx = UNIT.nx;
+            UNIT.ry = UNIT.ny;
         } else {
-            MW.rx = WX;
-            MW.ry = WY;
+            UNIT.rx = WX;
+            UNIT.ry = WY;
         }
-        MW.x = MathUtils.lerp(MW.x, MW.rx, MW.lerp);
-        MW.y = MathUtils.lerp(MW.y, MW.ry, MW.lerp);
-        MW.i = window.Math.max(0, window.Math.min(nVnMn, window.Math.floor(MW.y / Render.__TILE_SIZE__)));
-        MW.j = window.Math.max(0, window.Math.min(MwwMW, window.Math.floor(MW.x / Render.__TILE_SIZE__)));
-        if ((World.PLAYER.id === MW.pid) && (MW.id === 0))
-            MW.angle = Mouse.angle;
-        else if (MW.pid === 0)
-            MW.angle = MathUtils.lerp(MW.angle, MW.nangle, MW.lerp / 2);
+        UNIT.x = MathUtils.lerp(UNIT.x, UNIT.rx, UNIT.lerp);
+        UNIT.y = MathUtils.lerp(UNIT.y, UNIT.ry, UNIT.lerp);
+        UNIT.i = window.Math.max(0, window.Math.min(nVnMn, window.Math.floor(UNIT.y / Render.__TILE_SIZE__)));
+        UNIT.j = window.Math.max(0, window.Math.min(MwwMW, window.Math.floor(UNIT.x / Render.__TILE_SIZE__)));
+        if ((World.PLAYER.id === UNIT.pid) && (UNIT.id === 0))
+            UNIT.angle = Mouse.angle;
+        else if (UNIT.pid === 0)
+            UNIT.angle = MathUtils.lerp(UNIT.angle, UNIT.nangle, UNIT.lerp / 2);
         else
-            MW.angle = MathUtils.lerp(MW.angle, MW.nangle, MW.lerp * 2);
+            UNIT.angle = MathUtils.lerp(UNIT.angle, UNIT.nangle, UNIT.lerp * 2);
     };
 
     function VVnvw(WVm, M) {
@@ -2592,13 +2619,13 @@ var World = (function() {
             World.newLeaderboard = 1;
     };
 
-    function initLeaderboard(unit16, unit8) {
+    function initLeaderboard(ui16, ui8) {
         for (var i = 0; i < 10; i++) {
-            var Wn = unit8[2 + (i * 4)];
-            var score = unit16[2 + (i * 2)];
+            var Wn = ui8[2 + (i * 4)];
+            var score = ui16[2 + (i * 2)];
             var PLAYER = World.players[Wn];
             PLAYER.score = MathUtils.inflateNumber(score);
-            PLAYER.KARMA = unit8[3 + (i * 4)];
+            PLAYER.KARMA = ui8[3 + (i * 4)];
             var scoreSimplified = MathUtils.simplifyNumber(PLAYER.score);
             if (scoreSimplified !== PLAYER.scoreSimplified)
                 PLAYER.scoreLabel = null;
@@ -3093,20 +3120,20 @@ var Entitie = (function() {
     function remove(pid, Wn, uid, vV, nVmNV) {
         var i = 0;
         var mMnVn = (((pid === 0) ? 0 : MnMWW) + (pid * Entitie.unitsPerPlayer)) + Wn;
-        var MW = WVMvm[mMnVn];
-        if (((MW !== window.undefined) && (MW.type === vV)) && (MW.uid === uid))
+        var UNIT = WVMvm[mMnVn];
+        if (((UNIT !== window.undefined) && (UNIT.type === vV)) && (UNIT.uid === uid))
             WVMvm[mMnVn] = window.undefined;
         var M = border[vV];
         var NMwVv = units[vV];
         var len = M.border;
         for (i = 0; i < len; i++) {
-            var MW = NMwVv[M.cycle[i]];
-            if (((MW.uid === uid) && (MW.pid === pid)) && (MW.id === Wn)) {
+            var UNIT = NMwVv[M.cycle[i]];
+            if (((UNIT.uid === uid) && (UNIT.pid === pid)) && (UNIT.id === Wn)) {
                 Border.fastKillIdentifier(M, i);
-                if ((ENTITIES[MW.type].remove > 0) && (nVmNV === 1)) {
+                if ((ENTITIES[UNIT.type].remove > 0) && (nVmNV === 1)) {
                     var VWvMW = units[MwvWW][Border.forceNewIdentifier(border[MwvWW])];
-                    for (var j in MW)
-                        VWvMW[j] = MW[j];
+                    for (var j in UNIT)
+                        VWvMW[j] = UNIT[j];
                     VWvMW.removed = 1;
                 }
                 return;
@@ -3116,20 +3143,20 @@ var Entitie = (function() {
 
     function get(pid, Wn, uid, vV) {
         var mMnVn = (((pid === 0) ? 0 : MnMWW) + (pid * Entitie.unitsPerPlayer)) + Wn;
-        var MW = WVMvm[mMnVn];
-        if ((MW === window.undefined) || (MW.uid !== uid)) {
+        var UNIT = WVMvm[mMnVn];
+        if ((UNIT === window.undefined) || (UNIT.uid !== uid)) {
             var wmWnw = Border.forceNewIdentifier(border[vV]);
-            MW = units[vV][wmWnw];
-            if (MW === window.undefined) {
+            UNIT = units[vV][wmWnw];
+            if (UNIT === window.undefined) {
                 window.console.log("Memory Warn: new entitie created");
                 units[vV][wmWnw] = Entitie.create(vV);
-                MW = units[vV][wmWnw];
+                UNIT = units[vV][wmWnw];
             }
-            WVMvm[mMnVn] = MW;
-            MW.update = 0;
-            MW.removed = 0;
+            WVMvm[mMnVn] = UNIT;
+            UNIT.update = 0;
+            UNIT.removed = 0;
         }
-        return MW;
+        return UNIT;
     };
 
     function cleanRemoved() {
@@ -3137,8 +3164,8 @@ var Entitie = (function() {
         var NMwVv = units[MwvWW];
         var len = M.border;
         for (i = 0; i < len; i++) {
-            var MW = NMwVv[M.cycle[i]];
-            if (MW.removed !== 1) {
+            var UNIT = NMwVv[M.cycle[i]];
+            if (UNIT.removed !== 1) {
                 Border.fastKillIdentifier(M, i);
                 len--;
                 i--;
@@ -6832,54 +6859,54 @@ function EntitieClass(vV) {
         });
 };
 
-function setEntitie(MW, pid, uid, Wn, vV, WX, WY, nx, ny, extra, angle, Mnn) {
+function setEntitie(UNIT, pid, uid, Wn, vV, WX, WY, nx, ny, extra, angle, Mnn) {
 
-    MW.pid      = pid;
-    MW.uid      = uid;
-    MW.id       = Wn;
-    MW.nangle   = MathUtils.reduceAngle(MW.angle, ((angle * 2) * window.Math.PI) / 255);
-    MW.state    = Mnn;
-    MW.nx       = nx;
-    MW.ny       = ny;
-    MW.extra    = extra;
+    UNIT.pid      = pid;
+    UNIT.uid      = uid;
+    UNIT.id       = Wn;
+    UNIT.nangle   = MathUtils.reduceAngle(UNIT.angle, ((angle * 2) * window.Math.PI) / 255);
+    UNIT.state    = Mnn;
+    UNIT.nx       = nx;
+    UNIT.ny       = ny;
+    UNIT.extra    = extra;
 
-    if (MW.update === 0) {
+    if (UNIT.update === 0) {
 
         var WvW         = ENTITIES[vV];
-        MW.speed        = WvW.speed;
-        MW.angle        = MW.nangle;
-        MW.x            = WX;
-        MW.y            = WY;
-        MW.z            = WvW.z;
-        MW.lerp         = WvW.lerp;
-        MW.rx           = WX;
-        MW.ry           = WY;
-        MW.i            = window.Math.floor(WY / Render.__TILE_SIZE__);
-        MW.j            = window.Math.floor(WX / Render.__TILE_SIZE__);
-        MW.hit          = 0;
-        MW.hitMax       = 0;
-        MW.hurt         = 0;
-        MW.hurt2        = 0;
-        MW.hurtAngle    = 0;
-        MW.heal         = 0;
-        MW.death        = 0;
-        MW.breath       = 0;
-        MW.breath2      = 0;
-        MW.born         = 0;
-        MW.broke        = 0;
-        MW.subtype      = 0;
-        MW.draw         = null;
+        UNIT.speed        = WvW.speed;
+        UNIT.angle        = UNIT.nangle;
+        UNIT.x            = WX;
+        UNIT.y            = WY;
+        UNIT.z            = WvW.z;
+        UNIT.lerp         = WvW.lerp;
+        UNIT.rx           = WX;
+        UNIT.ry           = WY;
+        UNIT.i            = window.Math.floor(WY / Render.__TILE_SIZE__);
+        UNIT.j            = window.Math.floor(WX / Render.__TILE_SIZE__);
+        UNIT.hit          = 0;
+        UNIT.hitMax       = 0;
+        UNIT.hurt         = 0;
+        UNIT.hurt2        = 0;
+        UNIT.hurtAngle    = 0;
+        UNIT.heal         = 0;
+        UNIT.death        = 0;
+        UNIT.breath       = 0;
+        UNIT.breath2      = 0;
+        UNIT.born         = 0;
+        UNIT.broke        = 0;
+        UNIT.subtype      = 0;
+        UNIT.draw         = null;
 
         var init = WvW.init;
 
         if (init !== window.undefined)
-            init(MW);
+            init(UNIT);
 
     }
-    var angle = Math2d.angle(MW.rx, MW.ry, nx, ny);
-    MW.angleX = window.Math.cos(angle);
-    MW.angleY = window.Math.sin(angle);
-    MW.update = 1;
+    var angle = Math2d.angle(UNIT.rx, UNIT.ry, nx, ny);
+    UNIT.angleX = window.Math.cos(angle);
+    UNIT.angleY = window.Math.sin(angle);
+    UNIT.update = 1;
 };
 var Border = (function() {
     function forceNewIdentifier(M) {
@@ -7896,14 +7923,14 @@ var Home = (function() {
     var vmV = 0;
 
     function nnn(vV, WX, WY, angle, MMWWm, Mmwvn) {
-        var MW = Entitie.get(0, vmV, vmV, vV);
-        setEntitie(MW, 0, vmV, vmV, vV, WX, WY, WX, WY, (MMWWm << 5) + (Mmwvn << 10), angle, 1);
+        var UNIT = Entitie.get(0, vmV, vmV, vV);
+        setEntitie(UNIT, 0, vmV, vmV, vV, WX, WY, WX, WY, (MMWWm << 5) + (Mmwvn << 10), angle, 1);
         vmV++;
     };
 
     function Vnvmv(vV, WX, WY, Rot, Mnn, subtype) {
-        var MW = Entitie.get(0, vmV, vmV, vV);
-        setEntitie(MW, 0, vmV, vmV, vV, WX, WY, WX, WY, (subtype << 7) + (Rot << 5), 0, Mnn);
+        var UNIT = Entitie.get(0, vmV, vmV, vV);
+        setEntitie(UNIT, 0, vmV, vmV, vV, WX, WY, WX, WY, (subtype << 7) + (Rot << 5), 0, Mnn);
         vmV++;
     };
     var NNN = 0;
@@ -8985,8 +9012,8 @@ var Game = (function() {
     var MNWwn = [];
     var MmV = -1;
     var NWmNn = -1;
-    var emptyinvslot = CanvasUtils.loadImage("img/inv-empty.png");
-    var WwvNM = [emptyinvslot, emptyinvslot, emptyinvslot];
+    var inventoryEmpty = CanvasUtils.loadImage("img/inv-empty.png");
+    var WwvNM = [inventoryEmpty, inventoryEmpty, inventoryEmpty];
     var inventory = [];
     var craft = [];
     var recipe = [];
@@ -9050,7 +9077,7 @@ var Game = (function() {
             Nnw -= delta;
             if (Nnw > 2500) ctx.globalAlpha = MathUtils.Ease.inOutQuad((3000 - Nnw) / 500);
             else if (Nnw < 500) ctx.globalAlpha = MathUtils.Ease.inOutQuad(Nnw / 500);
-            ctx.drawImage(VWWvn, copypastebutton.pos.x - (85 * scaleby), copypastebutton.pos.y - (40 * scaleby), VWWvn.wh * scaleby, VWWvn.h2 * scaleby);
+            ctx.drawImage(VWWvn, editorCopy.pos.x - (85 * scaleby), editorCopy.pos.y - (40 * scaleby), VWWvn.wh * scaleby, VWWvn.h2 * scaleby);
             ctx.globalAlpha = 1;
         }
         if (NVVNW[World.PLAYER._j] === window.undefined) NVVNW[World.PLAYER._j] = [];
@@ -11131,8 +11158,8 @@ var Editor = (function() {
     var isMapOpen = 0;
     var isSettingsOpen = 0;
     var MNnnv = 0;
-    var emptyinvslot = CanvasUtils.loadImage("img/inv-empty.png");
-    var WwvNM = [emptyinvslot, emptyinvslot, emptyinvslot];
+    var inventoryEmpty = CanvasUtils.loadImage("img/inv-empty.png");
+    var WwvNM = [inventoryEmpty, inventoryEmpty, inventoryEmpty];
     var Wnw = [];
     var NWw = 0;
 
@@ -11223,8 +11250,8 @@ var Editor = (function() {
     var vmV = 0;
 
     function mnnMn(pid, vV, WX, WY, extra, Mnn) {
-        var MW = Entitie.get(pid, vmV, vmV, vV);
-        setEntitie(MW, pid, vmV, vmV, vV, WX, WY, WX, WY, extra, 0, Mnn);
+        var UNIT = Entitie.get(pid, vmV, vmV, vV);
+        setEntitie(UNIT, pid, vmV, vmV, vV, WX, WY, WX, WY, extra, 0, Mnn);
         vmV++;
     };
 
@@ -11270,10 +11297,10 @@ var Editor = (function() {
     };
 
     function nWMWn(pid, vV, WX, WY, Rot, Mnn, subtype) {
-        var MW = Entitie.get(pid, vmV, vmV, vV);
-        setEntitie(MW, pid, vmV, vmV, vV, WX, WY, WX, WY, (subtype << 7) + (Rot << 5), 0, Mnn);
+        var UNIT = Entitie.get(pid, vmV, vmV, vV);
+        setEntitie(UNIT, pid, vmV, vmV, vV, WX, WY, WX, WY, (subtype << 7) + (Rot << 5), 0, Mnn);
         var update = ENTITIES[vV].update;
-        if (update !== window.undefined) update(MW, WX, WY);
+        if (update !== window.undefined) update(UNIT, WX, WY);
         vmV++;
     };
 
@@ -11353,8 +11380,8 @@ var Editor = (function() {
     };
 
     function wWNmN() {
-        var WX = mapbuildingbutton.pos.x - (5 * scaleby);
-        var WY = mapbuildingbutton.pos.y + (74 * scaleby);
+        var WX = editorBuildings.pos.x - (5 * scaleby);
+        var WY = editorBuildings.pos.y + (74 * scaleby);
         var MVM = 45 * scaleby;
         for (var i = 0; i < NWw; i++) {
             var wm = Wnw[i];
@@ -11386,13 +11413,13 @@ var Editor = (function() {
             Nnw -= delta;
             if (Nnw > 2500) ctx.globalAlpha = MathUtils.Ease.inOutQuad((3000 - Nnw) / 500);
             else if (Nnw < 500) ctx.globalAlpha = MathUtils.Ease.inOutQuad(Nnw / 500);
-            ctx.drawImage(VWWvn, copypastebutton.pos.x - (85 * scaleby), copypastebutton.pos.y - (40 * scaleby), VWWvn.wh * scaleby, VWWvn.h2 * scaleby);
+            ctx.drawImage(VWWvn, editorCopy.pos.x - (85 * scaleby), editorCopy.pos.y - (40 * scaleby), VWWvn.wh * scaleby, VWWvn.h2 * scaleby);
             ctx.globalAlpha = 1;
         }
         if (NVVNW[World.PLAYER._j] === window.undefined) NVVNW[World.PLAYER._j] = [];
         if (NVVNW[World.PLAYER._j][World.PLAYER._i] === window.undefined) NVVNW[World.PLAYER._j][World.PLAYER._i] = GUI.renderText(((("(" + World.PLAYER._j) + ",") + World.PLAYER._i) + ")", "'Viga', sans-serif", "#FFFFFF", 52, 455, "#000000", 22, 22, window.undefined, window.undefined, 0.4, window.undefined, "#000000", 15.6);
         var img = NVVNW[World.PLAYER._j][World.PLAYER._i];
-        ctx.drawImage(img, 5 * scaleby, zoombutton.pos.y - (42 * scaleby), img.wh * scaleby, img.h2 * scaleby);
+        ctx.drawImage(img, 5 * scaleby, editorZoomIn.pos.y - (42 * scaleby), img.wh * scaleby, img.h2 * scaleby);
     };
 
     var VWWvn = null;
@@ -11400,46 +11427,50 @@ var Editor = (function() {
     var Nnw = 0;
     var NVVNW = [];
     var vVnNn = 0;
+
     var settingbox;
     var bordermap;
     var minimap;
-    var fullscreenimg;
-    var settingsimg;
-    var minimapbutt;
-    var logicbutton;
-    var mapexplobutton;
-    var maproadbutton;
-    var mapfurniturebutton;
-    var mapbuildingbutton;
-    var zoombutton;
-    var unzoombutton;
-    var mapdeletebutton;
-    var importbutton;
-    var copypastebutton;
-    var homebutton;
-    var zoombutton;
-    var unzoombutton;
+    var editorScreen;
+    var editorOptions;
+    var editorMap;
+    var editorLogic;
+    var editorExplosions;
+    var editorRoad;
+    var editorFurniture;
+    var editorBuildings;
+    var editorZoomIn;
+    var editorZoomOut;
+    var editorDelete;
+    var editorImport;
+    var editorCopy;
+    var editorHome;
+    var editorZoomIn;
+    var editorZoomOut;
 
     function init() {
         VWWvn = GUI.renderText("Copied to clipboard", "'Viga', sans-serif", "#FFFFFF", 40, 350, "#000000", 18, 18, window.undefined, window.undefined, 0.6);
         for (i = 0; i < 64; i++) Wnw.push(GUI.createButton(40, 40, null, WwvNM));
+        
         settingbox = GUI.createBackground(269, 267, "img/settings-box.png");
         bordermap = GUI.createBackground(412, 412, "img/borderBigMinimap2.png");
         minimap = GUI.createBackground(128, 128, "img/minimap.png");
-        fullscreenimg = GUI.createButton(40, 40, ["img/full-screen-out.png", "img/full-screen-in.png", "img/full-screen-click.png"]);
-        settingsimg = GUI.createButton(40, 40, ["img/settings-out.png", "img/settings-in.png", "img/settings-click.png"]);
-        minimapbutt = GUI.createButton(40, 40, ["img/minimap-button-out.png", "img/minimap-button-in.png", "img/minimap-button-click.png"]);
-        logicbutton = GUI.createButton(67, 67, ["img/logic-button-out.png", "img/logic-button-in.png", "img/logic-button-click.png"]);
-        mapexplobutton = GUI.createButton(67, 67, ["img/map-explosive-button-out.png", "img/map-explosive-button-in.png", "img/map-explosive-button-click.png"]);
-        maproadbutton = GUI.createButton(67, 67, ["img/map-road-button-out.png", "img/map-road-button-in.png", "img/map-road-button-click.png"]);
-        mapfurniturebutton = GUI.createButton(67, 67, ["img/map-furniture-button-out.png", "img/map-furniture-button-in.png", "img/map-furniture-button-click.png"]);
-        mapbuildingbutton = GUI.createButton(67, 67, ["img/map-building-button-out.png", "img/map-building-button-in.png", "img/map-building-button-click.png"]);
-        zoombutton = GUI.createButton(46.5, 46.5, ["img/zoom-button-out.png", "img/zoom-button-in.png", "img/zoom-button-click.png"]);
-        unzoombutton = GUI.createButton(46.5, 46.5, ["img/unzoom-button-out.png", "img/unzoom-button-in.png", "img/unzoom-button-click.png"]);
-        mapdeletebutton = GUI.createButton(40, 40, ["img/map-delete-button-out.png", "img/map-delete-button-in.png", "img/map-delete-button-click.png"]);
-        importbutton = GUI.createButton(46.5, 46.5, ["img/import-button-out.png", "img/import-button-in.png", "img/import-button-click.png"]);
-        copypastebutton = GUI.createButton(46.5, 46.5, ["img/copy-paste-button-out.png", "img/copy-paste-button-in.png", "img/copy-paste-button-click.png"]);
-        homebutton = GUI.createButton(60, 60, ["img/home-button-out.png", "img/home-button-in.png", "img/home-button-click.png"]);
+
+        editorScreen        = GUI.createButton(40, 40,      ["img/full-screen-out.png", "img/full-screen-in.png", "img/full-screen-click.png"]);
+        editorOptions       = GUI.createButton(40, 40,      ["img/settings-out.png", "img/settings-in.png", "img/settings-click.png"]);
+        editorMap           = GUI.createButton(40, 40,      ["img/minimap-button-out.png", "img/minimap-button-in.png", "img/minimap-button-click.png"]);
+        editorLogic         = GUI.createButton(67, 67,      ["img/logic-button-out.png", "img/logic-button-in.png", "img/logic-button-click.png"]);
+        editorExplosions    = GUI.createButton(67, 67,      ["img/map-explosive-button-out.png", "img/map-explosive-button-in.png", "img/map-explosive-button-click.png"]);
+        editorRoad          = GUI.createButton(67, 67,      ["img/map-road-button-out.png", "img/map-road-button-in.png", "img/map-road-button-click.png"]);
+        editorFurniture     = GUI.createButton(67, 67,      ["img/map-furniture-button-out.png", "img/map-furniture-button-in.png", "img/map-furniture-button-click.png"]);
+        editorBuildings     = GUI.createButton(67, 67,      ["img/map-building-button-out.png", "img/map-building-button-in.png", "img/map-building-button-click.png"]);
+        editorZoomIn        = GUI.createButton(46.5, 46.5,  ["img/zoom-button-out.png", "img/zoom-button-in.png", "img/zoom-button-click.png"]);
+        editorZoomOut       = GUI.createButton(46.5, 46.5,  ["img/unzoom-button-out.png", "img/unzoom-button-in.png", "img/unzoom-button-click.png"]);
+        editorDelete        = GUI.createButton(40, 40,      ["img/map-delete-button-out.png", "img/map-delete-button-in.png", "img/map-delete-button-click.png"]);
+        editorImport        = GUI.createButton(46.5, 46.5,  ["img/import-button-out.png", "img/import-button-in.png", "img/import-button-click.png"]);
+        editorCopy          = GUI.createButton(46.5, 46.5,  ["img/copy-paste-button-out.png", "img/copy-paste-button-in.png", "img/copy-paste-button-click.png"]);
+        editorHome          = GUI.createButton(60, 60,      ["img/home-button-out.png", "img/home-button-in.png", "img/home-button-click.png"]);
+
     };
     var MVv;
     var NWV = new Mouse.LocalMouseEvent;
@@ -11526,34 +11557,34 @@ var Editor = (function() {
         bordermap.pos.y = window.Math.max(0, canh2 - window.Math.floor(206 * scaleby)) + wwv;
         minimap.pos.x = window.Math.floor(5 * scaleby) - vMm;
         minimap.pos.y = window.Math.floor(5 * scaleby) - wwv;
-        fullscreenimg.pos.x = minimap.pos.x + window.Math.floor(126 * scaleby);
-        fullscreenimg.pos.y = minimap.pos.y;
-        settingsimg.pos.x = fullscreenimg.pos.x;
-        settingsimg.pos.y = fullscreenimg.pos.y + window.Math.floor(44.5 * scaleby);
-        minimapbutt.pos.x = settingsimg.pos.x;
-        minimapbutt.pos.y = settingsimg.pos.y + window.Math.floor(44.5 * scaleby);
-        logicbutton.pos.x = ((canw - window.Math.floor(67 * scaleby)) + window.Math.floor(-5 * scaleby)) - vMm;
-        logicbutton.pos.y = window.Math.floor(5 * scaleby) - wwv;
-        mapexplobutton.pos.x = logicbutton.pos.x + window.Math.floor(-70 * scaleby);
-        mapexplobutton.pos.y = window.Math.floor(5 * scaleby) - wwv;
-        maproadbutton.pos.x = mapexplobutton.pos.x + window.Math.floor(-70 * scaleby);
-        maproadbutton.pos.y = window.Math.floor(5 * scaleby) - wwv;
-        mapfurniturebutton.pos.x = maproadbutton.pos.x + window.Math.floor(-70 * scaleby);
-        mapfurniturebutton.pos.y = window.Math.floor(5 * scaleby) - wwv;
-        mapbuildingbutton.pos.x = mapfurniturebutton.pos.x + window.Math.floor(-70 * scaleby);
-        mapbuildingbutton.pos.y = window.Math.floor(5 * scaleby) - wwv;
-        zoombutton.pos.x = window.Math.floor(5 * scaleby);
-        zoombutton.pos.y = (canh - window.Math.floor(46.5 * scaleby)) + window.Math.floor(-5 * scaleby);
-        unzoombutton.pos.x = zoombutton.pos.x + window.Math.floor(50 * scaleby);
-        unzoombutton.pos.y = (canh - window.Math.floor(46.5 * scaleby)) + window.Math.floor(-5 * scaleby);
-        mapdeletebutton.pos.x = minimap.pos.x + window.Math.floor(89 * scaleby);
-        mapdeletebutton.pos.y = minimap.pos.y + window.Math.floor(126 * scaleby);
-        importbutton.pos.x = (canw - window.Math.floor(46.5 * scaleby)) + window.Math.floor(-5 * scaleby);
-        importbutton.pos.y = (canh - window.Math.floor(46.5 * scaleby)) + window.Math.floor(-5 * scaleby);
-        copypastebutton.pos.x = importbutton.pos.x + window.Math.floor(-50 * scaleby);
-        copypastebutton.pos.y = (canh - window.Math.floor(46.5 * scaleby)) + window.Math.floor(-5 * scaleby);
-        homebutton.pos.x = minimap.pos.x;
-        homebutton.pos.y = minimap.pos.y + window.Math.floor(126 * scaleby);
+        editorScreen.pos.x = minimap.pos.x + window.Math.floor(126 * scaleby);
+        editorScreen.pos.y = minimap.pos.y;
+        editorOptions.pos.x = editorScreen.pos.x;
+        editorOptions.pos.y = editorScreen.pos.y + window.Math.floor(44.5 * scaleby);
+        editorMap.pos.x = editorOptions.pos.x;
+        editorMap.pos.y = editorOptions.pos.y + window.Math.floor(44.5 * scaleby);
+        editorLogic.pos.x = ((canw - window.Math.floor(67 * scaleby)) + window.Math.floor(-5 * scaleby)) - vMm;
+        editorLogic.pos.y = window.Math.floor(5 * scaleby) - wwv;
+        editorExplosions.pos.x = editorLogic.pos.x + window.Math.floor(-70 * scaleby);
+        editorExplosions.pos.y = window.Math.floor(5 * scaleby) - wwv;
+        editorRoad.pos.x = editorExplosions.pos.x + window.Math.floor(-70 * scaleby);
+        editorRoad.pos.y = window.Math.floor(5 * scaleby) - wwv;
+        editorFurniture.pos.x = editorRoad.pos.x + window.Math.floor(-70 * scaleby);
+        editorFurniture.pos.y = window.Math.floor(5 * scaleby) - wwv;
+        editorBuildings.pos.x = editorFurniture.pos.x + window.Math.floor(-70 * scaleby);
+        editorBuildings.pos.y = window.Math.floor(5 * scaleby) - wwv;
+        editorZoomIn.pos.x = window.Math.floor(5 * scaleby);
+        editorZoomIn.pos.y = (canh - window.Math.floor(46.5 * scaleby)) + window.Math.floor(-5 * scaleby);
+        editorZoomOut.pos.x = editorZoomIn.pos.x + window.Math.floor(50 * scaleby);
+        editorZoomOut.pos.y = (canh - window.Math.floor(46.5 * scaleby)) + window.Math.floor(-5 * scaleby);
+        editorDelete.pos.x = minimap.pos.x + window.Math.floor(89 * scaleby);
+        editorDelete.pos.y = minimap.pos.y + window.Math.floor(126 * scaleby);
+        editorImport.pos.x = (canw - window.Math.floor(46.5 * scaleby)) + window.Math.floor(-5 * scaleby);
+        editorImport.pos.y = (canh - window.Math.floor(46.5 * scaleby)) + window.Math.floor(-5 * scaleby);
+        editorCopy.pos.x = editorImport.pos.x + window.Math.floor(-50 * scaleby);
+        editorCopy.pos.y = (canh - window.Math.floor(46.5 * scaleby)) + window.Math.floor(-5 * scaleby);
+        editorHome.pos.x = minimap.pos.x;
+        editorHome.pos.y = minimap.pos.y + window.Math.floor(126 * scaleby);
     };
 
     function draw() {
@@ -11565,20 +11596,20 @@ var Editor = (function() {
         Render.world();
         Render.minimap(minimap.pos.x, minimap.pos.y);
         minimap.draw();
-        fullscreenimg.draw();
-        settingsimg.draw();
-        minimapbutt.draw();
-        logicbutton.draw();
-        mapexplobutton.draw();
-        maproadbutton.draw();
-        mapfurniturebutton.draw();
-        mapbuildingbutton.draw();
-        zoombutton.draw();
-        unzoombutton.draw();
-        mapdeletebutton.draw();
-        importbutton.draw();
-        copypastebutton.draw();
-        homebutton.draw();
+        editorScreen.draw();
+        editorOptions.draw();
+        editorMap.draw();
+        editorLogic.draw();
+        editorExplosions.draw();
+        editorRoad.draw();
+        editorFurniture.draw();
+        editorBuildings.draw();
+        editorZoomIn.draw();
+        editorZoomOut.draw();
+        editorDelete.draw();
+        editorImport.draw();
+        editorCopy.draw();
+        editorHome.draw();
         markposition();
         wWNmN();
         if (NmW === 1) {
@@ -11614,20 +11645,20 @@ var Editor = (function() {
             update();
             if (MNw < 0) {
                 WWN = 0;
-                fullscreenimg.setState(GUI.__BUTTON_OUT__);
-                settingsimg.setState(GUI.__BUTTON_OUT__);
-                minimapbutt.setState(GUI.__BUTTON_OUT__);
-                logicbutton.setState(GUI.__BUTTON_OUT__);
-                mapexplobutton.setState(GUI.__BUTTON_OUT__);
-                maproadbutton.setState(GUI.__BUTTON_OUT__);
-                mapfurniturebutton.setState(GUI.__BUTTON_OUT__);
-                mapbuildingbutton.setState(GUI.__BUTTON_OUT__);
-                zoombutton.setState(GUI.__BUTTON_OUT__);
-                unzoombutton.setState(GUI.__BUTTON_OUT__);
-                mapdeletebutton.setState(GUI.__BUTTON_OUT__);
-                importbutton.setState(GUI.__BUTTON_OUT__);
-                copypastebutton.setState(GUI.__BUTTON_OUT__);
-                homebutton.setState(GUI.__BUTTON_OUT__);
+                editorScreen.setState(GUI.__BUTTON_OUT__);
+                editorOptions.setState(GUI.__BUTTON_OUT__);
+                editorMap.setState(GUI.__BUTTON_OUT__);
+                editorLogic.setState(GUI.__BUTTON_OUT__);
+                editorExplosions.setState(GUI.__BUTTON_OUT__);
+                editorRoad.setState(GUI.__BUTTON_OUT__);
+                editorFurniture.setState(GUI.__BUTTON_OUT__);
+                editorBuildings.setState(GUI.__BUTTON_OUT__);
+                editorZoomIn.setState(GUI.__BUTTON_OUT__);
+                editorZoomOut.setState(GUI.__BUTTON_OUT__);
+                editorDelete.setState(GUI.__BUTTON_OUT__);
+                editorImport.setState(GUI.__BUTTON_OUT__);
+                editorCopy.setState(GUI.__BUTTON_OUT__);
+                editorHome.setState(GUI.__BUTTON_OUT__);
                 MVv.run();
                 return 0;
             }
@@ -11647,43 +11678,43 @@ var Editor = (function() {
     function VNn(event) {
         Mouse.updateAll(event, Mouse.__MOUSE_DOWN__);
         var vnm = 0;
-        if (fullscreenimg.trigger() === 1) {
+        if (editorScreen.trigger() === 1) {
             vnm = 1;
         }
-        if (settingsimg.trigger() === 1) {
+        if (editorOptions.trigger() === 1) {
             vnm = 1;
         }
-        if (minimapbutt.trigger() === 1) {
+        if (editorMap.trigger() === 1) {
             vnm = 1;
         }
-        if (logicbutton.trigger() === 1) {
+        if (editorLogic.trigger() === 1) {
             vnm = 1;
         }
-        if (mapexplobutton.trigger() === 1) {
+        if (editorExplosions.trigger() === 1) {
             vnm = 1;
         }
-        if (maproadbutton.trigger() === 1) {
+        if (editorRoad.trigger() === 1) {
             vnm = 1;
         }
-        if (mapfurniturebutton.trigger() === 1) {
+        if (editorFurniture.trigger() === 1) {
             vnm = 1;
         }
-        if (mapbuildingbutton.trigger() === 1) {
+        if (editorBuildings.trigger() === 1) {
             vnm = 1;
         }
-        if (zoombutton.trigger() === 1) {
+        if (editorZoomIn.trigger() === 1) {
             vnm = 1;
         }
-        if (unzoombutton.trigger() === 1) {
+        if (editorZoomOut.trigger() === 1) {
             vnm = 1;
         }
-        if (mapdeletebutton.trigger() === 1) {
+        if (editorDelete.trigger() === 1) {
             vnm = 1;
         }
-        if (importbutton.trigger() === 1) {
+        if (editorImport.trigger() === 1) {
             vnm = 1;
         }
-        if (homebutton.trigger() === 1) {
+        if (editorHome.trigger() === 1) {
             vnm = 1;
         }
         if (NmW === 1) {
@@ -11718,7 +11749,7 @@ var Editor = (function() {
     function vNm(event) {
         Mouse.updateAll(event, Mouse.__MOUSE_UP__);
         var vnm = 0;
-        if (fullscreenimg.trigger() === 1) {
+        if (editorScreen.trigger() === 1) {
             vnm = 1;
             if (MNnnv === 0) {
                 MNnnv = 1;
@@ -11732,7 +11763,7 @@ var Editor = (function() {
                 AudioUtils.playFx(AudioUtils._fx.button, 1, 0);
             }
         }
-        if (settingsimg.trigger() === 1) {
+        if (editorOptions.trigger() === 1) {
             vnm = 1;
             if (isSettingsOpen === 0) {
                 nVN();
@@ -11746,7 +11777,7 @@ var Editor = (function() {
                 return;
             }
         }
-        if (minimapbutt.trigger() === 1) {
+        if (editorMap.trigger() === 1) {
             vnm = 1;
             if (isMapOpen === 0) {
                 nVN();
@@ -11760,7 +11791,7 @@ var Editor = (function() {
                 return;
             }
         }
-        if (logicbutton.trigger() === 1) {
+        if (editorLogic.trigger() === 1) {
             vnm = 1;
             NWw = 0;
             for (var i = 1; i < INVENTORY.length; i++) {
@@ -11773,7 +11804,7 @@ var Editor = (function() {
             }
             AudioUtils.playFx(AudioUtils._fx.button, 1, 0);
         }
-        if (mapexplobutton.trigger() === 1) {
+        if (editorExplosions.trigger() === 1) {
             vnm = 1;
             NWw = 0;
             for (var i = 1; i < INVENTORY.length; i++) {
@@ -11786,7 +11817,7 @@ var Editor = (function() {
             }
             AudioUtils.playFx(AudioUtils._fx.button, 1, 0);
         }
-        if (maproadbutton.trigger() === 1) {
+        if (editorRoad.trigger() === 1) {
             vnm = 1;
             NWw = 0;
             var itemSub = INVENTORY[IID.__ROAD__].subtype;
@@ -11799,7 +11830,7 @@ var Editor = (function() {
             }
             AudioUtils.playFx(AudioUtils._fx.button, 1, 0);
         }
-        if (mapfurniturebutton.trigger() === 1) {
+        if (editorFurniture.trigger() === 1) {
             vnm = 1;
             NWw = 0;
             var itemSub = INVENTORY[IID.__FURNITURE__].subtype;
@@ -11812,7 +11843,7 @@ var Editor = (function() {
             }
             AudioUtils.playFx(AudioUtils._fx.button, 1, 0);
         }
-        if (mapbuildingbutton.trigger() === 1) {
+        if (editorBuildings.trigger() === 1) {
             vnm = 1;
             NWw = 0;
             for (var i = 1; i < INVENTORY.length; i++) {
@@ -11826,45 +11857,45 @@ var Editor = (function() {
             AudioUtils.playFx(AudioUtils._fx.button, 1, 0);
         }
     
-        if (zoombutton.trigger() === 1) {
+        if (editorZoomIn.trigger() === 1) {
             vnm = 1;
             if (Render.scale < 1.5) {
                 Render.scale += 0.1;
                 AudioUtils.playFx(AudioUtils._fx.button, 1, 0);
-                unzoombutton.show();
-                if (Render.scale >= 1.5) zoombutton.hide();
+                editorZoomOut.show();
+                if (Render.scale >= 1.5) editorZoomIn.hide();
             }
         }
-        if (unzoombutton.trigger() === 1) {
+        if (editorZoomOut.trigger() === 1) {
             vnm = 1;
             if (Render.scale > -0.95) {
                 if (Render.scale < 0) Render.scale -= 0.05;
                 else Render.scale -= 0.1;
                 AudioUtils.playFx(AudioUtils._fx.button, 1, 0);
-                zoombutton.show();
-                if (Render.scale <= -0.95) unzoombutton.hide();
+                editorZoomIn.show();
+                if (Render.scale <= -0.95) editorZoomOut.hide();
             }
         }
     
     
-        if (mapdeletebutton.trigger() === 1) {
+        if (editorDelete.trigger() === 1) {
             vnm = 1;
             MVWMn();
             AudioUtils.playFx(AudioUtils._fx.button, 1, 0);
         }
-        if (importbutton.trigger() === 1) {
+        if (editorImport.trigger() === 1) {
             vnm = 1;
             AudioUtils.playFx(AudioUtils._fx.open, 1, 0);
             var MWwVN = window["prompt"]("Please enter your code here", "");
             AudioUtils.playFx(AudioUtils._fx.open, 1, 0);
             if ((MWwVN != null) && (MWwVN != "")) wwMmV(MWwVN);
         }
-        if (copypastebutton.trigger() === 1) {
+        if (editorCopy.trigger() === 1) {
             vnm = 1;
             AudioUtils.playFx(AudioUtils._fx.button, 1, 0);
             exportmapfunc();
         }
-        if (homebutton.trigger() === 1) {
+        if (editorHome.trigger() === 1) {
             vnm = 1;
             Editor.quit(Home);
             AudioUtils.playFx(AudioUtils._fx.play, 1, 0);
@@ -11964,51 +11995,49 @@ var Editor = (function() {
     };
 
 
-
-
     function wVv(event) {
         Mouse.updateAll(event, Mouse.__MOUSE_MOVE__);
         var vnm = 0;
-        if (fullscreenimg.trigger() === 1) {
+        if (editorScreen.trigger() === 1) {
             vnm = 1;
         }
-        if (settingsimg.trigger() === 1) {
+        if (editorOptions.trigger() === 1) {
             vnm = 1;
         }
-        if (minimapbutt.trigger() === 1) {
+        if (editorMap.trigger() === 1) {
             vnm = 1;
         }
-        if (logicbutton.trigger() === 1) {
+        if (editorLogic.trigger() === 1) {
             vnm = 1;
         }
-        if (mapexplobutton.trigger() === 1) {
+        if (editorExplosions.trigger() === 1) {
             vnm = 1;
         }
-        if (maproadbutton.trigger() === 1) {
+        if (editorRoad.trigger() === 1) {
             vnm = 1;
         }
-        if (mapfurniturebutton.trigger() === 1) {
+        if (editorFurniture.trigger() === 1) {
             vnm = 1;
         }
-        if (mapbuildingbutton.trigger() === 1) {
+        if (editorBuildings.trigger() === 1) {
             vnm = 1;
         }
-        if (zoombutton.trigger() === 1) {
+        if (editorZoomIn.trigger() === 1) {
             vnm = 1;
         }
-        if (unzoombutton.trigger() === 1) {
+        if (editorZoomOut.trigger() === 1) {
             vnm = 1;
         }
-        if (mapdeletebutton.trigger() === 1) {
+        if (editorDelete.trigger() === 1) {
             vnm = 1;
         }
-        if (importbutton.trigger() === 1) {
+        if (editorImport.trigger() === 1) {
             vnm = 1;
         }
-        if (copypastebutton.trigger() === 1) {
+        if (editorCopy.trigger() === 1) {
             vnm = 1;
         }
-        if (homebutton.trigger() === 1) {
+        if (editorHome.trigger() === 1) {
             vnm = 1;
         }
         if (NmW === 1) {
@@ -16954,73 +16983,73 @@ __ENTITIE_RESOURCES_STOP__  = COUNTER_ENTITIE++;
 __ENTITIE_EXPLOSION__       = COUNTER_ENTITIE++;
 __ENTITIE_AI__              = COUNTER_ENTITIE++;
 
-ENTITIES[__ENTITIE_PLAYER__].update = function updateEntitiePlayer(MW, WX, WY) {
-    if (Math2d.dist(MW.x, MW.y, WX, WY) > 66) {
-        MW.rx = WX;
-        MW.ry = WY;
-        var angle = Math2d.angle(MW.rx, MW.ry, MW.nx, MW.ny);
-        MW.angleX = window.Math.cos(angle);
-        MW.angleY = window.Math.sin(angle);
+ENTITIES[__ENTITIE_PLAYER__].update = function updateEntitiePlayer(UNIT, WX, WY) {
+    if (Math2d.dist(UNIT.x, UNIT.y, WX, WY) > 66) {
+        UNIT.rx = WX;
+        UNIT.ry = WY;
+        var angle = Math2d.angle(UNIT.rx, UNIT.ry, UNIT.nx, UNIT.ny);
+        UNIT.angleX = window.Math.cos(angle);
+        UNIT.angleY = window.Math.sin(angle);
     }
-    MW.speed = (MW.state >> 8) / 100;
+    UNIT.speed = (UNIT.state >> 8) / 100;
 };
-ENTITIES[__ENTITIE_PLAYER__].init = function initEntitiePlayer(MW) {
-    var PLAYER = World.players[MW.pid];
+ENTITIES[__ENTITIE_PLAYER__].init = function initEntitiePlayer(UNIT) {
+    var PLAYER = World.players[UNIT.pid];
     for (var i = 0; i < PLAYER.runEffect.length; i++) PLAYER.runEffect[i].delay = 0;
     for (var i = 0; i < PLAYER.cartridges.length; i++) PLAYER.cartridges[i].delay = 0;
-    MW.angle = MW.nangle;
+    UNIT.angle = UNIT.nangle;
     if (PLAYER.ghoul > 0) {
-        MW.heal = 1;
-        MW.hurt2 = 1;
+        UNIT.heal = 1;
+        UNIT.hurt2 = 1;
     }
 };
 ENTITIES[__ENTITIE_AI__].update = ENTITIES[__ENTITIE_PLAYER__].update;
-ENTITIES[__ENTITIE_AI__].init = function initEntitieAI(MW) {
-    MW.heal = 1;
-    MW.hurt2 = 1;
-    MW.angle = MW.nangle;
-    MW.speed = (MW.state >> 8) / 100;
+ENTITIES[__ENTITIE_AI__].init = function initEntitieAI(UNIT) {
+    UNIT.heal = 1;
+    UNIT.hurt2 = 1;
+    UNIT.angle = UNIT.nangle;
+    UNIT.speed = (UNIT.state >> 8) / 100;
 };
-ENTITIES[__ENTITIE_LOOT__].init = function initEntitieLoot(MW) {
-    if ((MW.x !== MW.rx) || (MW.y !== MW.ry)) {
-        MW.angle = Math2d.angle(MW.x, MW.y, MW.rx, MW.ry);
-        MW.nangle = MW.angle;
+ENTITIES[__ENTITIE_LOOT__].init = function initEntitieLoot(UNIT) {
+    if ((UNIT.x !== UNIT.rx) || (UNIT.y !== UNIT.ry)) {
+        UNIT.angle = Math2d.angle(UNIT.x, UNIT.y, UNIT.rx, UNIT.ry);
+        UNIT.nangle = UNIT.angle;
     } else {
-        MW.angle += window.Math.PI / 2;
-        MW.nangle = MW.angle;
+        UNIT.angle += window.Math.PI / 2;
+        UNIT.nangle = UNIT.angle;
     }
 };
-ENTITIES[__ENTITIE_LOOT__].update = function updateEntitieLoot(MW, WX, WY) {
-    MW.hit = MW.state >> 8;
+ENTITIES[__ENTITIE_LOOT__].update = function updateEntitieLoot(UNIT, WX, WY) {
+    UNIT.hit = UNIT.state >> 8;
 };
-ENTITIES[__ENTITIE_BULLET__].init = function initEntitieBullet(MW) {
-    MW.hurtAngle = Math2d.angle(MW.rx, MW.ry, MW.nx, MW.ny);
-    var Wn = MW.extra;
-    MW.speed = (MW.state >> 8) / 100;
+ENTITIES[__ENTITIE_BULLET__].init = function initEntitieBullet(UNIT) {
+    UNIT.hurtAngle = Math2d.angle(UNIT.rx, UNIT.ry, UNIT.nx, UNIT.ny);
+    var Wn = UNIT.extra;
+    UNIT.speed = (UNIT.state >> 8) / 100;
     switch (Wn) {
         case 4:
         case 8:
-            var player = Entitie.findEntitie(__ENTITIE_PLAYER__, MW.pid, 0);
+            var player = Entitie.findEntitie(__ENTITIE_PLAYER__, UNIT.pid, 0);
             if (player !== null) {
                 player.extra = player.extra & 255;
                 player.hit = 0;
             }
             break;
         case 3:
-            var player = Entitie.findEntitie(__ENTITIE_PLAYER__, MW.pid, 0);
+            var player = Entitie.findEntitie(__ENTITIE_PLAYER__, UNIT.pid, 0);
             if (player !== null) player.hit = 0;
             break;
     }
 };
-ENTITIES[__ENTITIE_BULLET__].update = function updateEntitieBullet(MW, WX, WY) {
-    var angle = Math2d.angle(MW.x, MW.y, MW.nx, MW.ny);
+ENTITIES[__ENTITIE_BULLET__].update = function updateEntitieBullet(UNIT, WX, WY) {
+    var angle = Math2d.angle(UNIT.x, UNIT.y, UNIT.nx, UNIT.ny);
     var pi2 = window.Math.PI * 2;
-    var vWWMM = (((angle + pi2) % pi2) - ((MW.hurtAngle + pi2) % pi2)) % pi2;
+    var vWWMM = (((angle + pi2) % pi2) - ((UNIT.hurtAngle + pi2) % pi2)) % pi2;
     if (window.Math.abs(vWWMM) > 0.1) {
-        MW.rx = MW.x;
-        MW.ry = MW.y;
-        MW.nx = MW.x;
-        MW.ny = MW.y;
+        UNIT.rx = UNIT.x;
+        UNIT.ry = UNIT.y;
+        UNIT.nx = UNIT.x;
+        UNIT.ny = UNIT.y;
     }
 };
 ENTITIES[__ENTITIE_RESOURCES_TOP__].update = function updateEntitieBuilding() {
@@ -17028,23 +17057,23 @@ ENTITIES[__ENTITIE_RESOURCES_TOP__].update = function updateEntitieBuilding() {
 ENTITIES[__ENTITIE_RESOURCES_DOWN__].update = ENTITIES[__ENTITIE_RESOURCES_TOP__].update;
 ENTITIES[__ENTITIE_RESOURCES_MID__].update = ENTITIES[__ENTITIE_RESOURCES_TOP__].update;
 ENTITIES[__ENTITIE_RESOURCES_STOP__].update = ENTITIES[__ENTITIE_RESOURCES_TOP__].update;
-ENTITIES[__ENTITIE_BUILD_TOP__].update = function updateEntitieBuilding(MW, WX, WY) {
-    var Rot = (MW.extra >> 5) & 3;
-    MW.subtype = (MW.state >> 5) & 63;
-    MW.broke = MW.state >> 14;
-    MW.state = MW.state & 16383;
-    var item = INVENTORY[MW.extra >> 7];
-    MW.x = ((window.Math.floor(WX / Render.__TILE_SIZE__) * Render.__TILE_SIZE__) + Render.__TILE_SIZE2__) + item.xCenter[Rot];
-    MW.y = ((window.Math.floor(WY / Render.__TILE_SIZE__) * Render.__TILE_SIZE__) + Render.__TILE_SIZE2__) + item.yCenter[Rot];
-    MW.rx = MW.x;
-    MW.ry = MW.y;
-    MW.nx = MW.x;
-    MW.ny = MW.y;
-    MW.px = MW.x;
-    MW.py = MW.y;
-    if ((item.door === 1) && ((MW.state & 16) === 16)) {
-        MW.px = ((window.Math.floor(MW.j + item.jMove[Rot]) * Render.__TILE_SIZE__) + Render.__TILE_SIZE2__) + item.xCenter[(Rot + 1) % 4];
-        MW.py = ((window.Math.floor(MW.i + item.iMove[Rot]) * Render.__TILE_SIZE__) + Render.__TILE_SIZE2__) + item.yCenter[(Rot + 1) % 4];
+ENTITIES[__ENTITIE_BUILD_TOP__].update = function updateEntitieBuilding(UNIT, WX, WY) {
+    var Rot = (UNIT.extra >> 5) & 3;
+    UNIT.subtype = (UNIT.state >> 5) & 63;
+    UNIT.broke = UNIT.state >> 14;
+    UNIT.state = UNIT.state & 16383;
+    var item = INVENTORY[UNIT.extra >> 7];
+    UNIT.x = ((window.Math.floor(WX / Render.__TILE_SIZE__) * Render.__TILE_SIZE__) + Render.__TILE_SIZE2__) + item.xCenter[Rot];
+    UNIT.y = ((window.Math.floor(WY / Render.__TILE_SIZE__) * Render.__TILE_SIZE__) + Render.__TILE_SIZE2__) + item.yCenter[Rot];
+    UNIT.rx = UNIT.x;
+    UNIT.ry = UNIT.y;
+    UNIT.nx = UNIT.x;
+    UNIT.ny = UNIT.y;
+    UNIT.px = UNIT.x;
+    UNIT.py = UNIT.y;
+    if ((item.door === 1) && ((UNIT.state & 16) === 16)) {
+        UNIT.px = ((window.Math.floor(UNIT.j + item.jMove[Rot]) * Render.__TILE_SIZE__) + Render.__TILE_SIZE2__) + item.xCenter[(Rot + 1) % 4];
+        UNIT.py = ((window.Math.floor(UNIT.i + item.iMove[Rot]) * Render.__TILE_SIZE__) + Render.__TILE_SIZE2__) + item.yCenter[(Rot + 1) % 4];
     }
 };
 ENTITIES[__ENTITIE_BUILD_DOWN__].update = ENTITIES[__ENTITIE_BUILD_TOP__].update;
