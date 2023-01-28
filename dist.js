@@ -1185,7 +1185,7 @@ function onDeleteItem(IID) {
             invtr[i][1] = 0;
             invtr[i][2] = 0;
             invtr[i][3] = 0;
-            if ((Game.MvN() === 1) && (World.PLAYER.craftCategory === -1)) 
+            if ((Game.getSkillBoxState() === 1) && (World.PLAYER.craftCategory === -1)) 
                 World.buildCraftList(World.PLAYER.craftArea);
             return;
         }
@@ -1201,7 +1201,7 @@ function onNewItem(IID) {
             invtr[i][2] = IID[3];
             invtr[i][3] = IID[4];
             Game.inventory[i].setImages(INVENTORY[IID[1]].itemButton.src, INVENTORY[IID[1]].itemButton.img);
-            if ((Game.MvN() === 1) && (World.PLAYER.craftCategory === -1))
+            if ((Game.getSkillBoxState() === 1) && (World.PLAYER.craftCategory === -1))
                 World.buildCraftList(World.PLAYER.craftArea);
             return;
         }
@@ -1213,7 +1213,7 @@ function onPlayerLife(vW) {
 };
 
 function onLifeDecreas() {
-    World.gauges.life.vww = 1;
+    World.gauges.life.decrease = 1;
 };
 
 function onSelectedItem(buf) {
@@ -1221,7 +1221,7 @@ function onSelectedItem(buf) {
 };
 
 function onLifeStop() {
-    World.gauges.life.vww = 0;
+    World.gauges.life.decrease = 0;
 };
 
 function onPlayerHeal(Wn) {
@@ -1231,7 +1231,7 @@ function onPlayerHeal(Wn) {
 };
 
 function onStaminaIncrease() {
-    World.gauges.stamina.vww = -1;
+    World.gauges.stamina.decrease = -1;
 };
 
 function onReplaceItem(IID) {
@@ -1239,7 +1239,7 @@ function onReplaceItem(IID) {
     for (var i = 0; i < invtr.length; i++) {
         if ((((invtr[i][0] === IID[1]) && (invtr[i][1] === IID[2])) && (invtr[i][2] === IID[3])) && (invtr[i][3] === IID[4])) {
             invtr[i][1] = IID[5];
-            if ((Game.MvN() === 1) && (World.PLAYER.craftCategory === -1))
+            if ((Game.getSkillBoxState() === 1) && (World.PLAYER.craftCategory === -1))
                 World.buildCraftList(World.PLAYER.craftArea);
             return;
         }
@@ -1270,7 +1270,7 @@ function onStackItem(buf) {
         invtr[wWnWW][3] = 0;
         invtr[MNmNm][1] = NVwnN;
     }
-    if ((Game.MvN() === 1) && (World.PLAYER.craftCategory === -1))
+    if ((Game.getSkillBoxState() === 1) && (World.PLAYER.craftCategory === -1))
         World.buildCraftList(World.PLAYER.craftArea);
 };
 
@@ -1292,28 +1292,28 @@ function onSplitItem(buf) {
         }
     }
     invtr[nvMvW][3] = invtr[VVmWn][3];
-    if ((Game.MvN() === 1) && (World.PLAYER.craftCategory === -1))
+    if ((Game.getSkillBoxState() === 1) && (World.PLAYER.craftCategory === -1))
         World.buildCraftList(World.PLAYER.craftArea);
 };
 
 function onStaminaStop() {
-    World.gauges.stamina.vww = 0;
+    World.gauges.stamina.decrease = 0;
 };
 
 function onStaminaDecrease() {
-    World.gauges.stamina.vww = 1;
+    World.gauges.stamina.decrease = 1;
 };
 
 function onColdIncrease() {
-    World.gauges.cold.vww = -1;
+    World.gauges.cold.decrease = -1;
 };
 
 function onColdStop() {
-    World.gauges.cold.vww = 0;
+    World.gauges.cold.decrease = 0;
 };
 
 function onColdDecrease() {
-    World.gauges.cold.vww = 1;
+    World.gauges.cold.decrease = 1;
 };
 
 function onPlayerStamina(vW) {
@@ -1321,7 +1321,7 @@ function onPlayerStamina(vW) {
 };
 
 function onLifeIncrease() {
-    World.gauges.life.vww = -1;
+    World.gauges.life.decrease = -1;
 };
 
 function onReplaceAmmo(IID) {
@@ -1351,7 +1351,7 @@ function onReplaceItemAndAmmo(IID) {
         if ((((invtr[i][0] === IID[1]) && (invtr[i][1] === IID[2])) && (invtr[i][2] === IID[3])) && (invtr[i][3] === IID[4])) {
             invtr[i][1] = IID[5];
             invtr[i][3] = IID[6];
-            if ((Game.MvN() === 1) && (World.PLAYER.craftCategory === -1))
+            if ((Game.getSkillBoxState() === 1) && (World.PLAYER.craftCategory === -1))
                 World.buildCraftList(World.PLAYER.craftArea);
             return;
         }
@@ -1364,13 +1364,13 @@ function onBlueprint(blueprint) {
 
 function onDay() {
     World.setDayCycle(0, 0);
-    World.gauges.cold.vww = -1;
+    World.gauges.cold.decrease = -1;
 };
 
 function onNight() {
     World.setDayCycle(1, 0);
     if (World.PLAYER.warm === 0)
-        World.gauges.cold.vww = 1;
+        World.gauges.cold.decrease = 1;
 };
 
 function onPlayerXp(xp) {
@@ -1402,12 +1402,12 @@ function onBoughtSkill(IID) {
                 World.PLAYER.inventory.push([0, 0, 0, 0]);
         }
     }
-    if ((Game.MvN() === 1) && (World.PLAYER.craftCategory !== -1)) 
+    if ((Game.getSkillBoxState() === 1) && (World.PLAYER.craftCategory !== -1)) 
         World.buildSkillList(World.PLAYER.craftCategory);
 };
 
 function onStartCraft(Wn) {
-    if ((Game.MvN() === 1) && (World.PLAYER.craftArea === 0))
+    if ((Game.getSkillBoxState() === 1) && (World.PLAYER.craftArea === 0))
         World.buildCraftList(AREAS.__PLAYER__);
     var delay = INVENTORY[Wn].detail.timer[0] * World.PLAYER.craftFactor;
     World.PLAYER.crafting = window.Date.now() + delay;
@@ -1415,8 +1415,8 @@ function onStartCraft(Wn) {
 };
 
 function onLostBuilding() {
-    if (((((Game.MvN() === 1) && (World.PLAYER.vwMWn !== -1)) && (World.PLAYER.craftCategory === -1)) && (World.PLAYER.craftArea !== AREAS.__PLAYER__)) || (World.PLAYER.isInChest === 1))
-        Game.closebutt();
+    if (((((Game.getSkillBoxState() === 1) && (World.PLAYER.vwMWn !== -1)) && (World.PLAYER.craftCategory === -1)) && (World.PLAYER.craftArea !== AREAS.__PLAYER__)) || (World.PLAYER.isInChest === 1))
+        Game.closeBox();
 };
 
 
@@ -1425,7 +1425,7 @@ function onOpenBuilding(unit8) {
     World.buildCraftList(area);
     if (unit8[8] === 0) {
         AudioUtils.playFx(AudioUtils._fx.open, 1, 0);
-        Game.nwmVV(1);
+        Game.openBox(1);
         World.PLAYER.isInBuilding = 1;
     }
     var craft = World.PLAYER.building;
@@ -1466,13 +1466,13 @@ function onNewFuelValue(unit8) {
 
 function onWarmOn() {
     World.PLAYER.warm = 1;
-    World.gauges.cold.vww = -1;
+    World.gauges.cold.decrease = -1;
 };
 
 function onWarmOff() {
     World.PLAYER.warm = 0;
     if ((World.day === 1) || (World.transition > 0))
-        World.gauges.cold.vww = 1;
+        World.gauges.cold.decrease = 1;
 };
 
 function onWrongTool(tool) {
@@ -1530,7 +1530,7 @@ function onFullChest(unit8) {
     var itemsinside = World.PLAYER.chest;
 
     if (unit8[1] === 1) {
-        Game.nwmVV(2);            
+        Game.openBox(2);            
         World.PLAYER.isInChest = 1;            
         AudioUtils.playFx(AudioUtils._fx.open, 1, 0); 
     }
@@ -1559,11 +1559,11 @@ function onFullChest(unit8) {
 
 
 function onRadOn() {
-    World.gauges.rad.vww = 1;
+    World.gauges.rad.decrease = 1;
 };
 
 function onRadOff() {
-    World.gauges.rad.vww = -1;
+    World.gauges.rad.decrease = -1;
 };
 
 function onAcceptedTeam(PLAYER, team) {
@@ -2614,18 +2614,18 @@ var World = (function() {
         this._max = 0;
         this.speed = 0;
         this.time = 0;
-        this.Nwmnw = 1;
-        this.mNNmw = 0;
+        this.maxTime = 1;
+        this.bonus = 0;
     };
 
-    function nVnwv(Vnv, vW, speedInc, speedDec, vww) {
+    function nVnwv(Vnv, vW, speedInc, speedDec, decrease) {
         Vnv.current = vW;
         Vnv.value = vW;
         Vnv._max = vW;
         Vnv.speedInc = speedInc;
         Vnv.speedDec = speedDec;
-        Vnv.vww = vww;
-        Vnv.mNNmw = 0;
+        Vnv.decrease = decrease;
+        Vnv.bonus = 0;
     };
 
     function initGauges() {
@@ -2647,14 +2647,14 @@ var World = (function() {
         gauges.xp.current = 0;
         PLAYER.nextLevel = __XP_START__;
         if (day === NwVWM)
-            gauges.cold.vww = 1;
+            gauges.cold.decrease = 1;
     };
 
     function nMmNW(Vnv) {
-        if (Vnv.vww === 1)
-            Vnv.value = window.Math.min(Vnv._max, window.Math.max(Vnv.value - (delta * (Vnv.speedDec - Vnv.mNNmw)), 0));
-        else if (Vnv.vww === -1)
-            Vnv.value = window.Math.min(Vnv.value + (delta * (Vnv.speedInc + Vnv.mNNmw)), Vnv._max);
+        if (Vnv.decrease === 1)
+            Vnv.value = window.Math.min(Vnv._max, window.Math.max(Vnv.value - (delta * (Vnv.speedDec - Vnv.bonus)), 0));
+        else if (Vnv.decrease === -1)
+            Vnv.value = window.Math.min(Vnv.value + (delta * (Vnv.speedInc + Vnv.bonus)), Vnv._max);
         Vnv.current = MathUtils.lerp(Vnv.current, Vnv.value, 0.1);
     };
 
@@ -2896,7 +2896,7 @@ var World = (function() {
                 gauges.xp.value = 0;
                 PLAYER.level++;
                 PLAYER.skillPoint++;
-                if ((Game.MvN() === 1) && (PLAYER.craftCategory !== -1))
+                if ((Game.getSkillBoxState() === 1) && (PLAYER.craftCategory !== -1))
                     buildSkillList(PLAYER.craftCategory);
                 AudioUtils.playFx(AudioUtils._fx.levelup, 1, 0);
                 return;
@@ -7525,9 +7525,9 @@ var AudioUtils = (function() {
         if (sound.loop === true)
             WNm.loop = sound.loop;
         if (!WNm.stop)
-            WNm.stop = WNm.vwwnN;
+            WNm.stop = WNm.noteOff;
         if (!WNm.start)
-            WNm.start = WNm.vWwMw;
+            WNm.start = WNm.noteOn;
         sound.source.start(((NwnmN === window.undefined) ? 0 : NwnmN) + NVNWw.currentTime, (nnW === window.undefined) ? 0 : nnW);
         sound.run = 1;
         sound.start = previousTimestamp;
@@ -8906,7 +8906,7 @@ var Game = (function() {
         return NmW;
     };
 
-    function MvN() {
+    function getSkillBoxState() {
         return NmW & isCraftOpen;
     };
     var nMnnm = null;
@@ -8928,7 +8928,7 @@ var Game = (function() {
 
     function nVN() {
         NmW = 0;
-        closebutt.setState(GUI.__BUTTON_OUT__);
+        closeBox.setState(GUI.__BUTTON_OUT__);
         isMapOpen = 0;
         isSettingsOpen = 0;
         isCraftOpen = 0;
@@ -8951,7 +8951,7 @@ var Game = (function() {
     var wnV = [];
     var craftList = [];
     var nmMMm = 0;
-    var closebutt = GUI.createButton(43, 43, ["img/close-box-out.png", "img/close-box-in.png", "img/close-box-click.png"]);
+    var closeBox = GUI.createButton(43, 43, ["img/close-box-out.png", "img/close-box-in.png", "img/close-box-click.png"]);
     var highpartout = [CanvasUtils.loadImage("img/high-particules-out.png"), CanvasUtils.loadImage("img/high-particules-in.png"), CanvasUtils.loadImage("img/high-particules-click.png")];
     var joinbuttout = [CanvasUtils.loadImage("img/join-button-out.png"), CanvasUtils.loadImage("img/join-button-in.png"), CanvasUtils.loadImage("img/join-button-click.png")];
     var removebuttout = [CanvasUtils.loadImage("img/remove-button-out.png"), CanvasUtils.loadImage("img/remove-button-in.png"), CanvasUtils.loadImage("img/remove-button-click.png")];
@@ -8992,7 +8992,7 @@ var Game = (function() {
     var recipe = [];
     var queue = [];
     var tools = [];
-    var nmMvw = [];
+    var join = [];
     var kick = [];
     var chest = [];
     var preview = GUI.createButton(58, 58, null, WwvNM);
@@ -9096,31 +9096,33 @@ var Game = (function() {
         for (i = 0; i < 4; i++) queue.push(GUI.createButton(wMv, wMv, null, WwvNM));
         for (i = 0; i < 3; i++) tools.push(GUI.createButton(wMv, wMv, null, WwvNM));
         for (i = 0; i < 9; i++) kick.push(GUI.createButton(29, 27, null, removebuttout));
-        for (i = 0; i < 18; i++) nmMvw.push(GUI.createButton(44, 33, null, joinbuttout));
-        Game.closebutt = nVN;
-        Game.nwmVV = MVVMv;
-        Game.inventory = inventory;
-        Game.craft = craft;
-        Game.recipe = recipe;
-        Game.preview = preview;
-        Game.queue = queue;
-        Game.tools = tools;
-        Game.chest = chest;
-        Game.kick = kick;
-        Game.join = nmMvw;
-        Game.MvN = MvN;
-        Game.getBoxState = getBoxState;
-        Game.teamName = "";
-        Game.nVNMM = joinbutt;
-        Game.nWvnm = deletebuttout;
+        for (i = 0; i < 18; i++) join.push(GUI.createButton(44, 33, null, joinbuttout));
+        
+        Game.closeBox = nVN;
+        Game.openBox = MVVMv;
+        Game.inventory          = inventory;
+        Game.craft              = craft;
+        Game.recipe             = recipe;
+        Game.preview            = preview;
+        Game.queue              = queue;
+        Game.tools              = tools;
+        Game.chest              = chest;
+        Game.kick               = kick;
+        Game.join               = join;
+        Game.getSkillBoxState   = getSkillBoxState;
+        Game.getBoxState        = getBoxState;
+        Game.teamName           = "";
+        Game.acceptMember       = joinbutt;
+        Game.refuseMember       = deletebuttout;
         Game.inventoryItemNumber = inventoryItemNumber;
         Game.inventoryAmmoNumber = inventoryAmmoNumber;
-        Game.mNNwM = 0;
-        Game.nNwMM = 0;
-        Game.vwVnW = 0;
-        Game.mnNnW = 0;
-        Game.mmNWn = 0;
-        Game.vmwNV = 0;
+        Game.xInteract          = 0;
+        Game.yInteract          = 0;
+        Game.widthInteract      = 0;
+        Game.heightInteract     = 0;
+        Game.xInteract2         = 0;
+        Game.yInteract2         = 0;
+
         wnV[SKILLS.__BUILDING__] = GUI.createButton(42, 42, ["img/building-button-out.png", "img/building-button-in.png", "img/building-button-click.png"]);
         wnV[SKILLS.__SKILL__] = GUI.createButton(42, 42, ["img/skill-button-out.png", "img/skill-button-in.png", "img/skill-button-click.png"]);
         wnV[SKILLS.__CLOTHE__] = GUI.createButton(42, 42, ["img/clothe-button-out.png", "img/clothe-button-in.png", "img/clothe-button-click.png"]);
@@ -9317,11 +9319,11 @@ var Game = (function() {
             } else leaderboardbutt2.draw();
         }
         if (NmW === 1) {
-            if (isMapOpen === 1) Render.bigminimap(bordermap, closebutt);
-            else if (isSettingsOpen === 1) Render.config(settingbox, wWNnw, nvwMN, MNVVn, VmvmN, WMVVn, wvNNV, WVnnn, NmVWV, vVMWm, closebutt, wVwnm, VnWMV, wwMwv);
-            else if (isCraftOpen === 1) Render.craft(craftbox, closebutt, wnV, craftbutt, cancelbutt, unlockbuttout, craftList, preview, inventoryItemNumber, inventoryAmmoNumber, VWNWV, WmWwW, WwMvM, NWmNn);
-            else if (isChestOpen === 1) Render.chest(chestbox, closebutt, inventoryItemNumber, inventoryAmmoNumber);
-            else if (isTeamOpen === 1) Render.team(closebutt, teambox, teammemberbox, leavebutt, addtimbutt, lockbutt, unlockbutt, deletebutt);
+            if (isMapOpen === 1) Render.bigminimap(bordermap, closeBox);
+            else if (isSettingsOpen === 1) Render.config(settingbox, wWNnw, nvwMN, MNVVn, VmvmN, WMVVn, wvNNV, WVnnn, NmVWV, vVMWm, closeBox, wVwnm, VnWMV, wwMwv);
+            else if (isCraftOpen === 1) Render.craft(craftbox, closeBox, wnV, craftbutt, cancelbutt, unlockbuttout, craftList, preview, inventoryItemNumber, inventoryAmmoNumber, VWNWV, WmWwW, WwMvM, NWmNn);
+            else if (isChestOpen === 1) Render.chest(chestbox, closeBox, inventoryItemNumber, inventoryAmmoNumber);
+            else if (isTeamOpen === 1) Render.team(closeBox, teambox, teammemberbox, leavebutt, addtimbutt, lockbutt, unlockbutt, deletebutt);
         } else if (isTouchScreen === 1) {
             if ((((Keyboard.isLeft() + Keyboard.isRight()) + Keyboard.isTop()) + Keyboard.isBottom()) >= 1) {
                 ctx.globalAlpha = 0.3;
@@ -9405,7 +9407,7 @@ var Game = (function() {
             if ((joinbutt.trigger() === 1) || (deletebuttout.trigger() === 1)) vnm = 1;
         }
         if (NmW === 1) {
-            closebutt.trigger();
+            closeBox.trigger();
             if (isSettingsOpen === 1) {
                 VmvmN.trigger();
                 WMVVn.trigger();
@@ -9467,9 +9469,9 @@ var Game = (function() {
                 if (World.PLAYER.team === -1) {
                     addtimbutt.trigger();
                     var j = 0;
-                    for (var i = 0; i < nmMvw.length; i++) {
+                    for (var i = 0; i < join.length; i++) {
                         if (World.teams[i].leader !== 0) {
-                            nmMvw[j].trigger();
+                            join[j].trigger();
                             j++;
                         }
                     }
@@ -9608,7 +9610,7 @@ var Game = (function() {
             }
         }
         if (NmW === 1) {
-            if (closebutt.trigger() === 1) {
+            if (closeBox.trigger() === 1) {
                 nVN();
                 AudioUtils.playFx(AudioUtils._fx.open, 1, 0);
                 return;
@@ -9838,9 +9840,9 @@ var Game = (function() {
                     }
                     if ((window.Date.now() - World.PLAYER.teamDelay) > 10500) {
                         var j = 0;
-                        for (var i = 0; i < nmMvw.length; i++) {
+                        for (var i = 0; i < join.length; i++) {
                             if (World.teams[i].leader !== 0) {
-                                if (nmMvw[j].trigger() === 1) {
+                                if (join[j].trigger() === 1) {
                                     Client.sendPacket(window.JSON.stringify([30, i]));
                                     AudioUtils.playFx(AudioUtils._fx.button, 1, 0);
                                     World.PLAYER.teamDelay = window.Date.now();
@@ -9996,7 +9998,7 @@ var Game = (function() {
             deletebuttout.trigger();
         }
         if (NmW === 1) {
-            closebutt.trigger();
+            closeBox.trigger();
             if (isSettingsOpen === 1) {
                 VmvmN.trigger();
                 WMVVn.trigger();
@@ -10043,9 +10045,9 @@ var Game = (function() {
                 if (World.PLAYER.team === -1) {
                     addtimbutt.trigger();
                     var j = 0;
-                    for (var i = 0; i < nmMvw.length; i++) {
+                    for (var i = 0; i < join.length; i++) {
                         if (World.teams[i].leader !== 0) {
-                            nmMvw[j].trigger();
+                            join[j].trigger();
                             j++;
                         }
                     }
@@ -10230,7 +10232,7 @@ var Game = (function() {
                 var sy = window.Math.floor(NWV.clientY * CanvasUtils.options.ratioY);
                 switch (World.PLAYER.interaction) {
                     case 2:
-                        if (((((World.PLAYER.extraLoot === 1) && (sx > Game.mmNWn)) && (sy > Game.vmwNV)) && (sx < (Game.mmNWn + Game.vwVnW))) && (sy < (Game.vmwNV + Game.mnNnW))) {
+                        if (((((World.PLAYER.extraLoot === 1) && (sx > Game.xInteract2)) && (sy > Game.yInteract2)) && (sx < (Game.xInteract2 + Game.widthInteract))) && (sy < (Game.yInteract2 + Game.heightInteract))) {
                             nvnNv = 1;
                             nNw.keyCode = 70;
                             nNw.charCode = 70;
@@ -10238,7 +10240,7 @@ var Game = (function() {
                             continue;
                         }
                         case 0:
-                            if ((((sx > Game.mNNwM) && (sy > Game.nNwMM)) && (sx < (Game.mNNwM + Game.vwVnW))) && (sy < (Game.nNwMM + Game.mnNnW))) {
+                            if ((((sx > Game.xInteract) && (sy > Game.yInteract)) && (sx < (Game.xInteract + Game.widthInteract))) && (sy < (Game.yInteract + Game.heightInteract))) {
                                 nvnNv = 1;
                                 nNw.keyCode = 69;
                                 nNw.charCode = 69;
@@ -11155,7 +11157,7 @@ var Editor = (function() {
             [-1, -1]
         ];
         World.gauges.rad.value = World.gauges.rad._max;
-        World.gauges.rad.vww = -1;
+        World.gauges.rad.decrease = -1;
         World.allocatePlayers([0, window.document.getElementById("nicknameInput").value]);
         World.initDayCycle(0, 0);
         Render.reset(window.undefined, 0, 0.07);
@@ -11176,7 +11178,7 @@ var Editor = (function() {
 
     function nVN() {
         NmW = 0;
-        closebutt.setState(GUI.__BUTTON_OUT__);
+        closeBox.setState(GUI.__BUTTON_OUT__);
         isMapOpen = 0;
         isSettingsOpen = 0;
         isCraftOpen = 0;
@@ -11185,7 +11187,7 @@ var Editor = (function() {
         World.releaseBuilding();
     };
     var nmMMm = 0;
-    var closebutt = GUI.createButton(43, 43, ["img/close-box-out.png", "img/close-box-in.png", "img/close-box-click.png"]);
+    var closeBox = GUI.createButton(43, 43, ["img/close-box-out.png", "img/close-box-in.png", "img/close-box-click.png"]);
     var highpartout = [CanvasUtils.loadImage("img/high-particules-out.png"), CanvasUtils.loadImage("img/high-particules-in.png"), CanvasUtils.loadImage("img/high-particules-click.png")];
     var wVwnm = GUI.createButton(54, 42, null, highpartout);
     var vWmmV = [CanvasUtils.loadImage("img/low-particules-out.png"), CanvasUtils.loadImage("img/low-particules-in.png"), CanvasUtils.loadImage("img/low-particules-click.png")];
@@ -11578,8 +11580,8 @@ var Editor = (function() {
         markposition();
         wWNmN();
         if (NmW === 1) {
-            if (isMapOpen === 1) Render.bigminimap(bordermap, closebutt);
-            else if (isSettingsOpen === 1) Render.config(settingbox, wWNnw, nvwMN, MNVVn, VmvmN, WMVVn, wvNNV, WVnnn, NmVWV, vVMWm, closebutt, wVwnm, VnWMV, wwMwv);
+            if (isMapOpen === 1) Render.bigminimap(bordermap, closeBox);
+            else if (isSettingsOpen === 1) Render.config(settingbox, wWNnw, nvwMN, MNVVn, VmvmN, WMVVn, wvNNV, WVnnn, NmVWV, vVMWm, closeBox, wVwnm, VnWMV, wwMwv);
         } else if (isTouchScreen === 1) {
             if ((((Keyboard.isLeft() + Keyboard.isRight()) + Keyboard.isTop()) + Keyboard.isBottom()) >= 1) {
                 ctx.globalAlpha = 0.3;
@@ -11683,7 +11685,7 @@ var Editor = (function() {
             vnm = 1;
         }
         if (NmW === 1) {
-            closebutt.trigger();
+            closeBox.trigger();
             if (isSettingsOpen === 1) {
                 VmvmN.trigger();
                 WMVVn.trigger();
@@ -11866,7 +11868,7 @@ var Editor = (function() {
             AudioUtils.playFx(AudioUtils._fx.play, 1, 0);
         }
         if (NmW === 1) {
-            if (closebutt.trigger() === 1) {
+            if (closeBox.trigger() === 1) {
                 nVN();
                 AudioUtils.playFx(AudioUtils._fx.open, 1, 0);
                 return;
@@ -12008,7 +12010,7 @@ var Editor = (function() {
             vnm = 1;
         }
         if (NmW === 1) {
-            closebutt.trigger();
+            closeBox.trigger();
             if (isSettingsOpen === 1) {
                 VmvmN.trigger();
                 WMVVn.trigger();
@@ -13630,7 +13632,7 @@ try {
         };
 
 
-        function _BigMinimap(vWvWN, closebutt) {        
+        function _BigMinimap(vWvWN, closeBox) {        
             var SY = vWw * scaleby;
             var SX = wvNVM * scaleby;
             var WX = canw2 - (SY / 2);
@@ -13639,8 +13641,8 @@ try {
             var VVm = WY / scaleby;
             var mvMnV = vWw / WMwnW;
             var _buttonInv = wvNVM / mmVNm;
-            closebutt.pos.x = window.Math.floor((WX + SY) + (0 * scaleby));
-            closebutt.pos.y = window.Math.floor(WY + (0 * scaleby));
+            closeBox.pos.x = window.Math.floor((WX + SY) + (0 * scaleby));
+            closeBox.pos.y = window.Math.floor(WY + (0 * scaleby));
             vWvWN.draw();
 
 
@@ -13667,7 +13669,7 @@ try {
                 ctx.globalAlpha = 1;
             }
             
-            closebutt.draw();
+            closeBox.draw();
 
             if ((World.PLAYER.team !== -1) || (World.PLAYER.ghoul !== 0) && (World.playerAlive < 6)) {
                 var players = Entitie.units[__ENTITIE_PLAYER__];
@@ -13717,10 +13719,10 @@ try {
                 teambox = CanvasUtils.loadImage(invbox, teambox);
                 return;
             }
-            Game.nVNMM.pos.x = WX + (241 * scaleby);
-            Game.nVNMM.pos.y = WY + (6 * scaleby);
-            Game.nWvnm.pos.x = WX + (290 * scaleby);
-            Game.nWvnm.pos.y = WY + (6 * scaleby);
+            Game.acceptMember.pos.x = WX + (241 * scaleby);
+            Game.acceptMember.pos.y = WY + (6 * scaleby);
+            Game.refuseMember.pos.x = WX + (290 * scaleby);
+            Game.refuseMember.pos.y = WY + (6 * scaleby);
             if ((World.PLAYER.teamJoin !== 0) || (World.PLAYER.teamEffect > 0)) {
                 if (World.PLAYER.teamJoin !== 0) {
                     if (World.PLAYER.teamEffect < 333) {
@@ -13735,8 +13737,8 @@ try {
                 if (PLAYER.nicknameLabel === null) PLAYER.nicknameLabel = GUI.renderText(PLAYER.nickname, "'Viga', sans-serif", "#FFFFFF", 38, 400, window.undefined, 16, 25, window.undefined, window.undefined, window.undefined, window.undefined, "#000000", 12);
                 ctx.drawImage(teambox, WX, WY, scaleby * teambox.wh, scaleby * teambox.h2);
                 if ((PLAYER.nicknameLabel.width !== 0) && (PLAYER.nicknameLabel.height !== 0)) ctx.drawImage(PLAYER.nicknameLabel, WX + (20 * scaleby), WY + (6 * scaleby), PLAYER.nicknameLabel.wh * scaleby, PLAYER.nicknameLabel.h2 * scaleby);
-                Game.nVNMM.draw();
-                Game.nWvnm.draw();
+                Game.acceptMember.draw();
+                Game.refuseMember.draw();
                 if (World.PLAYER.teamEffect < 333) ctx.globalAlpha = 1;
             }
         };
@@ -13811,7 +13813,7 @@ try {
                 vmnWW(0, WY);
                 timeleftfunc(WX, WY, 0);
             } else if (World.PLAYER.ghoul === 0) {
-                if (World.gauges.rad.vww === 1) {
+                if (World.gauges.rad.decrease === 1) {
                     WNmVW = window.Math.min(1000, WNmVW + delta);
                     ctx.globalAlpha = MathUtils.Ease.inQuad(WNmVW / 500);
                     CanvasUtils.drawImageHd(VmWNN, canw2ns, 58, 0, 0, 0, 1);
@@ -13887,7 +13889,7 @@ try {
                 ctx.globalAlpha = MathUtils.Ease.inQuad(wnW.effect);
                 CanvasUtils.drawImageHd(wnW, WX, WY + 31, 0, 0, 0, 1);
                 ctx.globalAlpha = 1;
-                if ((World.PLAYER.skillPoint <= 0) || (Game.MvN() === 1)) wnW.effect = window.Math.max(0, wnW.effect - (delta / 500));
+                if ((World.PLAYER.skillPoint <= 0) || (Game.getSkillBoxState() === 1)) wnW.effect = window.Math.max(0, wnW.effect - (delta / 500));
                 else if (wnW.effect < 1) wnW.effect = window.Math.min(1, wnW.effect + (delta / 500));
             }
         };
@@ -13896,7 +13898,7 @@ try {
         var teamName = "";
         var nNmVw = null;
 
-        function _Team(closebutt, VWwmm, mMnVm, wwVMn, NnvmN, mvNMv, WvvvV, deleteTeam) {
+        function _Team(closeBox, VWwmm, mMnVm, wwVMn, NnvmN, mvNMv, WvvvV, deleteTeam) {
             var WX = 0;
             var WY = 0;
             if (World.PLAYER.team === -1) {
@@ -13914,8 +13916,8 @@ try {
                 WX = VWwmm.pos.x;
                 WY = VWwmm.pos.y;
                 VWwmm.draw();
-                closebutt.pos.x = WX + (513 * scaleby);
-                closebutt.pos.y = WY + (2 * scaleby);
+                closeBox.pos.x = WX + (513 * scaleby);
+                closeBox.pos.y = WY + (2 * scaleby);
                 if (teamName !== Game.teamName) {
                     teamName = Game.teamName;
                     nNmVw = GUI.renderText(teamName, "'Viga', sans-serif", "#FFFFFF", 30, 400);
@@ -13956,8 +13958,8 @@ try {
                 if (team.label === null) team.label = GUI.renderText(team.name, "'Viga', sans-serif", "#FFFFFF", 30, 400);
                 ctx.drawImage(team.label, WX + (144 * scaleby), WY + (13 * scaleby), team.label.wh * scaleby, team.label.h2 * scaleby);
                 mMnVm.draw();
-                closebutt.pos.x = WX + (512 * scaleby);
-                closebutt.pos.y = WY + (34.5 * scaleby);
+                closeBox.pos.x = WX + (512 * scaleby);
+                closeBox.pos.y = WY + (34.5 * scaleby);
                 if (World.PLAYER.teamLeader === 1) {
                     if (World.PLAYER.teamLocked === 0) {
                         mvNMv.pos.x = WX + (259 * scaleby);
@@ -14002,17 +14004,17 @@ try {
                     }
                 }
             }
-            closebutt.draw();
+            closeBox.draw();
         };
 
-        function _Chest(chestbox, closebutt, inventoryItemNumber, inventoryAmmoNumber) {
+        function _Chest(chestbox, closeBox, inventoryItemNumber, inventoryAmmoNumber) {
             chestbox.draw();
             var WX = chestbox.pos.x;
             var WY = chestbox.pos.y;
 
-            closebutt.pos.x = WX + (161 * scaleby);
-            closebutt.pos.y = WY + (0 * scaleby);
-            closebutt.draw();
+            closeBox.pos.x = WX + (161 * scaleby);
+            closeBox.pos.y = WY + (0 * scaleby);
+            closeBox.draw();
 
             var chest = World.PLAYER.chest;
             var _x;
@@ -14077,15 +14079,15 @@ try {
             }
         };
 
-        function _Craft(craftbox, closebutt, wnV, NwnNV, VvvwN, nvmnM, craftList, preview, inventoryItemNumber, inventoryAmmoNumber, VWNWV, WmWwW, WwMvM, NWmNn) {
+        function _Craft(craftbox, closeBox, wnV, NwnNV, VvvwN, nvmnM, craftList, preview, inventoryItemNumber, inventoryAmmoNumber, VWNWV, WmWwW, WwMvM, NWmNn) {
             craftbox.draw();
             var WX = craftbox.pos.x;
             var WY = craftbox.pos.y;
             var wVw = WX / scaleby;
             var VVm = WY / scaleby;
-            closebutt.pos.x = WX + (594 * scaleby);
-            closebutt.pos.y = WY + (0 * scaleby);
-            closebutt.draw();
+            closeBox.pos.x = WX + (594 * scaleby);
+            closeBox.pos.y = WY + (0 * scaleby);
+            closeBox.draw();
             var craftAvailable = World.PLAYER.craftAvailable;
             var recipeAvailable = World.PLAYER.recipeAvailable;
             var category = World.PLAYER.craftCategory;
@@ -14354,13 +14356,13 @@ try {
             }
         };
 
-        function _Config(WWmVM, nmvnW, wMMmv, NNWVW, nMmMw, vNVNN, wvmWv, WmWnm, VNNMW, NVVwW, closebutt, WVVMw, vnNWN, MnvNV) {
+        function _Config(WWmVM, nmvnW, wMMmv, NNWVW, nMmMw, vNVNN, wvmWv, WmWnm, VNNMW, NVVwW, closeBox, WVVMw, vnNWN, MnvNV) {
             WWmVM.draw();
             var WX = WWmVM.pos.x;
             var WY = WWmVM.pos.y;
-            closebutt.pos.x = WX + (265 * scaleby);
-            closebutt.pos.y = WY + (0 * scaleby);
-            closebutt.draw();
+            closeBox.pos.x = WX + (265 * scaleby);
+            closeBox.pos.y = WY + (0 * scaleby);
+            closeBox.draw();
             nMmMw.pos.x = WX + (87 * scaleby);
             nMmMw.pos.y = WY + (15 * scaleby);
             if (Keyboard.isAzerty() === 1) nMmMw.setState(GUI.__BUTTON_CLICK__);
@@ -14544,11 +14546,11 @@ try {
                     var wVn = ENTITIES[__ENTITIE_PLAYER__].clothes[PLAYER.extra & 255];
                     var gauges = World.gauges;
                     if (wVn.rad !== window.undefined) {
-                        gauges.rad.mNNmw = wVn.rad;
-                        gauges.cold.mNNmw = wVn.warm;
+                        gauges.rad.bonus = wVn.rad;
+                        gauges.cold.bonus = wVn.warm;
                     } else {
-                        gauges.rad.mNNmw = 0;
-                        gauges.cold.mNNmw = 0;
+                        gauges.rad.bonus = 0;
+                        gauges.cold.bonus = 0;
                     }
                     NmM = PLAYER.x;
                     WWV = PLAYER.y;
@@ -15555,10 +15557,10 @@ try {
                     var posx = ((vertst + NmM) * imgMovement) - (scalex / 2);
                     var posy = window.Math.max(10 * scaleby, ((((horist + WWV) * imgMovement) - (scaley / 2)) - (65 * imgMovement)) - (60 * scaleby));
                     if (isTouchScreen === 1) {
-                        Game.mNNwM = posx;
-                        Game.nNwMM = posy;
-                        Game.vwVnW = scalex;
-                        Game.mnNnW = scaley;
+                        Game.xInteract = posx;
+                        Game.yInteract = posy;
+                        Game.widthInteract = scalex;
+                        Game.heightInteract = scaley;
                     }
                     ctx.drawImage(nMWVv, posx, posy, scalex, scaley);
                     var loot = LOOT[World.PLAYER.loot];
@@ -15619,10 +15621,10 @@ try {
                     else posx = ((vertst + NmM) * imgMovement) - (scalex / 2);
                     var posy = window.Math.max(10 * scaleby, ((((horist + WWV) * imgMovement) - (scaley / 2)) - (65 * imgMovement)) - (60 * scaleby));
                     if (isTouchScreen === 1) {
-                        Game.mNNwM = posx;
-                        Game.nNwMM = posy;
-                        Game.vwVnW = scalex;
-                        Game.mnNnW = scaley;
+                        Game.xInteract = posx;
+                        Game.yInteract = posy;
+                        Game.widthInteract = scalex;
+                        Game.heightInteract = scaley;
                     }
                     ctx.drawImage(img, posx, posy, scalex, scaley);
                     if (World.PLAYER.extraLoot === 1) {
@@ -15637,8 +15639,8 @@ try {
                         posx += scalex + (10 * scaleby);
                         posy = window.Math.max(10 * scaleby, ((((horist + WWV) * imgMovement) - (scaley / 2)) - (65 * imgMovement)) - (60 * scaleby));
                         if (isTouchScreen === 1) {
-                            Game.mmNWn = posx;
-                            Game.vmwNV = posy;
+                            Game.xInteract2 = posx;
+                            Game.yInteract2 = posy;
                         }
                         ctx.drawImage(VWvVN, posx, posy, scalex, scaley);
                         var loot = LOOT[World.PLAYER.loot];
