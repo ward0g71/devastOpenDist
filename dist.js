@@ -17048,7 +17048,7 @@ var AREAS = {
     __WORKBENCH2__:         COUNTER++,
     __SMELTER__:            COUNTER++,
     __TESLA__:              COUNTER++,
-    __COMPOSTER__:          COUNTER++,
+    __COMPOST__:            COUNTER++,
     __AGITATOR__:           COUNTER++,
     __EXTRACTOR__:          COUNTER++,
     __WELDING_MACHINE__:    COUNTER++
