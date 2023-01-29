@@ -1935,8 +1935,8 @@ var Client = (function() {
     var string0 = window.JSON.stringify([0]);
     var MMvMv = 150;
     var mvNWn = 60;
-    var key_a = 0;
-    var key_d = 1;
+    var LEFT = 0;
+    var RIGHT = 1;
     var socket = window.undefined;
     var Nvwnv = 0;
     var isconnected = 0;
@@ -2110,16 +2110,16 @@ var Client = (function() {
 
     function sendMouseRightLeft() {
         if (Mouse.x >= canw2ns) {
-            if (MmnWW !== key_d) {
+            if (MmnWW !== RIGHT) {
                 vVw = previousTimestamp;
-                MmnWW = key_d;
-                socket.send(window.JSON.stringify([3, key_d]));
+                MmnWW = RIGHT;
+                socket.send(window.JSON.stringify([3, RIGHT]));
             }
         } else {
-            if (MmnWW !== key_a) {
+            if (MmnWW !== LEFT) {
                 vVw = previousTimestamp;
-                MmnWW = key_a;
-                socket.send(window.JSON.stringify([3, key_a]));
+                MmnWW = LEFT;
+                socket.send(window.JSON.stringify([3, LEFT]));
             }
         }
     };
@@ -7169,146 +7169,124 @@ var TextManager = (function() {
 
 })();
 var Keyboard = (function() {
-    var VVvvM = "0";
-    var WWWNw = "1";
-    var mwN = 0;
-    var mvNNW = 1;
-    var key_a = 65;
-    var key_d = 68;
-    var key_w = 87;
-    var key_s = 83;
-    var numpad4 = 37;
-    var numpad6 = 39;
-    var numpad8 = 38;
-    var numpad2 = 40;
-    var keyshift = 16;
-    var VNW = (new window.Array(255)).fill(mwN);
-    var MVvNV = null;
+
+    var qwerty = "0";
+    var azerty = "1";
+    var UP      = 0;
+    var t_DOWN  = 1;
+    var LEFT  = 65;
+    var RIGHT = 68;
+    var TOP   = 87;
+    var DOWN  = 83;
+    var ARROW_LEFT   = 37;
+    var ARROW_RIGHT  = 39;
+    var ARROW_TOP    = 38;
+    var ARROW_BOTTOM = 40;
+    var SHIFT = 16;
+    var keys = (new Array(255)).fill(UP);
+    var mapping = null;
 
     function isAzerty() {
-        if (MVvNV === WWWNw)
-            return 1;
-        else
-            return 0;
+        if (mapping === azerty) return 1;
+        else return 0;
     };
 
     function isQwerty() {
-        if (MVvNV === VVvvM)
-            return 1;
-        else
-            return 0;
+        if (mapping === qwerty) return 1;
+        else return 0;
     };
 
     function setAzerty() {
-        key_a = 81;
-        key_d = 68;
-        key_w = 90;
-        key_s = 83;
-        localStorage2.setItem("keyboardMap", WWWNw);
-        MVvNV = WWWNw;
+        LEFT  = 81;
+        RIGHT = 68;
+        TOP   = 90;
+        DOWN  = 83;
+        localStorage2.setItem("keyboardMap", azerty);
+        mapping = azerty;
     };
 
     function setQwert() {
-        key_a = 65;
-        key_d = 68;
-        key_w = 87;
-        key_s = 83;
-        localStorage2.setItem("keyboardMap", VVvvM);
-        MVvNV = VVvvM;
+        LEFT   = 65;
+        RIGHT  = 68;
+        TOP    = 87;
+        DOWN   = 83;
+        localStorage2.setItem("keyboardMap", qwerty);
+        mapping = qwerty;
     };
 
     function keyup(event) {
         var k = window.Math.min(event.charCode || event.keyCode, 255);
-        VNW[k] = mwN;
+        keys[k] = UP;
     };
 
     function keydown(event) {
-        var k = window.Math.min(event.charCode || event.keyCode, 255);
-        if ((k === key_a) || (k === numpad4))
-            NnvmV();
-        else if ((k === key_w) || (k === numpad8))
-            WNwVV();
-        else if ((k === key_s) || (k === numpad2))
-            MWnmw();
-        else if ((k === key_d) || (k === numpad6))
-            mWnvN();
-        VNW[k] = mvNNW;
+        var k = Math.min(event.charCode || event.keyCode, 255);
+
+        if      ((k === LEFT)  || (k === ARROW_LEFT))    press_left();
+        else if ((k === TOP)   || (k === ARROW_TOP))     press_top();
+        else if ((k === DOWN)  || (k === ARROW_BOTTOM))  press_bottom();
+        else if ((k === RIGHT) || (k === ARROW_RIGHT))   press_right();
+
+        keys[k] = t_DOWN;
         return k;
     };
 
-    function NnvmV() {
-        VNW[key_d] = mwN;
-        VNW[numpad6] = mwN;
+    function press_left() {
+        keys[RIGHT]         = UP;
+        keys[ARROW_RIGHT]   = UP;
     };
 
-    function mWnvN() {
-        VNW[key_a] = mwN;
-        VNW[numpad4] = mwN;
+    function press_right() {
+        keys[LEFT]          = UP;
+        keys[ARROW_LEFT]    = UP;
     };
 
-    function MWnmw() {
-        VNW[key_w] = mwN;
-        VNW[numpad8] = mwN;
+    function press_bottom() {
+        keys[TOP]           = UP;
+        keys[ARROW_TOP]     = UP;
     };
 
-    function WNwVV() {
-        VNW[key_s] = mwN;
-        VNW[numpad2] = mwN;
+    function press_top() {
+        keys[DOWN]          = UP;
+        keys[ARROW_BOTTOM]  = UP;
     };
 
-    function isLeft() {
-        return VNW[key_a] || VNW[numpad4];
-    };
-
-    function isRight() {
-        return VNW[key_d] || VNW[numpad6];
-    };
-
-    function isBottom() {
-        return VNW[key_s] || VNW[numpad2];
-    };
-
-    function isTop() {
-        return VNW[key_w] || VNW[numpad8];
-    };
-
-    function isShift() {
-        return VNW[keyshift];
-    };
-
-    function isKey(WmVNW) {
-        return VNW[WmVNW];
-    };
+    function isLeft ()      { return keys[LEFT]  || keys[ARROW_LEFT]   };
+    function isRight ()     { return keys[RIGHT] || keys[ARROW_RIGHT]  };
+    function isBottom ()    { return keys[DOWN]  || keys[ARROW_BOTTOM] };
+    function isTop ()       { return keys[TOP]   || keys[ARROW_TOP]    };
+    function isShift ()     { return keys[SHIFT]                       };
+    function isKey (WmVNW)  { return keys[WmVNW]                       };
 
     function clearDirectionnal() {
-        VNW[key_d] = mwN;
-        VNW[numpad6] = mwN;
-        VNW[key_a] = mwN;
-        VNW[numpad4] = mwN;
-        VNW[key_w] = mwN;
-        VNW[numpad8] = mwN;
-        VNW[key_s] = mwN;
-        VNW[numpad2] = mwN;
+        keys[RIGHT]        = UP;
+        keys[ARROW_RIGHT]  = UP;
+        keys[LEFT]         = UP;
+        keys[ARROW_LEFT]   = UP;
+        keys[TOP]          = UP;
+        keys[ARROW_TOP]    = UP;
+        keys[DOWN]         = UP;
+        keys[ARROW_BOTTOM] = UP;
     };
 
     function LocalKeyboardEvent() {
-        this.keyCode = 0;
-        this.charCode = 0;
-        this.altKey = false;
-        this.ctrlKey = false;
+        this.keyCode    = 0;
+        this.charCode   = 0;
+        this.altKey     = false;
+        this.ctrlKey    = false;
         this.preventDefault = function() {};
     };
-    MVvNV = localStorage2.getItem("keyboardMap");
-    if (MVvNV === null) {
-        var nVmWN = window.navigator.language || window.navigator.userLanguage;
-        if ((nVmWN === "fr") || (nVmWN === "fr-FR"))
-            setAzerty();
-        else
-            setQwert();
-    } else if (MVvNV === WWWNw)
-        setAzerty();
-    else
-        setQwert();
+
+    mapping = localStorage2.getItem("keyboardMap");
+
+    if (mapping === null) {
+        var navLang = window.navigator.language || window.navigator.userLanguage;
+        if ((navLang === "fr") || (navLang === "fr-FR"))  setAzerty();
+        else                                              setQwert();
+        }
+        else if (mapping === azerty)                      setAzerty();
+        else                                              setQwert();
+
     return {
 
         setAzerty:          setAzerty,
@@ -12591,10 +12569,10 @@ try {
         var Mwwnm = 165 * (window.Math.PI / 180);
         var PIby2 = window.Math.PI / 2;
         var mWvNn = window.Math.PI / World.__DAY__;
-        var key_a = 1;
-        var key_d = 2;
-        var key_w = 4;
-        var key_s = 8;
+        var LEFT = 1;
+        var RIGHT = 2;
+        var TOP = 4;
+        var DOWN = 8;
         var MMn = 16;
         var nNn = 32;
         var Nvn = 64;
@@ -12664,52 +12642,52 @@ try {
         vNw[WnmmN][(mWn | WMN) | wwm] = 39;
         var WMV = [];
         WMV[0] = 0;
-        WMV[key_a] = 3;
-        WMV[key_d] = 4;
-        WMV[key_w] = 2;
-        WMV[key_s] = 1;
-        WMV[key_a | key_w] = 17;
-        WMV[key_a | key_d] = 5;
-        WMV[key_a | key_s] = 18;
-        WMV[key_d | key_w] = 16;
-        WMV[key_d | key_s] = 19;
-        WMV[key_w | key_s] = 6;
-        WMV[(key_a | key_w) | key_s] = 10;
-        WMV[(key_a | key_w) | key_d] = 9;
-        WMV[(key_s | key_w) | key_d] = 11;
-        WMV[(key_a | key_s) | key_d] = 8;
-        WMV[((key_a | key_w) | key_d) | key_s] = 7;
-        WMV[(key_s | key_d) | MMn] = 12;
-        WMV[(key_s | key_a) | nNn] = 13;
-        WMV[(key_w | key_a) | nwM] = 14;
-        WMV[(key_w | key_d) | Nvn] = 15;
-        WMV[((key_w | key_s) | key_d) | MMn] = 20;
-        WMV[(((key_w | key_s) | key_d) | key_a) | MMn] = 21;
-        WMV[((key_a | key_s) | key_d) | MMn] = 22;
-        WMV[(((key_w | key_s) | key_d) | key_a) | Nvn] = 23;
-        WMV[((key_a | key_w) | key_d) | Nvn] = 24;
-        WMV[((key_w | key_s) | key_d) | Nvn] = 25;
-        WMV[((key_w | key_s) | key_a) | nwM] = 26;
-        WMV[(((key_w | key_s) | key_d) | key_a) | nwM] = 27;
-        WMV[((key_w | key_d) | key_a) | nwM] = 28;
-        WMV[((key_s | key_d) | key_a) | nNn] = 29;
-        WMV[(((key_w | key_s) | key_d) | key_a) | nNn] = 30;
-        WMV[((key_w | key_s) | key_a) | nNn] = 31;
-        WMV[((((((key_w | key_s) | key_d) | key_a) | nNn) | MMn) | nwM) | Nvn] = 32;
-        WMV[((((key_w | key_s) | key_d) | key_a) | nNn) | nwM] = 33;
-        WMV[((((key_w | key_s) | key_d) | key_a) | nNn) | MMn] = 34;
-        WMV[((((key_w | key_s) | key_d) | key_a) | nNn) | Nvn] = 35;
-        WMV[((((key_w | key_s) | key_d) | key_a) | MMn) | nwM] = 36;
-        WMV[((((key_w | key_s) | key_d) | key_a) | Nvn) | MMn] = 37;
-        WMV[((((key_w | key_s) | key_d) | key_a) | Nvn) | nwM] = 38;
-        WMV[(((key_w | key_s) | key_d) | Nvn) | MMn] = 39;
-        WMV[(((key_w | key_s) | key_a) | nwM) | nNn] = 40;
-        WMV[(((key_d | key_s) | key_a) | MMn) | nNn] = 41;
-        WMV[(((key_d | key_w) | key_a) | Nvn) | nwM] = 42;
-        WMV[(((((key_w | key_s) | key_d) | key_a) | nNn) | nwM) | Nvn] = 43;
-        WMV[(((((key_w | key_s) | key_d) | key_a) | MMn) | nwM) | Nvn] = 44;
-        WMV[(((((key_w | key_s) | key_d) | key_a) | nNn) | MMn) | Nvn] = 45;
-        WMV[(((((key_w | key_s) | key_d) | key_a) | nNn) | MMn) | nwM] = 46;
+        WMV[LEFT] = 3;
+        WMV[RIGHT] = 4;
+        WMV[TOP] = 2;
+        WMV[DOWN] = 1;
+        WMV[LEFT | TOP] = 17;
+        WMV[LEFT | RIGHT] = 5;
+        WMV[LEFT | DOWN] = 18;
+        WMV[RIGHT | TOP] = 16;
+        WMV[RIGHT | DOWN] = 19;
+        WMV[TOP | DOWN] = 6;
+        WMV[(LEFT | TOP) | DOWN] = 10;
+        WMV[(LEFT | TOP) | RIGHT] = 9;
+        WMV[(DOWN | TOP) | RIGHT] = 11;
+        WMV[(LEFT | DOWN) | RIGHT] = 8;
+        WMV[((LEFT | TOP) | RIGHT) | DOWN] = 7;
+        WMV[(DOWN | RIGHT) | MMn] = 12;
+        WMV[(DOWN | LEFT) | nNn] = 13;
+        WMV[(TOP | LEFT) | nwM] = 14;
+        WMV[(TOP | RIGHT) | Nvn] = 15;
+        WMV[((TOP | DOWN) | RIGHT) | MMn] = 20;
+        WMV[(((TOP | DOWN) | RIGHT) | LEFT) | MMn] = 21;
+        WMV[((LEFT | DOWN) | RIGHT) | MMn] = 22;
+        WMV[(((TOP | DOWN) | RIGHT) | LEFT) | Nvn] = 23;
+        WMV[((LEFT | TOP) | RIGHT) | Nvn] = 24;
+        WMV[((TOP | DOWN) | RIGHT) | Nvn] = 25;
+        WMV[((TOP | DOWN) | LEFT) | nwM] = 26;
+        WMV[(((TOP | DOWN) | RIGHT) | LEFT) | nwM] = 27;
+        WMV[((TOP | RIGHT) | LEFT) | nwM] = 28;
+        WMV[((DOWN | RIGHT) | LEFT) | nNn] = 29;
+        WMV[(((TOP | DOWN) | RIGHT) | LEFT) | nNn] = 30;
+        WMV[((TOP | DOWN) | LEFT) | nNn] = 31;
+        WMV[((((((TOP | DOWN) | RIGHT) | LEFT) | nNn) | MMn) | nwM) | Nvn] = 32;
+        WMV[((((TOP | DOWN) | RIGHT) | LEFT) | nNn) | nwM] = 33;
+        WMV[((((TOP | DOWN) | RIGHT) | LEFT) | nNn) | MMn] = 34;
+        WMV[((((TOP | DOWN) | RIGHT) | LEFT) | nNn) | Nvn] = 35;
+        WMV[((((TOP | DOWN) | RIGHT) | LEFT) | MMn) | nwM] = 36;
+        WMV[((((TOP | DOWN) | RIGHT) | LEFT) | Nvn) | MMn] = 37;
+        WMV[((((TOP | DOWN) | RIGHT) | LEFT) | Nvn) | nwM] = 38;
+        WMV[(((TOP | DOWN) | RIGHT) | Nvn) | MMn] = 39;
+        WMV[(((TOP | DOWN) | LEFT) | nwM) | nNn] = 40;
+        WMV[(((RIGHT | DOWN) | LEFT) | MMn) | nNn] = 41;
+        WMV[(((RIGHT | TOP) | LEFT) | Nvn) | nwM] = 42;
+        WMV[(((((TOP | DOWN) | RIGHT) | LEFT) | nNn) | nwM) | Nvn] = 43;
+        WMV[(((((TOP | DOWN) | RIGHT) | LEFT) | MMn) | nwM) | Nvn] = 44;
+        WMV[(((((TOP | DOWN) | RIGHT) | LEFT) | nNn) | MMn) | Nvn] = 45;
+        WMV[(((((TOP | DOWN) | RIGHT) | LEFT) | nNn) | MMn) | nwM] = 46;
         var vMNWw = 0;
         var wVmnN = 1;
         var nWNMn = 2;
@@ -13138,27 +13116,27 @@ try {
                 var VMV = matrix[i - 1][j];
                 if (VMV.floorFrame === frameId) {
                     mMn = 1;
-                    Wn += key_w;
+                    Wn += TOP;
                 }
             }
             if ((i + 1) < wWw) {
                 var VMV = matrix[i + 1][j];
                 if (VMV.floorFrame === frameId) {
-                    Wn += key_s;
+                    Wn += DOWN;
                     M = 1;
                 }
             }
             if ((j - 1) >= 0) {
                 var VMV = matrix[i][j - 1];
                 if (VMV.floorFrame === frameId) {
-                    Wn += key_a;
+                    Wn += LEFT;
                     MNMWN = 1;
                 }
             }
             if ((j + 1) < NMv) {
                 var VMV = matrix[i][j + 1];
                 if (VMV.floorFrame === frameId) {
-                    Wn += key_d;
+                    Wn += RIGHT;
                     N = 1;
                 }
             }
@@ -13196,27 +13174,27 @@ try {
                 var VMV = matrix[i - 1][j];
                 if ((VMV.wallFrame === frameId) && (VMV.wall === vV)) {
                     mMn = 1;
-                    Wn += key_w;
+                    Wn += TOP;
                 }
             }
             if ((i + 1) < wWw) {
                 var VMV = matrix[i + 1][j];
                 if ((VMV.wallFrame === frameId) && (VMV.wall === vV)) {
-                    Wn += key_s;
+                    Wn += DOWN;
                     M = 1;
                 }
             }
             if ((j - 1) >= 0) {
                 var VMV = matrix[i][j - 1];
                 if ((VMV.wallFrame === frameId) && (VMV.wall === vV)) {
-                    Wn += key_a;
+                    Wn += LEFT;
                     MNMWN = 1;
                 }
             }
             if ((j + 1) < NMv) {
                 var VMV = matrix[i][j + 1];
                 if ((VMV.wallFrame === frameId) && (VMV.wall === vV)) {
-                    Wn += key_d;
+                    Wn += RIGHT;
                     N = 1;
                 }
             }
@@ -16817,10 +16795,10 @@ try {
         };
     })();
 var MapManager = (function() {
-    var key_w = 0;
-    var key_s = 1;
-    var key_a = 2;
-    var key_d = 4;
+    var TOP = 0;
+    var DOWN = 1;
+    var LEFT = 2;
+    var RIGHT = 4;
     var vMWMW = 0;
     var wMVvN = 0;
     var MnMNn = 4;
