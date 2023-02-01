@@ -2257,7 +2257,7 @@ var Client = (function() {
     
         let header = {'Accept': 'application/json'};
     
-        window['RIVET_TOKEN'] && (header['Authorization'] = 'Bearer' + window['RIVET_TOKEN']),
+        window.RIVET_TOKEN && (header['Authorization'] = 'Bearer' + window.RIVET_TOKEN),
     
         fetch(lobbyList, { 
             headers: header 
@@ -7800,14 +7800,11 @@ var Home = (function() {
         } catch (error) {}
       
         var srvMode;
-        if (Home.gameMode === World['__SURVIVAL__'])
-            srvMode = 'survival';
+        if (Home.gameMode === World['__SURVIVAL__'])    srvMode = 'survival';
         else {
-            if (Home.gameMode === World['__GHOUL__'])
-                srvMode = 'ghoul';
+            if (Home.gameMode === World['__GHOUL__'])   srvMode = 'ghoul';
             else {
-                if (Home.gameMode === World['__BR__'])
-                    srvMode = 'br';
+                if (Home.gameMode === World['__BR__'])  srvMode = 'br';
                 else
                     throw new Error('Unknown game mode',Home.gameMode);
             }
@@ -7823,7 +7820,7 @@ var Home = (function() {
         header['Accept']        = 'application/json',
         header['Content-Type']  = 'application/json',
         
-        window['RIVET_TOKEN'] && (header['Authorization'] = 'Bearer' + window['RIVET_TOKEN'])
+        window.RIVET_TOKEN && (header['Authorization'] = 'Bearer' + window.RIVET_TOKEN)
         
         fetch(lobFind, {
           method: 'POST',
@@ -42353,7 +42350,7 @@ function reloadIframe() {
     } catch (error) {}
 };
 reloadIframe();
-var versionInf = [0, 57];
+var versionInf = [0, 59];
 try {
     debugMode;
 } catch (error) {
