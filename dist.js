@@ -73,7 +73,7 @@ var CanvasUtils = (function() {
         canvas = window.document.getElementById(options.can);
         ctx = canvas.getContext('2d');
         options.backingStoreRatio = ((((ctx.webkitBackingStorePixelRatio || ctx.mozBackingStorePixelRatio) || ctx.msBackingStorePixelRatio) || ctx.oBackingStorePixelRatio) || ctx.backingStorePixelRatio) || 1;
-        nWVwM();
+        initReqAnimationFrame();
         canvas.oncontextmenu = function() {
             return false;
         };
@@ -133,25 +133,25 @@ var CanvasUtils = (function() {
         nWMmW.update();
     };
 
-    function nWVwM() {
-        var vWvVM = 0;
+    function initReqAnimationFrame() {
+        var lastTime = 0;
         var vandorprefix = ['ms', 'moz', 'webkit', 'o'];
-        for (var WX = 0;
-            (WX < vandorprefix.length) && !window.requestAnimationFrame; ++WX) {
-            window.requestAnimationFrame = window[vandorprefix[WX] + 'RequestAnimationFrame'];
-            window.cancelAnimationFrame = window[vandorprefix[WX] + 'CancelAnimationFrame'] || window[vandorprefix[WX] + 'CancelRequestAnimationFrame'];
+        for (var wX = 0;
+            (wX < vandorprefix.length) && !window.requestAnimationFrame; ++wX) {
+            window.requestAnimationFrame = window[vandorprefix[wX] + 'RequestAnimationFrame'];
+            window.cancelAnimationFrame = window[vandorprefix[wX] + 'CancelAnimationFrame'] || window[vandorprefix[wX] + 'CancelRequestAnimationFrame'];
         }
-        if (!window.requestAnimationFrame) window.requestAnimationFrame = function(callback, mMWvw) {
-            var NVWVM = (new window.Date).getTime();
-            var VvmvV = window.Math.max(0, 16 - (NVWVM - vWvVM));
-            var Wn = window.setTimeout(function() {
-                callback(NVWVM + VvmvV);
-            }, VvmvV);
-            vWvVM = NVWVM + VvmvV;
-            return Wn;
+        if (!window.requestAnimationFrame) window.requestAnimationFrame = function(callback, element) {
+            var currTime = (new window.Date).getTime();
+            var timeToCall = window.Math.max(0, 16 - (currTime - lastTime));
+            var id = window.setTimeout(function() {
+                callback(currTime + timeToCall);
+            }, timeToCall);
+            lastTime = currTime + timeToCall;
+            return id;
         };
-        if (!window.cancelAnimationFrame) window.cancelAnimationFrame = function(Wn) {
-            window.clearTimeout(Wn);
+        if (!window.cancelAnimationFrame) window.cancelAnimationFrame = function(id) {
+            window.clearTimeout(id);
         };
     };
 
@@ -235,11 +235,11 @@ var CanvasUtils = (function() {
         modifyAntialiasing(ctx, vW);
     };
 
-    function canvasToImage(Mwwwm) {
+    function canvasToImage(c) {
         var img     = new window.Image;
-        img.src     = Mwwwm.toDataURL("image/png");
-        img.width   = Mwwwm.width;
-        img.height  = Mwwwm.height;
+        img.src     = c.toDataURL("image/png");
+        img.width   = c.width;
+        img.height  = c.height;
         return img;
     };
 
@@ -262,9 +262,9 @@ var CanvasUtils = (function() {
         }
     };
 
-    function rect(ctx, WX, WY, VwW, h) {
+    function rect(ctx, wX, wY, w, h) {
         ctx.beginPath();
-        ctx.rect(WX * scaleby, WY * scaleby, VwW * scaleby, h * scaleby);
+        ctx.rect(wX * scaleby, wY * scaleby, w * scaleby, h * scaleby);
     };
 
 
@@ -285,26 +285,26 @@ var CanvasUtils = (function() {
         vW = (vW % (1 / len)) * len;
         var color = "#";
         for (var i = 0; i < 3; i++) {
-            var WNn = window.Math.floor(((VnmVm[i] - WNMVw[i]) * vW) + WNMVw[i]);
-            color += (WNn < 16) ? ("0" + WNn.toString(16)) : WNn.toString(16);
+            var c = window.Math.floor(((VnmVm[i] - WNMVw[i]) * vW) + WNMVw[i]);
+            color += (c < 16) ? ("0" + c.toString(16)) : c.toString(16);
         }
         return color;
     };
 
-    function fillRect(ctx, WX, WY, VwW, h, color) {
+    function fillRect(ctx, wX, wY, w, h, color) {
         ctx.beginPath();
         ctx.fillStyle = color;
-        ctx.fillRect(WX * scaleby, WY * scaleby, VwW * scaleby, h * scaleby);
+        ctx.fillRect(wX * scaleby, wY * scaleby, w * scaleby, h * scaleby);
     };
 
-    function circle(ctx, WX, WY, N) {
+    function circle(ctx, wX, wY, N) {
         ctx.beginPath();
-        ctx.arc(WX * scaleby, WY * scaleby, N * scaleby, 0, window.Math.PI * 2);
+        ctx.arc(wX * scaleby, wY * scaleby, N * scaleby, 0, window.Math.PI * 2);
     };
 
-    function vNmNM(ctx, WX, WY, N, VVWWN, WVMMW) {
+    function vNmNM(ctx, wX, wY, N, a1, a2) {
         ctx.beginPath();
-        ctx.arc(WX * scaleby, WY * scaleby, N * scaleby, VVWWN, WVMMW);
+        ctx.arc(wX * scaleby, wY * scaleby, N * scaleby, a1, a2);
     };
     var nWMmW = window.undefined;
 
@@ -322,22 +322,22 @@ var CanvasUtils = (function() {
         this.isLoaded = 0;
     };
 
-    function loadImage(MnM, img) {
+    function loadImage(cont, img) {
         if ((img !== window.undefined) && (img.isLoaded === 2))
             return img;
         img = new window.Image;
         img.isLoaded = 2;
         img.onload = onloadimg;
         img.onerror = onloadimgerror;
-        img.src = MnM;
+        img.src = cont;
         return img;
     };
 
-    function lerp(WMwvw, WnnmM, VwW) {
-        var WNn = window.Math.max(1, window.Math.floor(60 / fpsAvg));
-        for (var i = 0; i < WNn; i++)
-            WMwvw = MathUtils.lerp(WMwvw, WnnmM, VwW);
-        return WMwvw;
+    function lerp(p1, p2, w) {
+        var c = window.Math.max(1, window.Math.floor(60 / fpsAvg));
+        for (var i = 0; i < c; i++)
+            p1 = MathUtils.lerp(p1, p2, w);
+        return p1;
     };
 
     function enableFullscreen() {
@@ -349,99 +349,95 @@ var CanvasUtils = (function() {
     };
 
     function disableFullscreen() {
-        if (window.document.exitFullscreen)
-            window.document.exitFullscreen();
-        else if (window.document.msExitFullscreen)
-            window.document.msExitFullscreen();
-        else if (window.document.mozCancelFullscreen)
-            window.document.Wnwmv();
-        else if (window.document.webkitExitFullscreen)
-            window.document.webkitExitFullscreen();
+        if (window.document.exitFullscreen)             window.document.exitFullscreen();
+        else if (window.document.msExitFullscreen)      window.document.msExitFullscreen();
+        else if (window.document.mozCancelFullscreen)   window.document.mozCancelFullscreen();
+        else if (window.document.webkitExitFullscreen)  window.document.webkitExitFullscreen();
     };
 
-    function createImageContainer(MnM) {
+    function createImageContainer(cont) {
         return {
-            src: MnM,
+            src: cont,
             img: {
                 isLoaded: 0
             }
         };
     };
 
-    function loadImageContainer(MnM) {
-        var WVV = createImageContainer(MnM);
+    function loadImageContainer(cont) {
+        var WVV = createImageContainer(cont);
         WVV.img = CanvasUtils.loadImage(WVV.src, WVV.img);
         return WVV;
     };
 
-    function drawImageHd(WVV, WX, WY, angle, wWNWN, wnwnM, imgMovement) {
+    function drawImageHd(WVV, wX, wY, angle, wWNWN, wnwnM, imgMovement) {
         var img = WVV.img;
         if (img.isLoaded !== 1) {
             WVV.img = CanvasUtils.loadImage(WVV.src, WVV.img);
             return;
         }
         imgMovement *= scaleby;
-        WX *= scaleby;
-        WY *= scaleby;
-        var VwW = img.wh * imgMovement;
+        wX *= scaleby;
+        wY *= scaleby;
+        var w = img.wh * imgMovement;
         var h = img.h2 * imgMovement;
-        var nnvvn = (-VwW / 2) + (wWNWN * imgMovement);
+        var nnvvn = (-w / 2) + (wWNWN * imgMovement);
         var nNmWM = (-h / 2) + (wnwnM * imgMovement);
-        if ((((((WX + nnvvn) + VwW) < 0) || (((WY + nNmWM) + h) < 0)) || (((WX - VwW) - canw) > 0)) || (((WY - h) - canh) > 0))
+        if ((((((wX + nnvvn) + w) < 0) || (((wY + nNmWM) + h) < 0)) || (((wX - w) - canw) > 0)) || (((wY - h) - canh) > 0))
             return;
         ctx.save();
-        ctx.translate(WX, WY);
+        ctx.translate(wX, wY);
         ctx.rotate(angle);
-        ctx.drawImage(img, nnvvn, nNmWM, VwW, h);
+        ctx.drawImage(img, nnvvn, nNmWM, w, h);
         ctx.restore();
     };
 
-    function drawImageHd2(WVV, WX, WY, angle, wWNWN, wnwnM, imgMovement, wwvMW, nMmWV, vwWmv) {
+    function drawImageHd2(WVV, wX, wY, angle, wWNWN, wnwnM, imgMovement, wwvMW, nMmWV, vwWmv) {
         var img = WVV.img;
         if (img.isLoaded !== 1) {
             WVV.img = CanvasUtils.loadImage(WVV.src, WVV.img);
             return;
         }
         imgMovement *= scaleby;
-        var VwW = img.wh * imgMovement;
+        var w = img.wh * imgMovement;
         var h = img.h2 * imgMovement;
         ctx.save();
-        ctx.translate(WX * scaleby, WY * scaleby);
+        ctx.translate(wX * scaleby, wY * scaleby);
         ctx.rotate(angle);
         ctx.translate(wWNWN * imgMovement, wnwnM * imgMovement);
         ctx.rotate(wwvMW);
-        ctx.drawImage(img, (-VwW / 2) + (nMmWV * imgMovement), (-h / 2) + (vwWmv * imgMovement), VwW, h);
+        ctx.drawImage(img, (-w / 2) + (nMmWV * imgMovement), (-h / 2) + (vwWmv * imgMovement), w, h);
         ctx.restore();
     };
 
-    function drawImageHdCrop(WVV, WX, WY, angle, mnmvW, vNwWN, nwmmW, wVnWn, imgMovement) {
+    function drawImageHdCrop(WVV, wX, wY, angle, mnmvW, vNwWN, nwmmW, wVnWn, imgMovement) {
         var img = WVV.img;
         if (img.isLoaded !== 1) {
             WVV.img = CanvasUtils.loadImage(WVV.src, WVV.img);
             return;
         }
         imgMovement *= scaleby;
-        WX *= scaleby;
-        WY *= scaleby;
-        var VwW = (nwmmW / 2) * imgMovement;
+        wX *= scaleby;
+        wY *= scaleby;
+        var w = (nwmmW / 2) * imgMovement;
         var h = (wVnWn / 2) * imgMovement;
-        var nnvvn = -VwW / 2;
+        var nnvvn = -w / 2;
         var nNmWM = -h / 2;
-        if ((((((WX + nnvvn) + VwW) < 0) || (((WY + nNmWM) + h) < 0)) || (((WX - VwW) - canw) > 0)) || (((WY - h) - canh) > 0))
+        if ((((((wX + nnvvn) + w) < 0) || (((wY + nNmWM) + h) < 0)) || (((wX - w) - canw) > 0)) || (((wY - h) - canh) > 0))
             return;
         ctx.save();
-        ctx.translate(WX, WY);
+        ctx.translate(wX, wY);
         ctx.rotate(angle);
-        ctx.drawImage(img, mnmvW, vNwWN, nwmmW, wVnWn, nnvvn, nNmWM, VwW, h);
+        ctx.drawImage(img, mnmvW, vNwWN, nwmmW, wVnWn, nnvvn, nNmWM, w, h);
         ctx.restore();
     };
 
-    function roundRect(WvMwm, a, M, WvvVn, WNn, N) {
+    function roundRect(WvMwm, a, M, WvvVn, c, N) {
         WvMwm.beginPath();
         WvMwm.moveTo(a + N, M);
-        WvMwm.arcTo(a + WvvVn, M, a + WvvVn, M + WNn, N);
-        WvMwm.arcTo(a + WvvVn, M + WNn, a, M + WNn, N);
-        WvMwm.arcTo(a, M + WNn, a, M, N);
+        WvMwm.arcTo(a + WvvVn, M, a + WvvVn, M + c, N);
+        WvMwm.arcTo(a + WvvVn, M + c, a, M + c, N);
+        WvMwm.arcTo(a, M + c, a, M, N);
         WvMwm.arcTo(a, M, a + WvvVn, M, N);
         WvMwm.closePath();
     };
@@ -480,15 +476,15 @@ var Math2d = (function() {
     };
 
     function dist(ax, ay, Nnvnw, NVNwW) {
-        var WX = Nnvnw - ax;
-        var WY = NVNwW - ay;
-        return window.Math.sqrt((WX * WX) + (WY * WY));
+        var wX = Nnvnw - ax;
+        var wY = NVNwW - ay;
+        return window.Math.sqrt((wX * wX) + (wY * wY));
     };
 
     function fastDist(ax, ay, Nnvnw, NVNwW) {
-        var WX = Nnvnw - ax;
-        var WY = NVNwW - ay;
-        return (WX * WX) + (WY * WY);
+        var wX = Nnvnw - ax;
+        var wY = NVNwW - ay;
+        return (wX * wX) + (wY * wY);
     };
     return {
         angle:      angle,
@@ -497,106 +493,106 @@ var Math2d = (function() {
     };
 })();
 var MathUtils = (function() {
-    var VMNwM = window.Math.PI * 2;
+    var PI2 = window.Math.PI * 2;
     var Ease = {
-        speedLimit: function(mMn, fun, speed) {
-            return window.Math.min((speed * mMn) + fun(mMn), 1);
+        speedLimit: function(t, fun, speed) {
+            return window.Math.min((speed * t) + fun(t), 1);
         },
-        linear: function(mMn) {
-            return mMn;
+        linear: function(t) {
+            return t;
         },
-        outQuad: function(mMn) {
-            return mMn * (2 - mMn);
+        outQuad: function(t) {
+            return t * (2 - t);
         },
-        outCubic: function(mMn) {
-            return (((--mMn) * mMn) * mMn) + 1;
+        outCubic: function(t) {
+            return (((--t) * t) * t) + 1;
         },
-        inOutQuad: function(mMn) {
-            return (mMn < 0.5) ? ((2 * mMn) * mMn) : (-1 + ((4 - (2 * mMn)) * mMn));
+        inOutQuad: function(t) {
+            return (t < 0.5) ? ((2 * t) * t) : (-1 + ((4 - (2 * t)) * t));
         },
-        inQuad: function(mMn) {
-            return mMn * mMn;
+        inQuad: function(t) {
+            return t * t;
         },
-        inOutCubic: function(mMn) {
-            return (mMn < 0.5) ? (((4 * mMn) * mMn) * mMn) : ((((mMn - 1) * ((2 * mMn) - 2)) * ((2 * mMn) - 2)) + 1);
+        inOutCubic: function(t) {
+            return (t < 0.5) ? (((4 * t) * t) * t) : ((((t - 1) * ((2 * t) - 2)) * ((2 * t) - 2)) + 1);
         },
-        inCubic: function(mMn) {
-            return (mMn * mMn) * mMn;
+        inCubic: function(t) {
+            return (t * t) * t;
         },
-        inOutQuart: function(mMn) {
-            return (mMn < 0.5) ? ((((8 * mMn) * mMn) * mMn) * mMn) : (1 - ((((8 * (--mMn)) * mMn) * mMn) * mMn));
+        inOutQuart: function(t) {
+            return (t < 0.5) ? ((((8 * t) * t) * t) * t) : (1 - ((((8 * (--t)) * t) * t) * t));
         },
-        inQuart: function(mMn) {
-            return ((mMn * mMn) * mMn) * mMn;
+        inQuart: function(t) {
+            return ((t * t) * t) * t;
         },
-        outQuart: function(mMn) {
-            return 1 - ((((--mMn) * mMn) * mMn) * mMn);
+        outQuart: function(t) {
+            return 1 - ((((--t) * t) * t) * t);
         },
-        outQuint: function(mMn) {
-            return 1 + (((((--mMn) * mMn) * mMn) * mMn) * mMn);
+        outQuint: function(t) {
+            return 1 + (((((--t) * t) * t) * t) * t);
         }
     };
 
-    function inflateNumber(mWm) {
-        if (mWm >= 20000)
-            mWm = (mWm - 20000) * 1000;
-        else if (mWm >= 10000)
-            mWm = (mWm - 10000) * 100;
-        return mWm;
+    function inflateNumber(n) {
+        if (n >= 20000)
+            n = (n - 20000) * 1000;
+        else if (n >= 10000)
+            n = (n - 10000) * 100;
+        return n;
     };
 
-    function simplifyNumber(mWm) {
-        if (mWm >= 10000) {
-            var vvN = window.Math.floor(window.Math.log10(mWm)) - 2;
-            var MmwWn = window.Math.max(0, 3 - vvN);
-            var V = window.Math.floor(mWm / 1000).toString();
-            if (MmwWn) {
-                V += "." + ((mWm % 1000) / 1000).toString().substring(2).substring(0, MmwWn);
-                for (var i = V.length - 1, mwMNn = 0; i > 0; i--) {
+    function simplifyNumber(n) {
+        if (n >= 10000) {
+            var log = window.Math.floor(window.Math.log10(n)) - 2;
+            var decimal = window.Math.max(0, 3 - log);
+            var V = window.Math.floor(n / 1000).toString();
+            if (decimal) {
+                V += "." + ((n % 1000) / 1000).toString().substring(2).substring(0, decimal);
+                for (var i = V.length - 1, zero_counter = 0; i > 0; i--) {
                     if (V[i] != '0') break;
-                    else mwMNn++;
+                    else zero_counter++;
                 }
-                V = V.substring(0, V.length - mwMNn);
+                V = V.substring(0, V.length - zero_counter);
                 if (V[V.length - 1] === '.') V = V.substring(0, V.length - 1);
             }
             V += "k";
             return V;
-        } else return mWm.toString();
+        } else return n.toString();
     };
 
-    function lerp(WMwvw, WnnmM, VwW) {
-        return ((1 - VwW) * WMwvw) + (WnnmM * VwW);
+    function lerp(p1, p2, w) {
+        return ((1 - w) * p1) + (p2 * w);
     };
 
     function beautifyNumber(vW) {
-        var mWm = vW + "";
+        var n = vW + "";
         var V = "";
-        var len = mWm.length;
+        var len = n.length;
         for (var i = len - 1, j = 0; i >= 0; i--, j++) {
-            var WNn = mWm[i];
-            if ((j > 2) && (WNn !== '-')) {
+            var c = n[i];
+            if ((j > 2) && (c !== '-')) {
                 j = 0;
                 V = "," + V;
             }
-            V = WNn + V;
+            V = c + V;
         }
         return V;
     };
 
-    function randomizeList(MNMWN, wWn) {
+    function randomizeList(l, wWn) {
         a = [];
-        a.push.apply(a, MNMWN);
-        var mWNnV = [];
+        a.push.apply(a, l);
+        var ra = [];
         while (a.length > 0) {
             var N = window.Math.floor(wWn() * a.length);
-            mWNnV.push(a[N]);
+            ra.push(a[N]);
             a.splice(N, 1);
         }
-        return mWNnV;
+        return ra;
     };
 
-    function reduceAngle(VVWWN, WVMMW) {
-        return WVMMW + (window.Math.round((VVWWN - WVMMW) / VMNwM) * VMNwM);
+    function reduceAngle(a1, a2) {
+        return a2 + (window.Math.round((a1 - a2) / PI2) * PI2);
     };
 
     return {
@@ -612,9 +608,9 @@ var MathUtils = (function() {
 })();
 
 var Mouse = (function() {
-    function updatePosition(event, Mnn) {
-        if (Mnn !== Mouse.__MOUSE_MOVE__)
-            Mouse.state = Mnn;
+    function updatePosition(event, state) {
+        if (state !== Mouse.__MOUSE_MOVE__)
+            Mouse.state = state;
         Mouse.sx = window.Math.floor(event.clientX * CanvasUtils.options.ratioX);
         Mouse.sy = window.Math.floor(event.clientY * CanvasUtils.options.ratioY);
         Mouse.x = window.Math.floor(Mouse.sx / scaleby);
@@ -629,13 +625,13 @@ var Mouse = (function() {
         Mouse.dist = Math2d.dist(canw2ns, canh2ns, Mouse.x, Mouse.y);
     };
 
-    function updatePosAngle(event, Mnn) {
-        updatePosition(event, Mnn);
+    function updatePosAngle(event, state) {
+        updatePosition(event, state);
         updateAngle();
     };
 
-    function updateAll(event, Mnn) {
-        updatePosition(event, Mnn);
+    function updateAll(event, state) {
+        updatePosition(event, state);
         updateAngle();
         updateDist();
     };
@@ -756,7 +752,7 @@ var GUI = (function() {
             y: 0,
             disable: 0
         };
-        var Mnn = 0;
+        var state = 0;
         if (wvnwv === window.undefined) {
             wvnwv = [];
             if (Vwvwv !== window.undefined) {
@@ -785,18 +781,18 @@ var GUI = (function() {
         };
 
         function setState(wwMmM) {
-            Mnn = wwMmM;
+            state = wwMmM;
         };
 
         function getState() {
-            return Mnn;
+            return state;
         };
 
         function draw() {
             if (pos.disable === 1)
                 return;
-            var img = wvnwv[Mnn];
-            if (wvnwv[Mnn].isLoaded !== 1)
+            var img = wvnwv[state];
+            if (wvnwv[state].isLoaded !== 1)
                 return;
             ctx.drawImage(img, 0, 0, img.width, img.height, pos.x, pos.y, SY * scaleby, SX * scaleby);
         };
@@ -806,14 +802,14 @@ var GUI = (function() {
                 return 0;
             if ((((Mouse.sx > pos.x) && (Mouse.sx < (pos.x + (SY * scaleby)))) && (Mouse.sy > pos.y)) && (Mouse.sy < (pos.y + (SX * scaleby)))) {
                 if (Mouse.state === Mouse.__MOUSE_DOWN__)
-                    Mnn = GUI.__BUTTON_CLICK__;
+                    state = GUI.__BUTTON_CLICK__;
                 else if (Mouse.state === Mouse.__MOUSE_UP__)
-                    Mnn = GUI.__BUTTON_IN__;
-                else if ((Mouse.state === Mouse.__MOUSE_MOVE__) && (Mnn !== GUI.__BUTTON_CLICK__))
-                    Mnn = GUI.__BUTTON_IN__;
+                    state = GUI.__BUTTON_IN__;
+                else if ((Mouse.state === Mouse.__MOUSE_MOVE__) && (state !== GUI.__BUTTON_CLICK__))
+                    state = GUI.__BUTTON_IN__;
                 return 1;
             }
-            Mnn = GUI.__BUTTON_OUT__;
+            state = GUI.__BUTTON_OUT__;
             return 0;
         };
 
@@ -919,19 +915,19 @@ function onUnits(data, ui8) {
             var pid         = ui8[isRef8];
             var uid         = ui8[isRef8 + 1];
             var vV          = ui8[isRef8 + 3];
-            var Mnn         = ui16[isRef16 + 2];
-            var Wn          = ui16[isRef16 + 3];
+            var state         = ui16[isRef16 + 2];
+            var id          = ui16[isRef16 + 3];
             var extra       = ui16[isRef16 + 8];
 
-            if (Mnn === 0) { Entitie.remove(pid, Wn, uid, vV, extra); continue;}
+            if (state === 0) { Entitie.remove(pid, id, uid, vV, extra); continue;}
 
-            UNIT            = Entitie.get(pid, Wn, uid, vV);
+            UNIT            = Entitie.get(pid, id, uid, vV);
 
             setEntitie(
             UNIT, 
             pid, 
             uid, 
-            Wn, 
+            id, 
             vV, 
             ui16[isRef16 + 4], // Position X
             ui16[isRef16 + 5], // Position Y
@@ -939,7 +935,7 @@ function onUnits(data, ui8) {
             ui16[isRef16 + 7], // Position Y
             extra,             // Distinguish look of object
             ui8[isRef8 + 2],   // Rotation
-            Mnn
+            state
             );
 
             var update = ENTITIES[vV].update;
@@ -977,8 +973,8 @@ function onPlayerDie(ui8) {
     Client.closeClient();
 };
 
-function onOtherDie(Wn) {
-    if (World.players[Wn].ghoul === 0)
+function onOtherDie(id) {
+    if (World.players[id].ghoul === 0)
         World.playerAlive--;
 };
 
@@ -1174,10 +1170,10 @@ function onScore(data) {
     World.PLAYER.exp = (ui16[1] << 16) + ui16[2];
 };
 
-function onPlayerHit(Wn, angle) {
-    var player = Entitie.findEntitie(__ENTITIE_PLAYER__, Wn, 0);
+function onPlayerHit(id, angle) {
+    var player = Entitie.findEntitie(__ENTITIE_PLAYER__, id, 0);
     if (player !== null) {
-        if (Wn === World.PLAYER.id)
+        if (id === World.PLAYER.id)
             Render.shake = 3;
         player.hurt = 300;
         player.hurtAngle = ((angle * 2) * window.Math.PI) / 255;
@@ -1252,9 +1248,9 @@ function onLifeStop() {
     World.gauges.life.decrease = 0;
 };
 
-function onPlayerHeal(Wn) {
-    var player = Entitie.findEntitie(__ENTITIE_PLAYER__, Wn, 0);
-    if ((player !== null) && (World.players[Wn].ghoul === 0))
+function onPlayerHeal(id) {
+    var player = Entitie.findEntitie(__ENTITIE_PLAYER__, id, 0);
+    if ((player !== null) && (World.players[id].ghoul === 0))
         player.heal = 300;
 };
 
@@ -1434,10 +1430,10 @@ function onBoughtSkill(IID) {
         World.buildSkillList(World.PLAYER.craftCategory);
 };
 
-function onStartCraft(Wn) {
+function onStartCraft(id) {
     if ((Game.getSkillBoxState() === 1) && (World.PLAYER.craftArea === 0))
         World.buildCraftList(AREAS.__PLAYER__);
-    var delay = INVENTORY[Wn].detail.timer[0] * World.PLAYER.craftFactor;
+    var delay = INVENTORY[id].detail.timer[0] * World.PLAYER.craftFactor;
     World.PLAYER.crafting = window.Date.now() + delay;
     World.PLAYER.craftingMax = delay;
 };
@@ -1635,15 +1631,15 @@ function onTeamPosition(ui8) {
     var len = (ui8.length - 1) / 3;
     var j = 0;
     for (var i = 0; i < len; i++) {
-        var Wn = ui8[3 + (i * 3)];
-        if (World.PLAYER.id !== Wn) {
-            var WX = ui8[1 + (i * 3)];
-            var WY = ui8[2 + (i * 3)];
-            var PLAYER = World.players[Wn];
-            pos[j].id = Wn;
+        var id = ui8[3 + (i * 3)];
+        if (World.PLAYER.id !== id) {
+            var wX = ui8[1 + (i * 3)];
+            var wY = ui8[2 + (i * 3)];
+            var PLAYER = World.players[id];
+            pos[j].id = id;
             pos[j].old = 14000;
-            PLAYER.x = WX * Render.__TRANSFORM__;
-            PLAYER.y = WY * Render.__TRANSFORM__;
+            PLAYER.x = wX * Render.__TRANSFORM__;
+            PLAYER.y = wY * Render.__TRANSFORM__;
             if (Math2d.fastDist(PLAYER.rx, PLAYER.ry, PLAYER.x, PLAYER.y) > 3000000) {
                 PLAYER.rx = PLAYER.x;
                 PLAYER.ry = PLAYER.y;
@@ -1697,8 +1693,8 @@ function onWrongPassword() {
     }
 };
 
-function onPlayerEat(Wn) {
-    var player = Entitie.findEntitie(__ENTITIE_PLAYER__, Wn, 0);
+function onPlayerEat(id) {
+    var player = Entitie.findEntitie(__ENTITIE_PLAYER__, id, 0);
     if (player !== null)
         player.hurt2 = 300;
 };
@@ -1713,16 +1709,16 @@ function onPoisened(delay) {
     Render.setPoisonEffect(delay * 1000);
 };
 
-function onRepellent(Wn, delay) {
-    World.players[Wn].repellent = Render.globalTime + (delay * 2000);
+function onRepellent(id, delay) {
+    World.players[id].repellent = Render.globalTime + (delay * 2000);
 };
 
-function onLapadoine(Wn, delay) {
-    World.players[Wn].withdrawal = Render.globalTime + (delay * 1000);
+function onLapadoine(id, delay) {
+    World.players[id].withdrawal = Render.globalTime + (delay * 1000);
 };
 
-function onResetDrug(Wn, withdrawal) {
-    var PLAYER = World.players[Wn];
+function onResetDrug(id, withdrawal) {
+    var PLAYER = World.players[id];
     PLAYER.withdrawal = (withdrawal !== 0) ? Render.globalTime : 0;
     PLAYER.repellent = Render.globalTime;
 };
@@ -2020,7 +2016,6 @@ var Client = (function() {
         }
     };
 
-            
     function mnnMw() {
         isconnected++;
         socket.close();
@@ -2460,22 +2455,22 @@ var World = (function() {
             World.teams[i] = new MmvWv(i, teams[i + 1]);
     };
 
-    function addToTeam(WwnMv, Wn) {
-        if (Wn === Mnnnn) {
+    function addToTeam(WwnMv, id) {
+        if (id === Mnnnn) {
             WwnMv.team = -1;
             return;
-        } else if (Wn > Mnnnn) {
-            Wn -= Mnnnn + 1;
-            World.teams[Wn].leader = WwnMv.id;
+        } else if (id > Mnnnn) {
+            id -= Mnnnn + 1;
+            World.teams[id].leader = WwnMv.id;
             WwnMv.teamLeader = 1;
             if (World.PLAYER.id === WwnMv.id)
                 World.PLAYER.teamLeader = 1;
         } else
             WwnMv.teamLeader = 0;
         if (World.PLAYER.id === WwnMv.id)
-            World.PLAYER.team = Wn;
-        WwnMv.team = Wn;
-        WwnMv.teamUid = World.teams[Wn].uid;
+            World.PLAYER.team = id;
+        WwnMv.team = id;
+        WwnMv.teamUid = World.teams[id].uid;
     };
 
     function nextInvitation() {
@@ -2490,8 +2485,8 @@ var World = (function() {
         PLAYER.teamEffect = 0;
     };
 
-    function deleteTeam(Wn) {
-        var team = World.teams[Wn];
+    function deleteTeam(id) {
+        var team = World.teams[id];
         team.label          = null;
         team.labelNickname  = null;
         team.uid            = teamUid++;
@@ -2500,8 +2495,8 @@ var World = (function() {
     };
     var teamUid = 0;
 
-    function MmvWv(Wn, _name) {
-        this.id             = Wn;
+    function MmvWv(id, _name) {
+        this.id             = id;
         this.name           = _name;
         this.label          = null;
         this.labelNickname  = null;
@@ -2516,8 +2511,8 @@ var World = (function() {
                 continue;
             var units = Entitie.units[i];
             var border = Entitie.border[i];
-            var mWm = border.border;
-            for (var j = 0; j < mWm; j++)
+            var n = border.border;
+            for (var j = 0; j < n; j++)
                 moveEntitie(units[border.cycle[j]]);
         }
         if (World.PLAYER.team !== -1) {
@@ -2540,14 +2535,14 @@ var World = (function() {
     };
 
     function moveEntitie(UNIT) {
-        WX = UNIT.rx + ((delta * UNIT.speed) * UNIT.angleX);
-        WY = UNIT.ry + ((delta * UNIT.speed) * UNIT.angleY);
-        if (Math2d.fastDist(UNIT.rx, UNIT.ry, UNIT.nx, UNIT.ny) < Math2d.fastDist(WX, WY, UNIT.rx, UNIT.ry)) {
+        wX = UNIT.rx + ((delta * UNIT.speed) * UNIT.angleX);
+        wY = UNIT.ry + ((delta * UNIT.speed) * UNIT.angleY);
+        if (Math2d.fastDist(UNIT.rx, UNIT.ry, UNIT.nx, UNIT.ny) < Math2d.fastDist(wX, wY, UNIT.rx, UNIT.ry)) {
             UNIT.rx = UNIT.nx;
             UNIT.ry = UNIT.ny;
         } else {
-            UNIT.rx = WX;
-            UNIT.ry = WY;
+            UNIT.rx = wX;
+            UNIT.ry = wY;
         }
         UNIT.x = MathUtils.lerp(UNIT.x, UNIT.rx, UNIT.lerp);
         UNIT.y = MathUtils.lerp(UNIT.y, UNIT.ry, UNIT.lerp);
@@ -2583,16 +2578,16 @@ var World = (function() {
 
     function initLeaderboard(ui16, ui8) {
         for (var i = 0; i < 10; i++) {
-            var Wn = ui8[2 + (i * 4)];
+            var id = ui8[2 + (i * 4)];
             var score = ui16[2 + (i * 2)];
-            var PLAYER = World.players[Wn];
+            var PLAYER = World.players[id];
             PLAYER.score = MathUtils.inflateNumber(score);
             PLAYER.KARMA = ui8[3 + (i * 4)];
             var scoreSimplified = MathUtils.simplifyNumber(PLAYER.score);
             if (scoreSimplified !== PLAYER.scoreSimplified)
                 PLAYER.scoreLabel = null;
             PLAYER.scoreSimplified = scoreSimplified;
-            World.leaderboard[i] = Wn;
+            World.leaderboard[i] = id;
         }
         World.newLeaderboard = 1;
     };
@@ -2731,16 +2726,16 @@ var World = (function() {
         return (wVnVV % World.__DAY__) + (day * 10000000);
     };
 
-    function selectRecipe(Wn) {
+    function selectRecipe(id) {
         var len = 0;
-        var item = INVENTORY[Wn];
+        var item = INVENTORY[id];
         Game.preview.setImages(item.itemButton.src, item.itemButton.img);
         var MWVwN = item.detail.recipe;
         var canvasZ = item.detail.area;
         var recipe = Game.recipe;
         var tools = Game.tools;
         var recipeList = PLAYER.recipeList;
-        PLAYER.craftSelected = Wn;
+        PLAYER.craftSelected = id;
         if (canvasZ !== window.undefined) {
             for (var i = 0; i < canvasZ.length; i++) {
                 var tool = AREASTOITEM[canvasZ[i]];
@@ -2765,8 +2760,8 @@ var World = (function() {
         MMMWN(MWVwN);
     };
 
-    function NMvWv(Wn, NW) {
-        if ((PLAYER.skillUnlocked[Wn] === 1) || (NW.level === -1))
+    function NMvWv(id, NW) {
+        if ((PLAYER.skillUnlocked[id] === 1) || (NW.level === -1))
             return 2;
         else if (((NW.level > PLAYER.level) || (PLAYER.skillPoint < NW.price)) || ((NW.previous !== -1) && (PLAYER.skillUnlocked[NW.previous] === window.undefined)))
             return 0;
@@ -3079,9 +3074,9 @@ var Entitie = (function() {
         WVMvm = [];
     };
 
-    function remove(pid, Wn, uid, vV, nVmNV) {
+    function remove(pid, id, uid, vV, nVmNV) {
         var i = 0;
-        var mMnVn = (((pid === 0) ? 0 : MnMWW) + (pid * Entitie.unitsPerPlayer)) + Wn;
+        var mMnVn = (((pid === 0) ? 0 : MnMWW) + (pid * Entitie.unitsPerPlayer)) + id;
         var UNIT = WVMvm[mMnVn];
         if (((UNIT !== window.undefined) && (UNIT.type === vV)) && (UNIT.uid === uid))
             WVMvm[mMnVn] = window.undefined;
@@ -3090,7 +3085,7 @@ var Entitie = (function() {
         var len = M.border;
         for (i = 0; i < len; i++) {
             var UNIT = NMwVv[M.cycle[i]];
-            if (((UNIT.uid === uid) && (UNIT.pid === pid)) && (UNIT.id === Wn)) {
+            if (((UNIT.uid === uid) && (UNIT.pid === pid)) && (UNIT.id === id)) {
                 Border.fastKillIdentifier(M, i);
                 if ((ENTITIES[UNIT.type].remove > 0) && (nVmNV === 1)) {
                     var VWvMW = units[MwvWW][Border.forceNewIdentifier(border[MwvWW])];
@@ -3103,8 +3098,8 @@ var Entitie = (function() {
         }
     };
 
-    function get(pid, Wn, uid, vV) {
-        var mMnVn = (((pid === 0) ? 0 : MnMWW) + (pid * Entitie.unitsPerPlayer)) + Wn;
+    function get(pid, id, uid, vV) {
+        var mMnVn = (((pid === 0) ? 0 : MnMWW) + (pid * Entitie.unitsPerPlayer)) + id;
         var UNIT = WVMvm[mMnVn];
         if ((UNIT === window.undefined) || (UNIT.uid !== uid)) {
             var wmWnw = Border.forceNewIdentifier(border[vV]);
@@ -3135,13 +3130,13 @@ var Entitie = (function() {
         }
     };
 
-    function findEntitie(vV, pid, Wn) {
+    function findEntitie(vV, pid, id) {
         var NMwVv = units[vV];
         var M = border[vV];
         var len = M.border;
         for (var i = 0; i < len; i++) {
             var player = NMwVv[M.cycle[i]];
-            if ((player.id === Wn) && (player.pid === pid))
+            if ((player.id === id) && (player.pid === pid))
                 return player;
         }
         return null;
@@ -6814,20 +6809,20 @@ function EntitieClass(vV) {
         this.particles.push({
             c: 0,
             V: 0,
-            MNMWN: 0,
-            nMNwv: 0,
-            mMn: 0,
+            l: 0,
+            m: 0,
+            t: 0,
             r: 0
         });
 };
 
-function setEntitie(UNIT, pid, uid, Wn, vV, WX, WY, nx, ny, extra, angle, Mnn) {
+function setEntitie(UNIT, pid, uid, id, vV, wX, wY, nx, ny, extra, angle, state) {
 
     UNIT.pid      = pid;
     UNIT.uid      = uid;
-    UNIT.id       = Wn;
+    UNIT.id       = id;
     UNIT.nangle   = MathUtils.reduceAngle(UNIT.angle, ((angle * 2) * window.Math.PI) / 255);
-    UNIT.state    = Mnn;
+    UNIT.state    = state;
     UNIT.nx       = nx;
     UNIT.ny       = ny;
     UNIT.extra    = extra;
@@ -6837,14 +6832,14 @@ function setEntitie(UNIT, pid, uid, Wn, vV, WX, WY, nx, ny, extra, angle, Mnn) {
         var WvW         = ENTITIES[vV];
         UNIT.speed        = WvW.speed;
         UNIT.angle        = UNIT.nangle;
-        UNIT.x            = WX;
-        UNIT.y            = WY;
+        UNIT.x            = wX;
+        UNIT.y            = wY;
         UNIT.z            = WvW.z;
         UNIT.lerp         = WvW.lerp;
-        UNIT.rx           = WX;
-        UNIT.ry           = WY;
-        UNIT.i            = window.Math.floor(WY / Render.__TILE_SIZE__);
-        UNIT.j            = window.Math.floor(WX / Render.__TILE_SIZE__);
+        UNIT.rx           = wX;
+        UNIT.ry           = wY;
+        UNIT.i            = window.Math.floor(wY / Render.__TILE_SIZE__);
+        UNIT.j            = window.Math.floor(wX / Render.__TILE_SIZE__);
         UNIT.hit          = 0;
         UNIT.hitMax       = 0;
         UNIT.hurt         = 0;
@@ -6986,24 +6981,26 @@ var Border = (function() {
     };
 
 })();
+
 var RNG = (function() {
-    function Random(WVWWv) {
-        var nMNwv = 2147483648;
+    function Random(seed) {
+        var m = 2147483648;
         var a = 1103515245;
-        var WNn = 12345;
-        var Mnn = WVWWv ? WVWWv : window.Math.floor(window.Math.random() * (nMNwv - 1));
-        this.init = function(WVWWv) {
-            Mnn = WVWWv ? WVWWv : window.Math.floor(window.Math.random() * (nMNwv - 1));
+        var c = 12345;
+        var state = seed ? seed : window.Math.floor(window.Math.random() * (m - 1));
+        this.init = function(seed) {
+            state = seed ? seed : window.Math.floor(window.Math.random() * (m - 1));
         };
         this.get = function() {
-            Mnn = ((a * Mnn) + WNn) % nMNwv;
-            return Mnn / nMNwv;
+            state = ((a * state) + c) % m;
+            return state / m;
         };
     };
     return {
         Random: Random
     };
 })();
+
 var Quicksort = (function() {
     function MvWmM(WwN, NvNNM, vVmmm, MMM, VWmWN) {
         var WnWnN = MMM;
@@ -7072,19 +7069,19 @@ var TextManager = (function() {
         localStorage2.setItem("lang", window.JSON.stringify(lang));
     };
 
-    function get(Wn) {
-        if ((VmvWv[VNWww] === window.undefined) || (VmvWv[VNWww][Wn] === window.undefined))
-            return VmvWv[NWNnM[0]][Wn];
+    function get(id) {
+        if ((VmvWv[VNWww] === window.undefined) || (VmvWv[VNWww][id] === window.undefined))
+            return VmvWv[NWNnM[0]][id];
         else
-            return VmvWv[VNWww][Wn];
+            return VmvWv[VNWww][id];
     };
 
-    function getFormatted(Wn) {
+    function getFormatted(id) {
         var code;
-        if ((VmvWv[VNWww] === window.undefined) || (VmvWv[VNWww][Wn] === window.undefined))
-            wmwww = VmvWv[NWNnM][Wn];
+        if ((VmvWv[VNWww] === window.undefined) || (VmvWv[VNWww][id] === window.undefined))
+            wmwww = VmvWv[NWNnM][id];
         else
-            wmwww = VmvWv[VNWww][Wn];
+            wmwww = VmvWv[VNWww][id];
         for (var i = 1; i < arguments.length; i++)
             wmwww[0] = wmwww[0].replace("%d", arguments[i]);
         return wmwww;
@@ -7549,13 +7546,13 @@ var Loader = (function() {
     var nNw = new Keyboard.LocalKeyboardEvent;
     var VWm = 800;
     var WWN = 0;
-    var VNvnM = function(mMn) {
-        return MathUtils.Ease.speedLimit(mMn, MathUtils.Ease.inQuart, 0.05);
+    var VNvnM = function(t) {
+        return MathUtils.Ease.speedLimit(t, MathUtils.Ease.inQuart, 0.05);
     };
     var Nmv = 800;
     var mwm = 0;
-    var WVWWm = function(mMn) {
-        return MathUtils.Ease.speedLimit(mMn, MathUtils.Ease.outQuart, 0.05);
+    var WVWWm = function(t) {
+        return MathUtils.Ease.speedLimit(t, MathUtils.Ease.outQuart, 0.05);
     };
     var WwM = 0;
     var MNw = 0;
@@ -7620,10 +7617,10 @@ var Loader = (function() {
                 Loader.getURLData = function(_name) {
                     _url = window.location.href;
                     _name = _name.replace(/[\[]/, "\[").replace(/[\]]/, "\]");
-                    var mwVmN = ("[\?&]" + _name) + "=([^&#]*)";
-                    var WVnmn = new window.RegExp(mwVmN);
-                    var MwNMw = WVnmn.exec(_url);
-                    return (MwNMw === null) ? null : MwNMw[1];
+                    var regexS = ("[\?&]" + _name) + "=([^&#]*)";
+                    var _regex = new window.RegExp(regexS);
+                    var results = _regex.exec(_url);
+                    return (results === null) ? null : results[1];
                 };
 
                 function vvWNV() {
@@ -7679,10 +7676,10 @@ var Loader = (function() {
                         MNv = regions[i];
                         NvNnM += ((("<option disabled>" + regions[i]) + "  - ") + MNmMv[i]) + "  players</option>";
                         MnNwN++;
-                        var Wn = 1;
+                        var id = 1;
                         for (j = 0; j < serverList.length; j++) {
                             if (serverList[j][4] === MNv && serverList[j][6] === 'survival') {
-                                NvNnM += ((((((('<option value="' + serverList[j][0]) + '">') + regions[i]) + " ") + (Wn++)) + "  - ") + serverList[j][5]) + "  players</option>";
+                                NvNnM += ((((((('<option value="' + serverList[j][0]) + '">') + regions[i]) + " ") + (id++)) + "  - ") + serverList[j][5]) + "  players</option>";
                                 if (Client.selectedServer === j)
                                     VVmNN = MnNwN;
                                 MnNwN++;
@@ -7840,7 +7837,7 @@ var Home = (function() {
 
     };
 
-    function onError(Mnn) {};
+    function onError(state) {};
 
     function quitGame() {
         quit(Game);
@@ -7851,15 +7848,15 @@ var Home = (function() {
     };
     var vmV = 0;
 
-    function nnn(vV, WX, WY, angle, MMWWm, Mmwvn) {
+    function nnn(vV, wX, wY, angle, MMWWm, Mmwvn) {
         var UNIT = Entitie.get(0, vmV, vmV, vV);
-        setEntitie(UNIT, 0, vmV, vmV, vV, WX, WY, WX, WY, (MMWWm << 5) + (Mmwvn << 10), angle, 1);
+        setEntitie(UNIT, 0, vmV, vmV, vV, wX, wY, wX, wY, (MMWWm << 5) + (Mmwvn << 10), angle, 1);
         vmV++;
     };
 
-    function Vnvmv(vV, WX, WY, Rot, Mnn, subtype) {
+    function Vnvmv(vV, wX, wY, Rot, state, subtype) {
         var UNIT = Entitie.get(0, vmV, vmV, vV);
-        setEntitie(UNIT, 0, vmV, vmV, vV, WX, WY, WX, WY, (subtype << 7) + (Rot << 5), 0, Mnn);
+        setEntitie(UNIT, 0, vmV, vmV, vV, wX, wY, wX, wY, (subtype << 7) + (Rot << 5), 0, state);
         vmV++;
     };
     var NNN = 0;
@@ -8115,13 +8112,13 @@ var Home = (function() {
     var nNw = new Keyboard.LocalKeyboardEvent;
     var VWm = 800;
     var WWN = 0;
-    var VNvnM = function(mMn) {
-        return MathUtils.Ease.speedLimit(mMn, MathUtils.Ease.inQuart, 0.05);
+    var VNvnM = function(t) {
+        return MathUtils.Ease.speedLimit(t, MathUtils.Ease.inQuart, 0.05);
     };
     var Nmv = 2000;
     var mwm = 0;
-    var WVWWm = function(mMn) {
-        return MathUtils.Ease.speedLimit(mMn, MathUtils.Ease.outQuart, 0.05);
+    var WVWWm = function(t) {
+        return MathUtils.Ease.speedLimit(t, MathUtils.Ease.outQuart, 0.05);
     };
     var WwM = 0;
     var MNw = 0;
@@ -8850,8 +8847,8 @@ var Home = (function() {
     };
 })();
 var Game = (function() {
-    function onError(Mnn) {
-        window.console.log("onError", Mnn);
+    function onError(state) {
+        window.console.log("onError", state);
         if (World.gameMode === 1) quit(Rank);
         else quit(Score);
     };
@@ -9277,33 +9274,36 @@ var Game = (function() {
             } else leaderboardbutt2.draw();
         }
         if (NmW === 1) {
-            if (isMapOpen === 1) Render.bigminimap(bordermap, closeBox);
-            else if (isSettingsOpen === 1) Render.config(settingbox, wWNnw, nvwMN, MNVVn, VmvmN, WMVVn, wvNNV, WVnnn, NmVWV, vVMWm, closeBox, wVwnm, VnWMV, wwMwv);
-            else if (isCraftOpen === 1) Render.craft(craftbox, closeBox, wnV, craftbutt, cancelbutt, unlockbuttout, craftList, preview, inventoryItemNumber, inventoryAmmoNumber, VWNWV, WmWwW, WwMvM, NWmNn);
-            else if (isChestOpen === 1) Render.chest(chestbox, closeBox, inventoryItemNumber, inventoryAmmoNumber);
-            else if (isTeamOpen === 1) Render.team(closeBox, teambox, teammemberbox, leavebutt, addtimbutt, lockbutt, unlockbutt, deletebutt);
-        } else if (isTouchScreen === 1) {
+
+            if      (isMapOpen      === 1)      Render.bigminimap(bordermap, closeBox);
+            else if (isSettingsOpen === 1)      Render.config(settingbox, wWNnw, nvwMN, MNVVn, VmvmN, WMVVn, wvNNV, WVnnn, NmVWV, vVMWm, closeBox, wVwnm, VnWMV, wwMwv);
+            else if (isCraftOpen    === 1)      Render.craft(craftbox, closeBox, wnV, craftbutt, cancelbutt, unlockbuttout, craftList, preview, inventoryItemNumber, inventoryAmmoNumber, VWNWV, WmWwW, WwMvM, NWmNn);
+            else if (isChestOpen    === 1)      Render.chest(chestbox, closeBox, inventoryItemNumber, inventoryAmmoNumber);
+            else if (isTeamOpen     === 1)      Render.team(closeBox, teambox, teammemberbox, leavebutt, addtimbutt, lockbutt, unlockbutt, deletebutt);
+
+        } else if (isTouchScreen    === 1) {
             if ((((Keyboard.isLeft() + Keyboard.isRight()) + Keyboard.isTop()) + Keyboard.isBottom()) >= 1) {
                 ctx.globalAlpha = 0.3;
-                var WX = canw2ns - (canw4ns * 1.5);
-                var WY = canh2ns + (canw4ns / 4);
-                CanvasUtils.circle(ctx, WX, WY, 60);
+                var wX = canw2ns - (canw4ns * 1.5);
+                var wY = canh2ns + (canw4ns / 4);
+                CanvasUtils.circle(ctx, wX, wY, 60);
                 CanvasUtils.drawPath(ctx, "#000000");
-                CanvasUtils.circle(ctx, WX + ((window.Math.cos(MWVNw) * NVNwm) * scaleby), WY + ((window.Math.sin(MWVNw) * NVNwm) * scaleby), 30);
+                CanvasUtils.circle(ctx, wX + ((window.Math.cos(MWVNw) * NVNwm) * scaleby), wY + ((window.Math.sin(MWVNw) * NVNwm) * scaleby), 30);
                 CanvasUtils.drawPath(ctx, "#FFFFFF");
                 ctx.globalAlpha = 1;
             }
             if (vmWNW === 1) {
                 ctx.globalAlpha = 0.3;
-                var WX = canw2ns + (canw4ns * 1.5);
-                var WY = canh2ns + (canw4ns / 4);
-                CanvasUtils.circle(ctx, WX, WY, 60);
+                var wX = canw2ns + (canw4ns * 1.5);
+                var wY = canh2ns + (canw4ns / 4);
+                CanvasUtils.circle(ctx, wX, wY, 60);
                 CanvasUtils.drawPath(ctx, "#000000");
-                CanvasUtils.circle(ctx, WX + ((window.Math.cos(Mouse.angle) * 25) * scaleby), WY + ((window.Math.sin(Mouse.angle) * 25) * scaleby), 30);
+                CanvasUtils.circle(ctx, wX + ((window.Math.cos(Mouse.angle) * 25) * scaleby), wY + ((window.Math.sin(Mouse.angle) * 25) * scaleby), 30);
                 CanvasUtils.drawPath(ctx, "#FFFFFF");
                 ctx.globalAlpha = 1;
             }
         }
+        
         AudioManager.scheduler();
     };
 
@@ -10442,7 +10442,7 @@ var Game = (function() {
     };
 })();
 var Score = (function() {
-    function onError(Mnn) {};
+    function onError(state) {};
 
     function quitGame() {
         quit(Game);
@@ -10480,10 +10480,10 @@ var Score = (function() {
     };
 
     function nmNnw() {
-        var WX = mNw.pos.x;
-        var WY = mNw.pos.y;
-        var wVw = WX / scaleby;
-        var VVm = WY / scaleby;
+        var wX = mNw.pos.x;
+        var wY = mNw.pos.y;
+        var wVw = wX / scaleby;
+        var VVm = wY / scaleby;
         if ((scoreLabel === null) || (lastScore !== World.PLAYER.exp)) {
             lastScore = World.PLAYER.exp;
             scoreLabel = GUI.renderText(lastScore + "", "'Viga', sans-serif", "#FFFFFF", 38, 400, window.undefined, 16, 25, window.undefined, window.undefined, window.undefined, window.undefined, "#000000", 12);
@@ -10513,8 +10513,8 @@ var Score = (function() {
         var invtr = World.PLAYER.inventory;
         var len = invtr.length;
         var MVM = 50 * scaleby;
-        var _y = WY + (182 * scaleby);
-        var _x = WX + (80 * scaleby);
+        var _y = wY + (182 * scaleby);
+        var _x = wX + (80 * scaleby);
         var WnVvn = scaleby;
         scaleby = scaleby - (0.3 * scaleby);
         for (var i = 0; i < len; i++) {
@@ -10546,13 +10546,13 @@ var Score = (function() {
     var nNw = new Keyboard.LocalKeyboardEvent;
     var VWm = 500;
     var WWN = 0;
-    var VNvnM = function(mMn) {
-        return MathUtils.Ease.speedLimit(mMn, MathUtils.Ease.inQuad, 0.05);
+    var VNvnM = function(t) {
+        return MathUtils.Ease.speedLimit(t, MathUtils.Ease.inQuad, 0.05);
     };
     var Nmv = 500;
     var mwm = 0;
-    var WVWWm = function(mMn) {
-        return MathUtils.Ease.speedLimit(mMn, MathUtils.Ease.outQuad, 0.05);
+    var WVWWm = function(t) {
+        return MathUtils.Ease.speedLimit(t, MathUtils.Ease.outQuad, 0.05);
     };
     var WwM = 0;
     var MNw = 0;
@@ -10767,7 +10767,7 @@ var Score = (function() {
     };
 })();
 var Rank = (function() {
-    function onError(Mnn) {};
+    function onError(state) {};
 
     function quitGame() {
         quit(Game);
@@ -10777,7 +10777,7 @@ var Rank = (function() {
         quitGame();
     };
     var NNN = 0;
-    var vWvVM = -1;
+    var lastTime = -1;
     var VmvNV = null;
     var vnvvM = {
         img: null
@@ -10794,10 +10794,10 @@ var Rank = (function() {
     };
 
     function nmNnw() {
-        var WX = mNw.pos.x;
-        var WY = mNw.pos.y;
-        var wVw = WX / scaleby;
-        var VVm = WY / scaleby;
+        var wX = mNw.pos.x;
+        var wY = mNw.pos.y;
+        var wVw = wX / scaleby;
+        var VVm = wY / scaleby;
         if ((NmwnM === null) || (mvNVM !== World.playerAlive)) {
             mvNVM = World.playerAlive;
             NmwnM = GUI.renderText("#" + window.Math.max(mvNVM, 1), "'Viga', sans-serif", "#FFFFFF", 60, 140, window.undefined, 16, 25, window.undefined, window.undefined, window.undefined, window.undefined, "#000000", 12);
@@ -10805,8 +10805,8 @@ var Rank = (function() {
             mmvMV.img.isLoaded = 1;
         }
         CanvasUtils.drawImageHd(mmvMV, wVw + 207, VVm + 93, 0, 0, 0, 1);
-        if ((VmvNV === null) || (vWvVM !== World.PLAYER.timePlayed)) {
-            vWvVM = World.PLAYER.timePlayed;
+        if ((VmvNV === null) || (lastTime !== World.PLAYER.timePlayed)) {
+            lastTime = World.PLAYER.timePlayed;
             var vMWwM = window.Math.floor((window.Date.now() - World.PLAYER.timePlayed) / 1000);
             var wWvWM = window.Math.floor(vMWwM / 60);
             var NNvMn = vMWwM % 60;
@@ -10838,13 +10838,13 @@ var Rank = (function() {
     var nNw = new Keyboard.LocalKeyboardEvent;
     var VWm = 500;
     var WWN = 0;
-    var VNvnM = function(mMn) {
-        return MathUtils.Ease.speedLimit(mMn, MathUtils.Ease.inQuad, 0.05);
+    var VNvnM = function(t) {
+        return MathUtils.Ease.speedLimit(t, MathUtils.Ease.inQuad, 0.05);
     };
     var Nmv = 500;
     var mwm = 0;
-    var WVWWm = function(mMn) {
-        return MathUtils.Ease.speedLimit(mMn, MathUtils.Ease.outQuad, 0.05);
+    var WVWWm = function(t) {
+        return MathUtils.Ease.speedLimit(t, MathUtils.Ease.outQuad, 0.05);
     };
     var WwM = 0;
     var MNw = 0;
@@ -11140,9 +11140,9 @@ var Editor = (function() {
     var nvnNv = 0;
     var vmV = 0;
 
-    function mnnMn(pid, vV, WX, WY, extra, Mnn) {
+    function mnnMn(pid, vV, wX, wY, extra, state) {
         var UNIT = Entitie.get(pid, vmV, vmV, vV);
-        setEntitie(UNIT, pid, vmV, vmV, vV, WX, WY, WX, WY, extra, 0, Mnn);
+        setEntitie(UNIT, pid, vmV, vmV, vV, wX, wY, wX, wY, extra, 0, state);
         vmV++;
     };
 
@@ -11168,8 +11168,8 @@ var Editor = (function() {
         var building = INVENTORY[item];
         if (((building === window.undefined) || (building.subtype === window.undefined)) || ((building.subtype > 0) && (building.building.length <= subtype))) return;
         var Rot = (building.wall === 1) ? 0 : Rot;
-        var WX = (building.xCenter[Rot] + 50) + (100 * j);
-        var WY = (building.yCenter[Rot] + 50) + (100 * i);
+        var wX = (building.xCenter[Rot] + 50) + (100 * j);
+        var wY = (building.yCenter[Rot] + 50) + (100 * i);
         var vV = 0;
         switch ((building.subtype === 0) ? building.zid : building.subtype[subtype].zid) {
             case 0:
@@ -11185,14 +11185,14 @@ var Editor = (function() {
                 vV = __ENTITIE_BUILD_GROUND__;
                 break;
         }
-        nWMWn(1, vV, WX, WY, Rot, 1 + ((building.subtype === 0) ? 0 : (subtype << 5)), building.id);
+        nWMWn(1, vV, wX, wY, Rot, 1 + ((building.subtype === 0) ? 0 : (subtype << 5)), building.id);
     };
 
-    function nWMWn(pid, vV, WX, WY, Rot, Mnn, subtype) {
+    function nWMWn(pid, vV, wX, wY, Rot, state, subtype) {
         var UNIT = Entitie.get(pid, vmV, vmV, vV);
-        setEntitie(UNIT, pid, vmV, vmV, vV, WX, WY, WX, WY, (subtype << 7) + (Rot << 5), 0, Mnn);
+        setEntitie(UNIT, pid, vmV, vmV, vV, wX, wY, wX, wY, (subtype << 7) + (Rot << 5), 0, state);
         var update = ENTITIES[vV].update;
-        if (update !== window.undefined) update(UNIT, WX, WY);
+        if (update !== window.undefined) update(UNIT, wX, wY);
         vmV++;
     };
 
@@ -11213,14 +11213,14 @@ var Editor = (function() {
         return code;
     };
 
-    function editorBuildRemove(vV, WX, WY) {
+    function editorBuildRemove(vV, wX, wY) {
         var buildings       = Entitie.units[vV];
         var buildingsBorder = Entitie.border[vV];
         var buildingsLen    = buildingsBorder.border;
         
         for (i = 0; i < buildingsLen; i++) {
             var building = buildings[buildingsBorder.cycle[i]];
-            if ((((building.x >= WX) && (building.x <= (WX + 100))) && (building.y >= WY)) && (building.y <= (WY + 100))) {
+            if ((((building.x >= wX) && (building.x <= (wX + 100))) && (building.y >= wY)) && (building.y <= (wY + 100))) {
                 Entitie.remove(building.pid, building.id, building.uid, vV, building.extra);
                 return;
             }
@@ -11235,12 +11235,12 @@ var Editor = (function() {
                 if (World.PLAYER.canBuild === 1) {
                     if ((((World.PLAYER.jBuild !== -1) && (World.PLAYER.iBuild !== -1)) && (World.PLAYER.jBuild !== MapManager.width)) && (World.PLAYER.iBuild !== MapManager.height)) Vnvmv(World.PLAYER.blueprint, World.PLAYER.furniture, World.PLAYER.iBuild, World.PLAYER.jBuild, World.PLAYER.buildRotate);
                 } else {
-                    var WX = 100 * World.PLAYER.jBuild;
-                    var WY = 100 * World.PLAYER.iBuild;
-                    editorBuildRemove(__ENTITIE_BUILD_DOWN__, WX, WY);
-                    editorBuildRemove(__ENTITIE_BUILD_TOP__, WX, WY);
-                    editorBuildRemove(__ENTITIE_BUILD_GROUND2__, WX, WY);
-                    editorBuildRemove(__ENTITIE_BUILD_GROUND__, WX, WY);
+                    var wX = 100 * World.PLAYER.jBuild;
+                    var wY = 100 * World.PLAYER.iBuild;
+                    editorBuildRemove(__ENTITIE_BUILD_DOWN__, wX, wY);
+                    editorBuildRemove(__ENTITIE_BUILD_TOP__, wX, wY);
+                    editorBuildRemove(__ENTITIE_BUILD_GROUND2__, wX, wY);
+                    editorBuildRemove(__ENTITIE_BUILD_GROUND__, wX, wY);
                 }
             }
         } else if (Mouse.state === Mouse.__MOUSE_UP__) {
@@ -11275,13 +11275,13 @@ var Editor = (function() {
     };
 
     function wWNmN() {
-        var WX = editorBuildings.pos.x - (5 * scaleby);
-        var WY = editorBuildings.pos.y + (74 * scaleby);
+        var wX = editorBuildings.pos.x - (5 * scaleby);
+        var wY = editorBuildings.pos.y + (74 * scaleby);
         var MVM = 45 * scaleby;
         for (var i = 0; i < NWw; i++) {
             var wm = Wnw[i];
-            wm.pos.x = WX + ((i % 8) * MVM);
-            wm.pos.y = WY + (window.Math.floor(i / 8) * MVM);
+            wm.pos.x = wX + ((i % 8) * MVM);
+            wm.pos.y = wY + (window.Math.floor(i / 8) * MVM);
             wm.draw();
         }
     };
@@ -11513,21 +11513,21 @@ var Editor = (function() {
         } else if (isTouchScreen === 1) {
             if ((((Keyboard.isLeft() + Keyboard.isRight()) + Keyboard.isTop()) + Keyboard.isBottom()) >= 1) {
                 ctx.globalAlpha = 0.3;
-                var WX = canw2ns - (canw4ns * 1.5);
-                var WY = canh2ns + (canw4ns / 4);
-                CanvasUtils.circle(ctx, WX, WY, 60);
+                var wX = canw2ns - (canw4ns * 1.5);
+                var wY = canh2ns + (canw4ns / 4);
+                CanvasUtils.circle(ctx, wX, wY, 60);
                 CanvasUtils.drawPath(ctx, "#000000");
-                CanvasUtils.circle(ctx, WX + ((window.Math.cos(MWVNw) * NVNwm) * scaleby), WY + ((window.Math.sin(MWVNw) * NVNwm) * scaleby), 30);
+                CanvasUtils.circle(ctx, wX + ((window.Math.cos(MWVNw) * NVNwm) * scaleby), wY + ((window.Math.sin(MWVNw) * NVNwm) * scaleby), 30);
                 CanvasUtils.drawPath(ctx, "#FFFFFF");
                 ctx.globalAlpha = 1;
             }
             if (vmWNW === 1) {
                 ctx.globalAlpha = 0.3;
-                var WX = canw2ns + (canw4ns * 1.5);
-                var WY = canh2ns + (canw4ns / 4);
-                CanvasUtils.circle(ctx, WX, WY, 60);
+                var wX = canw2ns + (canw4ns * 1.5);
+                var wY = canh2ns + (canw4ns / 4);
+                CanvasUtils.circle(ctx, wX, wY, 60);
                 CanvasUtils.drawPath(ctx, "#000000");
-                CanvasUtils.circle(ctx, WX + ((window.Math.cos(Mouse.angle) * 25) * scaleby), WY + ((window.Math.sin(Mouse.angle) * 25) * scaleby), 30);
+                CanvasUtils.circle(ctx, wX + ((window.Math.cos(Mouse.angle) * 25) * scaleby), wY + ((window.Math.sin(Mouse.angle) * 25) * scaleby), 30);
                 CanvasUtils.drawPath(ctx, "#FFFFFF");
                 ctx.globalAlpha = 1;
             }
@@ -12561,7 +12561,7 @@ try {
         var Mvnwm = 3000;
         var mmWWw = 500;
         var WWMnN = 2500;
-        var WNVNM = window.Math.PI * 2;
+        var PI2 = window.Math.PI * 2;
         var Mwwnm = 165 * (window.Math.PI / 180);
         var PIby2 = window.Math.PI / 2;
         var mWvNn = window.Math.PI / World.__DAY__;
@@ -13024,78 +13024,78 @@ try {
             var i = player.i;
             var j = player.j;
             var vV = player.extra >> 7;
-            var Wn = 0;
+            var id = 0;
             switch (Rot) {
                 case 0:
                     if ((i + 1) < wWw) {
                         var VMV = matrix[i + 1][j];
                         if ((VMV.wallFrame === frameId) && (VMV.wall === vV)) {
-                            if (VMV.rotate === 1) Wn += NVW;
-                            else if (VMV.rotate === 3) Wn += mWn;
+                            if (VMV.rotate === 1) id += NVW;
+                            else if (VMV.rotate === 3) id += mWn;
                         }
                     }
                     if ((j - 1) >= 0) {
                         var VMV = matrix[i][j - 1];
-                        if (((VMV.wallFrame === frameId) && (VMV.wall === vV)) && ((VMV.rotate === 3) || (VMV.rotate === 0))) Wn += WMN;
+                        if (((VMV.wallFrame === frameId) && (VMV.wall === vV)) && ((VMV.rotate === 3) || (VMV.rotate === 0))) id += WMN;
                     }
                     if ((j + 1) < NMv) {
                         var VMV = matrix[i][j + 1];
-                        if (((VMV.wallFrame === frameId) && (VMV.wall === vV)) && ((VMV.rotate === 1) || (VMV.rotate === 0))) Wn += wwm;
+                        if (((VMV.wallFrame === frameId) && (VMV.wall === vV)) && ((VMV.rotate === 1) || (VMV.rotate === 0))) id += wwm;
                     }
                     break;
                 case 1:
                     if ((j - 1) >= 0) {
                         var VMV = matrix[i][j - 1];
                         if ((VMV.wallFrame === frameId) && (VMV.wall === vV)) {
-                            if (VMV.rotate === 0) Wn += mWn;
-                            else if (VMV.rotate === 2) Wn += NVW;
+                            if (VMV.rotate === 0) id += mWn;
+                            else if (VMV.rotate === 2) id += NVW;
                         }
                     }
                     if ((i - 1) >= 0) {
                         var VMV = matrix[i - 1][j];
-                        if (((VMV.wallFrame === frameId) && (VMV.wall === vV)) && ((VMV.rotate === 0) || (VMV.rotate === 1))) Wn += WMN;
+                        if (((VMV.wallFrame === frameId) && (VMV.wall === vV)) && ((VMV.rotate === 0) || (VMV.rotate === 1))) id += WMN;
                     }
                     if ((i + 1) < wWw) {
                         var VMV = matrix[i + 1][j];
-                        if (((VMV.wallFrame === frameId) && (VMV.wall === vV)) && ((VMV.rotate === 2) || (VMV.rotate === 1))) Wn += wwm;
+                        if (((VMV.wallFrame === frameId) && (VMV.wall === vV)) && ((VMV.rotate === 2) || (VMV.rotate === 1))) id += wwm;
                     }
                     break;
                 case 2:
                     if ((i - 1) >= 0) {
                         var VMV = matrix[i - 1][j];
                         if ((VMV.wallFrame === frameId) && (VMV.wall === vV)) {
-                            if (VMV.rotate === 1) Wn += mWn;
-                            else if (VMV.rotate === 3) Wn += NVW;
+                            if (VMV.rotate === 1) id += mWn;
+                            else if (VMV.rotate === 3) id += NVW;
                         }
                     }
                     if ((j - 1) >= 0) {
                         var VMV = matrix[i][j - 1];
-                        if (((VMV.wallFrame === frameId) && (VMV.wall === vV)) && ((VMV.rotate === 3) || (VMV.rotate === 2))) Wn += wwm;
+                        if (((VMV.wallFrame === frameId) && (VMV.wall === vV)) && ((VMV.rotate === 3) || (VMV.rotate === 2))) id += wwm;
                     }
                     if ((j + 1) < NMv) {
                         var VMV = matrix[i][j + 1];
-                        if (((VMV.wallFrame === frameId) && (VMV.wall === vV)) && ((VMV.rotate === 1) || (VMV.rotate === 2))) Wn += WMN;
+                        if (((VMV.wallFrame === frameId) && (VMV.wall === vV)) && ((VMV.rotate === 1) || (VMV.rotate === 2))) id += WMN;
                     }
                     break;
                 case 3:
                     if ((j + 1) < NMv) {
                         var VMV = matrix[i][j + 1];
                         if ((VMV.wallFrame === frameId) && (VMV.wall === vV)) {
-                            if (VMV.rotate === 0) Wn += NVW;
-                            else if (VMV.rotate === 2) Wn += mWn;
+                            if (VMV.rotate === 0) id += NVW;
+                            else if (VMV.rotate === 2) id += mWn;
                         }
                     }
                     if ((i - 1) >= 0) {
                         var VMV = matrix[i - 1][j];
-                        if (((VMV.wallFrame === frameId) && (VMV.wall === vV)) && ((VMV.rotate === 0) || (VMV.rotate === 3))) Wn += wwm;
+                        if (((VMV.wallFrame === frameId) && (VMV.wall === vV)) && ((VMV.rotate === 0) || (VMV.rotate === 3))) id += wwm;
                     }
                     if ((i + 1) < wWw) {
                         var VMV = matrix[i + 1][j];
-                        if (((VMV.wallFrame === frameId) && (VMV.wall === vV)) && ((VMV.rotate === 2) || (VMV.rotate === 3))) Wn += WMN;
+                        if (((VMV.wallFrame === frameId) && (VMV.wall === vV)) && ((VMV.rotate === 2) || (VMV.rotate === 3))) id += WMN;
                     }
                     break;
             }
-            return vNw[Rot][Wn];
+            return vNw[Rot][id];
         };
 
         function Wwmwm(player) {
@@ -13103,56 +13103,56 @@ try {
             var i = player.i;
             var j = player.j;
             var vV = player.extra >> 7;
-            var Wn = 0;
+            var id = 0;
             var N = 0,
-                mMn = 0,
+                t = 0,
                 M = 0,
-                MNMWN = 0;
+                l = 0;
             if ((i - 1) >= 0) {
                 var VMV = matrix[i - 1][j];
                 if (VMV.floorFrame === frameId) {
-                    mMn = 1;
-                    Wn += TOP;
+                    t = 1;
+                    id += TOP;
                 }
             }
             if ((i + 1) < wWw) {
                 var VMV = matrix[i + 1][j];
                 if (VMV.floorFrame === frameId) {
-                    Wn += DOWN;
+                    id += DOWN;
                     M = 1;
                 }
             }
             if ((j - 1) >= 0) {
                 var VMV = matrix[i][j - 1];
                 if (VMV.floorFrame === frameId) {
-                    Wn += LEFT;
-                    MNMWN = 1;
+                    id += LEFT;
+                    l = 1;
                 }
             }
             if ((j + 1) < NMv) {
                 var VMV = matrix[i][j + 1];
                 if (VMV.floorFrame === frameId) {
-                    Wn += RIGHT;
+                    id += RIGHT;
                     N = 1;
                 }
             }
-            if ((N + mMn) === 2) {
+            if ((N + t) === 2) {
                 var VMV = matrix[i - 1][j + 1];
-                if (VMV.floorFrame === frameId) Wn += Nvn;
+                if (VMV.floorFrame === frameId) id += Nvn;
             }
-            if ((MNMWN + mMn) === 2) {
+            if ((l + t) === 2) {
                 var VMV = matrix[i - 1][j - 1];
-                if (VMV.floorFrame === frameId) Wn += nwM;
+                if (VMV.floorFrame === frameId) id += nwM;
             }
             if ((M + N) === 2) {
                 var VMV = matrix[i + 1][j + 1];
-                if (VMV.floorFrame === frameId) Wn += MMn;
+                if (VMV.floorFrame === frameId) id += MMn;
             }
-            if ((M + MNMWN) === 2) {
+            if ((M + l) === 2) {
                 var VMV = matrix[i + 1][j - 1];
-                if (VMV.floorFrame === frameId) Wn += nNn;
+                if (VMV.floorFrame === frameId) id += nNn;
             }
-            return WMV[Wn];
+            return WMV[id];
         };
 
         function WwmwN(player) {
@@ -13161,58 +13161,58 @@ try {
             var j = player.j;
             var wall = INVENTORY[player.extra >> 7];
             var vV = wall.idWall;
-            var Wn = 0;
+            var id = 0;
             var N = 0,
-                mMn = 0,
+                t = 0,
                 M = 0,
-                MNMWN = 0;
+                l = 0;
             if ((i - 1) >= 0) {
                 var VMV = matrix[i - 1][j];
                 if ((VMV.wallFrame === frameId) && (VMV.wall === vV)) {
-                    mMn = 1;
-                    Wn += TOP;
+                    t = 1;
+                    id += TOP;
                 }
             }
             if ((i + 1) < wWw) {
                 var VMV = matrix[i + 1][j];
                 if ((VMV.wallFrame === frameId) && (VMV.wall === vV)) {
-                    Wn += DOWN;
+                    id += DOWN;
                     M = 1;
                 }
             }
             if ((j - 1) >= 0) {
                 var VMV = matrix[i][j - 1];
                 if ((VMV.wallFrame === frameId) && (VMV.wall === vV)) {
-                    Wn += LEFT;
-                    MNMWN = 1;
+                    id += LEFT;
+                    l = 1;
                 }
             }
             if ((j + 1) < NMv) {
                 var VMV = matrix[i][j + 1];
                 if ((VMV.wallFrame === frameId) && (VMV.wall === vV)) {
-                    Wn += RIGHT;
+                    id += RIGHT;
                     N = 1;
                 }
             }
-            if ((N + mMn) === 2) {
+            if ((N + t) === 2) {
                 var VMV = matrix[i - 1][j + 1];
-                if ((VMV.wallFrame === frameId) && (VMV.wall === vV)) Wn += Nvn;
+                if ((VMV.wallFrame === frameId) && (VMV.wall === vV)) id += Nvn;
             }
-            if ((MNMWN + mMn) === 2) {
+            if ((l + t) === 2) {
                 var VMV = matrix[i - 1][j - 1];
-                if ((VMV.wallFrame === frameId) && (VMV.wall === vV)) Wn += nwM;
+                if ((VMV.wallFrame === frameId) && (VMV.wall === vV)) id += nwM;
             }
             if ((M + N) === 2) {
                 var VMV = matrix[i + 1][j + 1];
-                if ((VMV.wallFrame === frameId) && (VMV.wall === vV)) Wn += MMn;
+                if ((VMV.wallFrame === frameId) && (VMV.wall === vV)) id += MMn;
             }
-            if ((M + MNMWN) === 2) {
+            if ((M + l) === 2) {
                 var VMV = matrix[i + 1][j - 1];
-                if ((VMV.wallFrame === frameId) && (VMV.wall === vV)) Wn += nNn;
+                if ((VMV.wallFrame === frameId) && (VMV.wall === vV)) id += nNn;
             }
-            var Wn = WMV[Wn];
-            matrix[i][j].drawFloor = wall.drawFloor[Wn];
-            return Wn;
+            var id = WMV[id];
+            matrix[i][j].drawFloor = wall.drawFloor[id];
+            return id;
         };
 
         function smallwallsfusion(player) {
@@ -13321,9 +13321,9 @@ try {
         };
 
 
-        function _buttonInv(wm, invtr, WX, WY, inventoryItemNumber, inventoryAmmoNumber) {
-            wm.pos.x = WX;
-            wm.pos.y = WY;
+        function _buttonInv(wm, invtr, wX, wY, inventoryItemNumber, inventoryAmmoNumber) {
+            wm.pos.x = wX;
+            wm.pos.y = wY;
             wm.draw();
             var item = INVENTORY[invtr[0]];
             var amount = invtr[1];
@@ -13334,7 +13334,7 @@ try {
                     };
                     inventoryItemNumber[amount].img.isLoaded = 1;
                 }
-                CanvasUtils.drawImageHd(inventoryItemNumber[amount], (WX / scaleby) + 53, (WY / scaleby) + 55, -0.5, 0, 0, 1);
+                CanvasUtils.drawImageHd(inventoryItemNumber[amount], (wX / scaleby) + 53, (wY / scaleby) + 55, -0.5, 0, 0, 1);
             }
             if ((item.bullet !== window.undefined) && (item.mMVwm === window.undefined)) {
                 var amount = invtr[3];
@@ -13344,23 +13344,23 @@ try {
                     };
                     inventoryAmmoNumber[amount].img.isLoaded = 1;
                 }
-                CanvasUtils.drawImageHd(inventoryAmmoNumber[amount], (WX / scaleby) + 53, (WY / scaleby) + 55, -0.5, 0, 0, 1);
+                CanvasUtils.drawImageHd(inventoryAmmoNumber[amount], (wX / scaleby) + 53, (wY / scaleby) + 55, -0.5, 0, 0, 1);
             }
             if (item.perish !== window.undefined) {
                 var VWNwv = window.Math.floor(invtr[3] / 12.8);
                 var img = wwvmV[VWNwv];
                 if (img.isLoaded !== 1) {
                     wwvmV[VWNwv] = CanvasUtils.loadImage(("img/rotten" + VWNwv) + ".png", img);
-                } else ctx.drawImage(img, WX + (0.5 * scaleby), WY, (scaleby * img.width) / 2, (scaleby * img.height) / 2);
+                } else ctx.drawImage(img, wX + (0.5 * scaleby), wY, (scaleby * img.width) / 2, (scaleby * img.height) / 2);
             }
         };
 
-        function NMMwN(Wn, WX, WY) {
-            if (wmvMm[Wn] === window.undefined) {
-                wmvMm[Wn] = window.document.createElement("canvas");
-                nmMMW[Wn] = wmvMm[Wn].getContext("2d");
-                var mWwVV = wmvMm[Wn];
-                var Nvmwn = nmMMW[Wn];
+        function NMMwN(id, wX, wY) {
+            if (wmvMm[id] === window.undefined) {
+                wmvMm[id] = window.document.createElement("canvas");
+                nmMMW[id] = wmvMm[id].getContext("2d");
+                var mWwVV = wmvMm[id];
+                var Nvmwn = nmMMW[id];
                 mWwVV.width = 400;
                 mWwVV.height = 148;
                 Nvmwn.clearRect(0, 0, 400, 148);
@@ -13369,10 +13369,10 @@ try {
                 Nvmwn.globalAlpha = 0.5;
                 Nvmwn.fill();
                 Nvmwn.globalAlpha = 1;
-                itemstatsfunc(nmMMW[Wn], Wn);
+                itemstatsfunc(nmMMW[id], id);
             }
             var SX = scaleby * 74;
-            ctx.drawImage(wmvMm[Wn], WX, WY, scaleby * 190, SX);
+            ctx.drawImage(wmvMm[id], wX, wY, scaleby * 190, SX);
         };
 
         function _Inventory(inventoryItemNumber, inventoryAmmoNumber, MmV, bagbutt) {
@@ -13388,8 +13388,8 @@ try {
             var SX = (nNMVM.height * scaleby) / 2;
             var _x = window.Math.max(300 * scaleby, (canw - (SY * len)) / 2);
             var _y = (canh - SX) - (5 * scaleby);
-            var WX = _x;
-            var WY = _y;
+            var wX = _x;
+            var wY = _y;
             var MVM = (5 * scaleby) + SY;
             if (len > 10) {
                 bagbutt.pos.x = canw - (69 * scaleby);
@@ -13400,18 +13400,18 @@ try {
             for (var i = 0; i < len; i++) {
                 var wm = inventory[i];
                 if (invtr[i][0] === 0) {
-                    wm.pos.x = WX;
-                    wm.pos.y = WY;
-                    ctx.drawImage(nNMVM, WX, WY, SY, SX);
-                } else _buttonInv(wm, invtr[i], WX, WY, inventoryItemNumber, inventoryAmmoNumber);
+                    wm.pos.x = wX;
+                    wm.pos.y = wY;
+                    ctx.drawImage(nNMVM, wX, wY, SY, SX);
+                } else _buttonInv(wm, invtr[i], wX, wY, inventoryItemNumber, inventoryAmmoNumber);
                 if (i === 9) {
-                    WX = bagbutt.pos.x - (5 * scaleby);
-                    WY = bagbutt.pos.y - MVM;
+                    wX = bagbutt.pos.x - (5 * scaleby);
+                    wY = bagbutt.pos.y - MVM;
                 } else if (i === 12) {
-                    WX -= MVM;
-                    WY = bagbutt.pos.y - MVM;
-                } else if (i > 9) WY -= MVM;
-                else WX += MVM;
+                    wX -= MVM;
+                    wY = bagbutt.pos.y - MVM;
+                } else if (i > 9) wY -= MVM;
+                else wX += MVM;
             }
             var drag = World.PLAYER.drag;
             if (((drag.begin === 1) && (Mouse.state === Mouse.__MOUSE_DOWN__)) && (Math2d.dist(drag.x, drag.y, Mouse.x, Mouse.y) > (4 * scaleby))) {
@@ -13431,7 +13431,7 @@ try {
             }
         };
 
-        function _GaugesAfter(WX, WY) {
+        function _GaugesAfter(wX, wY) {
             var level = World.PLAYER.level;
             if (NmWnM[level] === window.undefined) {
                 NmWnM[level] = {
@@ -13439,28 +13439,28 @@ try {
                 };
                 NmWnM[level].img.isLoaded = 1;
             }
-            CanvasUtils.drawImageHd(NmWnM[level], (WX / scaleby) + 234, (WY / scaleby) + 79, 0, 0, 0, 1);
+            CanvasUtils.drawImageHd(NmWnM[level], (wX / scaleby) + 234, (wY / scaleby) + 79, 0, 0, 0, 1);
             var rad = World.gauges.rad;
             var vW = 1 - (rad.current / rad._max);
-            CanvasUtils.drawImageHd(wmmvv, 38 + (WX / scaleby), 37 + (WY / scaleby), window.Math.PI * vW, 0, 0, 1);
+            CanvasUtils.drawImageHd(wmmvv, 38 + (wX / scaleby), 37 + (wY / scaleby), window.Math.PI * vW, 0, 0, 1);
         };
 
-        function _Gauges(WX, WY) {
+        function _Gauges(wX, wY) {
             var life = World.gauges.life;
             var vW = life.current / life._max;
-            CanvasUtils.fillRect(ctx, (WX / scaleby) + 14, (WY / scaleby) + 71, vW * 189, 16, lightgreen);
+            CanvasUtils.fillRect(ctx, (wX / scaleby) + 14, (wY / scaleby) + 71, vW * 189, 16, lightgreen);
             var food = World.gauges.food;
             var vW = food.current / food._max;
-            CanvasUtils.fillRect(ctx, (WX / scaleby) + 13, (WY / scaleby) + 162, 54, -vW * 63, orange);
+            CanvasUtils.fillRect(ctx, (wX / scaleby) + 13, (wY / scaleby) + 162, 54, -vW * 63, orange);
             var cold = World.gauges.cold;
             var vW = cold.current / cold._max;
-            CanvasUtils.fillRect(ctx, (WX / scaleby) + 81, (WY / scaleby) + 162, 54, -vW * 63, lightblue);
+            CanvasUtils.fillRect(ctx, (wX / scaleby) + 81, (wY / scaleby) + 162, 54, -vW * 63, lightblue);
             var stamina = World.gauges.stamina;
             var vW = stamina.current / stamina._max;
-            CanvasUtils.fillRect(ctx, (WX / scaleby) + 150, (WY / scaleby) + 162, 54, -vW * 63, yellow);
+            CanvasUtils.fillRect(ctx, (wX / scaleby) + 150, (wY / scaleby) + 162, 54, -vW * 63, yellow);
             var xp = World.gauges.xp;
             var vW = xp.current / xp._max;
-            CanvasUtils.fillRect(ctx, (WX / scaleby) + 226, (WY / scaleby) + 172, 16, -vW * 77, white);
+            CanvasUtils.fillRect(ctx, (wX / scaleby) + 226, (wY / scaleby) + 172, 16, -vW * 77, white);
             var wVnVV = World.updateHour();
             var img;
             var wnvmV;
@@ -13482,12 +13482,12 @@ try {
             }
             var SY = (scaleby * img.width) / 2;
             var SX = (scaleby * img.height) / 2;
-            ctx.drawImage(img, WX + (100 * scaleby), WY + (14 * scaleby), SY, SX);
-            CanvasUtils.drawImageHd(wnvmV, 144.5 + (WX / scaleby), (WY / scaleby) + 56, wVnVV * mWvNn, 0, 0, 1);
+            ctx.drawImage(img, wX + (100 * scaleby), wY + (14 * scaleby), SY, SX);
+            CanvasUtils.drawImageHd(wnvmV, 144.5 + (wX / scaleby), (wY / scaleby) + 56, wVnVV * mWvNn, 0, 0, 1);
         };
 
 
-        function _Leaderboard(WX, WY) {
+        function _Leaderboard(wX, wY) {
             var leaderboard = World.leaderboard;
             var players = World.players;
             var nWnWm = -1;
@@ -13529,21 +13529,21 @@ try {
                 }
                 context2dF.drawImage(PLAYER.scoreLabel, 484, 662, PLAYER.scoreLabel.width, PLAYER.scoreLabel.height);
             }
-            ctx.drawImage(canvasF, WX, WY, (Vwwmw / 3) * scaleby, (nvnwM / 3) * scaleby);
+            ctx.drawImage(canvasF, wX, wY, (Vwwmw / 3) * scaleby, (nvnwM / 3) * scaleby);
         };
 
 
         function _BigMinimap(vWvWN, closeBox) {        
             var SY = vWw * scaleby;
             var SX = wvNVM * scaleby;
-            var WX = canw2 - (SY / 2);
-            var WY = window.Math.max(canh2 - (SX / 2), 0);
-            var wVw = WX / scaleby;
-            var VVm = WY / scaleby;
+            var wX = canw2 - (SY / 2);
+            var wY = window.Math.max(canh2 - (SX / 2), 0);
+            var wVw = wX / scaleby;
+            var VVm = wY / scaleby;
             var mvMnV = vWw / WMwnW;
             var _buttonInv = wvNVM / mmVNm;
-            closeBox.pos.x = window.Math.floor((WX + SY) + (0 * scaleby));
-            closeBox.pos.y = window.Math.floor(WY + (0 * scaleby));
+            closeBox.pos.x = window.Math.floor((wX + SY) + (0 * scaleby));
+            closeBox.pos.y = window.Math.floor(wY + (0 * scaleby));
             vWvWN.draw();
 
 
@@ -13551,12 +13551,12 @@ try {
             var cities = World.PLAYER.cities;
             var len = cities.length / 2;
             if (len > 0) {
-                _y = window.Math.floor((WY / scaleby) + window.Math.min(window.Math.max(10, cities[0] * _buttonInv), 400));
-                _x = window.Math.floor((WX / scaleby) + window.Math.min(window.Math.max(10, cities[1] * mvMnV), 400));
+                _y = window.Math.floor((wY / scaleby) + window.Math.min(window.Math.max(10, cities[0] * _buttonInv), 400));
+                _x = window.Math.floor((wX / scaleby) + window.Math.min(window.Math.max(10, cities[1] * mvMnV), 400));
                 CanvasUtils.drawImageHd(cityiconmap, _x, _y, 0, 0, 0, 1);
                 for (var i = 1; i < len; i++) {
-                    _y = window.Math.floor((WY / scaleby) + window.Math.min(window.Math.max(10, cities[i * 2] * _buttonInv), 400));
-                    _x = window.Math.floor((WX / scaleby) + window.Math.min(window.Math.max(10, cities[1 + (i * 2)] * mvMnV), 400));
+                    _y = window.Math.floor((wY / scaleby) + window.Math.min(window.Math.max(10, cities[i * 2] * _buttonInv), 400));
+                    _x = window.Math.floor((wX / scaleby) + window.Math.min(window.Math.max(10, cities[1 + (i * 2)] * mvMnV), 400));
                     CanvasUtils.drawImageHd(houseiconmap, _x, _y, 0, 0, 0, 1);
                 }
             }
@@ -13582,13 +13582,13 @@ try {
                     var _y = window.Math.floor(VVm + window.Math.min(window.Math.max(10, PLAYER.ry * mvMnV), 400));
                     var angle;
                     if (frameId === (PLAYER.frameId + 1)) angle = players[PLAYER.locatePlayer].angle;
-                    else angle = PLAYER.x % WNVNM;
+                    else angle = PLAYER.x % PI2;
                     CanvasUtils.drawImageHd(arrowiconmap, _x, _y, angle, 0, 0, 1);
                 }
             }
 
-            var _x = window.Math.floor((WX / scaleby) + window.Math.min(window.Math.max(10, NmM * mvMnV), 400));
-            var _y = window.Math.floor((WY / scaleby) + window.Math.min(window.Math.max(10, WWV * _buttonInv), 400));
+            var _x = window.Math.floor((wX / scaleby) + window.Math.min(window.Math.max(10, NmM * mvMnV), 400));
+            var _y = window.Math.floor((wY / scaleby) + window.Math.min(window.Math.max(10, WWV * _buttonInv), 400));
             CanvasUtils.drawImageHd(arrowiconmap2, _x, _y, Mouse.angle, 0, 0, 1);
 
             if (World.PLAYER.badKarmaDelay > 0) {
@@ -13615,15 +13615,15 @@ try {
             }
         };
 
-        function nmwmn(WX, WY) {
+        function nmwmn(wX, wY) {
             if (teambox.isLoaded !== 1) {
                 teambox = CanvasUtils.loadImage(invbox, teambox);
                 return;
             }
-            Game.acceptMember.pos.x = WX + (241 * scaleby);
-            Game.acceptMember.pos.y = WY + (6 * scaleby);
-            Game.refuseMember.pos.x = WX + (290 * scaleby);
-            Game.refuseMember.pos.y = WY + (6 * scaleby);
+            Game.acceptMember.pos.x = wX + (241 * scaleby);
+            Game.acceptMember.pos.y = wY + (6 * scaleby);
+            Game.refuseMember.pos.x = wX + (290 * scaleby);
+            Game.refuseMember.pos.y = wY + (6 * scaleby);
             if ((World.PLAYER.teamJoin !== 0) || (World.PLAYER.teamEffect > 0)) {
                 if (World.PLAYER.teamJoin !== 0) {
                     if (World.PLAYER.teamEffect < 333) {
@@ -13636,19 +13636,19 @@ try {
                 }
                 var PLAYER = World.players[World.PLAYER.teamJoin];
                 if (PLAYER.nicknameLabel === null) PLAYER.nicknameLabel = GUI.renderText(PLAYER.nickname, "'Viga', sans-serif", "#FFFFFF", 38, 400, window.undefined, 16, 25, window.undefined, window.undefined, window.undefined, window.undefined, "#000000", 12);
-                ctx.drawImage(teambox, WX, WY, scaleby * teambox.wh, scaleby * teambox.h2);
-                if ((PLAYER.nicknameLabel.width !== 0) && (PLAYER.nicknameLabel.height !== 0)) ctx.drawImage(PLAYER.nicknameLabel, WX + (20 * scaleby), WY + (6 * scaleby), PLAYER.nicknameLabel.wh * scaleby, PLAYER.nicknameLabel.h2 * scaleby);
+                ctx.drawImage(teambox, wX, wY, scaleby * teambox.wh, scaleby * teambox.h2);
+                if ((PLAYER.nicknameLabel.width !== 0) && (PLAYER.nicknameLabel.height !== 0)) ctx.drawImage(PLAYER.nicknameLabel, wX + (20 * scaleby), wY + (6 * scaleby), PLAYER.nicknameLabel.wh * scaleby, PLAYER.nicknameLabel.h2 * scaleby);
                 Game.acceptMember.draw();
                 Game.refuseMember.draw();
                 if (World.PLAYER.teamEffect < 333) ctx.globalAlpha = 1;
             }
         };
 
-        function timeleftfunc(WX, WY, wNWnn) {
+        function timeleftfunc(wX, wY, wNWnn) {
             World.PLAYER.nextAreas -= delta;
             var nnW = window.Math.max(0, window.Math.floor(World.PLAYER.nextAreas / 1000));
             if (nnW < 3000) {
-                CanvasUtils.drawImageHd(timeleft, (WX / scaleby) + 51, (WY / scaleby) + 145, 0, 0, 0, 1);
+                CanvasUtils.drawImageHd(timeleft, (wX / scaleby) + 51, (wY / scaleby) + 145, 0, 0, 0, 1);
                 if (wVVVn[nnW] === window.undefined) {
                     if ((wNWnn === 1) && (wVVVn[nnW + 1] !== window.undefined)) wVVVn[nnW + 1] = window.undefined;
                     var wWvWM = window.Math.floor(nnW / 60);
@@ -13658,23 +13658,23 @@ try {
                     };
                     wVVVn[nnW].img.isLoaded = 1;
                 }
-                CanvasUtils.drawImageHd(wVVVn[nnW], (WX / scaleby) + 60, (WY / scaleby) + 145, 0, 0, 0, 1);
+                CanvasUtils.drawImageHd(wVVVn[nnW], (wX / scaleby) + 60, (wY / scaleby) + 145, 0, 0, 0, 1);
             }
         };
 
-        function vmnWW(WX, WY) {
-            CanvasUtils.drawImageHd(WvWnV, ((WX / scaleby) + canwns) - 63, 25 + (WY / scaleby), 0, 0, 0, 1);
+        function vmnWW(wX, wY) {
+            CanvasUtils.drawImageHd(WvWnV, ((wX / scaleby) + canwns) - 63, 25 + (wY / scaleby), 0, 0, 0, 1);
             if (playerAlive[World.playerAlive] === window.undefined) {
                 playerAlive[World.playerAlive] = {
                     img: GUI.renderText("#" + World.playerAlive, "'Viga', sans-serif", "#FFFFFF", 60, 140)
                 };
                 playerAlive[World.playerAlive].img.isLoaded = 1;
             }
-            CanvasUtils.drawImageHd(playerAlive[World.playerAlive], ((WX / scaleby) + canwns) - 50, 25 + (WY / scaleby), 0, 0, 0, 1);
+            CanvasUtils.drawImageHd(playerAlive[World.playerAlive], ((wX / scaleby) + canwns) - 50, 25 + (wY / scaleby), 0, 0, 0, 1);
         };
 
-        function _Minimap(WX, WY) {
-            nmwmn(WX + (250 * scaleby), WY);
+        function _Minimap(wX, wY) {
+            nmwmn(wX + (250 * scaleby), wY);
             if (minimap.isLoaded !== 1) {
                 minimap = CanvasUtils.loadImage(bordermapbig, minimap);
                 return;
@@ -13685,11 +13685,11 @@ try {
             var sx = window.Math.min(window.Math.max(0, mnmvW - WWn), vvVMV);
             var sy = window.Math.min(window.Math.max(0, vNwWN - WWn), vvVMV);
             var SY = WWn * scaleby;
-            ctx.drawImage(minimap, sx, sy, mVmWm, mVmWm, WX, WY, SY, SY);
+            ctx.drawImage(minimap, sx, sy, mVmWm, mVmWm, wX, wY, SY, SY);
             
             if (World.gameMode === World.__GHOUL__) {
-                if (World.PLAYER.ghoul !== 0) vmnWW(-255, WY);
-                else timeleftfunc(WX + 50, WY, 1);
+                if (World.PLAYER.ghoul !== 0) vmnWW(-255, wY);
+                else timeleftfunc(wX + 50, wY, 1);
             }
 
 
@@ -13706,13 +13706,13 @@ try {
                     CanvasUtils.drawImageHd(WWmMW, canw2ns, 58, 0, 0, 0, 1);
                     ctx.globalAlpha = 1;
                 }
-                ctx.drawImage(MWNMV.img, sx / 2, sy / 2, WWn, WWn, WX, WY, SY, SY);
+                ctx.drawImage(MWNMV.img, sx / 2, sy / 2, WWn, WWn, wX, wY, SY, SY);
                 ctx.globalAlpha = (mWWwn > 600) ? MathUtils.Ease.inOutQuad((1200 - mWWwn) / 600) : MathUtils.Ease.inOutQuad(mWWwn / 600);
                 mWWwn = (mWWwn + delta) % 1200;
-                ctx.drawImage(MMvWn.img, sx / 2, sy / 2, WWn, WWn, WX, WY, SY, SY);
+                ctx.drawImage(MMvWn.img, sx / 2, sy / 2, WWn, WWn, wX, wY, SY, SY);
                 ctx.globalAlpha = 1;
-                vmnWW(0, WY);
-                timeleftfunc(WX, WY, 0);
+                vmnWW(0, wY);
+                timeleftfunc(wX, wY, 0);
             } else if (World.PLAYER.ghoul === 0) {
                 if (World.gauges.rad.decrease === 1) {
                     WNmVW = window.Math.min(1000, WNmVW + delta);
@@ -13735,8 +13735,8 @@ try {
             if (sy >= vvVMV) vNwWN = window.Math.min(((vNwWN - VnvWV) / 2) + nWWwM, WWn - 8);
             else if (vNwWN < WWn) vNwWN = window.Math.max(15, vNwWN / 2);
             else vNwWN = nWWwM;
-            var wVw = WX / scaleby;
-            var VVm = WY / scaleby;
+            var wVw = wX / scaleby;
+            var VVm = wY / scaleby;
 
 
 
@@ -13756,7 +13756,7 @@ try {
                         PLAYER.x = WMv.x;
                         PLAYER.y = WMv.y;
                         angle = WMv.angle;
-                    } else var angle = PLAYER.x % WNVNM;
+                    } else var angle = PLAYER.x % PI2;
                     var _x = wVw + window.Math.max(15, window.Math.min(WWn - 15, (mnmvW - 3) + ((PLAYER.rx - NmM) * nwMnv)));
                     var _y = VVm + window.Math.max(15, window.Math.min(WWn - 15, (vNwWN - 3) + ((PLAYER.ry - WWV) * nwMnv)));
                     CanvasUtils.drawImageHd(arrowiconmap, _x, _y, angle, 0, 0, 1);
@@ -13785,10 +13785,10 @@ try {
             if ((World.PLAYER.ghoul === 0) && ((World.PLAYER.skillPoint > 0) || (wnW.effect > 0))) {
                 var move = (wnW.move + delta) % 1000;
                 wnW.move = move;
-                if (wnW.move < 500) WX += 260 + (15 * MathUtils.Ease.inOutQuad(move / 500));
-                else WX += 260 + (15 * MathUtils.Ease.inOutQuad((1000 - move) / 500));
+                if (wnW.move < 500) wX += 260 + (15 * MathUtils.Ease.inOutQuad(move / 500));
+                else wX += 260 + (15 * MathUtils.Ease.inOutQuad((1000 - move) / 500));
                 ctx.globalAlpha = MathUtils.Ease.inQuad(wnW.effect);
-                CanvasUtils.drawImageHd(wnW, WX, WY + 31, 0, 0, 0, 1);
+                CanvasUtils.drawImageHd(wnW, wX, wY + 31, 0, 0, 0, 1);
                 ctx.globalAlpha = 1;
                 if ((World.PLAYER.skillPoint <= 0) || (Game.getSkillBoxState() === 1)) wnW.effect = window.Math.max(0, wnW.effect - (delta / 500));
                 else if (wnW.effect < 1) wnW.effect = window.Math.min(1, wnW.effect + (delta / 500));
@@ -13800,8 +13800,8 @@ try {
         var nNmVw = null;
 
         function _Team(closeBox, VWwmm, mMnVm, wwVMn, NnvmN, mvNMv, WvvvV, deleteTeam) {
-            var WX = 0;
-            var WY = 0;
+            var wX = 0;
+            var wY = 0;
             if (World.PLAYER.team === -1) {
                 var teamNameValid = 1;
                 if (Game.teamName.length === 0) teamNameValid = 0;
@@ -13814,21 +13814,21 @@ try {
                     }
                 }
                 World.PLAYER.teamNameValid = teamNameValid;
-                WX = VWwmm.pos.x;
-                WY = VWwmm.pos.y;
+                wX = VWwmm.pos.x;
+                wY = VWwmm.pos.y;
                 VWwmm.draw();
-                closeBox.pos.x = WX + (513 * scaleby);
-                closeBox.pos.y = WY + (2 * scaleby);
+                closeBox.pos.x = wX + (513 * scaleby);
+                closeBox.pos.y = wY + (2 * scaleby);
                 if (teamName !== Game.teamName) {
                     teamName = Game.teamName;
                     nNmVw = GUI.renderText(teamName, "'Viga', sans-serif", "#FFFFFF", 30, 400);
                 }
                 if ((nNmVw !== null) && (teamName.length !== 0)) {
-                    CanvasUtils.fillRect(ctx, (WX / scaleby) + 39, (WY / scaleby) + 14, 122, 16.5, "#000000");
-                    ctx.drawImage(nNmVw, WX + (35 * scaleby), WY + (14.5 * scaleby), nNmVw.wh * scaleby, nNmVw.h2 * scaleby);
+                    CanvasUtils.fillRect(ctx, (wX / scaleby) + 39, (wY / scaleby) + 14, 122, 16.5, "#000000");
+                    ctx.drawImage(nNmVw, wX + (35 * scaleby), wY + (14.5 * scaleby), nNmVw.wh * scaleby, nNmVw.h2 * scaleby);
                 }
-                NnvmN.pos.x = WX + (172 * scaleby);
-                NnvmN.pos.y = WY + (6 * scaleby);
+                NnvmN.pos.x = wX + (172 * scaleby);
+                NnvmN.pos.y = wY + (6 * scaleby);
                 if ((teamNameValid === 0) || ((window.Date.now() - World.PLAYER.teamCreateDelay) < 30500)) {
                     NnvmN.setState(GUI.__BUTTON_OUT__);
                     ctx.globalAlpha = 0.5;
@@ -13840,10 +13840,10 @@ try {
                     var team = World.teams[i];
                     if (team.leader === 0) continue;
                     if (team.label === null) team.label = GUI.renderText(team.name, "'Viga', sans-serif", "#FFFFFF", 30, 400);
-                    ctx.drawImage(team.label, WX + ((20 + ((j % 3) * 163)) * scaleby), WY + ((58.5 + (window.Math.floor(j / 3) * 36)) * scaleby), team.label.wh * scaleby, team.label.h2 * scaleby);
+                    ctx.drawImage(team.label, wX + ((20 + ((j % 3) * 163)) * scaleby), wY + ((58.5 + (window.Math.floor(j / 3) * 36)) * scaleby), team.label.wh * scaleby, team.label.h2 * scaleby);
                     var wm = Game.join[j];
-                    wm.pos.x = WX + ((84 + ((j % 3) * 163)) * scaleby);
-                    wm.pos.y = WY + ((48 + (window.Math.floor(j / 3) * 36)) * scaleby);
+                    wm.pos.x = wX + ((84 + ((j % 3) * 163)) * scaleby);
+                    wm.pos.y = wY + ((48 + (window.Math.floor(j / 3) * 36)) * scaleby);
                     if ((window.Date.now() - World.PLAYER.teamDelay) < 10500) {
                         wm.setState(GUI.__BUTTON_OUT__);
                         ctx.globalAlpha = 0.5;
@@ -13853,36 +13853,36 @@ try {
                     j++;
                 }
             } else {
-                WX = mMnVm.pos.x;
-                WY = mMnVm.pos.y;
+                wX = mMnVm.pos.x;
+                wY = mMnVm.pos.y;
                 var team = World.teams[World.PLAYER.team];
                 if (team.label === null) team.label = GUI.renderText(team.name, "'Viga', sans-serif", "#FFFFFF", 30, 400);
-                ctx.drawImage(team.label, WX + (144 * scaleby), WY + (13 * scaleby), team.label.wh * scaleby, team.label.h2 * scaleby);
+                ctx.drawImage(team.label, wX + (144 * scaleby), wY + (13 * scaleby), team.label.wh * scaleby, team.label.h2 * scaleby);
                 mMnVm.draw();
-                closeBox.pos.x = WX + (512 * scaleby);
-                closeBox.pos.y = WY + (34.5 * scaleby);
+                closeBox.pos.x = wX + (512 * scaleby);
+                closeBox.pos.y = wY + (34.5 * scaleby);
                 if (World.PLAYER.teamLeader === 1) {
                     if (World.PLAYER.teamLocked === 0) {
-                        mvNMv.pos.x = WX + (259 * scaleby);
-                        mvNMv.pos.y = WY + (5 * scaleby);
+                        mvNMv.pos.x = wX + (259 * scaleby);
+                        mvNMv.pos.y = wY + (5 * scaleby);
                         mvNMv.draw();
                     } else {
-                        WvvvV.pos.x = WX + (259 * scaleby);
-                        WvvvV.pos.y = WY + (5 * scaleby);
+                        WvvvV.pos.x = wX + (259 * scaleby);
+                        WvvvV.pos.y = wY + (5 * scaleby);
                         WvvvV.draw();
                     }
-                    deleteTeam.pos.x = WX + (311.5 * scaleby);
-                    deleteTeam.pos.y = WY + (5 * scaleby);
+                    deleteTeam.pos.x = wX + (311.5 * scaleby);
+                    deleteTeam.pos.y = wY + (5 * scaleby);
                     deleteTeam.draw();
                     var j = 0;
                     for (var i = 0; i < World.players.length; i++) {
                         var PLAYER = World.players[i];
                         if ((team.uid !== PLAYER.teamUid) || (PLAYER.team !== team.id)) continue;
                         if (PLAYER.nicknameLabel === null) PLAYER.nicknameLabel = GUI.renderText(PLAYER.nickname, "'Viga', sans-serif", "#FFFFFF", 38, 400, window.undefined, 16, 25, window.undefined, window.undefined, window.undefined, window.undefined, "#000000", 12);
-                        if ((PLAYER.nicknameLabel.width !== 0) && (PLAYER.nicknameLabel.height !== 0)) ctx.drawImage(PLAYER.nicknameLabel, WX + ((26 + ((j % 3) * 166.5)) * scaleby), WY + ((53 + (window.Math.floor(j / 3) * 29.5)) * scaleby), (PLAYER.nicknameLabel.wh * scaleby) / 2.2, (PLAYER.nicknameLabel.h2 * scaleby) / 2.2);
+                        if ((PLAYER.nicknameLabel.width !== 0) && (PLAYER.nicknameLabel.height !== 0)) ctx.drawImage(PLAYER.nicknameLabel, wX + ((26 + ((j % 3) * 166.5)) * scaleby), wY + ((53 + (window.Math.floor(j / 3) * 29.5)) * scaleby), (PLAYER.nicknameLabel.wh * scaleby) / 2.2, (PLAYER.nicknameLabel.h2 * scaleby) / 2.2);
                         var wm = Game.kick[j];
-                        wm.pos.x = WX + ((132 + ((j % 3) * 166.5)) * scaleby);
-                        wm.pos.y = WY + ((48.5 + (window.Math.floor(j / 3) * 29.5)) * scaleby);
+                        wm.pos.x = wX + ((132 + ((j % 3) * 166.5)) * scaleby);
+                        wm.pos.y = wY + ((48.5 + (window.Math.floor(j / 3) * 29.5)) * scaleby);
                         if (((window.Date.now() - World.PLAYER.teamDelay) < 10500) || (PLAYER.id === World.PLAYER.id)) {
                             wm.setState(GUI.__BUTTON_OUT__);
                             ctx.globalAlpha = 0.5;
@@ -13892,15 +13892,15 @@ try {
                         j++;
                     }
                 } else {
-                    wwVMn.pos.x = WX + (311.5 * scaleby);
-                    wwVMn.pos.y = WY + (5 * scaleby);
+                    wwVMn.pos.x = wX + (311.5 * scaleby);
+                    wwVMn.pos.y = wY + (5 * scaleby);
                     wwVMn.draw();
                     var j = 0;
                     for (var i = 0; i < World.players.length; i++) {
                         var PLAYER = World.players[i];
                         if ((team.uid !== PLAYER.teamUid) || (PLAYER.team !== team.id)) continue;
                         if (PLAYER.nicknameLabel === null) PLAYER.nicknameLabel = GUI.renderText(PLAYER.nickname, "'Viga', sans-serif", "#FFFFFF", 38, 400, window.undefined, 16, 25, window.undefined, window.undefined, window.undefined, window.undefined, "#000000", 12);
-                        if ((PLAYER.nicknameLabel.width !== 0) && (PLAYER.nicknameLabel.height !== 0)) ctx.drawImage(PLAYER.nicknameLabel, WX + ((26 + ((j % 3) * 166.5)) * scaleby), WY + ((53 + (window.Math.floor(j / 3) * 29.5)) * scaleby), (PLAYER.nicknameLabel.wh * scaleby) / 2.2, (PLAYER.nicknameLabel.h2 * scaleby) / 2.2);
+                        if ((PLAYER.nicknameLabel.width !== 0) && (PLAYER.nicknameLabel.height !== 0)) ctx.drawImage(PLAYER.nicknameLabel, wX + ((26 + ((j % 3) * 166.5)) * scaleby), wY + ((53 + (window.Math.floor(j / 3) * 29.5)) * scaleby), (PLAYER.nicknameLabel.wh * scaleby) / 2.2, (PLAYER.nicknameLabel.h2 * scaleby) / 2.2);
                         j++;
                     }
                 }
@@ -13910,21 +13910,21 @@ try {
 
         function _Chest(chestbox, closeBox, inventoryItemNumber, inventoryAmmoNumber) {
             chestbox.draw();
-            var WX = chestbox.pos.x;
-            var WY = chestbox.pos.y;
+            var wX = chestbox.pos.x;
+            var wY = chestbox.pos.y;
 
-            closeBox.pos.x = WX + (161 * scaleby);
-            closeBox.pos.y = WY + (0 * scaleby);
+            closeBox.pos.x = wX + (161 * scaleby);
+            closeBox.pos.y = wY + (0 * scaleby);
             closeBox.draw();
 
             var chest = World.PLAYER.chest;
             var _x;
-            var _y = WY + (14 * scaleby);
+            var _y = wY + (14 * scaleby);
             var wm = Game.chest;
 
             for (var i = 0; i < 4; i++) {
                 if ((i % 2) === 0) {
-                    _x = WX + (12.5 * scaleby);
+                    _x = wX + (12.5 * scaleby);
                     if (i === 2) _y += 71 * scaleby;
                 } else _x += 72 * scaleby;
                 if (chest[i][0] === 0) continue;
@@ -13946,8 +13946,8 @@ try {
             if (nNnMV > 0) CanvasUtils.fillRect(ctx, mmMnV, canhns - nNnMV, (canwns - mmMnV) - Mwwnn, nNnMV, GROUND);
         };
 
-        function itemstatsfunc(wmvMm, Wn) {
-            var WvW = INVENTORY[Wn];
+        function itemstatsfunc(wmvMm, id) {
+            var WvW = INVENTORY[id];
             var NW = WvW.detail;
             var _name = GUI.renderText(NW.name, "'Viga', sans-serif", "#D3BB43", 30, 400);
             wmvMm.drawImage(_name, 20, 20);
@@ -13982,12 +13982,12 @@ try {
 
         function _Craft(craftbox, closeBox, wnV, NwnNV, VvvwN, nvmnM, craftList, preview, inventoryItemNumber, inventoryAmmoNumber, VWNWV, WmWwW, WwMvM, NWmNn) {
             craftbox.draw();
-            var WX = craftbox.pos.x;
-            var WY = craftbox.pos.y;
-            var wVw = WX / scaleby;
-            var VVm = WY / scaleby;
-            closeBox.pos.x = WX + (594 * scaleby);
-            closeBox.pos.y = WY + (0 * scaleby);
+            var wX = craftbox.pos.x;
+            var wY = craftbox.pos.y;
+            var wVw = wX / scaleby;
+            var VVm = wY / scaleby;
+            closeBox.pos.x = wX + (594 * scaleby);
+            closeBox.pos.y = wY + (0 * scaleby);
             closeBox.draw();
             var craftAvailable = World.PLAYER.craftAvailable;
             var recipeAvailable = World.PLAYER.recipeAvailable;
@@ -13996,8 +13996,8 @@ try {
             for (var i = 0; i < wnV.length; i++) {
                 var wm = wnV[i];
                 if (i === category) wm.setState(GUI.__BUTTON_CLICK__);
-                wm.pos.x = ((10 * scaleby) + WX) + ((i * 47) * scaleby);
-                wm.pos.y = WY - (40 * scaleby);
+                wm.pos.x = ((10 * scaleby) + wX) + ((i * 47) * scaleby);
+                wm.pos.y = wY - (40 * scaleby);
                 wm.draw();
             }
             var j = 0;
@@ -14005,13 +14005,13 @@ try {
                 if ((i === area) && (World.PLAYER.isInBuilding === 1)) {} else if ((i !== World.PLAYER.buildingArea) && (i !== 0)) continue;
                 var wm = craftList[i];
                 if (i === area) wm.setState(GUI.__BUTTON_CLICK__);
-                wm.pos.x = WX - (40 * scaleby);
-                wm.pos.y = ((10 * scaleby) + WY) + ((j * 43) * scaleby);
+                wm.pos.x = wX - (40 * scaleby);
+                wm.pos.y = ((10 * scaleby) + wY) + ((j * 43) * scaleby);
                 wm.draw();
                 j++;
             }
-            preview.pos.x = WX + (364 * scaleby);
-            preview.pos.y = WY + (27 * scaleby);
+            preview.pos.x = wX + (364 * scaleby);
+            preview.pos.y = wY + (27 * scaleby);
             preview.draw();
             var craft = Game.craft;
             var len = World.PLAYER.craftLen;
@@ -14032,8 +14032,8 @@ try {
             breath = window.Math.max(1, window.Math.min(1.08, breath));
             for (i = 0; i < len; i++) {
                 var wm = craft[i];
-                wm.pos.x = (mnMmm + WX) + ((i % 5) * MVM);
-                wm.pos.y = (NWNmV + WY) + (window.Math.floor(i / 5) * MVM);
+                wm.pos.x = (mnMmm + wX) + ((i % 5) * MVM);
+                wm.pos.y = (NWNmV + wY) + (window.Math.floor(i / 5) * MVM);
                 var MvmWv = craftAvailable[i];
                 if (MvmWv === 0) {
                     ctx.globalAlpha = 0.45;
@@ -14052,8 +14052,8 @@ try {
             var Nnv = 0;
             if (World.PLAYER.craftCategory === -1) {
                 if (World.PLAYER.isInBuilding === 1) {
-                    NwnNV.pos.x = WX + (454 * scaleby);
-                    NwnNV.pos.y = WY + (153 * scaleby);
+                    NwnNV.pos.x = wX + (454 * scaleby);
+                    NwnNV.pos.y = wY + (153 * scaleby);
                     if (((World.PLAYER.craftAvailable[World.PLAYER.craftIdSelected] === 1) && (World.PLAYER.building.len < 4)) && (World.PLAYER.building.fuel !== 0)) NwnNV.draw();
                     else {
                         ctx.globalAlpha = 0.5;
@@ -14062,8 +14062,8 @@ try {
                         ctx.globalAlpha = 1;
                     }
                 } else if (World.PLAYER.crafting === 0) {
-                    NwnNV.pos.x = WX + (454 * scaleby);
-                    NwnNV.pos.y = WY + (153 * scaleby);
+                    NwnNV.pos.x = wX + (454 * scaleby);
+                    NwnNV.pos.y = wY + (153 * scaleby);
                     if (World.PLAYER.craftAvailable[World.PLAYER.craftIdSelected] === 1) NwnNV.draw();
                     else {
                         ctx.globalAlpha = 0.5;
@@ -14072,8 +14072,8 @@ try {
                         ctx.globalAlpha = 1;
                     }
                 } else {
-                    VvvwN.pos.x = WX + (454 * scaleby);
-                    VvvwN.pos.y = WY + (153 * scaleby);
+                    VvvwN.pos.x = wX + (454 * scaleby);
+                    VvvwN.pos.y = wY + (153 * scaleby);
                     VvvwN.draw();
                 }
                 if (craftGauge.isLoaded !== 1) {
@@ -14096,8 +14096,8 @@ try {
                 Nnv = window.Math.min(1, window.Math.max(0, Nnv));
                 SY = (scaleby * craftGauge.width) / 2;
                 SX = (scaleby * craftGauge.height) / 2;
-                var posx = WX + (356 * scaleby);
-                var posy = WY + (206 * scaleby);
+                var posx = wX + (356 * scaleby);
+                var posy = wY + (206 * scaleby);
                 ctx.fillStyle = "#A29742";
                 MVM = 3 * scaleby;
                 mnMmm = 2 * MVM;
@@ -14106,8 +14106,8 @@ try {
                 
             } else {
                 var skill = World.PLAYER.craftAvailable[World.PLAYER.craftIdSelected];
-                nvmnM.pos.x = WX + (454 * scaleby);
-                nvmnM.pos.y = WY + (153 * scaleby);
+                nvmnM.pos.x = wX + (454 * scaleby);
+                nvmnM.pos.y = wY + (153 * scaleby);
                 if (skill === 1) nvmnM.draw();
                 else if (skill === 0) {
                     ctx.globalAlpha = 0.5;
@@ -14134,7 +14134,7 @@ try {
                             context2J.drawImage(Nvm, 20, MwNwV);
                         }
                     }
-                    ctx.drawImage(canvasJ, WX + (356 * scaleby), WY + (211 * scaleby), (scaleby * canvasJ.width) / 2, (scaleby * canvasJ.height) / 2);
+                    ctx.drawImage(canvasJ, wX + (356 * scaleby), wY + (211 * scaleby), (scaleby * canvasJ.width) / 2, (scaleby * canvasJ.height) / 2);
                 } else {
                     nvmnM.setState(GUI.__BUTTON_CLICK__);
                     nvmnM.draw();
@@ -14147,8 +14147,8 @@ try {
                     if (((area === AREAS.__SMELTER__) || (area === AREAS.__EXTRACTOR__)) || (area === AREAS.__AGITATOR__)) wm = WmWwW;
                     else if (area === AREAS.__TESLA__) wm = WwMvM;
                     else wm = VWNWV;
-                    wm.pos.x = WX + (532 * scaleby);
-                    wm.pos.y = WY + (153 * scaleby);
+                    wm.pos.x = wX + (532 * scaleby);
+                    wm.pos.y = wY + (153 * scaleby);
                     if (World.PLAYER.building.fuel !== 255) wm.draw();
                     else {
                         ctx.globalAlpha = 0.5;
@@ -14185,8 +14185,8 @@ try {
                         CanvasUtils.drawImageHd(vvNWN, (wm.pos.x / scaleby) + 20, (wm.pos.y / scaleby) + 20, 0, 0, 0, breath * 0.85);
                         ctx.globalAlpha = 1;
                     }
-                    wm.pos.x = (mnMmm + WX) + (i * MVM);
-                    wm.pos.y = NWNmV + WY;
+                    wm.pos.x = (mnMmm + wX) + (i * MVM);
+                    wm.pos.y = NWNmV + wY;
                     wm.draw();
                 }
             }
@@ -14197,8 +14197,8 @@ try {
             NWNmV = 151 * scaleby;
             for (var i = 0; i < len; i++) {
                 var wm = tools[i];
-                wm.pos.x = (mnMmm + WX) + (i * MVM);
-                wm.pos.y = NWNmV + WY;
+                wm.pos.x = (mnMmm + wX) + (i * MVM);
+                wm.pos.y = NWNmV + wY;
                 wm.draw();
             }
             if (World.PLAYER.skillPoint !== wmmVm) {
@@ -14207,17 +14207,17 @@ try {
                 var Nvm = GUI.renderText("SKILL POINT: " + wmmVm, "'Viga', sans-serif", "#FFFFFF", 32, 400);
                 context2H.drawImage(Nvm, 24, 12);
             }
-            ctx.drawImage(skillPoint, WX + (455 * scaleby), WY + (378 * scaleby), (scaleby * skillPoint.width) / 2, (scaleby * skillPoint.height) / 2);
+            ctx.drawImage(skillPoint, wX + (455 * scaleby), wY + (378 * scaleby), (scaleby * skillPoint.width) / 2, (scaleby * skillPoint.height) / 2);
             if (World.PLAYER.craftSelected !== mwwNm) {
                 context2dG.clearRect(0, 0, 280, 148);
                 mwwNm = World.PLAYER.craftSelected;
                 itemstatsfunc(context2dG, mwwNm);
             }
-            ctx.drawImage(canvasG, WX + (439 * scaleby), WY + (24 * scaleby), (scaleby * canvasG.width) / 2, (scaleby * canvasG.height) / 2);
+            ctx.drawImage(canvasG, wX + (439 * scaleby), wY + (24 * scaleby), (scaleby * canvasG.width) / 2, (scaleby * canvasG.height) / 2);
             if ((World.PLAYER.skillPoint > 0) || (wvV.effect > 0)) {
                 var move = (wvV.move + delta) % 1000;
                 wvV.move = move;
-                var _y = WY / scaleby;
+                var _y = wY / scaleby;
                 if (wvV.move < 500) _y += -62 - (15 * MathUtils.Ease.inOutQuad(move / 500));
                 else _y += -62 - (15 * MathUtils.Ease.inOutQuad((1000 - move) / 500));
                 ctx.globalAlpha = MathUtils.Ease.inQuad(wvV.effect);
@@ -14235,8 +14235,8 @@ try {
             NWNmV = 107 * scaleby;
             for (var i = 0; i < len; i++) {
                 var wm = recipe[i];
-                wm.pos.x = (mnMmm + WX) + (i * MVM);
-                wm.pos.y = NWNmV + WY;
+                wm.pos.x = (mnMmm + wX) + (i * MVM);
+                wm.pos.y = NWNmV + wY;
                 var amount = window.Math.abs(recipeAvailable[i]);
                 if (inventoryItemNumber[amount] === window.undefined) {
                     inventoryItemNumber[amount] = {
@@ -14259,57 +14259,57 @@ try {
 
         function _Config(WWmVM, nmvnW, wMMmv, NNWVW, nMmMw, vNVNN, wvmWv, WmWnm, VNNMW, NVVwW, closeBox, WVVMw, vnNWN, MnvNV) {
             WWmVM.draw();
-            var WX = WWmVM.pos.x;
-            var WY = WWmVM.pos.y;
-            closeBox.pos.x = WX + (265 * scaleby);
-            closeBox.pos.y = WY + (0 * scaleby);
+            var wX = WWmVM.pos.x;
+            var wY = WWmVM.pos.y;
+            closeBox.pos.x = wX + (265 * scaleby);
+            closeBox.pos.y = wY + (0 * scaleby);
             closeBox.draw();
-            nMmMw.pos.x = WX + (87 * scaleby);
-            nMmMw.pos.y = WY + (15 * scaleby);
+            nMmMw.pos.x = wX + (87 * scaleby);
+            nMmMw.pos.y = wY + (15 * scaleby);
             if (Keyboard.isAzerty() === 1) nMmMw.setState(GUI.__BUTTON_CLICK__);
             nMmMw.draw();
-            vNVNN.pos.x = WX + (173 * scaleby);
-            vNVNN.pos.y = WY + (15 * scaleby);
+            vNVNN.pos.x = wX + (173 * scaleby);
+            vNVNN.pos.y = wY + (15 * scaleby);
             if (Keyboard.isQwerty() === 1) vNVNN.setState(GUI.__BUTTON_CLICK__);
             vNVNN.draw();
-            NNWVW.pos.x = WX + (87 * scaleby);
-            NNWVW.pos.y = WY + (62 * scaleby);
+            NNWVW.pos.x = wX + (87 * scaleby);
+            NNWVW.pos.y = wY + (62 * scaleby);
             if (CanvasUtils.options.forceResolution === 3) NNWVW.setState(GUI.__BUTTON_CLICK__);
             NNWVW.draw();
-            wMMmv.pos.x = WX + (147 * scaleby);
-            wMMmv.pos.y = WY + (62 * scaleby);
+            wMMmv.pos.x = wX + (147 * scaleby);
+            wMMmv.pos.y = wY + (62 * scaleby);
             if (CanvasUtils.options.forceResolution === 2) wMMmv.setState(GUI.__BUTTON_CLICK__);
             wMMmv.draw();
-            nmvnW.pos.x = WX + (207 * scaleby);
-            nmvnW.pos.y = WY + (62 * scaleby);
+            nmvnW.pos.x = wX + (207 * scaleby);
+            nmvnW.pos.y = wY + (62 * scaleby);
             if (CanvasUtils.options.forceResolution === 1) nmvnW.setState(GUI.__BUTTON_CLICK__);
             nmvnW.draw();
-            wvmWv.pos.x = WX + (87 * scaleby);
-            wvmWv.pos.y = WY + (117 * scaleby);
+            wvmWv.pos.x = wX + (87 * scaleby);
+            wvmWv.pos.y = wY + (117 * scaleby);
             if (AudioUtils.options.isAudio === 1) wvmWv.setState(GUI.__BUTTON_CLICK__);
             wvmWv.draw();
-            WmWnm.pos.x = WX + (147 * scaleby);
-            WmWnm.pos.y = WY + (117 * scaleby);
+            WmWnm.pos.x = wX + (147 * scaleby);
+            WmWnm.pos.y = wY + (117 * scaleby);
             if (AudioUtils.options.isAudio === 0) WmWnm.setState(GUI.__BUTTON_CLICK__);
             WmWnm.draw();
-            VNNMW.pos.x = WX + (87 * scaleby);
-            VNNMW.pos.y = WY + (167 * scaleby);
+            VNNMW.pos.x = wX + (87 * scaleby);
+            VNNMW.pos.y = wY + (167 * scaleby);
             if (AudioUtils.options.isFx === 1) VNNMW.setState(GUI.__BUTTON_CLICK__);
             VNNMW.draw();
-            NVVwW.pos.x = WX + (147 * scaleby);
-            NVVwW.pos.y = WY + (167 * scaleby);
+            NVVwW.pos.x = wX + (147 * scaleby);
+            NVVwW.pos.y = wY + (167 * scaleby);
             if (AudioUtils.options.isFx === 0) NVVwW.setState(GUI.__BUTTON_CLICK__);
             NVVwW.draw();
-            MnvNV.pos.x = WX + (87 * scaleby);
-            MnvNV.pos.y = WY + (217 * scaleby);
+            MnvNV.pos.x = wX + (87 * scaleby);
+            MnvNV.pos.y = wY + (217 * scaleby);
             if (NwMVW === 0) MnvNV.setState(GUI.__BUTTON_CLICK__);
             MnvNV.draw();
-            vnNWN.pos.x = WX + (147 * scaleby);
-            vnNWN.pos.y = WY + (217 * scaleby);
+            vnNWN.pos.x = wX + (147 * scaleby);
+            vnNWN.pos.y = wY + (217 * scaleby);
             if (NwMVW === 1) vnNWN.setState(GUI.__BUTTON_CLICK__);
             vnNWN.draw();
-            WVVMw.pos.x = WX + (207 * scaleby);
-            WVVMw.pos.y = WY + (217 * scaleby);
+            WVVMw.pos.x = wX + (207 * scaleby);
+            WVVMw.pos.y = wY + (217 * scaleby);
             if (NwMVW === 2) WVVMw.setState(GUI.__BUTTON_CLICK__);
             WVVMw.draw();
         };
@@ -14339,9 +14339,9 @@ try {
                         if (effect < 0.25) ctx.globalAlpha = effect * 4;
                         else if (effect > 4.75) ctx.globalAlpha = window.Math.max((5 - effect) * 5, 0);
                         else ctx.globalAlpha = 1;
-                        var WY = 118;
+                        var wY = 118;
                         var img = PLAYER.label[i];
-                        ctx.drawImage(img, 0, 0, img.width, img.height, ((vertst + player.x) - (img.width / 4)) * scaleby, (((horist + player.y) - WY) - PLAYER.textMove[i]) * scaleby, (img.width / 2) * scaleby, (img.height / 2) * scaleby);
+                        ctx.drawImage(img, 0, 0, img.width, img.height, ((vertst + player.x) - (img.width / 4)) * scaleby, (((horist + player.y) - wY) - PLAYER.textMove[i]) * scaleby, (img.width / 2) * scaleby, (img.height / 2) * scaleby);
                         ctx.globalAlpha = 1;
                     }
                 }
@@ -14361,8 +14361,8 @@ try {
             if (((((player.extra & 255) === 16) && (World.PLAYER.admin !== 1)) && (player.pid !== World.PLAYER.id)) && (((PLAYER.team === -1) || (World.teams[PLAYER.team].uid !== PLAYER.teamUid)) || (World.PLAYER.team !== PLAYER.team))) return;
             if (PLAYER.nicknameLabel === null) PLAYER.nicknameLabel = GUI.renderText(PLAYER.nickname, "'Viga', sans-serif", "#FFFFFF", 38, 400, window.undefined, 16, 25, window.undefined, window.undefined, window.undefined, window.undefined, "#000000", 12);
             var img = PLAYER.nicknameLabel;
-            var WY = 90;
-            if (PLAYER.team === -1) ctx.drawImage(img, ((vertst + player.x) - (img.wh / 2)) * scaleby, ((horist + player.y) - WY) * scaleby, img.wh * scaleby, img.h2 * scaleby);
+            var wY = 90;
+            if (PLAYER.team === -1) ctx.drawImage(img, ((vertst + player.x) - (img.wh / 2)) * scaleby, ((horist + player.y) - wY) * scaleby, img.wh * scaleby, img.h2 * scaleby);
             else if (PLAYER.team !== -1) {
                 var team = World.teams[PLAYER.team];
                 if (team.uid === PLAYER.teamUid) {
@@ -14372,8 +14372,8 @@ try {
                         team.labelNickname = GUI.renderText(("[" + team.name) + "]", "'Viga', sans-serif", "#FFFFFF", 38, 400, window.undefined, 16, 25, window.undefined, window.undefined, window.undefined, window.undefined, "#000000", 12);
                     } else team.labelNickname = GUI.renderText(("[" + team.name) + "]", "'Viga', sans-serif", "#FFFFFF", 38, 400, window.undefined, 16, 25, window.undefined, window.undefined, window.undefined, window.undefined, "#000000", 12);
                     var wvMMv = team.labelNickname;
-                    ctx.drawImage(wvMMv, ((((vertst + player.x) - (img.wh / 2)) - (wvMMv.wh / 2)) - 0.5) * scaleby, ((horist + player.y) - WY) * scaleby, wvMMv.wh * scaleby, wvMMv.h2 * scaleby);
-                    if ((img.width !== 0) && (img.height !== 0)) ctx.drawImage(img, (((vertst + player.x) - (img.wh / 2)) + (wvMMv.wh / 2)) * scaleby, ((horist + player.y) - WY) * scaleby, img.wh * scaleby, img.h2 * scaleby);
+                    ctx.drawImage(wvMMv, ((((vertst + player.x) - (img.wh / 2)) - (wvMMv.wh / 2)) - 0.5) * scaleby, ((horist + player.y) - wY) * scaleby, wvMMv.wh * scaleby, wvMMv.h2 * scaleby);
+                    if ((img.width !== 0) && (img.height !== 0)) ctx.drawImage(img, (((vertst + player.x) - (img.wh / 2)) + (wvMMv.wh / 2)) * scaleby, ((horist + player.y) - wY) * scaleby, img.wh * scaleby, img.h2 * scaleby);
                 } else PLAYER.team = -1;
             }
         };
@@ -14405,26 +14405,26 @@ try {
                     } else vMnnw[_i][_j] = frameId;
                 }
             }
-            var WX = 0;
-            var WY = 0;
+            var wX = 0;
+            var wY = 0;
             var SX = 0;
             var SY = 0;
             if ((nMNww !== 0) || (WvMwV !== 0)) {
-                WX = (((tile.j + VwMWn) * __TILE_SIZE__) + vertst) * scaleby;
-                WY = (((tile.i + nVNNn) * __TILE_SIZE__) + horist) * scaleby;
+                wX = (((tile.j + VwMWn) * __TILE_SIZE__) + vertst) * scaleby;
+                wY = (((tile.i + nVNNn) * __TILE_SIZE__) + horist) * scaleby;
                 nVNNn *= 32;
                 VwMWn *= 32;
                 SX = (img.height - (nMNww * 32)) + nVNNn;
                 SY = (img.width - (WvMwV * 32)) + VwMWn;
             } else {
-                WX = (((tile.j + VwMWn) * __TILE_SIZE__) + vertst) * scaleby;
-                WY = (((tile.i + nVNNn) * __TILE_SIZE__) + horist) * scaleby;
+                wX = (((tile.j + VwMWn) * __TILE_SIZE__) + vertst) * scaleby;
+                wY = (((tile.i + nVNNn) * __TILE_SIZE__) + horist) * scaleby;
                 nVNNn *= 32;
                 VwMWn *= 32;
                 SX = img.height - nVNNn;
                 SY = img.width - VwMWn;
             }
-            ctx.drawImage(img, VwMWn, nVNNn, SY, SX, WX, WY, (SY * 3) * scaleby, (SX * 3) * scaleby);
+            ctx.drawImage(img, VwMWn, nVNNn, SY, SX, wX, wY, (SY * 3) * scaleby, (SX * 3) * scaleby);
         };
         
         function wNnvM() {
@@ -14463,10 +14463,10 @@ try {
                     var vWwvm = window.Math.min(canh4ns, canw4ns);
                     if (Mouse.dist > vWwvm) vWwvm = WwmVw * window.Math.min((Mouse.dist - vWwvm) / vWwvm, 1);
                     else vWwvm = 0;
-                    var WX = vWwvm * window.Math.cos(Mouse.angle);
-                    var WY = vWwvm * window.Math.sin(Mouse.angle);
-                    vvWnv = CanvasUtils.lerp(vvWnv, WX, WMNWw);
-                    Nvmmn = CanvasUtils.lerp(Nvmmn, WY, WMNWw);
+                    var wX = vWwvm * window.Math.cos(Mouse.angle);
+                    var wY = vWwvm * window.Math.sin(Mouse.angle);
+                    vvWnv = CanvasUtils.lerp(vvWnv, wX, WMNWw);
+                    Nvmmn = CanvasUtils.lerp(Nvmmn, wY, WMNWw);
                     var nvVvv = 0;
                     var WvnMn = 0;
                     if (Render.shake > 0) {
@@ -14524,20 +14524,20 @@ try {
                 return;
             }
             ctx.globalAlpha = World.PLAYER.grid / Mvvwv;
-            var WY = scaleby * (((World.PLAYER.iGrid * __TILE_SIZE__) + horist) + __TILE_SIZE2__);
-            var WX = scaleby * (((World.PLAYER.jGrid * __TILE_SIZE__) + vertst) + __TILE_SIZE2__);
+            var wY = scaleby * (((World.PLAYER.iGrid * __TILE_SIZE__) + horist) + __TILE_SIZE2__);
+            var wX = scaleby * (((World.PLAYER.jGrid * __TILE_SIZE__) + vertst) + __TILE_SIZE2__);
             var SY = (scaleby * wWNmv.width) / 2;
             var SX = (scaleby * wWNmv.height) / 2;
-            ctx.drawImage(wWNmv, WX - (SY / 2), WY - (SX / 2), SY, SX);
+            ctx.drawImage(wWNmv, wX - (SY / 2), wY - (SX / 2), SY, SX);
             ctx.globalAlpha = 1;
             for (var i = 0; i < World.PLAYER.gridPrev.length; i++) {
                 if (World.PLAYER.gridPrev[i] > 0) {
                     ctx.globalAlpha = World.PLAYER.gridPrev[i] / Mvvwv;
-                    var WY = scaleby * (((World.PLAYER.iGridPrev[i] * __TILE_SIZE__) + horist) + __TILE_SIZE2__);
-                    var WX = scaleby * (((World.PLAYER.jGridPrev[i] * __TILE_SIZE__) + vertst) + __TILE_SIZE2__);
+                    var wY = scaleby * (((World.PLAYER.iGridPrev[i] * __TILE_SIZE__) + horist) + __TILE_SIZE2__);
+                    var wX = scaleby * (((World.PLAYER.jGridPrev[i] * __TILE_SIZE__) + vertst) + __TILE_SIZE2__);
                     var SY = (scaleby * wWNmv.width) / 2;
                     var SX = (scaleby * wWNmv.height) / 2;
-                    ctx.drawImage(wWNmv, WX - (SY / 2), WY - (SX / 2), SY, SX);
+                    ctx.drawImage(wWNmv, wX - (SY / 2), wY - (SX / 2), SY, SX);
                     ctx.globalAlpha = 1;
                 }
             }
@@ -14608,25 +14608,25 @@ try {
                     }
                     if (effect.delay <= 0) {
                         effect.delay = 750;
-                        effect.angle = window.Math.random() * WNVNM;
+                        effect.angle = window.Math.random() * PI2;
                         effect.x = player.x;
                         effect.y = player.y;
                         effect.size = 1 + (window.Math.random() * 0.8);
                     } else effect.delay -= delta;
                     var vW = MathUtils.Ease.outQuart(window.Math.max(0, effect.delay / 750));
-                    var VwW = (((scaleby * (effect.size + 1)) * vW) * img.width) / 7;
-                    var wh = -VwW / 2;
+                    var w = (((scaleby * (effect.size + 1)) * vW) * img.width) / 7;
+                    var wh = -w / 2;
                     ctx.save();
                     ctx.translate((vertst + effect.x) * scaleby, (horist + effect.y) * scaleby);
                     ctx.rotate(effect.angle);
                     ctx.globalAlpha = window.Math.max(0, vW * vW);
-                    ctx.drawImage(img, wh, wh, VwW, VwW);
+                    ctx.drawImage(img, wh, wh, w, w);
                     ctx.restore();
                 }
             }
         };
         
-        function Wvmnw(mVn, weapon, wVn, player, imgMovement, WX, WY) {
+        function Wvmnw(mVn, weapon, wVn, player, imgMovement, wX, wY) {
             var PLAYER = World.players[player.pid];
             var WMW = 0;
             var repellent = PLAYER.repellent - Render.globalTime;
@@ -14682,11 +14682,11 @@ try {
             var breath = weapon.breath * ((PLAYER.breath < 750) ? (PLAYER.breath / 750) : (1 - ((PLAYER.breath - 750) / 750)));
             var move = weapon.move * ((PLAYER.move < 400) ? (PLAYER.move / 400) : (1 - ((PLAYER.move - 400) / 400)));
             var MVn = (wVn.rightArm === window.undefined) ? skin.rightArm : wVn.rightArm;
-            CanvasUtils.drawImageHd(MVn, WX, WY, Nmm.angle + player.angle, ((Nmm.x + (move * PLAYER.orientation)) + recoil) + breath, Nmm.y, imgMovement);
+            CanvasUtils.drawImageHd(MVn, wX, wY, Nmm.angle + player.angle, ((Nmm.x + (move * PLAYER.orientation)) + recoil) + breath, Nmm.y, imgMovement);
             MVn = (wVn.leftArm === window.undefined) ? skin.leftArm : wVn.leftArm;
-            CanvasUtils.drawImageHd(MVn, WX, WY, -VnN.angle + player.angle, ((VnN.x + (move * PLAYER.orientation)) + recoil) + breath, VnN.y, imgMovement);
+            CanvasUtils.drawImageHd(MVn, wX, wY, -VnN.angle + player.angle, ((VnN.x + (move * PLAYER.orientation)) + recoil) + breath, VnN.y, imgMovement);
             var item = weapon.weapon;
-            CanvasUtils.drawImageHd(item, WX, WY, player.angle, ((item.x + (move * PLAYER.orientation)) + breath) + recoil, item.y, imgMovement);
+            CanvasUtils.drawImageHd(item, wX, wY, player.angle, ((item.x + (move * PLAYER.orientation)) + breath) + recoil, item.y, imgMovement);
             if (player.hurt2 > 0) {
                 var mnM = 1;
                 player.hurt2 -= delta;
@@ -14697,7 +14697,7 @@ try {
                     mnM += (1 - vW) * 0.2;
                 }
                 ctx.globalAlpha = window.Math.min(1, window.Math.max(0, vW));
-                CanvasUtils.drawImageHd(mVn.food, WX, WY, player.angle, 0, 0, mnM);
+                CanvasUtils.drawImageHd(mVn.food, wX, wY, player.angle, 0, 0, mnM);
                 ctx.globalAlpha = 1;
             }
             if (player.hurt > 0) {
@@ -14709,10 +14709,10 @@ try {
                     vW = MathUtils.Ease.outQuad(player.hurt / 150);
                     mnM += (1 - vW) * 0.2;
                 }
-                WX += (window.Math.cos(player.hurtAngle) * vW) * 3;
-                WY += (window.Math.sin(player.hurtAngle) * vW) * 3;
+                wX += (window.Math.cos(player.hurtAngle) * vW) * 3;
+                wY += (window.Math.sin(player.hurtAngle) * vW) * 3;
                 ctx.globalAlpha = window.Math.min(1, window.Math.max(0, vW));
-                CanvasUtils.drawImageHd(mVn.hurt, WX, WY, player.angle, 0, 0, mnM);
+                CanvasUtils.drawImageHd(mVn.hurt, wX, wY, player.angle, 0, 0, mnM);
                 ctx.globalAlpha = 1;
             }
             if (player.heal > 0) {
@@ -14724,14 +14724,14 @@ try {
                     mnM += (1 - vW) * 0.2;
                     ctx.globalAlpha = window.Math.min(1, window.Math.max(0, vW));
                 }
-                CanvasUtils.drawImageHd(mVn.heal, WX, WY, player.angle, 0, 0, mnM);
+                CanvasUtils.drawImageHd(mVn.heal, wX, wY, player.angle, 0, 0, mnM);
                 ctx.globalAlpha = 1;
             }
-            CanvasUtils.drawImageHd(skin.head, WX, WY, player.angle, 0, 0, imgMovement);
-            if (wVn.head !== window.undefined) CanvasUtils.drawImageHd(wVn.head, WX, WY, player.angle, 0, 0, imgMovement);
+            CanvasUtils.drawImageHd(skin.head, wX, wY, player.angle, 0, 0, imgMovement);
+            if (wVn.head !== window.undefined) CanvasUtils.drawImageHd(wVn.head, wX, wY, player.angle, 0, 0, imgMovement);
         };
         
-        function vwVWm(mVn, weapon, wVn, player, imgMovement, WX, WY) {
+        function vwVWm(mVn, weapon, wVn, player, imgMovement, wX, wY) {
             var PLAYER = World.players[player.pid];
             var WMW = 0;
             var repellent = PLAYER.repellent - Render.globalTime;
@@ -14757,8 +14757,8 @@ try {
                         if (cartridge.delay <= 0) {
                             cartridge.type = weapon.cartridge;
                             cartridge.delay = weapon.cartridgeDelay;
-                            cartridge.x = WX + (window.Math.cos(player.angle) * 44);
-                            cartridge.y = WY + (window.Math.sin(player.angle) * 44);
+                            cartridge.x = wX + (window.Math.cos(player.angle) * 44);
+                            cartridge.y = wY + (window.Math.sin(player.angle) * 44);
                             var angle = ((-window.Math.PI / 2.5) + player.angle) + ((window.Math.random() * -window.Math.PI) / 3.5);
                             cartridge.ax = window.Math.cos(angle);
                             cartridge.ay = window.Math.sin(angle);
@@ -14803,15 +14803,15 @@ try {
             var breath = weapon.breath * ((PLAYER.breath < 750) ? (PLAYER.breath / 750) : (1 - ((PLAYER.breath - 750) / 750)));
             var move = weapon.move * ((PLAYER.move < 400) ? (PLAYER.move / 400) : (1 - ((PLAYER.move - 400) / 400)));
             var MVn = (wVn.rightArm === window.undefined) ? skin.rightArm : wVn.rightArm;
-            CanvasUtils.drawImageHd(MVn, WX, WY, Nmm.angle + player.angle, ((Nmm.x + (move * PLAYER.orientation)) + recoil) + breath, Nmm.y, imgMovement);
+            CanvasUtils.drawImageHd(MVn, wX, wY, Nmm.angle + player.angle, ((Nmm.x + (move * PLAYER.orientation)) + recoil) + breath, Nmm.y, imgMovement);
             MVn = (wVn.leftArm === window.undefined) ? skin.leftArm : wVn.leftArm;
-            CanvasUtils.drawImageHd(MVn, WX, WY, -VnN.angle + player.angle, ((VnN.x + (move * PLAYER.orientation)) + recoil) + breath, VnN.y, imgMovement);
+            CanvasUtils.drawImageHd(MVn, wX, wY, -VnN.angle + player.angle, ((VnN.x + (move * PLAYER.orientation)) + recoil) + breath, VnN.y, imgMovement);
             var item = weapon.weapon;
             if ((effect >= 0) && (weapon.noEffect === 0)) {
                 var gunEffect = mVn.gunEffect[weapon.gunEffect][effect];
-                CanvasUtils.drawImageHd(gunEffect, WX, WY, player.angle, (((item.x + (move * PLAYER.orientation)) + breath) + recoilGun) + weapon.distance, item.y, imgMovement);
+                CanvasUtils.drawImageHd(gunEffect, wX, wY, player.angle, (((item.x + (move * PLAYER.orientation)) + breath) + recoilGun) + weapon.distance, item.y, imgMovement);
             }
-            CanvasUtils.drawImageHd(item, WX, WY, player.angle, ((item.x + (move * PLAYER.orientation)) + breath) + recoilGun, item.y, imgMovement);
+            CanvasUtils.drawImageHd(item, wX, wY, player.angle, ((item.x + (move * PLAYER.orientation)) + breath) + recoilGun, item.y, imgMovement);
             for (var i = 0; i < cartridges.length; i++) {
                 var cartridge = cartridges[i];
                 if (cartridge.delay > 0) {
@@ -14834,10 +14834,10 @@ try {
                     vW = MathUtils.Ease.outQuad(player.hurt / 150);
                     mnM += (1 - vW) * 0.2;
                 }
-                WX += (window.Math.cos(player.hurtAngle) * vW) * 3;
-                WY += (window.Math.sin(player.hurtAngle) * vW) * 3;
+                wX += (window.Math.cos(player.hurtAngle) * vW) * 3;
+                wY += (window.Math.sin(player.hurtAngle) * vW) * 3;
                 ctx.globalAlpha = window.Math.min(1, window.Math.max(0, vW));
-                CanvasUtils.drawImageHd(mVn.hurt, WX, WY, player.angle, recoilHead, 0, mnM);
+                CanvasUtils.drawImageHd(mVn.hurt, wX, wY, player.angle, recoilHead, 0, mnM);
                 ctx.globalAlpha = 1;
             }
             if (player.heal > 0) {
@@ -14849,14 +14849,14 @@ try {
                     mnM += (1 - vW) * 0.2;
                     ctx.globalAlpha = window.Math.min(1, window.Math.max(0, vW));
                 }
-                CanvasUtils.drawImageHd(mVn.heal, WX, WY, player.angle, recoilHead, 0, mnM);
+                CanvasUtils.drawImageHd(mVn.heal, wX, wY, player.angle, recoilHead, 0, mnM);
                 ctx.globalAlpha = 1;
             }
-            CanvasUtils.drawImageHd(skin.head, WX, WY, player.angle, recoilHead, 0, imgMovement);
-            if (wVn.head !== window.undefined) CanvasUtils.drawImageHd(wVn.head, WX, WY, player.angle, recoilHead, 0, imgMovement);
+            CanvasUtils.drawImageHd(skin.head, wX, wY, player.angle, recoilHead, 0, imgMovement);
+            if (wVn.head !== window.undefined) CanvasUtils.drawImageHd(wVn.head, wX, wY, player.angle, recoilHead, 0, imgMovement);
         };
         
-        function WVVmN(mVn, weapon, wVn, player, imgMovement, WX, WY) {
+        function WVVmN(mVn, weapon, wVn, player, imgMovement, wX, wY) {
             var PLAYER = World.players[player.pid];
             var WMW = 0;
             var repellent = PLAYER.repellent - Render.globalTime;
@@ -14904,16 +14904,16 @@ try {
             var breathWeapon = weapon.breathWeapon * ((PLAYER.breath < 750) ? (PLAYER.breath / 750) : (1 - ((PLAYER.breath - 750) / 750)));
             var NwM = weapon.rightArm;
             var MVn = (wVn.rightArm === window.undefined) ? skin.rightArm : wVn.rightArm;
-            CanvasUtils.drawImageHd(MVn, WX, WY, (NwM.angle + player.angle) - nmm, ((NwM.x - (move * PLAYER.orientation)) + NWW) + breathWeapon, NwM.y, imgMovement);
+            CanvasUtils.drawImageHd(MVn, wX, wY, (NwM.angle + player.angle) - nmm, ((NwM.x - (move * PLAYER.orientation)) + NWW) + breathWeapon, NwM.y, imgMovement);
             if (player.hit > 0) {
                 var WnVmv = weapon.WnVmv;
-                CanvasUtils.drawImageHd(WnVmv, WX, WY, player.angle, ((WnVmv.x - (move * PLAYER.orientation)) + breathWeapon) + NWW, WnVmv.y, imgMovement);
+                CanvasUtils.drawImageHd(WnVmv, wX, wY, player.angle, ((WnVmv.x - (move * PLAYER.orientation)) + breathWeapon) + NWW, WnVmv.y, imgMovement);
             }
             var item = weapon.weapon;
-            CanvasUtils.drawImageHd(item, WX, WY, item.angle + player.angle, ((item.x + (move * PLAYER.orientation)) + breath) + NNM, item.y, imgMovement);
+            CanvasUtils.drawImageHd(item, wX, wY, item.angle + player.angle, ((item.x + (move * PLAYER.orientation)) + breath) + NNM, item.y, imgMovement);
             NwM = weapon.leftArm;
             MVn = (wVn.leftArm === window.undefined) ? skin.leftArm : wVn.leftArm;
-            CanvasUtils.drawImageHd(MVn, WX, WY, -NwM.angle + player.angle, ((NwM.x + (move * PLAYER.orientation)) + NNM) + breath, NwM.y, imgMovement);
+            CanvasUtils.drawImageHd(MVn, wX, wY, -NwM.angle + player.angle, ((NwM.x + (move * PLAYER.orientation)) + NNM) + breath, NwM.y, imgMovement);
             if (player.hurt > 0) {
                 var mnM = 1;
                 player.hurt -= delta;
@@ -14923,10 +14923,10 @@ try {
                     vW = MathUtils.Ease.outQuad(player.hurt / 150);
                     mnM += (1 - vW) * 0.2;
                 }
-                WX += (window.Math.cos(player.hurtAngle) * vW) * 3;
-                WY += (window.Math.sin(player.hurtAngle) * vW) * 3;
+                wX += (window.Math.cos(player.hurtAngle) * vW) * 3;
+                wY += (window.Math.sin(player.hurtAngle) * vW) * 3;
                 ctx.globalAlpha = window.Math.min(1, window.Math.max(0, vW));
-                CanvasUtils.drawImageHd(mVn.hurt, WX, WY, player.angle - (nmm / 1.5), wnN, 0, mnM);
+                CanvasUtils.drawImageHd(mVn.hurt, wX, wY, player.angle - (nmm / 1.5), wnN, 0, mnM);
                 ctx.globalAlpha = 1;
             }
             if (player.heal > 0) {
@@ -14938,14 +14938,14 @@ try {
                     mnM += (1 - vW) * 0.2;
                     ctx.globalAlpha = window.Math.min(1, window.Math.max(0, vW));
                 }
-                CanvasUtils.drawImageHd(mVn.heal, WX, WY, player.angle - (nmm / 1.5), wnN, 0, mnM);
+                CanvasUtils.drawImageHd(mVn.heal, wX, wY, player.angle - (nmm / 1.5), wnN, 0, mnM);
                 ctx.globalAlpha = 1;
             }
-            CanvasUtils.drawImageHd(skin.head, WX, WY, player.angle - (nmm / 1.5), wnN, 0, imgMovement);
-            if (wVn.head !== window.undefined) CanvasUtils.drawImageHd(wVn.head, WX, WY, player.angle - (nmm / 1.5), wnN, 0, imgMovement);
+            CanvasUtils.drawImageHd(skin.head, wX, wY, player.angle - (nmm / 1.5), wnN, 0, imgMovement);
+            if (wVn.head !== window.undefined) CanvasUtils.drawImageHd(wVn.head, wX, wY, player.angle - (nmm / 1.5), wnN, 0, imgMovement);
         };
         
-        function mWNvw(mVn, weapon, wVn, player, imgMovement, WX, WY) {
+        function mWNvw(mVn, weapon, wVn, player, imgMovement, wX, wY) {
             var PLAYER = World.players[player.pid];
             var WMW = 0;
             var repellent = PLAYER.repellent - Render.globalTime;
@@ -14992,7 +14992,7 @@ try {
             var move = weapon.move * ((PLAYER.move < 400) ? (PLAYER.move / 400) : (1 - ((PLAYER.move - 400) / 400)));
             var NwM = weapon.leftArm;
             var MVn = (wVn.leftArm === window.undefined) ? skin.leftArm : wVn.leftArm;
-            CanvasUtils.drawImageHd(MVn, WX, WY, ((-NwM.angle + player.angle) - breath) - nmm, (NwM.x - (move * PLAYER.orientation)) + NNM, NwM.y, imgMovement);
+            CanvasUtils.drawImageHd(MVn, wX, wY, ((-NwM.angle + player.angle) - breath) - nmm, (NwM.x - (move * PLAYER.orientation)) + NNM, NwM.y, imgMovement);
             if (player.hurt > 0) {
                 var mnM = 1;
                 player.hurt -= delta;
@@ -15002,10 +15002,10 @@ try {
                     vW = MathUtils.Ease.outQuad(player.hurt / 150);
                     mnM += (1 - vW) * 0.2;
                 }
-                WX += (window.Math.cos(player.hurtAngle) * vW) * 3;
-                WY += (window.Math.sin(player.hurtAngle) * vW) * 3;
+                wX += (window.Math.cos(player.hurtAngle) * vW) * 3;
+                wY += (window.Math.sin(player.hurtAngle) * vW) * 3;
                 ctx.globalAlpha = window.Math.min(1, window.Math.max(0, vW));
-                CanvasUtils.drawImageHd(mVn.hurt, WX, WY, player.angle - (nmm / 1.5), wnN, 0, mnM);
+                CanvasUtils.drawImageHd(mVn.hurt, wX, wY, player.angle - (nmm / 1.5), wnN, 0, mnM);
                 ctx.globalAlpha = 1;
             }
             if (player.heal > 0) {
@@ -15017,20 +15017,20 @@ try {
                     mnM += (1 - vW) * 0.2;
                     ctx.globalAlpha = window.Math.min(1, window.Math.max(0, vW));
                 }
-                CanvasUtils.drawImageHd(mVn.heal, WX, WY, player.angle - (nmm / 1.5), wnN, 0, mnM);
+                CanvasUtils.drawImageHd(mVn.heal, wX, wY, player.angle - (nmm / 1.5), wnN, 0, mnM);
                 ctx.globalAlpha = 1;
             }
-            CanvasUtils.drawImageHd(skin.head, WX, WY, player.angle - (nmm / 1.5), wnN, 0, imgMovement);
-            if (wVn.head !== window.undefined) CanvasUtils.drawImageHd(wVn.head, WX, WY, player.angle - (nmm / 1.5), wnN, 0, imgMovement);
+            CanvasUtils.drawImageHd(skin.head, wX, wY, player.angle - (nmm / 1.5), wnN, 0, imgMovement);
+            if (wVn.head !== window.undefined) CanvasUtils.drawImageHd(wVn.head, wX, wY, player.angle - (nmm / 1.5), wnN, 0, imgMovement);
             var breathWeapon = weapon.breathWeapon * ((PLAYER.breath < 750) ? (PLAYER.breath / 750) : (1 - ((PLAYER.breath - 750) / 750)));
             NwM = weapon.rightArm;
             MVn = (wVn.rightArm === window.undefined) ? skin.rightArm : wVn.rightArm;
-            CanvasUtils.drawImageHd(MVn, WX, WY, NwM.angle + player.angle, ((NwM.x + (move * PLAYER.orientation)) + NWW) + breathWeapon, NwM.y, imgMovement);
+            CanvasUtils.drawImageHd(MVn, wX, wY, NwM.angle + player.angle, ((NwM.x + (move * PLAYER.orientation)) + NWW) + breathWeapon, NwM.y, imgMovement);
             var item = weapon.weapon;
-            CanvasUtils.drawImageHd(item, WX, WY, item.angle + player.angle, ((item.x + (move * PLAYER.orientation)) + breathWeapon) + NWW, item.y, imgMovement);
+            CanvasUtils.drawImageHd(item, wX, wY, item.angle + player.angle, ((item.x + (move * PLAYER.orientation)) + breathWeapon) + NWW, item.y, imgMovement);
         };
         
-        function mvwMm(mVn, weapon, wVn, player, imgMovement, WX, WY) {
+        function mvwMm(mVn, weapon, wVn, player, imgMovement, wX, wY) {
             var PLAYER = World.players[player.pid];
             var WMW = 0;
             var repellent = PLAYER.repellent - Render.globalTime;
@@ -15078,11 +15078,11 @@ try {
             var breath = weapon.breath * ((PLAYER.breath < 750) ? (PLAYER.breath / 750) : (1 - ((PLAYER.breath - 750) / 750)));
             var move = weapon.move * ((PLAYER.move < 400) ? (PLAYER.move / 400) : (1 - ((PLAYER.move - 400) / 400)));
             var item = weapon.weapon;
-            CanvasUtils.drawImageHd2(item, WX, WY, (item.angle + player.angle) + breath, item.x + (move * PLAYER.orientation), item.y, imgMovement, nmm * item.rotation, item.x2, item.y2);
+            CanvasUtils.drawImageHd2(item, wX, wY, (item.angle + player.angle) + breath, item.x + (move * PLAYER.orientation), item.y, imgMovement, nmm * item.rotation, item.x2, item.y2);
             var MVn = (wVn.rightArm === window.undefined) ? skin.rightArm : wVn.rightArm;
-            CanvasUtils.drawImageHd(MVn, WX, WY, ((Nmm.angle + player.angle) + breath) + (nmm * Nmm.rotation), (Nmm.x + (move * PLAYER.orientation)) + NWW, Nmm.y, imgMovement);
+            CanvasUtils.drawImageHd(MVn, wX, wY, ((Nmm.angle + player.angle) + breath) + (nmm * Nmm.rotation), (Nmm.x + (move * PLAYER.orientation)) + NWW, Nmm.y, imgMovement);
             MVn = (wVn.leftArm === window.undefined) ? skin.leftArm : wVn.leftArm;
-            CanvasUtils.drawImageHd(MVn, WX, WY, ((-VnN.angle + player.angle) + breath) + (nmm * VnN.rotation), (VnN.x + (move * PLAYER.orientation)) + NNM, VnN.y, imgMovement);
+            CanvasUtils.drawImageHd(MVn, wX, wY, ((-VnN.angle + player.angle) + breath) + (nmm * VnN.rotation), (VnN.x + (move * PLAYER.orientation)) + NNM, VnN.y, imgMovement);
             if (player.hurt > 0) {
                 var mnM = 1;
                 player.hurt -= delta;
@@ -15092,10 +15092,10 @@ try {
                     vW = MathUtils.Ease.outQuad(player.hurt / 150);
                     mnM += (1 - vW) * 0.2;
                 }
-                WX += (window.Math.cos(player.hurtAngle) * vW) * 3;
-                WY += (window.Math.sin(player.hurtAngle) * vW) * 3;
+                wX += (window.Math.cos(player.hurtAngle) * vW) * 3;
+                wY += (window.Math.sin(player.hurtAngle) * vW) * 3;
                 ctx.globalAlpha = window.Math.min(1, window.Math.max(0, vW));
-                CanvasUtils.drawImageHd(mVn.hurt, WX, WY, player.angle + (nmm / 1.5), wnN, 0, mnM);
+                CanvasUtils.drawImageHd(mVn.hurt, wX, wY, player.angle + (nmm / 1.5), wnN, 0, mnM);
                 ctx.globalAlpha = 1;
             }
             if (player.heal > 0) {
@@ -15107,14 +15107,14 @@ try {
                     mnM += (1 - vW) * 0.2;
                     ctx.globalAlpha = window.Math.min(1, window.Math.max(0, vW));
                 }
-                CanvasUtils.drawImageHd(mVn.heal, WX, WY, player.angle + (nmm / 1.5), wnN, 0, mnM);
+                CanvasUtils.drawImageHd(mVn.heal, wX, wY, player.angle + (nmm / 1.5), wnN, 0, mnM);
                 ctx.globalAlpha = 1;
             }
-            CanvasUtils.drawImageHd(skin.head, WX, WY, player.angle + (nmm / 1.5), wnN, 0, imgMovement);
-            if (wVn.head !== window.undefined) CanvasUtils.drawImageHd(wVn.head, WX, WY, player.angle + (nmm / 1.5), wnN, 0, imgMovement);
+            CanvasUtils.drawImageHd(skin.head, wX, wY, player.angle + (nmm / 1.5), wnN, 0, imgMovement);
+            if (wVn.head !== window.undefined) CanvasUtils.drawImageHd(wVn.head, wX, wY, player.angle + (nmm / 1.5), wnN, 0, imgMovement);
         };
         
-        function mmmMw(mVn, weapon, wVn, player, imgMovement, WX, WY) {
+        function mmmMw(mVn, weapon, wVn, player, imgMovement, wX, wY) {
             var PLAYER = World.players[player.pid];
             var WMW = 0;
             var repellent = PLAYER.repellent - Render.globalTime;
@@ -15152,11 +15152,11 @@ try {
             var move = weapon.move * ((PLAYER.move < 400) ? (PLAYER.move / 400) : (1 - ((PLAYER.move - 400) / 400)));
             var NwM = weapon.rightArm;
             var MVn = (wVn.rightArm === window.undefined) ? skin.rightArm : wVn.rightArm;
-            CanvasUtils.drawImageHd(MVn, WX, WY, (NwM.angle + player.angle) + breath, (NwM.x + (move * PLAYER.orientation)) + NWW, NwM.y, imgMovement);
+            CanvasUtils.drawImageHd(MVn, wX, wY, (NwM.angle + player.angle) + breath, (NwM.x + (move * PLAYER.orientation)) + NWW, NwM.y, imgMovement);
             NwM = weapon.leftArm;
             MVn = (wVn.leftArm === window.undefined) ? skin.leftArm : wVn.leftArm;
-            CanvasUtils.drawImageHd(MVn, WX, WY, (-NwM.angle + player.angle) - breath, (NwM.x - (move * PLAYER.orientation)) + NNM, NwM.y, imgMovement);
-            CanvasUtils.drawImageHd(weapon.blueprint, WX, WY, ((-NwM.angle + player.angle) - breath) + (window.Math.PI / 3), ((NwM.x - (move * PLAYER.orientation)) + NNM) - 40, NwM.y - 15, imgMovement);
+            CanvasUtils.drawImageHd(MVn, wX, wY, (-NwM.angle + player.angle) - breath, (NwM.x - (move * PLAYER.orientation)) + NNM, NwM.y, imgMovement);
+            CanvasUtils.drawImageHd(weapon.blueprint, wX, wY, ((-NwM.angle + player.angle) - breath) + (window.Math.PI / 3), ((NwM.x - (move * PLAYER.orientation)) + NNM) - 40, NwM.y - 15, imgMovement);
             if (player.hurt > 0) {
                 var mnM = 1;
                 player.hurt -= delta;
@@ -15166,10 +15166,10 @@ try {
                     vW = MathUtils.Ease.outQuad(player.hurt / 150);
                     mnM += (1 - vW) * 0.2;
                 }
-                WX += (window.Math.cos(player.hurtAngle) * vW) * 3;
-                WY += (window.Math.sin(player.hurtAngle) * vW) * 3;
+                wX += (window.Math.cos(player.hurtAngle) * vW) * 3;
+                wY += (window.Math.sin(player.hurtAngle) * vW) * 3;
                 ctx.globalAlpha = window.Math.min(1, window.Math.max(0, vW));
-                CanvasUtils.drawImageHd(mVn.hurt, WX, WY, player.angle, 0, 0, mnM);
+                CanvasUtils.drawImageHd(mVn.hurt, wX, wY, player.angle, 0, 0, mnM);
                 ctx.globalAlpha = 1;
             }
             if (player.heal > 0) {
@@ -15181,12 +15181,12 @@ try {
                     mnM += (1 - vW) * 0.2;
                     ctx.globalAlpha = window.Math.min(1, window.Math.max(0, vW));
                 }
-                CanvasUtils.drawImageHd(mVn.heal, WX, WY, player.angle, 0, 0, mnM);
+                CanvasUtils.drawImageHd(mVn.heal, wX, wY, player.angle, 0, 0, mnM);
                 ctx.globalAlpha = 1;
             }
-            CanvasUtils.drawImageHd(skin.head, WX, WY, player.angle, 0, 0, imgMovement);
-            if (wVn.head !== window.undefined) CanvasUtils.drawImageHd(wVn.head, WX, WY, player.angle, 0, 0, imgMovement);
-            CanvasUtils.drawImageHd(weapon.pencil, WX, WY, player.angle, 0, 0, imgMovement);
+            CanvasUtils.drawImageHd(skin.head, wX, wY, player.angle, 0, 0, imgMovement);
+            if (wVn.head !== window.undefined) CanvasUtils.drawImageHd(wVn.head, wX, wY, player.angle, 0, 0, imgMovement);
+            CanvasUtils.drawImageHd(weapon.pencil, wX, wY, player.angle, 0, 0, imgMovement);
         };
         var nVWnV = [0, 0, 0, 0];
         
@@ -15205,23 +15205,23 @@ try {
                 var Rot = (item.wall === 1) ? 0 : World.PLAYER.buildRotate;
                 World.PLAYER.jBuild = World.PLAYER._j + window.Math.floor((__TILE_SIZE2__ + (window.Math.cos(angle) * __TILE_SIZE__)) / __TILE_SIZE__);
                 World.PLAYER.iBuild = World.PLAYER._i + window.Math.floor((__TILE_SIZE2__ + (window.Math.sin(angle) * __TILE_SIZE__)) / __TILE_SIZE__);
-                var WX = ((item.xCenter[Rot] + vertst) + __TILE_SIZE2__) + (__TILE_SIZE__ * World.PLAYER.jBuild);
-                var WY = ((item.yCenter[Rot] + horist) + __TILE_SIZE2__) + (__TILE_SIZE__ * World.PLAYER.iBuild);
+                var wX = ((item.xCenter[Rot] + vertst) + __TILE_SIZE2__) + (__TILE_SIZE__ * World.PLAYER.jBuild);
+                var wY = ((item.yCenter[Rot] + horist) + __TILE_SIZE2__) + (__TILE_SIZE__ * World.PLAYER.iBuild);
                 if ((((World.PLAYER.jBuild >= 0) && (World.PLAYER.iBuild >= 0)) && (World.PLAYER.jBuild < NMv)) && (World.PLAYER.iBuild < wWw)) {
                     var VMV = matrix[World.PLAYER.iBuild][World.PLAYER.jBuild];
                     var team = (World.PLAYER.team === -1) ? -2 : World.PLAYER.team;
                     if ((VMV.tile === frameId) && (((item.zid !== 2) || (VMV.tilePid === 0)) || (VMV.category === SKILLS.__PLANT__))) {
                         World.PLAYER.canBuild = 1; // before 0
-                        CanvasUtils.drawImageHd(item.redprint, WX, WY, Rot * PIby2, 0, 0, 1);
+                        CanvasUtils.drawImageHd(item.redprint, wX, wY, Rot * PIby2, 0, 0, 1);
                     } else if ((((item.detail.category === SKILLS.__PLANT__) || (item.zid === 2)) || (((VMV.pid !== 0) && (VMV.pid !== World.PLAYER.id)) && (World.players[VMV.pid].team !== team))) && (VMV.ground === frameId)) {
                         World.PLAYER.canBuild = 0;
-                        CanvasUtils.drawImageHd(item.redprint, WX, WY, Rot * PIby2, 0, 0, 1);
+                        CanvasUtils.drawImageHd(item.redprint, wX, wY, Rot * PIby2, 0, 0, 1);
                     } else if ((item.iTile !== window.undefined) && ((((Rot % 2) === 0) && ((((((World.PLAYER.iBuild < 1) || (World.PLAYER.iBuild >= (wWw - 1))) || (matrix[World.PLAYER.iBuild + 1][World.PLAYER.jBuild].tile === frameId)) || ((matrix[World.PLAYER.iBuild + 1][World.PLAYER.jBuild].ground === frameId) && (((matrix[World.PLAYER.iBuild + 1][World.PLAYER.jBuild].pid !== World.PLAYER.id) && (matrix[World.PLAYER.iBuild + 1][World.PLAYER.jBuild].pid !== 0)) && (World.players[matrix[World.PLAYER.iBuild + 1][World.PLAYER.jBuild].pid].team !== team)))) || (matrix[World.PLAYER.iBuild - 1][World.PLAYER.jBuild].tile === frameId)) || ((matrix[World.PLAYER.iBuild - 1][World.PLAYER.jBuild].ground === frameId) && (((matrix[World.PLAYER.iBuild - 1][World.PLAYER.jBuild].pid !== World.PLAYER.id) && (matrix[World.PLAYER.iBuild - 1][World.PLAYER.jBuild].pid !== 0)) && (World.players[matrix[World.PLAYER.iBuild - 1][World.PLAYER.jBuild].pid].team !== team))))) || (((Rot % 2) === 1) && (((((((World.PLAYER.jBuild < 1) || (World.PLAYER.jBuild >= (NMv - 1))) || (matrix[World.PLAYER.iBuild][World.PLAYER.jBuild + 1].tile === frameId)) || ((matrix[World.PLAYER.iBuild][World.PLAYER.jBuild + 1].ground === frameId) && (((matrix[World.PLAYER.iBuild][World.PLAYER.jBuild + 1].pid !== World.PLAYER.id) && (matrix[World.PLAYER.iBuild][World.PLAYER.jBuild + 1].pid !== 0)) && (World.players[matrix[World.PLAYER.iBuild][World.PLAYER.jBuild + 1].pid].team !== team)))) || (matrix[World.PLAYER.iBuild][World.PLAYER.jBuild - 1].tile === frameId)) || ((matrix[World.PLAYER.iBuild][World.PLAYER.jBuild - 1].ground === frameId) && (((matrix[World.PLAYER.iBuild][World.PLAYER.jBuild - 1].pid !== World.PLAYER.id) && (matrix[World.PLAYER.iBuild][World.PLAYER.jBuild - 1].pid !== 0)) && (World.players[matrix[World.PLAYER.iBuild][World.PLAYER.jBuild - 1].pid].team !== team)))) || (World.PLAYER._i === World.PLAYER.iBuild))))) {
                         World.PLAYER.canBuild = 0;
-                        CanvasUtils.drawImageHd(item.redprint, WX, WY, Rot * PIby2, 0, 0, 1);
+                        CanvasUtils.drawImageHd(item.redprint, wX, wY, Rot * PIby2, 0, 0, 1);
                     } else {
                         World.PLAYER.canBuild = 1;
-                        CanvasUtils.drawImageHd(item.blueprint, WX, WY, Rot * PIby2, 0, 0, 1);
+                        CanvasUtils.drawImageHd(item.blueprint, wX, wY, Rot * PIby2, 0, 0, 1);
                     }
                 }
                 if (hintRotate.isLoaded !== 1) {
@@ -15243,7 +15243,7 @@ try {
             World.PLAYER.hintRotate = nwmVM;
         };
 
-        function nwMNv(mVn, weapon, wVn, player, imgMovement, WX, WY) {
+        function nwMNv(mVn, weapon, wVn, player, imgMovement, wX, wY) {
             var PLAYER = World.players[player.pid];
             var WMW = 0;
             var repellent = PLAYER.repellent - Render.globalTime;
@@ -15292,10 +15292,10 @@ try {
             var move = weapon.move * ((PLAYER.move < 400) ? (PLAYER.move / 400) : (1 - ((PLAYER.move - 400) / 400)));
             var NwM = weapon.rightArm;
             var MVn = (wVn.rightArm === window.undefined) ? skin.rightArm : wVn.rightArm;
-            CanvasUtils.drawImageHd(MVn, WX, WY, ((NwM.angle + player.angle) + breath) + nmm, (NwM.x + (move * PLAYER.orientation)) + NWW, NwM.y, imgMovement);
+            CanvasUtils.drawImageHd(MVn, wX, wY, ((NwM.angle + player.angle) + breath) + nmm, (NwM.x + (move * PLAYER.orientation)) + NWW, NwM.y, imgMovement);
             NwM = weapon.leftArm;
             MVn = (wVn.leftArm === window.undefined) ? skin.leftArm : wVn.leftArm;
-            CanvasUtils.drawImageHd(MVn, WX, WY, ((-NwM.angle + player.angle) - breath) + nmm, (NwM.x - (move * PLAYER.orientation)) + NNM, NwM.y, imgMovement);
+            CanvasUtils.drawImageHd(MVn, wX, wY, ((-NwM.angle + player.angle) - breath) + nmm, (NwM.x - (move * PLAYER.orientation)) + NNM, NwM.y, imgMovement);
             if (player.hurt2 > 0) {
                 var mnM = 1;
                 player.hurt2 -= delta;
@@ -15306,7 +15306,7 @@ try {
                     mnM += (1 - vW) * 0.2;
                 }
                 ctx.globalAlpha = window.Math.min(1, window.Math.max(0, vW));
-                CanvasUtils.drawImageHd(mVn.food, WX, WY, player.angle + (nmm / 1.5), wnN, 0, mnM);
+                CanvasUtils.drawImageHd(mVn.food, wX, wY, player.angle + (nmm / 1.5), wnN, 0, mnM);
                 ctx.globalAlpha = 1;
             }
             if (player.hurt > 0) {
@@ -15318,10 +15318,10 @@ try {
                     vW = MathUtils.Ease.outQuad(player.hurt / 150);
                     mnM += (1 - vW) * 0.2;
                 }
-                WX += (window.Math.cos(player.hurtAngle) * vW) * 3;
-                WY += (window.Math.sin(player.hurtAngle) * vW) * 3;
+                wX += (window.Math.cos(player.hurtAngle) * vW) * 3;
+                wY += (window.Math.sin(player.hurtAngle) * vW) * 3;
                 ctx.globalAlpha = window.Math.min(1, window.Math.max(0, vW));
-                CanvasUtils.drawImageHd(mVn.hurt, WX, WY, player.angle + (nmm / 1.5), wnN, 0, mnM);
+                CanvasUtils.drawImageHd(mVn.hurt, wX, wY, player.angle + (nmm / 1.5), wnN, 0, mnM);
                 ctx.globalAlpha = 1;
             }
             if (player.heal > 0) {
@@ -15333,11 +15333,11 @@ try {
                     mnM += (1 - vW) * 0.2;
                     ctx.globalAlpha = window.Math.min(1, window.Math.max(0, vW));
                 }
-                CanvasUtils.drawImageHd(mVn.heal, WX, WY, player.angle + (nmm / 1.5), wnN, 0, mnM);
+                CanvasUtils.drawImageHd(mVn.heal, wX, wY, player.angle + (nmm / 1.5), wnN, 0, mnM);
                 ctx.globalAlpha = 1;
             }
-            CanvasUtils.drawImageHd(skin.head, WX, WY, player.angle + (nmm / 1.5), wnN, 0, imgMovement);
-            if (wVn.head !== window.undefined) CanvasUtils.drawImageHd(wVn.head, WX, WY, player.angle + (nmm / 1.5), wnN, 0, imgMovement);
+            CanvasUtils.drawImageHd(skin.head, wX, wY, player.angle + (nmm / 1.5), wnN, 0, imgMovement);
+            if (wVn.head !== window.undefined) CanvasUtils.drawImageHd(wVn.head, wX, wY, player.angle + (nmm / 1.5), wnN, 0, imgMovement);
         };
 
         function _EntitieAI(player) {
@@ -15346,13 +15346,13 @@ try {
             matrix[player.i][player.j].tilePid = player.pid;
             matrix[player.i][player.j].category = window.undefined;
             var imgMovement = 1;
-            var WX = vertst + player.x;
-            var WY = horist + player.y;
+            var wX = vertst + player.x;
+            var wY = horist + player.y;
             if (player.removed !== 0) {
                 player.death += delta;
                 var vW = MathUtils.Ease.outQuart(1 - ((player.death - 500) / 400));
                 ctx.globalAlpha = window.Math.min(window.Math.max(0, vW), 1);
-                CanvasUtils.drawImageHd(entitie.death, WX, WY, player.angle, 0, 0, 1);
+                CanvasUtils.drawImageHd(entitie.death, wX, wY, player.angle, 0, 0, 1);
                 vW = MathUtils.Ease.outQuart(1 - (player.death / 400));
                 imgMovement = window.Math.min(1 + (0.5 * (1 - vW)), 1.5);
                 ctx.globalAlpha = window.Math.max(0, vW);
@@ -15360,9 +15360,9 @@ try {
             if ((player.extra & 16) === 16) {
                 player.extra &= ~16;
                 player.hurt = 250;
-                player.hurtAngle = (WNVNM * ((player.extra >> 5) & 31)) / 31;
+                player.hurtAngle = (PI2 * ((player.extra >> 5) & 31)) / 31;
             }
-            entitie.draw(entitie, player, WX, WY, imgMovement);
+            entitie.draw(entitie, player, wX, wY, imgMovement);
             if (player.removed !== 0) {
                 if (player.death > 900) player.removed = 2;
                 ctx.globalAlpha = 1;
@@ -15379,13 +15379,13 @@ try {
             var wVn = mVn.clothes[player.extra & 255];
             var imgMovement = 1;
             var Vmwnn = player.state & 254;
-            var WX = vertst + player.x;
-            var WY = horist + player.y;
+            var wX = vertst + player.x;
+            var wY = horist + player.y;
             if (player.removed !== 0) {
                 player.death += delta;
                 var vW = MathUtils.Ease.outQuart(1 - ((player.death - 500) / 400));
                 ctx.globalAlpha = window.Math.min(window.Math.max(0, vW), 1);
-                CanvasUtils.drawImageHd(mVn.death, WX, WY, player.angle, 0, 0, 1);
+                CanvasUtils.drawImageHd(mVn.death, wX, wY, player.angle, 0, 0, 1);
                 vW = MathUtils.Ease.outQuart(1 - (player.death / 400));
                 imgMovement = window.Math.min(1 + (0.5 * (1 - vW)), 1.5);
                 ctx.globalAlpha = window.Math.max(0, vW);
@@ -15403,25 +15403,25 @@ try {
             } else if (Vmwnn === 6) player.state &= 65281;
             switch (weapon.type) {
                 case 0:
-                    nwMNv(mVn, weapon, wVn, player, imgMovement, WX, WY);
+                    nwMNv(mVn, weapon, wVn, player, imgMovement, wX, wY);
                     break;
                 case 1:
-                    mvwMm(mVn, weapon, wVn, player, imgMovement, WX, WY);
+                    mvwMm(mVn, weapon, wVn, player, imgMovement, wX, wY);
                     break;
                 case 2:
-                    vwVWm(mVn, weapon, wVn, player, imgMovement, WX, WY);
+                    vwVWm(mVn, weapon, wVn, player, imgMovement, wX, wY);
                     break;
                 case 3:
-                    mWNvw(mVn, weapon, wVn, player, imgMovement, WX, WY);
+                    mWNvw(mVn, weapon, wVn, player, imgMovement, wX, wY);
                     break;
                 case 4:
-                    WVVmN(mVn, weapon, wVn, player, imgMovement, WX, WY);
+                    WVVmN(mVn, weapon, wVn, player, imgMovement, wX, wY);
                     break;
                 case 5:
-                    Wvmnw(mVn, weapon, wVn, player, imgMovement, WX, WY);
+                    Wvmnw(mVn, weapon, wVn, player, imgMovement, wX, wY);
                     break;
                 case 6:
-                    mmmMw(mVn, weapon, wVn, player, imgMovement, WX, WY);
+                    mmmMw(mVn, weapon, wVn, player, imgMovement, wX, wY);
                     break;
             }
             if (player.removed !== 0) {
@@ -15501,7 +15501,7 @@ try {
                     ctx.drawImage(useTimer, posx, posy, scalex, scaley); 
                     ctx.save();
                     ctx.translate(_x, window.Math.max((10 * imgMovement) + (scaley / 2), (_y - (65 * imgMovement)) - (60 * scaleby)));
-                    ctx.rotate(-WNVNM * vW);
+                    ctx.rotate(-PI2 * vW);
                     ctx.drawImage(arrow, -scalex / 2, -scaley / 2, scalex, scaley);
                     ctx.restore();
                     ctx.drawImage(lights, posx, posy, scalex, scaley);
@@ -15559,20 +15559,20 @@ try {
             uid: -1
         };
 
-        function vNwNM(player, Wn, dist, amount) {
-            if ((NwMVW === vMNWw) || (Wn === PARTICLESID.__NOTHING__)) return;
+        function vNwNM(player, id, dist, amount) {
+            if ((NwMVW === vMNWw) || (id === PARTICLESID.__NOTHING__)) return;
             else if (NwMVW === nWNMn) amount *= 3;
             if ((Entitie.border[__ENTITIE_PARTICLES__].border + amount) >= wnNWM) return;
             for (var i = 0; i < amount; i++) {
                 var N = window.Math.random();
-                var angle = ((N * 10) % 1) * WNVNM;
+                var angle = ((N * 10) % 1) * PI2;
                 var MMwmm = dist + (((N * 10000) % 1) * 25);
                 dist += 8;
                 WvWmM = (WvWmM + 1) % wnNWM;
                 var wmWnw = WvWmM + Entitie.maxUnitsMaster;
                 nMVNv += 1;
                 var particle = Entitie.get(0, wmWnw, nMVNv, __ENTITIE_PARTICLES__);
-                setEntitie(particle, 0, nMVNv, wmWnw, __ENTITIE_PARTICLES__, player.px, player.py, player.px + (window.Math.cos(angle) * MMwmm), player.py + (window.Math.sin(angle) * MMwmm), window.Math.floor(N * PARTICLES[Wn].length), ((N * 100) % 1) * 255, Wn);
+                setEntitie(particle, 0, nMVNv, wmWnw, __ENTITIE_PARTICLES__, player.px, player.py, player.px + (window.Math.cos(angle) * MMwmm), player.py + (window.Math.sin(angle) * MMwmm), window.Math.floor(N * PARTICLES[id].length), ((N * 100) % 1) * 255, id);
             }
         };
 
@@ -15592,18 +15592,18 @@ try {
             CanvasUtils.drawImageHd(img, vertst + player.x, horist + player.y, player.angle, 0, 0, 1);
         };
 
-        function _Dynamite(item, player, WX, WY, Rot, imgMovement) {
+        function _Dynamite(item, player, wX, wY, Rot, imgMovement) {
             player.breath = (player.breath + delta) % 500;
             var vW = player.breath / 500;
             var mnM = 0.95 + (0.3 * MathUtils.Ease.inOutQuad(vW));
             ctx.globalAlpha = 1 - vW;
-            CanvasUtils.drawImageHd(item.building[1], (vertst + player.x) + WX, (horist + player.y) + WY, Rot * PIby2, 0, 0, mnM);
+            CanvasUtils.drawImageHd(item.building[1], (vertst + player.x) + wX, (horist + player.y) + wY, Rot * PIby2, 0, 0, mnM);
             ctx.globalAlpha = 1;
-            CanvasUtils.drawImageHd(item.building[0], (vertst + player.x) + WX, (horist + player.y) + WY, Rot * PIby2, 0, 0, imgMovement);
+            CanvasUtils.drawImageHd(item.building[0], (vertst + player.x) + wX, (horist + player.y) + wY, Rot * PIby2, 0, 0, imgMovement);
         };
         
         
-        function _Spike(item, player, WX, WY, Rot, imgMovement) {
+        function _Spike(item, player, wX, wY, Rot, imgMovement) {
             var isInClan = 0;
             var VmnmV = 1;
             if ((player.state & 16) === 16) VmnmV = 0;
@@ -15611,72 +15611,72 @@ try {
             if (VmnmV === 0) {
                 if (player.hurt2 === 0) vNwNM(player, item.particles, item.particlesDist, 5);
                 if (player.hurt2 < 300) {
-                    WX += (window.Math.random() * 6) - 4;
-                    WY += (window.Math.random() * 6) - 4;
+                    wX += (window.Math.random() * 6) - 4;
+                    wY += (window.Math.random() * 6) - 4;
                     player.hurt2 += delta;
                 }
                 if (player.breath > 0) {
                     player.breath = window.Math.max(0, player.breath - (delta / 5));
                     ctx.globalAlpha = MathUtils.Ease.inOutQuad(player.breath / 300);
-                    CanvasUtils.drawImageHd(item.hidden[player.id % 3], (vertst + player.x) + WX, (horist + player.y) + WY, Rot * PIby2, 0, 0, imgMovement);
+                    CanvasUtils.drawImageHd(item.hidden[player.id % 3], (vertst + player.x) + wX, (horist + player.y) + wY, Rot * PIby2, 0, 0, imgMovement);
                     ctx.globalAlpha = 1;
                 }
-                CanvasUtils.drawImageHd(item.deployed[player.id % 3], (vertst + player.x) + WX, (horist + player.y) + WY, Rot * PIby2, 0, 0, imgMovement);
+                CanvasUtils.drawImageHd(item.deployed[player.id % 3], (vertst + player.x) + wX, (horist + player.y) + wY, Rot * PIby2, 0, 0, imgMovement);
             } else if (isInClan === 1) {
-                if (player.breath === 300) CanvasUtils.drawImageHd(item.hidden[player.id % 3], (vertst + player.x) + WX, (horist + player.y) + WY, Rot * PIby2, 0, 0, imgMovement);
+                if (player.breath === 300) CanvasUtils.drawImageHd(item.hidden[player.id % 3], (vertst + player.x) + wX, (horist + player.y) + wY, Rot * PIby2, 0, 0, imgMovement);
                 else {
                     player.breath = window.Math.min(300, player.breath + delta);
                     ctx.globalAlpha = MathUtils.Ease.inOutQuad(player.breath / 300);
-                    CanvasUtils.drawImageHd(item.hidden[player.id % 3], (vertst + player.x) + WX, (horist + player.y) + WY, Rot * PIby2, 0, 0, imgMovement);
+                    CanvasUtils.drawImageHd(item.hidden[player.id % 3], (vertst + player.x) + wX, (horist + player.y) + wY, Rot * PIby2, 0, 0, imgMovement);
                     ctx.globalAlpha = 1;
                 }
             } else if ((isInClan === 0) && (player.breath > 0)) {
                 player.breath = window.Math.max(0, player.breath - (delta / 5));
                 ctx.globalAlpha = MathUtils.Ease.inOutQuad(player.breath / 300);
-                CanvasUtils.drawImageHd(item.hidden[player.id % 3], (vertst + player.x) + WX, (horist + player.y) + WY, Rot * PIby2, 0, 0, imgMovement);
+                CanvasUtils.drawImageHd(item.hidden[player.id % 3], (vertst + player.x) + wX, (horist + player.y) + wY, Rot * PIby2, 0, 0, imgMovement);
                 ctx.globalAlpha = 1;
             }
         };
         
-        function _HiddenBuilding(item, player, WX, WY, Rot, imgMovement) {
-            CanvasUtils.drawImageHd(item.building, (vertst + player.x) + WX, (horist + player.y) + WY, Rot * PIby2, 0, 0, imgMovement);
+        function _HiddenBuilding(item, player, wX, wY, Rot, imgMovement) {
+            CanvasUtils.drawImageHd(item.building, (vertst + player.x) + wX, (horist + player.y) + wY, Rot * PIby2, 0, 0, imgMovement);
         };
         
-        function _Landmine(item, player, WX, WY, Rot, imgMovement) {
+        function _Landmine(item, player, wX, wY, Rot, imgMovement) {
             var isInClan = 0;
             if (((player.pid === World.PLAYER.id) || (((World.PLAYER.team !== -1) && (World.PLAYER.team === World.players[player.pid].team)) && (World.players[player.pid].teamUid === World.teams[World.PLAYER.team].uid))) || (Math2d.fastDist(NmM, WWV, player.x, player.y) < 52000)) isInClan = 1;
             if (isInClan === 1) {
                 player.breath = window.Math.min(300, player.breath + delta);
                 ctx.globalAlpha = MathUtils.Ease.inOutQuad(player.breath / 300);
-                CanvasUtils.drawImageHd(item.building[player.id % 3], (vertst + player.x) + WX, (horist + player.y) + WY, Rot * PIby2, 0, 0, imgMovement);
+                CanvasUtils.drawImageHd(item.building[player.id % 3], (vertst + player.x) + wX, (horist + player.y) + wY, Rot * PIby2, 0, 0, imgMovement);
                 ctx.globalAlpha = 0.2;
-                CanvasUtils.drawImageHd(LIGHTFIRE[5], (vertst + player.x) + WX, (horist + player.y) + WY, 0, 0, 0, 0.6);
+                CanvasUtils.drawImageHd(LIGHTFIRE[5], (vertst + player.x) + wX, (horist + player.y) + wY, 0, 0, 0, 0.6);
                 ctx.globalAlpha = 1;
             }
         
             else if (isInClan === 0) {
                 player.breath = window.Math.min(300, player.breath + delta);
                 ctx.globalAlpha = MathUtils.Ease.inOutQuad(player.breath / 300);
-                CanvasUtils.drawImageHd(item.building[player.id % 3], (vertst + player.x) + WX, (horist + player.y) + WY, Rot * PIby2, 0, 0, imgMovement);
+                CanvasUtils.drawImageHd(item.building[player.id % 3], (vertst + player.x) + wX, (horist + player.y) + wY, Rot * PIby2, 0, 0, imgMovement);
         
                 ctx.globalAlpha = 0.2;
-                CanvasUtils.drawImageHd(LIGHTFIRE[4], (vertst + player.x) + WX, (horist + player.y) + WY, 0, 0, 0, 0.6);
+                CanvasUtils.drawImageHd(LIGHTFIRE[4], (vertst + player.x) + wX, (horist + player.y) + wY, 0, 0, 0, 0.6);
                 ctx.globalAlpha = 1; 
         
             }    
         };
         
-        function _DefaultBuilding(item, player, WX, WY, Rot, imgMovement) {
-            CanvasUtils.drawImageHd(item.building, (vertst + player.x) + WX, (horist + player.y) + WY, Rot * PIby2, 0, 0, imgMovement);
+        function _DefaultBuilding(item, player, wX, wY, Rot, imgMovement) {
+            CanvasUtils.drawImageHd(item.building, (vertst + player.x) + wX, (horist + player.y) + wY, Rot * PIby2, 0, 0, imgMovement);
         };
         
-        function _Breakable(item, player, WX, WY, Rot, imgMovement) {
-            CanvasUtils.drawImageHd(item.building[player.broke], (vertst + player.x) + WX, (horist + player.y) + WY, Rot * PIby2, 0, 0, imgMovement);
+        function _Breakable(item, player, wX, wY, Rot, imgMovement) {
+            CanvasUtils.drawImageHd(item.building[player.broke], (vertst + player.x) + wX, (horist + player.y) + wY, Rot * PIby2, 0, 0, imgMovement);
         };
         
-        function _Wall(item, player, WX, WY, Rot, imgMovement) {
-            if (player.broke > 0) CanvasUtils.drawImageHd(item.broken[player.broke - 1], (vertst + player.x) + WX, (horist + player.y) + WY, 0, 0, 0, imgMovement);
-            else CanvasUtils.drawImageHd(item.building[WwmwN(player)], (vertst + player.x) + WX, (horist + player.y) + WY, 0, 0, 0, imgMovement);
+        function _Wall(item, player, wX, wY, Rot, imgMovement) {
+            if (player.broke > 0) CanvasUtils.drawImageHd(item.broken[player.broke - 1], (vertst + player.x) + wX, (horist + player.y) + wY, 0, 0, 0, imgMovement);
+            else CanvasUtils.drawImageHd(item.building[WwmwN(player)], (vertst + player.x) + wX, (horist + player.y) + wY, 0, 0, 0, imgMovement);
         };
         
         function nearme(item, player, MMwnn) {
@@ -15697,8 +15697,8 @@ try {
             return 0;
         };
         
-        function _Construction(item, player, WX, WY, Rot, imgMovement) {
-            CanvasUtils.drawImageHd(item.builder, (vertst + player.x) + WX, (horist + player.y) + WY, Rot * PIby2, 0, 0, 1);
+        function _Construction(item, player, wX, wY, Rot, imgMovement) {
+            CanvasUtils.drawImageHd(item.builder, (vertst + player.x) + wX, (horist + player.y) + wY, Rot * PIby2, 0, 0, 1);
             var level = (player.state >> 4) & 15;
             if (player.breath2 !== level) {
                 player.breath2 = level;
@@ -15709,86 +15709,86 @@ try {
             var imgMovement = 1 + (0.03 * ((player.heal < 500) ? (player.heal / 500) : (1 - ((player.heal - 500) / 500))));
             if (level === 0) {
                 ctx.globalAlpha = MathUtils.Ease.inOutQuad(player.breath / item.evolve);
-                CanvasUtils.drawImageHd(item.building[0], (vertst + player.x) + WX, (horist + player.y) + WY, Rot * PIby2, 0, 0, imgMovement);
+                CanvasUtils.drawImageHd(item.building[0], (vertst + player.x) + wX, (horist + player.y) + wY, Rot * PIby2, 0, 0, imgMovement);
                 ctx.globalAlpha = 1;
             } else if (player.breath < item.evolve) {
                 var MwMvw = MathUtils.Ease.inOutQuad(player.breath / item.evolve);
                 ctx.globalAlpha = 1 - MwMvw;
-                CanvasUtils.drawImageHd(item.building[level - 1], (vertst + player.x) + WX, (horist + player.y) + WY, Rot * PIby2, 0, 0, imgMovement);
+                CanvasUtils.drawImageHd(item.building[level - 1], (vertst + player.x) + wX, (horist + player.y) + wY, Rot * PIby2, 0, 0, imgMovement);
                 ctx.globalAlpha = MwMvw;
-                CanvasUtils.drawImageHd(item.building[level], (vertst + player.x) + WX, (horist + player.y) + WY, Rot * PIby2, 0, 0, imgMovement);
+                CanvasUtils.drawImageHd(item.building[level], (vertst + player.x) + wX, (horist + player.y) + wY, Rot * PIby2, 0, 0, imgMovement);
                 ctx.globalAlpha = 1;
-            } else CanvasUtils.drawImageHd(item.building[level], (vertst + player.x) + WX, (horist + player.y) + WY, Rot * PIby2, 0, 0, imgMovement);
+            } else CanvasUtils.drawImageHd(item.building[level], (vertst + player.x) + wX, (horist + player.y) + wY, Rot * PIby2, 0, 0, imgMovement);
         };
         
-        function _TreeSeed(item, player, WX, WY, Rot, imgMovement) {
+        function _TreeSeed(item, player, wX, wY, Rot, imgMovement) {
             var level = (player.state >> 4) & 15;
             player.breath = (player.breath + delta) % 1000;
             var imgMovement = 1 + (0.01 * ((player.breath < 500) ? (player.breath / 500) : (1 - ((player.breath - 500) / 500))));
-            CanvasUtils.drawImageHd(item.building[level], (vertst + player.x) + WX, (horist + player.y) + WY, Rot * PIby2, 0, 0, imgMovement);
+            CanvasUtils.drawImageHd(item.building[level], (vertst + player.x) + wX, (horist + player.y) + wY, Rot * PIby2, 0, 0, imgMovement);
         };
         
-        function _OrangeSeed(item, player, WX, WY, Rot, imgMovement) {
+        function _OrangeSeed(item, player, wX, wY, Rot, imgMovement) {
             var level = (player.state >> 4) & 15;
             player.breath = (player.breath + delta) % 1000;
             var imgMovement = 1 + (0.03 * ((player.breath < 500) ? (player.breath / 500) : (1 - ((player.breath - 500) / 500))));
-            CanvasUtils.drawImageHd(item.building[level], (vertst + player.x) + WX, (horist + player.y) + WY, Rot * PIby2, 0, 0, imgMovement);
+            CanvasUtils.drawImageHd(item.building[level], (vertst + player.x) + wX, (horist + player.y) + wY, Rot * PIby2, 0, 0, imgMovement);
         };
         
-        function _LowWall(item, player, WX, WY, Rot, imgMovement) {
+        function _LowWall(item, player, wX, wY, Rot, imgMovement) {
             var WVV = (player.broke > 0) ? item.broken[player.broke - 1] : item.building[wmNMv(player, Rot)];
             var img = WVV.img;
             if (img.isLoaded !== 1) {
                 WVV.img = CanvasUtils.loadImage(WVV.src, WVV.img);
                 return;
             }
-            var VwW = ((scaleby * img.width) / 2) * imgMovement;
+            var w = ((scaleby * img.width) / 2) * imgMovement;
             var h = ((scaleby * img.height) / 2) * imgMovement;
             ctx.save();
-            ctx.translate(scaleby * ((vertst + player.x) + WX), scaleby * ((horist + player.y) + WY));
+            ctx.translate(scaleby * ((vertst + player.x) + wX), scaleby * ((horist + player.y) + wY));
             ctx.rotate(Rot * PIby2);
-            ctx.translate((item.xRotate * scaleby) - (VwW / 2), (item.yRotate * scaleby) - (h / 2));
-            ctx.drawImage(img, -item.xRotate * scaleby, -item.yRotate * scaleby, VwW, h);
+            ctx.translate((item.xRotate * scaleby) - (w / 2), (item.yRotate * scaleby) - (h / 2));
+            ctx.drawImage(img, -item.xRotate * scaleby, -item.yRotate * scaleby, w, h);
             ctx.restore();
         };
         
-        function _AutomaticDoor(item, player, WX, WY, Rot, imgMovement) {
+        function _AutomaticDoor(item, player, wX, wY, Rot, imgMovement) {
             ctx.globalAlpha = 1;
             var MvVvv = (player.state >> 7) & 1;
             if (MvVvv === 1) player.hitMax = window.Math.min(500, player.hitMax + delta);
             else if (player.hitMax > 0) player.hitMax = window.Math.max(0, player.hitMax - delta);
             if ((player.hitMax > 0) && (player.hitMax !== 500)) {
                 ctx.globalAlpha = MathUtils.Ease.outQuad(player.hitMax / 500);
-                CanvasUtils.drawImageHd(item.building[1][player.broke], (vertst + player.x) + WX, (horist + player.y) + WY, Rot * PIby2, 0, 0, imgMovement);
+                CanvasUtils.drawImageHd(item.building[1][player.broke], (vertst + player.x) + wX, (horist + player.y) + wY, Rot * PIby2, 0, 0, imgMovement);
                 ctx.globalAlpha = MathUtils.Ease.outQuad(1 - (player.hitMax / 500));
-                CanvasUtils.drawImageHd(item.building[0][player.broke], (vertst + player.x) + WX, (horist + player.y) + WY, Rot * PIby2, 0, 0, imgMovement);
+                CanvasUtils.drawImageHd(item.building[0][player.broke], (vertst + player.x) + wX, (horist + player.y) + wY, Rot * PIby2, 0, 0, imgMovement);
                 ctx.globalAlpha = 1;
-            } else CanvasUtils.drawImageHd(item.building[MvVvv][player.broke], (vertst + player.x) + WX, (horist + player.y) + WY, Rot * PIby2, 0, 0, imgMovement);
+            } else CanvasUtils.drawImageHd(item.building[MvVvv][player.broke], (vertst + player.x) + wX, (horist + player.y) + wY, Rot * PIby2, 0, 0, imgMovement);
         };
         
-        function _SwitchOff(item, player, WX, WY, Rot, imgMovement) {
+        function _SwitchOff(item, player, wX, wY, Rot, imgMovement) {
         nearme(item, player, 0);
-        CanvasUtils.drawImageHd(item.building[(player.state >> 4) & 1], (vertst + player.x) + WX, (horist + player.y) + WY, Rot * PIby2, 0, 0, imgMovement);
-            var WY = scaleby * (((player.i * 100) + horist) + 50);
-            var WX = scaleby * (((player.j * 100) + vertst) + 50);
+        CanvasUtils.drawImageHd(item.building[(player.state >> 4) & 1], (vertst + player.x) + wX, (horist + player.y) + wY, Rot * PIby2, 0, 0, imgMovement);
+            var wY = scaleby * (((player.i * 100) + horist) + 50);
+            var wX = scaleby * (((player.j * 100) + vertst) + 50);
             var SY = (imgMovement * arv.width) / 3;
             var SX = (imgMovement * arv.height) / 3;
         };
         
-        function _TimerGate(item, player, WX, WY, Rot, imgMovement) {
+        function _TimerGate(item, player, wX, wY, Rot, imgMovement) {
             nearme(item, player, 0);
-            CanvasUtils.drawImageHd(item.building[(player.state >> 4) & 3], (vertst + player.x) + WX, (horist + player.y) + WY, Rot * PIby2, 0, 0, imgMovement);
+            CanvasUtils.drawImageHd(item.building[(player.state >> 4) & 3], (vertst + player.x) + wX, (horist + player.y) + wY, Rot * PIby2, 0, 0, imgMovement);
         };
         
-        function _Lamp(item, player, WX, WY, Rot, imgMovement) {
+        function _Lamp(item, player, wX, wY, Rot, imgMovement) {
             nearme(item, player, 0);
             var light = (player.state >> 7) & 1;
             if (light === 1) player.hitMax = window.Math.min(500, player.hitMax + delta);
             else if (player.hitMax > 0) player.hitMax = window.Math.max(0, player.hitMax - delta);
             if (player.hitMax > 0) {
                 WvnvV[pplonscr++] = player;
-                CanvasUtils.drawImageHd(item.buildingOn[(player.state >> 4) & 7], (vertst + player.x) + WX, (horist + player.y) + WY, Rot * PIby2, 0, 0, imgMovement);
-            } else CanvasUtils.drawImageHd(item.building, (vertst + player.x) + WX, (horist + player.y) + WY, Rot * PIby2, 0, 0, imgMovement);
+                CanvasUtils.drawImageHd(item.buildingOn[(player.state >> 4) & 7], (vertst + player.x) + wX, (horist + player.y) + wY, Rot * PIby2, 0, 0, imgMovement);
+            } else CanvasUtils.drawImageHd(item.building, (vertst + player.x) + wX, (horist + player.y) + wY, Rot * PIby2, 0, 0, imgMovement);
         };
         
         function _LampLight(player) {
@@ -15802,7 +15802,7 @@ try {
         };
         
         
-        function _Door(item, player, WX, WY, Rot, imgMovement) {
+        function _Door(item, player, wX, wY, Rot, imgMovement) {
             var NVNvv = (player.state >> 4) & 1;
             var MWwVn = (player.pid === 0) ? 0 : 1;
             if ((nearme(item, player, MWwVn) === 1) && (NVNvv === 1)) World.PLAYER.eInteract = item.interactclose;
@@ -15820,18 +15820,18 @@ try {
                 WVV.img = CanvasUtils.loadImage(WVV.src, WVV.img);
                 return;
             }
-            var VwW = ((scaleby * img.width) / 2) * imgMovement;
+            var w = ((scaleby * img.width) / 2) * imgMovement;
             var h = ((scaleby * img.height) / 2) * imgMovement;
             ctx.save();
-            ctx.translate(scaleby * ((vertst + player.x) + WX), scaleby * ((horist + player.y) + WY));
+            ctx.translate(scaleby * ((vertst + player.x) + wX), scaleby * ((horist + player.y) + wY));
             ctx.rotate(Rot * PIby2);
-            ctx.translate((item.xRotate * scaleby) - (VwW / 2), (item.yRotate * scaleby) - (h / 2));
+            ctx.translate((item.xRotate * scaleby) - (w / 2), (item.yRotate * scaleby) - (h / 2));
             ctx.rotate(angle);
-            ctx.drawImage(img, -item.xRotate * scaleby, -item.yRotate * scaleby, VwW, h);
+            ctx.drawImage(img, -item.xRotate * scaleby, -item.yRotate * scaleby, w, h);
             ctx.restore();
             if ((player.state & 32) === 32) {
                 player.state -= 32;
-                if (((player.breath === 0) && (WX === 0)) && (WY === 0)) player.breath = 600;
+                if (((player.breath === 0) && (wX === 0)) && (wY === 0)) player.breath = 600;
             }
             if (player.breath > 0) {
                 if (arv.isLoaded !== 1) {
@@ -15840,44 +15840,44 @@ try {
                 }
                 if (player.breath > 400) ctx.globalAlpha = MathUtils.Ease.outQuad(1 - ((player.breath - 400) / 200));
                 else if (player.breath < 200) ctx.globalAlpha = MathUtils.Ease.outQuad(player.breath / 200);
-                var WY = scaleby * (((player.i * __TILE_SIZE__) + horist) + __TILE_SIZE2__);
-                var WX = scaleby * (((player.j * __TILE_SIZE__) + vertst) + __TILE_SIZE2__);
+                var wY = scaleby * (((player.i * __TILE_SIZE__) + horist) + __TILE_SIZE2__);
+                var wX = scaleby * (((player.j * __TILE_SIZE__) + vertst) + __TILE_SIZE2__);
                 var SY = (scaleby * arv.width) / 2;
                 var SX = (scaleby * arv.height) / 2;
-                ctx.drawImage(arv, WX - (SY / 2), WY - (SX / 2), SY, SX);
+                ctx.drawImage(arv, wX - (SY / 2), wY - (SX / 2), SY, SX);
                 ctx.globalAlpha = 1;
                 player.breath = window.Math.max(0, player.breath - delta);
             }
         };
         
-        function _GroundFloor(item, player, WX, WY, Rot, imgMovement) {
+        function _GroundFloor(item, player, wX, wY, Rot, imgMovement) {
             var mmWVw = matrix[player.i][player.j];
             mmWVw.tile = 0;
             mmWVw.ground = frameId;
             mmWVw.pid = player.pid;
             if ((mmWVw.wallFrame !== frameId) || (mmWVw.drawFloor === 1)) {
-                if (player.broke > 0) CanvasUtils.drawImageHd(item.broken[player.broke - 1], (vertst + player.x) + WX, (horist + player.y) + WY, 0, 0, 0, imgMovement);
+                if (player.broke > 0) CanvasUtils.drawImageHd(item.broken[player.broke - 1], (vertst + player.x) + wX, (horist + player.y) + wY, 0, 0, 0, imgMovement);
                 else CanvasUtils.drawImageHd(item.building[Wwmwm(player)], vertst + player.x, horist + player.y, 0, 0, 0, imgMovement);
             }
         };
         
         
-        function _Furniture(item, player, WX, WY, Rot, imgMovement) {
+        function _Furniture(item, player, wX, wY, Rot, imgMovement) {
             var inuse = (player.state >> 4) & 1;
             var objects = INVENTORY[item.id].subtype[player.subtype];
             if (inuse === 1) player.hit = window.Math.min(500, player.hit + delta);
             else if (player.hit > 0) player.hit = window.Math.max(0, player.hit - delta);
             if (((inuse === 0) && (objects.usable === 1)) && (nearme(objects, player, 0) === 1)) World.PLAYER.eInteract = econtainericon;
-            CanvasUtils.drawImageHd(objects.building, (vertst + player.x) + WX, (horist + player.y) + WY, Rot * PIby2, 0, 0, imgMovement);
-            if (player.hit > 0) containeropenic(player, WX, WY);
+            CanvasUtils.drawImageHd(objects.building, (vertst + player.x) + wX, (horist + player.y) + wY, Rot * PIby2, 0, 0, imgMovement);
+            if (player.hit > 0) containeropenic(player, wX, wY);
         };
         
-        function _Road(item, player, WX, WY, Rot, imgMovement) {
+        function _Road(item, player, wX, wY, Rot, imgMovement) {
             var objects = INVENTORY[item.id].subtype[player.subtype];
             CanvasUtils.drawImageHd(objects.building, vertst + player.x, horist + player.y, 0, 0, 0, imgMovement);
         };
         
-        function _Ghoul(entitie, player, WX, WY, imgMovement) {
+        function _Ghoul(entitie, player, wX, wY, imgMovement) {
             var Vmwnn = player.state & 254;
             if (Vmwnn === 2) {
                 player.state &= 65281;
@@ -15922,8 +15922,8 @@ try {
             }
             var breath = entitie.breath * ((player.breath < 750) ? (player.breath / 750) : (1 - ((player.breath - 750) / 750)));
             var move = entitie.armMove * ((player.breath2 < 750) ? (player.breath2 / 750) : (1 - ((player.breath2 - 750) / 750)));
-            CanvasUtils.drawImageHd(entitie.rightArm, WX, WY, ((entitie.rightArm.angle + player.angle) + breath) + nmm, (entitie.rightArm.x + (move * player.heal)) + NWW, entitie.rightArm.y, imgMovement);
-            CanvasUtils.drawImageHd(entitie.leftArm, WX, WY, ((-entitie.leftArm.angle + player.angle) - breath) + nmm, (entitie.leftArm.x - (move * player.heal)) + NNM, entitie.leftArm.y, imgMovement);
+            CanvasUtils.drawImageHd(entitie.rightArm, wX, wY, ((entitie.rightArm.angle + player.angle) + breath) + nmm, (entitie.rightArm.x + (move * player.heal)) + NWW, entitie.rightArm.y, imgMovement);
+            CanvasUtils.drawImageHd(entitie.leftArm, wX, wY, ((-entitie.leftArm.angle + player.angle) - breath) + nmm, (entitie.leftArm.x - (move * player.heal)) + NNM, entitie.leftArm.y, imgMovement);
             if (player.hurt > 0) {
                 var mnM = 1;
                 player.hurt -= delta;
@@ -15933,26 +15933,26 @@ try {
                     vW = MathUtils.Ease.outQuad(player.hurt / 150);
                     mnM += (1 - vW) * 0.2;
                 }
-                WX += (window.Math.cos(player.hurtAngle) * vW) * 10;
-                WY += (window.Math.sin(player.hurtAngle) * vW) * 10;
+                wX += (window.Math.cos(player.hurtAngle) * vW) * 10;
+                wY += (window.Math.sin(player.hurtAngle) * vW) * 10;
                 ctx.globalAlpha = window.Math.min(1, window.Math.max(0, vW));
-                CanvasUtils.drawImageHd(entitie.hurt, WX, WY, player.angle + (nmm / 1.5), wnN, 0, mnM);
+                CanvasUtils.drawImageHd(entitie.hurt, wX, wY, player.angle + (nmm / 1.5), wnN, 0, mnM);
                 ctx.globalAlpha = 1;
             }
-            CanvasUtils.drawImageHd(entitie.head, WX, WY, player.angle + (nmm / 1.5), wnN, 0, imgMovement);
+            CanvasUtils.drawImageHd(entitie.head, wX, wY, player.angle + (nmm / 1.5), wnN, 0, imgMovement);
         };
         
         
-        function _Workbench(item, player, WX, WY, Rot, imgMovement) {
+        function _Workbench(item, player, wX, wY, Rot, imgMovement) {
             var inuse = (player.state >> 4) & 1;
             if (inuse === 1) player.hit = window.Math.min(500, player.hit + delta);
             else if (player.hit > 0) player.hit = window.Math.max(0, player.hit - delta);
             if (inuse === 0) nearme(item, player, 0);
-            CanvasUtils.drawImageHd(item.building, (vertst + player.x) + WX, (horist + player.y) + WY, Rot * PIby2, 0, 0, imgMovement);
-            if (player.hit > 0) containeropenic(player, WX, WY);
+            CanvasUtils.drawImageHd(item.building, (vertst + player.x) + wX, (horist + player.y) + wY, Rot * PIby2, 0, 0, imgMovement);
+            if (player.hit > 0) containeropenic(player, wX, wY);
         };
         
-        function _Workbench2(item, player, WX, WY, Rot, imgMovement) {
+        function _Workbench2(item, player, wX, wY, Rot, imgMovement) {
             var i = (Rot + 1) % 2;
             var j = Rot % 2;
             matrix[player.i + i][player.j + j].tile = frameId;
@@ -15962,10 +15962,10 @@ try {
             matrix[player.i + i][player.j + j].category = window.undefined;
             matrix[player.i - i][player.j - j].category = window.undefined;
             nearme(item, player, 0);
-            CanvasUtils.drawImageHd(item.building, (vertst + player.x) + WX, (horist + player.y) + WY, Rot * PIby2, 0, 0, imgMovement);
+            CanvasUtils.drawImageHd(item.building, (vertst + player.x) + wX, (horist + player.y) + wY, Rot * PIby2, 0, 0, imgMovement);
         };
         
-        function _Agitator(item, player, WX, WY, Rot, imgMovement) {
+        function _Agitator(item, player, wX, wY, Rot, imgMovement) {
             var MWm = (player.state >> 4) & 1;
             if (MWm === 1) player.hit = window.Math.min(500, player.hit + delta);
             else if (player.hit > 0) player.hit = window.Math.max(0, player.hit - delta);
@@ -15977,14 +15977,14 @@ try {
             if (player.hitMax > 0) {
                 vW = MathUtils.Ease.outQuad(player.hitMax / 10000);
                 player.heal += (vW * delta) / 300;
-                CanvasUtils.drawImageHd(item.building[1], (vertst + player.x) + WX, (horist + player.y) + WY, Rot * PIby2, 0, 0, imgMovement);
-                CanvasUtils.drawImageHd(item.building[2], ((vertst + player.x) + WX) + item.spine[Rot][0], ((horist + player.y) + WY) + item.spine[Rot][1], (Rot * PIby2) + player.heal, 0, 0, imgMovement);
-                CanvasUtils.drawImageHd(item.building[3], (vertst + player.x) + WX, (horist + player.y) + WY, Rot * PIby2, 0, 0, imgMovement);
-            } else CanvasUtils.drawImageHd(item.building[0], (vertst + player.x) + WX, (horist + player.y) + WY, Rot * PIby2, 0, 0, imgMovement);
-            if (player.hit > 0) containeropenic(player, WX, WY);
+                CanvasUtils.drawImageHd(item.building[1], (vertst + player.x) + wX, (horist + player.y) + wY, Rot * PIby2, 0, 0, imgMovement);
+                CanvasUtils.drawImageHd(item.building[2], ((vertst + player.x) + wX) + item.spine[Rot][0], ((horist + player.y) + wY) + item.spine[Rot][1], (Rot * PIby2) + player.heal, 0, 0, imgMovement);
+                CanvasUtils.drawImageHd(item.building[3], (vertst + player.x) + wX, (horist + player.y) + wY, Rot * PIby2, 0, 0, imgMovement);
+            } else CanvasUtils.drawImageHd(item.building[0], (vertst + player.x) + wX, (horist + player.y) + wY, Rot * PIby2, 0, 0, imgMovement);
+            if (player.hit > 0) containeropenic(player, wX, wY);
         };
         
-        function _Extractor(item, player, WX, WY, Rot, imgMovement) {
+        function _Extractor(item, player, wX, wY, Rot, imgMovement) {
             var MWm = (player.state >> 4) & 1;
             if (MWm === 1) player.hit = window.Math.min(500, player.hit + delta);
             else if (player.hit > 0) player.hit = window.Math.max(0, player.hit - delta);
@@ -15995,16 +15995,16 @@ try {
             var vW = 0;
             if (player.hitMax > 0) {
                 vW = MathUtils.Ease.outQuad(player.hitMax / 10000);
-                WX += ((window.Math.random() * 2) - 1) * vW;
-                WY += ((window.Math.random() * 2) - 1) * vW;
+                wX += ((window.Math.random() * 2) - 1) * vW;
+                wY += ((window.Math.random() * 2) - 1) * vW;
                 player.heal += (vW * delta) / 300;
-                CanvasUtils.drawImageHd(item.building[1], ((vertst + player.x) + WX) + item.spine[Rot][0], ((horist + player.y) + WY) + item.spine[Rot][1], (Rot * PIby2) + player.heal, 0, 0, imgMovement);
-                CanvasUtils.drawImageHd(item.building[0], (vertst + player.x) + WX, (horist + player.y) + WY, Rot * PIby2, 0, 0, imgMovement);
-            } else CanvasUtils.drawImageHd(item.building[2], (vertst + player.x) + WX, (horist + player.y) + WY, Rot * PIby2, 0, 0, imgMovement);
-            if (player.hit > 0) containeropenic(player, WX, WY);
+                CanvasUtils.drawImageHd(item.building[1], ((vertst + player.x) + wX) + item.spine[Rot][0], ((horist + player.y) + wY) + item.spine[Rot][1], (Rot * PIby2) + player.heal, 0, 0, imgMovement);
+                CanvasUtils.drawImageHd(item.building[0], (vertst + player.x) + wX, (horist + player.y) + wY, Rot * PIby2, 0, 0, imgMovement);
+            } else CanvasUtils.drawImageHd(item.building[2], (vertst + player.x) + wX, (horist + player.y) + wY, Rot * PIby2, 0, 0, imgMovement);
+            if (player.hit > 0) containeropenic(player, wX, wY);
         };
         
-        function containeropenic(player, WX, WY) {
+        function containeropenic(player, wX, wY) {
             player.breath = (player.breath + delta) % 1000;
             var imgMovement = 1 + (0.15 * ((player.breath < 500) ? (player.breath / 500) : (1 - ((player.breath - 500) / 500))));
             imgMovement *= scaleby;
@@ -16013,15 +16013,15 @@ try {
                 return;
             }
             ctx.globalAlpha = MathUtils.Ease.outQuad(player.hit / 500);
-            var WY = scaleby * (((player.i * __TILE_SIZE__) + horist) + __TILE_SIZE2__);
-            var WX = scaleby * (((player.j * __TILE_SIZE__) + vertst) + __TILE_SIZE2__);
+            var wY = scaleby * (((player.i * __TILE_SIZE__) + horist) + __TILE_SIZE2__);
+            var wX = scaleby * (((player.j * __TILE_SIZE__) + vertst) + __TILE_SIZE2__);
             var SY = (imgMovement * arv.width) / 2;
             var SX = (imgMovement * arv.height) / 2;
-            ctx.drawImage(arv, WX - (SY / 2), WY - (SX / 2), SY, SX);
+            ctx.drawImage(arv, wX - (SY / 2), wY - (SX / 2), SY, SX);
             ctx.globalAlpha = 1;
         };
         
-        function _Compost(item, player, WX, WY, Rot, imgMovement) {
+        function _Compost(item, player, wX, wY, Rot, imgMovement) {
             var MWm = (player.state >> 4) & 1;
             if (MWm === 1) player.hit = window.Math.min(500, player.hit + delta);
             else if (player.hit > 0) player.hit = window.Math.max(0, player.hit - delta);
@@ -16034,14 +16034,14 @@ try {
             var vW = 0;
             if (player.hitMax > 0) {
                 vW = MathUtils.Ease.outQuad(player.hitMax / 10000);
-                WX += ((window.Math.random() * 2) - 1) * vW;
-                WY += ((window.Math.random() * 2) - 1) * vW;
-                CanvasUtils.drawImageHd(item.building[0], (vertst + player.x) + WX, (horist + player.y) + WY, Rot * PIby2, 0, 0, imgMovement);
-            } else CanvasUtils.drawImageHd(item.building[1], (vertst + player.x) + WX, (horist + player.y) + WY, Rot * PIby2, 0, 0, imgMovement);
-            if (player.hit > 0) containeropenic(player, WX, WY);
+                wX += ((window.Math.random() * 2) - 1) * vW;
+                wY += ((window.Math.random() * 2) - 1) * vW;
+                CanvasUtils.drawImageHd(item.building[0], (vertst + player.x) + wX, (horist + player.y) + wY, Rot * PIby2, 0, 0, imgMovement);
+            } else CanvasUtils.drawImageHd(item.building[1], (vertst + player.x) + wX, (horist + player.y) + wY, Rot * PIby2, 0, 0, imgMovement);
+            if (player.hit > 0) containeropenic(player, wX, wY);
         };
         
-        function _Smelter(item, player, WX, WY, Rot, imgMovement) {
+        function _Smelter(item, player, wX, wY, Rot, imgMovement) {
             var i = (Rot + 1) % 2;
             var j = Rot % 2;
             matrix[player.i + i][player.j + j].tile = frameId;
@@ -16062,14 +16062,14 @@ try {
             var vW = 0;
             if (player.hitMax > 0) {
                 vW = MathUtils.Ease.outQuad(player.hitMax / 10000);
-                WX += ((window.Math.random() * 2) - 1) * vW;
-                WY += ((window.Math.random() * 2) - 1) * vW;
-                CanvasUtils.drawImageHd(item.building[1], (vertst + player.x) + WX, (horist + player.y) + WY, Rot * PIby2, 0, 0, imgMovement);
-            } else CanvasUtils.drawImageHd(item.building[0], (vertst + player.x) + WX, (horist + player.y) + WY, Rot * PIby2, 0, 0, imgMovement);
-            if (player.hit > 0) containeropenic(player, WX, WY);
+                wX += ((window.Math.random() * 2) - 1) * vW;
+                wY += ((window.Math.random() * 2) - 1) * vW;
+                CanvasUtils.drawImageHd(item.building[1], (vertst + player.x) + wX, (horist + player.y) + wY, Rot * PIby2, 0, 0, imgMovement);
+            } else CanvasUtils.drawImageHd(item.building[0], (vertst + player.x) + wX, (horist + player.y) + wY, Rot * PIby2, 0, 0, imgMovement);
+            if (player.hit > 0) containeropenic(player, wX, wY);
         };
         
-        function _TeslaBench(item, player, WX, WY, Rot, imgMovement) {
+        function _TeslaBench(item, player, wX, wY, Rot, imgMovement) {
             var i = (Rot + 1) % 2;
             var j = Rot % 2;
             matrix[player.i + i][player.j + j].tile = frameId;
@@ -16087,11 +16087,11 @@ try {
             else player.hitMax = 0;
             var vW = 0;
             if (player.hitMax > 0) {
-                CanvasUtils.drawImageHd(item.building[1 + (window.Math.floor(player.hitMax / 500) % 3)], (vertst + player.x) + WX, (horist + player.y) + WY, Rot * PIby2, 0, 0, imgMovement);
+                CanvasUtils.drawImageHd(item.building[1 + (window.Math.floor(player.hitMax / 500) % 3)], (vertst + player.x) + wX, (horist + player.y) + wY, Rot * PIby2, 0, 0, imgMovement);
                 var light = item.light[window.Math.floor(player.hitMax / 50) % item.light.length];
-                if (light !== 0) CanvasUtils.drawImageHd(light, (vertst + player.x) + WX, (horist + player.y) + WY, Rot * PIby2, 0, 0, imgMovement);
-            } else CanvasUtils.drawImageHd(item.building[0], (vertst + player.x) + WX, (horist + player.y) + WY, Rot * PIby2, 0, 0, imgMovement);
-            if (player.hit > 0) containeropenic(player, WX, WY);
+                if (light !== 0) CanvasUtils.drawImageHd(light, (vertst + player.x) + wX, (horist + player.y) + wY, Rot * PIby2, 0, 0, imgMovement);
+            } else CanvasUtils.drawImageHd(item.building[0], (vertst + player.x) + wX, (horist + player.y) + wY, Rot * PIby2, 0, 0, imgMovement);
+            if (player.hit > 0) containeropenic(player, wX, wY);
         };
         
         function _CampfireLight(player) {
@@ -16109,19 +16109,19 @@ try {
             ctx.globalAlpha = 1;
         };
         
-        function _Campfire(item, player, WX, WY, Rot, imgMovement) {
+        function _Campfire(item, player, wX, wY, Rot, imgMovement) {
             
             var MWm = (player.state >> 4) & 1;
             if (MWm === 1) player.hit = window.Math.min(500, player.hit + delta);
             else if (player.hit > 0) player.hit = window.Math.max(0, player.hit - delta);
             if (MWm === 0) nearme(item, player, 0);
-            CanvasUtils.drawImageHd(item.building, (vertst + player.x) + WX, (horist + player.y) + WY, Rot * PIby2, 0, 0, imgMovement);
+            CanvasUtils.drawImageHd(item.building, (vertst + player.x) + wX, (horist + player.y) + wY, Rot * PIby2, 0, 0, imgMovement);
         
             var light = (player.state >> 5) & 1;
             if (light === 1) player.hitMax = window.Math.min(500, player.hitMax + delta);
             else if (player.hitMax > 0) player.hitMax = window.Math.max(0, player.hitMax - delta);
             if (player.hitMax > 0) WvnvV[pplonscr++] = player;
-            if (player.hit > 0) containeropenic(player, WX, WY);
+            if (player.hit > 0) containeropenic(player, wX, wY);
         };
         
         function _Explosions(player) {
@@ -16175,20 +16175,20 @@ try {
                 }
                 player.hurt = 250;
                 if (player.hurt2 <= 0) player.hurt2 = 300;
-                player.hurtAngle = (WNVNM * (player.extra & 31)) / 31;
+                player.hurtAngle = (PI2 * (player.extra & 31)) / 31;
                 player.state &= ~2;
                 vNwNM(player, WwMWW.particles, vV.particlesDist, 1);
             }
-            var WX = 0;
-            var WY = 0;
+            var wX = 0;
+            var wY = 0;
             if (player.hurt > 0) {
                 var hurt = (player.hurt > 200) ? ((20 * (250 - player.hurt)) / 50) : ((20 * player.hurt) / 200);
-                WX = window.Math.cos(player.hurtAngle) * hurt;
-                WY = window.Math.sin(player.hurtAngle) * hurt;
+                wX = window.Math.cos(player.hurtAngle) * hurt;
+                wY = window.Math.sin(player.hurtAngle) * hurt;
                 player.hurt -= delta;
             }
             if (((player.breath === 3000) && (WMWvN !== 0)) && (player.hurt === 0)) {
-                CanvasUtils.drawImageHd(vV.imgFull, (vertst + player.x) + WX, (horist + player.y) + WY, player.angle, 0, 0, imgMovement);
+                CanvasUtils.drawImageHd(vV.imgFull, (vertst + player.x) + wX, (horist + player.y) + wY, player.angle, 0, 0, imgMovement);
                 if (player.removed !== 0) {
                     if (player.death > 300) player.removed = 2;
                     ctx.globalAlpha = 1;
@@ -16198,14 +16198,14 @@ try {
                 }
                 return;
             }
-            CanvasUtils.drawImageHd(vV.img, (vertst + player.x) + WX, (horist + player.y) + WY, player.angle, 0, 0, imgMovement);
+            CanvasUtils.drawImageHd(vV.img, (vertst + player.x) + wX, (horist + player.y) + wY, player.angle, 0, 0, imgMovement);
             if (vV.imgTop !== window.undefined) {
-                WX = 0;
-                WY = 0;
+                wX = 0;
+                wY = 0;
                 if (player.hurt2 > 0) {
                     var hurt = (player.hurt2 > 250) ? (10 * MathUtils.Ease.inQuad((300 - player.hurt2) / 250)) : (10 * MathUtils.Ease.outQuad(player.hurt2 / 250));
-                    WX = window.Math.cos(player.hurtAngle) * hurt;
-                    WY = window.Math.sin(player.hurtAngle) * hurt;
+                    wX = window.Math.cos(player.hurtAngle) * hurt;
+                    wY = window.Math.sin(player.hurtAngle) * hurt;
                     player.hurt2 -= delta;
                 }
                 if (WMWvN === 0) {
@@ -16225,7 +16225,7 @@ try {
                         imgMovement += 0.025 - ((0.025 * player.breath) / 3000);
                     }
                 }
-                CanvasUtils.drawImageHd(vV.imgTop, (vertst + player.x) + WX, (horist + player.y) + WY, player.angle, 0, 0, imgMovement);
+                CanvasUtils.drawImageHd(vV.imgTop, (vertst + player.x) + wX, (horist + player.y) + wY, player.angle, 0, 0, imgMovement);
             }
             if (player.removed !== 0) {
                 if (player.death > 300) player.removed = 2;
@@ -16260,7 +16260,7 @@ try {
             }
             if ((player.state & 2) === 2) {
                 player.hurt = 250;
-                player.hurtAngle = (WNVNM * (player.extra & 31)) / 31;
+                player.hurtAngle = (PI2 * (player.extra & 31)) / 31;
                 player.state &= ~2;
                 var _item = (item.particles === -1) ? INVENTORY[item.id].subtype[player.subtype] : item;
                 vNwNM(player, _item.particles, _item.particlesDist, 1);
@@ -16269,22 +16269,22 @@ try {
                     soundLimit[_item.impact] = 1;
                 }
             }
-            var WX = 0;
-            var WY = 0;
+            var wX = 0;
+            var wY = 0;
             if (player.hurt > 0) {
                 if (player.hurt > 200) {
                     var hurt = (20 * (250 - player.hurt)) / 100;
-                    WX = window.Math.cos(player.hurtAngle) * hurt;
-                    WY = window.Math.sin(player.hurtAngle) * hurt;
+                    wX = window.Math.cos(player.hurtAngle) * hurt;
+                    wY = window.Math.sin(player.hurtAngle) * hurt;
                     player.hurt -= delta;
                 } else {
                     var hurt = (20 * player.hurt) / 200;
-                    WX = window.Math.cos(player.hurtAngle) * hurt;
-                    WY = window.Math.sin(player.hurtAngle) * hurt;
+                    wX = window.Math.cos(player.hurtAngle) * hurt;
+                    wY = window.Math.sin(player.hurtAngle) * hurt;
                     player.hurt -= delta;
                 }
             }
-            item.draw(item, player, WX, WY, Rot, imgMovement);
+            item.draw(item, player, wX, wY, Rot, imgMovement);
             if (player.removed !== 0) {
                 if (player.death > 300) player.removed = 2;
                 ctx.globalAlpha = 1;
@@ -16816,8 +16816,8 @@ var MapManager = (function() {
         }
     };
 
-    function wvmnN(WVWWv, SY, SX) {
-        wWn = new RNG.Random(WVWWv);
+    function wvmnN(seed, SY, SX) {
+        wWn = new RNG.Random(seed);
         vMWMW = SY;
         wMVvN = SX;
         MapManager.width = SY;
@@ -16833,9 +16833,9 @@ var MapManager = (function() {
         VNnvM = 0;
     };
 
-    function init(WVWWv, SY, SX, fun) {
+    function init(seed, SY, SX, fun) {
         window.console.time("Town generation");
-        wvmnN(WVWWv, SY, SX);
+        wvmnN(seed, SY, SX);
         VVvvN();
         if (fun !== window.undefined) fun();
         window.console.timeEnd("Town generation");
@@ -16866,10 +16866,10 @@ __ENTITIE_RESOURCES_STOP__  = COUNTER_ENTITIE++;
 __ENTITIE_EXPLOSION__       = COUNTER_ENTITIE++;
 __ENTITIE_AI__              = COUNTER_ENTITIE++;
 
-ENTITIES[__ENTITIE_PLAYER__].update = function updateEntitiePlayer(UNIT, WX, WY) {
-    if (Math2d.dist(UNIT.x, UNIT.y, WX, WY) > 66) {
-        UNIT.rx = WX;
-        UNIT.ry = WY;
+ENTITIES[__ENTITIE_PLAYER__].update = function updateEntitiePlayer(UNIT, wX, wY) {
+    if (Math2d.dist(UNIT.x, UNIT.y, wX, wY) > 66) {
+        UNIT.rx = wX;
+        UNIT.ry = wY;
         var angle = Math2d.angle(UNIT.rx, UNIT.ry, UNIT.nx, UNIT.ny);
         UNIT.angleX = window.Math.cos(angle);
         UNIT.angleY = window.Math.sin(angle);
@@ -16902,14 +16902,14 @@ ENTITIES[__ENTITIE_LOOT__].init = function initEntitieLoot(UNIT) {
         UNIT.nangle = UNIT.angle;
     }
 };
-ENTITIES[__ENTITIE_LOOT__].update = function updateEntitieLoot(UNIT, WX, WY) {
+ENTITIES[__ENTITIE_LOOT__].update = function updateEntitieLoot(UNIT, wX, wY) {
     UNIT.hit = UNIT.state >> 8;
 };
 ENTITIES[__ENTITIE_BULLET__].init = function initEntitieBullet(UNIT) {
     UNIT.hurtAngle = Math2d.angle(UNIT.rx, UNIT.ry, UNIT.nx, UNIT.ny);
-    var Wn = UNIT.extra;
+    var id = UNIT.extra;
     UNIT.speed = (UNIT.state >> 8) / 100;
-    switch (Wn) {
+    switch (id) {
         case 4:
         case 8:
             var player = Entitie.findEntitie(__ENTITIE_PLAYER__, UNIT.pid, 0);
@@ -16924,7 +16924,7 @@ ENTITIES[__ENTITIE_BULLET__].init = function initEntitieBullet(UNIT) {
             break;
     }
 };
-ENTITIES[__ENTITIE_BULLET__].update = function updateEntitieBullet(UNIT, WX, WY) {
+ENTITIES[__ENTITIE_BULLET__].update = function updateEntitieBullet(UNIT, wX, wY) {
     var angle = Math2d.angle(UNIT.x, UNIT.y, UNIT.nx, UNIT.ny);
     var pi2 = window.Math.PI * 2;
     var vWWMM = (((angle + pi2) % pi2) - ((UNIT.hurtAngle + pi2) % pi2)) % pi2;
@@ -16940,14 +16940,14 @@ ENTITIES[__ENTITIE_RESOURCES_TOP__].update = function updateEntitieBuilding() {
 ENTITIES[__ENTITIE_RESOURCES_DOWN__].update = ENTITIES[__ENTITIE_RESOURCES_TOP__].update;
 ENTITIES[__ENTITIE_RESOURCES_MID__].update = ENTITIES[__ENTITIE_RESOURCES_TOP__].update;
 ENTITIES[__ENTITIE_RESOURCES_STOP__].update = ENTITIES[__ENTITIE_RESOURCES_TOP__].update;
-ENTITIES[__ENTITIE_BUILD_TOP__].update = function updateEntitieBuilding(UNIT, WX, WY) {
+ENTITIES[__ENTITIE_BUILD_TOP__].update = function updateEntitieBuilding(UNIT, wX, wY) {
     var Rot = (UNIT.extra >> 5) & 3;
     UNIT.subtype = (UNIT.state >> 5) & 63;
     UNIT.broke = UNIT.state >> 14;
     UNIT.state = UNIT.state & 16383;
     var item = INVENTORY[UNIT.extra >> 7];
-    UNIT.x = ((window.Math.floor(WX / Render.__TILE_SIZE__) * Render.__TILE_SIZE__) + Render.__TILE_SIZE2__) + item.xCenter[Rot];
-    UNIT.y = ((window.Math.floor(WY / Render.__TILE_SIZE__) * Render.__TILE_SIZE__) + Render.__TILE_SIZE2__) + item.yCenter[Rot];
+    UNIT.x = ((window.Math.floor(wX / Render.__TILE_SIZE__) * Render.__TILE_SIZE__) + Render.__TILE_SIZE2__) + item.xCenter[Rot];
+    UNIT.y = ((window.Math.floor(wY / Render.__TILE_SIZE__) * Render.__TILE_SIZE__) + Render.__TILE_SIZE2__) + item.yCenter[Rot];
     UNIT.rx = UNIT.x;
     UNIT.ry = UNIT.y;
     UNIT.nx = UNIT.x;
