@@ -90,23 +90,23 @@ var CanvasUtils = (function() {
     };
 
     function bodOnResize() {
-        var mnV, SY, SX;
+        var mnV, width, height;
         if (options.resizeMethod === __RESIZE_METHOD_CSS__) {
             if (window.innerWidth > window.innerHeight) {
                 mnV = window.innerHeight / window.innerWidth;
-                SY = options.size;
-                SX = window.Math.floor(SY * mnV);
+                width = options.size;
+                height = window.Math.floor(width * mnV);
             } else {
                 mnV = window.innerWidth / window.innerHeight;
-                SX = options.size;
-                SY = window.Math.floor(SX * mnV);
+                height = options.size;
+                width = window.Math.floor(height * mnV);
             }
         } else {
-            SY = window.innerWidth;
-            SX = window.innerHeight;
+            width = window.innerWidth;
+            height = window.innerHeight;
         }
-        canw = SY;
-        canh = SX;
+        canw = width;
+        canh = height;
         canw2 = window.Math.floor(canw / 2);
         canh2 = window.Math.floor(canh / 2);
         canw4 = window.Math.floor(canw / 4);
@@ -118,9 +118,9 @@ var CanvasUtils = (function() {
         canvas.width = canw * mnV;
         canvas.height = canh * mnV;
         if (options.resizeMethod === __RESIZE_METHOD_SCALE__) {
-            scaleby = window.Math.max(SX / ((options.size * 11) / 16), SY / options.size);
-            canvas.style.width = SY + "px";
-            canvas.style.height = SX + "px";
+            scaleby = window.Math.max(height / ((options.size * 11) / 16), width / options.size);
+            canvas.style.width = width + "px";
+            canvas.style.height = height + "px";
         }
         canwns  = canw / scaleby;
         canhns  = canh / scaleby;
@@ -249,14 +249,14 @@ var CanvasUtils = (function() {
         ctx.lineTo(lineTo * scaleby, Vvwwm * scaleby);
     };
 
-    function drawPath(ctx, MWnvm, wNNwN, SY) {
+    function drawPath(ctx, MWnvm, wNNwN, width) {
         if (MWnvm !== window.undefined) {
             ctx.fillStyle = MWnvm;
             ctx.fill();
         }
         if (wNNwN !== window.undefined) {
-            if (SY !== window.undefined)
-                ctx.lineWidth = SY;
+            if (width !== window.undefined)
+                ctx.lineWidth = width;
             ctx.strokeStyle = wNNwN;
             ctx.stroke();
         }
@@ -672,20 +672,20 @@ var Mouse = (function() {
 })();
 
 var GUI = (function() {
-    function roundRect(ctx, vnvMN, mWvWn, SY, SX, radius) {
-        (SY < (2 * radius)) && (radius = SY / 2);
-        (SX < (2 * radius)) && (radius = SX / 2);
+    function roundRect(ctx, vnvMN, mWvWn, width, height, radius) {
+        (width < (2 * radius)) && (radius = width / 2);
+        (height < (2 * radius)) && (radius = height / 2);
         (0 > radius) && (radius = 0);
         ctx.beginPath();
         ctx.moveTo(vnvMN + radius, mWvWn);
-        ctx.arcTo(vnvMN + SY, mWvWn, vnvMN + SY, mWvWn + SX, radius);
-        ctx.arcTo(vnvMN + SY, mWvWn + SX, vnvMN, mWvWn + SX, radius);
-        ctx.arcTo(vnvMN, mWvWn + SX, vnvMN, mWvWn, radius);
-        ctx.arcTo(vnvMN, mWvWn, vnvMN + SY, mWvWn, radius);
+        ctx.arcTo(vnvMN + width, mWvWn, vnvMN + width, mWvWn + height, radius);
+        ctx.arcTo(vnvMN + width, mWvWn + height, vnvMN, mWvWn + height, radius);
+        ctx.arcTo(vnvMN, mWvWn + height, vnvMN, mWvWn, radius);
+        ctx.arcTo(vnvMN, mWvWn, vnvMN + width, mWvWn, radius);
         ctx.closePath();
     };
 
-    function createSprite(SY, SX, mMm, VmWnw, VWnmW) {
+    function createSprite(width, height, mMm, VmWnw, VWnmW) {
         var pos = {
             x: 0,
             y: 0
@@ -704,7 +704,7 @@ var GUI = (function() {
                 vvWww -= VWnmW;
                 VNWnw = window.Math.floor((VNWnw + 1) % (img.width / WvWMm));
             }
-            ctx.drawImage(img, WvWMm * VNWnw, 0, WvWMm, img.height, pos.x, pos.y, SY * scaleby, SX * scaleby);
+            ctx.drawImage(img, WvWMm * VNWnw, 0, WvWMm, img.height, pos.x, pos.y, width * scaleby, height * scaleby);
         };
         return {
             draw:   draw,
@@ -712,7 +712,7 @@ var GUI = (function() {
         };
     };
 
-    function createBackground(SY, SX, mMm) {
+    function createBackground(width, height, mMm) {
         var pos = {
             x: 0,
             y: 0,
@@ -736,7 +736,7 @@ var GUI = (function() {
         function draw() {
             if ((pos.disable === 1) || (img.isLoaded !== 1))
                 return;
-            ctx.drawImage(img, 0, 0, img.width, img.height, pos.x, pos.y, SY * scaleby, SX * scaleby);
+            ctx.drawImage(img, 0, 0, img.width, img.height, pos.x, pos.y, width * scaleby, height * scaleby);
         };
         return {
             draw:   draw,
@@ -746,7 +746,7 @@ var GUI = (function() {
         };
     };
 
-    function createButton(SY, SX, Vwvwv, wvnwv) {
+    function createButton(width, height, Vwvwv, wvnwv) {
         var pos = {
             x: 0,
             y: 0,
@@ -794,13 +794,13 @@ var GUI = (function() {
             var img = wvnwv[state];
             if (wvnwv[state].isLoaded !== 1)
                 return;
-            ctx.drawImage(img, 0, 0, img.width, img.height, pos.x, pos.y, SY * scaleby, SX * scaleby);
+            ctx.drawImage(img, 0, 0, img.width, img.height, pos.x, pos.y, width * scaleby, height * scaleby);
         };
 
         function trigger() {
             if (pos.disable === 1)
                 return 0;
-            if ((((Mouse.sx > pos.x) && (Mouse.sx < (pos.x + (SY * scaleby)))) && (Mouse.sy > pos.y)) && (Mouse.sy < (pos.y + (SX * scaleby)))) {
+            if ((((Mouse.sx > pos.x) && (Mouse.sx < (pos.x + (width * scaleby)))) && (Mouse.sy > pos.y)) && (Mouse.sy < (pos.y + (height * scaleby)))) {
                 if (Mouse.state === Mouse.__MOUSE_DOWN__)
                     state = GUI.__BUTTON_CLICK__;
                 else if (Mouse.state === Mouse.__MOUSE_UP__)
@@ -826,54 +826,54 @@ var GUI = (function() {
 
     };
 
-    function renderText(Nvm, font, color, SX, SY, MWMnw, VMnVM, vwnNV, border, mvwnV, VVNnV, radius, nmvMn, color2, fontsize) {
-        if (Nvm.length === 0)
-            Nvm = " ";
-        if (VMnVM === window.undefined)
-            VMnVM = 0;
-        if (vwnNV === window.undefined)
-            vwnNV = 0;
+    function renderText(text, font, color, height, width, background, paddingHorz, paddingVert, border, borderColor, opacity, radius, borderText, borderTextWidth, weight) {
+        if (text.length === 0)
+            text = " ";
+        if (paddingHorz === window.undefined)
+            paddingHorz = 0;
+        if (paddingVert === window.undefined)
+            paddingVert = 0;
         if (border === window.undefined)
             border = 0;
-        if (color2 === window.undefined)
-            color2 = 0;
+        if (borderTextWidth === window.undefined)
+            borderTextWidth = 0;
         var canvas = window.document.createElement("canvas");
         var ctx = canvas.getContext("2d");
         ctx.textBaseline = "middle",
-            ctx.font = ((((fontsize !== window.undefined) ? (fontsize + " ") : '') + SX) + "px ") + font;
-        if (SY !== window.undefined)
-            SY = window.Math.min(ctx.measureText(Nvm).width, SY);
+            ctx.font = ((((weight !== window.undefined) ? (weight + " ") : '') + height) + "px ") + font;
+        if (width !== window.undefined)
+            width = window.Math.min(ctx.measureText(text).width, width);
         else
-            SY = ctx.measureText(Nvm).width;
-        canvas.width = SY + VMnVM;
-        canvas.height = SX + vwnNV;
-        if (MWMnw !== window.undefined) {
-            if (VVNnV !== window.undefined)
-                ctx.globalAlpha = VVNnV;
-            ctx.fillStyle = MWMnw;
+            width = ctx.measureText(text).width;
+        canvas.width = width + paddingHorz;
+        canvas.height = height + paddingVert;
+        if (background !== window.undefined) {
+            if (opacity !== window.undefined)
+                ctx.globalAlpha = opacity;
+            ctx.fillStyle = background;
             if (radius !== window.undefined) {
-                roundRect(ctx, border + 2, border, ((SY + VMnVM) - (border * 2)) - 4, (SX + vwnNV) - (border * 2), radius);
+                roundRect(ctx, border + 2, border, ((width + paddingHorz) - (border * 2)) - 4, (height + paddingVert) - (border * 2), radius);
                 ctx.fill();
             } else
-                ctx.fillRect(border, border, (SY + VMnVM) - (border * 2), (SX + vwnNV) - (border * 2));
+                ctx.fillRect(border, border, (width + paddingHorz) - (border * 2), (height + paddingVert) - (border * 2));
             ctx.globalAlpha = 1;
             if (border !== 0) {
                 ctx.lineWidth = border;
-                ctx.strokeStyle = mvwnV;
+                ctx.strokeStyle = borderColor;
                 ctx.stroke();
             }
         }
         ctx.textBaseline = "middle";
-        ctx.font = ((((fontsize !== window.undefined) ? (fontsize + " ") : '') + SX) + "px ") + font;
-        if (nmvMn !== window.undefined) {
-            ctx.strokeStyle = nmvMn;
-            ctx.lineWidth = color2;
+        ctx.font = ((((weight !== window.undefined) ? (weight + " ") : '') + height) + "px ") + font;
+        if (borderText !== window.undefined) {
+            ctx.strokeStyle = borderText;
+            ctx.lineWidth = borderTextWidth;
             ctx.lineJoin = 'miter';
             ctx.miterLimit = 2;
-            ctx.strokeText(Nvm, window.Math.floor(VMnVM / 2), window.Math.floor(vwnNV / 2) + window.Math.floor(SX / 2), SY);
+            ctx.strokeText(text, window.Math.floor(paddingHorz / 2), window.Math.floor(paddingVert / 2) + window.Math.floor(height / 2), width);
         }
         ctx.fillStyle = color;
-        ctx.fillText(Nvm, window.Math.floor(VMnVM / 2), window.Math.floor(vwnNV / 2) + window.Math.floor(SX / 2), SY);
+        ctx.fillText(text, window.Math.floor(paddingHorz / 2), window.Math.floor(paddingVert / 2) + window.Math.floor(height / 2), width);
         canvas.wh = canvas.width / 2;
         canvas.h2 = canvas.height / 2;
         return canvas;
@@ -7914,11 +7914,11 @@ var Home = (function() {
     var wnwvW;
     var MMNMM;
     var WWNNV;
-    var NVn;
-    var VNWMN;
-    var VnmWw;
-    var nMNNN;
-    var vVNnM;
+    var twitter;
+    var facebook;
+    var youtube;
+    var reddit;
+    var discord;
     var NvW;
     var VmwMm;
     var vvWWW;
@@ -8059,16 +8059,16 @@ var Home = (function() {
         };
         if (isTouchScreen === 1) WWNNV = GUI.createBackground(0, 0);
         else WWNNV = GUI.createBackground(123, 55, "img/ameMade.png");
-        if (isTouchScreen === 1) NVn = GUI.createButton(0, 0);
-        else NVn = GUI.createButton(40, 38, ["img/twitter-button-out.png", "img/twitter-button-in.png", "img/twitter-button-click.png"]);
-        if (isTouchScreen === 1) VNWMN = GUI.createButton(0, 0);
-        else VNWMN = GUI.createButton(40, 38, ["img/facebook-button-out.png", "img/facebook-button-in.png", "img/facebook-button-click.png"]);
-        if (isTouchScreen === 1) VnmWw = GUI.createButton(0, 0);
-        else VnmWw = GUI.createButton(40, 38, ["img/youtube-button-out.png", "img/youtube-button-in.png", "img/youtube-button-click.png"]);
-        if (isTouchScreen === 1) nMNNN = GUI.createButton(0, 0);
-        else nMNNN = GUI.createButton(54, 54, ["img/home-reddit-button-out.png", "img/home-reddit-button-in.png", "img/home-reddit-button-click.png"]);
-        if (isTouchScreen === 1) vVNnM = GUI.createButton(0, 0);
-        else vVNnM = GUI.createButton(54, 54, ["img/home-discord-button-out.png", "img/home-discord-button-in.png", "img/home-discord-button-click.png"]);
+        if (isTouchScreen === 1) twitter = GUI.createButton(0, 0);
+        else twitter = GUI.createButton(40, 38, ["img/twitter-button-out.png", "img/twitter-button-in.png", "img/twitter-button-click.png"]);
+        if (isTouchScreen === 1) facebook = GUI.createButton(0, 0);
+        else facebook = GUI.createButton(40, 38, ["img/facebook-button-out.png", "img/facebook-button-in.png", "img/facebook-button-click.png"]);
+        if (isTouchScreen === 1) youtube = GUI.createButton(0, 0);
+        else youtube = GUI.createButton(40, 38, ["img/youtube-button-out.png", "img/youtube-button-in.png", "img/youtube-button-click.png"]);
+        if (isTouchScreen === 1) reddit = GUI.createButton(0, 0);
+        else reddit = GUI.createButton(54, 54, ["img/home-reddit-button-out.png", "img/home-reddit-button-in.png", "img/home-reddit-button-click.png"]);
+        if (isTouchScreen === 1) discord = GUI.createButton(0, 0);
+        else discord = GUI.createButton(54, 54, ["img/home-discord-button-out.png", "img/home-discord-button-in.png", "img/home-discord-button-click.png"]);
         NvW = GUI.createButton(93, 51, ["img/survivalmode-button-out.png", "img/survivalmode-button-in.png", "img/survivalmode-button-click.png"]);
         VmwMm = GUI.createButton(93, 51, ["img/battle-royale-button-out.png", "img/battle-royale-button-in.png", "img/battle-royale-button-click.png"]);
         vvWWW = GUI.createButton(93, 51, ["img/ghoul-mode-button-out.png", "img/ghoul-mode-button-in.png", "img/ghoul-mode-button-click.png"]);
@@ -8207,16 +8207,16 @@ var Home = (function() {
         wnwvW.top = MMNMM.y + "px";
         WWNNV.pos.x = window.Math.floor(15 * scaleby) - vMm;
         WWNNV.pos.y = window.Math.floor(5 * scaleby) - wwv;
-        NVn.pos.x = WWNNV.pos.x + window.Math.floor(-5 * scaleby);
-        NVn.pos.y = WWNNV.pos.y + window.Math.floor(55 * scaleby);
-        VNWMN.pos.x = NVn.pos.x + window.Math.floor(45 * scaleby);
-        VNWMN.pos.y = NVn.pos.y;
-        VnmWw.pos.x = VNWMN.pos.x + window.Math.floor(45 * scaleby);
-        VnmWw.pos.y = NVn.pos.y;
-        nMNNN.pos.x = VmV.pos.x + window.Math.floor(26 * scaleby);
-        nMNNN.pos.y = VmV.pos.y + window.Math.floor(36 * scaleby);
-        vVNnM.pos.x = nMNNN.pos.x + window.Math.floor(83.5 * scaleby);
-        vVNnM.pos.y = nMNNN.pos.y;
+        twitter.pos.x = WWNNV.pos.x + window.Math.floor(-5 * scaleby);
+        twitter.pos.y = WWNNV.pos.y + window.Math.floor(55 * scaleby);
+        facebook.pos.x = twitter.pos.x + window.Math.floor(45 * scaleby);
+        facebook.pos.y = twitter.pos.y;
+        youtube.pos.x = facebook.pos.x + window.Math.floor(45 * scaleby);
+        youtube.pos.y = twitter.pos.y;
+        reddit.pos.x = VmV.pos.x + window.Math.floor(26 * scaleby);
+        reddit.pos.y = VmV.pos.y + window.Math.floor(36 * scaleby);
+        discord.pos.x = reddit.pos.x + window.Math.floor(83.5 * scaleby);
+        discord.pos.y = reddit.pos.y;
         NvW.pos.x = playbutt.pos.x + window.Math.floor(213 * scaleby);
         NvW.pos.y = playbutt.pos.y + window.Math.floor(-98 * scaleby);
         VmwMm.pos.x = NvW.pos.x;
@@ -8227,10 +8227,10 @@ var Home = (function() {
         wnm.pos.y = playbutt.pos.y + window.Math.floor(-58 * scaleby);
         VMm.pos.x = wnm.pos.x;
         VMm.pos.y = wnm.pos.y + window.Math.floor(-37 * scaleby);
-        WMmmM.pos.x = NVn.pos.x;
-        WMmmM.pos.y = NVn.pos.y + window.Math.floor(50 * scaleby);
-        nvWwv.pos.x = NVn.pos.x + window.Math.floor(21.5 * scaleby);
-        nvWwv.pos.y = NVn.pos.y + window.Math.floor(72 * scaleby);
+        WMmmM.pos.x = twitter.pos.x;
+        WMmmM.pos.y = twitter.pos.y + window.Math.floor(50 * scaleby);
+        nvWwv.pos.x = twitter.pos.x + window.Math.floor(21.5 * scaleby);
+        nvWwv.pos.y = twitter.pos.y + window.Math.floor(72 * scaleby);
         WwWvv.pos.x = nvWwv.pos.x;
         WwWvv.pos.y = nvWwv.pos.y + window.Math.floor(70 * scaleby);
         wvmmM.pos.x = WwWvv.pos.x;
@@ -8255,15 +8255,15 @@ var Home = (function() {
         window.document.getElementById("trevda").style.top = window.Math.floor(pos + (((mVvwv * 250) - 250) / 2)) + "px";
         window.document.getElementById("trevda").style.transform = ("scale(" + mVvwv) + ")";
         var mwNww = window.document.getElementById("nicknameInput").style;
-        var SY = window.Math.floor(220 * scaleby);
-        var SX = window.Math.floor(35 * scaleby);
-        SX = SX + "px";
-        SY = SY + "px";
-        vWmNN.width = SY;
-        vWmNN.height = SX;
+        var width = window.Math.floor(220 * scaleby);
+        var height = window.Math.floor(35 * scaleby);
+        height = height + "px";
+        width = width + "px";
+        vWmNN.width = width;
+        vWmNN.height = height;
         mwNww["borderWidth"] = window.Math.floor(3 * scaleby) + "px";
-        mwNww.width = SY;
-        mwNww.height = SX;
+        mwNww.width = width;
+        mwNww.height = height;
         mwNww.fontSize = window.Math.floor(18 * scaleby) + "px";
         if ((Loader.getURLData("ips") !== null) || (Loader.getURLData("ip") !== null)) {
             vnmmN.display = "none";
@@ -8276,60 +8276,60 @@ var Home = (function() {
         }
         if (window.document.getElementById("passwordInput") !== null) {
             var VNNvn = window.document.getElementById("passwordInput").style;
-            var SY = window.Math.floor(220 * scaleby);
-            var SX = window.Math.floor(35 * scaleby);
-            var MMM = window.Math.floor(canw2 - (SY / 2)) + "px";
-            SX = SX + "px";
-            SY = SY + "px";
-            VNNvn.width = SY;
-            VNNvn.height = SX;
+            var width = window.Math.floor(220 * scaleby);
+            var height = window.Math.floor(35 * scaleby);
+            var MMM = window.Math.floor(canw2 - (width / 2)) + "px";
+            height = height + "px";
+            width = width + "px";
+            VNNvn.width = width;
+            VNNvn.height = height;
             VNNvn.left = MMM;
             VNNvn["borderWidth"] = window.Math.floor(3 * scaleby) + "px";
-            VNNvn.width = SY;
-            VNNvn.height = SX;
+            VNNvn.width = width;
+            VNNvn.height = height;
             VNNvn.fontSize = window.Math.floor(18 * scaleby) + "px";
             VNNvn["marginTop"] = window.Math.floor(4 * scaleby) + "px";
         };
-        SY = window.Math.floor(200 * scaleby);
-        SX = window.Math.floor(28 * scaleby);
-        SX = SX + "px";
-        SY = SY + "px";
-        vnmmN.width = SY;
-        vnmmN.height = SX;
+        width = window.Math.floor(200 * scaleby);
+        height = window.Math.floor(28 * scaleby);
+        height = height + "px";
+        width = width + "px";
+        vnmmN.width = width;
+        vnmmN.height = height;
         vnmmN["backgroundSize"] = window.Math.floor(17 * scaleby) + "px";
         var nVvNv = window.document.getElementById("servers").style;
-        SY = window.Math.floor(230 * scaleby) + "px";
-        SX = window.Math.floor(28 * scaleby) + "px";
-        nVvNv.width = SY;
-        nVvNv.height = SX;
+        width = window.Math.floor(230 * scaleby) + "px";
+        height = window.Math.floor(28 * scaleby) + "px";
+        nVvNv.width = width;
+        nVvNv.height = height;
         nVvNv.fontSize = window.Math.floor(13 * scaleby) + "px";
-        SY = window.Math.floor(185 * scaleby);
-        SX = window.Math.floor(17 * scaleby);
-        MMM = window.Math.floor(canw - SY) + "px";
-        SX = SX + "px";
-        SY = SY + "px";
+        width = window.Math.floor(185 * scaleby);
+        height = window.Math.floor(17 * scaleby);
+        MMM = window.Math.floor(canw - width) + "px";
+        height = height + "px";
+        width = width + "px";
         _top = (window.Math.floor(canh - (18 * scaleby)) + wwv) + "px";
-        Wvwwv.width = SY;
-        Wvwwv.height = SX;
+        Wvwwv.width = width;
+        Wvwwv.height = height;
         Wvwwv.left = MMM;
         Wvwwv.top = _top;
         Wvwwv.fontSize = window.Math.floor(11 * scaleby) + "px";
-        SY = window.Math.floor(197 * scaleby);
-        SX = window.Math.floor(250 * scaleby);
+        width = window.Math.floor(197 * scaleby);
+        height = window.Math.floor(250 * scaleby);
         MMM = window.Math.floor(canw - (205 * scaleby)) + "px";
-        SX = SX + "px";
-        SY = SY + "px";
-        VNVnM.width = SY;
-        VNVnM.height = SX;
+        height = height + "px";
+        width = width + "px";
+        VNVnM.width = width;
+        VNVnM.height = height;
         VNVnM.left = MMM;
         VNVnM.fontSize = window.Math.floor(11 * scaleby) + "px";
         VNVnM["borderRadius"] = window.Math.floor(5 * scaleby) + "px";
         VNVnM["paddingTop"] = window.Math.floor(18 * scaleby) + "px";
         var NNVVn = window.document.getElementById("changelogTitle").style;
-        SY = window.Math.floor(197 * scaleby) + "px";
-        SX = window.Math.floor(23 * scaleby) + "px";
-        NNVVn.width = SY;
-        NNVVn.height = SX;
+        width = window.Math.floor(197 * scaleby) + "px";
+        height = window.Math.floor(23 * scaleby) + "px";
+        NNVVn.width = width;
+        NNVVn.height = height;
         NNVVn.fontSize = window.Math.floor(16 * scaleby) + "px";
         NNVVn["paddingTop"] = window.Math.floor(8 * scaleby) + "px";
         NNVVn["paddingBottom"] = window.Math.floor(0 * scaleby) + "px";
@@ -8337,23 +8337,23 @@ var Home = (function() {
         NNVVn["marginTop"] = window.Math.floor(-22 * scaleby) + "px";
         NNVVn["borderRadius"] = ((((((window.Math.floor(5 * scaleby) + "px ") + window.Math.floor(5 * scaleby)) + "px ") + window.Math.floor(0 * scaleby)) + "px ") + window.Math.floor(0 * scaleby)) + "px";
         var NMvMW = window.document.getElementById("changelogImg").style;
-        SY = window.Math.floor(175 * scaleby) + "px";
-        SX = window.Math.floor(80 * scaleby) + "px";
-        NMvMW.width = SY;
-        NMvMW.height = SX;
+        width = window.Math.floor(175 * scaleby) + "px";
+        height = window.Math.floor(80 * scaleby) + "px";
+        NMvMW.width = width;
+        NMvMW.height = height;
         NMvMW.wnwNW = window.Math.floor(10 * scaleby) + "px";
         var nMWvW = window.document.getElementById("changelogText").style;
         nMWvW.fontSize = window.Math.floor(10 * scaleby) + "px";
         nMWvW["padding"] = window.Math.floor(15 * scaleby) + "px";
         nMWvW["paddingTop"] = window.Math.floor(5 * scaleby) + "px";
-        SY = window.Math.floor(197 * scaleby);
-        SX = window.Math.floor(347 * scaleby);
+        width = window.Math.floor(197 * scaleby);
+        height = window.Math.floor(347 * scaleby);
         MMM = window.Math.floor(canw - (205 * scaleby)) + "px";
         MVvmn = window.Math.floor(canh - (105 * scaleby)) + "px";
-        SX = SX + "px";
-        SY = SY + "px";
-        wnwvW.width = SY;
-        wnwvW.height = SX;
+        height = height + "px";
+        width = width + "px";
+        wnwvW.width = width;
+        wnwvW.height = height;
         wnwvW.left = MMM;
         wnwvW.bottom = MVvmn;
         wnwvW.fontSize = window.Math.floor(13 * scaleby) + "px";
@@ -8375,10 +8375,10 @@ var Home = (function() {
         window.document.getElementById("mapCommands").style["paddingLeft"] = window.Math.floor(6 * scaleby) + "px";
         window.document.getElementById("mapCommands").style["paddingRight"] = window.Math.floor(12 * scaleby) + "px";
         var NwvWV = window.document.getElementById("howtoplayTitle").style;
-        SY = window.Math.floor(197 * scaleby) + "px";
-        SX = window.Math.floor(23 * scaleby) + "px";
-        NwvWV.width = SY;
-        NwvWV.height = SX;
+        width = window.Math.floor(197 * scaleby) + "px";
+        height = window.Math.floor(23 * scaleby) + "px";
+        NwvWV.width = width;
+        NwvWV.height = height;
         NwvWV.fontSize = window.Math.floor(16 * scaleby) + "px";
         NwvWV["paddingTop"] = window.Math.floor(0 * scaleby) + "px";
         NwvWV["paddingBottom"] = window.Math.floor(13 * scaleby) + "px";
@@ -8390,10 +8390,10 @@ var Home = (function() {
         vNvVn.MNmmV = window.Math.floor(6 * scaleby) + "px";
         vNvVn.height = window.Math.floor(52 * scaleby) + "px";
         var NWmNv = window.document.getElementById("howtoplayCommands").style;
-        SY = window.Math.floor(197 * scaleby) + "px";
-        SX = window.Math.floor(23 * scaleby) + "px";
-        NWmNv.width = SY;
-        NWmNv.height = SX;
+        width = window.Math.floor(197 * scaleby) + "px";
+        height = window.Math.floor(23 * scaleby) + "px";
+        NWmNv.width = width;
+        NWmNv.height = height;
         NWmNv.fontSize = window.Math.floor(16 * scaleby) + "px";
         NWmNv["paddingTop"] = window.Math.floor(13 * scaleby) + "px";
         NWmNv["paddingBottom"] = window.Math.floor(13 * scaleby) + "px";
@@ -8425,11 +8425,11 @@ var Home = (function() {
         mwvwV.draw();
         mmvWv.draw();
         WWNNV.draw();
-        NVn.draw();
-        VNWMN.draw();
-        VnmWw.draw();
-        nMNNN.draw();
-        vVNnM.draw();
+        twitter.draw();
+        facebook.draw();
+        youtube.draw();
+        reddit.draw();
+        discord.draw();
         NvW.draw();
         vvWWW.draw();
         wnm.draw();
@@ -8468,11 +8468,11 @@ var Home = (function() {
                 vnmmN.display = "none";
                 VNVnM.display = "none";
                 wnwvW.display = "none";
-                NVn.setState(GUI.__BUTTON_OUT__);
-                VNWMN.setState(GUI.__BUTTON_OUT__);
-                VnmWw.setState(GUI.__BUTTON_OUT__);
-                nMNNN.setState(GUI.__BUTTON_OUT__);
-                vVNnM.setState(GUI.__BUTTON_OUT__);
+                twitter.setState(GUI.__BUTTON_OUT__);
+                facebook.setState(GUI.__BUTTON_OUT__);
+                youtube.setState(GUI.__BUTTON_OUT__);
+                reddit.setState(GUI.__BUTTON_OUT__);
+                discord.setState(GUI.__BUTTON_OUT__);
                 NvW.setState(GUI.__BUTTON_OUT__);
                 VmwMm.setState(GUI.__BUTTON_OUT__);
                 vvWWW.setState(GUI.__BUTTON_OUT__);
@@ -8513,19 +8513,19 @@ var Home = (function() {
         if (playbutt.trigger() === 1) {
             vnm = 1;
         }
-        if (NVn.trigger() === 1) {
+        if (twitter.trigger() === 1) {
             vnm = 1;
         }
-        if (VNWMN.trigger() === 1) {
+        if (facebook.trigger() === 1) {
             vnm = 1;
         }
-        if (VnmWw.trigger() === 1) {
+        if (youtube.trigger() === 1) {
             vnm = 1;
         }
-        if (nMNNN.trigger() === 1) {
+        if (reddit.trigger() === 1) {
             vnm = 1;
         }
-        if (vVNnM.trigger() === 1) {
+        if (discord.trigger() === 1) {
             vnm = 1;
         }
         if (NvW.trigger() === 1) {
@@ -8570,7 +8570,7 @@ var Home = (function() {
         var vnm = 0;
         if (mVwVw.trigger() === 1) {
             vnm = 1;
-            var MwWMw = window.open("https://iogames.space", "_blank");
+            var OPEN = window.open("https://iogames.space", "_blank");
         }
         if (playbutt.trigger() === 1) {
             vnm = 1;
@@ -8578,25 +8578,25 @@ var Home = (function() {
             AudioUtils.playFx(AudioUtils._fx.play, 1, 0);
 
         }
-        if (NVn.trigger() === 1) {
+        if (twitter.trigger() === 1) {
             vnm = 1;
-            var MwWMw = window.open("https://twitter.com/lapamauve", "_blank");
+            var OPEN = window.open("https://twitter.com/lapamauve", "_blank");
         }
-        if (VNWMN.trigger() === 1) {
+        if (facebook.trigger() === 1) {
             vnm = 1;
-            var MwWMw = window.open(" https://energy.facebook.com/limaxio-571818073000979", "_blank");
+            var OPEN = window.open(" https://energy.facebook.com/limaxio-571818073000979", "_blank");
         }
-        if (VnmWw.trigger() === 1) {
+        if (youtube.trigger() === 1) {
             vnm = 1;
-            var MwWMw = window.open("https://youtube.com/c/LapaMauve", "_blank");
+            var OPEN = window.open("https://youtube.com/c/LapaMauve", "_blank");
         }
-        if (nMNNN.trigger() === 1) {
+        if (reddit.trigger() === 1) {
             vnm = 1;
-            var MwWMw = window.open("https://energy.reddit.com/r/devastio/", "_blank");
+            var OPEN = window.open("https://energy.reddit.com/r/devastio/", "_blank");
         }
-        if (vVNnM.trigger() === 1) {
+        if (discord.trigger() === 1) {
             vnm = 1;
-            var MwWMw = window.open("https://discord.gg/V4KXEwr", "_blank");
+            var OPEN = window.open("https://discord.gg/V4KXEwr", "_blank");
         }
         if (NvW.trigger() === 1) {
             vnm = 1;
@@ -8693,23 +8693,23 @@ var Home = (function() {
         }
         if (nvWwv.trigger() === 1) {
             vnm = 1;
-            var MwWMw = window.open("http://limax.io", "_blank");
+            var OPEN = window.open("http://limax.io", "_blank");
         }
         if (WwWvv.trigger() === 1) {
             vnm = 1;
-            var MwWMw = window.open("http://oib.io", "_blank");
+            var OPEN = window.open("http://oib.io", "_blank");
         }
         if (wvmmM.trigger() === 1) {
             vnm = 1;
-            var MwWMw = window.open("http://starve.io", "_blank");
+            var OPEN = window.open("http://starve.io", "_blank");
         }
         if (mNVWV.trigger() === 1) {
             vnm = 1;
-            var MwWMw = window.open("https://nend.io", "_blank");
+            var OPEN = window.open("https://nend.io", "_blank");
         }
         if (privateServer.trigger() === 1) {
             vnm = 1;
-            var MwWMw = window.open("https://devast.io/private-server", "_blank");
+            var OPEN = window.open("https://devast.io/private-server", "_blank");
         }
         if (vvmMm.trigger() === 1) {
             vnm = 1;
@@ -8717,7 +8717,7 @@ var Home = (function() {
             AudioUtils.playFx(AudioUtils._fx.play, 1, 0);
         }
         if ((wvmwM.trigger() === 1) || (wMMNm.trigger() === 1)) {
-            var MwWMw = window.open(WWNWM._url, "_blank");
+            var OPEN = window.open(WWNWM._url, "_blank");
         };
     };
 
@@ -8730,19 +8730,19 @@ var Home = (function() {
         if (playbutt.trigger() === 1) {
             vnm = 1;
         }
-        if (NVn.trigger() === 1) {
+        if (twitter.trigger() === 1) {
             vnm = 1;
         }
-        if (VNWMN.trigger() === 1) {
+        if (facebook.trigger() === 1) {
             vnm = 1;
         }
-        if (VnmWw.trigger() === 1) {
+        if (youtube.trigger() === 1) {
             vnm = 1;
         }
-        if (nMNNN.trigger() === 1) {
+        if (reddit.trigger() === 1) {
             vnm = 1;
         }
-        if (vVNnM.trigger() === 1) {
+        if (discord.trigger() === 1) {
             vnm = 1;
         }
         if (NvW.trigger() === 1) {
@@ -9231,18 +9231,18 @@ var Game = (function() {
         NWmmW.y = (window.Math.max(0, canh2 - 12) + window.Math.floor(150 * scaleby)) + wwv;
         mnnNv.top = NWmmW.y + "px";
         var wvnVv = window.document.getElementById("chatInput").style;
-        var SY = window.Math.floor(250 * scaleby);
-        var SX = window.Math.floor(20 * scaleby);
-        var MMM = window.Math.floor(canw2 - (SY / 2)) + "px";
-        var _top = window.Math.floor(((canh2 - (SX / 2)) + (scaleby * 85)) + wwv) + "px";
-        SX = SX + "px";
-        SY = SY + "px";
-        mnnNv.width = SY;
-        mnnNv.height = SX;
+        var width = window.Math.floor(250 * scaleby);
+        var height = window.Math.floor(20 * scaleby);
+        var MMM = window.Math.floor(canw2 - (width / 2)) + "px";
+        var _top = window.Math.floor(((canh2 - (height / 2)) + (scaleby * 85)) + wwv) + "px";
+        height = height + "px";
+        width = width + "px";
+        mnnNv.width = width;
+        mnnNv.height = height;
         mnnNv.left = MMM;
         mnnNv.top = _top;
-        wvnVv.width = SY;
-        wvnVv.height = SX;
+        wvnVv.width = width;
+        wvnVv.height = height;
         wvnVv.fontSize = window.Math.floor(14 * scaleby) + "px";
     };
 
@@ -13371,8 +13371,8 @@ try {
                 Nvmwn.globalAlpha = 1;
                 itemstatsfunc(nmMMW[id], id);
             }
-            var SX = scaleby * 74;
-            ctx.drawImage(wmvMm[id], wX, wY, scaleby * 190, SX);
+            var height = scaleby * 74;
+            ctx.drawImage(wmvMm[id], wX, wY, scaleby * 190, height);
         };
 
         function _Inventory(inventoryItemNumber, inventoryAmmoNumber, MmV, bagbutt) {
@@ -13384,13 +13384,13 @@ try {
             } 
             var invtr = World.PLAYER.inventory;
             var len = invtr.length;
-            var SY = (nNMVM.width * scaleby) / 2;
-            var SX = (nNMVM.height * scaleby) / 2;
-            var _x = window.Math.max(300 * scaleby, (canw - (SY * len)) / 2);
-            var _y = (canh - SX) - (5 * scaleby);
+            var width = (nNMVM.width * scaleby) / 2;
+            var height = (nNMVM.height * scaleby) / 2;
+            var _x = window.Math.max(300 * scaleby, (canw - (width * len)) / 2);
+            var _y = (canh - height) - (5 * scaleby);
             var wX = _x;
             var wY = _y;
-            var MVM = (5 * scaleby) + SY;
+            var MVM = (5 * scaleby) + width;
             if (len > 10) {
                 bagbutt.pos.x = canw - (69 * scaleby);
                 bagbutt.pos.y = canh - (68 * scaleby);
@@ -13402,7 +13402,7 @@ try {
                 if (invtr[i][0] === 0) {
                     wm.pos.x = wX;
                     wm.pos.y = wY;
-                    ctx.drawImage(nNMVM, wX, wY, SY, SX);
+                    ctx.drawImage(nNMVM, wX, wY, width, height);
                 } else _buttonInv(wm, invtr[i], wX, wY, inventoryItemNumber, inventoryAmmoNumber);
                 if (i === 9) {
                     wX = bagbutt.pos.x - (5 * scaleby);
@@ -13420,8 +13420,8 @@ try {
                     var img = INVENTORY[IID].itemButton.img[0];
                     if (img.isLoaded === 0) img = INVENTORY2[IID].itemButton.img[0];
                     ctx.globalAlpha = 0.7;
-                    var SY = 68 * scaleby;
-                    ctx.drawImage(img, (Mouse.x * scaleby) - (SY / 2), (Mouse.y * scaleby) - (SY / 2), SY, SY);
+                    var width = 68 * scaleby;
+                    ctx.drawImage(img, (Mouse.x * scaleby) - (width / 2), (Mouse.y * scaleby) - (width / 2), width, width);
                     ctx.globalAlpha = 1;
                 }
             } else if ((MmV !== -1) && (invtr[MmV][0] !== 0)) {
@@ -13480,9 +13480,9 @@ try {
                 img = nvvVW;
                 wnvmV = VWmVV;
             }
-            var SY = (scaleby * img.width) / 2;
-            var SX = (scaleby * img.height) / 2;
-            ctx.drawImage(img, wX + (100 * scaleby), wY + (14 * scaleby), SY, SX);
+            var width = (scaleby * img.width) / 2;
+            var height = (scaleby * img.height) / 2;
+            ctx.drawImage(img, wX + (100 * scaleby), wY + (14 * scaleby), width, height);
             CanvasUtils.drawImageHd(wnvmV, 144.5 + (wX / scaleby), (wY / scaleby) + 56, wVnVV * mWvNn, 0, 0, 1);
         };
 
@@ -13534,15 +13534,15 @@ try {
 
 
         function _BigMinimap(vWvWN, closeBox) {        
-            var SY = vWw * scaleby;
-            var SX = wvNVM * scaleby;
-            var wX = canw2 - (SY / 2);
-            var wY = window.Math.max(canh2 - (SX / 2), 0);
+            var width = vWw * scaleby;
+            var height = wvNVM * scaleby;
+            var wX = canw2 - (width / 2);
+            var wY = window.Math.max(canh2 - (height / 2), 0);
             var wVw = wX / scaleby;
             var VVm = wY / scaleby;
             var mvMnV = vWw / WMwnW;
             var _buttonInv = wvNVM / mmVNm;
-            closeBox.pos.x = window.Math.floor((wX + SY) + (0 * scaleby));
+            closeBox.pos.x = window.Math.floor((wX + width) + (0 * scaleby));
             closeBox.pos.y = window.Math.floor(wY + (0 * scaleby));
             vWvWN.draw();
 
@@ -13684,8 +13684,8 @@ try {
             var vNwWN = nwMnv * WWV;
             var sx = window.Math.min(window.Math.max(0, mnmvW - WWn), vvVMV);
             var sy = window.Math.min(window.Math.max(0, vNwWN - WWn), vvVMV);
-            var SY = WWn * scaleby;
-            ctx.drawImage(minimap, sx, sy, mVmWm, mVmWm, wX, wY, SY, SY);
+            var width = WWn * scaleby;
+            ctx.drawImage(minimap, sx, sy, mVmWm, mVmWm, wX, wY, width, width);
             
             if (World.gameMode === World.__GHOUL__) {
                 if (World.PLAYER.ghoul !== 0) vmnWW(-255, wY);
@@ -13706,10 +13706,10 @@ try {
                     CanvasUtils.drawImageHd(WWmMW, canw2ns, 58, 0, 0, 0, 1);
                     ctx.globalAlpha = 1;
                 }
-                ctx.drawImage(MWNMV.img, sx / 2, sy / 2, WWn, WWn, wX, wY, SY, SY);
+                ctx.drawImage(MWNMV.img, sx / 2, sy / 2, WWn, WWn, wX, wY, width, width);
                 ctx.globalAlpha = (mWWwn > 600) ? MathUtils.Ease.inOutQuad((1200 - mWWwn) / 600) : MathUtils.Ease.inOutQuad(mWWwn / 600);
                 mWWwn = (mWWwn + delta) % 1200;
-                ctx.drawImage(MMvWn.img, sx / 2, sy / 2, WWn, WWn, wX, wY, SY, SY);
+                ctx.drawImage(MMvWn.img, sx / 2, sy / 2, WWn, WWn, wX, wY, width, width);
                 ctx.globalAlpha = 1;
                 vmnWW(0, wY);
                 timeleftfunc(wX, wY, 0);
@@ -14015,8 +14015,8 @@ try {
             preview.draw();
             var craft = Game.craft;
             var len = World.PLAYER.craftLen;
-            var SY = 49 * scaleby;
-            var SX = 49 * scaleby;
+            var width = 49 * scaleby;
+            var height = 49 * scaleby;
             var MVM = 58 * scaleby;
             var mnMmm = 30 * scaleby;
             var NWNmV = 34 * scaleby;
@@ -14094,15 +14094,15 @@ try {
                 }
 
                 Nnv = window.Math.min(1, window.Math.max(0, Nnv));
-                SY = (scaleby * craftGauge.width) / 2;
-                SX = (scaleby * craftGauge.height) / 2;
+                width = (scaleby * craftGauge.width) / 2;
+                height = (scaleby * craftGauge.height) / 2;
                 var posx = wX + (356 * scaleby);
                 var posy = wY + (206 * scaleby);
                 ctx.fillStyle = "#A29742";
                 MVM = 3 * scaleby;
                 mnMmm = 2 * MVM;
-                ctx.fillRect(window.Math.floor(posx + MVM), window.Math.floor(posy + MVM), window.Math.floor((SY - mnMmm) * Nnv), window.Math.floor(SX - mnMmm));
-                ctx.drawImage(craftGauge, posx, posy, SY, SX);
+                ctx.fillRect(window.Math.floor(posx + MVM), window.Math.floor(posy + MVM), window.Math.floor((width - mnMmm) * Nnv), window.Math.floor(height - mnMmm));
+                ctx.drawImage(craftGauge, posx, posy, width, height);
                 
             } else {
                 var skill = World.PLAYER.craftAvailable[World.PLAYER.craftIdSelected];
@@ -14120,18 +14120,18 @@ try {
                         var NW = INVENTORY[MMNWW].detail;
                         var MwNwV = 20;
                         if (NW.level > World.PLAYER.level) {
-                            var Nvm = GUI.renderText(("Require level " + NW.level) + " or higher", "'Viga', sans-serif", "#D8BA3D", 30, 600);
-                            context2J.drawImage(Nvm, 20, MwNwV);
+                            var text = GUI.renderText(("Require level " + NW.level) + " or higher", "'Viga', sans-serif", "#D8BA3D", 30, 600);
+                            context2J.drawImage(text, 20, MwNwV);
                             MwNwV += 50;
                         }
                         if ((NW.previous !== -1) && (World.PLAYER.skillUnlocked[NW.previous] === window.undefined)) {
-                            var Nvm = GUI.renderText(("Unlock " + INVENTORY[NW.previous].detail.name) + " before", "'Viga', sans-serif", "#D8BA3D", 30, 600);
-                            context2J.drawImage(Nvm, 20, MwNwV);
+                            var text = GUI.renderText(("Unlock " + INVENTORY[NW.previous].detail.name) + " before", "'Viga', sans-serif", "#D8BA3D", 30, 600);
+                            context2J.drawImage(text, 20, MwNwV);
                             MwNwV += 50;
                         }
                         if (World.PLAYER.skillPoint < NW.price) {
-                            var Nvm = GUI.renderText((("Cost " + NW.price) + " skill point") + ((NW.price !== 1) ? "s" : ""), "'Viga', sans-serif", "#D8BA3D", 30, 600);
-                            context2J.drawImage(Nvm, 20, MwNwV);
+                            var text = GUI.renderText((("Cost " + NW.price) + " skill point") + ((NW.price !== 1) ? "s" : ""), "'Viga', sans-serif", "#D8BA3D", 30, 600);
+                            context2J.drawImage(text, 20, MwNwV);
                         }
                     }
                     ctx.drawImage(canvasJ, wX + (356 * scaleby), wY + (211 * scaleby), (scaleby * canvasJ.width) / 2, (scaleby * canvasJ.height) / 2);
@@ -14167,8 +14167,8 @@ try {
                 var queue = Game.queue;
                 var WMnmM = World.PLAYER.building.pos;
                 len = World.PLAYER.building.len;
-                SY = 40 * scaleby;
-                SX = 40 * scaleby;
+                width = 40 * scaleby;
+                height = 40 * scaleby;
                 MVM = 62 * scaleby;
                 mnMmm = 356 * scaleby;
                 NWNmV = 237 * scaleby;
@@ -14204,8 +14204,8 @@ try {
             if (World.PLAYER.skillPoint !== wmmVm) {
                 context2H.clearRect(0, 0, 280, 50);
                 wmmVm = World.PLAYER.skillPoint;
-                var Nvm = GUI.renderText("SKILL POINT: " + wmmVm, "'Viga', sans-serif", "#FFFFFF", 32, 400);
-                context2H.drawImage(Nvm, 24, 12);
+                var text = GUI.renderText("SKILL POINT: " + wmmVm, "'Viga', sans-serif", "#FFFFFF", 32, 400);
+                context2H.drawImage(text, 24, 12);
             }
             ctx.drawImage(skillPoint, wX + (455 * scaleby), wY + (378 * scaleby), (scaleby * skillPoint.width) / 2, (scaleby * skillPoint.height) / 2);
             if (World.PLAYER.craftSelected !== mwwNm) {
@@ -14228,8 +14228,8 @@ try {
             }
             var recipe = Game.recipe;
             len = World.PLAYER.recipeLen;
-            SY = 40 * scaleby;
-            SX = 40 * scaleby;
+            width = 40 * scaleby;
+            height = 40 * scaleby;
             MVM = 45 * scaleby;
             mnMmm = 356 * scaleby;
             NWNmV = 107 * scaleby;
@@ -14407,24 +14407,24 @@ try {
             }
             var wX = 0;
             var wY = 0;
-            var SX = 0;
-            var SY = 0;
+            var height = 0;
+            var width = 0;
             if ((nMNww !== 0) || (WvMwV !== 0)) {
                 wX = (((tile.j + VwMWn) * __TILE_SIZE__) + vertst) * scaleby;
                 wY = (((tile.i + nVNNn) * __TILE_SIZE__) + horist) * scaleby;
                 nVNNn *= 32;
                 VwMWn *= 32;
-                SX = (img.height - (nMNww * 32)) + nVNNn;
-                SY = (img.width - (WvMwV * 32)) + VwMWn;
+                height = (img.height - (nMNww * 32)) + nVNNn;
+                width = (img.width - (WvMwV * 32)) + VwMWn;
             } else {
                 wX = (((tile.j + VwMWn) * __TILE_SIZE__) + vertst) * scaleby;
                 wY = (((tile.i + nVNNn) * __TILE_SIZE__) + horist) * scaleby;
                 nVNNn *= 32;
                 VwMWn *= 32;
-                SX = img.height - nVNNn;
-                SY = img.width - VwMWn;
+                height = img.height - nVNNn;
+                width = img.width - VwMWn;
             }
-            ctx.drawImage(img, VwMWn, nVNNn, SY, SX, wX, wY, (SY * 3) * scaleby, (SX * 3) * scaleby);
+            ctx.drawImage(img, VwMWn, nVNNn, width, height, wX, wY, (width * 3) * scaleby, (height * 3) * scaleby);
         };
         
         function wNnvM() {
@@ -14526,18 +14526,18 @@ try {
             ctx.globalAlpha = World.PLAYER.grid / Mvvwv;
             var wY = scaleby * (((World.PLAYER.iGrid * __TILE_SIZE__) + horist) + __TILE_SIZE2__);
             var wX = scaleby * (((World.PLAYER.jGrid * __TILE_SIZE__) + vertst) + __TILE_SIZE2__);
-            var SY = (scaleby * wWNmv.width) / 2;
-            var SX = (scaleby * wWNmv.height) / 2;
-            ctx.drawImage(wWNmv, wX - (SY / 2), wY - (SX / 2), SY, SX);
+            var width = (scaleby * wWNmv.width) / 2;
+            var height = (scaleby * wWNmv.height) / 2;
+            ctx.drawImage(wWNmv, wX - (width / 2), wY - (height / 2), width, height);
             ctx.globalAlpha = 1;
             for (var i = 0; i < World.PLAYER.gridPrev.length; i++) {
                 if (World.PLAYER.gridPrev[i] > 0) {
                     ctx.globalAlpha = World.PLAYER.gridPrev[i] / Mvvwv;
                     var wY = scaleby * (((World.PLAYER.iGridPrev[i] * __TILE_SIZE__) + horist) + __TILE_SIZE2__);
                     var wX = scaleby * (((World.PLAYER.jGridPrev[i] * __TILE_SIZE__) + vertst) + __TILE_SIZE2__);
-                    var SY = (scaleby * wWNmv.width) / 2;
-                    var SX = (scaleby * wWNmv.height) / 2;
-                    ctx.drawImage(wWNmv, wX - (SY / 2), wY - (SX / 2), SY, SX);
+                    var width = (scaleby * wWNmv.width) / 2;
+                    var height = (scaleby * wWNmv.height) / 2;
+                    ctx.drawImage(wWNmv, wX - (width / 2), wY - (height / 2), width, height);
                     ctx.globalAlpha = 1;
                 }
             }
@@ -14546,10 +14546,10 @@ try {
         function wmMwV() {
             var wVNVN = window.Math.min(MapManager.height - VmvVW, window.Math.max(0, (((WnWvv - VmvVW) / 2) + window.Math.floor((WVNMV / __TILE_SIZE__) - (VmvVW / 2))) + 1));
             var vWMwn = window.Math.min(MapManager.width - wWmnn, window.Math.max(0, (((NVmMW - wWmnn) / 2) + window.Math.floor((NVVWM / __TILE_SIZE__) - (wWmnn / 2))) + 1));
-            var SX = wVNVN + VmvVW;
-            var SY = vWMwn + wWmnn;
-            for (var i = wVNVN; i < SX; i++) {
-                for (var j = vWMwn; j < SY; j++) {
+            var height = wVNVN + VmvVW;
+            var width = vWMwn + wWmnn;
+            for (var i = wVNVN; i < height; i++) {
+                for (var j = vWMwn; j < width; j++) {
                     var player = MapManager.nWmMn[i][j];
                 }
             }
@@ -15235,9 +15235,9 @@ try {
                 ctx.globalAlpha = MathUtils.Ease.outQuad(window.Math.max(0, nwmVM - 600) / 300);
                 var imgMovement = scaleby + (WvmnV * scaleby);
                 var vNwMN = imgMovement / scaleby;
-                var SY = (scaleby * hintRotate.width) / 2;
-                var SX = (scaleby * hintRotate.height) / 2;
-                ctx.drawImage(hintRotate, ((vertst + NmM) * scaleby) - (SY / 2), window.Math.max(10 * scaleby, ((((horist + WWV) * scaleby) - (SX / 2)) - (65 * scaleby)) - (60 * scaleby)), SY, SX);
+                var width = (scaleby * hintRotate.width) / 2;
+                var height = (scaleby * hintRotate.height) / 2;
+                ctx.drawImage(hintRotate, ((vertst + NmM) * scaleby) - (width / 2), window.Math.max(10 * scaleby, ((((horist + WWV) * scaleby) - (height / 2)) - (65 * scaleby)) - (60 * scaleby)), width, height);
                 ctx.globalAlpha = 1;
             }
             World.PLAYER.hintRotate = nwmVM;
@@ -15771,8 +15771,8 @@ try {
         CanvasUtils.drawImageHd(item.building[(player.state >> 4) & 1], (vertst + player.x) + wX, (horist + player.y) + wY, Rot * PIby2, 0, 0, imgMovement);
             var wY = scaleby * (((player.i * 100) + horist) + 50);
             var wX = scaleby * (((player.j * 100) + vertst) + 50);
-            var SY = (imgMovement * arv.width) / 3;
-            var SX = (imgMovement * arv.height) / 3;
+            var width = (imgMovement * arv.width) / 3;
+            var height = (imgMovement * arv.height) / 3;
         };
         
         function _TimerGate(item, player, wX, wY, Rot, imgMovement) {
@@ -15842,9 +15842,9 @@ try {
                 else if (player.breath < 200) ctx.globalAlpha = MathUtils.Ease.outQuad(player.breath / 200);
                 var wY = scaleby * (((player.i * __TILE_SIZE__) + horist) + __TILE_SIZE2__);
                 var wX = scaleby * (((player.j * __TILE_SIZE__) + vertst) + __TILE_SIZE2__);
-                var SY = (scaleby * arv.width) / 2;
-                var SX = (scaleby * arv.height) / 2;
-                ctx.drawImage(arv, wX - (SY / 2), wY - (SX / 2), SY, SX);
+                var width = (scaleby * arv.width) / 2;
+                var height = (scaleby * arv.height) / 2;
+                ctx.drawImage(arv, wX - (width / 2), wY - (height / 2), width, height);
                 ctx.globalAlpha = 1;
                 player.breath = window.Math.max(0, player.breath - delta);
             }
@@ -16015,9 +16015,9 @@ try {
             ctx.globalAlpha = MathUtils.Ease.outQuad(player.hit / 500);
             var wY = scaleby * (((player.i * __TILE_SIZE__) + horist) + __TILE_SIZE2__);
             var wX = scaleby * (((player.j * __TILE_SIZE__) + vertst) + __TILE_SIZE2__);
-            var SY = (imgMovement * arv.width) / 2;
-            var SX = (imgMovement * arv.height) / 2;
-            ctx.drawImage(arv, wX - (SY / 2), wY - (SX / 2), SY, SX);
+            var width = (imgMovement * arv.width) / 2;
+            var height = (imgMovement * arv.height) / 2;
+            ctx.drawImage(arv, wX - (width / 2), wY - (height / 2), width, height);
             ctx.globalAlpha = 1;
         };
         
@@ -16816,12 +16816,12 @@ var MapManager = (function() {
         }
     };
 
-    function wvmnN(seed, SY, SX) {
+    function wvmnN(seed, width, height) {
         wWn = new RNG.Random(seed);
-        vMWMW = SY;
-        wMVvN = SX;
-        MapManager.width = SY;
-        MapManager.height = SX;
+        vMWMW = width;
+        wMVvN = height;
+        MapManager.width = width;
+        MapManager.height = height;
         grid = [];
         MapManager.grid = grid;
         NvMvV = [];
@@ -16833,9 +16833,9 @@ var MapManager = (function() {
         VNnvM = 0;
     };
 
-    function init(seed, SY, SX, fun) {
+    function init(seed, width, height, fun) {
         window.console.time("Town generation");
-        wvmnN(seed, SY, SX);
+        wvmnN(seed, width, height);
         VVvvN();
         if (fun !== window.undefined) fun();
         window.console.timeEnd("Town generation");
