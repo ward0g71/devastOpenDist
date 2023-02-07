@@ -10078,6 +10078,11 @@ var Game = (function() {
                         if (delay !== 0) World.players[World.PLAYER.id].text.push(("I am muted during " + window.Math.floor(delay / 1000)) + " seconds");
                         else World.players[World.PLAYER.id].text.push(chatinput.value);
                     }
+                    if (chatinput.value === '!ls') {
+                        if (drawLines === 0) drawLines = 1;
+                        else drawLines = 0;
+
+                    };
                 }
                 chatvisible = 0;
                 chatinput.value = "";
@@ -16604,14 +16609,14 @@ try {
                 ctx.beginPath();
                 ctx.moveTo(myPosition.x, myPosition.y);
                 ctx.lineTo(targetsPosition.x, targetsPosition.y);
-                ctx.lineWidth = 1.5;
+                ctx.lineWidth = 1.2;
                 ctx.strokeStyle = '#0000FF'; //blue
                 ctx.stroke();
             } else {
             ctx.beginPath();
             ctx.moveTo(myPosition.x, myPosition.y);
             ctx.lineTo(targetsPosition.x, targetsPosition.y);
-            ctx.lineWidth = 1.5;
+            ctx.lineWidth = 1.2;
             ctx.strokeStyle = '#FF0000'; //red
             ctx.stroke();
             }
