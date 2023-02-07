@@ -12484,9 +12484,9 @@ try {
 } catch (error) {}
 
     var Render = (function() {
-        var __TILE_SIZE__ = 100;      
-        var __TILE_SIZE2__ = __TILE_SIZE__ / 2; 
-        var __TILE_SCALE__ = 1;
+        var __TILE_SIZE__   = 100;      
+        var __TILE_SIZE2__  = __TILE_SIZE__ / 2; 
+        var __TILE_SCALE__  = 1;
         var NVmMW = 13;
         var WnWvv = 9;
         var WwmVw = 100;
@@ -12508,61 +12508,58 @@ try {
         var wvNVM = vWw;
         var wVNMN = 412 / 8;
         var NnWnv = 0;
-        var bordermapbig = "img/borderBigMinimap2.png";
-        var maparrowicon = "img/arrow-minimap.png";
-        var maparrowicon2 = "img/arrow-minimap2.png";
-        var houseicon = "img/house-icon.png";
-        var cityicon = "img/city-icon.png";
-        var emptyinventoryicon = "img/inv-empty.png";
-        var looticon = "img/loot.png";
-        var lootmobileicon = "img/loot-isTouchScreen.png";
-        var loot2icon = "img/loot2.png";
-        var timericon = "img/timer.png";
-        var craftgrid = "img/craft-grid.png";
-        var timerarrow = "img/timer-arrow.png";
-        var timerlights = "img/timer-lights.png";
-        var hintrotate = "img/hint-rotate.png";
-        var useicon = "img/day-unusable.png";
-        var MMVnVmV = "img/day-unusable.png";
-        var dayclock = "img/day-clock.png";
-        var nightclock = "img/night-clock.png";
-        var clockhand = "img/clock-hand.png";
-        var clockhandrad = "img/clock-hand-radiation.png";
-        var dayclockhand = "img/day-clock-hand.png";
-        var craftgauge = "img/craft-gauge.png";
-        var strokebonus = "img/stroke-bonus.png";
-        var wrongtool = "img/wrong-tool.png";
-        var handtool = "img/hand-tool.png";
-        var arrowcraft = "img/arrow-craft.png";
-        var unlockskill = "img/unlock-skills.png";
-        var serverFull = "img/server-full.png";
-        var serverOld = "img/server-old.png";
-        var clientOld = "img/client-old.png";
-        var serverWrong = "img/server-wrong.png";
-        var invbox = "img/invitation-box.png";
-        var timebox = "img/time-box.png";
-        var rankbox = "img/rank-box.png";
-        var toxicalert = "img/toxic-alert.png";
-        var radalert = "img/radiation-alert.png";
+        var IMG_MAP_BORDER      = "img/borderBigMinimap2.png";
+        var IMG_MAP_ARROW       = "img/arrow-minimap.png";
+        var IMG_MAP_ARROW2      = "img/arrow-minimap2.png";
+        var IMG_HOUSE_ICON      = "img/house-icon.png";
+        var IMG_CITY_ICON       = "img/city-icon.png";
+        var IMG_INV_EMPTY       = "img/inv-empty.png";
+        var IMG_LOOT            = "img/loot.png";
+        var IMG_LOOT_TOUCH      = "img/loot-isTouchScreen.png";
+        var IMG_LOOT2           = "img/loot2.png";
+        var IMG_TIMER           = "img/timer.png";
+        var IMG_CRAFT_GRID      = "img/craft-grid.png";
+        var IMG_TIMER_ARROW     = "img/timer-arrow.png";
+        var IMG_TIMER_LIGHTS    = "img/timer-lights.png";
+        var IMG_HINT_ROTATE     = "img/hint-rotate.png";
+        var IMG_DAY_UNUSABLE    = "img/day-unusable.png";
+        var IMG_DAY_CLOCK       = "img/day-clock.png";
+        var IMG_NIGHT_CLOCK     = "img/night-clock.png";
+        var IMG_CLOCK_HAND      = "img/clock-hand.png";
+        var IMG_CLOCK_HAND_RAD  = "img/clock-hand-radiation.png";
+        var IMG_DAY_CLOCK_HAND  = "img/day-clock-hand.png";
+        var IMG_CRAFT_GAUGE     = "img/craft-gauge.png";
+        var IMG_STROKE_BONUS    = "img/stroke-bonus.png";
+        var IMG_WRONG_TOOL      = "img/wrong-tool.png";
+        var IMG_HAND_TOOL       = "img/hand-tool.png";
+        var IMG_ARROW_CRAFT     = "img/arrow-craft.png";
+        var IMG_UNLOCK_SKILLS   = "img/unlock-skills.png";
+        var IMG_SERVER_FULL     = "img/server-full.png";
+        var IMG_SERVER_OLD      = "img/server-old.png";
+        var IMG_CLIENT_OLD      = "img/client-old.png";
+        var IMG_SERVER_WRONG    = "img/server-wrong.png";
+        var IMG_INVITATION_BOX  = "img/invitation-box.png";
+        var IMG_TIME_BOX        = "img/time-box.png";
+        var IMG_RANK_BOX        = "img/rank-box.png";
+        var IMG_TOXIC_ALERT     = "img/toxic-alert.png";
+        var IMG_RAD_ALERT       = "img/radiation-alert.png";
         var Mvvwv = 500;
         var mVmWm = 256;
-        var NNmnW = mVmWm * 2;
         var mMmvV = 500;
         var WWn = window.Math.floor(mVmWm / 2);
         var nWWwM = window.Math.floor(WWn / 2);
-        var NVvVm = "img/alert";
+        var IMG_ALERT = "img/alert";
         var Vwwmw = 699;
         var nvnwM = 738;
-        var lightgreen = "#70BD56";
-        var orange = "#e58833";
-        var lightblue = "#55B7BC";
-        var yellow = "#d7c83a";
-        var white = "#FFFFFF";
+        var COLOR_LIGHTGREEN    = "#70BD56";
+        var COLOR_ORANGE        = "#e58833";
+        var COLOR_LIGHTBLUE     = "#55B7BC";
+        var COLOR_YELLOW        = "#d7c83a";
+        var COLOR_WHITE         = "#FFFFFF";
         var Mvnwm = 3000;
         var mmWWw = 500;
         var WWMnN = 2500;
         var PI2 = window.Math.PI * 2;
-        var Mwwnm = 165 * (window.Math.PI / 180);
         var PIby2 = window.Math.PI / 2;
         var mWvNn = window.Math.PI / World.__DAY__;
         var LEFT = 1;
@@ -12709,8 +12706,6 @@ try {
         var matrix = [];
         var wWmnn = NVmMW;
         var VmvVW = WnWvv;
-        var NwVwM = NVmMW * __TILE_SIZE__;
-        var wNwMv = WnWvv * __TILE_SIZE__;
         var NmWnM = [];
         var nNMVM = {
             isLoaded: 0
@@ -12721,7 +12716,7 @@ try {
         var wnW = {
             move: 0,
             effect: 0,
-            src: arrowcraft,
+            src: IMG_ARROW_CRAFT,
             img: {
                 isLoaded: 0
             }
@@ -12729,32 +12724,32 @@ try {
         var wvV = {
             move: 0,
             effect: 0,
-            src: unlockskill,
+            src: IMG_UNLOCK_SKILLS,
             img: {
                 isLoaded: 0
             }
         };
         var timeleft = {
-            src: timebox,
+            src: IMG_TIME_BOX,
             img: {
                 isLoaded: 0
             }
         };
         var WvWnV = {
-            src: rankbox,
+            src: IMG_RANK_BOX,
             img: {
                 isLoaded: 0
             }
         };
         var WWmMW = {
-            src: toxicalert,
+            src: IMG_TOXIC_ALERT,
             img: {
                 isLoaded: 0
             }
         };
         var MvvNN = 0;
         var VmWNN = {
-            src: radalert,
+            src: IMG_RAD_ALERT,
             img: {
                 isLoaded: 0
             }
@@ -12803,20 +12798,20 @@ try {
             isLoaded: 0
         };
         var vvNWN = {
-            src: strokebonus,
+            src: IMG_STROKE_BONUS,
             img: {
                 isLoaded: 0
             }
         };
         var VnwNw = 0;
         var wrongTool = {
-            src: wrongtool,
+            src: IMG_WRONG_TOOL,
             img: {
                 isLoaded: 0
             }
         };
         var vwnWv = {
-            src: handtool,
+            src: IMG_HAND_TOOL,
             img: {
                 isLoaded: 0
             }
@@ -12838,13 +12833,13 @@ try {
             };
         }
         var arrowiconmap2 = {
-            src: maparrowicon,
+            src: IMG_MAP_ARROW,
             img: {
                 isLoaded: 0
             }
         };
         var arrowiconmap = {
-            src: maparrowicon2,
+            src: IMG_MAP_ARROW2,
             img: {
                 isLoaded: 0
             }
@@ -12853,67 +12848,67 @@ try {
             isLoaded: 0
         };
         var houseiconmap = {
-            src: houseicon,
+            src: IMG_HOUSE_ICON,
             img: {
                 isLoaded: 0
             }
         };
         var cityiconmap = {
-            src: cityicon,
+            src: IMG_CITY_ICON,
             img: {
                 isLoaded: 0
             }
         };
         var WmVNn = {
-            src: nightclock,
+            src: IMG_NIGHT_CLOCK,
             img: {
                 isLoaded: 0
             }
         };
         var nvvVW = {
-            src: dayclock,
+            src: IMG_DAY_CLOCK,
             img: {
                 isLoaded: 0
             }
         };
         var nMmvV = {
-            src: clockhand,
+            src: IMG_CLOCK_HAND,
             img: {
                 isLoaded: 0
             }
         };
         var VWmVV = {
-            src: dayclockhand,
+            src: IMG_DAY_CLOCK_HAND,
             img: {
                 isLoaded: 0
             }
         };
         var wmmvv = {
-            src: clockhandrad,
+            src: IMG_CLOCK_HAND_RAD,
             img: {
                 isLoaded: 0
             }
         };
         var alertFull = {
-            src: serverFull,
+            src: IMG_SERVER_FULL,
             img: {
                 isLoaded: 0
             }
         };
         var alertServerOld = {
-            src: serverOld,
+            src: IMG_SERVER_OLD,
             img: {
                 isLoaded: 0
             }
         };
         var alertClientOld = {
-            src: clientOld,
+            src: IMG_CLIENT_OLD,
             img: {
                 isLoaded: 0
             }
         };
         var alertServerWrong = {
-            src: serverWrong,
+            src: IMG_SERVER_WRONG,
             img: {
                 isLoaded: 0
             }
@@ -13379,7 +13374,7 @@ try {
             //if (World.PLAYER.ghoul !== 0) return;
             var inventory = Game.inventory;
             if (nNMVM.isLoaded !== 1) {
-                nNMVM = CanvasUtils.loadImage(emptyinventoryicon, nNMVM);
+                nNMVM = CanvasUtils.loadImage(IMG_INV_EMPTY, nNMVM);
                 return;
             } 
             var invtr = World.PLAYER.inventory;
@@ -13448,25 +13443,25 @@ try {
         function _Gauges(wX, wY) {
             var life = World.gauges.life;
             var vW = life.current / life._max;
-            CanvasUtils.fillRect(ctx, (wX / scaleby) + 14, (wY / scaleby) + 71, vW * 189, 16, lightgreen);
+            CanvasUtils.fillRect(ctx, (wX / scaleby) + 14, (wY / scaleby) + 71, vW * 189, 16, COLOR_LIGHTGREEN);
             var food = World.gauges.food;
             var vW = food.current / food._max;
-            CanvasUtils.fillRect(ctx, (wX / scaleby) + 13, (wY / scaleby) + 162, 54, -vW * 63, orange);
+            CanvasUtils.fillRect(ctx, (wX / scaleby) + 13, (wY / scaleby) + 162, 54, -vW * 63, COLOR_ORANGE);
             var cold = World.gauges.cold;
             var vW = cold.current / cold._max;
-            CanvasUtils.fillRect(ctx, (wX / scaleby) + 81, (wY / scaleby) + 162, 54, -vW * 63, lightblue);
+            CanvasUtils.fillRect(ctx, (wX / scaleby) + 81, (wY / scaleby) + 162, 54, -vW * 63, COLOR_LIGHTBLUE);
             var stamina = World.gauges.stamina;
             var vW = stamina.current / stamina._max;
-            CanvasUtils.fillRect(ctx, (wX / scaleby) + 150, (wY / scaleby) + 162, 54, -vW * 63, yellow);
+            CanvasUtils.fillRect(ctx, (wX / scaleby) + 150, (wY / scaleby) + 162, 54, -vW * 63, COLOR_YELLOW);
             var xp = World.gauges.xp;
             var vW = xp.current / xp._max;
-            CanvasUtils.fillRect(ctx, (wX / scaleby) + 226, (wY / scaleby) + 172, 16, -vW * 77, white);
+            CanvasUtils.fillRect(ctx, (wX / scaleby) + 226, (wY / scaleby) + 172, 16, -vW * 77, COLOR_WHITE);
             var wVnVV = World.updateHour();
             var img;
             var wnvmV;
             if (wVnVV >= 10000000) {
                 if (WmVNn.isLoaded !== 1) {
-                    WmVNn = CanvasUtils.loadImage(nightclock, WmVNn);
+                    WmVNn = CanvasUtils.loadImage(IMG_NIGHT_CLOCK, WmVNn);
                     return;
                 }
                 wVnVV -= 10000000;
@@ -13474,7 +13469,7 @@ try {
                 wnvmV = nMmvV;
             } else {
                 if (nvvVW.isLoaded !== 1) {
-                    nvvVW = CanvasUtils.loadImage(dayclock, nvvVW);
+                    nvvVW = CanvasUtils.loadImage(IMG_DAY_CLOCK, nvvVW);
                     return;
                 }
                 img = nvvVW;
@@ -13617,7 +13612,7 @@ try {
 
         function nmwmn(wX, wY) {
             if (teambox.isLoaded !== 1) {
-                teambox = CanvasUtils.loadImage(invbox, teambox);
+                teambox = CanvasUtils.loadImage(IMG_INVITATION_BOX, teambox);
                 return;
             }
             Game.acceptMember.pos.x = wX + (241 * scaleby);
@@ -13644,7 +13639,7 @@ try {
             }
         };
 
-        function timeleftfunc(wX, wY, wNWnn) {
+        function _TimerGhoul(wX, wY, wNWnn) {
             World.PLAYER.nextAreas -= delta;
             var nnW = window.Math.max(0, window.Math.floor(World.PLAYER.nextAreas / 1000));
             if (nnW < 3000) {
@@ -13662,7 +13657,7 @@ try {
             }
         };
 
-        function vmnWW(wX, wY) {
+        function _AliveGhoul(wX, wY) {
             CanvasUtils.drawImageHd(WvWnV, ((wX / scaleby) + canwns) - 63, 25 + (wY / scaleby), 0, 0, 0, 1);
             if (playerAlive[World.playerAlive] === window.undefined) {
                 playerAlive[World.playerAlive] = {
@@ -13676,7 +13671,7 @@ try {
         function _Minimap(wX, wY) {
             nmwmn(wX + (250 * scaleby), wY);
             if (minimap.isLoaded !== 1) {
-                minimap = CanvasUtils.loadImage(bordermapbig, minimap);
+                minimap = CanvasUtils.loadImage(IMG_MAP_BORDER, minimap);
                 return;
             }
 
@@ -13688,8 +13683,8 @@ try {
             ctx.drawImage(minimap, sx, sy, mVmWm, mVmWm, wX, wY, width, width);
             
             if (World.gameMode === World.__GHOUL__) {
-                if (World.PLAYER.ghoul !== 0) vmnWW(-255, wY);
-                else timeleftfunc(wX + 50, wY, 1);
+                if (World.PLAYER.ghoul !== 0) _AliveGhoul(-255, wY);
+                else _TimerGhoul(wX + 50, wY, 1);
             }
 
 
@@ -13711,8 +13706,8 @@ try {
                 mWWwn = (mWWwn + delta) % 1200;
                 ctx.drawImage(MMvWn.img, sx / 2, sy / 2, WWn, WWn, wX, wY, width, width);
                 ctx.globalAlpha = 1;
-                vmnWW(0, wY);
-                timeleftfunc(wX, wY, 0);
+                _AliveGhoul(0, wY);
+                _TimerGhoul(wX, wY, 0);
             } else if (World.PLAYER.ghoul === 0) {
                 if (World.gauges.rad.decrease === 1) {
                     WNmVW = window.Math.min(1000, WNmVW + delta);
@@ -14077,7 +14072,7 @@ try {
                     VvvwN.draw();
                 }
                 if (craftGauge.isLoaded !== 1) {
-                    craftGauge = CanvasUtils.loadImage(craftgauge, craftGauge);
+                    craftGauge = CanvasUtils.loadImage(IMG_CRAFT_GAUGE, craftGauge);
                     return;
                 }
 
@@ -14520,7 +14515,7 @@ try {
                 for (var i = 0; i < World.PLAYER.gridPrev.length; i++) World.PLAYER.gridPrev[i] = window.Math.max(0, World.PLAYER.gridPrev[i] - delta);
             }
             if (wWNmv.isLoaded !== 1) {
-                wWNmv = CanvasUtils.loadImage(craftgrid, wWNmv);
+                wWNmv = CanvasUtils.loadImage(IMG_CRAFT_GRID, wWNmv);
                 return;
             }
             ctx.globalAlpha = World.PLAYER.grid / Mvvwv;
@@ -14573,7 +14568,7 @@ try {
                 }
                 var img = wVMNN[vV][level];
                 if (img.isLoaded !== 1) {
-                    wVMNN[vV][level] = CanvasUtils.loadImage((((NVvVm + vV) + "_") + level) + ".png", img);
+                    wVMNN[vV][level] = CanvasUtils.loadImage((((IMG_ALERT + vV) + "_") + level) + ".png", img);
                     return;
                 }
                 var move = 0;
@@ -15225,7 +15220,7 @@ try {
                     }
                 }
                 if (hintRotate.isLoaded !== 1) {
-                    hintRotate = CanvasUtils.loadImage(hintrotate, hintRotate);
+                    hintRotate = CanvasUtils.loadImage(IMG_HINT_ROTATE, hintRotate);
                     return;
                 }
                 if ((item.wall === 1) || (World.PLAYER.interaction >= 0)) nwmVM = window.Math.max(0, World.PLAYER.hintRotate - delta);
@@ -15447,8 +15442,8 @@ try {
             switch (interaction) {
                 case 0:
                     if (nMWVv.isLoaded !== 1) {
-                        if (isTouchScreen === 0) nMWVv = CanvasUtils.loadImage(looticon, nMWVv);
-                        else nMWVv = CanvasUtils.loadImage(lootmobileicon, nMWVv);
+                        if (isTouchScreen === 0) nMWVv = CanvasUtils.loadImage(IMG_LOOT, nMWVv);
+                        else nMWVv = CanvasUtils.loadImage(IMG_LOOT_TOUCH, nMWVv);
                         return;
                     }
                     var imgMovement = scaleby + (WvmnV * scaleby);
@@ -15478,15 +15473,15 @@ try {
                         return;
                     }
                     if (useTimer.isLoaded !== 1) {
-                        useTimer = CanvasUtils.loadImage(timericon, useTimer);
+                        useTimer = CanvasUtils.loadImage(IMG_TIMER, useTimer);
                         return;
                     }
                     if (arrow.isLoaded !== 1) {
-                        arrow = CanvasUtils.loadImage(timerarrow, arrow);
+                        arrow = CanvasUtils.loadImage(IMG_TIMER_ARROW, arrow);
                         return;
                     }
                     if (lights.isLoaded !== 1) {
-                        lights = CanvasUtils.loadImage(timerlights, lights);
+                        lights = CanvasUtils.loadImage(IMG_TIMER_LIGHTS, lights);
                         return;
                     }
                     var imgMovement = scaleby + (WvmnV * scaleby);
@@ -15530,8 +15525,8 @@ try {
                     ctx.drawImage(img, posx, posy, scalex, scaley);
                     if (World.PLAYER.extraLoot === 1) {
                         if (VWvVN.isLoaded !== 1) {
-                            if (isTouchScreen === 0) VWvVN = CanvasUtils.loadImage(loot2icon, VWvVN);
-                            else VWvVN = CanvasUtils.loadImage(lootmobileicon, nMWVv);
+                            if (isTouchScreen === 0) VWvVN = CanvasUtils.loadImage(IMG_LOOT2, VWvVN);
+                            else VWvVN = CanvasUtils.loadImage(IMG_LOOT_TOUCH, nMWVv);
                             return;
                         }
                         var vNwMN = imgMovement / scaleby;
@@ -15835,7 +15830,7 @@ try {
             }
             if (player.breath > 0) {
                 if (arv.isLoaded !== 1) {
-                    arv = CanvasUtils.loadImage(useicon, arv);
+                    arv = CanvasUtils.loadImage(IMG_DAY_UNUSABLE, arv);
                     return;
                 }
                 if (player.breath > 400) ctx.globalAlpha = MathUtils.Ease.outQuad(1 - ((player.breath - 400) / 200));
@@ -16009,7 +16004,7 @@ try {
             var imgMovement = 1 + (0.15 * ((player.breath < 500) ? (player.breath / 500) : (1 - ((player.breath - 500) / 500))));
             imgMovement *= scaleby;
             if (arv.isLoaded !== 1) {
-                arv = CanvasUtils.loadImage(useicon, arv);
+                arv = CanvasUtils.loadImage(IMG_DAY_UNUSABLE, arv);
                 return;
             }
             ctx.globalAlpha = MathUtils.Ease.outQuad(player.hit / 500);
