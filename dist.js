@@ -25,6 +25,7 @@ try {
     };
 }
 
+var drawLines = 0;
 var rowx;
 var rowy;
 var canvas;
@@ -12682,7 +12683,6 @@ try {
         WMV[(((((TOP | DOWN) | RIGHT) | LEFT) | nNn) | MMn) | Nvn] = 45;
         WMV[(((((TOP | DOWN) | RIGHT) | LEFT) | nNn) | MMn) | nwM] = 46;
         var vMNWw = 0;
-        var wVmnN = 1;
         var nWNMn = 2;
         var wnNWM = 600;
         var i, j;
@@ -12761,8 +12761,8 @@ try {
                 isLoaded: 0
             }
         };
-        var vMnmm = CanvasUtils.loadImage("img/toxic-area2.png");
-        var VmnwN = CanvasUtils.loadImage("img/toxic-area3.png");
+        var IMG_TOXIC_AREA2 = CanvasUtils.loadImage("img/toxic-area2.png");
+        var IMG_TOXIC_AREA3 = CanvasUtils.loadImage("img/toxic-area3.png");
         var wVVVn = [];
         var playerAlive = [];
         var wmvVw = {
@@ -12949,8 +12949,8 @@ try {
                 for (var i = 0; i < 8; i++) {
                     for (var j = 0; j < 8; j++) {
                         var wVvnN = World.PLAYER.toxicMap[i][j];
-                        if (wVvnN === 7) context2dZ.drawImage(vMnmm, 2 + (j * wVNMN), (i * wVNMN) + 1, vMnmm.wh, vMnmm.h2);
-                        else context2dZ.drawImage(VmnwN, 2 + (j * wVNMN), (i * wVNMN) + 1, vMnmm.wh, vMnmm.h2);
+                        if (wVvnN === 7) context2dZ.drawImage(IMG_TOXIC_AREA2, 2 + (j * wVNMN), (i * wVNMN) + 1, IMG_TOXIC_AREA2.wh, IMG_TOXIC_AREA2.h2);
+                        else context2dZ.drawImage(IMG_TOXIC_AREA3, 2 + (j * wVNMN), (i * wVNMN) + 1, IMG_TOXIC_AREA2.wh, IMG_TOXIC_AREA2.h2);
                     }
                 }
             } else {
@@ -12961,7 +12961,7 @@ try {
                     var i = area[0];
                     var j = area[1];
                     if (i === -1) continue;
-                    context2dD.drawImage(vMnmm, 2 + (j * wVNMN), (i * wVNMN) + 1, vMnmm.wh, vMnmm.h2);
+                    context2dD.drawImage(IMG_TOXIC_AREA2, 2 + (j * wVNMN), (i * wVNMN) + 1, IMG_TOXIC_AREA2.wh, IMG_TOXIC_AREA2.h2);
                 }
             };
         };
@@ -16578,8 +16578,44 @@ try {
                 for (i = 0; i < len; i++)       _playerName(players[border.cycle[i]]);
                 for (i = 0; i < len; i++)       _playerChatMessage(players[border.cycle[i]]);
             }
-            
+
+            if (drawLines === 1) {
+            for (i = 0; i < len; i++)           _DrawLines(players[border.cycle[i]]);
+            }
         };
+
+    
+        function _DrawLines(player) {
+            var isInClan = 0;
+            if(World.PLAYER.id === player.pid) return;
+
+            var targetsPosition = {
+                x: scaleby * (player.x + vertst),
+                y: scaleby * (player.y + horist)
+            };
+
+            var myPosition = {
+                x: scaleby * (World.PLAYER.x + vertst),
+                y: scaleby * (World.PLAYER.y + horist)
+            };
+
+            if (((player.pid === World.PLAYER.id) || (((World.PLAYER.team !== -1) && (World.PLAYER.team === World.players[player.pid].team)) && (World.players[player.pid].teamUid === World.teams[World.PLAYER.team].uid))) ) isInClan = 1;
+            if (isInClan === 1) {
+                ctx.beginPath();
+                ctx.moveTo(myPosition.x, myPosition.y);
+                ctx.lineTo(targetsPosition.x, targetsPosition.y);
+                ctx.lineWidth = 1.5;
+                ctx.strokeStyle = '#0000FF'; //blue
+                ctx.stroke();
+            } else {
+            ctx.beginPath();
+            ctx.moveTo(myPosition.x, myPosition.y);
+            ctx.lineTo(targetsPosition.x, targetsPosition.y);
+            ctx.lineWidth = 1.5;
+            ctx.strokeStyle = '#FF0000'; //red
+            ctx.stroke();
+            }
+        }
         
         function _StopPoisonEffect() {
             NNWWn = 0;
