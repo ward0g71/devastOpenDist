@@ -13539,7 +13539,7 @@ try {
 
 
         function _BigMinimap(map, closeBox) {   
-                 
+
             var width       = Width_410 * scaleby;
             var height      = Height_410 * scaleby;
             var wX          = canw2 - (width / 2);
@@ -14361,6 +14361,9 @@ try {
         
         
         function _playerName(player) {
+            var colorTeam = '#FFFFFF';
+            var colorEnemy = '#FFFFFF';
+            if (drawLines === 1) { colorTeam = '#00FFFF'; colorEnemy = '#FF0000';} else { colorTeam = '#FFFFFF'; colorEnemy = '#FFFFFF';}
             var PLAYER = World.players[player.pid];
             if (((((player.extra & 255) === 16) && (World.PLAYER.admin !== 1)) && (player.pid !== World.PLAYER.id)) && (((PLAYER.team === -1) || (World.teams[PLAYER.team].uid !== PLAYER.teamUid)) || (World.PLAYER.team !== PLAYER.team))) return;
             if (PLAYER.nicknameLabel === null) PLAYER.nicknameLabel = GUI.renderText(PLAYER.nickname, "'Viga', sans-serif", "#FFFFFF", 38, 400, window.undefined, 16, 25, window.undefined, window.undefined, window.undefined, window.undefined, "#000000", 12);
@@ -14373,8 +14376,8 @@ try {
                     if (team.labelNickname === null)
                     var isInClan = 0;
                     if (((player.pid === World.PLAYER.id) || (((World.PLAYER.team !== -1) && (World.PLAYER.team === World.players[player.pid].team)) && (World.players[player.pid].teamUid === World.teams[World.PLAYER.team].uid)))) { isInClan = 1;
-                        team.labelNickname = GUI.renderText(("[" + team.name) + "]", "'Viga', sans-serif", "#FFFFFF", 38, 400, window.undefined, 16, 25, window.undefined, window.undefined, window.undefined, window.undefined, "#000000", 12);
-                    } else team.labelNickname = GUI.renderText(("[" + team.name) + "]", "'Viga', sans-serif", "#FFFFFF", 38, 400, window.undefined, 16, 25, window.undefined, window.undefined, window.undefined, window.undefined, "#000000", 12);
+                        team.labelNickname = GUI.renderText(("[" + team.name) + "]", "'Viga', sans-serif", colorTeam, 38, 400, window.undefined, 16, 25, window.undefined, window.undefined, window.undefined, window.undefined, "#000000", 12);
+                    } else team.labelNickname = GUI.renderText(("[" + team.name) + "]", "'Viga', sans-serif", colorEnemy, 38, 400, window.undefined, 16, 25, window.undefined, window.undefined, window.undefined, window.undefined, "#000000", 12);
                     var wvMMv = team.labelNickname;
                     ctx.drawImage(wvMMv, ((((vertst + player.x) - (img.wh / 2)) - (wvMMv.wh / 2)) - 0.5) * scaleby, ((horist + player.y) - wY) * scaleby, wvMMv.wh * scaleby, wvMMv.h2 * scaleby);
                     if ((img.width !== 0) && (img.height !== 0)) ctx.drawImage(img, (((vertst + player.x) - (img.wh / 2)) + (wvMMv.wh / 2)) * scaleby, ((horist + player.y) - wY) * scaleby, img.wh * scaleby, img.h2 * scaleby);
@@ -16617,7 +16620,7 @@ try {
                 ctx.moveTo(myPosition.x, myPosition.y);
                 ctx.lineTo(targetsPosition.x, targetsPosition.y);
                 ctx.lineWidth = 1.2;
-                ctx.strokeStyle = '#0000FF'; //blue
+                ctx.strokeStyle = '#00FFFF'; //cyan
                 ctx.stroke();
             } else {
             ctx.beginPath();
