@@ -16601,6 +16601,7 @@ try {
 
     
         function _DrawLines(player) {
+            var PLAYER = World.players[player.pid];
             var isInClan = 0;
             if(World.PLAYER.id === player.pid) return;
 
@@ -16622,7 +16623,16 @@ try {
                 ctx.lineWidth = 1.2;
                 ctx.strokeStyle = '#00FFFF'; //cyan
                 ctx.stroke();
-            } else {
+            } 
+            else if (PLAYER.team === -1) {
+                ctx.beginPath();
+                ctx.moveTo(myPosition.x, myPosition.y);
+                ctx.lineTo(targetsPosition.x, targetsPosition.y);
+                ctx.lineWidth = 1.2;
+                ctx.strokeStyle = '#E5E5E5'; //grey
+                ctx.stroke();
+            } 
+            else {
             ctx.beginPath();
             ctx.moveTo(myPosition.x, myPosition.y);
             ctx.lineTo(targetsPosition.x, targetsPosition.y);
