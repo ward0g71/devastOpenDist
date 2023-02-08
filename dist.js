@@ -12694,8 +12694,6 @@ try {
         WMV[(((((TOP | DOWN) | RIGHT) | LEFT) | MMn) | nwM) | Nvn] = 44;
         WMV[(((((TOP | DOWN) | RIGHT) | LEFT) | nNn) | MMn) | Nvn] = 45;
         WMV[(((((TOP | DOWN) | RIGHT) | LEFT) | nNn) | MMn) | nwM] = 46;
-        var vMNWw = 0;
-        var nWNMn = 2;
         var wnNWM = 600;
         var i, j;
         var vertst = 0;
@@ -12713,7 +12711,7 @@ try {
         for (i = 0; i < 20; i++) vMnmV[i] = {
             isLoaded: 0
         };
-        var NwMVW = nWNMn;
+        var setParticles = 2;
         var vMnnw = [];
         var matrix = [];
         var wWmnn = NVmMW;
@@ -13222,7 +13220,7 @@ try {
             return id;
         };
 
-        function smallwallsfusion(player) {
+        function _wallConnect(player) {
             var vV = player.extra >> 7;
             if (((INVENTORY[vV].lowWall !== 1) || (player.hurt > 0)) || (player.broke > 0)) return;
             var VMV = matrix[player.i][player.j];
@@ -13231,7 +13229,7 @@ try {
             VMV.rotate = (player.extra >> 5) & 3;
         };
 
-        function bigwallsfusion(player) {
+        function _bigWallConnect(player) {
             var vV = player.extra >> 7;
             if (((INVENTORY[vV].wall !== 1) || (player.hurt > 0)) || (player.broke > 0)) return;
             var VMV = matrix[player.i][player.j];
@@ -13248,7 +13246,7 @@ try {
             }
         };
 
-        function floorsfusion(player) {
+        function _floorConnect(player) {
             var vV = player.extra >> 7;
             if (((INVENTORY[vV].wall !== 1) || (player.hurt > 0)) || (player.broke > 0)) return;
             var VMV = matrix[player.i][player.j];
@@ -13301,10 +13299,10 @@ try {
             wnW.move = 0;
             wvV.effect = 0;
             wvV.move = 0;
-            VwmMm.id = -1;
-            VwmMm.uid = -1;
+            PARTICLE.id = -1;
+            PARTICLE.uid = -1;
             var vW = localStorage2.getItem("particles");
-            if (vW !== null) NwMVW = window.Number(vW);
+            if (vW !== null) setParticles = window.Number(vW);
             teamName = "";
             nNmVw = null;
             MapManager.width = 150;
@@ -14309,15 +14307,15 @@ try {
             NVVwW.draw();
             MnvNV.pos.x = wX + (87 * scaleby);
             MnvNV.pos.y = wY + (217 * scaleby);
-            if (NwMVW === 0) MnvNV.setState(GUI.__BUTTON_CLICK__);
+            if (setParticles === 0) MnvNV.setState(GUI.__BUTTON_CLICK__);
             MnvNV.draw();
             vnNWN.pos.x = wX + (147 * scaleby);
             vnNWN.pos.y = wY + (217 * scaleby);
-            if (NwMVW === 1) vnNWN.setState(GUI.__BUTTON_CLICK__);
+            if (setParticles === 1) vnNWN.setState(GUI.__BUTTON_CLICK__);
             vnNWN.draw();
             WVVMw.pos.x = wX + (207 * scaleby);
             WVVMw.pos.y = wY + (217 * scaleby);
-            if (NwMVW === 2) WVVMw.setState(GUI.__BUTTON_CLICK__);
+            if (setParticles === 2) WVVMw.setState(GUI.__BUTTON_CLICK__);
             WVVMw.draw();
         };
 
@@ -15561,14 +15559,14 @@ try {
         };
         var nMVNv = 0;
         var WvWmM = 0;
-        var VwmMm = {
+        var PARTICLE = {
             id: -1,
             uid: -1
         };
 
         function vNwNM(player, id, dist, amount) {
-            if ((NwMVW === vMNWw) || (id === PARTICLESID.__NOTHING__)) return;
-            else if (NwMVW === nWNMn) amount *= 3;
+            if ((setParticles === 0) || (id === PARTICLESID.__NOTHING__)) return;
+            else if (setParticles === 2) amount *= 3;
             if ((Entitie.border[__ENTITIE_PARTICLES__].border + amount) >= wnNWM) return;
             for (var i = 0; i < amount; i++) {
                 var N = window.Math.random();
@@ -15583,107 +15581,107 @@ try {
             }
         };
 
-        function mWNvV(player) {
-            var img = PARTICLES[player.state][player.extra];
-            if (player.death > 0) {
-                player.death = window.Math.min(1, player.death + (delta / 500));
-                ctx.globalAlpha = 1 - player.death;
-                CanvasUtils.drawImageHd(img, vertst + player.x, horist + player.y, player.angle, 0, 0, 1);
+        function _Particles(particle) {
+            var img = PARTICLES[particle.state][particle.extra];
+            if (particle.death > 0) {
+                particle.death = window.Math.min(1, particle.death + (delta / 500));
+                ctx.globalAlpha = 1 - particle.death;
+                CanvasUtils.drawImageHd(img, vertst + particle.x, horist + particle.y, particle.angle, 0, 0, 1);
                 ctx.globalAlpha = 1;
-                if (player.death === 1) {
-                    VwmMm.id = player.id;
-                    VwmMm.uid = player.uid;
+                if (particle.death === 1) {
+                    PARTICLE.id = particle.id;
+                    PARTICLE.uid = particle.uid;
                 }
                 return;
-            } else if (Math2d.fastDist(player.x, player.y, player.nx, player.ny) < 0.01) player.death = 0.001;
-            CanvasUtils.drawImageHd(img, vertst + player.x, horist + player.y, player.angle, 0, 0, 1);
+            } else if (Math2d.fastDist(particle.x, particle.y, particle.nx, particle.ny) < 0.01) particle.death = 0.001;
+            CanvasUtils.drawImageHd(img, vertst + particle.x, horist + particle.y, particle.angle, 0, 0, 1);
         };
 
-        function _Dynamite(item, player, wX, wY, Rot, imgMovement) {
-            player.breath = (player.breath + delta) % 500;
-            var vW = player.breath / 500;
+        function _Dynamite(item, dynamite, wX, wY, Rot, imgMovement) {
+            dynamite.breath = (dynamite.breath + delta) % 500;
+            var vW = dynamite.breath / 500;
             var mnM = 0.95 + (0.3 * MathUtils.Ease.inOutQuad(vW));
             ctx.globalAlpha = 1 - vW;
-            CanvasUtils.drawImageHd(item.building[1], (vertst + player.x) + wX, (horist + player.y) + wY, Rot * PIby2, 0, 0, mnM);
+            CanvasUtils.drawImageHd(item.building[1], (vertst + dynamite.x) + wX, (horist + dynamite.y) + wY, Rot * PIby2, 0, 0, mnM);
             ctx.globalAlpha = 1;
-            CanvasUtils.drawImageHd(item.building[0], (vertst + player.x) + wX, (horist + player.y) + wY, Rot * PIby2, 0, 0, imgMovement);
+            CanvasUtils.drawImageHd(item.building[0], (vertst + dynamite.x) + wX, (horist + dynamite.y) + wY, Rot * PIby2, 0, 0, imgMovement);
         };
         
         
-        function _Spike(item, player, wX, wY, Rot, imgMovement) {
+        function _Spike(item, spike, wX, wY, Rot, imgMovement) {
             var isInClan = 0;
             var VmnmV = 1;
-            if ((player.state & 16) === 16) VmnmV = 0;
-            if (((player.pid === World.PLAYER.id) || (((World.PLAYER.team !== -1) && (World.PLAYER.team === World.players[player.pid].team)) && (World.players[player.pid].teamUid === World.teams[World.PLAYER.team].uid))) || (Math2d.fastDist(NmM, WWV, player.x, player.y) < 52000)) isInClan = 1;
+            if ((spike.state & 16) === 16) VmnmV = 0;
+            if (((spike.pid === World.PLAYER.id) || (((World.PLAYER.team !== -1) && (World.PLAYER.team === World.players[spike.pid].team)) && (World.players[spike.pid].teamUid === World.teams[World.PLAYER.team].uid))) || (Math2d.fastDist(NmM, WWV, spike.x, spike.y) < 52000)) isInClan = 1;
             if (VmnmV === 0) {
-                if (player.hurt2 === 0) vNwNM(player, item.particles, item.particlesDist, 5);
-                if (player.hurt2 < 300) {
+                if (spike.hurt2 === 0) vNwNM(spike, item.particles, item.particlesDist, 5);
+                if (spike.hurt2 < 300) {
                     wX += (window.Math.random() * 6) - 4;
                     wY += (window.Math.random() * 6) - 4;
-                    player.hurt2 += delta;
+                    spike.hurt2 += delta;
                 }
-                if (player.breath > 0) {
-                    player.breath = window.Math.max(0, player.breath - (delta / 5));
-                    ctx.globalAlpha = MathUtils.Ease.inOutQuad(player.breath / 300);
-                    CanvasUtils.drawImageHd(item.hidden[player.id % 3], (vertst + player.x) + wX, (horist + player.y) + wY, Rot * PIby2, 0, 0, imgMovement);
+                if (spike.breath > 0) {
+                    spike.breath = window.Math.max(0, spike.breath - (delta / 5));
+                    ctx.globalAlpha = MathUtils.Ease.inOutQuad(spike.breath / 300);
+                    CanvasUtils.drawImageHd(item.hidden[spike.id % 3], (vertst + spike.x) + wX, (horist + spike.y) + wY, Rot * PIby2, 0, 0, imgMovement);
                     ctx.globalAlpha = 1;
                 }
-                CanvasUtils.drawImageHd(item.deployed[player.id % 3], (vertst + player.x) + wX, (horist + player.y) + wY, Rot * PIby2, 0, 0, imgMovement);
+                CanvasUtils.drawImageHd(item.deployed[spike.id % 3], (vertst + spike.x) + wX, (horist + spike.y) + wY, Rot * PIby2, 0, 0, imgMovement);
             } else if (isInClan === 1) {
-                if (player.breath === 300) CanvasUtils.drawImageHd(item.hidden[player.id % 3], (vertst + player.x) + wX, (horist + player.y) + wY, Rot * PIby2, 0, 0, imgMovement);
+                if (spike.breath === 300) CanvasUtils.drawImageHd(item.hidden[spike.id % 3], (vertst + spike.x) + wX, (horist + spike.y) + wY, Rot * PIby2, 0, 0, imgMovement);
                 else {
-                    player.breath = window.Math.min(300, player.breath + delta);
-                    ctx.globalAlpha = MathUtils.Ease.inOutQuad(player.breath / 300);
-                    CanvasUtils.drawImageHd(item.hidden[player.id % 3], (vertst + player.x) + wX, (horist + player.y) + wY, Rot * PIby2, 0, 0, imgMovement);
+                    spike.breath = window.Math.min(300, spike.breath + delta);
+                    ctx.globalAlpha = MathUtils.Ease.inOutQuad(spike.breath / 300);
+                    CanvasUtils.drawImageHd(item.hidden[spike.id % 3], (vertst + spike.x) + wX, (horist + spike.y) + wY, Rot * PIby2, 0, 0, imgMovement);
                     ctx.globalAlpha = 1;
                 }
-            } else if ((isInClan === 0) && (player.breath > 0)) {
-                player.breath = window.Math.max(0, player.breath - (delta / 5));
-                ctx.globalAlpha = MathUtils.Ease.inOutQuad(player.breath / 300);
-                CanvasUtils.drawImageHd(item.hidden[player.id % 3], (vertst + player.x) + wX, (horist + player.y) + wY, Rot * PIby2, 0, 0, imgMovement);
+            } else if ((isInClan === 0) && (spike.breath > 0)) {
+                spike.breath = window.Math.max(0, spike.breath - (delta / 5));
+                ctx.globalAlpha = MathUtils.Ease.inOutQuad(spike.breath / 300);
+                CanvasUtils.drawImageHd(item.hidden[spike.id % 3], (vertst + spike.x) + wX, (horist + spike.y) + wY, Rot * PIby2, 0, 0, imgMovement);
                 ctx.globalAlpha = 1;
             }
         };
         
-        function _HiddenBuilding(item, player, wX, wY, Rot, imgMovement) {
-            CanvasUtils.drawImageHd(item.building, (vertst + player.x) + wX, (horist + player.y) + wY, Rot * PIby2, 0, 0, imgMovement);
+        function _HiddenBuilding(item, building, wX, wY, Rot, imgMovement) {
+            CanvasUtils.drawImageHd(item.building, (vertst + building.x) + wX, (horist + building.y) + wY, Rot * PIby2, 0, 0, imgMovement);
         };
         
-        function _Landmine(item, player, wX, wY, Rot, imgMovement) {
+        function _Landmine(item, landmine, wX, wY, Rot, imgMovement) {
             var isInClan = 0;
-            if (((player.pid === World.PLAYER.id) || (((World.PLAYER.team !== -1) && (World.PLAYER.team === World.players[player.pid].team)) && (World.players[player.pid].teamUid === World.teams[World.PLAYER.team].uid))) || (Math2d.fastDist(NmM, WWV, player.x, player.y) < 52000)) isInClan = 1;
+            if (((landmine.pid === World.PLAYER.id) || (((World.PLAYER.team !== -1) && (World.PLAYER.team === World.players[landmine.pid].team)) && (World.players[landmine.pid].teamUid === World.teams[World.PLAYER.team].uid))) || (Math2d.fastDist(NmM, WWV, landmine.x, landmine.y) < 52000)) isInClan = 1;
             if (isInClan === 1) {
-                player.breath = window.Math.min(300, player.breath + delta);
-                ctx.globalAlpha = MathUtils.Ease.inOutQuad(player.breath / 300);
-                CanvasUtils.drawImageHd(item.building[player.id % 3], (vertst + player.x) + wX, (horist + player.y) + wY, Rot * PIby2, 0, 0, imgMovement);
+                landmine.breath = window.Math.min(300, landmine.breath + delta);
+                ctx.globalAlpha = MathUtils.Ease.inOutQuad(landmine.breath / 300);
+                CanvasUtils.drawImageHd(item.building[landmine.id % 3], (vertst + landmine.x) + wX, (horist + landmine.y) + wY, Rot * PIby2, 0, 0, imgMovement);
                 ctx.globalAlpha = 0.2;
-                CanvasUtils.drawImageHd(LIGHTFIRE[5], (vertst + player.x) + wX, (horist + player.y) + wY, 0, 0, 0, 0.6);
+                CanvasUtils.drawImageHd(LIGHTFIRE[5], (vertst + landmine.x) + wX, (horist + landmine.y) + wY, 0, 0, 0, 0.6);
                 ctx.globalAlpha = 1;
             }
         
             else if (isInClan === 0) {
-                player.breath = window.Math.min(300, player.breath + delta);
-                ctx.globalAlpha = MathUtils.Ease.inOutQuad(player.breath / 300);
-                CanvasUtils.drawImageHd(item.building[player.id % 3], (vertst + player.x) + wX, (horist + player.y) + wY, Rot * PIby2, 0, 0, imgMovement);
+                landmine.breath = window.Math.min(300, landmine.breath + delta);
+                ctx.globalAlpha = MathUtils.Ease.inOutQuad(landmine.breath / 300);
+                CanvasUtils.drawImageHd(item.building[landmine.id % 3], (vertst + landmine.x) + wX, (horist + landmine.y) + wY, Rot * PIby2, 0, 0, imgMovement);
         
                 ctx.globalAlpha = 0.2;
-                CanvasUtils.drawImageHd(LIGHTFIRE[4], (vertst + player.x) + wX, (horist + player.y) + wY, 0, 0, 0, 0.6);
+                CanvasUtils.drawImageHd(LIGHTFIRE[4], (vertst + landmine.x) + wX, (horist + landmine.y) + wY, 0, 0, 0, 0.6);
                 ctx.globalAlpha = 1; 
         
             }    
         };
         
-        function _DefaultBuilding(item, player, wX, wY, Rot, imgMovement) {
-            CanvasUtils.drawImageHd(item.building, (vertst + player.x) + wX, (horist + player.y) + wY, Rot * PIby2, 0, 0, imgMovement);
+        function _DefaultBuilding(item, building, wX, wY, Rot, imgMovement) {
+            CanvasUtils.drawImageHd(item.building, (vertst + building.x) + wX, (horist + building.y) + wY, Rot * PIby2, 0, 0, imgMovement);
         };
         
-        function _Breakable(item, player, wX, wY, Rot, imgMovement) {
-            CanvasUtils.drawImageHd(item.building[player.broke], (vertst + player.x) + wX, (horist + player.y) + wY, Rot * PIby2, 0, 0, imgMovement);
+        function _Breakable(item, building, wX, wY, Rot, imgMovement) {
+            CanvasUtils.drawImageHd(item.building[building.broke], (vertst + building.x) + wX, (horist + building.y) + wY, Rot * PIby2, 0, 0, imgMovement);
         };
         
-        function _Wall(item, player, wX, wY, Rot, imgMovement) {
-            if (player.broke > 0) CanvasUtils.drawImageHd(item.broken[player.broke - 1], (vertst + player.x) + wX, (horist + player.y) + wY, 0, 0, 0, imgMovement);
-            else CanvasUtils.drawImageHd(item.building[WwmwN(player)], (vertst + player.x) + wX, (horist + player.y) + wY, 0, 0, 0, imgMovement);
+        function _Wall(item, wall, wX, wY, Rot, imgMovement) {
+            if (wall.broke > 0) CanvasUtils.drawImageHd(item.broken[wall.broke - 1], (vertst + wall.x) + wX, (horist + wall.y) + wY, 0, 0, 0, imgMovement);
+            else CanvasUtils.drawImageHd(item.building[WwmwN(wall)], (vertst + wall.x) + wX, (horist + wall.y) + wY, 0, 0, 0, imgMovement);
         };
         
         function nearme(item, player, MMwnn) {
@@ -16395,7 +16393,7 @@ try {
             }
         };
         
-        function checkobjonscreen() {
+        function RenderObjects() {
             var i = 0;
             pplonscr = 0;
             NNmMN[0] = 0;
@@ -16404,35 +16402,38 @@ try {
             NNmMN[3] = 0;
             vnVmM = 12000;
             wMVMm = 12000;
-            World.PLAYER.extraLoot = 0;
-            World.PLAYER.buildingId = -1;
+            World.PLAYER.extraLoot    = 0;
+            World.PLAYER.buildingId   = -1;
             World.PLAYER.buildingArea = -1;
             if (World.PLAYER.interaction !== 1) World.PLAYER.interaction = -1;
-            var MvW = Entitie.units[ENTITIES.length];
-            var Wwn = Entitie.border[ENTITIES.length];
-            var WWM = Wwn.border;
-            var buildings = Entitie.units[__ENTITIE_BUILD_TOP__];
+            
+            var ents            = Entitie.units[ENTITIES.length];
+            var entsBorder      = Entitie.border[ENTITIES.length];
+            var entsLen         = entsBorder.border;
+
+            var buildings       = Entitie.units[__ENTITIE_BUILD_TOP__];
             var buildingsBorder = Entitie.border[__ENTITIE_BUILD_TOP__];
-            var buildingsLen = buildingsBorder.border;
-            for (i = 0; i < buildingsLen; i++) bigwallsfusion(buildings[buildingsBorder.cycle[i]]);
-            buildings = Entitie.units[__ENTITIE_BUILD_GROUND2__];
-            buildingsBorder = Entitie.border[__ENTITIE_BUILD_GROUND2__];
-            buildingsLen = buildingsBorder.border;
-            for (i = 0; i < buildingsLen; i++) floorsfusion(buildings[buildingsBorder.cycle[i]]);
+            var buildingsLen    = buildingsBorder.border;
+            for (i = 0; i < buildingsLen; i++) _bigWallConnect(buildings[buildingsBorder.cycle[i]]);
+
+            buildings           = Entitie.units[__ENTITIE_BUILD_GROUND2__];
+            buildingsBorder     = Entitie.border[__ENTITIE_BUILD_GROUND2__];
+            buildingsLen        = buildingsBorder.border;
+            for (i = 0; i < buildingsLen; i++) _floorConnect(buildings[buildingsBorder.cycle[i]]);
             for (i = 0; i < buildingsLen; i++) _Buildings(buildings[buildingsBorder.cycle[i]]);
-            for (i = 0; i < WWM; i++) {
-                var player = MvW[Wwn.cycle[i]];
+            for (i = 0; i < entsLen; i++) {
+                var player = ents[entsBorder.cycle[i]];
                 if (player.type === __ENTITIE_BUILD_GROUND2__) _Buildings(player);
             }
 
-            if (NwMVW !== vMNWw) {
+            if (setParticles !== 0) {
                 var particles       = Entitie.units[__ENTITIE_PARTICLES__];
                 var buildingsBorder = Entitie.border[__ENTITIE_PARTICLES__];
                 var buildingsLen    = buildingsBorder.border;
-                for (i = 0; i < buildingsLen; i++) mWNvV(particles[buildingsBorder.cycle[i]]);
-                if (VwmMm.id !== -1) {
-                    Entitie.remove(0, VwmMm.id, VwmMm.uid, __ENTITIE_PARTICLES__);
-                    VwmMm.id = -1;
+                for (i = 0; i < buildingsLen; i++) _Particles(particles[buildingsBorder.cycle[i]]);
+                if (PARTICLE.id !== -1) {
+                    Entitie.remove(0, PARTICLE.id, PARTICLE.uid, __ENTITIE_PARTICLES__);
+                    PARTICLE.id = -1;
                 }
             }
 
@@ -16440,8 +16441,8 @@ try {
             var buildingsBorder     = Entitie.border[__ENTITIE_BUILD_GROUND__];
             var buildingsLen        = buildingsBorder.border;
             for (i = 0; i < buildingsLen; i++) _Buildings(buildings[buildingsBorder.cycle[i]]);
-            for (i = 0; i < WWM; i++) {
-                var player = MvW[Wwn.cycle[i]];
+            for (i = 0; i < entsLen; i++) {
+                var player = ents[entsBorder.cycle[i]];
                 if (player.type === __ENTITIE_BUILD_GROUND__) _Buildings(player);
             }
 
@@ -16449,18 +16450,18 @@ try {
             resourceBorder          = Entitie.border[__ENTITIE_RESOURCES_DOWN__];
             resourceLen             = resourceBorder.border;
             for (i = 0; i < resourceLen; i++) _Resources(resources[resourceBorder.cycle[i]]);
-            for (i = 0; i < WWM; i++) {
-                var player = MvW[Wwn.cycle[i]];
+            for (i = 0; i < entsLen; i++) {
+                var player = ents[entsBorder.cycle[i]];
                 if (player.type === __ENTITIE_RESOURCES_DOWN__) _Resources(player);
             }
 
             var buildings           = Entitie.units[__ENTITIE_BUILD_DOWN__];
             var buildingsBorder     = Entitie.border[__ENTITIE_BUILD_DOWN__];
             var buildingsLen        = buildingsBorder.border;
-            for (i = 0; i < buildingsLen; i++) smallwallsfusion(buildings[buildingsBorder.cycle[i]]);
+            for (i = 0; i < buildingsLen; i++) _wallConnect(buildings[buildingsBorder.cycle[i]]);
             for (i = 0; i < buildingsLen; i++) _Buildings(buildings[buildingsBorder.cycle[i]]);
-            for (i = 0; i < WWM; i++) {
-                var player = MvW[Wwn.cycle[i]];
+            for (i = 0; i < entsLen; i++) {
+                var player = ents[entsBorder.cycle[i]];
                 if (player.type === __ENTITIE_BUILD_DOWN__) _Buildings(player);
             }
 
@@ -16483,8 +16484,8 @@ try {
             var lootsBorder         = Entitie.border[__ENTITIE_LOOT__];
             var lootsLen            = lootsBorder.border;
             for (i = 0; i < lootsLen; i++) _Loots(loots[lootsBorder.cycle[i]]);
-            for (i = 0; i < WWM; i++) {
-                var player = MvW[Wwn.cycle[i]];
+            for (i = 0; i < entsLen; i++) {
+                var player = ents[entsBorder.cycle[i]];
                 if (player.type === __ENTITIE_LOOT__) _Loots(player);
             }
 
@@ -16492,8 +16493,8 @@ try {
             var bulletsBorder       = Entitie.border[__ENTITIE_BULLET__];
             var bulletsLen          = bulletsBorder.border;
             for (i = 0; i < bulletsLen; i++) _Bullets(bullets[bulletsBorder.cycle[i]]);
-            for (i = 0; i < WWM; i++) {
-                var player = MvW[Wwn.cycle[i]];
+            for (i = 0; i < entsLen; i++) {
+                var player = ents[entsBorder.cycle[i]];
                 if (player.type === __ENTITIE_BULLET__) _Bullets(player);
             }
 
@@ -16501,8 +16502,8 @@ try {
             resourceBorder          = Entitie.border[__ENTITIE_RESOURCES_MID__];
             resourceLen             = resourceBorder.border;
             for (i = 0; i < resourceLen; i++) _Resources(resources[resourceBorder.cycle[i]]);
-            for (i = 0; i < WWM; i++) {
-                var player = MvW[Wwn.cycle[i]];
+            for (i = 0; i < entsLen; i++) {
+                var player = ents[entsBorder.cycle[i]];
                 if (player.type === __ENTITIE_RESOURCES_MID__) _Resources(player);
             }
 
@@ -16516,8 +16517,8 @@ try {
                         _EntitieAI(player);
                     };
                 }
-                for (i = 0; i < WWM; i++) {
-                    var player = MvW[Wwn.cycle[i]];
+                for (i = 0; i < entsLen; i++) {
+                    var player = ents[entsBorder.cycle[i]];
                     if (player.type === __ENTITIE_PLAYER__) {
                         _Run(player);
                         var ghoul = World.players[player.pid].ghoul;
@@ -16530,8 +16531,8 @@ try {
                 }
             } else {
                 for (i = 0; i < len; i++) _EntitiePlayer(players[border.cycle[i]]);
-                for (i = 0; i < WWM; i++) {
-                    var player = MvW[Wwn.cycle[i]];
+                for (i = 0; i < entsLen; i++) {
+                    var player = ents[entsBorder.cycle[i]];
                     if (player.type === __ENTITIE_PLAYER__) {
                         _Run(player);
                         _EntitiePlayer(player);
@@ -16543,8 +16544,8 @@ try {
             var entitieBorder   = Entitie.border[__ENTITIE_AI__];
             var entitieLen      = entitieBorder.border;
             for (i = 0; i < entitieLen; i++) _EntitieAI(entitie[entitieBorder.cycle[i]]);
-            for (i = 0; i < WWM; i++) {
-                var player = MvW[Wwn.cycle[i]];
+            for (i = 0; i < entsLen; i++) {
+                var player = ents[entsBorder.cycle[i]];
                 if (player.type === __ENTITIE_AI__) _EntitieAI(player);
             }
 
@@ -16552,8 +16553,8 @@ try {
             buildingsBorder     = Entitie.border[__ENTITIE_BUILD_TOP__];
             buildingsLen        = buildingsBorder.border;
             for (i = 0; i < buildingsLen; i++) _Buildings(buildings[buildingsBorder.cycle[i]]);
-            for (i = 0; i < WWM; i++) {
-                var player = MvW[Wwn.cycle[i]];
+            for (i = 0; i < entsLen; i++) {
+                var player = ents[entsBorder.cycle[i]];
                 if (player.type === __ENTITIE_BUILD_TOP__) _Buildings(player);
             }
             for (i = 0; i < pplonscr; i++) {
@@ -16566,8 +16567,8 @@ try {
             resourceBorder  = Entitie.border[__ENTITIE_RESOURCES_TOP__];
             resourceLen     = resourceBorder.border;
             for (i = 0; i < resourceLen; i++) _Resources(resources[resourceBorder.cycle[i]]);
-            for (i = 0; i < WWM; i++) {
-                var player = MvW[Wwn.cycle[i]];
+            for (i = 0; i < entsLen; i++) {
+                var player = ents[entsBorder.cycle[i]];
                 if (player.type === __ENTITIE_RESOURCES_TOP__) _Resources(player);
             }
 
@@ -16575,8 +16576,8 @@ try {
             resourceBorder  = Entitie.border[__ENTITIE_RESOURCES_STOP__];
             resourceLen     = resourceBorder.border;
             for (i = 0; i < resourceLen; i++) _Resources(resources[resourceBorder.cycle[i]]);
-            for (i = 0; i < WWM; i++) {
-                var player = MvW[Wwn.cycle[i]];
+            for (i = 0; i < entsLen; i++) {
+                var player = ents[entsBorder.cycle[i]];
                 if (player.type === __ENTITIE_RESOURCES_STOP__) _Resources(player);
             }
 
@@ -16712,7 +16713,7 @@ try {
             ctx.fillStyle = (World.day === 0) ? "#0B2129" : "#3D5942";
             ctx.fillRect(0, 0, canw, canh);
             vMwNm();
-            checkobjonscreen();
+            RenderObjects();
             mWN = INVENTORY2;
             INVENTORY2 = INVENTORY;
             INVENTORY = mWN;
@@ -16753,7 +16754,7 @@ try {
             myplayerfocusinscreen();
             vMwNm();
             wmVNW();
-            checkobjonscreen(); 
+            RenderObjects(); 
             placingobj();
             if (World.transition > 0) nvVmw();
             Entitie.cleanRemoved();
@@ -16770,7 +16771,7 @@ try {
 
         function _SetParticles(vW) {
             localStorage2.setItem("particles", "" + vW);
-            NwMVW = vW;
+            setParticles = vW;
         };
         return {
             globalTime:         window.Date.now(),
