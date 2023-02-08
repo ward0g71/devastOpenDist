@@ -8512,7 +8512,7 @@ var Home = (function() {
         return 1;
     };
 
-    function VNn(event) {
+    function mouseDown(event) {
         Mouse.updateAll(event, Mouse.__MOUSE_DOWN__);
         var vnm = 0;
         if (mVwVw.trigger() === 1) {
@@ -8573,7 +8573,7 @@ var Home = (function() {
         wMMNm.trigger();
     };
 
-    function vNm(event) {
+    function mouseUp(event) {
         Mouse.updateAll(event, Mouse.__MOUSE_UP__);
         var vnm = 0;
         if (mVwVw.trigger() === 1) {
@@ -8729,7 +8729,7 @@ var Home = (function() {
         };
     };
 
-    function wVv(event) {
+    function mouseMove(event) {
         Mouse.updateAll(event, Mouse.__MOUSE_MOVE__);
         var vnm = 0;
         if (mVwVw.trigger() === 1) {
@@ -8790,28 +8790,28 @@ var Home = (function() {
         wMMNm.trigger();
     };
 
-    function WwW(event) {
+    function touchStart(event) {
         if (event.touches.length > 0) {
             Mouse.touchToMouseEvent(NWV, event, event.touches[0]);
-            VNn(NWV);
+            mouseDown(NWV);
         }
     };
 
-    function nMN(event) {
-        vNm(NWV);
+    function touchEnd(event) {
+        mouseUp(NWV);
     };
 
-    function Www(event) {
+    function touchCancel(event) {
         if (event.touches.length > 0) {
             Mouse.touchToMouseEvent(NWV, event, event.touches[0]);
-            vNm(NWV);
+            mouseUp(NWV);
         }
     };
 
-    function vnv(event) {
+    function touchMove(event) {
         if (event.touches.length > 0) {
             Mouse.touchToMouseEvent(NWV, event, event.touches[0]);
-            wVv(NWV);
+            mouseMove(NWV);
         }
     };
 
@@ -8828,23 +8828,23 @@ var Home = (function() {
             getClickPos();
             return false;
             }, false);
-        if (isTouchScreen === 0) window.addEventListener('mousedown', VNn, false);
-        if (isTouchScreen === 0) window.addEventListener('mouseup', vNm, false);
-        if (isTouchScreen === 0) window.addEventListener('mousemove', wVv, false);
-        if (isTouchScreen === 1) window.addEventListener('touchstart', WwW, false);
-        if (isTouchScreen === 1) window.addEventListener('touchend', nMN, false);
-        if (isTouchScreen === 1) window.addEventListener('touchcancel', Www, false);
-        if (isTouchScreen === 1) window.addEventListener('touchmove', vnv, false);
+        if (isTouchScreen === 0) window.addEventListener('mousedown', mouseDown, false);
+        if (isTouchScreen === 0) window.addEventListener('mouseup', mouseUp, false);
+        if (isTouchScreen === 0) window.addEventListener('mousemove', mouseMove, false);
+        if (isTouchScreen === 1) window.addEventListener('touchstart', touchStart, false);
+        if (isTouchScreen === 1) window.addEventListener('touchend', touchEnd, false);
+        if (isTouchScreen === 1) window.addEventListener('touchcancel', touchCancel, false);
+        if (isTouchScreen === 1) window.addEventListener('touchmove', touchMove, false);
     };
 
     function VVwMW() {
-        if (isTouchScreen === 0) window.removeEventListener('mousedown', VNn, false);
-        if (isTouchScreen === 0) window.removeEventListener('mouseup', vNm, false);
-        if (isTouchScreen === 0) window.removeEventListener('mousemove', wVv, false);
-        if (isTouchScreen === 1) window.removeEventListener('touchstart', WwW, false);
-        if (isTouchScreen === 1) window.removeEventListener('touchend', nMN, false);
-        if (isTouchScreen === 1) window.removeEventListener('touchcancel', Www, false);
-        if (isTouchScreen === 1) window.removeEventListener('touchmove', vnv, false);
+        if (isTouchScreen === 0) window.removeEventListener('mousedown', mouseDown, false);
+        if (isTouchScreen === 0) window.removeEventListener('mouseup', mouseUp, false);
+        if (isTouchScreen === 0) window.removeEventListener('mousemove', mouseMove, false);
+        if (isTouchScreen === 1) window.removeEventListener('touchstart', touchStart, false);
+        if (isTouchScreen === 1) window.removeEventListener('touchend', touchEnd, false);
+        if (isTouchScreen === 1) window.removeEventListener('touchcancel', touchCancel, false);
+        if (isTouchScreen === 1) window.removeEventListener('touchmove', touchMove, false);
     };
     return {
         quit: quit,
@@ -9345,7 +9345,7 @@ var Game = (function() {
         return 1;
     };
 
-    function VNn(event) {
+    function mouseDown(event) {
         Mouse.updateAll(event, Mouse.__MOUSE_DOWN__);
         var vnm = 0;
         if (fullscreenimg.trigger() === 1) {
@@ -9469,7 +9469,7 @@ var Game = (function() {
         }
     };
 
-    function vNm(event) {
+    function mouseUp(event) {
         Mouse.updateAll(event, Mouse.__MOUSE_UP__);
         var vnm = 0;
         if (fullscreenimg.trigger() === 1) {
@@ -9935,7 +9935,7 @@ var Game = (function() {
         drag.begin = 0;
     };
 
-    function wVv(event) {
+    function mouseMove(event) {
         Mouse.updateAll(event, Mouse.__MOUSE_MOVE__);
         var vnm = 0;
         if (fullscreenimg.trigger() === 1) {
@@ -10170,7 +10170,7 @@ var Game = (function() {
         }
     };
 
-    function WwW(event) {
+    function touchStart(event) {
         var NVN = 0;
         for (var wVV = 0; wVV < event.touches.length; wVV++) {
             Mouse.touchToMouseEvent(NWV, event, event.touches[wVV]);
@@ -10189,7 +10189,7 @@ var Game = (function() {
                     }
                 }
                 if (NwvVw === 1) {
-                    VNn(NWV);
+                    mouseDown(NWV);
                     continue;
                 }
             }
@@ -10254,40 +10254,40 @@ var Game = (function() {
                                 vmWNW = 1;
                                 NnVMv = NWV.clientX;
                                 WNmmw = NWV.clientY;
-                                VNn(NWV);
+                                mouseDown(NWV);
                             }
                             MMMvM = vVMmn;
                         } else {
                             vmWNW = 1;
                             NnVMv = NWV.clientX;
                             WNmmw = NWV.clientY;
-                            VNn(NWV);
+                            mouseDown(NWV);
                         }
                     }
                     continue;
                 }
             }
             if ((NVN === 0) && (mWM === 0)) {
-                VNn(NWV);
+                mouseDown(NWV);
                 NVN = 1;
             }
         }
     };
 
-    function nMN(event) {
+    function touchEnd(event) {
         var sx = window.Math.floor(event.changedTouches[0].clientX * CanvasUtils.options.ratioX);
         var sy = window.Math.floor(event.changedTouches[0].clientY * CanvasUtils.options.ratioY);
         if (nvnNv === 1) nvnNv = 0;
-        else if (NmW === 1) vNm(NWV);
+        else if (NmW === 1) mouseUp(NWV);
         else if ((vmWNW === 1) && (sx >= canw2)) {
             vmWNW = 0;
             NWV.clientX = NnVMv;
             NWV.clientY = WNmmw;
-            vNm(NWV);
+            mouseUp(NWV);
             return;
         } else if (((World.PLAYER.drag.begin === 0) && (sx < canw2)) && (sy < (canh - (70 * scaleby)))) {
-            if ((sx < (240 * scaleby)) && (sy < (160 * scaleby))) vNm(NWV);
-        } else vNm(NWV);
+            if ((sx < (240 * scaleby)) && (sy < (160 * scaleby))) mouseUp(NWV);
+        } else mouseUp(NWV);
         if (mWM !== 0) {
             if (mWM & 1) {
                 nNw.charCode = 37;
@@ -10309,9 +10309,9 @@ var Game = (function() {
         }
     };
 
-    function Www(event) {};
+    function touchCancel(event) {};
 
-    function vnv(event) {
+    function touchMove(event) {
         var NVN = 0;
         var mWVWv = 0;
         for (var wVV = 0; wVV < event.touches.length; wVV++) {
@@ -10328,7 +10328,7 @@ var Game = (function() {
                     }
                 }
                 if (NwvVw === 1) {
-                    wVv(NWV);
+                    mouseMove(NWV);
                     continue;
                 }
             }
@@ -10384,12 +10384,12 @@ var Game = (function() {
                         NWV.clientY -= nmV / CanvasUtils.options.ratioX;
                         NnVMv = NWV.clientX;
                         WNmmw = NWV.clientY;
-                        wVv(NWV);
+                        mouseMove(NWV);
                     }
                 }
             }
             if ((NVN === 0) && (mWM === 0)) {
-                wVv(NWV);
+                mouseMove(NWV);
                 NVN = 1;
             }
         }
@@ -10423,28 +10423,28 @@ var Game = (function() {
 
     function MmNNN() {
         if (isTouchScreen === 0) window.addEventListener("wheel", MouseWheelHandler, false);
-        if (isTouchScreen === 0) window.addEventListener('mousedown', VNn, false);
-        if (isTouchScreen === 0) window.addEventListener('mouseup', vNm, false);
-        if (isTouchScreen === 0) window.addEventListener('mousemove', wVv, false);
+        if (isTouchScreen === 0) window.addEventListener('mousedown', mouseDown, false);
+        if (isTouchScreen === 0) window.addEventListener('mouseup', mouseUp, false);
+        if (isTouchScreen === 0) window.addEventListener('mousemove', mouseMove, false);
         if (isTouchScreen === 0) window.addEventListener('keyup', NmN, false);
         if (isTouchScreen === 0) window.addEventListener('keydown', vnW, false);
-        if (isTouchScreen === 1) window.addEventListener('touchstart', WwW, false);
-        if (isTouchScreen === 1) window.addEventListener('touchend', nMN, false);
-        if (isTouchScreen === 1) window.addEventListener('touchcancel', Www, false);
-        if (isTouchScreen === 1) window.addEventListener('touchmove', vnv, false);
+        if (isTouchScreen === 1) window.addEventListener('touchstart', touchStart, false);
+        if (isTouchScreen === 1) window.addEventListener('touchend', touchEnd, false);
+        if (isTouchScreen === 1) window.addEventListener('touchcancel', touchCancel, false);
+        if (isTouchScreen === 1) window.addEventListener('touchmove', touchMove, false);
     };
 
     function VVwMW() {
         if (isTouchScreen === 0) window.addEventListener("wheel", MouseWheelHandler, false);
-        if (isTouchScreen === 0) window.removeEventListener('mousedown', VNn, false);
-        if (isTouchScreen === 0) window.removeEventListener('mouseup', vNm, false);
-        if (isTouchScreen === 0) window.removeEventListener('mousemove', wVv, false);
+        if (isTouchScreen === 0) window.removeEventListener('mousedown', mouseDown, false);
+        if (isTouchScreen === 0) window.removeEventListener('mouseup', mouseUp, false);
+        if (isTouchScreen === 0) window.removeEventListener('mousemove', mouseMove, false);
         if (isTouchScreen === 0) window.removeEventListener('keyup', NmN, false);
         if (isTouchScreen === 0) window.removeEventListener('keydown', vnW, false);
-        if (isTouchScreen === 1) window.removeEventListener('touchstart', WwW, false);
-        if (isTouchScreen === 1) window.removeEventListener('touchend', nMN, false);
-        if (isTouchScreen === 1) window.removeEventListener('touchcancel', Www, false);
-        if (isTouchScreen === 1) window.removeEventListener('touchmove', vnv, false);
+        if (isTouchScreen === 1) window.removeEventListener('touchstart', touchStart, false);
+        if (isTouchScreen === 1) window.removeEventListener('touchend', touchEnd, false);
+        if (isTouchScreen === 1) window.removeEventListener('touchcancel', touchCancel, false);
+        if (isTouchScreen === 1) window.removeEventListener('touchmove', touchMove, false);
     };
     return {
         quit: quit,
@@ -10684,7 +10684,7 @@ var Score = (function() {
         return 1;
     };
 
-    function VNn(event) {
+    function mouseDown(event) {
         Mouse.updateAll(event, Mouse.__MOUSE_DOWN__);
         var vnm = 0;
         if (playagainbutt.trigger() === 1) {
@@ -10695,7 +10695,7 @@ var Score = (function() {
         }
     };
 
-    function vNm(event) {
+    function mouseUp(event) {
         Mouse.updateAll(event, Mouse.__MOUSE_UP__);
         var vnm = 0;
         if (playagainbutt.trigger() === 1) {
@@ -10716,7 +10716,7 @@ var Score = (function() {
         }
     };
 
-    function wVv(event) {
+    function mouseMove(event) {
         Mouse.updateAll(event, Mouse.__MOUSE_MOVE__);
         var vnm = 0;
         if (playagainbutt.trigger() === 1) {
@@ -10727,49 +10727,49 @@ var Score = (function() {
         }
     };
 
-    function WwW(event) {
+    function touchStart(event) {
         if (event.touches.length > 0) {
             Mouse.touchToMouseEvent(NWV, event, event.touches[0]);
-            VNn(NWV);
+            mouseDown(NWV);
         }
     };
 
-    function nMN(event) {
-        vNm(NWV);
+    function touchEnd(event) {
+        mouseUp(NWV);
     };
 
-    function Www(event) {
+    function touchCancel(event) {
         if (event.touches.length > 0) {
             Mouse.touchToMouseEvent(NWV, event, event.touches[0]);
-            vNm(NWV);
+            mouseUp(NWV);
         }
     };
 
-    function vnv(event) {
+    function touchMove(event) {
         if (event.touches.length > 0) {
             Mouse.touchToMouseEvent(NWV, event, event.touches[0]);
-            wVv(NWV);
+            mouseMove(NWV);
         }
     };
 
     function MmNNN() {
-        if (isTouchScreen === 0) window.addEventListener('mousedown', VNn, false);
-        if (isTouchScreen === 0) window.addEventListener('mouseup', vNm, false);
-        if (isTouchScreen === 0) window.addEventListener('mousemove', wVv, false);
-        if (isTouchScreen === 1) window.addEventListener('touchstart', WwW, false);
-        if (isTouchScreen === 1) window.addEventListener('touchend', nMN, false);
-        if (isTouchScreen === 1) window.addEventListener('touchcancel', Www, false);
-        if (isTouchScreen === 1) window.addEventListener('touchmove', vnv, false);
+        if (isTouchScreen === 0) window.addEventListener('mousedown', mouseDown, false);
+        if (isTouchScreen === 0) window.addEventListener('mouseup', mouseUp, false);
+        if (isTouchScreen === 0) window.addEventListener('mousemove', mouseMove, false);
+        if (isTouchScreen === 1) window.addEventListener('touchstart', touchStart, false);
+        if (isTouchScreen === 1) window.addEventListener('touchend', touchEnd, false);
+        if (isTouchScreen === 1) window.addEventListener('touchcancel', touchCancel, false);
+        if (isTouchScreen === 1) window.addEventListener('touchmove', touchMove, false);
     };
 
     function VVwMW() {
-        if (isTouchScreen === 0) window.removeEventListener('mousedown', VNn, false);
-        if (isTouchScreen === 0) window.removeEventListener('mouseup', vNm, false);
-        if (isTouchScreen === 0) window.removeEventListener('mousemove', wVv, false);
-        if (isTouchScreen === 1) window.removeEventListener('touchstart', WwW, false);
-        if (isTouchScreen === 1) window.removeEventListener('touchend', nMN, false);
-        if (isTouchScreen === 1) window.removeEventListener('touchcancel', Www, false);
-        if (isTouchScreen === 1) window.removeEventListener('touchmove', vnv, false);
+        if (isTouchScreen === 0) window.removeEventListener('mousedown', mouseDown, false);
+        if (isTouchScreen === 0) window.removeEventListener('mouseup', mouseUp, false);
+        if (isTouchScreen === 0) window.removeEventListener('mousemove', mouseMove, false);
+        if (isTouchScreen === 1) window.removeEventListener('touchstart', touchStart, false);
+        if (isTouchScreen === 1) window.removeEventListener('touchend', touchEnd, false);
+        if (isTouchScreen === 1) window.removeEventListener('touchcancel', touchCancel, false);
+        if (isTouchScreen === 1) window.removeEventListener('touchmove', touchMove, false);
     };
     return {
         quit: quit,
@@ -10960,7 +10960,7 @@ var Rank = (function() {
         return 1;
     };
 
-    function VNn(event) {
+    function mouseDown(event) {
         Mouse.updateAll(event, Mouse.__MOUSE_DOWN__);
         var vnm = 0;
         if (playagainbutt.trigger() === 1) {
@@ -10971,7 +10971,7 @@ var Rank = (function() {
         }
     };
 
-    function vNm(event) {
+    function mouseUp(event) {
         Mouse.updateAll(event, Mouse.__MOUSE_UP__);
         var vnm = 0;
         if (playagainbutt.trigger() === 1) {
@@ -10992,7 +10992,7 @@ var Rank = (function() {
         }
     };
 
-    function wVv(event) {
+    function mouseMove(event) {
         Mouse.updateAll(event, Mouse.__MOUSE_MOVE__);
         var vnm = 0;
         if (playagainbutt.trigger() === 1) {
@@ -11003,49 +11003,49 @@ var Rank = (function() {
         }
     };
 
-    function WwW(event) {
+    function touchStart(event) {
         if (event.touches.length > 0) {
             Mouse.touchToMouseEvent(NWV, event, event.touches[0]);
-            VNn(NWV);
+            mouseDown(NWV);
         }
     };
 
-    function nMN(event) {
-        vNm(NWV);
+    function touchEnd(event) {
+        mouseUp(NWV);
     };
 
-    function Www(event) {
+    function touchCancel(event) {
         if (event.touches.length > 0) {
             Mouse.touchToMouseEvent(NWV, event, event.touches[0]);
-            vNm(NWV);
+            mouseUp(NWV);
         }
     };
 
-    function vnv(event) {
+    function touchMove(event) {
         if (event.touches.length > 0) {
             Mouse.touchToMouseEvent(NWV, event, event.touches[0]);
-            wVv(NWV);
+            mouseMove(NWV);
         }
     };
 
     function MmNNN() {
-        if (isTouchScreen === 0) window.addEventListener('mousedown', VNn, false);
-        if (isTouchScreen === 0) window.addEventListener('mouseup', vNm, false);
-        if (isTouchScreen === 0) window.addEventListener('mousemove', wVv, false);
-        if (isTouchScreen === 1) window.addEventListener('touchstart', WwW, false);
-        if (isTouchScreen === 1) window.addEventListener('touchend', nMN, false);
-        if (isTouchScreen === 1) window.addEventListener('touchcancel', Www, false);
-        if (isTouchScreen === 1) window.addEventListener('touchmove', vnv, false);
+        if (isTouchScreen === 0) window.addEventListener('mousedown', mouseDown, false);
+        if (isTouchScreen === 0) window.addEventListener('mouseup', mouseUp, false);
+        if (isTouchScreen === 0) window.addEventListener('mousemove', mouseMove, false);
+        if (isTouchScreen === 1) window.addEventListener('touchstart', touchStart, false);
+        if (isTouchScreen === 1) window.addEventListener('touchend', touchEnd, false);
+        if (isTouchScreen === 1) window.addEventListener('touchcancel', touchCancel, false);
+        if (isTouchScreen === 1) window.addEventListener('touchmove', touchMove, false);
     };
 
     function VVwMW() {
-        if (isTouchScreen === 0) window.removeEventListener('mousedown', VNn, false);
-        if (isTouchScreen === 0) window.removeEventListener('mouseup', vNm, false);
-        if (isTouchScreen === 0) window.removeEventListener('mousemove', wVv, false);
-        if (isTouchScreen === 1) window.removeEventListener('touchstart', WwW, false);
-        if (isTouchScreen === 1) window.removeEventListener('touchend', nMN, false);
-        if (isTouchScreen === 1) window.removeEventListener('touchcancel', Www, false);
-        if (isTouchScreen === 1) window.removeEventListener('touchmove', vnv, false);
+        if (isTouchScreen === 0) window.removeEventListener('mousedown', mouseDown, false);
+        if (isTouchScreen === 0) window.removeEventListener('mouseup', mouseUp, false);
+        if (isTouchScreen === 0) window.removeEventListener('mousemove', mouseMove, false);
+        if (isTouchScreen === 1) window.removeEventListener('touchstart', touchStart, false);
+        if (isTouchScreen === 1) window.removeEventListener('touchend', touchEnd, false);
+        if (isTouchScreen === 1) window.removeEventListener('touchcancel', touchCancel, false);
+        if (isTouchScreen === 1) window.removeEventListener('touchmove', touchMove, false);
     };
     return {
         quit: quit,
@@ -11583,7 +11583,7 @@ var Editor = (function() {
     };
 
 
-    function VNn(event) {
+    function mouseDown(event) {
         Mouse.updateAll(event, Mouse.__MOUSE_DOWN__);
         var vnm = 0;
 
@@ -11630,7 +11630,7 @@ var Editor = (function() {
         }
     };
 
-    function vNm(event) {
+    function mouseUp(event) {
         Mouse.updateAll(event, Mouse.__MOUSE_UP__);
         var vnm = 0;
         if (editorScreen.trigger() === 1) {
@@ -11879,7 +11879,7 @@ var Editor = (function() {
     };
 
 
-    function wVv(event) {
+    function mouseMove(event) {
         Mouse.updateAll(event, Mouse.__MOUSE_MOVE__);
         var vnm = 0;
         if (editorScreen.trigger() === 1) {
@@ -11973,7 +11973,7 @@ var Editor = (function() {
         }
     };
 
-    function WwW(event) {
+    function touchStart(event) {
         var NVN = 0;
         for (var wVV = 0; wVV < event.touches.length; wVV++) {
             Mouse.touchToMouseEvent(NWV, event, event.touches[wVV]);
@@ -12019,42 +12019,42 @@ var Editor = (function() {
                                 vmWNW = 1;
                                 NnVMv = NWV.clientX;
                                 WNmmw = NWV.clientY;
-                                VNn(NWV);
+                                mouseDown(NWV);
                             }
                             MMMvM = vVMmn;
                         } else {
                             vmWNW = 1;
                             NnVMv = NWV.clientX;
                             WNmmw = NWV.clientY;
-                            VNn(NWV);
+                            mouseDown(NWV);
                         }
                     }
                     continue;
                 }
             }
             if ((NVN === 0) && (mWM === 0)) {
-                VNn(NWV);
+                mouseDown(NWV);
                 NVN = 1;
             }
         }
     };
 
-    function nMN(event) {};
+    function touchEnd(event) {};
 
-    function Www(event) {
+    function touchCancel(event) {
         var sx = window.Math.floor(event.changedTouches[0].clientX * CanvasUtils.options.ratioX);
         var sy = window.Math.floor(event.changedTouches[0].clientY * CanvasUtils.options.ratioY);
         if (nvnNv === 1) nvnNv = 0;
-        else if (NmW === 1) vNm(NWV);
+        else if (NmW === 1) mouseUp(NWV);
         else if ((vmWNW === 1) && (sx >= canw2)) {
             vmWNW = 0;
             NWV.clientX = NnVMv;
             NWV.clientY = WNmmw;
-            vNm(NWV);
+            mouseUp(NWV);
             return;
         } else if (((World.PLAYER.drag.begin === 0) && (sx < canw2)) && (sy < (canh - (70 * scaleby)))) {
-            if ((sx < (240 * scaleby)) && (sy < (160 * scaleby))) vNm(NWV);
-        } else vNm(NWV);
+            if ((sx < (240 * scaleby)) && (sy < (160 * scaleby))) mouseUp(NWV);
+        } else mouseUp(NWV);
         if (mWM !== 0) {
             if (mWM & 1) {
                 nNw.charCode = 37;
@@ -12076,7 +12076,7 @@ var Editor = (function() {
         }
     };
 
-    function vnv(event) {
+    function touchMove(event) {
         var NVN = 0;
         var mWVWv = 0;
         for (var wVV = 0; wVV < event.touches.length; wVV++) {
@@ -12133,12 +12133,12 @@ var Editor = (function() {
                         NWV.clientY -= nmV / CanvasUtils.options.ratioX;
                         NnVMv = NWV.clientX;
                         WNmmw = NWV.clientY;
-                        wVv(NWV);
+                        mouseMove(NWV);
                     }
                 }
             }
             if ((NVN === 0) && (mWM === 0)) {
-                wVv(NWV);
+                mouseMove(NWV);
                 NVN = 1;
             }
         }
@@ -12164,27 +12164,27 @@ var Editor = (function() {
     };
 
     function MmNNN() {
-        if (isTouchScreen === 0) window.addEventListener('mousedown', VNn, false);
-        if (isTouchScreen === 0) window.addEventListener('mouseup', vNm, false);
-        if (isTouchScreen === 0) window.addEventListener('mousemove', wVv, false);
+        if (isTouchScreen === 0) window.addEventListener('mousedown', mouseDown, false);
+        if (isTouchScreen === 0) window.addEventListener('mouseup', mouseUp, false);
+        if (isTouchScreen === 0) window.addEventListener('mousemove', mouseMove, false);
         if (isTouchScreen === 0) window.addEventListener('keyup', NmN, false);
         if (isTouchScreen === 0) window.addEventListener('keydown', vnW, false);
-        if (isTouchScreen === 1) window.addEventListener('touchstart', WwW, false);
-        if (isTouchScreen === 1) window.addEventListener('touchend', nMN, false);
-        if (isTouchScreen === 1) window.addEventListener('touchcancel', Www, false);
-        if (isTouchScreen === 1) window.addEventListener('touchmove', vnv, false);
+        if (isTouchScreen === 1) window.addEventListener('touchstart', touchStart, false);
+        if (isTouchScreen === 1) window.addEventListener('touchend', touchEnd, false);
+        if (isTouchScreen === 1) window.addEventListener('touchcancel', touchCancel, false);
+        if (isTouchScreen === 1) window.addEventListener('touchmove', touchMove, false);
     };
 
     function VVwMW() {
-        if (isTouchScreen === 0) window.removeEventListener('mousedown', VNn, false);
-        if (isTouchScreen === 0) window.removeEventListener('mouseup', vNm, false);
-        if (isTouchScreen === 0) window.removeEventListener('mousemove', wVv, false);
+        if (isTouchScreen === 0) window.removeEventListener('mousedown', mouseDown, false);
+        if (isTouchScreen === 0) window.removeEventListener('mouseup', mouseUp, false);
+        if (isTouchScreen === 0) window.removeEventListener('mousemove', mouseMove, false);
         if (isTouchScreen === 0) window.removeEventListener('keyup', NmN, false);
         if (isTouchScreen === 0) window.removeEventListener('keydown', vnW, false);
-        if (isTouchScreen === 1) window.removeEventListener('touchstart', WwW, false);
-        if (isTouchScreen === 1) window.removeEventListener('touchend', nMN, false);
-        if (isTouchScreen === 1) window.removeEventListener('touchcancel', Www, false);
-        if (isTouchScreen === 1) window.removeEventListener('touchmove', vnv, false);
+        if (isTouchScreen === 1) window.removeEventListener('touchstart', touchStart, false);
+        if (isTouchScreen === 1) window.removeEventListener('touchend', touchEnd, false);
+        if (isTouchScreen === 1) window.removeEventListener('touchcancel', touchCancel, false);
+        if (isTouchScreen === 1) window.removeEventListener('touchmove', touchMove, false);
     };
     return {
         quit: quit,
