@@ -2346,19 +2346,19 @@ var Client = (function() {
 })();
 
 var World = (function() {
-    var NMv = 0;
-    var wWw = 0;
-    var MwwMW = 0;
-    var nVnMn = 0;
+    var worldWidth = 0;
+    var worldHeight = 0;
+    var worldX = 0;
+    var worldY = 0;
     var NNMVV = 18;
     var NmmnM = 9;
     var Mnnnn = 50;
 
-    function setSizeWorld(VVNwN, WNvNN) {
-        NMv = VVNwN;
-        wWw = WNvNN;
-        MwwMW = VVNwN - 1;
-        nVnMn = WNvNN - 1;
+    function setSizeWorld(worldWidth, worldHeight) {
+        worldWidth = worldWidth;
+        worldHeight = worldHeight;
+        worldX = worldWidth - 1;
+        worldY = worldHeight - 1;
     };
 
     function allocatePlayers(mNWnw) {
@@ -2554,8 +2554,8 @@ var World = (function() {
         }
         UNIT.x = MathUtils.lerp(UNIT.x, UNIT.rx, UNIT.lerp);
         UNIT.y = MathUtils.lerp(UNIT.y, UNIT.ry, UNIT.lerp);
-        UNIT.i = window.Math.max(0, window.Math.min(nVnMn, window.Math.floor(UNIT.y / Render.__TILE_SIZE__)));
-        UNIT.j = window.Math.max(0, window.Math.min(MwwMW, window.Math.floor(UNIT.x / Render.__TILE_SIZE__)));
+        UNIT.i = window.Math.max(0, window.Math.min(worldY, window.Math.floor(UNIT.y / Render.__TILE_SIZE__)));
+        UNIT.j = window.Math.max(0, window.Math.min(worldX, window.Math.floor(UNIT.x / Render.__TILE_SIZE__)));
         if ((World.PLAYER.id === UNIT.pid) && (UNIT.id === 0))
             UNIT.angle = Mouse.angle;
         else if (UNIT.pid === 0)
@@ -10495,15 +10495,15 @@ var Score = (function() {
     function nmNnw() {
         var wX = mNw.pos.x;
         var wY = mNw.pos.y;
-        var wVw = wX / scaleby;
-        var VVm = wY / scaleby;
+        var wX_Scale = wX / scaleby;
+        var wY_Scale = wY / scaleby;
         if ((scoreLabel === null) || (lastScore !== World.PLAYER.exp)) {
             lastScore = World.PLAYER.exp;
             scoreLabel = GUI.renderText(lastScore + "", "'Viga', sans-serif", "#FFFFFF", 38, 400, window.undefined, 16, 25, window.undefined, window.undefined, window.undefined, window.undefined, "#000000", 12);
             MnvWv.img = scoreLabel;
             MnvWv.img.isLoaded = 1;
         }
-        CanvasUtils.drawImageHd(MnvWv, wVw + 280, VVm + 117, 0, 0, 0, 1);
+        CanvasUtils.drawImageHd(MnvWv, wX_Scale + 280, wY_Scale + 117, 0, 0, 0, 1);
         if ((WwwvV === null) || (VwvVv !== World.PLAYER.level)) {
             VwvVv = World.PLAYER.level;
             WwwvV = GUI.renderText(VwvVv + "", "'Viga', sans-serif", "#FFFFFF", 38, 400, window.undefined, 16, 25, window.undefined, window.undefined, window.undefined, window.undefined, "#000000", 12);
@@ -10513,15 +10513,15 @@ var Score = (function() {
             nwWMv.img = wNnwN;
             nwWMv.img.isLoaded = 1;
         }
-        CanvasUtils.drawImageHd(WMwMN, wVw + 108, VVm + 117, 0, 0, 0, 1);
-        CanvasUtils.drawImageHd(nwWMv, wVw + 288, VVm + 147, 0, 0, 0, 1);
+        CanvasUtils.drawImageHd(WMwMN, wX_Scale + 108, wY_Scale + 117, 0, 0, 0, 1);
+        CanvasUtils.drawImageHd(nwWMv, wX_Scale + 288, wY_Scale + 147, 0, 0, 0, 1);
         if ((VMnMw === null) || (vvWmM !== World.PLAYER.kill)) {
             vvWmM = World.PLAYER.kill;
             VMnMw = GUI.renderText(vvWmM + "", "'Viga', sans-serif", "#FFFFFF", 38, 400, window.undefined, 16, 25, window.undefined, window.undefined, window.undefined, window.undefined, "#000000", 12);
             vMMnW.img = VMnMw;
             vMMnW.img.isLoaded = 1;
         }
-        CanvasUtils.drawImageHd(vMMnW, wVw + 453, VVm + 117, 0, 0, 0, 1);
+        CanvasUtils.drawImageHd(vMMnW, wX_Scale + 453, wY_Scale + 117, 0, 0, 0, 1);
         var inventory = Game.inventory;
         var invtr = World.PLAYER.inventory;
         var len = invtr.length;
@@ -10539,7 +10539,7 @@ var Score = (function() {
         if (Home.adblocker === 1) {
             var breath = MathUtils.Ease.inOutQuad((VmVNw > 500) ? ((1000 - VmVNw) / 500) : (VmVNw / 500));
             ctx.globalAlpha = 0.7;
-            CanvasUtils.drawImageHd(nMwNn, wVw + 288, VVm + 193, 0, 0, 0, 1 + (0.04 * breath));
+            CanvasUtils.drawImageHd(nMwNn, wX_Scale + 288, wY_Scale + 193, 0, 0, 0, 1 + (0.04 * breath));
             ctx.globalAlpha = 1;
             VmVNw = (VmVNw + delta) % 1000;
         }
@@ -10809,15 +10809,15 @@ var Rank = (function() {
     function nmNnw() {
         var wX = mNw.pos.x;
         var wY = mNw.pos.y;
-        var wVw = wX / scaleby;
-        var VVm = wY / scaleby;
+        var wX_Scale = wX / scaleby;
+        var wY_Scale = wY / scaleby;
         if ((NmwnM === null) || (mvNVM !== World.playerAlive)) {
             mvNVM = World.playerAlive;
             NmwnM = GUI.renderText("#" + window.Math.max(mvNVM, 1), "'Viga', sans-serif", "#FFFFFF", 60, 140, window.undefined, 16, 25, window.undefined, window.undefined, window.undefined, window.undefined, "#000000", 12);
             mmvMV.img = NmwnM;
             mmvMV.img.isLoaded = 1;
         }
-        CanvasUtils.drawImageHd(mmvMV, wVw + 207, VVm + 93, 0, 0, 0, 1);
+        CanvasUtils.drawImageHd(mmvMV, wX_Scale + 207, wY_Scale + 93, 0, 0, 0, 1);
         if ((VmvNV === null) || (lastTime !== World.PLAYER.timePlayed)) {
             lastTime = World.PLAYER.timePlayed;
             var vMWwM = window.Math.floor((window.Date.now() - World.PLAYER.timePlayed) / 1000);
@@ -10827,14 +10827,14 @@ var Rank = (function() {
             vnvvM.img = VmvNV;
             vnvvM.img.isLoaded = 1;
         }
-        CanvasUtils.drawImageHd(vnvvM, wVw + 110, VVm + 100, 0, 0, 0, 1);
+        CanvasUtils.drawImageHd(vnvvM, wX_Scale + 110, wY_Scale + 100, 0, 0, 0, 1);
         if ((VMnMw === null) || (vvWmM !== World.PLAYER.kill)) {
             vvWmM = World.PLAYER.kill;
             VMnMw = GUI.renderText(vvWmM + "", "'Viga', sans-serif", "#FFFFFF", 38, 400, window.undefined, 16, 25, window.undefined, window.undefined, window.undefined, window.undefined, "#000000", 12);
             vMMnW.img = VMnMw;
             vMMnW.img.isLoaded = 1;
         }
-        CanvasUtils.drawImageHd(vMMnW, wVw + 309, VVm + 100, 0, 0, 0, 1);
+        CanvasUtils.drawImageHd(vMMnW, wX_Scale + 309, wY_Scale + 100, 0, 0, 0, 1);
     };
     var waitAds = 0;
     var mNw;
@@ -12507,18 +12507,18 @@ try {
         var NMmmm = 0; 
         var VmNmN = 0.01;
         var NmMvvvN = 0.008;
-        var NMv = 0;
-        var WMwnW = 0;
-        var mmVNm = 0;
-        var wWw = 0;
+        var worldWidth = 0;
+        var worldWidthFull = 0;
+        var worldHeightFull = 0;
+        var worldHeight = 0;
         var NnvWw = 3;
         var nwMnv = 0;
         var vnvWWnW = 0;
         var vvVMV = 0;
         var VnvWV = 0;
         var vvNWNnN = 450;
-        var vWw = 410;
-        var wvNVM = vWw;
+        var Width_410 = 410;
+        var Height_410 = Width_410;
         var wVNMN = 412 / 8;
         var NnWnv = 0;
         var IMG_MAP_BORDER      = "img/borderBigMinimap2.png";
@@ -12932,8 +12932,8 @@ try {
         });
         var canvasZ = window.document.createElement('canvas');
         var context2dZ = canvasZ.getContext('2d');
-        canvasZ.width = vWw;
-        canvasZ.height = wvNVM;
+        canvasZ.width = Width_410;
+        canvasZ.height = Height_410;
         canvasZ.isLoaded = 1;
         canvasZ.wh = canvasZ.width / 2;
         canvasZ.h2 = canvasZ.height / 2;
@@ -12942,8 +12942,8 @@ try {
         };
         var canvasD = window.document.createElement('canvas');
         var context2dD = canvasD.getContext('2d');
-        canvasD.width = vWw;
-        canvasD.height = wvNVM;
+        canvasD.width = Width_410;
+        canvasD.height = Height_410;
         canvasD.isLoaded = 1;
         canvasD.wh = canvasZ.width / 2;
         canvasD.h2 = canvasZ.height / 2;
@@ -12954,8 +12954,8 @@ try {
 
         function _BattleRoyale() {
             if (World.PLAYER.toxicStep === 8) {
-                context2dZ.clearRect(0, 0, vWw, wvNVM);
-                context2dD.clearRect(0, 0, vWw, wvNVM);
+                context2dZ.clearRect(0, 0, Width_410, Height_410);
+                context2dD.clearRect(0, 0, Width_410, Height_410);
                 for (var i = 0; i < 8; i++) {
                     for (var j = 0; j < 8; j++) {
                         var wVvnN = World.PLAYER.toxicMap[i][j];
@@ -12965,7 +12965,7 @@ try {
                 }
             } else {
                 context2dZ.drawImage(canvasD, 0, 0);
-                context2dD.clearRect(0, 0, vWw, wvNVM);
+                context2dD.clearRect(0, 0, Width_410, Height_410);
                 for (var k = 0; k < 12; k++) {
                     var area = World.PLAYER.lastAreas[k];
                     var i = area[0];
@@ -13032,7 +13032,7 @@ try {
             var id = 0;
             switch (Rot) {
                 case 0:
-                    if ((i + 1) < wWw) {
+                    if ((i + 1) < worldHeight) {
                         var VMV = matrix[i + 1][j];
                         if ((VMV.wallFrame === frameId) && (VMV.wall === vV)) {
                             if (VMV.rotate === 1) id += NVW;
@@ -13043,7 +13043,7 @@ try {
                         var VMV = matrix[i][j - 1];
                         if (((VMV.wallFrame === frameId) && (VMV.wall === vV)) && ((VMV.rotate === 3) || (VMV.rotate === 0))) id += WMN;
                     }
-                    if ((j + 1) < NMv) {
+                    if ((j + 1) < worldWidth) {
                         var VMV = matrix[i][j + 1];
                         if (((VMV.wallFrame === frameId) && (VMV.wall === vV)) && ((VMV.rotate === 1) || (VMV.rotate === 0))) id += wwm;
                     }
@@ -13060,7 +13060,7 @@ try {
                         var VMV = matrix[i - 1][j];
                         if (((VMV.wallFrame === frameId) && (VMV.wall === vV)) && ((VMV.rotate === 0) || (VMV.rotate === 1))) id += WMN;
                     }
-                    if ((i + 1) < wWw) {
+                    if ((i + 1) < worldHeight) {
                         var VMV = matrix[i + 1][j];
                         if (((VMV.wallFrame === frameId) && (VMV.wall === vV)) && ((VMV.rotate === 2) || (VMV.rotate === 1))) id += wwm;
                     }
@@ -13077,13 +13077,13 @@ try {
                         var VMV = matrix[i][j - 1];
                         if (((VMV.wallFrame === frameId) && (VMV.wall === vV)) && ((VMV.rotate === 3) || (VMV.rotate === 2))) id += wwm;
                     }
-                    if ((j + 1) < NMv) {
+                    if ((j + 1) < worldWidth) {
                         var VMV = matrix[i][j + 1];
                         if (((VMV.wallFrame === frameId) && (VMV.wall === vV)) && ((VMV.rotate === 1) || (VMV.rotate === 2))) id += WMN;
                     }
                     break;
                 case 3:
-                    if ((j + 1) < NMv) {
+                    if ((j + 1) < worldWidth) {
                         var VMV = matrix[i][j + 1];
                         if ((VMV.wallFrame === frameId) && (VMV.wall === vV)) {
                             if (VMV.rotate === 0) id += NVW;
@@ -13094,7 +13094,7 @@ try {
                         var VMV = matrix[i - 1][j];
                         if (((VMV.wallFrame === frameId) && (VMV.wall === vV)) && ((VMV.rotate === 0) || (VMV.rotate === 3))) id += wwm;
                     }
-                    if ((i + 1) < wWw) {
+                    if ((i + 1) < worldHeight) {
                         var VMV = matrix[i + 1][j];
                         if (((VMV.wallFrame === frameId) && (VMV.wall === vV)) && ((VMV.rotate === 2) || (VMV.rotate === 3))) id += WMN;
                     }
@@ -13120,7 +13120,7 @@ try {
                     id += TOP;
                 }
             }
-            if ((i + 1) < wWw) {
+            if ((i + 1) < worldHeight) {
                 var VMV = matrix[i + 1][j];
                 if (VMV.floorFrame === frameId) {
                     id += DOWN;
@@ -13134,7 +13134,7 @@ try {
                     l = 1;
                 }
             }
-            if ((j + 1) < NMv) {
+            if ((j + 1) < worldWidth) {
                 var VMV = matrix[i][j + 1];
                 if (VMV.floorFrame === frameId) {
                     id += RIGHT;
@@ -13178,7 +13178,7 @@ try {
                     id += TOP;
                 }
             }
-            if ((i + 1) < wWw) {
+            if ((i + 1) < worldHeight) {
                 var VMV = matrix[i + 1][j];
                 if ((VMV.wallFrame === frameId) && (VMV.wall === vV)) {
                     id += DOWN;
@@ -13192,7 +13192,7 @@ try {
                     l = 1;
                 }
             }
-            if ((j + 1) < NMv) {
+            if ((j + 1) < worldWidth) {
                 var VMV = matrix[i][j + 1];
                 if ((VMV.wallFrame === frameId) && (VMV.wall === vV)) {
                     id += RIGHT;
@@ -13276,8 +13276,8 @@ try {
         function _Reset(wVNwM, MMnVM, VmNwV) {
             bodOnResize = window.document.getElementById("bod").onresize;
             if (World.gameMode === World.__BR__) {
-                context2dZ.clearRect(0, 0, vWw, vWw);
-                context2dD.clearRect(0, 0, vWw, vWw);
+                context2dZ.clearRect(0, 0, Width_410, Width_410);
+                context2dD.clearRect(0, 0, Width_410, Width_410);
                 MvvNN = 0;
             }
             WNmVW = 0;
@@ -13308,18 +13308,18 @@ try {
             MapManager.width = 150;
             MapManager.height = 150;
             Render.__TRANSFORM__ = (MapManager.width * 100) / 255;
-            NMv = MapManager.width;
-            wWw = MapManager.height;
-            WMwnW = __TILE_SIZE__ * NMv;
-            mmVNm = __TILE_SIZE__ * wWw;
-            nwMnv = 824 / WMwnW;
+            worldWidth = MapManager.width;
+            worldHeight = MapManager.height;
+            worldWidthFull = __TILE_SIZE__ * worldWidth;
+            worldHeightFull = __TILE_SIZE__ * worldHeight;
+            nwMnv = 824 / worldWidthFull;
             vvVMV = 824 - mVmWm;
             VnvWV = vvVMV + WWn;
-            NnWnv = WMwnW / 8;
-            World.setSizeWorld(NMv, wWw);
-            for (var i = 0; i < wWw; i++) {
+            NnWnv = worldWidthFull / 8;
+            World.setSizeWorld(worldWidth, worldHeight);
+            for (var i = 0; i < worldHeight; i++) {
                 matrix[i] = [];
-                for (var j = 0; j < NMv; j++) matrix[i][j] = new MmmnN;
+                for (var j = 0; j < worldWidth; j++) matrix[i][j] = new MmmnN;
             }
             var len = Entitie.units[0].length;
             for (i = 0; i < len; i++) WvnvV[i] = null;
@@ -13538,20 +13538,19 @@ try {
         };
 
 
-        function _BigMinimap(vWvWN, closeBox) {        
-            var width = vWw * scaleby;
-            var height = wvNVM * scaleby;
-            var wX = canw2 - (width / 2);
-            var wY = window.Math.max(canh2 - (height / 2), 0);
-            var wVw = wX / scaleby;
-            var VVm = wY / scaleby;
-            var mvMnV = vWw / WMwnW;
-            var _buttonInv = wvNVM / mmVNm;
-            closeBox.pos.x = window.Math.floor((wX + width) + (0 * scaleby));
-            closeBox.pos.y = window.Math.floor(wY + (0 * scaleby));
-            vWvWN.draw();
-
-
+        function _BigMinimap(map, closeBox) {   
+                 
+            var width       = Width_410 * scaleby;
+            var height      = Height_410 * scaleby;
+            var wX          = canw2 - (width / 2);
+            var wY          = window.Math.max(canh2 - (height / 2), 0);
+            var wX_Scale    = wX / scaleby;
+            var wY_Scale    = wY / scaleby;
+            var mvMnV       = Width_410 / worldWidthFull;
+            var _buttonInv  = Height_410 / worldHeightFull;
+            closeBox.pos.x  = window.Math.floor((wX + width) + (0 * scaleby));
+            closeBox.pos.y  = window.Math.floor(wY + (0 * scaleby));
+            map.draw();
 
             var cities = World.PLAYER.cities;
             var len = cities.length / 2;
@@ -13567,8 +13566,8 @@ try {
             }
 
             if (World.gameMode === World.__BR__) {
-                var wwwmm = wVw + (vWw / 2);
-                var vnvWw = VVm + (wvNVM / 2);
+                var wwwmm = wX_Scale + (Width_410 / 2);
+                var vnvWw = wY_Scale + (Height_410 / 2);
                 CanvasUtils.drawImageHd(MWNMV, wwwmm, vnvWw, 0, 0, 0, 2);
                 ctx.globalAlpha = (mWWwn > 600) ? MathUtils.Ease.inOutQuad((1200 - mWWwn) / 600) : MathUtils.Ease.inOutQuad(mWWwn / 600);
                 CanvasUtils.drawImageHd(MMvWn, wwwmm, vnvWw, 0, 0, 0, 2);
@@ -13583,8 +13582,8 @@ try {
                     var nmmvN = World.PLAYER.teamPos[i];
                     if (nmmvN.old < 0) continue;
                     var PLAYER = World.players[nmmvN.id];
-                    var _x = window.Math.floor(wVw + window.Math.min(window.Math.max(10, PLAYER.rx * mvMnV), 400));
-                    var _y = window.Math.floor(VVm + window.Math.min(window.Math.max(10, PLAYER.ry * mvMnV), 400));
+                    var _x = window.Math.floor(wX_Scale + window.Math.min(window.Math.max(10, PLAYER.rx * mvMnV), 400));
+                    var _y = window.Math.floor(wY_Scale + window.Math.min(window.Math.max(10, PLAYER.ry * mvMnV), 400));
                     var angle;
                     if (frameId === (PLAYER.frameId + 1)) angle = players[PLAYER.locatePlayer].angle;
                     else angle = PLAYER.x % PI2;
@@ -13598,7 +13597,7 @@ try {
 
             if (World.PLAYER.badKarmaDelay > 0) {
                 var PLAYER = World.players[World.PLAYER.badKarma];
-                CanvasUtils.drawImageHd(KARMA[PLAYER.KARMA], window.Math.floor(wVw + window.Math.min(window.Math.max(10, PLAYER.rx * mvMnV), 400)), window.Math.floor(VVm + window.Math.min(window.Math.max(10, PLAYER.ry * mvMnV), 400)), 0, 0, 0, 1.25);
+                CanvasUtils.drawImageHd(KARMA[PLAYER.KARMA], window.Math.floor(wX_Scale + window.Math.min(window.Math.max(10, PLAYER.rx * mvMnV), 400)), window.Math.floor(wY_Scale + window.Math.min(window.Math.max(10, PLAYER.ry * mvMnV), 400)), 0, 0, 0, 1.25);
             }
             
 
@@ -13740,8 +13739,8 @@ try {
             if (sy >= vvVMV) vNwWN = window.Math.min(((vNwWN - VnvWV) / 2) + nWWwM, WWn - 8);
             else if (vNwWN < WWn) vNwWN = window.Math.max(15, vNwWN / 2);
             else vNwWN = nWWwM;
-            var wVw = wX / scaleby;
-            var VVm = wY / scaleby;
+            var wX_Scale = wX / scaleby;
+            var wY_Scale = wY / scaleby;
 
 
 
@@ -13762,8 +13761,8 @@ try {
                         PLAYER.y = WMv.y;
                         angle = WMv.angle;
                     } else var angle = PLAYER.x % PI2;
-                    var _x = wVw + window.Math.max(15, window.Math.min(WWn - 15, (mnmvW - 3) + ((PLAYER.rx - NmM) * nwMnv)));
-                    var _y = VVm + window.Math.max(15, window.Math.min(WWn - 15, (vNwWN - 3) + ((PLAYER.ry - WWV) * nwMnv)));
+                    var _x = wX_Scale + window.Math.max(15, window.Math.min(WWn - 15, (mnmvW - 3) + ((PLAYER.rx - NmM) * nwMnv)));
+                    var _y = wY_Scale + window.Math.max(15, window.Math.min(WWn - 15, (vNwWN - 3) + ((PLAYER.ry - WWV) * nwMnv)));
                     CanvasUtils.drawImageHd(arrowiconmap, _x, _y, angle, 0, 0, 1);
                 }
             }
@@ -13781,11 +13780,11 @@ try {
                     PLAYER.x = WMv.x;
                     PLAYER.y = WMv.y;
                 }
-                CanvasUtils.drawImageHd(KARMA[PLAYER.KARMA], wVw + window.Math.max(15, window.Math.min(WWn - 15, (mnmvW - 3) + ((PLAYER.rx - NmM) * nwMnv))), VVm + window.Math.max(15, window.Math.min(WWn - 15, (vNwWN - 3) + ((PLAYER.ry - WWV) * nwMnv))), 0, 0, 0, 1.25);
+                CanvasUtils.drawImageHd(KARMA[PLAYER.KARMA], wX_Scale + window.Math.max(15, window.Math.min(WWn - 15, (mnmvW - 3) + ((PLAYER.rx - NmM) * nwMnv))), wY_Scale + window.Math.max(15, window.Math.min(WWn - 15, (vNwWN - 3) + ((PLAYER.ry - WWV) * nwMnv))), 0, 0, 0, 1.25);
             }
 
-            var _x = wVw + (mnmvW - 3);
-            var _y = VVm + (vNwWN - 3);
+            var _x = wX_Scale + (mnmvW - 3);
+            var _y = wY_Scale + (vNwWN - 3);
             CanvasUtils.drawImageHd(arrowiconmap2, _x, _y, Mouse.angle, 0, 0, 1);
             if ((World.PLAYER.ghoul === 0) && ((World.PLAYER.skillPoint > 0) || (wnW.effect > 0))) {
                 var move = (wnW.move + delta) % 1000;
@@ -13944,10 +13943,10 @@ try {
             var wvnWn = horist;
             if (wvnWn > 0) CanvasUtils.fillRect(ctx, mmMnV, 0, canwns - mmMnV, wvnWn, GROUND);
             else wvnWn = 0;
-            var Mwwnn = (-vertst + canwns) - WMwnW;
+            var Mwwnn = (-vertst + canwns) - worldWidthFull;
             if (Mwwnn > 0) CanvasUtils.fillRect(ctx, canwns - Mwwnn, wvnWn, Mwwnn, canhns - wvnWn, GROUND);
             else Mwwnn = 0;
-            var nNnMV = (-horist + canhns) - mmVNm;
+            var nNnMV = (-horist + canhns) - worldHeightFull;
             if (nNnMV > 0) CanvasUtils.fillRect(ctx, mmMnV, canhns - nNnMV, (canwns - mmMnV) - Mwwnn, nNnMV, GROUND);
         };
 
@@ -13989,8 +13988,8 @@ try {
             craftbox.draw();
             var wX = craftbox.pos.x;
             var wY = craftbox.pos.y;
-            var wVw = wX / scaleby;
-            var VVm = wY / scaleby;
+            var wX_Scale = wX / scaleby;
+            var wY_Scale = wY / scaleby;
             closeBox.pos.x = wX + (594 * scaleby);
             closeBox.pos.y = wY + (0 * scaleby);
             closeBox.draw();
@@ -15212,7 +15211,7 @@ try {
                 World.PLAYER.iBuild = World.PLAYER._i + window.Math.floor((__TILE_SIZE2__ + (window.Math.sin(angle) * __TILE_SIZE__)) / __TILE_SIZE__);
                 var wX = ((item.xCenter[Rot] + vertst) + __TILE_SIZE2__) + (__TILE_SIZE__ * World.PLAYER.jBuild);
                 var wY = ((item.yCenter[Rot] + horist) + __TILE_SIZE2__) + (__TILE_SIZE__ * World.PLAYER.iBuild);
-                if ((((World.PLAYER.jBuild >= 0) && (World.PLAYER.iBuild >= 0)) && (World.PLAYER.jBuild < NMv)) && (World.PLAYER.iBuild < wWw)) {
+                if ((((World.PLAYER.jBuild >= 0) && (World.PLAYER.iBuild >= 0)) && (World.PLAYER.jBuild < worldWidth)) && (World.PLAYER.iBuild < worldHeight)) {
                     var VMV = matrix[World.PLAYER.iBuild][World.PLAYER.jBuild];
                     var team = (World.PLAYER.team === -1) ? -2 : World.PLAYER.team;
                     if ((VMV.tile === frameId) && (((item.zid !== 2) || (VMV.tilePid === 0)) || (VMV.category === SKILLS.__PLANT__))) {
@@ -15221,7 +15220,7 @@ try {
                     } else if ((((item.detail.category === SKILLS.__PLANT__) || (item.zid === 2)) || (((VMV.pid !== 0) && (VMV.pid !== World.PLAYER.id)) && (World.players[VMV.pid].team !== team))) && (VMV.ground === frameId)) {
                         World.PLAYER.canBuild = 0;
                         CanvasUtils.drawImageHd(item.redprint, wX, wY, Rot * PIby2, 0, 0, 1);
-                    } else if ((item.iTile !== window.undefined) && ((((Rot % 2) === 0) && ((((((World.PLAYER.iBuild < 1) || (World.PLAYER.iBuild >= (wWw - 1))) || (matrix[World.PLAYER.iBuild + 1][World.PLAYER.jBuild].tile === frameId)) || ((matrix[World.PLAYER.iBuild + 1][World.PLAYER.jBuild].ground === frameId) && (((matrix[World.PLAYER.iBuild + 1][World.PLAYER.jBuild].pid !== World.PLAYER.id) && (matrix[World.PLAYER.iBuild + 1][World.PLAYER.jBuild].pid !== 0)) && (World.players[matrix[World.PLAYER.iBuild + 1][World.PLAYER.jBuild].pid].team !== team)))) || (matrix[World.PLAYER.iBuild - 1][World.PLAYER.jBuild].tile === frameId)) || ((matrix[World.PLAYER.iBuild - 1][World.PLAYER.jBuild].ground === frameId) && (((matrix[World.PLAYER.iBuild - 1][World.PLAYER.jBuild].pid !== World.PLAYER.id) && (matrix[World.PLAYER.iBuild - 1][World.PLAYER.jBuild].pid !== 0)) && (World.players[matrix[World.PLAYER.iBuild - 1][World.PLAYER.jBuild].pid].team !== team))))) || (((Rot % 2) === 1) && (((((((World.PLAYER.jBuild < 1) || (World.PLAYER.jBuild >= (NMv - 1))) || (matrix[World.PLAYER.iBuild][World.PLAYER.jBuild + 1].tile === frameId)) || ((matrix[World.PLAYER.iBuild][World.PLAYER.jBuild + 1].ground === frameId) && (((matrix[World.PLAYER.iBuild][World.PLAYER.jBuild + 1].pid !== World.PLAYER.id) && (matrix[World.PLAYER.iBuild][World.PLAYER.jBuild + 1].pid !== 0)) && (World.players[matrix[World.PLAYER.iBuild][World.PLAYER.jBuild + 1].pid].team !== team)))) || (matrix[World.PLAYER.iBuild][World.PLAYER.jBuild - 1].tile === frameId)) || ((matrix[World.PLAYER.iBuild][World.PLAYER.jBuild - 1].ground === frameId) && (((matrix[World.PLAYER.iBuild][World.PLAYER.jBuild - 1].pid !== World.PLAYER.id) && (matrix[World.PLAYER.iBuild][World.PLAYER.jBuild - 1].pid !== 0)) && (World.players[matrix[World.PLAYER.iBuild][World.PLAYER.jBuild - 1].pid].team !== team)))) || (World.PLAYER._i === World.PLAYER.iBuild))))) {
+                    } else if ((item.iTile !== window.undefined) && ((((Rot % 2) === 0) && ((((((World.PLAYER.iBuild < 1) || (World.PLAYER.iBuild >= (worldHeight - 1))) || (matrix[World.PLAYER.iBuild + 1][World.PLAYER.jBuild].tile === frameId)) || ((matrix[World.PLAYER.iBuild + 1][World.PLAYER.jBuild].ground === frameId) && (((matrix[World.PLAYER.iBuild + 1][World.PLAYER.jBuild].pid !== World.PLAYER.id) && (matrix[World.PLAYER.iBuild + 1][World.PLAYER.jBuild].pid !== 0)) && (World.players[matrix[World.PLAYER.iBuild + 1][World.PLAYER.jBuild].pid].team !== team)))) || (matrix[World.PLAYER.iBuild - 1][World.PLAYER.jBuild].tile === frameId)) || ((matrix[World.PLAYER.iBuild - 1][World.PLAYER.jBuild].ground === frameId) && (((matrix[World.PLAYER.iBuild - 1][World.PLAYER.jBuild].pid !== World.PLAYER.id) && (matrix[World.PLAYER.iBuild - 1][World.PLAYER.jBuild].pid !== 0)) && (World.players[matrix[World.PLAYER.iBuild - 1][World.PLAYER.jBuild].pid].team !== team))))) || (((Rot % 2) === 1) && (((((((World.PLAYER.jBuild < 1) || (World.PLAYER.jBuild >= (worldWidth - 1))) || (matrix[World.PLAYER.iBuild][World.PLAYER.jBuild + 1].tile === frameId)) || ((matrix[World.PLAYER.iBuild][World.PLAYER.jBuild + 1].ground === frameId) && (((matrix[World.PLAYER.iBuild][World.PLAYER.jBuild + 1].pid !== World.PLAYER.id) && (matrix[World.PLAYER.iBuild][World.PLAYER.jBuild + 1].pid !== 0)) && (World.players[matrix[World.PLAYER.iBuild][World.PLAYER.jBuild + 1].pid].team !== team)))) || (matrix[World.PLAYER.iBuild][World.PLAYER.jBuild - 1].tile === frameId)) || ((matrix[World.PLAYER.iBuild][World.PLAYER.jBuild - 1].ground === frameId) && (((matrix[World.PLAYER.iBuild][World.PLAYER.jBuild - 1].pid !== World.PLAYER.id) && (matrix[World.PLAYER.iBuild][World.PLAYER.jBuild - 1].pid !== 0)) && (World.players[matrix[World.PLAYER.iBuild][World.PLAYER.jBuild - 1].pid].team !== team)))) || (World.PLAYER._i === World.PLAYER.iBuild))))) {
                         World.PLAYER.canBuild = 0;
                         CanvasUtils.drawImageHd(item.redprint, wX, wY, Rot * PIby2, 0, 0, 1);
                     } else {
@@ -16241,72 +16240,72 @@ try {
             }
         };
         
-        function _Buildings(player) {
-            matrix[player.i][player.j].tile = frameId;
-            matrix[player.i][player.j].tilePid = player.pid;
-            matrix[player.i][player.j].category = window.undefined;
-            var Rot = (player.extra >> 5) & 3;
-            var item = INVENTORY[player.extra >> 7];
+        function _Buildings(building) {
+            matrix[building.i][building.j].tile = frameId;
+            matrix[building.i][building.j].tilePid = building.pid;
+            matrix[building.i][building.j].category = window.undefined;
+            var Rot = (building.extra >> 5) & 3;
+            var item = INVENTORY[building.extra >> 7];
             var imgMovement = 1;
-            matrix[player.i][player.j].category = item.detail.category;
-            if (player.removed !== 0) {
-                if (player.death === 0) {
-                    var _item = (item.particles === -1) ? INVENTORY[item.id].subtype[player.subtype] : item;
-                    vNwNM(player, _item.particles, _item.particlesDist, 5);
+            matrix[building.i][building.j].category = item.detail.category;
+            if (building.removed !== 0) {
+                if (building.death === 0) {
+                    var _item = (item.particles === -1) ? INVENTORY[item.id].subtype[building.subtype] : item;
+                    vNwNM(building, _item.particles, _item.particlesDist, 5);
                     if ((_item.destroy !== 0) && (soundLimit[_item.destroy] === 0)) {
-                        AudioUtils.playFx(AudioUtils._fx.damage[_item.destroy], 1, Math2d.dist(World.PLAYER.x, World.PLAYER.y, player.x, player.y) / 2.5);
+                        AudioUtils.playFx(AudioUtils._fx.damage[_item.destroy], 1, Math2d.dist(World.PLAYER.x, World.PLAYER.y, building.x, building.y) / 2.5);
                         soundLimit[_item.destroy] = 1;
                     }
                 }
-                player.death += delta;
-                var vW = window.Math.max(0, MathUtils.Ease.outQuart(1 - (player.death / 300)));
+                building.death += delta;
+                var vW = window.Math.max(0, MathUtils.Ease.outQuart(1 - (building.death / 300)));
                 ctx.globalAlpha = vW;
                 imgMovement = window.Math.min(1 + (0.35 * (1 - vW)), 1.35);
             }
-            if ((player.state & 2) === 2) {
-                player.hurt = 250;
-                player.hurtAngle = (PI2 * (player.extra & 31)) / 31;
-                player.state &= ~2;
-                var _item = (item.particles === -1) ? INVENTORY[item.id].subtype[player.subtype] : item;
-                vNwNM(player, _item.particles, _item.particlesDist, 1);
+            if ((building.state & 2) === 2) {
+                building.hurt = 250;
+                building.hurtAngle = (PI2 * (building.extra & 31)) / 31;
+                building.state &= ~2;
+                var _item = (item.particles === -1) ? INVENTORY[item.id].subtype[building.subtype] : item;
+                vNwNM(building, _item.particles, _item.particlesDist, 1);
                 if ((_item.impact !== 0) && (soundLimit[_item.impact] === 0)) {
-                    AudioUtils.playFx(AudioUtils._fx.damage[_item.impact], 1, Math2d.dist(World.PLAYER.x, World.PLAYER.y, player.x, player.y) / 2.8);
+                    AudioUtils.playFx(AudioUtils._fx.damage[_item.impact], 1, Math2d.dist(World.PLAYER.x, World.PLAYER.y, building.x, building.y) / 2.8);
                     soundLimit[_item.impact] = 1;
                 }
             }
             var wX = 0;
             var wY = 0;
-            if (player.hurt > 0) {
-                if (player.hurt > 200) {
-                    var hurt = (20 * (250 - player.hurt)) / 100;
-                    wX = window.Math.cos(player.hurtAngle) * hurt;
-                    wY = window.Math.sin(player.hurtAngle) * hurt;
-                    player.hurt -= delta;
+            if (building.hurt > 0) {
+                if (building.hurt > 200) {
+                    var hurt = (20 * (250 - building.hurt)) / 100;
+                    wX = window.Math.cos(building.hurtAngle) * hurt;
+                    wY = window.Math.sin(building.hurtAngle) * hurt;
+                    building.hurt -= delta;
                 } else {
-                    var hurt = (20 * player.hurt) / 200;
-                    wX = window.Math.cos(player.hurtAngle) * hurt;
-                    wY = window.Math.sin(player.hurtAngle) * hurt;
-                    player.hurt -= delta;
+                    var hurt = (20 * building.hurt) / 200;
+                    wX = window.Math.cos(building.hurtAngle) * hurt;
+                    wY = window.Math.sin(building.hurtAngle) * hurt;
+                    building.hurt -= delta;
                 }
             }
-            item.draw(item, player, wX, wY, Rot, imgMovement);
-            if (player.removed !== 0) {
-                if (player.death > 300) player.removed = 2;
+            item.draw(item, building, wX, wY, Rot, imgMovement);
+            if (building.removed !== 0) {
+                if (building.death > 300) building.removed = 2;
                 ctx.globalAlpha = 1;
             }
         };
         
-        function _Bullets(player) {
-            matrix[player.i][player.j].tile = frameId;
-            matrix[player.i][player.j].tilePid = player.pid;
-            matrix[player.i][player.j].category = window.undefined;
+        function _Bullets(bullet) {
+            matrix[bullet.i][bullet.j].tile = frameId;
+            matrix[bullet.i][bullet.j].tilePid = bullet.pid;
+            matrix[bullet.i][bullet.j].category = window.undefined;
             var MwMvw = 1;
-            var i = player.i;
-            var j = player.j;
+            var i = bullet.i;
+            var j = bullet.j;
             var NWvmm = (i <= 1) ? 0 : (i - 1);
-            var MvmNn = (i >= (NMv - 2)) ? (NMv - 1) : (i + 1);
+            var MvmNn = (i >= (worldWidth - 2)) ? (worldWidth - 1) : (i + 1);
             var vnVVM = (j <= 1) ? 0 : (j - 1);
-            var MnVMW = (j >= (wWw - 2)) ? (wWw - 1) : (j + 1);
+            var MnVMW = (j >= (worldHeight - 2)) ? (worldHeight - 1) : (j + 1);
             for (i = NWvmm; i <= MvmNn; i++) {
                 for (j = vnVVM; j <= MnVMW; j++) {
                     var VMV = matrix[i][j];
@@ -16317,30 +16316,30 @@ try {
                         var WvW = M[k];
                         var vV = WvW.type;
                         var mvnVn = Entitie.units[vV][WvW.cycle];
-                        if (((mvnVn.pid !== World.PLAYER.id)) && (Math2d.dist(mvnVn.x, mvnVn.y, player.x, player.y) < (ENTITIES[vV].radius - 4))) {
+                        if (((mvnVn.pid !== World.PLAYER.id)) && (Math2d.dist(mvnVn.x, mvnVn.y, bullet.x, bullet.y) < (ENTITIES[vV].radius - 4))) {
                             window.console.log("DETECTED");
-                            player.rx = player.x;
-                            player.ry = player.y;
-                            player.nx = player.x;
-                            player.ny = player.y;
+                            bullet.rx = bullet.x;
+                            bullet.ry = bullet.y;
+                            bullet.nx = bullet.x;
+                            bullet.ny = bullet.y;
                         }
                     }
                 }
             }
-            if (player.removed !== 0) {
-                player.death += delta;
-                MwMvw = window.Math.max(0, MathUtils.Ease.outQuart(1 - (player.death / 200)));
+            if (bullet.removed !== 0) {
+                bullet.death += delta;
+                MwMvw = window.Math.max(0, MathUtils.Ease.outQuart(1 - (bullet.death / 200)));
                 ctx.globalAlpha = MwMvw;
             }
-            var dist = Math2d.fastDist(player.nx, player.ny, player.x, player.y);
-            if ((dist < 400) || (player.removed !== 0)) {
+            var dist = Math2d.fastDist(bullet.nx, bullet.ny, bullet.x, bullet.y);
+            if ((dist < 400) || (bullet.removed !== 0)) {
                 ctx.globalAlpha = window.Math.min(dist / 400, MwMvw);
-                CanvasUtils.drawImageHd(ENTITIES[__ENTITIE_PLAYER__].bullets[player.extra][2], vertst + player.x, horist + player.y, player.angle, 0, 0, 1);
+                CanvasUtils.drawImageHd(ENTITIES[__ENTITIE_PLAYER__].bullets[bullet.extra][2], vertst + bullet.x, horist + bullet.y, bullet.angle, 0, 0, 1);
                 ctx.globalAlpha = MwMvw;
-                CanvasUtils.drawImageHd(ENTITIES[__ENTITIE_PLAYER__].bullets[player.extra][1], vertst + player.x, horist + player.y, player.angle, 0, 0, 1);
-            } else CanvasUtils.drawImageHd(ENTITIES[__ENTITIE_PLAYER__].bullets[player.extra][0], vertst + player.x, horist + player.y, player.angle, 0, 0, 1);
-            if (player.removed !== 0) {
-                if (player.death > 200) player.removed = 2;
+                CanvasUtils.drawImageHd(ENTITIES[__ENTITIE_PLAYER__].bullets[bullet.extra][1], vertst + bullet.x, horist + bullet.y, bullet.angle, 0, 0, 1);
+            } else CanvasUtils.drawImageHd(ENTITIES[__ENTITIE_PLAYER__].bullets[bullet.extra][0], vertst + bullet.x, horist + bullet.y, bullet.angle, 0, 0, 1);
+            if (bullet.removed !== 0) {
+                if (bullet.death > 200) bullet.removed = 2;
                 ctx.globalAlpha = 1;
             }
         };
