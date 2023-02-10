@@ -5,6 +5,7 @@ commands in chat:
 !new = new token
 !afk = server not gona kick you out
 !ls = draw lines
+!eat = auto eat food from inventory
 */
 
 var lowerCase = window.navigator.userAgent.toLowerCase();
@@ -32,7 +33,10 @@ try {
     };
 }
 
-var drawLines = 0;
+var drawLines = false;
+var AutoEat = false;
+var AutoEatLabel = null;
+var setHungryLevel = 100;
 var rowx;
 var rowy;
 var canvas;
@@ -10069,6 +10073,8 @@ var Game = (function() {
                         if (chatinput.value === '!pos') World.players[World.PLAYER.id].text.push((window.Math.floor(World.PLAYER.x / 100) + ":") + window.Math.floor(World.PLAYER.y / 100));
                         if (chatinput.value === '!new') Client.newToken(chatinput.value);
                         if (chatinput.value === '!afk') Client.sendAfk(chatinput.value);
+                        if (chatinput.value === '!ls')  { if (!drawLines)   drawLines = true;  else drawLines = false; }
+                        if (chatinput.value === '!eat') { if (!AutoEat) {AutoEat = true; AutoEatLoop()} else AutoEat = false; }
                         else {
                             var mNvMM = chatinput.value.split('!');
                             for (var i = 1; i < mNvMM.length; i++) {
@@ -10085,11 +10091,6 @@ var Game = (function() {
                         if (delay !== 0) World.players[World.PLAYER.id].text.push(("I am muted during " + window.Math.floor(delay / 1000)) + " seconds");
                         else World.players[World.PLAYER.id].text.push(chatinput.value);
                     }
-                    if (chatinput.value === '!ls') {
-                        if (drawLines === 0) drawLines = 1;
-                        else drawLines = 0;
-
-                    };
                 }
                 chatvisible = 0;
                 chatinput.value = "";
@@ -12717,7 +12718,7 @@ try {
         var wWmnn = NVmMW;
         var VmvVW = WnWvv;
         var NmWnM = [];
-        var nNMVM = {
+        var inventorySlot = {
             isLoaded: 0
         };
         var hintRotate = {
@@ -13383,14 +13384,14 @@ try {
         function _Inventory(inventoryItemNumber, inventoryAmmoNumber, MmV, bagbutt) {
             //if (World.PLAYER.ghoul !== 0) return;
             var inventory = Game.inventory;
-            if (nNMVM.isLoaded !== 1) {
-                nNMVM = CanvasUtils.loadImage(IMG_INV_EMPTY, nNMVM);
+            if (inventorySlot.isLoaded !== 1) {
+                inventorySlot = CanvasUtils.loadImage(IMG_INV_EMPTY, inventorySlot);
                 return;
             } 
             var invtr = World.PLAYER.inventory;
             var len = invtr.length;
-            var width = (nNMVM.width * scaleby) / 2;
-            var height = (nNMVM.height * scaleby) / 2;
+            var width = (inventorySlot.width * scaleby) / 2;
+            var height = (inventorySlot.height * scaleby) / 2;
             var _x = window.Math.max(300 * scaleby, (canw - (width * len)) / 2);
             var _y = (canh - height) - (5 * scaleby);
             var wX = _x;
@@ -13407,7 +13408,7 @@ try {
                 if (invtr[i][0] === 0) {
                     wm.pos.x = wX;
                     wm.pos.y = wY;
-                    ctx.drawImage(nNMVM, wX, wY, width, height);
+                    ctx.drawImage(inventorySlot, wX, wY, width, height);
                 } else _buttonInv(wm, invtr[i], wX, wY, inventoryItemNumber, inventoryAmmoNumber);
                 if (i === 9) {
                     wX = bagbutt.pos.x - (5 * scaleby);
@@ -14363,7 +14364,7 @@ try {
         function _playerName(player) {
             var colorTeam = '#FFFFFF';
             var colorEnemy = '#FFFFFF';
-            if (drawLines === 1) { colorTeam = '#00FFFF'; colorEnemy = '#FF0000';} else { colorTeam = '#FFFFFF'; colorEnemy = '#FFFFFF';}
+            if (drawLines) { colorTeam = '#00FFFF'; colorEnemy = '#FF0000';} else { colorTeam = '#FFFFFF'; colorEnemy = '#FFFFFF';}
             var PLAYER = World.players[player.pid];
             if (((((player.extra & 255) === 16) && (World.PLAYER.admin !== 1)) && (player.pid !== World.PLAYER.id)) && (((PLAYER.team === -1) || (World.teams[PLAYER.team].uid !== PLAYER.teamUid)) || (World.PLAYER.team !== PLAYER.team))) return;
             if (PLAYER.nicknameLabel === null) PLAYER.nicknameLabel = GUI.renderText(PLAYER.nickname, "'Viga', sans-serif", "#FFFFFF", 38, 400, window.undefined, 16, 25, window.undefined, window.undefined, window.undefined, window.undefined, "#000000", 12);
@@ -14383,6 +14384,15 @@ try {
                     if ((img.width !== 0) && (img.height !== 0)) ctx.drawImage(img, (((vertst + player.x) - (img.wh / 2)) + (wvMMv.wh / 2)) * scaleby, ((horist + player.y) - wY) * scaleby, img.wh * scaleby, img.h2 * scaleby);
                 } else PLAYER.team = -1;
             }
+
+            // Auto Eat Label
+            if (AutoEat) {
+                if (AutoEatLabel === null) AutoEatLabel = GUI.renderText('AUTO EAT', "'Viga', sans-serif", "#00FF00", 38, 400, window.undefined, 16, 25, window.undefined, window.undefined, window.undefined, window.undefined, "#000000", 10);
+                var img = AutoEatLabel;
+                var wY = 90;
+                ctx.drawImage(img, ((vertst + World.PLAYER.x) - (img.wh / 2)) * scaleby, ((horist + World.PLAYER.y) - wY + 74) * scaleby, img.wh * scaleby, img.h2 * scaleby);
+            }
+
         };
         
         
@@ -14635,16 +14645,16 @@ try {
         
         function Wvmnw(mVn, weapon, wVn, player, imgMovement, wX, wY) {
             var PLAYER = World.players[player.pid];
-            var WMW = 0;
+            var skinType = 0;
             var repellent = PLAYER.repellent - Render.globalTime;
             var withdrawal = PLAYER.withdrawal - Render.globalTime;
             if (repellent > 0) {
-                if (withdrawal > 0) WMW = 3;
-                else if (PLAYER.withdrawal > 0) WMW = 5;
-                else WMW = 1;
-            } else if (withdrawal > 0) WMW = 2;
-            else if (PLAYER.withdrawal > 0) WMW = 4;
-            var skin = mVn.skins[WMW];
+                if (withdrawal > 0) skinType = 3;
+                else if (PLAYER.withdrawal > 0) skinType = 5;
+                else skinType = 1;
+            } else if (withdrawal > 0) skinType = 2;
+            else if (PLAYER.withdrawal > 0) skinType = 4;
+            var skin = mVn.skins[skinType];
             var recoil = 0;
             var Vmwnn = player.state & 254;
             var Nmm = weapon.rightArm;
@@ -14740,16 +14750,16 @@ try {
         
         function vwVWm(mVn, weapon, wVn, player, imgMovement, wX, wY) {
             var PLAYER = World.players[player.pid];
-            var WMW = 0;
+            var skinType = 0;
             var repellent = PLAYER.repellent - Render.globalTime;
             var withdrawal = PLAYER.withdrawal - Render.globalTime;
             if (repellent > 0) {
-                if (withdrawal > 0) WMW = 3;
-                else if (PLAYER.withdrawal > 0) WMW = 5;
-                else WMW = 1;
-            } else if (withdrawal > 0) WMW = 2;
-            else if (PLAYER.withdrawal > 0) WMW = 4;
-            var skin = mVn.skins[WMW];
+                if (withdrawal > 0) skinType = 3;
+                else if (PLAYER.withdrawal > 0) skinType = 5;
+                else skinType = 1;
+            } else if (withdrawal > 0) skinType = 2;
+            else if (PLAYER.withdrawal > 0) skinType = 4;
+            var skin = mVn.skins[skinType];
             var recoil = 0;
             var recoilGun = 0;
             var recoilHead = 0;
@@ -14865,16 +14875,16 @@ try {
         
         function WVVmN(mVn, weapon, wVn, player, imgMovement, wX, wY) {
             var PLAYER = World.players[player.pid];
-            var WMW = 0;
+            var skinType = 0;
             var repellent = PLAYER.repellent - Render.globalTime;
             var withdrawal = PLAYER.withdrawal - Render.globalTime;
             if (repellent > 0) {
-                if (withdrawal > 0) WMW = 3;
-                else if (PLAYER.withdrawal > 0) WMW = 5;
-                else WMW = 1;
-            } else if (withdrawal > 0) WMW = 2;
-            else if (PLAYER.withdrawal > 0) WMW = 4;
-            var skin = mVn.skins[WMW];
+                if (withdrawal > 0) skinType = 3;
+                else if (PLAYER.withdrawal > 0) skinType = 5;
+                else skinType = 1;
+            } else if (withdrawal > 0) skinType = 2;
+            else if (PLAYER.withdrawal > 0) skinType = 4;
+            var skin = mVn.skins[skinType];
             var nmm = 0;
             var NNM = 0;
             var NWW = 0;
@@ -14954,16 +14964,16 @@ try {
         
         function mWNvw(mVn, weapon, wVn, player, imgMovement, wX, wY) {
             var PLAYER = World.players[player.pid];
-            var WMW = 0;
+            var skinType = 0;
             var repellent = PLAYER.repellent - Render.globalTime;
             var withdrawal = PLAYER.withdrawal - Render.globalTime;
             if (repellent > 0) {
-                if (withdrawal > 0) WMW = 3;
-                else if (PLAYER.withdrawal > 0) WMW = 5;
-                else WMW = 1;
-            } else if (withdrawal > 0) WMW = 2;
-            else if (PLAYER.withdrawal > 0) WMW = 4;
-            var skin = mVn.skins[WMW];
+                if (withdrawal > 0) skinType = 3;
+                else if (PLAYER.withdrawal > 0) skinType = 5;
+                else skinType = 1;
+            } else if (withdrawal > 0) skinType = 2;
+            else if (PLAYER.withdrawal > 0) skinType = 4;
+            var skin = mVn.skins[skinType];
             var nmm = 0;
             var NNM = 0;
             var NWW = 0;
@@ -15039,16 +15049,16 @@ try {
         
         function mvwMm(mVn, weapon, wVn, player, imgMovement, wX, wY) {
             var PLAYER = World.players[player.pid];
-            var WMW = 0;
+            var skinType = 0;
             var repellent = PLAYER.repellent - Render.globalTime;
             var withdrawal = PLAYER.withdrawal - Render.globalTime;
             if (repellent > 0) {
-                if (withdrawal > 0) WMW = 3;
-                else if (PLAYER.withdrawal > 0) WMW = 5;
-                else WMW = 1;
-            } else if (withdrawal > 0) WMW = 2;
-            else if (PLAYER.withdrawal > 0) WMW = 4;
-            var skin = mVn.skins[WMW];
+                if (withdrawal > 0) skinType = 3;
+                else if (PLAYER.withdrawal > 0) skinType = 5;
+                else skinType = 1;
+            } else if (withdrawal > 0) skinType = 2;
+            else if (PLAYER.withdrawal > 0) skinType = 4;
+            var skin = mVn.skins[skinType];
             var nmm = 0;
             var NNM = 0;
             var NWW = 0;
@@ -15123,16 +15133,16 @@ try {
         
         function mmmMw(mVn, weapon, wVn, player, imgMovement, wX, wY) {
             var PLAYER = World.players[player.pid];
-            var WMW = 0;
+            var skinType = 0;
             var repellent = PLAYER.repellent - Render.globalTime;
             var withdrawal = PLAYER.withdrawal - Render.globalTime;
             if (repellent > 0) {
-                if (withdrawal > 0) WMW = 3;
-                else if (PLAYER.withdrawal > 0) WMW = 5;
-                else WMW = 1;
-            } else if (withdrawal > 0) WMW = 2;
-            else if (PLAYER.withdrawal > 0) WMW = 4;
-            var skin = mVn.skins[WMW];
+                if (withdrawal > 0) skinType = 3;
+                else if (PLAYER.withdrawal > 0) skinType = 5;
+                else skinType = 1;
+            } else if (withdrawal > 0) skinType = 2;
+            else if (PLAYER.withdrawal > 0) skinType = 4;
+            var skin = mVn.skins[skinType];
             var NNM = 0;
             var NWW = 0;
             if (Math2d.fastDist(player.x, player.y, player.nx, player.ny) < 1) {
@@ -15252,16 +15262,16 @@ try {
 
         function nwMNv(mVn, weapon, wVn, player, imgMovement, wX, wY) {
             var PLAYER = World.players[player.pid];
-            var WMW = 0;
+            var skinType = 0;
             var repellent = PLAYER.repellent - Render.globalTime;
             var withdrawal = PLAYER.withdrawal - Render.globalTime;
             if (repellent > 0) {
-                if (withdrawal > 0) WMW = 3;
-                else if (PLAYER.withdrawal > 0) WMW = 5;
-                else WMW = 1;
-            } else if (withdrawal > 0) WMW = 2;
-            else if (PLAYER.withdrawal > 0) WMW = 4;
-            var skin = mVn.skins[WMW];
+                if (withdrawal > 0) skinType = 3;
+                else if (PLAYER.withdrawal > 0) skinType = 5;
+                else skinType = 1;
+            } else if (withdrawal > 0) skinType = 2;
+            else if (PLAYER.withdrawal > 0) skinType = 4;
+            var skin = mVn.skins[skinType];
             var nmm = 0;
             var NNM = 0;
             var NWW = 0;
@@ -16594,9 +16604,10 @@ try {
                 for (i = 0; i < len; i++)       _playerChatMessage(players[border.cycle[i]]);
             }
 
-            if (drawLines === 1) {
+            if (drawLines) {
             for (i = 0; i < len; i++)           _DrawLines(players[border.cycle[i]]);
             }
+            for (i = 0; i < len; i++)           _CheckMyPlayer(players[border.cycle[i]]);
         };
 
     
@@ -16641,7 +16652,7 @@ try {
             ctx.stroke();
             }
         }
-        
+
         function _StopPoisonEffect() {
             NNWWn = 0;
         };
@@ -16766,7 +16777,7 @@ try {
             myplayerfocusinscreen();
             vMwNm();
             wmVNW();
-            RenderObjects(); 
+            RenderObjects();
             placingobj();
             if (World.transition > 0) nvVmw();
             Entitie.cleanRemoved();
@@ -16846,6 +16857,120 @@ try {
             battleRoyale:       _BattleRoyale
         };
     })();
+
+var ent, inhandID, weapon;
+var myplayerhit = 0;
+
+function _CheckMyPlayer(player) {
+    if(World.PLAYER.id === player.pid) { 
+        ent         = ENTITIES[__ENTITIE_PLAYER__];
+        inhandID    = (player.extra >> 8) & 255;
+        weapon      = ent.weapons[inhandID];
+        myplayerhit = player.hit;
+    }
+}
+
+function _AutoEat() {
+
+    /* TODO / PROBLEMS
+    ----------------------------------------------------------------
+    1. Sometimes eat 2 times, or not eat first time - CRITICAL
+    2. If food near perish then hungry level up - TO ADD
+    3. Check if I indeed send message(or somehow else) for both eat and equip food - GOOD TO BE
+    ----------------------------------------------------------------
+    */
+
+    var food = {
+        orange:     12,
+        tomato:     77,
+        mushrom:    120,
+        mushrom2:   121,
+        steak:      10,
+        tomatosoup: 72,
+        chips:      87,
+        soda:       39
+    };
+    var hungryValue     = World.gauges.food.value;
+    var hungryLevel     = World.gauges.food.current;
+    var invtr           = World.PLAYER.inventory;
+    var lock            = true;
+    var FoodInHand      = 0;
+    var Timeout         = World.PLAYER.interactionDelay
+    var FoundFoodInventory = false;
+    Timeout -= delta
+    if ((Timeout <= 0) && (World.PLAYER.interaction === -1)) lock = false;
+    if((weapon.consumable != 1) || (weapon.heal < -1) || (weapon.food <= 0)) FoodInHand = 0; else FoodInHand = 1;
+
+    if (hungryLevel < setHungryLevel) {
+        if (!lock) {
+
+            if(FoodInHand === 0) {
+                _CheckInvForFood();
+            } else _Eat_Food();
+
+        }
+    };
+
+    var IID, amount, itemID, extra;
+    function _CheckInvForFood() {
+    
+        for (var i = 0; i < invtr.length; i++) {
+            if ((invtr[i][0] === food.orange) || (invtr[i][0] === food.tomato) || (invtr[i][0] === food.mushrom) || (invtr[i][0] === food.mushrom2) || (invtr[i][0] === food.steak) || (invtr[i][0] === food.tomatosoup) || (invtr[i][0] === food.chips) || (invtr[i][0] === food.soda)) {
+                IID     = invtr[i][0];
+                amount  = invtr[i][1];
+                itemID  = invtr[i][2];
+                extra   = invtr[i][3];
+            }
+        };
+
+        if ((IID != null) || (amount != null) || (itemID != null) || (extra != null)) FoundFoodInventory = true; else FoundFoodInventory = false;
+
+        if (!lock) {
+            if (FoundFoodInventory) {
+                _Equip_Food(IID, amount, itemID, extra);
+            } else _No_Food();
+        }
+    
+    };
+
+    function _Equip_Food(IID, amount, itemID, extra) {
+        if (!lock) {
+            if (FoundFoodInventory) {
+                Client.sendPacket(window.JSON.stringify([8, IID, amount, itemID, extra]));
+                console.log('AutoEat -> : equip_food! :')
+            } else _No_Food();
+        }
+    };
+
+    function _Eat_Food() {
+        if (!lock) {
+            Client.sendMouseDown(); 
+            Client.sendMouseUp()
+            console.log('AutoEat -> : eat_food! :')
+        }
+    
+    };
+
+    function _No_Food() {
+            console.log('AutoEat -> : FOOD NOT FOUND! :')
+    };
+
+    if (myplayerhit !== 0) Client.sendMouseUp(); // Make sure we ain't hitting nobody, intrusive of gameplay
+};
+
+var i = 1;
+function AutoEatLoop() {
+    if ((AutoEat === true) & (Client.State.__CONNECTED__)) {
+        setTimeout(function() {
+            _AutoEat();
+            i++;
+            if (i < Infinity) {
+                AutoEatLoop();
+            }
+        }, 1000)
+    }
+}
+
 var MapManager = (function() {
     var TOP = 0;
     var DOWN = 1;
@@ -42406,7 +42531,7 @@ function reloadIframe() {
     } catch (error) {}
 };
 reloadIframe();
-var versionInf = [0, 59];
+var versionInf = [0, 71];
 try {
     debugMode;
 } catch (error) {
@@ -42434,5 +42559,5 @@ window.onbeforeunload = function() {
 };
 waitHTMLAndRun();
 
-var noDebug = window.console;
-noDebug.log = noDebug.info = noDebug.error = noDebug.warn = noDebug.debug = noDebug.NWVnW = noDebug.trace = noDebug.time = noDebug.timeEnd = function() {};
+//var noDebug = window.console;
+//noDebug.log = noDebug.info = noDebug.error = noDebug.warn = noDebug.debug = noDebug.NWVnW = noDebug.trace = noDebug.time = noDebug.timeEnd = function() {};
