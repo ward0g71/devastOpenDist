@@ -5,7 +5,6 @@ commands in chat:
 !new = new token
 !afk = server not gona kick you out
 !ls = draw lines
-!eat = auto eat food from inventory
 */
 
 var lowerCase = window.navigator.userAgent.toLowerCase();
@@ -10074,7 +10073,7 @@ var Game = (function() {
                         if (chatinput.value === '!new') Client.newToken(chatinput.value);
                         if (chatinput.value === '!afk') Client.sendAfk(chatinput.value);
                         if (chatinput.value === '!ls')  { if (!drawLines)   drawLines = true;  else drawLines = false; }
-                        if (chatinput.value === '!eat') { if (!AutoEat) {AutoEat = true; AutoEatLoop()} else AutoEat = false; }
+                        //if (chatinput.value === '!eat') { if (!AutoEat) {AutoEat = true; AutoEatLoop()} else AutoEat = false; }
                         else {
                             var mNvMM = chatinput.value.split('!');
                             for (var i = 1; i < mNvMM.length; i++) {
@@ -16879,108 +16878,6 @@ function _CheckMyPlayer(player) {
         inhandID    = (player.extra >> 8) & 255;
         weapon      = ent.weapons[inhandID];
         myplayerhit = player.hit;
-    }
-}
-
-function _AutoEat() {
-
-    /* TODO / PROBLEMS
-    ----------------------------------------------------------------
-    1. Sometimes eat 2 times, or not eat first time - CRITICAL
-    2. If food near perish then hungry level up - TO ADD
-    3. Check if I indeed send message(or somehow else) for both eat and equip food - GOOD TO BE
-    ----------------------------------------------------------------
-    */
-
-    var food = {
-        orange:     12,
-        tomato:     77,
-        mushrom:    120,
-        mushrom2:   121,
-        steak:      10,
-        tomatosoup: 72,
-        chips:      87,
-        soda:       39
-    };
-    var hungryValue     = World.gauges.food.value;
-    var hungryLevel     = World.gauges.food.current;
-    var invtr           = World.PLAYER.inventory;
-    var lock            = true;
-    var FoodInHand      = 0;
-    var Timeout         = World.PLAYER.interactionDelay
-    var FoundFoodInventory = false;
-    Timeout -= delta
-    if ((Timeout <= 0) && (World.PLAYER.interaction === -1)) lock = false;
-    if((weapon.consumable != 1) || (weapon.heal < -1) || (weapon.food <= 0)) FoodInHand = 0; else FoodInHand = 1;
-
-    if (hungryLevel < setHungryLevel) {
-        if (!lock) {
-
-            if(FoodInHand === 0) {
-                _CheckInvForFood();
-            } else _Eat_Food();
-
-        }
-    } else console.log('AutoEat -> : not_hungry! :');
-
-    var IID, amount, itemID, extra;
-    function _CheckInvForFood() {
-    
-        for (var i = 0; i < invtr.length; i++) {
-            if ((invtr[i][0] === food.orange) || (invtr[i][0] === food.tomato) || (invtr[i][0] === food.mushrom) || (invtr[i][0] === food.mushrom2) || (invtr[i][0] === food.steak) || (invtr[i][0] === food.tomatosoup) || (invtr[i][0] === food.chips) || (invtr[i][0] === food.soda)) {
-                IID     = invtr[i][0];
-                amount  = invtr[i][1];
-                itemID  = invtr[i][2];
-                extra   = invtr[i][3];
-            }
-        };
-
-        if ((IID != null) || (amount != null) || (itemID != null) || (extra != null)) FoundFoodInventory = true; else FoundFoodInventory = false;
-
-        if (!lock) {
-            if (FoundFoodInventory) {
-                _Equip_Food(IID, amount, itemID, extra);
-            } else _No_Food();
-        }
-    
-    };
-
-    function _Equip_Food(IID, amount, itemID, extra) {
-        if (!lock) {
-            if (FoundFoodInventory) {
-                Client.sendPacket(window.JSON.stringify([8, IID, amount, itemID, extra]));
-                console.log('AutoEat -> : equip_food! :')
-            } else _No_Food();
-        }
-    };
-
-    function _Eat_Food() {
-        if (!lock) {
-            Client.sendMouseDown(); 
-            Client.sendMouseUp()
-            console.log('AutoEat -> : eat_food! :')
-        }
-    
-    };
-
-    function _No_Food() {
-            console.log('AutoEat -> : FOOD NOT FOUND! :')
-    };
-
-    if (myplayerhit !== 0) Client.sendMouseUp(); // Make sure we ain't hitting nobody, intrusive of gameplay
-};
-
-var i = 1;
-if (AutoEat) AutoEatLoop();
-function AutoEatLoop() {
-    if (AutoEat === true) {
-        setTimeout(function() {
-            _AutoEat();
-            i++;
-            if (i < Infinity) {
-                AutoEatLoop();
-            }
-        }, 1000)
     }
 }
 
