@@ -13490,6 +13490,18 @@ try {
             var height = (scaleby * img.height) / 2;
             ctx.drawImage(img, wX + (100 * scaleby), wY + (14 * scaleby), width, height);
             CanvasUtils.drawImageHd(wnvmV, 144.5 + (wX / scaleby), (wY / scaleby) + 56, wVnVV * mWvNn, 0, 0, 1);
+
+            var LifeNumberLabel = null;
+            // Life Value Label
+            if (drawLines) {
+                if (LifeNumberLabel === null) LifeNumberLabel = GUI.renderText(~~life.current, "'Viga', sans-serif", "#00FF00", 25, 400, window.undefined, 16, 25, window.undefined, window.undefined, window.undefined, window.undefined, "#000000", 10);
+                var img2 = LifeNumberLabel;
+                var width = (scaleby * img2.width) / 2.1;
+                var height = (scaleby * img2.height) / 2.1;
+                var posx = wX + (100 * scaleby);
+                var posy = wY + (14 * scaleby);
+                ctx.drawImage(img2, posx, posy, width, height);
+            }
         };
 
 
@@ -16909,7 +16921,7 @@ function _AutoEat() {
             } else _Eat_Food();
 
         }
-    };
+    } else console.log('AutoEat -> : not_hungry! :');
 
     var IID, amount, itemID, extra;
     function _CheckInvForFood() {
@@ -16959,6 +16971,7 @@ function _AutoEat() {
 };
 
 var i = 1;
+if (AutoEat) AutoEatLoop();
 function AutoEatLoop() {
     if (AutoEat === true) {
         setTimeout(function() {
