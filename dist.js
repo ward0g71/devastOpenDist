@@ -16960,7 +16960,7 @@ function _AutoEat() {
 
 var i = 1;
 function AutoEatLoop() {
-    if ((AutoEat === true) & (Client.State.__CONNECTED__)) {
+    if (AutoEat === true) {
         setTimeout(function() {
             _AutoEat();
             i++;
