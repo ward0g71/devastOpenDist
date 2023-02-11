@@ -9015,9 +9015,9 @@ var Game = (function() {
         else Client.sendMouseAngle();
         NnnNW();
     };
-
     function markPosition() {
         if (drawLines) {
+            var Nnw = 0;
             if (Nnw > 0) {
                 Nnw -= delta;
                 if (Nnw > 2500) ctx.globalAlpha = MathUtils.Ease.inOutQuad((3000 - Nnw) / 500);
