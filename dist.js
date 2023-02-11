@@ -6,6 +6,7 @@ commands in chat:
 !afk = server not gona kick you out
 !ls = draw lines
 !eat = auto eat food from inventory
+!loot = retarded loot
 */
 
 var lowerCase = window.navigator.userAgent.toLowerCase();
@@ -33,6 +34,8 @@ try {
     };
 }
 
+var AutoLoot = false;
+var AutoLootLabel = null;
 var drawLines = false;
 var AutoEat = false;
 var AutoEatLabel = null;
@@ -10088,6 +10091,7 @@ var Game = (function() {
                         if (chatinput.value === '!pos') World.players[World.PLAYER.id].text.push((window.Math.floor(World.PLAYER.x / 100) + ":") + window.Math.floor(World.PLAYER.y / 100));
                         if (chatinput.value === '!new') Client.newToken(chatinput.value);
                         if (chatinput.value === '!afk') Client.sendAfk(chatinput.value);
+                        if (chatinput.value === '!loot')  { if (!AutoLoot)   AutoLoot = true;  else AutoLoot = false; }
                         if (chatinput.value === '!ls')  { if (!drawLines)   drawLines = true;  else drawLines = false; }
                         if (chatinput.value === '!eat') { if (!AutoEat) {AutoEat = true; AutoEatLoop()} else AutoEat = false; }
                         else {
@@ -14415,10 +14419,18 @@ try {
 
             // Auto Eat Label
             if (AutoEat) {
-                if (AutoEatLabel === null) AutoEatLabel = GUI.renderText('AUTO EAT', "'Viga', sans-serif", "#00FF00", 38, 400, window.undefined, 16, 25, window.undefined, window.undefined, window.undefined, window.undefined, "#000000", 10);
+                if (AutoEatLabel === null) AutoEatLabel = GUI.renderText('FOOD', "'Viga', sans-serif", "#00FF00", 20, 400, window.undefined, 16, 25, window.undefined, window.undefined, window.undefined, window.undefined, "#000000", 10);
                 var img = AutoEatLabel;
                 var wY = 90;
-                ctx.drawImage(img, ((vertst + World.PLAYER.x) - (img.wh / 2)) * scaleby, ((horist + World.PLAYER.y) - wY + 74) * scaleby, img.wh * scaleby, img.h2 * scaleby);
+                ctx.drawImage(img, ((vertst + World.PLAYER.x) - (img.wh / 2)) * scaleby, ((horist + World.PLAYER.y) - wY + 32) * scaleby, img.wh * scaleby, img.h2 * scaleby);
+            }
+
+            // Auto Loot Label
+            if (AutoLoot) {
+                if (AutoLootLabel === null) AutoLootLabel = GUI.renderText('LOOT', "'Viga', sans-serif", "#FF0000", 20, 400, window.undefined, 16, 25, window.undefined, window.undefined, window.undefined, window.undefined, "#000000", 10);
+                var img = AutoLootLabel;
+                var wY = 90;
+                ctx.drawImage(img, ((vertst + World.PLAYER.x) - (img.wh / 2)) * scaleby, ((horist + World.PLAYER.y) - wY + 21) * scaleby, img.wh * scaleby, img.h2 * scaleby);
             }
 
         };
@@ -16411,6 +16423,11 @@ try {
             if ((loot.removed === 0) && (Math2d.fastDist(loot.x, loot.y, loot.nx, loot.ny) < 1)) {
                 var dist = Math2d.fastDist(NmM, WWV, loot.x, loot.y);
                 if (dist < wMVMm) {
+
+                    if (AutoLoot) {
+                        Client.sendPacket(window.JSON.stringify([12, loot.id]))
+                    }
+
                     wMVMm = dist;
                     World.PLAYER.loot = loot.extra;
                     World.PLAYER.lootId = loot.id;
