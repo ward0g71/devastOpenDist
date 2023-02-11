@@ -5,8 +5,6 @@ commands in chat:
 !new = new token
 !afk = server not gona kick you out
 !ls = draw lines
-!eat = auto eat food from inventory
-!loot = retarded loot
 */
 
 var lowerCase = window.navigator.userAgent.toLowerCase();
