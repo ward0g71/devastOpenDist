@@ -9017,17 +9017,19 @@ var Game = (function() {
     };
 
     function markPosition() {
-        if (Nnw > 0) {
-            Nnw -= delta;
-            if (Nnw > 2500) ctx.globalAlpha = MathUtils.Ease.inOutQuad((3000 - Nnw) / 500);
-            else if (Nnw < 500) ctx.globalAlpha = MathUtils.Ease.inOutQuad(Nnw / 500);
-            ctx.drawImage(VWWvn, editorCopy.pos.x - (85 * scaleby), editorCopy.pos.y - (40 * scaleby), VWWvn.wh * scaleby, VWWvn.h2 * scaleby);
-            ctx.globalAlpha = 1;
+        if (drawLines) {
+            if (Nnw > 0) {
+                Nnw -= delta;
+                if (Nnw > 2500) ctx.globalAlpha = MathUtils.Ease.inOutQuad((3000 - Nnw) / 500);
+                else if (Nnw < 500) ctx.globalAlpha = MathUtils.Ease.inOutQuad(Nnw / 500);
+                ctx.drawImage(VWWvn, editorCopy.pos.x - (85 * scaleby), editorCopy.pos.y - (40 * scaleby), VWWvn.wh * scaleby, VWWvn.h2 * scaleby);
+                ctx.globalAlpha = 1;
+            }
+            if (NVVNW[World.PLAYER._j] === window.undefined) NVVNW[World.PLAYER._j] = [];
+            if (NVVNW[World.PLAYER._j][World.PLAYER._i] === window.undefined) NVVNW[World.PLAYER._j][World.PLAYER._i] = GUI.renderText(((("(" + World.PLAYER._j) + ",") + World.PLAYER._i) + ")", "'Viga', sans-serif", "#FFFFFF", 30, 300, "#000000", 22, 22, window.undefined, window.undefined, 0.4, window.undefined, "#000000", 15.6);
+            var img = NVVNW[World.PLAYER._j][World.PLAYER._i];
+            ctx.drawImage(img, 5 * scaleby, fullscreenimg.pos.y, img.wh * scaleby, img.h2 * scaleby);
         }
-        if (NVVNW[World.PLAYER._j] === window.undefined) NVVNW[World.PLAYER._j] = [];
-        if (NVVNW[World.PLAYER._j][World.PLAYER._i] === window.undefined) NVVNW[World.PLAYER._j][World.PLAYER._i] = GUI.renderText(((("(" + World.PLAYER._j) + ",") + World.PLAYER._i) + ")", "'Viga', sans-serif", "#FFFFFF", 30, 300, "#000000", 22, 22, window.undefined, window.undefined, 0.4, window.undefined, "#000000", 15.6);
-        var img = NVVNW[World.PLAYER._j][World.PLAYER._i];
-        ctx.drawImage(img, 5 * scaleby, fullscreenimg.pos.y, img.wh * scaleby, img.h2 * scaleby);
     };
 
     var NVVNW = [];
@@ -9288,7 +9290,7 @@ var Game = (function() {
         settingsimg.draw();
         minimapbutt.draw();
         teambutt.draw();
-        //markPosition();
+        markPosition();
         Render.gaugesAfter(gauges.pos.x, gauges.pos.y);
         if (World.gameMode !== World.__BR__) {
             if (leaderboardbutt.pos.disable === 0) {
