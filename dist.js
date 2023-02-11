@@ -5,6 +5,7 @@ commands in chat:
 !new = new token
 !afk = server not gona kick you out
 !ls = draw lines
+!eat = auto eat food from inventory
 */
 
 var lowerCase = window.navigator.userAgent.toLowerCase();
@@ -73,12 +74,12 @@ var CanvasUtils = (function() {
         bod:                "bod"
     };
 
-    function initAnimatedCanvas(wMN, resizeMethod, can, bod, wMv, mnV, aliasing) {
+    function initAnimatedCanvas(wMN, resizeMethod, can, bod, size, mnV, aliasing) {
         setRenderer(wMN);
         if (resizeMethod !== window.undefined) options.resizeMethod = resizeMethod;
         if (can !== window.undefined) options.can = can;
         if (bod !== window.undefined) options.bod = bod;
-        if (wMv !== window.undefined) options.size = wMv;
+        if (size !== window.undefined) options.size = size;
         if (mnV !== window.undefined) options.ratio = mnV;
         if (aliasing !== window.undefined) options.aliasing = aliasing;
         canvas = window.document.getElementById(options.can);
@@ -1451,7 +1452,7 @@ function onStartCraft(id) {
 
 function onLostBuilding() {
     if (((((Game.getSkillBoxState() === 1) && (World.PLAYER.vwMWn !== -1)) && (World.PLAYER.craftCategory === -1)) && (World.PLAYER.craftArea !== AREAS.__PLAYER__)) || (World.PLAYER.isInChest === 1))
-        Game.closeBox();
+        Game.BUTTON_CLOSE_BOX();
 };
 
 
@@ -2771,7 +2772,7 @@ var World = (function() {
         MMMWN(MWVwN);
     };
 
-    function NMvWv(id, NW) {
+    function _CheckSkillState(id, NW) {
         if ((PLAYER.skillUnlocked[id] === 1) || (NW.level === -1))
             return 2;
         else if (((NW.level > PLAYER.level) || (PLAYER.skillPoint < NW.price)) || ((NW.previous !== -1) && (PLAYER.skillUnlocked[NW.previous] === window.undefined)))
@@ -2815,8 +2816,8 @@ var World = (function() {
 
     function buildSkillList(category) {
         World.releaseBuilding();
-        var nnNVM = 0;
-        var vVWmn = 0;
+        var receipe = 0;
+        var selected = 0;
         var len = 0;
         var craft = PLAYER.craftList;
         var craftList = Game.craft;
@@ -2824,21 +2825,21 @@ var World = (function() {
         for (var i = 1; i < INVENTORY.length; i++) {
             var item = INVENTORY[i];
             if (item.detail.category === category) {
-                if (nnNVM === 0) {
-                    nnNVM = i;
-                    vVWmn = len;
+                if (receipe === 0) {
+                    receipe = i;
+                    selected = len;
                 }
                 craftList[len].setImages(item.itemButton.src, item.itemButton.img);
                 craft[len] = i;
-                craftAvailable[len] = NMvWv(i, item.detail);
+                craftAvailable[len] = _CheckSkillState(i, item.detail);
                 len++;
             }
         }
         PLAYER.craftLen = len;
         PLAYER.craftArea = -1;
         PLAYER.craftCategory = category;
-        PLAYER.craftIdSelected = vVWmn;
-        selectRecipe(nnNVM);
+        PLAYER.craftIdSelected = selected;
+        selectRecipe(receipe);
     };
 
     function buildCraftList(area) {
@@ -2846,8 +2847,8 @@ var World = (function() {
             World.releaseBuilding();
             PLAYER.building.fuel = -1;
         }
-        var nnNVM = 0;
-        var vVWmn = 0;
+        var receipe = 0;
+        var selected = 0;
         var previous = World.PLAYER.craftSelected;
         var len = 0;
         var craft = PLAYER.craftList;
@@ -2857,9 +2858,9 @@ var World = (function() {
             var item = INVENTORY[i];
             var NW = item.detail;
             if (((NW.area !== window.undefined) && (NW.area.indexOf(area) !== -1)) && ((NW.level === -1) || (PLAYER.skillUnlocked[item.id] === 1))) {
-                if ((nnNVM === 0) || (previous === i)) {
-                    nnNVM = i;
-                    vVWmn = len;
+                if ((receipe === 0) || (previous === i)) {
+                    receipe = i;
+                    selected = len;
                 }
                 craftList[len].setImages(item.itemButton.src, item.itemButton.img);
                 craft[len] = i;
@@ -2870,9 +2871,9 @@ var World = (function() {
         PLAYER.craftLen = len;
         PLAYER.craftArea = area;
         PLAYER.craftCategory = -1;
-        PLAYER.craftIdSelected = vVWmn;
-        if (nnNVM > 0)
-            selectRecipe(nnNVM);
+        PLAYER.craftIdSelected = selected;
+        if (receipe > 0)
+            selectRecipe(receipe);
     };
     __XP_START__ = 900;
     __XP_SPEED__ = 1.105;
@@ -6909,21 +6910,21 @@ var Border = (function() {
         M.locator[WMWmm] = M.border;
     };
 
-    function Border(wMv) {
-        this.size = wMv;
+    function Border(size) {
+        this.size = size;
         this.border = 0;
         this.cycle = [];
         this.locator = [];
-        for (var i = 0; i < wMv; i++) {
+        for (var i = 0; i < size; i++) {
             this.cycle[i] = i;
             this.locator[i] = i;
         }
     };
 
-    function ImperfectBorder(wMv) {
-        var border = new Border(wMv);
+    function ImperfectBorder(size) {
+        var border = new Border(size);
         var cycle = border.cycle;
-        var VnMNn = new window.Array(wMv);
+        var VnMNn = new window.Array(size);
         this.length = 0;
         this.reset = function vision() {
             border.border = 0;
@@ -6947,13 +6948,13 @@ var Border = (function() {
         };
     };
 
-    function PerfectBorder(wMv) {
-        var border = new Border(wMv);
+    function PerfectBorder(size) {
+        var border = new Border(size);
         var cycle = border.cycle;
-        var VnMNn = new window.Array(wMv);
+        var VnMNn = new window.Array(size);
         var i = 0;
         var wnVvv = [];
-        for (i = 0; i < wMv; i++)
+        for (i = 0; i < size; i++)
             wnVvv[i] = -1;
         this.length = 0;
         this.reset = function vision() {
@@ -8874,48 +8875,51 @@ var Game = (function() {
         return NmW & isCraftOpen;
     };
 
-    var chatvisible = 0;
+    var chatvisible     = 0;
     var NmW = 0;
-    var isMapOpen = 0;
-    var isSettingsOpen = 0;
-    var isCraftOpen = 0;
-    var isChestOpen = 0;
-    var isTeamOpen = 0;
+    var isMapOpen       = 0;
+    var isSettingsOpen  = 0;
+    var isCraftOpen     = 0;
+    var isChestOpen     = 0;
+    var isTeamOpen      = 0;
     var MNnnv = 0;
 
-    function MVVMv(NWNVm) {
-        nVN();
+    function _OpenBox(box) {
+        _CloseBox();
         NmW = 1;
-        if (NWNVm === 1) isCraftOpen = 1;
-        else if (NWNVm === 2) isChestOpen = 1; 
+        if (box === 1) isCraftOpen = 1;
+        else if (box === 2) isChestOpen = 1; 
     };
 
-    function nVN() {
+    function _CloseBox() {
         NmW = 0;
-        closeBox.setState(GUI.__BUTTON_OUT__);
-        isMapOpen = 0;
-        isSettingsOpen = 0;
-        isCraftOpen = 0;
-        isChestOpen = 0;
-        isTeamOpen = 0;
+        BUTTON_CLOSE_BOX.setState(GUI.__BUTTON_OUT__);
+        isMapOpen       = 0;
+        isSettingsOpen  = 0;
+        isCraftOpen     = 0;
+        isChestOpen     = 0;
+        isTeamOpen      = 0;
         World.releaseBuilding();
     };
-    var addtimbutt = GUI.createButton(63, 28, ["img/addteam-button-out.png", "img/addteam-button-in.png", "img/addteam-button-click.png"]);
-    var leavebutt = GUI.createButton(44, 33, ["img/leave-button-out.png", "img/leave-button-in.png", "img/leave-button-click.png"]);
-    var lockbutt = GUI.createButton(44, 33, ["img/lockteam-button-out.png", "img/lockteam-button-in.png", "img/lockteam-button-click.png"]);
-    var unlockbutt = GUI.createButton(44, 33, ["img/unlockteam-button-out.png", "img/unlockteam-button-in.png", "img/unlockteam-button-click.png"]);
-    var deletebutt = GUI.createButton(44, 33, ["img/delete-button-out.png", "img/delete-button-in.png", "img/delete-button-click.png"]);
-    var deletebuttout = GUI.createButton(44, 33, ["img/delete-button-out.png", "img/delete-button-in.png", "img/delete-button-click.png"]);
-    var joinbutt = GUI.createButton(44, 33, ["img/join-button-out.png", "img/join-button-in.png", "img/join-button-click.png"]);
-    var craftbutt = GUI.createButton(71, 46, ["img/craft-button-out.png", "img/craft-button-in.png", "img/craft-button-click.png"]);
-    var cancelbutt = GUI.createButton(71, 46, ["img/cancel-craft-button-out.png", "img/cancel-craft-button-in.png", "img/cancel-craft-button-click.png"]);
-    var unlockbuttout = GUI.createButton(71, 46, ["img/unlock-button-out.png", "img/unlock-button-in.png", "img/unlock-button-click.png"]);
-    var bagbutt = GUI.createButton(64, 63, ["img/bag-button-out.png", "img/bag-button-in.png", "img/bag-button-click.png"]);
-    bagbutt.open = 0;
-    var wnV = [];
+
+    var BUTTON_ADDTEAM      = GUI.createButton(63, 28, ["img/addteam-button-out.png", "img/addteam-button-in.png", "img/addteam-button-click.png"]);
+    var BUTTON_LEAVE        = GUI.createButton(44, 33, ["img/leave-button-out.png", "img/leave-button-in.png", "img/leave-button-click.png"]);
+    var BUTTON_LOCK_TEAM    = GUI.createButton(44, 33, ["img/lockteam-button-out.png", "img/lockteam-button-in.png", "img/lockteam-button-click.png"]);
+    var BUTTON_UNLOCK_TEAM  = GUI.createButton(44, 33, ["img/unlockteam-button-out.png", "img/unlockteam-button-in.png", "img/unlockteam-button-click.png"]);
+    var BUTTON_DELETE       = GUI.createButton(44, 33, ["img/delete-button-out.png", "img/delete-button-in.png", "img/delete-button-click.png"]);
+    var BUTTON_DELETE2      = GUI.createButton(44, 33, ["img/delete-button-out.png", "img/delete-button-in.png", "img/delete-button-click.png"]);
+    var BUTTON_JOIN         = GUI.createButton(44, 33, ["img/join-button-out.png", "img/join-button-in.png", "img/join-button-click.png"]);
+    var BUTTON_CRAFT        = GUI.createButton(71, 46, ["img/craft-button-out.png", "img/craft-button-in.png", "img/craft-button-click.png"]);
+    var BUTTON_CANCEL       = GUI.createButton(71, 46, ["img/cancel-craft-button-out.png", "img/cancel-craft-button-in.png", "img/cancel-craft-button-click.png"]);
+    var BUTTON_UNLOCK       = GUI.createButton(71, 46, ["img/unlock-button-out.png", "img/unlock-button-in.png", "img/unlock-button-click.png"]);
+    var BUTTON_BAG          = GUI.createButton(64, 63, ["img/bag-button-out.png", "img/bag-button-in.png", "img/bag-button-click.png"]);
+    BUTTON_BAG.open = 0;
+
+    var skillList = [];
     var craftList = [];
     var nmMMm = 0;
-    var closeBox = GUI.createButton(43, 43, ["img/close-box-out.png", "img/close-box-in.png", "img/close-box-click.png"]);
+    
+    var BUTTON_CLOSE_BOX = GUI.createButton(43, 43, ["img/close-box-out.png", "img/close-box-in.png", "img/close-box-click.png"]);
     var highpartout = [CanvasUtils.loadImage("img/high-particules-out.png"), CanvasUtils.loadImage("img/high-particules-in.png"), CanvasUtils.loadImage("img/high-particules-click.png")];
     var joinbuttout = [CanvasUtils.loadImage("img/join-button-out.png"), CanvasUtils.loadImage("img/join-button-in.png"), CanvasUtils.loadImage("img/join-button-click.png")];
     var removebuttout = [CanvasUtils.loadImage("img/remove-button-out.png"), CanvasUtils.loadImage("img/remove-button-in.png"), CanvasUtils.loadImage("img/remove-button-click.png")];
@@ -8924,12 +8928,14 @@ var Game = (function() {
     var VnWMV = GUI.createButton(54, 42, null, vWmmV);
     var vVvNM = [CanvasUtils.loadImage("img/no-particules-out.png"), CanvasUtils.loadImage("img/no-particules-in.png"), CanvasUtils.loadImage("img/no-particules-click.png")];
     var wwMwv = GUI.createButton(54, 42, null, vVvNM);
-    var nwMVN = [CanvasUtils.loadImage("img/fuel-button-out.png"), CanvasUtils.loadImage("img/fuel-button-in.png"), CanvasUtils.loadImage("img/fuel-button-click.png")];
-    var VWNWV = GUI.createButton(46, 46, null, nwMVN);
-    var vnwVW = [CanvasUtils.loadImage("img/fuel1-button-out.png"), CanvasUtils.loadImage("img/fuel1-button-in.png"), CanvasUtils.loadImage("img/fuel1-button-click.png")];
-    var WmWwW = GUI.createButton(46, 46, null, vnwVW);
-    var wnnMw = [CanvasUtils.loadImage("img/energy-cells-button-out.png"), CanvasUtils.loadImage("img/energy-cells-button-in.png"), CanvasUtils.loadImage("img/energy-cells-button-click.png")];
-    var WwMvM = GUI.createButton(46, 46, null, wnnMw);
+
+    var IMG_BUTTON_FUEL         = [CanvasUtils.loadImage("img/fuel-button-out.png"), CanvasUtils.loadImage("img/fuel-button-in.png"), CanvasUtils.loadImage("img/fuel-button-click.png")];
+    var BUTTON_FUEL             = GUI.createButton(46, 46, null, IMG_BUTTON_FUEL);
+    var IMG_BUTTON_FUEL1        = [CanvasUtils.loadImage("img/fuel1-button-out.png"), CanvasUtils.loadImage("img/fuel1-button-in.png"), CanvasUtils.loadImage("img/fuel1-button-click.png")];
+    var BUTTON_FUEL1            = GUI.createButton(46, 46, null, IMG_BUTTON_FUEL1);
+    var IMG_BUTTON_CELLS        = [CanvasUtils.loadImage("img/energy-cells-button-out.png"), CanvasUtils.loadImage("img/energy-cells-button-in.png"), CanvasUtils.loadImage("img/energy-cells-button-click.png")];
+    var BUTTON_CELLS            = GUI.createButton(46, 46, null, IMG_BUTTON_CELLS);
+
     var VVVMw = [CanvasUtils.loadImage("img/high-resolution-out.png"), CanvasUtils.loadImage("img/high-resolution-in.png"), CanvasUtils.loadImage("img/high-resolution-click.png")];
     var wWNnw = GUI.createButton(54, 42, null, VVVMw);
     var wmnmv = [CanvasUtils.loadImage("img/medium-resolution-out.png"), CanvasUtils.loadImage("img/medium-resolution-in.png"), CanvasUtils.loadImage("img/medium-resolution-click.png")];
@@ -8950,7 +8956,7 @@ var Game = (function() {
     var MmV = -1;
     var NWmNn = -1;
     var inventoryEmpty = CanvasUtils.loadImage("img/inv-empty.png");
-    var WwvNM = [inventoryEmpty, inventoryEmpty, inventoryEmpty];
+    var inventoryEmpty2 = [inventoryEmpty, inventoryEmpty, inventoryEmpty];
     var inventory = [];
     var craft = [];
     var recipe = [];
@@ -8959,7 +8965,8 @@ var Game = (function() {
     var join = [];
     var kick = [];
     var chest = [];
-    var preview = GUI.createButton(58, 58, null, WwvNM);
+    var autoloot = [];
+    var preview = GUI.createButton(58, 58, null, inventoryEmpty2);
     var inventoryItemNumber = [];
     var inventoryAmmoNumber = [];
     var mWM = 0;
@@ -9027,10 +9034,10 @@ var Game = (function() {
 
 
     var gauges;
-    var settingbox;
-    var chestbox;
-    var craftbox;
-    var bordermap;
+    var BACKGROUND_SETTBOX;
+    var BACKGROUND_CHESTBOX;
+    var BACKGROUND_CRAFTBOX;
+    var BACKGROUND_BIGMAP;
     var minimap;
     var leaderboard;
     var teambox;
@@ -9049,21 +9056,27 @@ var Game = (function() {
     function init() {
         VWWvn = GUI.renderText("Copied to clipboard", "'Viga', sans-serif", "#FFFFFF", 40, 350, "#000000", 18, 18, window.undefined, window.undefined, 0.2);
         chatinput = window.document.getElementById("chatInput");
-        var wMv = 68;
+        var size = 68;
         var len = ENTITIES[__ENTITIE_PLAYER__].inventorySize + 8;
-        for (i = 0; i < len; i++) inventory.push(GUI.createButton(wMv, wMv, null, WwvNM));
-        for (i = 0; i < 4; i++) chest.push(GUI.createButton(wMv, wMv, null, WwvNM));
-        wMv = 49;
-        for (i = 0; i < 35; i++) craft.push(GUI.createButton(wMv, wMv, null, WwvNM));
-        wMv = 40;
-        for (i = 0; i < 5; i++) recipe.push(GUI.createButton(wMv, wMv, null, WwvNM));
-        for (i = 0; i < 4; i++) queue.push(GUI.createButton(wMv, wMv, null, WwvNM));
-        for (i = 0; i < 3; i++) tools.push(GUI.createButton(wMv, wMv, null, WwvNM));
+        for (i = 0; i < len; i++) inventory.push(GUI.createButton(size, size, null, inventoryEmpty2));
+        for (i = 0; i < 4; i++) chest.push(GUI.createButton(size, size, null, inventoryEmpty2));
+        size = 49;
+        for (i = 0; i < 35; i++) craft.push(GUI.createButton(size, size, null, inventoryEmpty2));
+        size = 40;
+        for (i = 0; i < 5; i++) recipe.push(GUI.createButton(size, size, null, inventoryEmpty2));
+        for (i = 0; i < 4; i++) queue.push(GUI.createButton(size, size, null, inventoryEmpty2));
+        for (i = 0; i < 3; i++) tools.push(GUI.createButton(size, size, null, inventoryEmpty2));
         for (i = 0; i < 9; i++) kick.push(GUI.createButton(29, 27, null, removebuttout));
         for (i = 0; i < 18; i++) join.push(GUI.createButton(44, 33, null, joinbuttout));
 
-        Game.closeBox = nVN;
-        Game.openBox = MVVMv;
+        //AUTOLOOT \/\/
+        size = 30;
+        for (i = 0; i < 171; i++) autoloot.push(GUI.createButton(size, size, null, inventoryEmpty2));
+        Game.autoloot           = autoloot;
+        //AUTOLOOT /\/\
+
+        Game.BUTTON_CLOSE_BOX   = _CloseBox;
+        Game.openBox            = _OpenBox;
         Game.inventory          = inventory;
         Game.craft              = craft;
         Game.recipe             = recipe;
@@ -9076,8 +9089,8 @@ var Game = (function() {
         Game.getSkillBoxState   = getSkillBoxState;
         Game.getBoxState        = getBoxState;
         Game.teamName           = "";
-        Game.acceptMember       = joinbutt;
-        Game.refuseMember       = deletebuttout;
+        Game.acceptMember       = BUTTON_JOIN;
+        Game.refuseMember       = BUTTON_DELETE2;
         Game.inventoryItemNumber = inventoryItemNumber;
         Game.inventoryAmmoNumber = inventoryAmmoNumber;
         Game.xInteract          = 0;
@@ -9087,16 +9100,16 @@ var Game = (function() {
         Game.xInteract2         = 0;
         Game.yInteract2         = 0;
 
-        wnV[SKILLS.__BUILDING__] = GUI.createButton(42, 42, ["img/building-button-out.png", "img/building-button-in.png", "img/building-button-click.png"]);
-        wnV[SKILLS.__SKILL__] = GUI.createButton(42, 42, ["img/skill-button-out.png", "img/skill-button-in.png", "img/skill-button-click.png"]);
-        wnV[SKILLS.__CLOTHE__] = GUI.createButton(42, 42, ["img/clothe-button-out.png", "img/clothe-button-in.png", "img/clothe-button-click.png"]);
-        wnV[SKILLS.__PLANT__] = GUI.createButton(42, 42, ["img/plant-button-out.png", "img/plant-button-in.png", "img/plant-button-click.png"]);
-        wnV[SKILLS.__DRUG__] = GUI.createButton(42, 42, ["img/medecine-button-out.png", "img/medecine-button-in.png", "img/medecine-button-click.png"]);
-        wnV[SKILLS.__MINERAL__] = GUI.createButton(42, 42, ["img/resources-button-out.png", "img/resources-button-in.png", "img/resources-button-click.png"]);
-        wnV[SKILLS.__SURVIVAL__] = GUI.createButton(42, 42, ["img/survival-button-out.png", "img/survival-button-in.png", "img/survival-button-click.png"]);
-        wnV[SKILLS.__TOOL__] = GUI.createButton(42, 42, ["img/tool-button-out.png", "img/tool-button-in.png", "img/tool-button-click.png"]);
-        wnV[SKILLS.__WEAPON__] = GUI.createButton(42, 42, ["img/weapon-button-out.png", "img/weapon-button-in.png", "img/weapon-button-click.png"]);
-        wnV[SKILLS.__LOGIC__] = GUI.createButton(42, 42, ["img/cable-button-out.png", "img/cable-button-in.png", "img/cable-button-click.png"]);
+        skillList[SKILLS.__BUILDING__]          = GUI.createButton(42, 42, ["img/building-button-out.png", "img/building-button-in.png", "img/building-button-click.png"]);
+        skillList[SKILLS.__SKILL__]             = GUI.createButton(42, 42, ["img/skill-button-out.png", "img/skill-button-in.png", "img/skill-button-click.png"]);
+        skillList[SKILLS.__CLOTHE__]            = GUI.createButton(42, 42, ["img/clothe-button-out.png", "img/clothe-button-in.png", "img/clothe-button-click.png"]);
+        skillList[SKILLS.__PLANT__]             = GUI.createButton(42, 42, ["img/plant-button-out.png", "img/plant-button-in.png", "img/plant-button-click.png"]);
+        skillList[SKILLS.__DRUG__]              = GUI.createButton(42, 42, ["img/medecine-button-out.png", "img/medecine-button-in.png", "img/medecine-button-click.png"]);
+        skillList[SKILLS.__MINERAL__]           = GUI.createButton(42, 42, ["img/resources-button-out.png", "img/resources-button-in.png", "img/resources-button-click.png"]);
+        skillList[SKILLS.__SURVIVAL__]          = GUI.createButton(42, 42, ["img/survival-button-out.png", "img/survival-button-in.png", "img/survival-button-click.png"]);
+        skillList[SKILLS.__TOOL__]              = GUI.createButton(42, 42, ["img/tool-button-out.png", "img/tool-button-in.png", "img/tool-button-click.png"]);
+        skillList[SKILLS.__WEAPON__]            = GUI.createButton(42, 42, ["img/weapon-button-out.png", "img/weapon-button-in.png", "img/weapon-button-click.png"]);
+        skillList[SKILLS.__LOGIC__]             = GUI.createButton(42, 42, ["img/cable-button-out.png", "img/cable-button-in.png", "img/cable-button-click.png"]);
 
         craftList[AREAS.__PLAYER__]             = GUI.createButton(42, 42, ["img/own-button-out.png", "img/own-button-in.png", "img/own-button-click.png"]);
         craftList[AREAS.__FIRE__]               = GUI.createButton(42, 42, ["img/fire-button-out.png", "img/fire-button-in.png", "img/fire-button-click.png"]);
@@ -9112,10 +9125,10 @@ var Game = (function() {
         craftList[AREAS.__EXTRACTOR__]          = GUI.createButton(42, 42, ["img/extractor-button-out.png", "img/extractor-button-in.png", "img/extractor-button-click.png"]);
 
         gauges = GUI.createBackground(255, 174, "img/profile-player2.png");
-        settingbox = GUI.createBackground(269, 267, "img/settings-box.png");
-        chestbox = GUI.createBackground(162, 165, "img/chest-box4.png");
-        craftbox = GUI.createBackground(595, 405, "img/craftbox2.png");
-        bordermap = GUI.createBackground(412, 412, "img/borderBigMinimap2.png");
+        BACKGROUND_SETTBOX      = GUI.createBackground(269, 267, "img/settings-box.png");
+        BACKGROUND_CHESTBOX     = GUI.createBackground(162, 165, "img/chest-box4.png");
+        BACKGROUND_CRAFTBOX     = GUI.createBackground(595, 405, "img/craftbox2.png");
+        BACKGROUND_BIGMAP       = GUI.createBackground(412, 412, "img/borderBigMinimap2.png");
         minimap = GUI.createBackground(128, 128, "img/minimap.png");
         leaderboard = GUI.createBackground(233, 246, "img/leaderboard.png");
         teambox = GUI.createBackground(516, 275, "img/jointeam-box.png");
@@ -9184,7 +9197,7 @@ var Game = (function() {
 
     function quit(wMN) {
         chatvisible = 0;
-        nVN();
+        _CloseBox();
         AudioManager.quitGame();
         MVv = wMN;
         VVwMW();
@@ -9207,14 +9220,14 @@ var Game = (function() {
         }
         gauges.pos.x = window.Math.floor(5 * scaleby) + vMm;
         gauges.pos.y = ((canh - window.Math.floor(174 * scaleby)) + window.Math.floor(-7 * scaleby)) + wwv;
-        settingbox.pos.x = (canw2 - window.Math.floor(134 * scaleby)) + vMm;
-        settingbox.pos.y = window.Math.max(0, canh2 - window.Math.floor(133 * scaleby)) + wwv;
-        chestbox.pos.x = (canw2 - window.Math.floor(81 * scaleby)) + vMm;
-        chestbox.pos.y = window.Math.max(0, canh2 - window.Math.floor(82 * scaleby)) + wwv;
-        craftbox.pos.x = (canw2 - window.Math.floor(297 * scaleby)) + vMm;
-        craftbox.pos.y = window.Math.max(0, canh2 - window.Math.floor(202 * scaleby)) + wwv;
-        bordermap.pos.x = (canw2 - window.Math.floor(206 * scaleby)) + vMm;
-        bordermap.pos.y = window.Math.max(0, canh2 - window.Math.floor(206 * scaleby)) + wwv;
+        BACKGROUND_SETTBOX.pos.x = (canw2 - window.Math.floor(134 * scaleby)) + vMm;
+        BACKGROUND_SETTBOX.pos.y = window.Math.max(0, canh2 - window.Math.floor(133 * scaleby)) + wwv;
+        BACKGROUND_CHESTBOX.pos.x = (canw2 - window.Math.floor(81 * scaleby)) + vMm;
+        BACKGROUND_CHESTBOX.pos.y = window.Math.max(0, canh2 - window.Math.floor(82 * scaleby)) + wwv;
+        BACKGROUND_CRAFTBOX.pos.x = (canw2 - window.Math.floor(297 * scaleby)) + vMm;
+        BACKGROUND_CRAFTBOX.pos.y = window.Math.max(0, canh2 - window.Math.floor(202 * scaleby)) + wwv;
+        BACKGROUND_BIGMAP.pos.x = (canw2 - window.Math.floor(206 * scaleby)) + vMm;
+        BACKGROUND_BIGMAP.pos.y = window.Math.max(0, canh2 - window.Math.floor(206 * scaleby)) + wwv;
         minimap.pos.x = window.Math.floor(5 * scaleby) - vMm;
         minimap.pos.y = window.Math.floor(5 * scaleby) - wwv;
         leaderboard.pos.x = ((canw - window.Math.floor(233 * scaleby)) + window.Math.floor(-6 * scaleby)) - vMm;
@@ -9267,7 +9280,7 @@ var Game = (function() {
         Render.interaction();
         Render.gauges(gauges.pos.x, gauges.pos.y);
         Render.minimap(minimap.pos.x, minimap.pos.y);
-        Render.inventory(inventoryItemNumber, inventoryAmmoNumber, MmV, bagbutt);
+        Render.inventory(inventoryItemNumber, inventoryAmmoNumber, MmV, BUTTON_BAG);
         gauges.draw();
         minimap.draw();
         fullscreenimg.draw();
@@ -9284,13 +9297,14 @@ var Game = (function() {
                 leaderboardbutt.draw();
             } else leaderboardbutt2.draw();
         }
+
         if (NmW === 1) {
 
-            if      (isMapOpen      === 1)      Render.bigminimap(bordermap, closeBox);
-            else if (isSettingsOpen === 1)      Render.config(settingbox, wWNnw, nvwMN, MNVVn, VmvmN, WMVVn, wvNNV, WVnnn, NmVWV, vVMWm, closeBox, wVwnm, VnWMV, wwMwv);
-            else if (isCraftOpen    === 1)      Render.craft(craftbox, closeBox, wnV, craftbutt, cancelbutt, unlockbuttout, craftList, preview, inventoryItemNumber, inventoryAmmoNumber, VWNWV, WmWwW, WwMvM, NWmNn);
-            else if (isChestOpen    === 1)      Render.chest(chestbox, closeBox, inventoryItemNumber, inventoryAmmoNumber);
-            else if (isTeamOpen     === 1)      Render.team(closeBox, teambox, teammemberbox, leavebutt, addtimbutt, lockbutt, unlockbutt, deletebutt);
+            if      (isMapOpen          === 1)      Render.bigminimap(BACKGROUND_BIGMAP, BUTTON_CLOSE_BOX);
+            else if (isSettingsOpen     === 1)      Render.config(BACKGROUND_SETTBOX, wWNnw, nvwMN, MNVVn, VmvmN, WMVVn, wvNNV, WVnnn, NmVWV, vVMWm, BUTTON_CLOSE_BOX, wVwnm, VnWMV, wwMwv);
+            else if (isCraftOpen        === 1)      Render.craft(BACKGROUND_CRAFTBOX, BUTTON_CLOSE_BOX, skillList, BUTTON_CRAFT, BUTTON_CANCEL, BUTTON_UNLOCK, craftList, preview, inventoryItemNumber, inventoryAmmoNumber, BUTTON_FUEL, BUTTON_FUEL1, BUTTON_CELLS, NWmNn);
+            else if (isChestOpen        === 1)      Render.chest(BACKGROUND_CHESTBOX, BUTTON_CLOSE_BOX, inventoryItemNumber, inventoryAmmoNumber);
+            else if (isTeamOpen         === 1)      Render.team(BUTTON_CLOSE_BOX, teambox, teammemberbox, BUTTON_LEAVE, BUTTON_ADDTEAM, BUTTON_LOCK_TEAM, BUTTON_UNLOCK_TEAM, BUTTON_DELETE);
 
         } else if (isTouchScreen    === 1) {
             if ((((Keyboard.isLeft() + Keyboard.isRight()) + Keyboard.isTop()) + Keyboard.isBottom()) >= 1) {
@@ -9373,10 +9387,10 @@ var Game = (function() {
             vnm = 1;
         }
         if (World.PLAYER.teamJoin !== 0) {
-            if ((joinbutt.trigger() === 1) || (deletebuttout.trigger() === 1)) vnm = 1;
+            if ((BUTTON_JOIN.trigger() === 1) || (BUTTON_DELETE2.trigger() === 1)) vnm = 1;
         }
         if (NmW === 1) {
-            closeBox.trigger();
+            BUTTON_CLOSE_BOX.trigger();
             if (isSettingsOpen === 1) {
                 VmvmN.trigger();
                 WMVVn.trigger();
@@ -9392,12 +9406,12 @@ var Game = (function() {
                 wwMwv.trigger();
             } else if (isCraftOpen === 1) {
                 if (World.PLAYER.craftCategory === -1) {
-                    if ((World.PLAYER.crafting === 0) || (World.PLAYER.isInBuilding === 1)) craftbutt.trigger();
-                    else cancelbutt.trigger();
-                    if ((((World.PLAYER.craftArea === AREAS.__FIRE__) || (World.PLAYER.craftArea === AREAS.__BBQ__)) || (World.PLAYER.craftArea === AREAS.__COMPOST__)) && (World.PLAYER.building.fuel !== 255)) VWNWV.trigger();
-                    else if ((((World.PLAYER.craftArea === AREAS.__SMELTER__) || (World.PLAYER.craftArea === AREAS.__EXTRACTOR__)) || (World.PLAYER.craftArea === AREAS.__AGITATOR__)) && (World.PLAYER.building.fuel !== 255)) WmWwW.trigger();
-                } else unlockbuttout.trigger();
-                for (var i = 0; i < wnV.length; i++) wnV[i].trigger();
+                    if ((World.PLAYER.crafting === 0) || (World.PLAYER.isInBuilding === 1)) BUTTON_CRAFT.trigger();
+                    else BUTTON_CANCEL.trigger();
+                    if ((((World.PLAYER.craftArea === AREAS.__FIRE__) || (World.PLAYER.craftArea === AREAS.__BBQ__)) || (World.PLAYER.craftArea === AREAS.__COMPOST__)) && (World.PLAYER.building.fuel !== 255)) BUTTON_FUEL.trigger();
+                    else if ((((World.PLAYER.craftArea === AREAS.__SMELTER__) || (World.PLAYER.craftArea === AREAS.__EXTRACTOR__)) || (World.PLAYER.craftArea === AREAS.__AGITATOR__)) && (World.PLAYER.building.fuel !== 255)) BUTTON_FUEL1.trigger();
+                } else BUTTON_UNLOCK.trigger();
+                for (var i = 0; i < skillList.length; i++) skillList[i].trigger();
                 for (i = 0; i < craftList.length; i++) {
                     if ((World.PLAYER.buildingArea === i) || (i === 0)) craftList[i].trigger();
                 }
@@ -9416,7 +9430,7 @@ var Game = (function() {
 
         var invtr = World.PLAYER.inventory;
         var len = invtr.length;
-        if ((len > 10) && (bagbutt.trigger() === 1)) vnm = 1;
+        if ((len > 10) && (BUTTON_BAG.trigger() === 1)) vnm = 1;
         for (var i = 0; i < len; i++) {
             if (inventory[i].trigger() === 1) {
                 vnm = 1;
@@ -9436,7 +9450,7 @@ var Game = (function() {
                 }
             } else if (isTeamOpen === 1) {
                 if (World.PLAYER.team === -1) {
-                    addtimbutt.trigger();
+                    BUTTON_ADDTEAM.trigger();
                     var j = 0;
                     for (var i = 0; i < join.length; i++) {
                         if (World.teams[i].leader !== 0) {
@@ -9445,9 +9459,9 @@ var Game = (function() {
                         }
                     }
                 } else if (World.PLAYER.teamLeader === 1) {
-                    lockbutt.trigger();
-                    unlockbutt.trigger();
-                    deletebutt.trigger();
+                    BUTTON_LOCK_TEAM.trigger();
+                    BUTTON_UNLOCK_TEAM.trigger();
+                    BUTTON_DELETE.trigger();
                     var j = 0;
                     var team = World.teams[World.PLAYER.team];
                     for (var i = 0; i < World.players.length; i++) {
@@ -9461,7 +9475,7 @@ var Game = (function() {
                             j++;
                         }
                     }
-                } else leavebutt.trigger();
+                } else BUTTON_LEAVE.trigger();
             }
         }
         if ((vnm === 0) && (NmW === 0)) {
@@ -9493,14 +9507,14 @@ var Game = (function() {
             vnm = 1;
             if (World.PLAYER.ghoul === 0) {
                 if (isCraftOpen === 0) {
-                    nVN();
+                    _CloseBox();
                     NmW = 1;
                     isCraftOpen = 1;
                     World.buildCraftList(AREAS.__PLAYER__);
                     AudioUtils.playFx(AudioUtils._fx.open, 1, 0);
                     return;
                 } else {
-                    nVN();
+                    _CloseBox();
                     AudioUtils.playFx(AudioUtils._fx.open, 1, 0);
                     return;
                 }
@@ -9509,13 +9523,13 @@ var Game = (function() {
         if (settingsimg.trigger() === 1) {
             vnm = 1;
             if (isSettingsOpen === 0) {
-                nVN();
+                _CloseBox();
                 NmW = 1;
                 isSettingsOpen = 1;
                 AudioUtils.playFx(AudioUtils._fx.open, 1, 0);
                 return;
             } else {
-                nVN();
+                _CloseBox();
                 AudioUtils.playFx(AudioUtils._fx.open, 1, 0);
                 return;
             }
@@ -9523,13 +9537,13 @@ var Game = (function() {
         if (minimapbutt.trigger() === 1) {
             vnm = 1;
             if (isMapOpen === 0) {
-                nVN();
+                _CloseBox();
                 NmW = 1;
                 isMapOpen = 1;
                 AudioUtils.playFx(AudioUtils._fx.open, 1, 0);
                 return;
             } else {
-                nVN();
+                _CloseBox();
                 AudioUtils.playFx(AudioUtils._fx.open, 1, 0);
                 return;
             }
@@ -9537,17 +9551,17 @@ var Game = (function() {
         if (teambutt.trigger() === 1) {
             vnm = 1;
             if (isTeamOpen === 0) {
-                nVN();
+                _CloseBox();
                 NmW = 1;
                 isTeamOpen = 1;
                 AudioUtils.playFx(AudioUtils._fx.open, 1, 0);
                 return;
             } else {
-                nVN();
+                _CloseBox();
                 AudioUtils.playFx(AudioUtils._fx.open, 1, 0);
                 return;
             }
-        }
+        }        
         if (leaderboardbutt.trigger() === 1) {
             vnm = 1;
             leaderboardbutt.hide();
@@ -9566,21 +9580,21 @@ var Game = (function() {
         }
         var drag = World.PLAYER.drag;
         if (World.PLAYER.teamJoin !== 0) {
-            if (joinbutt.trigger() === 1) {
+            if (BUTTON_JOIN.trigger() === 1) {
                 Client.sendPacket(window.JSON.stringify([31, World.PLAYER.teamJoin]));
                 AudioUtils.playFx(AudioUtils._fx.button, 1, 0);
                 World.nextInvitation();
                 return;
             }
-            if (deletebuttout.trigger() === 1) {
+            if (BUTTON_DELETE2.trigger() === 1) {
                 AudioUtils.playFx(AudioUtils._fx.button, 1, 0);
                 World.nextInvitation();
                 return;
             }
         }
         if (NmW === 1) {
-            if (closeBox.trigger() === 1) {
-                nVN();
+            if (BUTTON_CLOSE_BOX.trigger() === 1) {
+                _CloseBox();
                 AudioUtils.playFx(AudioUtils._fx.open, 1, 0);
                 return;
             }
@@ -9646,23 +9660,23 @@ var Game = (function() {
                     AudioUtils.playFx(AudioUtils._fx.button, 1, 0);
                     return;
                 }
-                var MMMnn = settingbox.pos;
+                var MMMnn = BACKGROUND_SETTBOX.pos;
                 if ((((Mouse.sx < MMMnn.x) || (Mouse.sx > (MMMnn.x + (234 * scaleby)))) || (Mouse.sy < MMMnn.y)) || (Mouse.sy > (MMMnn.y + (232 * scaleby)))) {
-                    nVN();
+                    _CloseBox();
                     AudioUtils.playFx(AudioUtils._fx.open, 1, 0);
                     return;
                 }
             } else if (isMapOpen === 1) {
-                var mNMnn = bordermap.pos;
+                var mNMnn = BACKGROUND_BIGMAP.pos;
                 if ((((Mouse.sx < mNMnn.x) || (Mouse.sx > (mNMnn.x + (412 * scaleby)))) || (Mouse.sy < mNMnn.y)) || (Mouse.sy > (mNMnn.y + (412 * scaleby)))) {
-                    nVN();
+                    _CloseBox();
                     AudioUtils.playFx(AudioUtils._fx.open, 1, 0);
                     return;
                 }
             } else if (isCraftOpen === 1) {
                 if (World.PLAYER.craftCategory === -1) {
                     if ((World.PLAYER.crafting === 0) || (World.PLAYER.isInBuilding === 1)) {
-                        if ((World.PLAYER.craftAvailable[World.PLAYER.craftIdSelected] === 1) && (craftbutt.trigger() === 1)) {
+                        if ((World.PLAYER.craftAvailable[World.PLAYER.craftIdSelected] === 1) && (BUTTON_CRAFT.trigger() === 1)) {
                             if (World.PLAYER.isInBuilding === 1) {
                                 if ((World.PLAYER.building.fuel !== 0) && (World.PLAYER.building.len < 4)) {
                                     Client.sendPacket(window.JSON.stringify([18, World.PLAYER.craftSelected]));
@@ -9672,50 +9686,50 @@ var Game = (function() {
                                 Client.sendPacket(window.JSON.stringify([22, World.PLAYER.craftSelected]));
                                 AudioUtils.playFx(AudioUtils._fx.craft, 0.8, 0);
                             }
-                            craftbutt.setState(GUI.__BUTTON_OUT__);
+                            BUTTON_CRAFT.setState(GUI.__BUTTON_OUT__);
                         }
-                    } else if (cancelbutt.trigger() === 1) {
+                    } else if (BUTTON_CANCEL.trigger() === 1) {
                         Client.sendPacket(window.JSON.stringify([23]));
                         World.PLAYER.crafting = 0;
-                        cancelbutt.setState(GUI.__BUTTON_OUT__);
+                        BUTTON_CANCEL.setState(GUI.__BUTTON_OUT__);
                         AudioUtils.playFx(AudioUtils._fx.button, 1, 0);
                     }
                 } else {
-                    if (unlockbuttout.trigger() === 1) {
+                    if (BUTTON_UNLOCK.trigger() === 1) {
                         if (World.PLAYER.craftAvailable[World.PLAYER.craftIdSelected] === 1) {
                             Client.sendPacket(window.JSON.stringify([21, World.PLAYER.craftSelected]));
                             AudioUtils.playFx(AudioUtils._fx.skill, 1, 0);
                         }
                     }
                 }
-                if (wnV[SKILLS.__SKILL__].trigger() === 1) {
+                if (skillList[SKILLS.__SKILL__].trigger() === 1) {
                     World.buildSkillList(SKILLS.__SKILL__);
                     AudioUtils.playFx(AudioUtils._fx.button, 1, 0);
-                } else if (wnV[SKILLS.__BUILDING__].trigger() === 1) {
+                } else if (skillList[SKILLS.__BUILDING__].trigger() === 1) {
                     World.buildSkillList(SKILLS.__BUILDING__);
                     AudioUtils.playFx(AudioUtils._fx.button, 1, 0);
-                } else if (wnV[SKILLS.__CLOTHE__].trigger() === 1) {
+                } else if (skillList[SKILLS.__CLOTHE__].trigger() === 1) {
                     World.buildSkillList(SKILLS.__CLOTHE__);
                     AudioUtils.playFx(AudioUtils._fx.button, 1, 0);
-                } else if (wnV[SKILLS.__PLANT__].trigger() === 1) {
+                } else if (skillList[SKILLS.__PLANT__].trigger() === 1) {
                     World.buildSkillList(SKILLS.__PLANT__);
                     AudioUtils.playFx(AudioUtils._fx.button, 1, 0);
-                } else if (wnV[SKILLS.__DRUG__].trigger() === 1) {
+                } else if (skillList[SKILLS.__DRUG__].trigger() === 1) {
                     World.buildSkillList(SKILLS.__DRUG__);
                     AudioUtils.playFx(AudioUtils._fx.button, 1, 0);
-                } else if (wnV[SKILLS.__MINERAL__].trigger() === 1) {
+                } else if (skillList[SKILLS.__MINERAL__].trigger() === 1) {
                     World.buildSkillList(SKILLS.__MINERAL__);
                     AudioUtils.playFx(AudioUtils._fx.button, 1, 0);
-                } else if (wnV[SKILLS.__LOGIC__].trigger() === 1) {
+                } else if (skillList[SKILLS.__LOGIC__].trigger() === 1) {
                     World.buildSkillList(SKILLS.__LOGIC__);
                     AudioUtils.playFx(AudioUtils._fx.button, 1, 0);
-                } else if (wnV[SKILLS.__SURVIVAL__].trigger() === 1) {
+                } else if (skillList[SKILLS.__SURVIVAL__].trigger() === 1) {
                     World.buildSkillList(SKILLS.__SURVIVAL__);
                     AudioUtils.playFx(AudioUtils._fx.button, 1, 0);
-                } else if (wnV[SKILLS.__TOOL__].trigger() === 1) {
+                } else if (skillList[SKILLS.__TOOL__].trigger() === 1) {
                     World.buildSkillList(SKILLS.__TOOL__);
                     AudioUtils.playFx(AudioUtils._fx.button, 1, 0);
-                } else if (wnV[SKILLS.__WEAPON__].trigger() === 1) {
+                } else if (skillList[SKILLS.__WEAPON__].trigger() === 1) {
                     World.buildSkillList(SKILLS.__WEAPON__);
                     AudioUtils.playFx(AudioUtils._fx.button, 1, 0);
                 } else if (craftList[AREAS.__PLAYER__].trigger() === 1) {
@@ -9765,28 +9779,28 @@ var Game = (function() {
                             }
                         }
                         if (((World.PLAYER.craftArea === AREAS.__FIRE__) || (World.PLAYER.craftArea === AREAS.__BBQ__)) || (World.PLAYER.craftArea === AREAS.__COMPOST__)) {
-                            if ((World.PLAYER.building.fuel !== 255) && (VWNWV.trigger() === 1)) {
+                            if ((World.PLAYER.building.fuel !== 255) && (BUTTON_FUEL.trigger() === 1)) {
                                 Client.sendPacket(window.JSON.stringify([24]));
                                 AudioUtils.playFx(AudioUtils._fx.button, 1, 0);
                                 return;
                             }
                         } else if (((World.PLAYER.craftArea === AREAS.__SMELTER__) || (World.PLAYER.craftArea === AREAS.__EXTRACTOR__)) || (World.PLAYER.craftArea === AREAS.__AGITATOR__)) {
-                            if ((World.PLAYER.building.fuel !== 255) && (WmWwW.trigger() === 1)) {
+                            if ((World.PLAYER.building.fuel !== 255) && (BUTTON_FUEL1.trigger() === 1)) {
                                 Client.sendPacket(window.JSON.stringify([24]));
                                 AudioUtils.playFx(AudioUtils._fx.button, 1, 0);
                                 return;
                             }
                         } else if (World.PLAYER.craftArea === AREAS.__TESLA__) {
-                            if ((World.PLAYER.building.fuel !== 255) && (WwMvM.trigger() === 1)) {
+                            if ((World.PLAYER.building.fuel !== 255) && (BUTTON_CELLS.trigger() === 1)) {
                                 Client.sendPacket(window.JSON.stringify([24]));
                                 AudioUtils.playFx(AudioUtils._fx.button, 1, 0);
                                 return;
                             }
                         }
                     }
-                    var nNMwN = craftbox.pos;
+                    var nNMwN = BACKGROUND_CRAFTBOX.pos;
                     if (((drag.begin !== 1) && !event.ctrlKey) && ((((Mouse.sx < nNMwN.x) || (Mouse.sx > (nNMwN.x + (595 * scaleby)))) || (Mouse.sy < nNMwN.y)) || (Mouse.sy > (nNMwN.y + (325 * scaleby))))) {
-                        nVN();
+                        _CloseBox();
                         AudioUtils.playFx(AudioUtils._fx.open, 1, 0);
                         return;
                     }
@@ -9802,7 +9816,7 @@ var Game = (function() {
                 }
             } else if (isTeamOpen === 1) {
                 if (World.PLAYER.team === -1) {
-                    if (((addtimbutt.trigger() === 1) && (World.PLAYER.teamNameValid === 1)) && ((window.Date.now() - World.PLAYER.teamCreateDelay) > 30500)) {
+                    if (((BUTTON_ADDTEAM.trigger() === 1) && (World.PLAYER.teamNameValid === 1)) && ((window.Date.now() - World.PLAYER.teamCreateDelay) > 30500)) {
                         Client.sendPacket(window.JSON.stringify([28, Game.teamName]));
                         AudioUtils.playFx(AudioUtils._fx.button, 1, 0);
                         World.PLAYER.teamCreateDelay = window.Date.now();
@@ -9821,19 +9835,19 @@ var Game = (function() {
                         }
                     }
                 } else if (World.PLAYER.teamLeader === 1) {
-                    if ((lockbutt.trigger() === 1) && (World.PLAYER.teamLocked === 0)) {
+                    if ((BUTTON_LOCK_TEAM.trigger() === 1) && (World.PLAYER.teamLocked === 0)) {
                         Client.sendPacket(window.JSON.stringify([33]));
                         World.PLAYER.teamLocked = 1;
                         AudioUtils.playFx(AudioUtils._fx.button, 1, 0);
                         return;
                     }
-                    if ((unlockbutt.trigger() === 1) && (World.PLAYER.teamLocked === 1)) {
+                    if ((BUTTON_UNLOCK_TEAM.trigger() === 1) && (World.PLAYER.teamLocked === 1)) {
                         Client.sendPacket(window.JSON.stringify([34]));
                         World.PLAYER.teamLocked = 0;
                         AudioUtils.playFx(AudioUtils._fx.button, 1, 0);
                         return;
                     }
-                    if (deletebutt.trigger() === 1) {
+                    if (BUTTON_DELETE.trigger() === 1) {
                         Client.sendPacket(window.JSON.stringify([29]));
                         AudioUtils.playFx(AudioUtils._fx.button, 1, 0);
                         return;
@@ -9856,7 +9870,7 @@ var Game = (function() {
                         }
                     }
                 } else {
-                    if (leavebutt.trigger() === 1) {
+                    if (BUTTON_LEAVE.trigger() === 1) {
                         Client.sendPacket(window.JSON.stringify([35, World.PLAYER.id]));
                         AudioUtils.playFx(AudioUtils._fx.button, 1, 0);
                         return;
@@ -9867,13 +9881,13 @@ var Game = (function() {
         var invtr = World.PLAYER.inventory;
         var len = invtr.length;
         var mnWNv = 0;
-        if ((len > 10) && (bagbutt.trigger() === 1)) {
-            bagbutt.open = (bagbutt.open + 1) % 2;
-            if (bagbutt.open === 1) AudioUtils.playFx(AudioUtils._fx.zipperOn, 0.08, 0);
+        if ((len > 10) && (BUTTON_BAG.trigger() === 1)) {
+            BUTTON_BAG.open = (BUTTON_BAG.open + 1) % 2;
+            if (BUTTON_BAG.open === 1) AudioUtils.playFx(AudioUtils._fx.zipperOn, 0.08, 0);
             else AudioUtils.playFx(AudioUtils._fx.zipperOff, 0.08, 0);
         }
         for (var i = 0; i < len; i++) {
-            if ((i > 9) && (bagbutt.open === 0)) break;
+            if ((i > 9) && (BUTTON_BAG.open === 0)) break;
             if (inventory[i].trigger() === 1) {
                 mnWNv = 1;
                 var IID = invtr[i][0];
@@ -9924,9 +9938,9 @@ var Game = (function() {
             }
         }
         if ((isChestOpen === 1) && (mnWNv === 0)) {
-            var NnVVw = chestbox.pos;
+            var NnVVw = BACKGROUND_CHESTBOX.pos;
             if ((((Mouse.sx < NnVVw.x) || (Mouse.sx > (NnVVw.x + (161 * scaleby)))) || (Mouse.sy < NnVVw.y)) || (Mouse.sy > (NnVVw.y + (165 * scaleby)))) {
-                nVN();
+                _CloseBox();
                 AudioUtils.playFx(AudioUtils._fx.open, 1, 0);
             }
         }
@@ -9963,11 +9977,11 @@ var Game = (function() {
             vnm = 1;
         }
         if (World.PLAYER.teamJoin !== 0) {
-            joinbutt.trigger();
-            deletebuttout.trigger();
+            BUTTON_JOIN.trigger();
+            BUTTON_DELETE2.trigger();
         }
         if (NmW === 1) {
-            closeBox.trigger();
+            BUTTON_CLOSE_BOX.trigger();
             if (isSettingsOpen === 1) {
                 VmvmN.trigger();
                 WMVVn.trigger();
@@ -9983,10 +9997,10 @@ var Game = (function() {
                 wwMwv.trigger();
             } else if (isCraftOpen === 1) {
                 if (World.PLAYER.craftCategory === -1) {
-                    if ((World.PLAYER.crafting === 0) || (World.PLAYER.isInBuilding === 1)) craftbutt.trigger();
-                    else cancelbutt.trigger();
-                } else unlockbuttout.trigger();
-                for (var i = 0; i < wnV.length; i++) wnV[i].trigger();
+                    if ((World.PLAYER.crafting === 0) || (World.PLAYER.isInBuilding === 1)) BUTTON_CRAFT.trigger();
+                    else BUTTON_CANCEL.trigger();
+                } else BUTTON_UNLOCK.trigger();
+                for (var i = 0; i < skillList.length; i++) skillList[i].trigger();
                 for (i = 0; i < craftList.length; i++) {
                     if ((World.PLAYER.buildingArea === i) || (i === 0)) craftList[i].trigger();
                 }
@@ -9999,8 +10013,8 @@ var Game = (function() {
                 }
                 if (World.PLAYER.isInBuilding === 1) {
                     for (i = 0; i < World.PLAYER.building.len; i++) queue[i].trigger();
-                    if ((((World.PLAYER.craftArea === AREAS.__FIRE__) || (World.PLAYER.craftArea === AREAS.__BBQ__)) || (World.PLAYER.craftArea === AREAS.__COMPOST__)) && (World.PLAYER.building.fuel !== 255)) VWNWV.trigger();
-                    else if ((((World.PLAYER.craftArea === AREAS.__SMELTER__) || (World.PLAYER.craftArea === AREAS.__EXTRACTOR__)) || (World.PLAYER.craftArea === AREAS.__AGITATOR__)) && (World.PLAYER.building.fuel !== 255)) WmWwW.trigger();
+                    if ((((World.PLAYER.craftArea === AREAS.__FIRE__) || (World.PLAYER.craftArea === AREAS.__BBQ__)) || (World.PLAYER.craftArea === AREAS.__COMPOST__)) && (World.PLAYER.building.fuel !== 255)) BUTTON_FUEL.trigger();
+                    else if ((((World.PLAYER.craftArea === AREAS.__SMELTER__) || (World.PLAYER.craftArea === AREAS.__EXTRACTOR__)) || (World.PLAYER.craftArea === AREAS.__AGITATOR__)) && (World.PLAYER.building.fuel !== 255)) BUTTON_FUEL1.trigger();
                 }
                 len = World.PLAYER.toolsLen;
                 for (i = 0; i < len; i++) tools[i].trigger();
@@ -10012,7 +10026,7 @@ var Game = (function() {
                 }
             } else if (isTeamOpen === 1) {
                 if (World.PLAYER.team === -1) {
-                    addtimbutt.trigger();
+                    BUTTON_ADDTEAM.trigger();
                     var j = 0;
                     for (var i = 0; i < join.length; i++) {
                         if (World.teams[i].leader !== 0) {
@@ -10021,9 +10035,9 @@ var Game = (function() {
                         }
                     }
                 } else if (World.PLAYER.teamLeader === 1) {
-                    lockbutt.trigger();
-                    unlockbutt.trigger();
-                    deletebutt.trigger();
+                    BUTTON_LOCK_TEAM.trigger();
+                    BUTTON_UNLOCK_TEAM.trigger();
+                    BUTTON_DELETE.trigger();
                     var j = 0;
                     var team = World.teams[World.PLAYER.team];
                     for (var i = 0; i < World.players.length; i++) {
@@ -10037,15 +10051,15 @@ var Game = (function() {
                             j++;
                         }
                     }
-                } else leavebutt.trigger();
+                } else BUTTON_LEAVE.trigger();
             }
         }
         var invtr = World.PLAYER.inventory;
         var len = invtr.length;
         MmV = -1;
-        if (len > 10) bagbutt.trigger();
+        if (len > 10) BUTTON_BAG.trigger();
         for (var i = 0; i < len; i++) {
-            if ((i > 9) && (bagbutt.open === 0)) break;
+            if ((i > 9) && (BUTTON_BAG.open === 0)) break;
             if (invtr[i][0] !== 0) {
                 if (inventory[i].trigger() === 1) MmV = i;
             }
@@ -10073,7 +10087,7 @@ var Game = (function() {
                         if (chatinput.value === '!new') Client.newToken(chatinput.value);
                         if (chatinput.value === '!afk') Client.sendAfk(chatinput.value);
                         if (chatinput.value === '!ls')  { if (!drawLines)   drawLines = true;  else drawLines = false; }
-                        //if (chatinput.value === '!eat') { if (!AutoEat) {AutoEat = true; AutoEatLoop()} else AutoEat = false; }
+                        if (chatinput.value === '!eat') { if (!AutoEat) {AutoEat = true; AutoEatLoop()} else AutoEat = false; }
                         else {
                             var mNvMM = chatinput.value.split('!');
                             for (var i = 1; i < mNvMM.length; i++) {
@@ -10102,12 +10116,12 @@ var Game = (function() {
         } else if (chatvisible === 0) {
             if (event.keyCode === 77) {
                 if (isMapOpen === 0) {
-                    nVN();
+                    _CloseBox();
                     NmW = 1;
                     isMapOpen = 1;
                     AudioUtils.playFx(AudioUtils._fx.open, 1, 0);
                 } else {
-                    nVN();
+                    _CloseBox();
                     AudioUtils.playFx(AudioUtils._fx.open, 1, 0);
                 }
             } else if ((event.keyCode === 69) || (event.keyCode === 32)) {
@@ -10146,18 +10160,18 @@ var Game = (function() {
                 }
             } else if ((event.keyCode === 67) && (World.PLAYER.ghoul === 0)) {
                 if (isCraftOpen === 0) {
-                    nVN();
+                    _CloseBox();
                     NmW = 1;
                     isCraftOpen = 1;
                     World.buildCraftList(AREAS.__PLAYER__);
                     AudioUtils.playFx(AudioUtils._fx.open, 1, 0);
                 } else {
                     AudioUtils.playFx(AudioUtils._fx.open, 1, 0);
-                    nVN();
+                    _CloseBox();
                 }
             } else if ((event.keyCode === 27) && (NmW === 1)) {
                 AudioUtils.playFx(AudioUtils._fx.open, 1, 0);
-                nVN();
+                _CloseBox();
             }
         }
     };
@@ -10174,7 +10188,7 @@ var Game = (function() {
         var NVN = 0;
         for (var wVV = 0; wVV < event.touches.length; wVV++) {
             Mouse.touchToMouseEvent(NWV, event, event.touches[wVV]);
-            if (bagbutt.open !== 0) {
+            if (BUTTON_BAG.open !== 0) {
                 var MVvmv = Mouse.state;
                 Mouse.updateAll(NWV, Mouse.__MOUSE_DOWN__);
                 Mouse.state = MVvmv;
@@ -10316,7 +10330,7 @@ var Game = (function() {
         var mWVWv = 0;
         for (var wVV = 0; wVV < event.touches.length; wVV++) {
             Mouse.touchToMouseEvent(NWV, event, event.touches[wVV]);
-            if (bagbutt.open !== 0) {
+            if (BUTTON_BAG.open !== 0) {
                 var invtr = World.PLAYER.inventory;
                 var NwvVw = 0;
                 for (var i = 10; i < invtr.length; i++) {
@@ -11063,7 +11077,7 @@ var Editor = (function() {
     var isSettingsOpen = 0;
     var MNnnv = 0;
     var inventoryEmpty = CanvasUtils.loadImage("img/inv-empty.png");
-    var WwvNM = [inventoryEmpty, inventoryEmpty, inventoryEmpty];
+    var inventoryEmpty2 = [inventoryEmpty, inventoryEmpty, inventoryEmpty];
     var Wnw = [];
     var NWw = 0;
 
@@ -11102,16 +11116,16 @@ var Editor = (function() {
         mnnMn(1, __ENTITIE_PLAYER__, 550, 550, 21 << 8, 0);
     };
 
-    function MVVMv(NWNVm) {
-        nVN();
+    function _OpenBox(box) {
+        _CloseBox();
         NmW = 1;
-        if (NWNVm === 1) isCraftOpen = 1;
-        else if (NWNVm === 2) isChestOpen = 1;
+        if (box === 1) isCraftOpen = 1;
+        else if (box === 2) isChestOpen = 1;
     };
 
-    function nVN() {
+    function _CloseBox() {
         NmW = 0;
-        closeBox.setState(GUI.__BUTTON_OUT__);
+        BUTTON_CLOSE_BOX.setState(GUI.__BUTTON_OUT__);
         isMapOpen       = 0;
         isSettingsOpen  = 0;
         isCraftOpen     = 0;
@@ -11120,7 +11134,7 @@ var Editor = (function() {
         World.releaseBuilding();
     };
     var nmMMm = 0;
-    var closeBox = GUI.createButton(43, 43, ["img/close-box-out.png", "img/close-box-in.png", "img/close-box-click.png"]);
+    var BUTTON_CLOSE_BOX = GUI.createButton(43, 43, ["img/close-box-out.png", "img/close-box-in.png", "img/close-box-click.png"]);
     var highpartout = [CanvasUtils.loadImage("img/high-particules-out.png"), CanvasUtils.loadImage("img/high-particules-in.png"), CanvasUtils.loadImage("img/high-particules-click.png")];
     var wVwnm = GUI.createButton(54, 42, null, highpartout);
     var vWmmV = [CanvasUtils.loadImage("img/low-particules-out.png"), CanvasUtils.loadImage("img/low-particules-in.png"), CanvasUtils.loadImage("img/low-particules-click.png")];
@@ -11336,8 +11350,8 @@ var Editor = (function() {
     var NVVNW = [];
     var vVnNn = 0;
 
-    var settingbox;
-    var bordermap;
+    var BACKGROUND_SETTBOX;
+    var BACKGROUND_BIGMAP;
     var minimap;
     var editorScreen;
     var editorOptions;
@@ -11358,10 +11372,10 @@ var Editor = (function() {
 
     function init() {
         VWWvn = GUI.renderText("Copied to clipboard", "'Viga', sans-serif", "#FFFFFF", 40, 350, "#000000", 18, 18, window.undefined, window.undefined, 0.6);
-        for (i = 0; i < 64; i++) Wnw.push(GUI.createButton(40, 40, null, WwvNM));
+        for (i = 0; i < 64; i++) Wnw.push(GUI.createButton(40, 40, null, inventoryEmpty2));
         
-        settingbox = GUI.createBackground(269, 267, "img/settings-box.png");
-        bordermap = GUI.createBackground(412, 412, "img/borderBigMinimap2.png");
+        BACKGROUND_SETTBOX = GUI.createBackground(269, 267, "img/settings-box.png");
+        BACKGROUND_BIGMAP = GUI.createBackground(412, 412, "img/borderBigMinimap2.png");
         minimap = GUI.createBackground(128, 128, "img/minimap.png");
 
         editorScreen        = GUI.createButton(40, 40,      ["img/full-screen-out.png", "img/full-screen-in.png", "img/full-screen-click.png"]);
@@ -11438,7 +11452,7 @@ var Editor = (function() {
     };
 
     function quit(wMN) {
-        nVN();
+        _CloseBox();
         AudioManager.quitGame();
         MVv = wMN;
         VVwMW();
@@ -11459,10 +11473,10 @@ var Editor = (function() {
             vMm *= transition;
             wwv *= transition;
         }
-        settingbox.pos.x = (canw2 - window.Math.floor(134 * scaleby)) + vMm;
-        settingbox.pos.y = window.Math.max(0, canh2 - window.Math.floor(133 * scaleby)) + wwv;
-        bordermap.pos.x = (canw2 - window.Math.floor(206 * scaleby)) + vMm;
-        bordermap.pos.y = window.Math.max(0, canh2 - window.Math.floor(206 * scaleby)) + wwv;
+        BACKGROUND_SETTBOX.pos.x = (canw2 - window.Math.floor(134 * scaleby)) + vMm;
+        BACKGROUND_SETTBOX.pos.y = window.Math.max(0, canh2 - window.Math.floor(133 * scaleby)) + wwv;
+        BACKGROUND_BIGMAP.pos.x = (canw2 - window.Math.floor(206 * scaleby)) + vMm;
+        BACKGROUND_BIGMAP.pos.y = window.Math.max(0, canh2 - window.Math.floor(206 * scaleby)) + wwv;
         minimap.pos.x = window.Math.floor(5 * scaleby) - vMm;
         minimap.pos.y = window.Math.floor(5 * scaleby) - wwv;
         editorScreen.pos.x      = minimap.pos.x + window.Math.floor(126 * scaleby);
@@ -11521,8 +11535,8 @@ var Editor = (function() {
         markPosition();
         wWNmN();
         if (NmW === 1) {
-            if (isMapOpen === 1) Render.bigminimap(bordermap, closeBox);
-            else if (isSettingsOpen === 1) Render.config(settingbox, wWNnw, nvwMN, MNVVn, VmvmN, WMVVn, wvNNV, WVnnn, NmVWV, vVMWm, closeBox, wVwnm, VnWMV, wwMwv);
+            if (isMapOpen === 1) Render.bigminimap(BACKGROUND_BIGMAP, BUTTON_CLOSE_BOX);
+            else if (isSettingsOpen === 1) Render.config(BACKGROUND_SETTBOX, wWNnw, nvwMN, MNVVn, VmvmN, WMVVn, wvNNV, WVnnn, NmVWV, vVMWm, BUTTON_CLOSE_BOX, wVwnm, VnWMV, wwMwv);
         } else if (isTouchScreen === 1) {
             if ((((Keyboard.isLeft() + Keyboard.isRight()) + Keyboard.isTop()) + Keyboard.isBottom()) >= 1) {
                 ctx.globalAlpha = 0.3;
@@ -11602,7 +11616,7 @@ var Editor = (function() {
         if (editorHome.trigger()        === 1)          { vnm = 1; }
 
         if (NmW === 1) {
-            closeBox.trigger();
+            BUTTON_CLOSE_BOX.trigger();
             if (isSettingsOpen === 1) {
                 VmvmN.trigger();
                 WMVVn.trigger();
@@ -11650,13 +11664,13 @@ var Editor = (function() {
         if (editorOptions.trigger() === 1) {
             vnm = 1;
             if (isSettingsOpen === 0) {
-                nVN();
+                _CloseBox();
                 NmW = 1;
                 isSettingsOpen = 1;
                 AudioUtils.playFx(AudioUtils._fx.open, 1, 0);
                 return;
             } else {
-                nVN();
+                _CloseBox();
                 AudioUtils.playFx(AudioUtils._fx.open, 1, 0);
                 return;
             }
@@ -11664,13 +11678,13 @@ var Editor = (function() {
         if (editorMap.trigger() === 1) {
             vnm = 1;
             if (isMapOpen === 0) {
-                nVN();
+                _CloseBox();
                 NmW = 1;
                 isMapOpen = 1;
                 AudioUtils.playFx(AudioUtils._fx.open, 1, 0);
                 return;
             } else {
-                nVN();
+                _CloseBox();
                 AudioUtils.playFx(AudioUtils._fx.open, 1, 0);
                 return;
             }
@@ -11785,8 +11799,8 @@ var Editor = (function() {
             AudioUtils.playFx(AudioUtils._fx.play, 1, 0);
         }
         if (NmW === 1) {
-            if (closeBox.trigger() === 1) {
-                nVN();
+            if (BUTTON_CLOSE_BOX.trigger() === 1) {
+                _CloseBox();
                 AudioUtils.playFx(AudioUtils._fx.open, 1, 0);
                 return;
             }
@@ -11852,16 +11866,16 @@ var Editor = (function() {
                     AudioUtils.playFx(AudioUtils._fx.button, 1, 0);
                     return;
                 }
-                var MMMnn = settingbox.pos;
+                var MMMnn = BACKGROUND_SETTBOX.pos;
                 if ((((Mouse.sx < MMMnn.x) || (Mouse.sx > (MMMnn.x + (234 * scaleby)))) || (Mouse.sy < MMMnn.y)) || (Mouse.sy > (MMMnn.y + (232 * scaleby)))) {
-                    nVN();
+                    _CloseBox();
                     AudioUtils.playFx(AudioUtils._fx.open, 1, 0);
                     return;
                 }
             } else if (isMapOpen === 1) {
-                var mNMnn = bordermap.pos;
+                var mNMnn = BACKGROUND_BIGMAP.pos;
                 if ((((Mouse.sx < mNMnn.x) || (Mouse.sx > (mNMnn.x + (412 * scaleby)))) || (Mouse.sy < mNMnn.y)) || (Mouse.sy > (mNMnn.y + (412 * scaleby)))) {
-                    nVN();
+                    _CloseBox();
                     AudioUtils.playFx(AudioUtils._fx.open, 1, 0);
                     return;
                 }
@@ -11872,6 +11886,7 @@ var Editor = (function() {
                     AudioUtils.playFx(AudioUtils._fx.button, 1, 0);
                     World.PLAYER.blueprint = Wnw[i].itemId;
                     World.PLAYER.furniture = Wnw[i].itemSubId;
+                    console.log(Wnw[i].itemId)
                     if (World.PLAYER.blueprint === IID.__ROAD__) World.PLAYER.buildRotate = 0;
                 }
             }
@@ -11925,7 +11940,7 @@ var Editor = (function() {
             vnm = 1;
         }
         if (NmW === 1) {
-            closeBox.trigger();
+            BUTTON_CLOSE_BOX.trigger();
             if (isSettingsOpen === 1) {
                 VmvmN.trigger();
                 WMVVn.trigger();
@@ -11949,17 +11964,17 @@ var Editor = (function() {
         Keyboard.keyup(event);
         if (event.keyCode === 77) {
             if (isMapOpen === 0) {
-                nVN();
+                _CloseBox();
                 NmW = 1;
                 isMapOpen = 1;
                 AudioUtils.playFx(AudioUtils._fx.open, 1, 0);
             } else {
-                nVN();
+                _CloseBox();
                 AudioUtils.playFx(AudioUtils._fx.open, 1, 0);
             }
         } else if ((event.keyCode === 27) && (NmW === 1)) {
             AudioUtils.playFx(AudioUtils._fx.open, 1, 0);
-            nVN();
+            _CloseBox();
         } else if (event.keyCode === 82) {
             if ((World.PLAYER.isBuilding === 1) && (World.PLAYER.blueprint !== IID.__ROAD__)) World.PLAYER.buildRotate = (World.PLAYER.buildRotate + 1) % 4;
         }
@@ -12765,7 +12780,7 @@ try {
             }
         };
         var WNmVW = 0;
-        var econtainericon = {
+        var ICON_E_FURNITURE = {
             src: "img/e-furniture.png",
             img: {
                 isLoaded: 0
@@ -12807,7 +12822,7 @@ try {
         var craftGauge = {
             isLoaded: 0
         };
-        var vvNWN = {
+        var STROKE_BONUS = {
             src: IMG_STROKE_BONUS,
             img: {
                 isLoaded: 0
@@ -13380,7 +13395,7 @@ try {
             ctx.drawImage(wmvMm[id], wX, wY, scaleby * 190, height);
         };
 
-        function _Inventory(inventoryItemNumber, inventoryAmmoNumber, MmV, bagbutt) {
+        function _Inventory(inventoryItemNumber, inventoryAmmoNumber, MmV, BUTTON_BAG) {
             //if (World.PLAYER.ghoul !== 0) return;
             var inventory = Game.inventory;
             if (inventorySlot.isLoaded !== 1) {
@@ -13397,10 +13412,10 @@ try {
             var wY = _y;
             var MVM = (5 * scaleby) + width;
             if (len > 10) {
-                bagbutt.pos.x = canw - (69 * scaleby);
-                bagbutt.pos.y = canh - (68 * scaleby);
-                bagbutt.draw();
-                if (bagbutt.open === 0) len = 10;
+                BUTTON_BAG.pos.x = canw - (69 * scaleby);
+                BUTTON_BAG.pos.y = canh - (68 * scaleby);
+                BUTTON_BAG.draw();
+                if (BUTTON_BAG.open === 0) len = 10;
             }
             for (var i = 0; i < len; i++) {
                 var wm = inventory[i];
@@ -13410,11 +13425,11 @@ try {
                     ctx.drawImage(inventorySlot, wX, wY, width, height);
                 } else _buttonInv(wm, invtr[i], wX, wY, inventoryItemNumber, inventoryAmmoNumber);
                 if (i === 9) {
-                    wX = bagbutt.pos.x - (5 * scaleby);
-                    wY = bagbutt.pos.y - MVM;
+                    wX = BUTTON_BAG.pos.x - (5 * scaleby);
+                    wY = BUTTON_BAG.pos.y - MVM;
                 } else if (i === 12) {
                     wX -= MVM;
-                    wY = bagbutt.pos.y - MVM;
+                    wY = BUTTON_BAG.pos.y - MVM;
                 } else if (i > 9) wY -= MVM;
                 else wX += MVM;
             }
@@ -13431,8 +13446,8 @@ try {
                 }
             } else if ((MmV !== -1) && (invtr[MmV][0] !== 0)) {
                 if (MmV < 10) NMMwN(invtr[MmV][0], _x + (MVM * MmV), _y - (79 * scaleby));
-                else if (MmV < 13) NMMwN(invtr[MmV][0], bagbutt.pos.x - (200 * scaleby), bagbutt.pos.y + (MVM * (-1 + ((10 - MmV) % 3))));
-                else NMMwN(invtr[MmV][0], (bagbutt.pos.x - (200 * scaleby)) - MVM, bagbutt.pos.y + (MVM * (-1 + ((10 - MmV) % 3))));
+                else if (MmV < 13) NMMwN(invtr[MmV][0], BUTTON_BAG.pos.x - (200 * scaleby), BUTTON_BAG.pos.y + (MVM * (-1 + ((10 - MmV) % 3))));
+                else NMMwN(invtr[MmV][0], (BUTTON_BAG.pos.x - (200 * scaleby)) - MVM, BUTTON_BAG.pos.y + (MVM * (-1 + ((10 - MmV) % 3))));
             }
         };
 
@@ -13550,7 +13565,7 @@ try {
         };
 
 
-        function _BigMinimap(map, closeBox) {   
+        function _BigMinimap(map, BUTTON_CLOSE_BOX) {   
 
             var width       = Width_410 * scaleby;
             var height      = Height_410 * scaleby;
@@ -13560,8 +13575,8 @@ try {
             var wY_Scale    = wY / scaleby;
             var mvMnV       = Width_410 / worldWidthFull;
             var _buttonInv  = Height_410 / worldHeightFull;
-            closeBox.pos.x  = window.Math.floor((wX + width) + (0 * scaleby));
-            closeBox.pos.y  = window.Math.floor(wY + (0 * scaleby));
+            BUTTON_CLOSE_BOX.pos.x  = window.Math.floor((wX + width) + (0 * scaleby));
+            BUTTON_CLOSE_BOX.pos.y  = window.Math.floor(wY + (0 * scaleby));
             map.draw();
 
             var cities = World.PLAYER.cities;
@@ -13586,7 +13601,7 @@ try {
                 ctx.globalAlpha = 1;
             }
             
-            closeBox.draw();
+            BUTTON_CLOSE_BOX.draw();
 
             if ((World.PLAYER.team !== -1) || (World.PLAYER.ghoul !== 0) && (World.playerAlive < 6)) {
                 var players = Entitie.units[__ENTITIE_PLAYER__];
@@ -13815,7 +13830,7 @@ try {
         var teamName = "";
         var nNmVw = null;
 
-        function _Team(closeBox, VWwmm, mMnVm, wwVMn, NnvmN, mvNMv, WvvvV, deleteTeam) {
+        function _Team(BUTTON_CLOSE_BOX, VWwmm, mMnVm, wwVMn, NnvmN, mvNMv, WvvvV, deleteTeam) {
             var wX = 0;
             var wY = 0;
             if (World.PLAYER.team === -1) {
@@ -13833,8 +13848,8 @@ try {
                 wX = VWwmm.pos.x;
                 wY = VWwmm.pos.y;
                 VWwmm.draw();
-                closeBox.pos.x = wX + (513 * scaleby);
-                closeBox.pos.y = wY + (2 * scaleby);
+                BUTTON_CLOSE_BOX.pos.x = wX + (513 * scaleby);
+                BUTTON_CLOSE_BOX.pos.y = wY + (2 * scaleby);
                 if (teamName !== Game.teamName) {
                     teamName = Game.teamName;
                     nNmVw = GUI.renderText(teamName, "'Viga', sans-serif", "#FFFFFF", 30, 400);
@@ -13875,8 +13890,8 @@ try {
                 if (team.label === null) team.label = GUI.renderText(team.name, "'Viga', sans-serif", "#FFFFFF", 30, 400);
                 ctx.drawImage(team.label, wX + (144 * scaleby), wY + (13 * scaleby), team.label.wh * scaleby, team.label.h2 * scaleby);
                 mMnVm.draw();
-                closeBox.pos.x = wX + (512 * scaleby);
-                closeBox.pos.y = wY + (34.5 * scaleby);
+                BUTTON_CLOSE_BOX.pos.x = wX + (512 * scaleby);
+                BUTTON_CLOSE_BOX.pos.y = wY + (34.5 * scaleby);
                 if (World.PLAYER.teamLeader === 1) {
                     if (World.PLAYER.teamLocked === 0) {
                         mvNMv.pos.x = wX + (259 * scaleby);
@@ -13921,17 +13936,17 @@ try {
                     }
                 }
             }
-            closeBox.draw();
+            BUTTON_CLOSE_BOX.draw();
         };
 
-        function _Chest(chestbox, closeBox, inventoryItemNumber, inventoryAmmoNumber) {
-            chestbox.draw();
-            var wX = chestbox.pos.x;
-            var wY = chestbox.pos.y;
+        function _Chest(BACKGROUND_CHESTBOX, BUTTON_CLOSE_BOX, inventoryItemNumber, inventoryAmmoNumber) {
+            BACKGROUND_CHESTBOX.draw();
+            var wX = BACKGROUND_CHESTBOX.pos.x;
+            var wY = BACKGROUND_CHESTBOX.pos.y;
 
-            closeBox.pos.x = wX + (161 * scaleby);
-            closeBox.pos.y = wY + (0 * scaleby);
-            closeBox.draw();
+            BUTTON_CLOSE_BOX.pos.x = wX + (161 * scaleby);
+            BUTTON_CLOSE_BOX.pos.y = wY + (0 * scaleby);
+            BUTTON_CLOSE_BOX.draw();
 
             var chest = World.PLAYER.chest;
             var _x;
@@ -13996,21 +14011,21 @@ try {
             }
         };
 
-        function _Craft(craftbox, closeBox, wnV, NwnNV, VvvwN, nvmnM, craftList, preview, inventoryItemNumber, inventoryAmmoNumber, VWNWV, WmWwW, WwMvM, NWmNn) {
-            craftbox.draw();
-            var wX = craftbox.pos.x;
-            var wY = craftbox.pos.y;
+        function _Craft(BACKGROUND_CRAFTBOX, BUTTON_CLOSE_BOX, skillList, NwnNV, VvvwN, nvmnM, craftList, preview, inventoryItemNumber, inventoryAmmoNumber, BUTTON_FUEL, BUTTON_FUEL1, BUTTON_CELLS, NWmNn) {
+            BACKGROUND_CRAFTBOX.draw();
+            var wX = BACKGROUND_CRAFTBOX.pos.x;
+            var wY = BACKGROUND_CRAFTBOX.pos.y;
             var wX_Scale = wX / scaleby;
             var wY_Scale = wY / scaleby;
-            closeBox.pos.x = wX + (594 * scaleby);
-            closeBox.pos.y = wY + (0 * scaleby);
-            closeBox.draw();
+            BUTTON_CLOSE_BOX.pos.x = wX + (594 * scaleby);
+            BUTTON_CLOSE_BOX.pos.y = wY + (0 * scaleby);
+            BUTTON_CLOSE_BOX.draw();
             var craftAvailable = World.PLAYER.craftAvailable;
             var recipeAvailable = World.PLAYER.recipeAvailable;
             var category = World.PLAYER.craftCategory;
             var area = World.PLAYER.craftArea;
-            for (var i = 0; i < wnV.length; i++) {
-                var wm = wnV[i];
+            for (var i = 0; i < skillList.length; i++) {
+                var wm = skillList[i];
                 if (i === category) wm.setState(GUI.__BUTTON_CLICK__);
                 wm.pos.x = ((10 * scaleby) + wX) + ((i * 47) * scaleby);
                 wm.pos.y = wY - (40 * scaleby);
@@ -14060,7 +14075,7 @@ try {
                     wm.draw();
                 } else {
                     ctx.globalAlpha = 0.6;
-                    CanvasUtils.drawImageHd(vvNWN, (wm.pos.x / scaleby) + 24.5, (wm.pos.y / scaleby) + 24.5, 0, 0, 0, breath);
+                    CanvasUtils.drawImageHd(STROKE_BONUS, (wm.pos.x / scaleby) + 24.5, (wm.pos.y / scaleby) + 24.5, 0, 0, 0, breath);
                     ctx.globalAlpha = 1;
                     wm.draw();
                 }
@@ -14160,9 +14175,9 @@ try {
                 var amount = World.PLAYER.building.fuel;
                 if (amount >= 0) {
                     var wm;
-                    if (((area === AREAS.__SMELTER__) || (area === AREAS.__EXTRACTOR__)) || (area === AREAS.__AGITATOR__)) wm = WmWwW;
-                    else if (area === AREAS.__TESLA__) wm = WwMvM;
-                    else wm = VWNWV;
+                    if (((area === AREAS.__SMELTER__) || (area === AREAS.__EXTRACTOR__)) || (area === AREAS.__AGITATOR__)) wm = BUTTON_FUEL1;
+                    else if (area === AREAS.__TESLA__) wm = BUTTON_CELLS;
+                    else wm = BUTTON_FUEL;
                     wm.pos.x = wX + (532 * scaleby);
                     wm.pos.y = wY + (153 * scaleby);
                     if (World.PLAYER.building.fuel !== 255) wm.draw();
@@ -14193,12 +14208,12 @@ try {
                     if (i === WMnmM) {
                         if (Nnv !== 0) {
                             ctx.globalAlpha = 0.6;
-                            CanvasUtils.drawImageHd(vvNWN, (wm.pos.x / scaleby) + 20, (wm.pos.y / scaleby) + 20, 0, 0, 0, 0.85 * window.Math.max(0.01, window.Math.min(1, Nnv)));
+                            CanvasUtils.drawImageHd(STROKE_BONUS, (wm.pos.x / scaleby) + 20, (wm.pos.y / scaleby) + 20, 0, 0, 0, 0.85 * window.Math.max(0.01, window.Math.min(1, Nnv)));
                             ctx.globalAlpha = 1;
                         }
                     } else if (i < WMnmM) {
                         ctx.globalAlpha = 0.6;
-                        CanvasUtils.drawImageHd(vvNWN, (wm.pos.x / scaleby) + 20, (wm.pos.y / scaleby) + 20, 0, 0, 0, breath * 0.85);
+                        CanvasUtils.drawImageHd(STROKE_BONUS, (wm.pos.x / scaleby) + 20, (wm.pos.y / scaleby) + 20, 0, 0, 0, breath * 0.85);
                         ctx.globalAlpha = 1;
                     }
                     wm.pos.x = (mnMmm + wX) + (i * MVM);
@@ -14237,7 +14252,7 @@ try {
                 if (wvV.move < 500) _y += -62 - (15 * MathUtils.Ease.inOutQuad(move / 500));
                 else _y += -62 - (15 * MathUtils.Ease.inOutQuad((1000 - move) / 500));
                 ctx.globalAlpha = MathUtils.Ease.inQuad(wvV.effect);
-                CanvasUtils.drawImageHd(wvV, 266 + (craftbox.pos.x / scaleby), _y, 0, 0, 0, 1);
+                CanvasUtils.drawImageHd(wvV, 266 + (BACKGROUND_CRAFTBOX.pos.x / scaleby), _y, 0, 0, 0, 1);
                 ctx.globalAlpha = 1;
                 if (World.PLAYER.skillPoint <= 0) wvV.effect = window.Math.max(0, wvV.effect - (delta / 500));
                 else if (wvV.effect < 1) wvV.effect = window.Math.min(1, wvV.effect + (delta / 500));
@@ -14273,13 +14288,13 @@ try {
             }
         };
 
-        function _Config(WWmVM, nmvnW, wMMmv, NNWVW, nMmMw, vNVNN, wvmWv, WmWnm, VNNMW, NVVwW, closeBox, WVVMw, vnNWN, MnvNV) {
+        function _Config(WWmVM, nmvnW, wMMmv, NNWVW, nMmMw, vNVNN, wvmWv, WmWnm, VNNMW, NVVwW, BUTTON_CLOSE_BOX, WVVMw, vnNWN, MnvNV) {
             WWmVM.draw();
             var wX = WWmVM.pos.x;
             var wY = WWmVM.pos.y;
-            closeBox.pos.x = wX + (265 * scaleby);
-            closeBox.pos.y = wY + (0 * scaleby);
-            closeBox.draw();
+            BUTTON_CLOSE_BOX.pos.x = wX + (265 * scaleby);
+            BUTTON_CLOSE_BOX.pos.y = wY + (0 * scaleby);
+            BUTTON_CLOSE_BOX.draw();
             nMmMw.pos.x = wX + (87 * scaleby);
             nMmMw.pos.y = wY + (15 * scaleby);
             if (Keyboard.isAzerty() === 1) nMmMw.setState(GUI.__BUTTON_CLICK__);
@@ -15895,7 +15910,7 @@ try {
             var objects = INVENTORY[item.id].subtype[player.subtype];
             if (inuse === 1) player.hit = window.Math.min(500, player.hit + delta);
             else if (player.hit > 0) player.hit = window.Math.max(0, player.hit - delta);
-            if (((inuse === 0) && (objects.usable === 1)) && (nearme(objects, player, 0) === 1)) World.PLAYER.eInteract = econtainericon;
+            if (((inuse === 0) && (objects.usable === 1)) && (nearme(objects, player, 0) === 1)) World.PLAYER.eInteract = ICON_E_FURNITURE;
             CanvasUtils.drawImageHd(objects.building, (vertst + player.x) + wX, (horist + player.y) + wY, Rot * PIby2, 0, 0, imgMovement);
             if (player.hit > 0) containeropenic(player, wX, wY);
         };
@@ -16369,6 +16384,14 @@ try {
         };
         
         function _Loots(loot) {
+            var LootList = {
+                wood: false,
+                stone: false
+            };
+            var LootNametoID = {
+                wood: 2,
+                stone: 15
+            };
             matrix[loot.i][loot.j].tile = frameId;
             matrix[loot.i][loot.j].tilePid = loot.pid;
             matrix[loot.i][loot.j].category = window.undefined;
@@ -16878,6 +16901,108 @@ function _CheckMyPlayer(player) {
         inhandID    = (player.extra >> 8) & 255;
         weapon      = ent.weapons[inhandID];
         myplayerhit = player.hit;
+    }
+}
+
+function _AutoEat() {
+
+    /* TODO / PROBLEMS
+    ----------------------------------------------------------------
+    1. Sometimes eat 2 times, or not eat first time - CRITICAL
+    2. If food near perish then hungry level up - TO ADD
+    3. Check if I indeed send message(or somehow else) for both eat and equip food - GOOD TO BE
+    ----------------------------------------------------------------
+    */
+
+    var food = {
+        orange:     12,
+        tomato:     77,
+        mushrom:    120,
+        mushrom2:   121,
+        steak:      10,
+        tomatosoup: 72,
+        chips:      87,
+        soda:       39
+    };
+    var hungryValue     = World.gauges.food.value;
+    var hungryLevel     = World.gauges.food.current;
+    var invtr           = World.PLAYER.inventory;
+    var lock            = true;
+    var FoodInHand      = 0;
+    var Timeout         = World.PLAYER.interactionDelay
+    var FoundFoodInventory = false;
+    Timeout -= delta
+    if ((Timeout <= 0) && (World.PLAYER.interaction === -1)) lock = false;
+    if((weapon.consumable != 1) || (weapon.heal < -1) || (weapon.food <= 0)) FoodInHand = 0; else FoodInHand = 1;
+
+    if (hungryLevel < setHungryLevel) {
+        if (!lock) {
+
+            if(FoodInHand === 0) {
+                _CheckInvForFood();
+            } else _Eat_Food();
+
+        }
+    } else console.log('AutoEat -> : not_hungry! :');
+
+    var IID, amount, itemID, extra;
+    function _CheckInvForFood() {
+    
+        for (var i = 0; i < invtr.length; i++) {
+            if ((invtr[i][0] === food.orange) || (invtr[i][0] === food.tomato) || (invtr[i][0] === food.mushrom) || (invtr[i][0] === food.mushrom2) || (invtr[i][0] === food.steak) || (invtr[i][0] === food.tomatosoup) || (invtr[i][0] === food.chips) || (invtr[i][0] === food.soda)) {
+                IID     = invtr[i][0];
+                amount  = invtr[i][1];
+                itemID  = invtr[i][2];
+                extra   = invtr[i][3];
+            }
+        };
+
+        if ((IID != null) || (amount != null) || (itemID != null) || (extra != null)) FoundFoodInventory = true; else FoundFoodInventory = false;
+
+        if (!lock) {
+            if (FoundFoodInventory) {
+                _Equip_Food(IID, amount, itemID, extra);
+            } else _No_Food();
+        }
+    
+    };
+
+    function _Equip_Food(IID, amount, itemID, extra) {
+        if (!lock) {
+            if (FoundFoodInventory) {
+                Client.sendPacket(window.JSON.stringify([8, IID, amount, itemID, extra]));
+                console.log('AutoEat -> : equip_food! :')
+            } else _No_Food();
+        }
+    };
+
+    function _Eat_Food() {
+        if (!lock) {
+            Client.sendMouseDown(); 
+            Client.sendMouseUp()
+            console.log('AutoEat -> : eat_food! :')
+        }
+    
+    };
+
+    function _No_Food() {
+            console.log('AutoEat -> : FOOD NOT FOUND! :')
+    };
+
+    if (myplayerhit !== 0) Client.sendMouseUp(); // Make sure we ain't hitting nobody, intrusive of gameplay
+};
+
+var i = 1;
+if (AutoEat) AutoEatLoop();
+function AutoEatLoop() {
+    if (AutoEat === true) {
+        setTimeout(function() {
+            _AutoEat();
+            i++;
+            if (i < Infinity) {
+                AutoEatLoop();
+            }
+        }, 1000)
     }
 }
 
