@@ -16422,9 +16422,9 @@ try {
                 var dist = Math2d.fastDist(NmM, WWV, loot.x, loot.y);
                 if (dist < wMVMm) {
 
-                    if (AutoLoot) {
-                        Client.sendPacket(window.JSON.stringify([12, loot.id]))
-                    }
+                    //if (AutoLoot) {
+                    //    Client.sendPacket(window.JSON.stringify([12, loot.id]))
+                    //}
 
                     wMVMm = dist;
                     World.PLAYER.loot = loot.extra;
