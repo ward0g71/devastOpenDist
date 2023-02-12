@@ -42895,5 +42895,5 @@ window.onbeforeunload = function() {
 };
 waitHTMLAndRun();
 
-//var noDebug = window.console;
-//noDebug.log = noDebug.info = noDebug.error = noDebug.warn = noDebug.debug = noDebug.NWVnW = noDebug.trace = noDebug.time = noDebug.timeEnd = function() {};
+var noDebug = window.console;
+noDebug.log = noDebug.info = noDebug.error = noDebug.warn = noDebug.debug = noDebug.NWVnW = noDebug.trace = noDebug.time = noDebug.timeEnd = function() {};
