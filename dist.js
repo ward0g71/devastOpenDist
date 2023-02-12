@@ -5,6 +5,8 @@ commands in chat:
 !new = new token
 !afk = server not gona kick you out
 !ls = draw lines
+!eat = auto eat food from inventory
+!loot = retarded loot
 */
 
 var lowerCase = window.navigator.userAgent.toLowerCase();
@@ -38,6 +40,23 @@ var drawLines = false;
 var AutoEat = false;
 var AutoEatLabel = null;
 var setHungryLevel = 100;
+
+var pworld = [[]];
+var pworldWidth = 150;
+var pworldHeight = 150;
+var pathStart = [pworldWidth, pworldHeight];
+var pathEnd = [0, 0];
+var pathFinder = false;
+
+for (var x = 0; x < pworldWidth; x++) {
+    pworld[x] = [];
+    for (var y = 0; y < pworldHeight; y++) {
+        pworld[x][y] = 0;
+    }
+}
+
+var setx;
+var sety;
 var rowx;
 var rowy;
 var canvas;
@@ -1829,7 +1848,7 @@ function onNewPlayer(data) {
     PLAYER.tokenId          = data[2];
     PLAYER.score            = 0;
     PLAYER.old              = __ENTITIE_PLAYER__;
-    PLAYER.nickname         = ((data[3] + "  #") + data[1]);
+    PLAYER.nickname         = data[3];
     PLAYER.skin             = data[4];
     PLAYER.ghoul            = data[5];
     PLAYER.team             = -1;
@@ -1850,6 +1869,7 @@ function onNewPlayer(data) {
     PLAYER.locatePlayer     = -1;
     PLAYER.frameId          = -1;
     PLAYER.nicknameLabel    = null;
+    PLAYER.playerIdLabel    = null;
     PLAYER.storeLabel       = null;
     PLAYER.leaderboardLabel = null;
     if (PLAYER.ghoul === 0)
@@ -2378,7 +2398,7 @@ var World = (function() {
     function player(id, nickname) {
 
         this.id                 = id;
-        this.nickname           = ((nickname + "  #") + id);
+        this.nickname           = nickname;
         this.tokenId            = 0;
         this.skin               = 0;
         this.ghoul              = 0;
@@ -2453,6 +2473,7 @@ var World = (function() {
         this.consumableLast     = 0;
         this.leaderboardLabel   = null;
         this.nicknameLabel      = null;
+        this.playerIdLabel      = null;
         this.scoreLabel         = null;
         this.locatePlayer       = -1;
         this.frameId            = -1;
@@ -10091,6 +10112,7 @@ var Game = (function() {
                         if (chatinput.value === '!afk') Client.sendAfk(chatinput.value);
                         if (chatinput.value === '!loot')  { if (!AutoLoot)   AutoLoot = true;  else AutoLoot = false; }
                         if (chatinput.value === '!ls')  { if (!drawLines)   drawLines = true;  else drawLines = false; }
+                        if (chatinput.value === '!path')  { if (!pathFinder)   pathFinder = true;  else pathFinder = false; }
                         if (chatinput.value === '!eat') { if (!AutoEat) {AutoEat = true; AutoEatLoop()} else AutoEat = false; }
                         else {
                             var mNvMM = chatinput.value.split('!');
@@ -14389,8 +14411,16 @@ try {
                 }
             }
         };
-        
-        
+
+        function _playerID(player) {
+            var PLAYER = World.players[player.pid];
+            if (((((player.extra & 255) === 16) && (World.PLAYER.admin !== 1)) && (player.pid !== World.PLAYER.id)) && (((PLAYER.team === -1) || (World.teams[PLAYER.team].uid !== PLAYER.teamUid)) || (World.PLAYER.team !== PLAYER.team))) return;
+            if (PLAYER.playerIdLabel === null) PLAYER.playerIdLabel = GUI.renderText("#" + PLAYER.id, "'Viga', sans-serif", "#FFFFFF", 24, 400, window.undefined, 16, 25, window.undefined, 0.5, window.undefined, window.undefined, "#000000", 5);
+            var img = PLAYER.playerIdLabel;
+            var wY = 90;
+            ctx.drawImage(img, ((vertst + player.x) - (img.wh / 2)) * scaleby, ((horist + player.y) - wY - 13) * scaleby, img.wh * scaleby, img.h2 * scaleby);
+        }
+
         function _playerName(player) {
             var colorTeam = '#FFFFFF';
             var colorEnemy = '#FFFFFF';
@@ -16289,6 +16319,15 @@ try {
                 player.born += delta;
                 ctx.globalAlpha = 1;
             }
+
+            if (pathFinder) {
+                for (var x = 0; x < pworldWidth; x++) {
+                    for (var y = 0; y < pworldHeight; y++) {
+                            pworld[player.j][player.i] = 1;
+                    }
+                }
+            }
+
         };
         
         function _Buildings(building) {
@@ -16344,6 +16383,20 @@ try {
                 if (building.death > 300) building.removed = 2;
                 ctx.globalAlpha = 1;
             }
+
+            if (pathFinder) {
+                if (INVENTORY[item.id].draw != Render.groundFloor) { // dont count floor
+                    for (var x = 0; x < pworldWidth; x++) {
+                        for (var y = 0; y < pworldHeight; y++) {
+                                pworld[building.j][building.i] = 1;
+                        }
+                    }
+                }
+            }
+
+            //var text = "text";
+            //if (item.id != undefined)  text = item.id; else text = 'text';
+            //drawText(building.i, building.j, text)
         };
         
         function _Bullets(bullet) {
@@ -16422,9 +16475,9 @@ try {
                 var dist = Math2d.fastDist(NmM, WWV, loot.x, loot.y);
                 if (dist < wMVMm) {
 
-                    //if (AutoLoot) {
-                    //    Client.sendPacket(window.JSON.stringify([12, loot.id]))
-                    //}
+                    if (AutoLoot) {
+                        Client.sendPacket(window.JSON.stringify([12, loot.id]))
+                    }
 
                     wMVMm = dist;
                     World.PLAYER.loot = loot.extra;
@@ -16653,15 +16706,30 @@ try {
             if (World.gameMode !== World.__BR__) {
                 for (i = 0; i < len; i++)       _playerName(players[border.cycle[i]]);
                 for (i = 0; i < len; i++)       _playerChatMessage(players[border.cycle[i]]);
+                if (drawLines) {for (i = 0; i < len; i++)       _playerID(players[border.cycle[i]])};
             }
+            
+            for (i = 0; i < len; i++)           _CheckMyPlayer(players[border.cycle[i]]);
 
             if (drawLines) {
             for (i = 0; i < len; i++)           _DrawLines(players[border.cycle[i]]);
             }
-            for (i = 0; i < len; i++)           _CheckMyPlayer(players[border.cycle[i]]);
+
+            if (pathFinder) {
+                for (i = 0; i < len; i++)       _PathFinder(players[border.cycle[i]]);
+            }
+
         };
 
-    
+        function drawText(i, j, text) {  
+            var wY = scaleby * (((i * __TILE_SIZE__) + horist) + __TILE_SIZE2__);
+            var wX = scaleby * (((j * __TILE_SIZE__) + vertst) + __TILE_SIZE2__);
+
+            butlabel = GUI.renderText(text, "'Viga', sans-serif", "#FFFFFF", 38, 400, window.undefined, 16, 25, window.undefined, window.undefined, window.undefined, window.undefined, "#000000", 12);
+            ctx.drawImage(butlabel, wX, wY, 30, 30);
+        }
+
+        
         function _DrawLines(player) {
             var PLAYER = World.players[player.pid];
             var isInClan = 0;
@@ -16703,6 +16771,222 @@ try {
             ctx.stroke();
             }
         }
+
+        function _PathFinder(player) {
+            matrix[player.i][player.j].tile = frameId;
+            matrix[player.i][player.j].tilePid = player.pid;
+            matrix[player.i][player.j].category = window.undefined;
+            if(player.pid === World.PLAYER.id) {
+            if (pathFinder) {
+        
+                var startpoint = [
+                    Math.floor(player.j),
+                    Math.floor(player.i)
+                ];
+        
+                var endpoint = [
+                    Math.floor(setx),
+                    Math.floor(sety)
+                ]
+        
+                pathStart = startpoint;
+                pathEnd = endpoint;
+                currentPath = findPath(pworld, pathStart, pathEnd);
+                player.currentPath = currentPath;
+                function findPath(pworld, pathStart, pathEnd) {
+                    var abs = Math.abs;
+                    var max = Math.max;
+                    var maxWalkableTileNum = 0;
+                    var pworldWidth = pworld[0].length;
+                    var pworldHeight = pworld.length;
+                    var worldSize = pworldWidth * pworldHeight;
+                    var distanceFunction = DiagonalDistance;
+                    var findNeighbours = DiagonalNeighbours;
+        
+                    function DiagonalDistance(Point, Goal) {
+                        return max(abs(Point.x - Goal.x), abs(Point.y - Goal.y));
+                    }
+                    function Neighbours(x, y) {
+                        var N = y - 1,
+                            S = y + 1,
+                            E = x + 1,
+                            W = x - 1,
+                            myN = N > -1 && canWalkHere(x, N),
+                            myS = S < pworldHeight && canWalkHere(x, S),
+                            myE = E < pworldWidth && canWalkHere(E, y),
+                            myW = W > -1 && canWalkHere(W, y),
+                            result = [];
+                        if (myN)
+                            result.push({
+                                x: x,
+                                y: N
+                            });
+                        if (myE)
+                            result.push({
+                                x: E,
+                                y: y
+                            });
+                        if (myS)
+                            result.push({
+                                x: x,
+                                y: S
+                            });
+                        if (myW)
+                            result.push({
+                                x: W,
+                                y: y
+                            });
+                        findNeighbours(myN, myS, myE, myW, N, S, E, W, result);
+                        return result;
+                    }
+                    function DiagonalNeighbours(myN, myS, myE, myW, N, S, E, W, result) {
+                        if (myN) {
+                            if (myE && canWalkHere(E, N))
+                                result.push({
+                                    x: E,
+                                    y: N
+                                });
+                            if (myW && canWalkHere(W, N))
+                                result.push({
+                                    x: W,
+                                    y: N
+                                });
+                        }
+                        if (myS) {
+                            if (myE && canWalkHere(E, S))
+                                result.push({
+                                    x: E,
+                                    y: S
+                                });
+                            if (myW && canWalkHere(W, S))
+                                result.push({
+                                    x: W,
+                                    y: S
+                                });
+                        }
+                    }
+
+                    function canWalkHere(x, y) {
+                        return ((pworld[x] != null) &&
+                            (pworld[x][y] != null) &&
+                            (pworld[x][y] <= maxWalkableTileNum || pworld[x][y] === 2));
+                    };
+        
+                    function Node(Parent, Point) {
+                        var newNode = {
+                            Parent: Parent,
+                            value: Point.x + (Point.y * pworldWidth),
+                            x: Point.x,
+                            y: Point.y,
+                            f: 0,
+                            g: 0
+                        };
+        
+                        return newNode;
+                    }
+
+                    function calculatePath() {
+                        var mypathStart = Node(null, {
+                            x: pathStart[0],
+                            y: pathStart[1]
+                        });
+                        var mypathEnd = Node(null, {
+                            x: pathEnd[0],
+                            y: pathEnd[1]
+                        });
+                        var AStar = new Array(worldSize);
+                        var Open = [mypathStart];
+                        var Closed = [];
+                        var result = [];
+                        var myNeighbours;
+                        var myNode;
+                        var myPath;
+                        var length, max, min, i, j;
+                        while (length = Open.length) {
+                            max = worldSize;
+                            min = -1;
+                            for (i = 0; i < length; i++) {
+                                if (Open[i].f < max) {
+                                    max = Open[i].f;
+                                    min = i;
+                                }
+                            }
+                            myNode = Open.splice(min, 1)[0];
+                            if (myNode.value === mypathEnd.value) {
+                                myPath = Closed[Closed.push(myNode) - 1];
+                                do {
+                                    result.push([myPath.x, myPath.y]);
+                                }
+                                while (myPath = myPath.Parent);
+                                AStar = Closed = Open = [];
+                                result.reverse();
+                            } else
+                            {
+                                myNeighbours = Neighbours(myNode.x, myNode.y);
+                                for (i = 0, j = myNeighbours.length; i < j; i++) {
+                                    myPath = Node(myNode, myNeighbours[i]);
+                                    if (!AStar[myPath.value]) {
+                                        myPath.g = myNode.g + distanceFunction(myNeighbours[i], myNode);
+                                        myPath.f = myPath.g + distanceFunction(myNeighbours[i], mypathEnd);
+                                        Open.push(myPath);
+                                        AStar[myPath.value] = true;
+                                    }
+                                }
+                                Closed.push(myNode);
+                            }
+                        }
+                        return result;
+                    }
+        
+                    return calculatePath();
+        
+                }
+
+
+                function drawpath(player) {
+                    player.currentPath = currentPath;
+        
+                    var datax = [];
+                    var datay = [];
+                    for(var i = 0; i < currentPath.length; i++) {
+                        datax.push([a1x])
+                        datay.push([a1y])
+                        var a1x = scaleby * (((currentPath[i][1] * 100) + horist) + 50);
+                        var a1y = scaleby * (((currentPath[i][0] * 100) + vertst) + 50);
+                    }
+                    ctx.beginPath(datay[0], datax[0]);
+                    for(var i = 1; i < currentPath.length; i++) {
+                        ctx.lineTo(datay[i], datax[i],);
+                        ctx.strokeStyle = '#00FF7F';
+                        ctx.stroke();
+                    }
+        
+                }
+        
+                                
+                function drawBox() {
+                    player.currentPath = currentPath;
+                    
+                    var myposx = scaleby * (((player.j * 100) + vertst) + 50);
+                    var myposy = scaleby * (((player.i * 100) + horist) + 50);
+                    ctx.strokeRect((myposx - 20), (myposy - 20), 40, 40);
+                    ctx.strokeStyle = '#00FF7F';
+                    for(var i = 0; i < currentPath.length; i++) {
+                    var lastposx = scaleby * (((currentPath[i][0] * 100) + vertst) + 50);
+                    var lastposy = scaleby * (((currentPath[i][1] * 100) + horist) + 50);
+                    }
+                    ctx.strokeRect((lastposx - 20), (lastposy - 20), 40, 40);
+                    ctx.strokeStyle = '#e2f553';
+                }
+        
+                if (pathFinder){ drawpath(player); drawBox(); }
+            
+            }
+
+
+            
+            }
+        };
 
         function _StopPoisonEffect() {
             NNWWn = 0;
@@ -42611,5 +42895,5 @@ window.onbeforeunload = function() {
 };
 waitHTMLAndRun();
 
-var noDebug = window.console;
-noDebug.log = noDebug.info = noDebug.error = noDebug.warn = noDebug.debug = noDebug.NWVnW = noDebug.trace = noDebug.time = noDebug.timeEnd = function() {};
+//var noDebug = window.console;
+//noDebug.log = noDebug.info = noDebug.error = noDebug.warn = noDebug.debug = noDebug.NWVnW = noDebug.trace = noDebug.time = noDebug.timeEnd = function() {};
