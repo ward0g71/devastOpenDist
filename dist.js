@@ -36,10 +36,12 @@ try {
 
 var AutoLoot = false;
 var AutoLootLabel = null;
-var drawLines = false;
+
 var AutoEat = false;
 var AutoEatLabel = null;
 var setHungryLevel = 100;
+
+var drawLines = false;
 
 var pworld = [[]];
 var pworldWidth = 150;
@@ -500,6 +502,7 @@ var CanvasUtils = (function() {
         loadImageContainer:     loadImageContainer
     };
 })();
+
 var Math2d = (function() {
     function angle(ax, ay, Nnvnw, NVNwW) {
         var WWNwv = NVNwW - ay;
@@ -946,21 +949,21 @@ function onUnits(data, ui8) {
             var UNIT        = null;
             var pid         = ui8[isRef8];
             var uid         = ui8[isRef8 + 1];
-            var vV          = ui8[isRef8 + 3];
-            var state         = ui16[isRef16 + 2];
+            var type        = ui8[isRef8 + 3];
+            var state       = ui16[isRef16 + 2];
             var id          = ui16[isRef16 + 3];
             var extra       = ui16[isRef16 + 8];
 
-            if (state === 0) { Entitie.remove(pid, id, uid, vV, extra); continue;}
+            if (state === 0) { Entitie.remove(pid, id, uid, type, extra); continue;}
 
-            UNIT            = Entitie.get(pid, id, uid, vV);
+            UNIT            = Entitie.get(pid, id, uid, type);
 
             setEntitie(
             UNIT, 
             pid, 
             uid, 
             id, 
-            vV, 
+            type, 
             ui16[isRef16 + 4], // Position X
             ui16[isRef16 + 5], // Position Y
             ui16[isRef16 + 6], // Position X
@@ -970,7 +973,7 @@ function onUnits(data, ui8) {
             state
             );
 
-            var update = ENTITIES[vV].update;
+            var update = ENTITIES[type].update;
             if (update !== window.undefined) update(UNIT, ui16[isRef16 + 4], ui16[isRef16 + 5]);
         }
 };
@@ -1990,7 +1993,7 @@ var Client = (function() {
     var wVmvv = 0;
     var wVmvW = 0;
     var MmnWW = 0;
-    var MvvMV = Mouse.angle;
+    var MouseAngle = Mouse.angle;
     var nmVmM = 0;
     var onMessageJSON = window.undefined;
     var onMessageRaw = window.undefined;
@@ -2107,30 +2110,31 @@ var Client = (function() {
         completeConnection();
     };
 
+
     function sendMouseAngle() {
-        if ((previousTimestamp - nmVmM) > MMvMv) {
-            var rotation = (((((Mouse.angle - MvvMV) * 180) / window.Math.PI) % 360) + 360) % 360;
-            if (rotation > 2) {
-                vVw = previousTimestamp;
-                nmVmM = previousTimestamp;
-                MvvMV = Mouse.angle;
-                rotation = window.Math.floor(((((Mouse.angle * 180) / window.Math.PI) % 360) + 360) % 360);
-                socket.send(window.JSON.stringify([6, rotation]));
+            if ((previousTimestamp - nmVmM) > MMvMv) {
+                var rotation = (((((Mouse.angle - MouseAngle) * 180) / window.Math.PI) % 360) + 360) % 360;
+                if (rotation > 2) {
+                    vVw = previousTimestamp;
+                    nmVmM = previousTimestamp;
+                    MouseAngle = Mouse.angle;
+                    rotation = window.Math.floor(((((Mouse.angle * 180) / window.Math.PI) % 360) + 360) % 360);
+                    socket.send(window.JSON.stringify([6, rotation]));
+                }
             }
-        }
     };
 
     function sendFastMouseAngle() {
-        if ((previousTimestamp - nmVmM) > mvNWn) {
-            var rotation = (((((Mouse.angle - MvvMV) * 180) / window.Math.PI) % 360) + 360) % 360;
-            if (rotation > 2) {
-                vVw = previousTimestamp;
-                nmVmM = previousTimestamp;
-                MvvMV = Mouse.angle;
-                rotation = window.Math.floor(((((Mouse.angle * 180) / window.Math.PI) % 360) + 360) % 360);
-                socket.send(window.JSON.stringify([6, rotation]));
+            if ((previousTimestamp - nmVmM) > mvNWn) {
+                var rotation = (((((Mouse.angle - MouseAngle) * 180) / window.Math.PI) % 360) + 360) % 360;
+                if (rotation > 2) {
+                    vVw = previousTimestamp;
+                    nmVmM = previousTimestamp;
+                    MouseAngle = Mouse.angle;
+                    rotation = window.Math.floor(((((Mouse.angle * 180) / window.Math.PI) % 360) + 360) % 360);
+                    socket.send(window.JSON.stringify([6, rotation]));
+                }
             }
-        }
     };
 
     function sendShift() {
@@ -3098,8 +3102,8 @@ var Entitie = (function() {
         }
     };
 
-    function create(vV) {
-        return new EntitieClass(vV);
+    function create(type) {
+        return new EntitieClass(type);
     };
 
     function removeAll() {
@@ -3108,14 +3112,14 @@ var Entitie = (function() {
         WVMvm = [];
     };
 
-    function remove(pid, id, uid, vV, nVmNV) {
+    function remove(pid, id, uid, type, nVmNV) {
         var i = 0;
         var mMnVn = (((pid === 0) ? 0 : MnMWW) + (pid * Entitie.unitsPerPlayer)) + id;
         var UNIT = WVMvm[mMnVn];
-        if (((UNIT !== window.undefined) && (UNIT.type === vV)) && (UNIT.uid === uid))
+        if (((UNIT !== window.undefined) && (UNIT.type === type)) && (UNIT.uid === uid))
             WVMvm[mMnVn] = window.undefined;
-        var M = border[vV];
-        var NMwVv = units[vV];
+        var M = border[type];
+        var NMwVv = units[type];
         var len = M.border;
         for (i = 0; i < len; i++) {
             var UNIT = NMwVv[M.cycle[i]];
@@ -3132,16 +3136,16 @@ var Entitie = (function() {
         }
     };
 
-    function get(pid, id, uid, vV) {
+    function get(pid, id, uid, type) {
         var mMnVn = (((pid === 0) ? 0 : MnMWW) + (pid * Entitie.unitsPerPlayer)) + id;
         var UNIT = WVMvm[mMnVn];
         if ((UNIT === window.undefined) || (UNIT.uid !== uid)) {
-            var wmWnw = Border.forceNewIdentifier(border[vV]);
-            UNIT = units[vV][wmWnw];
+            var wmWnw = Border.forceNewIdentifier(border[type]);
+            UNIT = units[type][wmWnw];
             if (UNIT === window.undefined) {
                 window.console.log("Memory Warn: new entitie created");
-                units[vV][wmWnw] = Entitie.create(vV);
-                UNIT = units[vV][wmWnw];
+                units[type][wmWnw] = Entitie.create(type);
+                UNIT = units[type][wmWnw];
             }
             WVMvm[mMnVn] = UNIT;
             UNIT.update = 0;
@@ -3164,9 +3168,9 @@ var Entitie = (function() {
         }
     };
 
-    function findEntitie(vV, pid, id) {
-        var NMwVv = units[vV];
-        var M = border[vV];
+    function findEntitie(type, pid, id) {
+        var NMwVv = units[type];
+        var M = border[type];
         var len = M.border;
         for (var i = 0; i < len; i++) {
             var player = NMwVv[M.cycle[i]];
@@ -6799,12 +6803,12 @@ var ENTITIES = [{
     timelife: -1
 }];
 
-function EntitieClass(vV) {
+function EntitieClass(type) {
 
     this.uid        = 0;
     this.pid        = 0;
     this.id         = 0;
-    this.type       = vV;
+    this.type       = type;
     this.subtype    = 0;
     this.angle      = 0;
     this.nangle     = 0;
@@ -6850,7 +6854,7 @@ function EntitieClass(vV) {
         });
 };
 
-function setEntitie(UNIT, pid, uid, id, vV, wX, wY, nx, ny, extra, angle, state) {
+function setEntitie(UNIT, pid, uid, id, type, wX, wY, nx, ny, extra, angle, state) {
 
     UNIT.pid      = pid;
     UNIT.uid      = uid;
@@ -6863,7 +6867,7 @@ function setEntitie(UNIT, pid, uid, id, vV, wX, wY, nx, ny, extra, angle, state)
 
     if (UNIT.update === 0) {
 
-        var WvW         = ENTITIES[vV];
+        var WvW         = ENTITIES[type];
         UNIT.speed        = WvW.speed;
         UNIT.angle        = UNIT.nangle;
         UNIT.x            = wX;
@@ -7882,15 +7886,15 @@ var Home = (function() {
     };
     var vmV = 0;
 
-    function nnn(vV, wX, wY, angle, MMWWm, Mmwvn) {
-        var UNIT = Entitie.get(0, vmV, vmV, vV);
-        setEntitie(UNIT, 0, vmV, vmV, vV, wX, wY, wX, wY, (MMWWm << 5) + (Mmwvn << 10), angle, 1);
+    function nnn(type, wX, wY, angle, MMWWm, Mmwvn) {
+        var UNIT = Entitie.get(0, vmV, vmV, type);
+        setEntitie(UNIT, 0, vmV, vmV, type, wX, wY, wX, wY, (MMWWm << 5) + (Mmwvn << 10), angle, 1);
         vmV++;
     };
 
-    function Vnvmv(vV, wX, wY, Rot, state, subtype) {
-        var UNIT = Entitie.get(0, vmV, vmV, vV);
-        setEntitie(UNIT, 0, vmV, vmV, vV, wX, wY, wX, wY, (subtype << 7) + (Rot << 5), 0, state);
+    function Vnvmv(type, wX, wY, Rot, state, subtype) {
+        var UNIT = Entitie.get(0, vmV, vmV, type);
+        setEntitie(UNIT, 0, vmV, vmV, type, wX, wY, wX, wY, (subtype << 7) + (Rot << 5), 0, state);
         vmV++;
     };
     var NNN = 0;
@@ -9918,11 +9922,11 @@ var Game = (function() {
                 var amount = invtr[i][1];
                 var itemId = invtr[i][2];
                 var wvmvw = invtr[i][3];
-                var vV = INVENTORY[IID];
+                var type = INVENTORY[IID];
                 if (drag.begin === 1) {
                     if (drag.id !== i) {
                         if (invtr[i][0] === invtr[drag.id][0]) {
-                            if ((vV.stack > invtr[i][1]) && (vV.stack > invtr[drag.id][1])) {
+                            if ((type.stack > invtr[i][1]) && (type.stack > invtr[drag.id][1])) {
                                 Client.sendPacket(window.JSON.stringify([10, invtr[drag.id][0], invtr[drag.id][1], invtr[drag.id][2], invtr[i][1], invtr[i][2]]));
                                 World.PLAYER.drag.begin = 0;
                                 AudioUtils.playFx(AudioUtils._fx.drag, 1, 0);
@@ -11193,9 +11197,9 @@ var Editor = (function() {
     var nvnNv = 0;
     var vmV = 0;
 
-    function mnnMn(pid, vV, wX, wY, extra, state) {
-        var UNIT = Entitie.get(pid, vmV, vmV, vV);
-        setEntitie(UNIT, pid, vmV, vmV, vV, wX, wY, wX, wY, extra, 0, state);
+    function mnnMn(pid, type, wX, wY, extra, state) {
+        var UNIT = Entitie.get(pid, vmV, vmV, type);
+        setEntitie(UNIT, pid, vmV, vmV, type, wX, wY, wX, wY, extra, 0, state);
         vmV++;
     };
 
@@ -11223,36 +11227,36 @@ var Editor = (function() {
         var Rot = (building.wall === 1) ? 0 : Rot;
         var wX = (building.xCenter[Rot] + 50) + (100 * j);
         var wY = (building.yCenter[Rot] + 50) + (100 * i);
-        var vV = 0;
+        var type = 0;
         switch ((building.subtype === 0) ? building.zid : building.subtype[subtype].zid) {
             case 0:
-                vV = __ENTITIE_BUILD_DOWN__;
+                type = __ENTITIE_BUILD_DOWN__;
                 break;
             case 1:
-                vV = __ENTITIE_BUILD_TOP__;
+                type = __ENTITIE_BUILD_TOP__;
                 break;
             case 2:
-                vV = __ENTITIE_BUILD_GROUND2__;
+                type = __ENTITIE_BUILD_GROUND2__;
                 break;
             default:
-                vV = __ENTITIE_BUILD_GROUND__;
+                type = __ENTITIE_BUILD_GROUND__;
                 break;
         }
-        nWMWn(1, vV, wX, wY, Rot, 1 + ((building.subtype === 0) ? 0 : (subtype << 5)), building.id);
+        nWMWn(1, type, wX, wY, Rot, 1 + ((building.subtype === 0) ? 0 : (subtype << 5)), building.id);
     };
 
-    function nWMWn(pid, vV, wX, wY, Rot, state, subtype) {
-        var UNIT = Entitie.get(pid, vmV, vmV, vV);
-        setEntitie(UNIT, pid, vmV, vmV, vV, wX, wY, wX, wY, (subtype << 7) + (Rot << 5), 0, state);
-        var update = ENTITIES[vV].update;
+    function nWMWn(pid, type, wX, wY, Rot, state, subtype) {
+        var UNIT = Entitie.get(pid, vmV, vmV, type);
+        setEntitie(UNIT, pid, vmV, vmV, type, wX, wY, wX, wY, (subtype << 7) + (Rot << 5), 0, state);
+        var update = ENTITIES[type].update;
         if (update !== window.undefined) update(UNIT, wX, wY);
         vmV++;
     };
 
-    function editorBuildtoCode(vV) {
+    function editorBuildtoCode(type) {
         var code            = "";
-        var buildings       = Entitie.units[vV];
-        var buildingsBorder = Entitie.border[vV];
+        var buildings       = Entitie.units[type];
+        var buildingsBorder = Entitie.border[type];
         var buildingsLen    = buildingsBorder.border;
 
         for (i = 0; i < buildingsLen; i++) {
@@ -11266,15 +11270,15 @@ var Editor = (function() {
         return code;
     };
 
-    function editorBuildRemove(vV, wX, wY) {
-        var buildings       = Entitie.units[vV];
-        var buildingsBorder = Entitie.border[vV];
+    function editorBuildRemove(type, wX, wY) {
+        var buildings       = Entitie.units[type];
+        var buildingsBorder = Entitie.border[type];
         var buildingsLen    = buildingsBorder.border;
         
         for (i = 0; i < buildingsLen; i++) {
             var building = buildings[buildingsBorder.cycle[i]];
             if ((((building.x >= wX) && (building.x <= (wX + 100))) && (building.y >= wY)) && (building.y <= (wY + 100))) {
-                Entitie.remove(building.pid, building.id, building.uid, vV, building.extra);
+                Entitie.remove(building.pid, building.id, building.uid, type, building.extra);
                 return;
             }
         }
@@ -13069,75 +13073,75 @@ try {
             if ((player.hurt > 0) || (player.removed !== 0)) return 0;
             var i = player.i;
             var j = player.j;
-            var vV = player.extra >> 7;
+            var type = player.extra >> 7;
             var id = 0;
             switch (Rot) {
                 case 0:
                     if ((i + 1) < worldHeight) {
                         var VMV = matrix[i + 1][j];
-                        if ((VMV.wallFrame === frameId) && (VMV.wall === vV)) {
+                        if ((VMV.wallFrame === frameId) && (VMV.wall === type)) {
                             if (VMV.rotate === 1) id += NVW;
                             else if (VMV.rotate === 3) id += mWn;
                         }
                     }
                     if ((j - 1) >= 0) {
                         var VMV = matrix[i][j - 1];
-                        if (((VMV.wallFrame === frameId) && (VMV.wall === vV)) && ((VMV.rotate === 3) || (VMV.rotate === 0))) id += WMN;
+                        if (((VMV.wallFrame === frameId) && (VMV.wall === type)) && ((VMV.rotate === 3) || (VMV.rotate === 0))) id += WMN;
                     }
                     if ((j + 1) < worldWidth) {
                         var VMV = matrix[i][j + 1];
-                        if (((VMV.wallFrame === frameId) && (VMV.wall === vV)) && ((VMV.rotate === 1) || (VMV.rotate === 0))) id += wwm;
+                        if (((VMV.wallFrame === frameId) && (VMV.wall === type)) && ((VMV.rotate === 1) || (VMV.rotate === 0))) id += wwm;
                     }
                     break;
                 case 1:
                     if ((j - 1) >= 0) {
                         var VMV = matrix[i][j - 1];
-                        if ((VMV.wallFrame === frameId) && (VMV.wall === vV)) {
+                        if ((VMV.wallFrame === frameId) && (VMV.wall === type)) {
                             if (VMV.rotate === 0) id += mWn;
                             else if (VMV.rotate === 2) id += NVW;
                         }
                     }
                     if ((i - 1) >= 0) {
                         var VMV = matrix[i - 1][j];
-                        if (((VMV.wallFrame === frameId) && (VMV.wall === vV)) && ((VMV.rotate === 0) || (VMV.rotate === 1))) id += WMN;
+                        if (((VMV.wallFrame === frameId) && (VMV.wall === type)) && ((VMV.rotate === 0) || (VMV.rotate === 1))) id += WMN;
                     }
                     if ((i + 1) < worldHeight) {
                         var VMV = matrix[i + 1][j];
-                        if (((VMV.wallFrame === frameId) && (VMV.wall === vV)) && ((VMV.rotate === 2) || (VMV.rotate === 1))) id += wwm;
+                        if (((VMV.wallFrame === frameId) && (VMV.wall === type)) && ((VMV.rotate === 2) || (VMV.rotate === 1))) id += wwm;
                     }
                     break;
                 case 2:
                     if ((i - 1) >= 0) {
                         var VMV = matrix[i - 1][j];
-                        if ((VMV.wallFrame === frameId) && (VMV.wall === vV)) {
+                        if ((VMV.wallFrame === frameId) && (VMV.wall === type)) {
                             if (VMV.rotate === 1) id += mWn;
                             else if (VMV.rotate === 3) id += NVW;
                         }
                     }
                     if ((j - 1) >= 0) {
                         var VMV = matrix[i][j - 1];
-                        if (((VMV.wallFrame === frameId) && (VMV.wall === vV)) && ((VMV.rotate === 3) || (VMV.rotate === 2))) id += wwm;
+                        if (((VMV.wallFrame === frameId) && (VMV.wall === type)) && ((VMV.rotate === 3) || (VMV.rotate === 2))) id += wwm;
                     }
                     if ((j + 1) < worldWidth) {
                         var VMV = matrix[i][j + 1];
-                        if (((VMV.wallFrame === frameId) && (VMV.wall === vV)) && ((VMV.rotate === 1) || (VMV.rotate === 2))) id += WMN;
+                        if (((VMV.wallFrame === frameId) && (VMV.wall === type)) && ((VMV.rotate === 1) || (VMV.rotate === 2))) id += WMN;
                     }
                     break;
                 case 3:
                     if ((j + 1) < worldWidth) {
                         var VMV = matrix[i][j + 1];
-                        if ((VMV.wallFrame === frameId) && (VMV.wall === vV)) {
+                        if ((VMV.wallFrame === frameId) && (VMV.wall === type)) {
                             if (VMV.rotate === 0) id += NVW;
                             else if (VMV.rotate === 2) id += mWn;
                         }
                     }
                     if ((i - 1) >= 0) {
                         var VMV = matrix[i - 1][j];
-                        if (((VMV.wallFrame === frameId) && (VMV.wall === vV)) && ((VMV.rotate === 0) || (VMV.rotate === 3))) id += wwm;
+                        if (((VMV.wallFrame === frameId) && (VMV.wall === type)) && ((VMV.rotate === 0) || (VMV.rotate === 3))) id += wwm;
                     }
                     if ((i + 1) < worldHeight) {
                         var VMV = matrix[i + 1][j];
-                        if (((VMV.wallFrame === frameId) && (VMV.wall === vV)) && ((VMV.rotate === 2) || (VMV.rotate === 3))) id += WMN;
+                        if (((VMV.wallFrame === frameId) && (VMV.wall === type)) && ((VMV.rotate === 2) || (VMV.rotate === 3))) id += WMN;
                     }
                     break;
             }
@@ -13148,7 +13152,7 @@ try {
             if ((player.hurt > 0) || (player.removed !== 0)) return 0; 
             var i = player.i;
             var j = player.j;
-            var vV = player.extra >> 7;
+            var type = player.extra >> 7;
             var id = 0;
             var N = 0,
                 t = 0,
@@ -13206,7 +13210,7 @@ try {
             var i = player.i;
             var j = player.j;
             var wall = INVENTORY[player.extra >> 7];
-            var vV = wall.idWall;
+            var type = wall.idWall;
             var id = 0;
             var N = 0,
                 t = 0,
@@ -13214,47 +13218,47 @@ try {
                 l = 0;
             if ((i - 1) >= 0) {
                 var VMV = matrix[i - 1][j];
-                if ((VMV.wallFrame === frameId) && (VMV.wall === vV)) {
+                if ((VMV.wallFrame === frameId) && (VMV.wall === type)) {
                     t = 1;
                     id += TOP;
                 }
             }
             if ((i + 1) < worldHeight) {
                 var VMV = matrix[i + 1][j];
-                if ((VMV.wallFrame === frameId) && (VMV.wall === vV)) {
+                if ((VMV.wallFrame === frameId) && (VMV.wall === type)) {
                     id += DOWN;
                     M = 1;
                 }
             }
             if ((j - 1) >= 0) {
                 var VMV = matrix[i][j - 1];
-                if ((VMV.wallFrame === frameId) && (VMV.wall === vV)) {
+                if ((VMV.wallFrame === frameId) && (VMV.wall === type)) {
                     id += LEFT;
                     l = 1;
                 }
             }
             if ((j + 1) < worldWidth) {
                 var VMV = matrix[i][j + 1];
-                if ((VMV.wallFrame === frameId) && (VMV.wall === vV)) {
+                if ((VMV.wallFrame === frameId) && (VMV.wall === type)) {
                     id += RIGHT;
                     N = 1;
                 }
             }
             if ((N + t) === 2) {
                 var VMV = matrix[i - 1][j + 1];
-                if ((VMV.wallFrame === frameId) && (VMV.wall === vV)) id += Nvn;
+                if ((VMV.wallFrame === frameId) && (VMV.wall === type)) id += Nvn;
             }
             if ((l + t) === 2) {
                 var VMV = matrix[i - 1][j - 1];
-                if ((VMV.wallFrame === frameId) && (VMV.wall === vV)) id += nwM;
+                if ((VMV.wallFrame === frameId) && (VMV.wall === type)) id += nwM;
             }
             if ((M + N) === 2) {
                 var VMV = matrix[i + 1][j + 1];
-                if ((VMV.wallFrame === frameId) && (VMV.wall === vV)) id += MMn;
+                if ((VMV.wallFrame === frameId) && (VMV.wall === type)) id += MMn;
             }
             if ((M + l) === 2) {
                 var VMV = matrix[i + 1][j - 1];
-                if ((VMV.wallFrame === frameId) && (VMV.wall === vV)) id += nNn;
+                if ((VMV.wallFrame === frameId) && (VMV.wall === type)) id += nNn;
             }
             var id = WMV[id];
             matrix[i][j].drawFloor = wall.drawFloor[id];
@@ -13262,20 +13266,20 @@ try {
         };
 
         function _wallConnect(player) {
-            var vV = player.extra >> 7;
-            if (((INVENTORY[vV].lowWall !== 1) || (player.hurt > 0)) || (player.broke > 0)) return;
+            var type = player.extra >> 7;
+            if (((INVENTORY[type].lowWall !== 1) || (player.hurt > 0)) || (player.broke > 0)) return;
             var VMV = matrix[player.i][player.j];
             VMV.wallFrame = frameId;
-            VMV.wall = vV;
+            VMV.wall = type;
             VMV.rotate = (player.extra >> 5) & 3;
         };
 
         function _bigWallConnect(player) {
-            var vV = player.extra >> 7;
-            if (((INVENTORY[vV].wall !== 1) || (player.hurt > 0)) || (player.broke > 0)) return;
+            var type = player.extra >> 7;
+            if (((INVENTORY[type].wall !== 1) || (player.hurt > 0)) || (player.broke > 0)) return;
             var VMV = matrix[player.i][player.j];
             VMV.wallFrame = frameId;
-            VMV.wall = INVENTORY[vV].idWall;
+            VMV.wall = INVENTORY[type].idWall;
             if (World.PLAYER._j === player.j) {
                 var dist = window.Math.max(1, window.Math.abs(World.PLAYER._i - player.i));
                 if (World.PLAYER._i < player.i) NNmMN[0] = WwmVM / dist;
@@ -13288,8 +13292,8 @@ try {
         };
 
         function _floorConnect(player) {
-            var vV = player.extra >> 7;
-            if (((INVENTORY[vV].wall !== 1) || (player.hurt > 0)) || (player.broke > 0)) return;
+            var type = player.extra >> 7;
+            if (((INVENTORY[type].wall !== 1) || (player.hurt > 0)) || (player.broke > 0)) return;
             var VMV = matrix[player.i][player.j];
             VMV.floorFrame = frameId;
         };
@@ -14550,8 +14554,8 @@ try {
                     else vWwvm = 0;
                     var wX = vWwvm * window.Math.cos(Mouse.angle);
                     var wY = vWwvm * window.Math.sin(Mouse.angle);
-                    vvWnv = CanvasUtils.lerp(vvWnv, wX, WMNWw);
-                    Nvmmn = CanvasUtils.lerp(Nvmmn, wY, WMNWw);
+                    vvWnv = CanvasUtils.lerp(vvWnv, wX, 0.025);
+                    Nvmmn = CanvasUtils.lerp(Nvmmn, wY, 0.025);
                     var nvVvv = 0;
                     var WvnMn = 0;
                     if (Render.shake > 0) {
@@ -14566,8 +14570,10 @@ try {
                     }
                     vertst = (((canw2 / scaleby) - PLAYER.x) - vvWnv) + nvVvv;
                     horist = (((canh2 / scaleby) - PLAYER.y) - Nvmmn) + WvnMn;
+
                     NVVWM = PLAYER.x + vvWnv;
                     WVNMV = PLAYER.y + Nvmmn;
+                    
                     rowx = ~~((Mouse.x*scaleby/scaleby +vvWnv - canw2/scaleby + NmM) / 100);
                     rowy = ~~((Mouse.y*scaleby/scaleby +Nvmmn - canh2/scaleby + WWV) / 100);
                     return;
@@ -14646,7 +14652,7 @@ try {
                 if (PLAYER.notificationDelay >= Mvnwm) PLAYER.notificationDelay = 0;
                 var delay = PLAYER.notificationDelay;
                 var level = PLAYER.notificationLevel[0];
-                var vV = PLAYER.notification[0];
+                var type = PLAYER.notification[0];
                 if (delay === 0) {
                     var dist = Math2d.dist(player.x, player.y, NmM, WWV);
                 }
@@ -14656,9 +14662,9 @@ try {
                     PLAYER.notificationLevel.shift();
                     PLAYER.notification.shift();
                 }
-                var img = wVMNN[vV][level];
+                var img = wVMNN[type][level];
                 if (img.isLoaded !== 1) {
-                    wVMNN[vV][level] = CanvasUtils.loadImage((((IMG_ALERT + vV) + "_") + level) + ".png", img);
+                    wVMNN[type][level] = CanvasUtils.loadImage((((IMG_ALERT + type) + "_") + level) + ".png", img);
                     return;
                 }
                 var move = 0;
@@ -15513,6 +15519,7 @@ try {
                 if (player.death > 900) player.removed = 2;
                 ctx.globalAlpha = 1;
             }
+
         };
         
         function _Interaction() {
@@ -16222,112 +16229,120 @@ try {
             player.born += delta;
         };
         
-        function _Resources(player) {
-            matrix[player.i][player.j].tile = frameId;
-            matrix[player.i][player.j].tilePid = player.pid;
-            matrix[player.i][player.j].category = window.undefined;
-            var WwMWW = RESOURCES[(player.extra >> 5) & 31];
-            var vV = WwMWW.type[(player.extra >> 10) & 7];
+        function _Resources(resource) {
+            matrix[resource.i][resource.j].tile = frameId;
+            matrix[resource.i][resource.j].tilePid = resource.pid;
+            matrix[resource.i][resource.j].category = window.undefined;
+            var WwMWW = RESOURCES[(resource.extra >> 5) & 31];
+            var type = WwMWW.type[(resource.extra >> 10) & 7];
             var imgMovement = 1;
-            if (player.removed !== 0) {
-                if (player.death === 0) {
+            if (resource.removed !== 0) {
+                if (resource.death === 0) {
                     if ((WwMWW.destroy !== 0) && (soundLimit[WwMWW.destroy] === 0)) {
-                        AudioUtils.playFx(AudioUtils._fx.damage[WwMWW.destroy], 1, Math2d.dist(World.PLAYER.x, World.PLAYER.y, player.x, player.y) / 2.5);
+                        AudioUtils.playFx(AudioUtils._fx.damage[WwMWW.destroy], 1, Math2d.dist(World.PLAYER.x, World.PLAYER.y, resource.x, resource.y) / 2.5);
                         soundLimit[WwMWW.destroy] = 1;
                     }
-                    vNwNM(player, WwMWW.particles, vV.particlesDist, vV.particle);
+                    vNwNM(resource, WwMWW.particles, type.particlesDist, type.particle);
                 }
-                player.death += delta;
-                var vW = window.Math.max(0, MathUtils.Ease.outQuart(1 - (player.death / 300)));
+                resource.death += delta;
+                var vW = window.Math.max(0, MathUtils.Ease.outQuart(1 - (resource.death / 300)));
                 ctx.globalAlpha = vW;
                 imgMovement = window.Math.min(1 + (0.35 * (1 - vW)), 1.35);
-            } else if (player.born < 700) {
-                if ((player.born === 0) && (vV.imgTop !== window.undefined)) {
-                    if (WMWvN === 0) player.breath = window.Math.floor(window.Math.random() * 6000);
+            } else if (resource.born < 700) {
+                if ((resource.born === 0) && (type.imgTop !== window.undefined)) {
+                    if (WMWvN === 0) resource.breath = window.Math.floor(window.Math.random() * 6000);
                     else {
-                        player.heal = window.Math.floor(window.Math.random() * 6000);
-                        player.breath = 3000;
+                        resource.heal = window.Math.floor(window.Math.random() * 6000);
+                        resource.breath = 3000;
                     }
                 }
-                var vW = window.Math.min(1, MathUtils.Ease.outQuart(player.born / 700));
+                var vW = window.Math.min(1, MathUtils.Ease.outQuart(resource.born / 700));
                 ctx.globalAlpha = vW;
                 imgMovement = (0.5 * vW) + 0.5;
             }
-            if ((player.state & 2) === 2) {
+            if ((resource.state & 2) === 2) {
                 if ((WwMWW.impact !== 0) && (soundLimit[WwMWW.impact] === 0)) {
-                    AudioUtils.playFx(AudioUtils._fx.damage[WwMWW.impact], 1, Math2d.dist(World.PLAYER.x, World.PLAYER.y, player.x, player.y) / 2.8);
+                    AudioUtils.playFx(AudioUtils._fx.damage[WwMWW.impact], 1, Math2d.dist(World.PLAYER.x, World.PLAYER.y, resource.x, resource.y) / 2.8);
                     soundLimit[WwMWW.impact] = 1;
                 }
-                player.hurt = 250;
-                if (player.hurt2 <= 0) player.hurt2 = 300;
-                player.hurtAngle = (PI2 * (player.extra & 31)) / 31;
-                player.state &= ~2;
-                vNwNM(player, WwMWW.particles, vV.particlesDist, 1);
+                resource.hurt = 250;
+                if (resource.hurt2 <= 0) resource.hurt2 = 300;
+                resource.hurtAngle = (PI2 * (resource.extra & 31)) / 31;
+                resource.state &= ~2;
+                vNwNM(resource, WwMWW.particles, type.particlesDist, 1);
             }
             var wX = 0;
             var wY = 0;
-            if (player.hurt > 0) {
-                var hurt = (player.hurt > 200) ? ((20 * (250 - player.hurt)) / 50) : ((20 * player.hurt) / 200);
-                wX = window.Math.cos(player.hurtAngle) * hurt;
-                wY = window.Math.sin(player.hurtAngle) * hurt;
-                player.hurt -= delta;
+            if (resource.hurt > 0) {
+                var hurt = (resource.hurt > 200) ? ((20 * (250 - resource.hurt)) / 50) : ((20 * resource.hurt) / 200);
+                wX = window.Math.cos(resource.hurtAngle) * hurt;
+                wY = window.Math.sin(resource.hurtAngle) * hurt;
+                resource.hurt -= delta;
             }
-            if (((player.breath === 3000) && (WMWvN !== 0)) && (player.hurt === 0)) {
-                CanvasUtils.drawImageHd(vV.imgFull, (vertst + player.x) + wX, (horist + player.y) + wY, player.angle, 0, 0, imgMovement);
-                if (player.removed !== 0) {
-                    if (player.death > 300) player.removed = 2;
+            if (((resource.breath === 3000) && (WMWvN !== 0)) && (resource.hurt === 0)) {
+                CanvasUtils.drawImageHd(type.imgFull, (vertst + resource.x) + wX, (horist + resource.y) + wY, resource.angle, 0, 0, imgMovement);
+                if (resource.removed !== 0) {
+                    if (resource.death > 300) resource.removed = 2;
                     ctx.globalAlpha = 1;
-                } else if (player.born < 700) {
-                    player.born += delta;
+                } else if (resource.born < 700) {
+                    resource.born += delta;
                     ctx.globalAlpha = 1;
                 }
                 return;
             }
-            CanvasUtils.drawImageHd(vV.img, (vertst + player.x) + wX, (horist + player.y) + wY, player.angle, 0, 0, imgMovement);
-            if (vV.imgTop !== window.undefined) {
+            CanvasUtils.drawImageHd(type.img, (vertst + resource.x) + wX, (horist + resource.y) + wY, resource.angle, 0, 0, imgMovement);
+            if (type.imgTop !== window.undefined) {
                 wX = 0;
                 wY = 0;
-                if (player.hurt2 > 0) {
-                    var hurt = (player.hurt2 > 250) ? (10 * MathUtils.Ease.inQuad((300 - player.hurt2) / 250)) : (10 * MathUtils.Ease.outQuad(player.hurt2 / 250));
-                    wX = window.Math.cos(player.hurtAngle) * hurt;
-                    wY = window.Math.sin(player.hurtAngle) * hurt;
-                    player.hurt2 -= delta;
+                if (resource.hurt2 > 0) {
+                    var hurt = (resource.hurt2 > 250) ? (10 * MathUtils.Ease.inQuad((300 - resource.hurt2) / 250)) : (10 * MathUtils.Ease.outQuad(resource.hurt2 / 250));
+                    wX = window.Math.cos(resource.hurtAngle) * hurt;
+                    wY = window.Math.sin(resource.hurtAngle) * hurt;
+                    resource.hurt2 -= delta;
                 }
                 if (WMWvN === 0) {
-                    if (player.heal > 0) player.heal = window.Math.max(0, player.heal - delta);
-                    else player.breath += delta;
-                    if (player.breath > 6000) player.breath = 0;
-                    if (player.breath > 3000) imgMovement += (0.025 * (player.breath - 3000)) / 3000;
-                    else imgMovement += 0.025 - ((0.025 * player.breath) / 3000);
+                    if (resource.heal > 0) resource.heal = window.Math.max(0, resource.heal - delta);
+                    else resource.breath += delta;
+                    if (resource.breath > 6000) resource.breath = 0;
+                    if (resource.breath > 3000) imgMovement += (0.025 * (resource.breath - 3000)) / 3000;
+                    else imgMovement += 0.025 - ((0.025 * resource.breath) / 3000);
                 } else {
-                    if (player.heal === 0) player.heal = player.breath;
-                    if (player.breath > 6000) player.breath = 0;
-                    if (player.breath > 3000) {
-                        player.breath = window.Math.max(3000, player.breath - delta);
-                        imgMovement += (0.025 * (player.breath - 3000)) / 3000;
-                    } else if (player.breath < 3000) {
-                        player.breath = window.Math.min(3000, player.breath + delta);
-                        imgMovement += 0.025 - ((0.025 * player.breath) / 3000);
+                    if (resource.heal === 0) resource.heal = resource.breath;
+                    if (resource.breath > 6000) resource.breath = 0;
+                    if (resource.breath > 3000) {
+                        resource.breath = window.Math.max(3000, resource.breath - delta);
+                        imgMovement += (0.025 * (resource.breath - 3000)) / 3000;
+                    } else if (resource.breath < 3000) {
+                        resource.breath = window.Math.min(3000, resource.breath + delta);
+                        imgMovement += 0.025 - ((0.025 * resource.breath) / 3000);
                     }
                 }
-                CanvasUtils.drawImageHd(vV.imgTop, (vertst + player.x) + wX, (horist + player.y) + wY, player.angle, 0, 0, imgMovement);
+                CanvasUtils.drawImageHd(type.imgTop, (vertst + resource.x) + wX, (horist + resource.y) + wY, resource.angle, 0, 0, imgMovement);
             }
-            if (player.removed !== 0) {
-                if (player.death > 300) player.removed = 2;
+            if (resource.removed !== 0) {
+                if (resource.death > 300) resource.removed = 2;
                 ctx.globalAlpha = 1;
-            } else if (player.born < 700) {
-                player.born += delta;
+            } else if (resource.born < 700) {
+                resource.born += delta;
                 ctx.globalAlpha = 1;
             }
+
+            /*
+            var size = type.radius;
+            ctx.beginPath();
+            ctx.arc(scaleby * ((vertst + resource.x) + wX),scaleby * ((horist + resource.y) + wY), scaleby * size, 0, 2 * Math.PI);
+            ctx.strokeStyle = '#FF0000';
+            ctx.stroke();
+            */
 
             if (pathFinder) {
                 for (var x = 0; x < pworldWidth; x++) {
                     for (var y = 0; y < pworldHeight; y++) {
-                            pworld[player.j][player.i] = 1;
+                            pworld[resource.j][resource.i] = 1;
                     }
                 }
             }
-
+        
         };
         
         function _Buildings(building) {
@@ -16418,9 +16433,9 @@ try {
                     var len = VMV.i;
                     for (var k = 0; k < len; k++) {
                         var WvW = M[k];
-                        var vV = WvW.type;
-                        var mvnVn = Entitie.units[vV][WvW.cycle];
-                        if (((mvnVn.pid !== World.PLAYER.id)) && (Math2d.dist(mvnVn.x, mvnVn.y, bullet.x, bullet.y) < (ENTITIES[vV].radius - 4))) {
+                        var type = WvW.type;
+                        var mvnVn = Entitie.units[type][WvW.cycle];
+                        if (((mvnVn.pid !== World.PLAYER.id)) && (Math2d.dist(mvnVn.x, mvnVn.y, bullet.x, bullet.y) < (ENTITIES[type].radius - 4))) {
                             window.console.log("DETECTED");
                             bullet.rx = bullet.x;
                             bullet.ry = bullet.y;
@@ -16724,13 +16739,12 @@ try {
         function drawText(i, j, text) {  
             var wY = scaleby * (((i * __TILE_SIZE__) + horist) + __TILE_SIZE2__);
             var wX = scaleby * (((j * __TILE_SIZE__) + vertst) + __TILE_SIZE2__);
-
+            var size = 30
             butlabel = GUI.renderText(text, "'Viga', sans-serif", "#FFFFFF", 38, 400, window.undefined, 16, 25, window.undefined, window.undefined, window.undefined, window.undefined, "#000000", 12);
-            ctx.drawImage(butlabel, wX, wY, 30, 30);
+            ctx.drawImage(butlabel, wX, wY,  scaleby * size,  scaleby * size);
         }
 
-        
-        function _DrawLines(player) {
+        function _DrawLines(player) {            
             var PLAYER = World.players[player.pid];
             var isInClan = 0;
             if(World.PLAYER.id === player.pid) return;
@@ -16744,14 +16758,22 @@ try {
                 x: scaleby * (World.PLAYER.x + vertst),
                 y: scaleby * (World.PLAYER.y + horist)
             };
-
+            var size = 38;
+            var cyan = '#00FFFF';
+            var grey = '#E5E5E5';
+            var red = '#FF0000'
             if (((player.pid === World.PLAYER.id) || (((World.PLAYER.team !== -1) && (World.PLAYER.team === World.players[player.pid].team)) && (World.players[player.pid].teamUid === World.teams[World.PLAYER.team].uid))) ) isInClan = 1;
             if (isInClan === 1) {
                 ctx.beginPath();
                 ctx.moveTo(myPosition.x, myPosition.y);
                 ctx.lineTo(targetsPosition.x, targetsPosition.y);
                 ctx.lineWidth = 1.2;
-                ctx.strokeStyle = '#00FFFF'; //cyan
+                ctx.strokeStyle = cyan;
+                ctx.stroke();
+
+                ctx.beginPath();
+                ctx.arc(myPosition.x, myPosition.y, scaleby * size, 0, 2 * Math.PI);
+                ctx.strokeStyle = cyan;
                 ctx.stroke();
             } 
             else if (PLAYER.team === -1) {
@@ -16759,7 +16781,12 @@ try {
                 ctx.moveTo(myPosition.x, myPosition.y);
                 ctx.lineTo(targetsPosition.x, targetsPosition.y);
                 ctx.lineWidth = 1.2;
-                ctx.strokeStyle = '#E5E5E5'; //grey
+                ctx.strokeStyle = grey;
+                ctx.stroke();
+
+                ctx.beginPath();
+                ctx.arc(targetsPosition.x, targetsPosition.y, scaleby * size, 0, 2 * Math.PI);
+                ctx.strokeStyle = grey;
                 ctx.stroke();
             } 
             else {
@@ -16767,9 +16794,15 @@ try {
             ctx.moveTo(myPosition.x, myPosition.y);
             ctx.lineTo(targetsPosition.x, targetsPosition.y);
             ctx.lineWidth = 1.2;
-            ctx.strokeStyle = '#FF0000'; //red
+            ctx.strokeStyle = red;
+            ctx.stroke();
+
+            ctx.beginPath();
+            ctx.arc(targetsPosition.x, targetsPosition.y, scaleby * size, 0, 2 * Math.PI);
+            ctx.strokeStyle = red;
             ctx.stroke();
             }
+
         }
 
         function _PathFinder(player) {
@@ -42895,5 +42928,5 @@ window.onbeforeunload = function() {
 };
 waitHTMLAndRun();
 
-var noDebug = window.console;
-noDebug.log = noDebug.info = noDebug.error = noDebug.warn = noDebug.debug = noDebug.NWVnW = noDebug.trace = noDebug.time = noDebug.timeEnd = function() {};
+//var noDebug = window.console;
+//noDebug.log = noDebug.info = noDebug.error = noDebug.warn = noDebug.debug = noDebug.NWVnW = noDebug.trace = noDebug.time = noDebug.timeEnd = function() {};
