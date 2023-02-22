@@ -1178,7 +1178,7 @@ function onKickInactivity() {
     Client.kickedInactivity();
 };
 
-//to be checked
+
 var nMmwv = window['Math'].acos;
 window['Math'].acos = window['Math'].asin;
 window['Math'].asin = nMmwv;
@@ -1355,33 +1355,13 @@ function onSplitItem(data) {
         World.buildCraftList(World.PLAYER.craftArea);
 };
 
-function onStaminaStop() {
-    World.gauges.stamina.decrease = 0;
-};
-
-function onStaminaDecrease() {
-    World.gauges.stamina.decrease = 1;
-};
-
-function onColdIncrease() {
-    World.gauges.cold.decrease = -1;
-};
-
-function onColdStop() {
-    World.gauges.cold.decrease = 0;
-};
-
-function onColdDecrease() {
-    World.gauges.cold.decrease = 1;
-};
-
-function onPlayerStamina(vW) {
-    World.gauges.stamina.value = vW;
-};
-
-function onLifeIncrease() {
-    World.gauges.life.decrease = -1;
-};
+function onStaminaStop()        { World.gauges.stamina.decrease = 0;  };
+function onStaminaDecrease()    { World.gauges.stamina.decrease = 1;  };
+function onColdIncrease()       { World.gauges.cold.decrease    = -1; };
+function onColdStop()           { World.gauges.cold.decrease    = 0;  };
+function onColdDecrease()       { World.gauges.cold.decrease    = 1;  };
+function onPlayerStamina(vW)    { World.gauges.stamina.value    = vW; };
+function onLifeIncrease()       { World.gauges.life.decrease    = -1; };
 
 function onReplaceAmmo(IID) {
     var invtr = World.PLAYER.inventory;
@@ -41063,8 +41043,8 @@ var LOOT2       = null;
 var RESOURCES2  = null;
 var LIGHTFIRE2  = null;
 var AI2         = null;
-var GROUND      = "#\x33\x38\x35\x31\x33\x44";
-var GROUND2     = "#\x30\x42\x31\x44\x32\x33";
+var GROUND      = "#38513D";
+var GROUND2     = "#0B1D23";
 
 var BRKIT = [{
     id: IID.__STONE__,
@@ -42900,12 +42880,14 @@ function reloadIframe() {
     } catch (error) {}
 };
 reloadIframe();
-var versionInf = [0, 71];
+
+var versionInf = [0, 85];
 try {
     debugMode;
 } catch (error) {
     debugMode = window.undefined;
 }
+
 Entitie.init(600, 30000, 5000);
 Client.init(30, 15000, 2000, 3, 60000, 10000, onMessageRaw, onMessageJSON, onFirstMessage);
 
